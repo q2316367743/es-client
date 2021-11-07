@@ -4,11 +4,13 @@
     "description": "",
     "main": "main.js",
     "scripts": {
-        "start": "electron ."
+        "start": "electron .",
+        "package:win32": "electron-packager . es-client --platform=win32 --arch=x64 --icon=html/favicon.icp --out=./out --asar --app-version=0.0.1 --overwrite --ignore=node_modules --download.mirrorOptions.mirror=https://npm.taobao.org/mirrors/electron/"
     },
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "electron": "^15.3.0"
+        "electron": "^15.3.0",
+        "electron-packager": "^15.4.0"
     }
 }
