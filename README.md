@@ -1,24 +1,10 @@
 # es-client
 
-## Project setup
-```
-npm install
-```
+仿照elasticsearch head编写的es查询客户端，使用vue+element-ui编写
 
-### Compiles and hot-reloads for development
-```
+## 项目使用
+
+```bash
+npm install
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
