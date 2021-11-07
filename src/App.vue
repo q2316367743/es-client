@@ -12,17 +12,17 @@
 				<el-menu-item index="data">
 					<span slot="title">数据浏览</span>
 				</el-menu-item>
-				<el-menu-item index="baseQuery">
+				<el-menu-item index="base_search">
 					<span slot="title">基本查询</span>
 				</el-menu-item>
-				<el-menu-item index="seniorQuery">
+				<el-menu-item index="senior_search">
 					<span slot="title">高级查询</span>
 				</el-menu-item>
 			</el-menu>
 		</div>
 		<div class="main">
 			<div class="top">
-				<div class="option">
+				<div class="app-option">
 					<el-input v-model="url"></el-input>
 					<el-button @click="connect">连接</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
@@ -115,7 +115,6 @@ export default {
 	},
     created(){
         let route = this.$route.name;
-        console.log(route)
         if (route !== 'domain'){
             this.active = route
         } 
@@ -189,7 +188,7 @@ export default {
 			display: grid;
 			grid-template-columns: 1fr 100px;
 			grid-template-rows: 50px;
-			.option {
+			.app-option {
 				display: flex;
 				.el-input {
 					width: 250px;
