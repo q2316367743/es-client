@@ -1,6 +1,6 @@
 <template>
 	<div class="senior-search">
-		<el-card>
+		<el-card style="min-height: 550px">
 			<div slot="header">高级查询</div>
 			<div class="senior-main">
 				<div class="senior-side">
@@ -34,6 +34,7 @@
 					<div class="senior-side-item">
 						<div class="senior-item-label"></div>
 						<div>
+							<el-button type="success" @click="condition_dialog = true">全屏显示</el-button>
 							<el-button @click="format">格式化</el-button>
 							<el-button type="primary" @click="search"
 								>搜索</el-button
@@ -50,6 +51,20 @@
 					></json-viewer>
 				</div>
 			</div>
+			<el-dialog
+				title="查询条件"
+				:visible.sync="condition_dialog"
+				width="70%"
+				append-to-body
+				top="7vh"
+				:close-on-click-modal="false"
+				v-if="condition_dialog"
+			>
+				<codemirror v-model="param" :options="options"></codemirror>
+				<div slot="footer">
+					<el-button @click="format">格式化</el-button>
+				</div>
+			</el-dialog>
 		</el-card>
 	</div>
 </template>
@@ -70,20 +85,20 @@ export default {
 	data: () => {
 		let senior_url = localStorage.getItem("senior_url");
 		if (!senior_url) {
-			let url = localStorage.getItem('url');
+			let url = localStorage.getItem("url");
 			senior_url = url;
 		}
 		let senior_link = localStorage.getItem("senior_link");
 		if (!senior_link) {
-			senior_link = '';
+			senior_link = "";
 		}
-		let method = localStorage.getItem('senior_method');
+		let method = localStorage.getItem("senior_method");
 		if (!method) {
-			method = 'GET';
+			method = "GET";
 		}
-		let param = localStorage.getItem('senior_param');
+		let param = localStorage.getItem("senior_param");
 		if (!param) {
-			param = '';
+			param = "";
 		}
 		return {
 			url: senior_url,
@@ -104,6 +119,7 @@ export default {
 				},
 			},
 			result: {},
+			condition_dialog: false,
 		};
 	},
 	components: {
@@ -126,10 +142,10 @@ export default {
 		},
 		search() {
 			try {
-				localStorage.setItem('senior_url', this.url);
-				localStorage.setItem('senior_method', this.method);
-				localStorage.setItem('senior_link', this.link);
-				localStorage.setItem('senior_param', this.param);
+				localStorage.setItem("senior_url", this.url);
+				localStorage.setItem("senior_method", this.method);
+				localStorage.setItem("senior_link", this.link);
+				localStorage.setItem("senior_param", this.param);
 				axios({
 					baseURL: this.url + this.link,
 					method: this.method,
@@ -202,5 +218,8 @@ export default {
 .code-mirror {
 	width: 360px;
 	height: 300px;
+}
+.el-dialog__body>.vue-codemirror>.CodeMirror {
+	min-height: 420px;
 }
 </style>

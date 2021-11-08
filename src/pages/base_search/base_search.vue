@@ -1,14 +1,39 @@
 <template>
 	<div class="base-search">
 		<div class="base-option">
-			<el-card class="es-card">
-				<div slot="header">
-                    <span>查询条件</span>
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="is_show = !is_show">{{is_show ? '收起' : '展开'}}</el-button>
-                </div>
+			<div class="el-card es-card is-always-shadow">
+				<div class="el-card__header">
+					<span>查询条件</span>
+					<el-button
+						style="
+							float: right;
+							padding: 3px 13px 3px 0;
+							margin-left: 10px;
+						"
+						type="text"
+						@click="is_show = !is_show"
+						>{{ is_show ? "收起" : "展开" }}</el-button
+					>
+					<el-button
+						style="float: right; padding: 3px 0"
+						type="text"
+						@click="search"
+						>刷新</el-button
+					>
+					<el-button
+						style="float: right; padding: 3px 0"
+						type="text"
+						@click="show_body"
+						>显示查询语句</el-button
+					>
+				</div>
 				<transition name="el-zoom-in-top">
-					<div v-show="is_show">
-						<el-form label-position="top" label-width="80px">
+					<div class="el-card__body" v-show="is_show">
+						<el-form
+							label-position="top"
+							label-width="80px"
+							style="overflow: auto"
+						>
 							<el-form-item label="文档：">
 								<el-select
 									v-model="index"
@@ -23,11 +48,26 @@
 									>
 									</el-option>
 								</el-select>
+								<el-button
+									type="primary"
+									style="margin-left: 10px"
+									@click="search"
+									>搜索</el-button
+								>
+								<el-button
+									style="margin-left: 10px"
+									@click="clear"
+									>清空</el-button
+								>
 							</el-form-item>
-							<el-form-item label="条件：">
+							<el-form-item
+								label="条件："
+								style="min-width: 1100px"
+							>
 								<div
 									v-for="(item, idx) in field_condition"
 									:key="idx"
+									style="margin-bottom: 10px"
 								>
 									<el-select
 										v-model="item.bool"
@@ -75,7 +115,10 @@
 									>
 										<el-option label="match" value="match">
 										</el-option>
-										<el-option label="term" value="term">
+										<el-option
+											label="term"
+											value="term"
+										>
 										</el-option>
 										<el-option
 											label="wildcard"
@@ -87,9 +130,9 @@
 											value="prefix"
 										>
 										</el-option>
-										<el-option label="fuzzy" value="fuzzy">
+										<el-option label="fuzzy" value="fuzzy" disabled>
 										</el-option>
-										<el-option label="range" value="range">
+										<el-option label="range" value="range" disabled>
 										</el-option>
 										<el-option
 											label="query_string"
@@ -119,67 +162,62 @@
 									<el-button
 										type="primary"
 										style="margin-left: 10px"
+										@click="field_condition_add"
 										>新增</el-button
 									>
-									<el-button type="danger">移除</el-button>
+									<el-button
+										type="danger"
+										@click="field_condition_remove(item.id)"
+										>移除</el-button
+									>
 								</div>
 							</el-form-item>
 						</el-form>
 					</div>
 				</transition>
-			</el-card>
+			</div>
 		</div>
 		<div class="base-content">
-			<el-card></el-card>
+			<el-card>
+				<json-viewer
+					:value="result"
+					:expand-depth="4"
+					copyable
+					sort
+				></json-viewer>
+			</el-card>
 		</div>
+		<el-dialog
+			title="查询条件"
+			:visible.sync="condition_dialog"
+			width="70%"
+			append-to-body
+			custom-class="es-dialog"
+			:close-on-click-modal="false"
+		>
+			<json-viewer
+				:value="condition_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
 import cluster_api from "@/apis/cluster.js";
+import JsonViewer from "vue-json-viewer";
+// 引入axios
+import axios from "axios";
+import { buildIndices, buildQuery } from "@/utils/buildUtil";
 
 // 公共方法
 
-/**
- * 构建索引
- */
-function buildIndices(cluster_stats) {
-	let indices = {};
-	for (let index in cluster_stats.metadata.indices) {
-		indices[index] = buildField(
-			cluster_stats.metadata.indices[index].mappings
-		);
-	}
-	return indices;
-}
-
-/**
- * 构建字段
- */
-function buildField(mappings) {
-	let fileds = {};
-	fileds["match_all"] = "";
-	fileds["_all"] = "";
-	// 第一步，遍历类型
-	for (let type in mappings) {
-		// 遍历字段
-		let properties = mappings[type].properties;
-		for (let property in properties) {
-			if (properties[property].properties) {
-				// 是对象
-				let objs = properties[property].properties;
-				for (let obj in objs) {
-					fileds[`${type}.${property}.${obj}`] = objs[obj].type;
-				}
-			} else {
-				fileds[`${type}.${property}`] = properties[property].type;
-			}
-		}
-	}
-	return fileds;
-}
-
 export default {
+	components: {
+		JsonViewer,
+	},
 	data: () => {
 		return {
 			is_show: true,
@@ -189,12 +227,16 @@ export default {
 			index: "",
 			field_condition: [
 				{
+					id: new Date().getTime(),
 					bool: "must",
 					field: "match_all",
 					condition: "",
 					value: "",
 				},
 			],
+			condition_dialog: false,
+			condition_data: {},
+			result: {},
 		};
 	},
 	created() {
@@ -206,18 +248,67 @@ export default {
 			}
 		});
 	},
+	methods: {
+		field_condition_add() {
+			this.field_condition.push({
+				id: new Date().getTime(),
+				bool: "must",
+				field: "match_all",
+				condition: "",
+				value: "",
+			});
+		},
+		field_condition_remove(id) {
+			this.field_condition = this.field_condition.filter((item) => {
+				return item.id !== id;
+			});
+			if (this.field_condition.length === 0) {
+				this.field_condition.push({
+					id: new Date().getTime(),
+					bool: "must",
+					field: "match_all",
+					condition: "",
+					value: "",
+				});
+			}
+		},
+		show_body() {
+			this.condition_data = buildQuery(this.field_condition);
+			this.condition_dialog = true;
+		},
+		search() {
+			if (this.index.length === 0) {
+				this.$alert("请选择索引");
+				return;
+			}
+			axios({
+				baseURL:
+					localStorage.getItem("url") + "/" + this.index + "/_search",
+				method: "POST",
+				data: buildQuery(this.field_condition),
+			}).then((response) => {
+				this.result = response.data;
+			});
+		},
+		clear() {
+			this.index = "";
+			this.field_condition = [
+				{
+					id: new Date().getTime(),
+					bool: "must",
+					field: "match_all",
+					condition: "",
+					value: "",
+				},
+			];
+		},
+	},
 };
 </script>
 
 <style lang="less">
-.es-card {
-    max-height: 50vh;
-}
 .base-search {
 	padding: 10px;
-	.base-option {
-		margin-top: 5px;
-	}
 	.base-content {
 		margin-top: 20px;
 	}

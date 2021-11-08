@@ -6,12 +6,6 @@
 				<el-menu-item index="home">
 					<span slot="title">概览</span>
 				</el-menu-item>
-				<el-menu-item index="index">
-					<span slot="title">索引</span>
-				</el-menu-item>
-				<el-menu-item index="data">
-					<span slot="title">数据浏览</span>
-				</el-menu-item>
 				<el-menu-item index="base_search">
 					<span slot="title">基本查询</span>
 				</el-menu-item>
@@ -45,7 +39,7 @@
 								>节点状态</el-dropdown-item
 							>
 							<el-dropdown-item>集群节点</el-dropdown-item>
-							<el-dropdown-item>插件</el-dropdown-item>
+							<el-dropdown-item @click.native="node_plugins">插件</el-dropdown-item>
 							<el-dropdown-item>群集状态</el-dropdown-item>
 							<el-dropdown-item>集群健康值</el-dropdown-item>
 							<el-dropdown-item>模板</el-dropdown-item>
@@ -64,6 +58,7 @@
 			append-to-body
 			custom-class="es-dialog"
 			:close-on-click-modal="false"
+			top="10vh"
 		>
 			<json-viewer
 				:value="info_data"
@@ -79,6 +74,7 @@
 			append-to-body
 			custom-class="es-dialog"
 			:close-on-click-modal="false"
+			top="10vh"
 		>
 			<json-viewer
 				:value="stats_data"
@@ -94,9 +90,26 @@
 			append-to-body
 			custom-class="es-dialog"
 			:close-on-click-modal="false"
+			top="10vh"
 		>
 			<json-viewer
 				:value="nodes_stats_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
+		</el-dialog>
+		<el-dialog
+			title="插件"
+			:visible.sync="node_plugins_dialog"
+			width="70%"
+			append-to-body
+			custom-class="es-dialog"
+			:close-on-click-modal="false"
+			top="10vh"
+		>
+			<json-viewer
+				:value="node_plugins_data"
 				:expand-depth="4"
 				copyable
 				sort
@@ -116,7 +129,7 @@ export default {
 	data: () => {
 		let url = localStorage.getItem("url");
 		if (!url) {
-			url = "localhost:9200";
+			url = "http://localhost:9200";
 			localStorage.setItem("url", url);
 		}
 		return {
@@ -130,6 +143,8 @@ export default {
 			stats_dialog: false,
 			nodes_stats_data: {},
 			nodes_stats_dialog: false,
+			node_plugins_data: {},
+			node_plugins_dialog: false,
 		};
 	},
 	created() {
@@ -164,6 +179,12 @@ export default {
 				this.nodes_stats_dialog = true;
 			});
 		},
+		node_plugins() {
+			cluster_api._nodes_plugins((res) => {
+				this.node_plugins_data = res;
+				this.node_plugins_dialog = true;
+			});
+		}
 	},
 };
 </script>
@@ -211,10 +232,10 @@ export default {
 				display: flex;
 				.el-input {
 					width: 250px;
-					margin-left: 20px;
+					margin-left: 5px;
 				}
 				.el-button {
-					margin-left: 20px;
+					margin-left: 10px;
 					height: 40px;
 					margin-top: 5px;
 				}
@@ -233,7 +254,8 @@ export default {
 			left: 0;
 			right: 0;
 			bottom: 0;
-			overflow: auto;
+			overflow-y: auto;
+			overflow-x: hidden;
 		}
 	}
 }

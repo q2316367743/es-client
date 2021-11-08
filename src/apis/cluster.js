@@ -62,5 +62,20 @@ export default {
                 console.log(e, e.response)
             }
         })
-    }
+    },
+    _nodes_plugins(success, error) {
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'GET',
+            url: '_nodes/plugins',
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
+    },
 }
