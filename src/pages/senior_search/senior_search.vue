@@ -5,8 +5,12 @@
 			<div class="senior-main">
 				<div class="senior-side">
 					<div class="senior-side-item">
-						<div class="senior-item-label">链接：</div>
+						<div class="senior-item-label">地址：</div>
 						<el-input v-model="url"></el-input>
+					</div>
+					<div class="senior-side-item">
+						<div class="senior-item-label">链接：</div>
+						<el-input v-model="link"></el-input>
 					</div>
 					<div class="senior-side-item">
 						<div class="senior-item-label">方式：</div>
@@ -66,8 +70,12 @@ export default {
 	data: () => {
 		let senior_url = localStorage.getItem("senior_url");
 		if (!senior_url) {
-			senior_url = localStorage.getItem('url');
-			localStorage.setItem('senior_url', senior_url);
+			let url = localStorage.getItem('url');
+			senior_url = url;
+		}
+		let senior_link = localStorage.getItem("senior_link");
+		if (!senior_link) {
+			senior_link = '';
 		}
 		let method = localStorage.getItem('senior_method');
 		if (!method) {
@@ -79,6 +87,7 @@ export default {
 		}
 		return {
 			url: senior_url,
+			link: senior_link,
 			method: method,
 			param: "",
 			options: {
@@ -119,9 +128,10 @@ export default {
 			try {
 				localStorage.setItem('senior_url', this.url);
 				localStorage.setItem('senior_method', this.method);
+				localStorage.setItem('senior_link', this.link);
 				localStorage.setItem('senior_param', this.param);
 				axios({
-					baseURL: this.url,
+					baseURL: this.url + this.link,
 					method: this.method,
 					data: this.param.length > 0 ? JSON.parse(this.param) : {},
 				}).then((response) => {
@@ -166,6 +176,7 @@ export default {
 				margin-bottom: 10px;
 				.senior-item-label {
 					width: 60px;
+					line-height: 40px;
 				}
 				.el-input {
 					width: 360px;
