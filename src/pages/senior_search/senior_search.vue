@@ -38,9 +38,12 @@
 					</div>
 				</div>
 				<div class="senior-content">
-					<code>
-						<pre>{{ result }}</pre>
-					</code>
+					<json-viewer
+						:value="result"
+						:expand-depth="4"
+						copyable
+						sort
+					></json-viewer>
 				</div>
 			</div>
 		</el-card>
@@ -57,12 +60,26 @@ import "codemirror/theme/idea.css";
 import "codemirror/mode/javascript/javascript.js";
 // 引入axios
 import axios from "axios";
+import JsonViewer from "vue-json-viewer";
 
 export default {
 	data: () => {
+		let senior_url = localStorage.getItem("senior_url");
+		if (!senior_url) {
+			senior_url = localStorage.getItem('url');
+			localStorage.setItem('senior_url', senior_url);
+		}
+		let method = localStorage.getItem('senior_method');
+		if (!method) {
+			method = 'GET';
+		}
+		let param = localStorage.getItem('senior_param');
+		if (!param) {
+			param = '';
+		}
 		return {
-			url: localStorage.getItem("url"),
-			method: "GET",
+			url: senior_url,
+			method: method,
 			param: "",
 			options: {
 				tabSize: 4, // 缩进格式
@@ -77,15 +94,19 @@ export default {
 					completeSingle: true, // 当匹配只有一项的时候是否自动补全
 				},
 			},
-			result: "",
+			result: {},
 		};
 	},
 	components: {
 		codemirror,
+		JsonViewer,
 	},
 	methods: {
 		format() {
 			try {
+				if (this.param.length === 0) {
+					return;
+				}
 				this.param = JSON.stringify(JSON.parse(this.param), null, 4);
 			} catch (error) {
 				this.$message({
@@ -96,12 +117,15 @@ export default {
 		},
 		search() {
 			try {
+				localStorage.setItem('senior_url', this.url);
+				localStorage.setItem('senior_method', this.method);
+				localStorage.setItem('senior_param', this.param);
 				axios({
 					baseURL: this.url,
 					method: this.method,
-					data: JSON.parse(this.param),
+					data: this.param.length > 0 ? JSON.parse(this.param) : {},
 				}).then((response) => {
-					this.result = JSON.stringify(response.data, null, 4);
+					this.result = response.data;
 				});
 			} catch (error) {
 				this.$message({
@@ -130,7 +154,7 @@ export default {
 	}
 	.senior-main {
 		position: relative;
-			height: 100%;
+		height: 100%;
 		.senior-side {
 			position: absolute;
 			top: 0;
@@ -158,8 +182,8 @@ export default {
 			bottom: 0;
 			right: 0;
 			overflow: auto;
-            padding: 5px;
-            border: #f2f2f2 solid 1px;
+			padding: 5px;
+			border: #f2f2f2 solid 1px;
 		}
 	}
 }

@@ -78,9 +78,12 @@
 			custom-class="es-dialog"
 			:close-on-click-modal="false"
 		>
-			<code>
-				<pre>{{ stats_index_data }}</pre>
-			</code>
+			<json-viewer
+				:value="stats_index_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
 		</el-dialog>
 		<el-dialog
 			:title="index_name"
@@ -90,9 +93,12 @@
 			custom-class="es-dialog"
 			:close-on-click-modal="false"
 		>
-			<code>
-				<pre>{{ cluster_stats_metadata_index_data }}</pre>
-			</code>
+			<json-viewer
+				:value="cluster_stats_metadata_index_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
 		</el-dialog>
 	</div>
 </template>
@@ -101,8 +107,12 @@
 import cluster_api from "@/apis/cluster.js";
 import index_api from "@/apis/index.js";
 import { prettyDataUnit } from "@/utils/fieldUtil";
+import JsonViewer from "vue-json-viewer";
 
 export default {
+	components: {
+		JsonViewer,
+	},
 	data: () => {
 		let url = localStorage.getItem("url");
 		if (!url) {
@@ -121,7 +131,7 @@ export default {
 			indices: [],
 			alias: {},
 			index_name: "",
-			stats_index_data: "",
+			stats_index_data: {},
 			stats_index_dialog: false,
 			cluster_stats_metadata_index_data: "",
 			cluster_stats_metadata_index_dialog: false,
@@ -157,20 +167,13 @@ export default {
 		prettyDataUnit,
 		showStatsByIndexName(index_name) {
 			this.index_name = index_name;
-			this.stats_index_data = JSON.stringify(
-				this.stats.indices[index_name],
-				null,
-				4
-			);
+			this.stats_index_data = this.stats.indices[index_name];
 			this.stats_index_dialog = true;
 		},
 		showMetadataByIndexName(index_name) {
 			this.index_name = index_name;
-			this.cluster_stats_metadata_index_data = JSON.stringify(
-				this.cluster_stats.metadata.indices[index_name],
-				null,
-				4
-			);
+			this.cluster_stats_metadata_index_data =
+				this.cluster_stats.metadata.indices[index_name];
 			this.cluster_stats_metadata_index_dialog = true;
 		},
 		getAliasByIndexName(index_name) {
@@ -194,7 +197,7 @@ export default {
 				.catch(() => {});
 		},
 		remove_alias(index, alias) {
-            console.log(index, alias)
+			console.log(index, alias);
 			this.$confirm("此操作将永久删除该别名, 是否继续?", "提示", {
 				confirmButtonText: "确定",
 				cancelButtonText: "取消",

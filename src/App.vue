@@ -35,9 +35,15 @@
 							></i>
 						</el-button>
 						<el-dropdown-menu slot="dropdown">
-							<el-dropdown-item @click.native="info">信息</el-dropdown-item>
-							<el-dropdown-item @click.native="stats">状态</el-dropdown-item>
-							<el-dropdown-item @click.native="nodes_stats">节点状态</el-dropdown-item>
+							<el-dropdown-item @click.native="info"
+								>信息</el-dropdown-item
+							>
+							<el-dropdown-item @click.native="stats"
+								>状态</el-dropdown-item
+							>
+							<el-dropdown-item @click.native="nodes_stats"
+								>节点状态</el-dropdown-item
+							>
 							<el-dropdown-item>集群节点</el-dropdown-item>
 							<el-dropdown-item>插件</el-dropdown-item>
 							<el-dropdown-item>群集状态</el-dropdown-item>
@@ -57,11 +63,14 @@
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
-            :close-on-click-modal="false"
+			:close-on-click-modal="false"
 		>
-			<code>
-				<pre>{{ info_data }}</pre>
-			</code>
+			<json-viewer
+				:value="info_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
 		</el-dialog>
 		<el-dialog
 			title="状态"
@@ -69,11 +78,14 @@
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
-            :close-on-click-modal="false"
+			:close-on-click-modal="false"
 		>
-			<code>
-				<pre>{{ stats_data }}</pre>
-			</code>
+			<json-viewer
+				:value="stats_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
 		</el-dialog>
 		<el-dialog
 			title="节点状态"
@@ -81,19 +93,26 @@
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
-            :close-on-click-modal="false"
+			:close-on-click-modal="false"
 		>
-			<code>
-				<pre>{{ nodes_stats_data }}</pre>
-			</code>
+			<json-viewer
+				:value="nodes_stats_data"
+				:expand-depth="4"
+				copyable
+				sort
+			></json-viewer>
 		</el-dialog>
 	</div>
 </template>
 
 <script>
 import cluster_api from "@/apis/cluster.js";
+import JsonViewer from "vue-json-viewer";
 
 export default {
+	components: {
+		JsonViewer,
+	},
 	data: () => {
 		let url = localStorage.getItem("url");
 		if (!url) {
@@ -101,24 +120,24 @@ export default {
 			localStorage.setItem("url", url);
 		}
 		return {
-            active: 'home',
+			active: "home",
 			url: url,
 			load: true,
 			cluster_name: "",
-			info_data: "",
+			info_data: {},
 			info_dialog: false,
-			stats_data: "",
+			stats_data: {},
 			stats_dialog: false,
-			nodes_stats_data: "",
+			nodes_stats_data: {},
 			nodes_stats_dialog: false,
 		};
 	},
-    created(){
-        let route = this.$route.name;
-        if (route !== 'domain'){
-            this.active = route
-        } 
-    },
+	created() {
+		let route = this.$route.name;
+		if (route !== "domain") {
+			this.active = route;
+		}
+	},
 	methods: {
 		connect() {
 			window.localStorage.setItem("url", this.url);
@@ -129,22 +148,22 @@ export default {
 		},
 		info() {
 			cluster_api.info((res) => {
-				this.info_data = JSON.stringify(res, null, 4);
+				this.info_data = res;
 				this.info_dialog = true;
 			});
 		},
 		stats() {
-			cluster_api._stats(res => {
-				this.stats_data = JSON.stringify(res, null, 4);
+			cluster_api._stats((res) => {
+				this.stats_data = res;
 				this.stats_dialog = true;
-			})
+			});
 		},
 		nodes_stats() {
-			cluster_api._nodes_stats(res => {
-				this.nodes_stats_data = JSON.stringify(res, null, 4);
+			cluster_api._nodes_stats((res) => {
+				this.nodes_stats_data = res;
 				this.nodes_stats_dialog = true;
-			})
-		}
+			});
+		},
 	},
 };
 </script>
