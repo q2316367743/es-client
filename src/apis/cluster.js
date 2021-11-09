@@ -48,6 +48,36 @@ export default {
             }
         })
     },
+    _cluster_health(success, error) {
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'GET',
+            url: '_cluster/health',
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
+    },
+    _nodes(success, error) {
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'GET',
+            url: '_nodes',
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
+    },
     _nodes_stats(success, error) {
         axios({
             baseURL: localStorage.getItem('url'),
@@ -68,6 +98,21 @@ export default {
             baseURL: localStorage.getItem('url'),
             method: 'GET',
             url: '_nodes/plugins',
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
+    },
+    _template(success, error) {
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'GET',
+            url: '_template',
         }).then(response => {
             success(response.data);
         }).catch(e => {

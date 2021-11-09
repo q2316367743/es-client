@@ -2,7 +2,16 @@
 	<div>
 		<div class="home-option">
 			<div style="display: flex">
-				<el-input v-model="condition.name"></el-input>
+				<el-autocomplete
+					v-model="condition.name"
+					:fetch-suggestions="condition_name_proposal"
+					placeholder="请输入索引名称"
+					style="width: 300px"
+					@blur="search"
+					@select="search"
+					@clear="search"
+					clearable
+				></el-autocomplete>
 				<el-select
 					v-model="condition.order"
 					placeholder="请选择"
@@ -25,8 +34,15 @@
 				>
 			</div>
 			<div style="margin-right: 15px">
-				<el-button @click="init">刷新</el-button
-				><el-button @click="index_dialog = true" type="primary"
+				<el-dropdown split-button @click="init">
+					刷新
+					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item>每隔5秒</el-dropdown-item>
+						<el-dropdown-item>每隔30秒</el-dropdown-item>
+						<el-dropdown-item>每隔一分钟</el-dropdown-item>
+					</el-dropdown-menu>
+				</el-dropdown>
+				<el-button @click="index_dialog = true" type="primary" style="margin-left: 10px"
 					>新建索引</el-button
 				>
 			</div>
@@ -222,7 +238,6 @@ export default {
 				this.stats = res;
 				cluster_api._cluster_state((res) => {
 					this.cluster_stats = res;
-					this.$parent.cluster_name = res.cluster_name;
 					for (let key in this.stats.indices) {
 						this.indices.push({
 							name: key,
@@ -240,6 +255,16 @@ export default {
 					this.search();
 				});
 			});
+		},
+		condition_name_proposal(queryString, cb) {
+			let proposal = this.indices
+				.filter((item) => {
+					return item.name.indexOf(queryString) > -1;
+				})
+				.map((item) => {
+					return { value: item.name };
+				});
+			cb(proposal);
 		},
 		prettyDataUnit,
 		showStatsByIndexName(index_name) {
@@ -272,7 +297,6 @@ export default {
 			});
 		},
 		remove_alias(index, alias) {
-			console.log(index, alias);
 			this.$confirm("此操作将永久删除该别名, 是否继续?", "提示", {
 				confirmButtonText: "确定",
 				cancelButtonText: "取消",

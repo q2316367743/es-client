@@ -1,6 +1,6 @@
 {
     "name": "electron",
-    "version": "1.0.0",
+    "version": "0.3.0",
     "description": "",
     "main": "main.js",
     "scripts": {
@@ -8,7 +8,7 @@
         "package:win32": "electron-packager . es-client --platform=win32 --arch=x64 --icon=html/favicon.icp --out=./out --asar --app-version=0.0.1 --overwrite --ignore=node_modules --download.mirrorOptions.mirror=https://npm.taobao.org/mirrors/electron/"
     },
     "author": "",
-    "license": "ISC",
+    "license": "Apache-2.0",
     "devDependencies": {
         "electron": "^15.3.0",
         "electron-packager": "^15.4.0"

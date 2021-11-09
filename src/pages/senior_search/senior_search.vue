@@ -34,11 +34,25 @@
 					<div class="senior-side-item">
 						<div class="senior-item-label"></div>
 						<div>
-							<el-button type="success" @click="condition_dialog = true">全屏显示</el-button>
+							<el-button
+								type="success"
+								@click="condition_dialog = true"
+								>全屏显示</el-button
+							>
 							<el-button @click="format">格式化</el-button>
 							<el-button type="primary" @click="search"
 								>搜索</el-button
 							>
+						</div>
+					</div>
+					<div class="senior-side-item">
+						<div class="senior-item-label">历史：</div>
+						<div>
+							<div class="param-history">
+								<div class="param-history-item" v-for="(item, index) in param_history" :key="index" @click="choose_history(item)">
+									{{item}}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -96,15 +110,23 @@ export default {
 		if (!method) {
 			method = "GET";
 		}
-		let param = localStorage.getItem("senior_param");
-		if (!param) {
-			param = "";
+		let senior_param = localStorage.getItem("senior_param");
+		if (!senior_param) {
+			senior_param = "";
+		}
+		let param_history = localStorage.getItem("param_history");
+		console.log(param_history)
+		if (!param_history) {
+			param_history = [];
+		}else {
+			param_history = JSON.parse(param_history)
 		}
 		return {
 			url: senior_url,
 			link: senior_link,
 			method: method,
-			param: "",
+			param: senior_param,
+			param_history: param_history,
 			options: {
 				tabSize: 4, // 缩进格式
 				theme: "idea", // 主题，对应主题库 JS 需要提前引入
@@ -141,6 +163,18 @@ export default {
 			}
 		},
 		search() {
+			let flag = true;
+			for (let param of this.param_history) {
+				if(param === this.param) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				this.param_history.push(this.param);
+				// 实例化
+				window.localStorage.setItem('param_history', JSON.stringify(this.param_history))
+			}
 			try {
 				localStorage.setItem("senior_url", this.url);
 				localStorage.setItem("senior_method", this.method);
@@ -160,6 +194,9 @@ export default {
 				});
 			}
 		},
+		choose_history(value) {
+			this.param = value;
+		}
 	},
 };
 </script>
@@ -200,6 +237,24 @@ export default {
 				.el-textarea {
 					width: 360px;
 				}
+				.param-history {
+					position: absolute;
+					bottom: 10px;
+					top: 520px;
+					width: 360px;
+					border: #f2f2f2 solid 1px;
+					border-radius: 5px;
+					overflow-y: auto;
+					overflow-x: hidden;
+					.param-history-item {
+						padding: 5px 10px;
+						width: 360px;
+						max-width: 360px;
+						border-bottom: #f2f2f2 solid 1px;
+						word-break: break-all;
+						cursor: pointer;
+					}
+				}
 			}
 		}
 		.senior-content {
@@ -219,7 +274,7 @@ export default {
 	width: 360px;
 	height: 300px;
 }
-.el-dialog__body>.vue-codemirror>.CodeMirror {
+.el-dialog__body > .vue-codemirror > .CodeMirror {
 	min-height: 420px;
 }
 </style>
