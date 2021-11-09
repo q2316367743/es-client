@@ -4,6 +4,7 @@ node_modules
 electron/node_modules
 electron/html
 electron/out
+chrome/es-client
 
 
 # local env files
