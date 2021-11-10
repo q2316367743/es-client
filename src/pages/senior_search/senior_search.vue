@@ -166,9 +166,14 @@ export default {
 			let flag = true;
 			for (let param of this.param_history) {
 				if(param === this.param) {
+					// 存在一样的
 					flag = false;
 					break;
 				}
+			}
+			if (this.param === '') {
+				// 空
+				flag = false;
 			}
 			if (flag) {
 				this.param_history.push(this.param);

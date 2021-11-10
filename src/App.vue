@@ -12,6 +12,9 @@
 				<el-menu-item index="senior_search">
 					<span slot="title">高级查询</span>
 				</el-menu-item>
+				<el-menu-item index="sql_search">
+					<span slot="title">SQL查询</span>
+				</el-menu-item>
 			</el-menu>
 			<div class="author">
 				<el-link href="https://esion.xyz">云落天都</el-link>

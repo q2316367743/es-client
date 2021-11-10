@@ -41,3 +41,5 @@ npm run build
 ```
 
 之后在`/chrome`文件夹下建立`es-client`文件夹，将`/electron/html`文件夹中内容复制到`/chrome/es-client`文件夹中
+
+安装：打开浏览器，打开拓展，将chrome拖入浏览器
