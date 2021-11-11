@@ -5,6 +5,8 @@ electron/node_modules
 electron/html
 electron/out
 chrome/es-client
+chrome.crx
+chrome.pem
 
 
 # local env files
