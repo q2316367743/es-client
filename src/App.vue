@@ -14,8 +14,16 @@
 				</el-menu-item>
 			</el-menu>
 			<div class="author">
-				<el-link href="https://esion.xyz">云落天都</el-link>
-				<div style="margin-top: 5px">v0.3.0</div>
+				<el-link href="https://esion.xyz" target="_blank"
+					>云落天都</el-link
+				>
+				<div style="margin-top: 5px">
+					<el-link
+						href="https://gitee.com/qiaoshengda/es-client"
+						target="_blank"
+						>v0.3.0</el-link
+					>
+				</div>
 			</div>
 		</div>
 		<div class="main">
