@@ -15,6 +15,9 @@
 				<el-menu-item index="sql_search">
 					<span slot="title">SQL查询</span>
 				</el-menu-item>
+				<el-menu-item index="setting">
+					<span slot="title">设置</span>
+				</el-menu-item>
 			</el-menu>
 			<div class="author">
 				<el-link href="https://esion.xyz" target="_blank"
@@ -220,6 +223,7 @@
 
 <script>
 import cluster_api from "@/apis/cluster.js";
+import url_dao from "@/database/url.js";
 import JsonViewer from "vue-json-viewer";
 
 export default {
@@ -232,34 +236,27 @@ export default {
 			url = "http://localhost:9200";
 			localStorage.setItem("url", url);
 		}
-		let url_history = localStorage.getItem("url_history");
-		if (!url_history) {
-			url_history = [];
-			localStorage.setItem("url_history", url_history);
-		} else {
-			url_history = JSON.parse(url_history);
-		}
 		return {
 			active: "home",
 			url: url,
-			url_history: url_history,
+			url_history: [],
 			load: true,
 			cluster_health_main: {
-				cluster_name: "whmall",
-				status: "yellow",
+				cluster_name: "",
+				status: "",
 				timed_out: false,
-				number_of_nodes: 1,
-				number_of_data_nodes: 1,
-				active_primary_shards: 145,
-				active_shards: 145,
+				number_of_nodes: 0,
+				number_of_data_nodes: 0,
+				active_primary_shards: 0,
+				active_shards: 0,
 				relocating_shards: 0,
 				initializing_shards: 0,
-				unassigned_shards: 255,
+				unassigned_shards: 0,
 				delayed_unassigned_shards: 0,
 				number_of_pending_tasks: 0,
 				number_of_in_flight_fetch: 0,
 				task_max_waiting_in_queue_millis: 0,
-				active_shards_percent_as_number: 36.25,
+				active_shards_percent_as_number: 0.0,
 			},
 			info_data: {},
 			info_dialog: false,
@@ -285,6 +282,11 @@ export default {
 			this.active = route;
 		}
 		this.init();
+		url_dao.list(10).then((items) => {
+			for (let item of items) {
+				this.url_history.push(item.value);
+			}
+		});
 	},
 	methods: {
 		connect() {
@@ -294,26 +296,13 @@ export default {
 				this.load = true;
 			});
 			this.init();
-			let flag = true;
-			for (let url of this.url_history) {
-				console.log(url, this.url, url.indexOf(this.url) !== -1);
-				if (url.indexOf(this.url) !== -1) {
-					// 存在
-					flag = false;
+			url_dao.save(this.url);
+			this.url_history = [];
+			url_dao.list(10).then((items) => {
+				for (let item of items) {
+					this.url_history.push(item.value);
 				}
-			}
-			if (flag) {
-				// 列表没有
-				this.url_history.push(this.url);
-				// 如果超过10个，则删除最后一个
-				if (this.url_history.length > 10) {
-					this.url_history = this.url_history.slice(1);
-				}
-				window.localStorage.setItem(
-					"url_history",
-					JSON.stringify(this.url_history)
-				);
-			}
+			});
 		},
 		url_proposal(queryString, cb) {
 			let proposal = this.url_history.map((item) => {

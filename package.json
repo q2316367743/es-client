@@ -16,6 +16,7 @@
     "dependencies": {
         "axios": "^0.24.0",
         "core-js": "^3.6.5",
+        "dexie": "^3.0.3",
         "element-ui": "^2.15.6",
         "less": "^4.1.2",
         "less-loader": "^6.0.0",

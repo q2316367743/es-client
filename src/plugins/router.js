@@ -5,6 +5,7 @@ import home from "@/pages/home/home";
 import base_search from "@/pages/base_search/base_search";
 import senior_search from "@/pages/senior_search/senior_search";
 import sql_search from "@/pages/sql_search/sql_search";
+import setting from "@/pages/setting/setting";
 
 Vue.use(Router);
 
@@ -30,5 +31,9 @@ export default new Router({
         path: '/sql_search',
         name: 'sql_search',
         component: sql_search
+    }, {
+        path: '/setting',
+        name: 'setting',
+        component: setting
     }]
 })
