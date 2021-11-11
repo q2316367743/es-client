@@ -12,6 +12,19 @@
 
 ## 项目打包
 
+## chrome插件
+
+如果你使用的是edge浏览器，本项目已经推送edge商店，插件地址：[es-client](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+
+```bash
+npm install
+npm run build
+```
+
+之后在`/chrome`文件夹下建立`es-client`文件夹，将`/electron/html`文件夹中内容复制到`/chrome/es-client`文件夹中
+
+安装：打开浏览器，打开拓展，将chrome拖入浏览器
+
 ### 静态文件
 
 ```bash
@@ -32,17 +45,6 @@ npm run package:win32
 ```
 
 文件在`/electron/out/es-client-win32-x64`
-
-## chrome插件
-
-```bash
-npm install
-npm run build
-```
-
-之后在`/chrome`文件夹下建立`es-client`文件夹，将`/electron/html`文件夹中内容复制到`/chrome/es-client`文件夹中
-
-安装：打开浏览器，打开拓展，将chrome拖入浏览器
 
 ## 预览
 
