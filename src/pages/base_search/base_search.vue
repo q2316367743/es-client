@@ -55,6 +55,7 @@
                                     v-for="(item, idx) in field_condition"
                                     :key="idx"
                                     style="margin-bottom: 10px">
+                                    <!-- 选择查询模式 -->
                                     <el-select
                                         v-model="item.bool"
                                         filterable
@@ -64,53 +65,153 @@
                                         <el-option label="must_not" value="must_not"></el-option>
                                         <el-option label="should" value="should"></el-option>
                                     </el-select>
+                                    <!-- 选择查询字段 -->
                                     <el-select
                                         v-model="item.field"
                                         filterable
                                         placeholder="请选择"
-                                        style="margin-left: 10px">
+                                        style="margin-left: 10px"
+                                        value-key="name">
                                         <el-option
                                             v-for="(type, field) in indices[
 												index
 											]"
                                             :key="field"
                                             :label="field"
-                                            :value="field">
+                                            :value="{
+                                                name: field,
+                                                type: type
+                                            }">
                                         </el-option>
                                     </el-select>
+                                    <!-- 选择查询条件 -->
                                     <el-select
                                         v-model="item.condition"
                                         filterable
                                         placeholder="请选择"
                                         v-if="
-											item.field !== 'match_all' &&
-											item.field !== '_all'
+											item.field.name !== 'match_all' &&
+											item.field.name !== '_all'
 										"
                                         style="margin-left: 10px">
-                                        <el-option label="match" value="match">
+                                        <el-option
+                                            label="match"
+                                            value="match"
+                                            v-if="
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text'
+                                            "
+                                        >
                                         </el-option>
-                                        <el-option label="term" value="term">
+                                        <el-option
+                                            label="term"
+                                            value="term"
+                                            v-if="
+                                                item.field.type === 'date' ||
+                                                item.field.type === 'long' ||
+                                                item.field.type === 'text' ||
+                                                item.field.type === 'date' ||
+                                                item.field.type === 'short'
+                                            ">
                                         </el-option>
-                                        <el-option label="wildcard" value="wildcard"></el-option>
-                                        <el-option label="prefix" value="prefix"></el-option>
-                                        <el-option label="fuzzy" value="fuzzy" disabled></el-option>
-                                        <el-option label="range" value="range" disabled></el-option>
-                                        <el-option label="query_string" value="query_string"></el-option>
-                                        <el-option label="text" value="text"></el-option>
-                                        <el-option label="missing" value="missing"></el-option>
+                                        <el-option
+                                            label="wildcard"
+                                            value="wildcard"
+                                            v-if="
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text'
+                                            "
+                                        ></el-option>
+                                        <el-option
+                                            label="prefix"
+                                            value="prefix"
+                                            v-if="
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text'
+                                            "
+                                        ></el-option>
+                                        <el-option
+                                            label="range" value="range"
+                                            v-if="
+                                                item.field.type === 'long' ||
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text' ||
+                                                item.field.type === 'date' ||
+                                                item.field.type === 'short'
+                                            "
+                                        ></el-option>
+                                        <el-option
+                                            label="fuzzy"
+                                            value="fuzzy"
+                                            v-if="
+                                                item.field.type === 'long' ||
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text' ||
+                                                item.field.type === 'date' ||
+                                                item.field.type === 'short'
+                                            "
+                                        ></el-option>
+                                        <el-option
+                                            label="query_string"
+                                            value="query_string"
+                                            v-if="
+                                                item.field.type === 'long' ||
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text' ||
+                                                item.field.type === 'date' ||
+                                                item.field.type === 'short'
+                                            "
+                                        ></el-option>
+                                        <el-option
+                                            label="text"
+                                            value="text"
+                                            v-if="
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text'
+                                            "
+                                        ></el-option>
+                                        <el-option
+                                            label="missing"
+                                            value="missing"
+                                            v-if="
+                                                item.field.type === 'long' ||
+                                                item.field.type === 'keyword' ||
+                                                item.field.type === 'text' ||
+                                                item.field.type === 'date' ||
+                                                item.field.type === 'short'
+                                            "
+                                        ></el-option>
                                     </el-select>
                                     <el-input
                                         v-model="item.value"
                                         style="width: 180px; margin-left: 10px"
                                         v-if="
-											item.condition === 'match' ||
+											(item.condition === 'match' ||
 											item.condition === 'term' ||
 											item.condition === 'wildcard' ||
 											item.condition === 'prefix' ||
 											item.condition === 'query_string' ||
-											item.condition === 'text'
+											item.condition === 'text') &&
+											item.field.name !== 'match_all' &&
+											item.field.name !== '_all'
 										"
                                     ></el-input>
+                                    <div
+                                        style="display: inline-block;margin-top: 10px"
+                                        v-if="item.condition === 'range'">
+                                        <el-select v-model="item.range.condition_left">
+                                            <el-option value="gt" label="gt"></el-option>
+                                            <el-option value="gte" label="gte"></el-option>
+                                        </el-select>
+                                        <el-input v-model="item.range.value_left"
+                                                  style="width: 180px;margin-left: 10px;"></el-input>
+                                        <el-select v-model="item.range.condition_right" style="margin-left: 10px;">
+                                            <el-option value="lt" label="lt"></el-option>
+                                            <el-option value="lte" label="lte"></el-option>
+                                        </el-select>
+                                        <el-input v-model="item.range.value_right"
+                                                  style="width: 180px;margin-left: 10px;"></el-input>
+                                    </div>
                                     <el-button
                                         type="primary"
                                         style="margin-left: 10px"
@@ -181,9 +282,19 @@ export default {
                 {
                     id: new Date().getTime(),
                     bool: "must",
-                    field: "match_all",
+                    field: {
+                        name: "match_all",
+                        type: ""
+                    },
+                    type: "",
                     condition: "",
                     value: "",
+                    range: {
+                        condition_left: 'gt',
+                        value_left: '',
+                        condition_right: 'lt',
+                        value_right: ''
+                    }
                 },
             ],
             condition_dialog: false,
@@ -205,9 +316,19 @@ export default {
             this.field_condition.push({
                 id: new Date().getTime(),
                 bool: "must",
-                field: "match_all",
+                field: {
+                    name: "match_all",
+                    type: ""
+                },
+                type: "",
                 condition: "",
                 value: "",
+                range: {
+                    condition_left: 'gt',
+                    value_left: '',
+                    condition_right: 'lt',
+                    value_right: ''
+                }
             });
         },
         field_condition_remove(id) {
@@ -218,9 +339,19 @@ export default {
                 this.field_condition.push({
                     id: new Date().getTime(),
                     bool: "must",
-                    field: "match_all",
+                    field: {
+                        name: "match_all",
+                        type: ""
+                    },
+                    type: "",
                     condition: "",
                     value: "",
+                    range: {
+                        condition_left: 'gt',
+                        value_left: '',
+                        condition_right: 'lt',
+                        value_right: ''
+                    }
                 });
             }
         },
@@ -248,9 +379,19 @@ export default {
                 {
                     id: new Date().getTime(),
                     bool: "must",
-                    field: "match_all",
+                    field: {
+                        name: "match_all",
+                        type: ""
+                    },
+                    type: "",
                     condition: "",
                     value: "",
+                    range: {
+                        condition_left: 'gt',
+                        value_left: '',
+                        condition_right: 'lt',
+                        value_right: ''
+                    }
                 },
             ];
         },

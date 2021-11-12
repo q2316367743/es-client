@@ -66,14 +66,18 @@ export function buildQuery(items) {
         let condition = {};
         let filed = {};
         // 去除第一个类型
-        let temps = item.field.split(".");
+        let temps = item.field.name.split(".");
         if (temps.length > 1) {
             // 普通
             filed[temps.slice(1, temps.length).join(".")] = item.value;
+        }
+        if (item.condition === 'range') {
+            let temp = {};
+            temp[item.range.condition_left] = item.range.value_left;
+            temp[item.range.condition_right] = item.range.value_right;
+            condition[item.condition] = temp;
+        }else {
             condition[item.condition] = filed;
-        } else {
-            // match_all
-            condition[item.field] = filed;
         }
         if (item.bool === "must") {
             body.query.bool.must.push(condition);

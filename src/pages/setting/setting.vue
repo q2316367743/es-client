@@ -92,7 +92,8 @@ export default {
             this.$prompt('请输入新链接', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                inputValue: record.value
+                inputValue: record.value,
+                closeOnClickModal: false
             }).then(({value}) => {
                 url_dao.update({
                     id: record.id,
@@ -109,6 +110,7 @@ export default {
             this.$prompt('请输入新链接', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
+                closeOnClickModal: false
             }).then(({value}) => {
                 url_dao.update({
                     time: new Date().getTime(),
@@ -124,7 +126,8 @@ export default {
             this.$confirm('此操作将永久删除该链接, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                type: 'warning'
+                type: 'warning',
+                closeOnClickModal: false
             }).then(() => {
                 url_dao.remove(id).then(() => {
                     this.$message({

@@ -7,15 +7,16 @@
                     :fetch-suggestions="condition_name_proposal"
                     placeholder="请输入索引名称"
                     style="width: 300px"
-                    @blur="search"
                     @select="search"
                     @clear="search"
+                    @keydown.enter="search"
                     clearable
                 ></el-autocomplete>
                 <el-select
                     v-model="condition.order"
                     placeholder="请选择"
                     style="margin-left: 5px"
+                    @change="search"
                 >
                     <el-option label="名称正序(A-Z)" value="NAME_ASC"></el-option>
                     <el-option label="名称倒序(Z-A)" value="NAME_DESC"></el-option>
