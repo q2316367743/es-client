@@ -20,17 +20,9 @@
                 </el-menu-item>
             </el-menu>
             <div class="author">
-                <el-link href="https://esion.xyz" target="_blank"
-                >云落天都
-                </el-link
-                >
+                <el-link href="https://esion.xyz" target="_blank">云落天都</el-link>
                 <div style="margin-top: 5px">
-                    <el-link
-                        href="https://gitee.com/qiaoshengda/es-client"
-                        target="_blank"
-                    >v0.3.0
-                    </el-link
-                    >
+                    <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">v0.3.0</el-link>
                 </div>
             </div>
         </div>
@@ -42,9 +34,7 @@
                         :fetch-suggestions="url_proposal"
                         placeholder="请输入索引地址"
                         style="width: 300px"
-                        @blur="connect"
                         @select="connect"
-                        @clear="connect"
                         clearable
                     ></el-autocomplete>
                     <el-button @click="connect">连接</el-button>
@@ -55,43 +45,18 @@
                 <div class="info">
                     <el-dropdown>
                         <el-button type="primary">
-                            信息<i
-                            class="el-icon-arrow-down el-icon--right"
-                        ></i>
+                            <span>信息</span>
+                            <i class="el-icon-arrow-down el-icon--right" ></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="info"
-                            >信息
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="stats"
-                            >状态
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="nodes_stats"
-                            >节点状态
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="nodes"
-                            >集群节点
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="node_plugins"
-                            >插件
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="cluster_state"
-                            >群集状态
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="cluster_health"
-                            >集群健康值
-                            </el-dropdown-item
-                            >
-                            <el-dropdown-item @click.native="template"
-                            >模板
-                            </el-dropdown-item
-                            >
+                            <el-dropdown-item @click.native="info">信息</el-dropdown-item>
+                            <el-dropdown-item @click.native="stats">状态</el-dropdown-item>
+                            <el-dropdown-item @click.native="nodes_stats">节点状态</el-dropdown-item>
+                            <el-dropdown-item @click.native="nodes">集群节点</el-dropdown-item>
+                            <el-dropdown-item @click.native="node_plugins">插件</el-dropdown-item>
+                            <el-dropdown-item @click.native="cluster_state">群集状态</el-dropdown-item>
+                            <el-dropdown-item @click.native="cluster_health">集群健康值</el-dropdown-item>
+                            <el-dropdown-item @click.native="template">模板</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -292,11 +257,6 @@ export default {
             this.active = route;
         }
         this.init();
-        url_dao.list(10).then((items) => {
-            for (let item of items) {
-                this.url_history.push(item.value);
-            }
-        });
     },
     methods: {
         connect() {
@@ -306,13 +266,6 @@ export default {
                 this.load = true;
             });
             this.init();
-            url_dao.save(this.url);
-            this.url_history = [];
-            url_dao.list(10).then((items) => {
-                for (let item of items) {
-                    this.url_history.push(item.value);
-                }
-            });
         },
         url_proposal(queryString, cb) {
             let proposal = this.url_history.map((item) => {
@@ -323,6 +276,12 @@ export default {
         init() {
             cluster_api._cluster_health((res) => {
                 this.cluster_health_main = res;
+            });
+            url_dao.list(10).then((items) => {
+                this.url_history = [];
+                for (let item of items) {
+                    this.url_history.push(item.value);
+                }
             });
         },
         info() {

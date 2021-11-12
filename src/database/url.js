@@ -5,25 +5,28 @@ import db from "@/plugins/dexie";
  */
 export default {
     async list(limit) {
-        return await db.url_history.limit(limit).toArray();
+        return db.url_history.orderBy('is_top').limit(limit).reverse().toArray();
     },
     async page(page, limit) {
-        return await db.url_history.offset((page - 1) * limit).limit(limit).toArray();
+        return db.url_history.orderBy('is_top').offset((page - 1) * limit).limit(limit).reverse().toArray();
+    },
+    count() {
+        return db.url_history.count();
     },
     /**
      * 存储一个字段
      */
-    async save(value) {
-        let count = await db.url_history.where('value').equals(value).count();
-        if (count > 0) {
-            console.log('重复数据');
-            return;
-        }
-        console.log('插入');
-        db.url_history.add({
+    save(value) {
+        db.url_history.put({
             value: value,
             time: new Date().getTime(),
             is_top: 0
         })
+    },
+    async update(record) {
+        await db.url_history.put(record)
+    },
+    async remove(id) {
+        await db.url_history.where('id').equals(id).delete();
     }
 }
