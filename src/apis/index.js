@@ -9,7 +9,7 @@ export default {
             baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: '_aliases',
-            data: { "actions": [{ "add": { "index": index, "alias": alias } }] }
+            data: {"actions": [{"add": {"index": index, "alias": alias}}]}
         }).then(response => {
             success(response.data);
         }).catch(e => {
@@ -25,7 +25,7 @@ export default {
             baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: '_aliases',
-            data: { "actions": [{ "remove": { "index": index, "alias": alias } }] }
+            data: {"actions": [{"remove": {"index": index, "alias": alias}}]}
         }).then(response => {
             success(response.data);
         }).catch(e => {

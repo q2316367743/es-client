@@ -1,7 +1,7 @@
 <template>
-	<el-card class="sql-search">
-		<div slot="header">SQL查询</div>
-	</el-card>
+    <el-card class="sql-search">
+        <div slot="header">SQL查询</div>
+    </el-card>
 </template>
 
 <script>
@@ -10,6 +10,6 @@ export default {};
 
 <style lang="less">
 .sql-search {
-	margin: 10px;
+    margin: 10px;
 }
 </style>

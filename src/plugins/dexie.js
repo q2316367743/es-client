@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 // 创建数据库
-var db = new Dexie("es_client");
+const db = new Dexie("es_client");
 
 // 数据库版本
 db.version(1).stores({
