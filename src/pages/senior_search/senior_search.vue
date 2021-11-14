@@ -110,7 +110,6 @@ export default {
             senior_param = "";
         }
         let param_history = localStorage.getItem("param_history");
-        console.log(param_history)
         if (!param_history) {
             param_history = [];
         } else {

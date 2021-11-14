@@ -86,5 +86,50 @@ export default {
                 console.log(e, e.response)
             }
         })
+    },
+    _close(index, success, error){
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'POST',
+            url: `${index}/_close`,
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
+    },
+    _open(index, success, error){
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'POST',
+            url: `${index}/_open`,
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
+    },
+    _flush(index, success, error){
+        axios({
+            baseURL: localStorage.getItem('url'),
+            method: 'POST',
+            url: `${index}/_flush`,
+        }).then(response => {
+            success(response.data);
+        }).catch(e => {
+            if (error) {
+                error(e);
+            } else {
+                console.log(e, e.response)
+            }
+        })
     }
 }

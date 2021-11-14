@@ -41,7 +41,10 @@
         </div>
         <div class="home-main">
             <div class="card" v-for="(index, key) in temp_indices" :key="key">
-                <div class="title">{{ index.name }}</div>
+                <div class="title" v-bind:style="{color: index.state === 'open' ? '#000000' : '#888888'}">{{
+                        index.name
+                    }}
+                </div>
                 <div class="detail">
                     <div>
                         size:
@@ -70,11 +73,12 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="new_alias(index.name)">新建别名</el-dropdown-item>
                             <el-dropdown-item @click.native="refresh(index.name)">刷新</el-dropdown-item>
-                            <el-dropdown-item>Flush刷新</el-dropdown-item>
-                            <el-dropdown-item>ForceMerge</el-dropdown-item>
-                            <el-dropdown-item>网关快照</el-dropdown-item>
-                            <el-dropdown-item>测试分析器</el-dropdown-item>
-                            <el-dropdown-item>关闭</el-dropdown-item>
+                            <el-dropdown-item @click.native="flush(index.name)">Flush刷新</el-dropdown-item>
+                            <el-dropdown-item disabled>ForceMerge</el-dropdown-item>
+                            <el-dropdown-item disabled>网关快照</el-dropdown-item>
+                            <el-dropdown-item disabled>测试分析器</el-dropdown-item>
+                            <el-dropdown-item v-if="index.state === 'open'" @click.native="close(index.name)">关闭</el-dropdown-item>
+                            <el-dropdown-item v-if="index.state === 'close'" @click.native="open(index.name)">开启</el-dropdown-item>
                             <el-dropdown-item @click.native="remove_index(index.name)">删除</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -209,21 +213,26 @@ export default {
     methods: {
         init() {
             this.indices = [];
-            cluster_api._stats((res) => {
-                this.stats = res;
-                cluster_api._cluster_state((res) => {
-                    this.cluster_stats = res;
-                    for (let key in this.stats.indices) {
+            cluster_api._cluster_state((res) => {
+                this.cluster_stats = res;
+                cluster_api._stats((res) => {
+                    this.stats = res;
+                    for (let key in this.cluster_stats.metadata.indices) {
+                        let index = this.stats.indices[key];
+                        let size = 0;
+                        let docs = 0;
+                        if (index) {
+                            let total = index.total;
+                            size = total.store.size_in_bytes;
+                            docs = total.docs.count
+                        }
+                        let state = this.cluster_stats.metadata.indices[key].state;
                         this.indices.push({
                             name: key,
-                            original_size:
-                            this.stats.indices[key].total.store
-                                .size_in_bytes,
-                            size: prettyDataUnit(
-                                this.stats.indices[key].total.store
-                                    .size_in_bytes
-                            ),
-                            docs: this.stats.indices[key].total.docs.count,
+                            original_size: size,
+                            size: prettyDataUnit(size),
+                            docs: docs,
+                            state: state
                         });
                     }
                     this.temp_indices = this.indices;
@@ -316,6 +325,24 @@ export default {
                         number_of_replicas: 1,
                     };
                 }
+            });
+        },
+        close(index){
+            index_api._close(index, (res) => {
+                this.$alert(JSON.stringify(res));
+                this.init();
+            });
+        },
+        open(index){
+            index_api._open(index, (res) => {
+                this.$alert(JSON.stringify(res));
+                this.init();
+            });
+        },
+        flush(index){
+            index_api._flush(index, (res) => {
+                this.$alert(JSON.stringify(res));
+                this.init();
             });
         },
         search() {

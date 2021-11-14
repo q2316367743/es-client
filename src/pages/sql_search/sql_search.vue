@@ -1,6 +1,7 @@
 <template>
     <el-card class="sql-search">
         <div slot="header">SQL查询</div>
+        <div>敬请期待</div>
     </el-card>
 </template>
 

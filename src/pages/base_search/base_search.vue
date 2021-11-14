@@ -89,10 +89,7 @@
                                         v-model="item.condition"
                                         filterable
                                         placeholder="请选择"
-                                        v-if="
-											item.field.name !== 'match_all' &&
-											item.field.name !== '_all'
-										"
+                                        v-if="item.field.name !== 'match_all'"
                                         style="margin-left: 10px">
                                         <el-option
                                             label="match"
@@ -159,7 +156,8 @@
                                                 item.field.type === 'keyword' ||
                                                 item.field.type === 'text' ||
                                                 item.field.type === 'date' ||
-                                                item.field.type === 'short'
+                                                item.field.type === 'short' ||
+                                                item.field.name === '_all'
                                             "
                                         ></el-option>
                                         <el-option
@@ -192,8 +190,7 @@
 											item.condition === 'prefix' ||
 											item.condition === 'query_string' ||
 											item.condition === 'text') &&
-											item.field.name !== 'match_all' &&
-											item.field.name !== '_all'
+											item.field.name !== 'match_all'
 										"
                                     ></el-input>
                                     <div
@@ -340,11 +337,11 @@ export default {
                     id: new Date().getTime(),
                     bool: "must",
                     field: {
-                        name: "match_all",
+                        name: "",
                         type: ""
                     },
                     type: "",
-                    condition: "",
+                    condition: "match_all",
                     value: "",
                     range: {
                         condition_left: 'gt',

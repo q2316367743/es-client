@@ -64,20 +64,33 @@ export function buildQuery(items) {
     };
     for (let item of items) {
         let condition = {};
-        let filed = {};
-        // 去除第一个类型
-        let temps = item.field.name.split(".");
-        if (temps.length > 1) {
-            // 普通
-            filed[temps.slice(1, temps.length).join(".")] = item.value;
-        }
-        if (item.condition === 'range') {
-            let temp = {};
-            temp[item.range.condition_left] = item.range.value_left;
-            temp[item.range.condition_right] = item.range.value_right;
-            condition[item.condition] = temp;
+        // 处理字段
+        if (item.field.name === 'match_all') {
+            condition['match_all'] = {};
+        }else if (item.field.name === '_all') {
+            condition[item.condition] =  {
+                default_field: "_all",
+                query: item.value
+            }
         }else {
-            condition[item.condition] = filed;
+            // 处理条件
+            if (item.condition === 'range') {
+                let temp = {};
+                temp[item.range.condition_left] = item.range.value_left;
+                temp[item.range.condition_right] = item.range.value_right;
+                condition[item.condition] = temp;
+            }else {
+                let filed = {};
+                // 正常字段
+                let temps = item.field.name.split(".");
+                // 如果是普通字段，去除类型
+                if (temps.length > 1) {
+                    filed[temps.slice(1, temps.length).join(".")] = item.value;
+                }else {
+                    filed[item.field.name] = item.value;
+                }
+                condition[item.condition] = filed;
+            }
         }
         if (item.bool === "must") {
             body.query.bool.must.push(condition);

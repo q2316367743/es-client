@@ -2,7 +2,7 @@
     <div id="app">
         <div class="menu">
             <div class="logo">ES-client</div>
-            <el-menu :default-active="active" router style="height: 100%">
+            <el-menu :default-active="active" style="height: 100%" @select="choose_route">
                 <el-menu-item index="home">
                     <span slot="title">概览</span>
                 </el-menu-item>
@@ -22,7 +22,7 @@
             <div class="author">
                 <el-link href="https://esion.xyz" target="_blank">云落天都</el-link>
                 <div style="margin-top: 5px">
-                    <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">v0.3.0</el-link>
+                    <el-link @click="about_dialog = true">v0.4.0</el-link>
                 </div>
             </div>
         </div>
@@ -62,7 +62,11 @@
                 </div>
             </div>
             <div class="content">
-                <router-view v-if="load"></router-view>
+                <home v-show="active === 'home'" v-if="load"></home>
+                <base_search v-show="active === 'base_search'" v-if="load"></base_search>
+                <senior_search v-show="active === 'senior_search'" v-if="load"></senior_search>
+                <sql_search v-show="active === 'sql_search'" v-if="load"></sql_search>
+                <setting v-show="active === 'setting'" v-if="load"></setting>
             </div>
         </div>
         <el-dialog
@@ -193,17 +197,43 @@
                 sort
             ></json-viewer>
         </el-dialog>
+        <el-dialog
+            title="关于"
+            :visible.sync="about_dialog"
+            width="70%"
+            append-to-body
+            custom-class="es-dialog"
+            :close-on-click-modal="false"
+            top="10vh"
+        >
+            <about></about>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import cluster_api from "@/apis/cluster.js";
 import url_dao from "@/database/url.js";
+import {get_current_route, choose_route} from '@/plugins/route'
 import JsonViewer from "vue-json-viewer";
+
+// 引入页面组件
+import home from '@/pages/home/home.vue'
+import base_search from '@/pages/base_search/base_search.vue'
+import senior_search from '@/pages/senior_search/senior_search.vue'
+import sql_search from '@/pages/sql_search/sql_search.vue'
+import setting from '@/pages/setting/setting.vue'
+import about from '@/pages/about/about.vue'
 
 export default {
     components: {
         JsonViewer,
+        home,
+        base_search,
+        senior_search,
+        sql_search,
+        setting,
+        about
     },
     data: () => {
         let url = localStorage.getItem("url");
@@ -249,16 +279,19 @@ export default {
             cluster_health_dialog: false,
             template_data: {},
             template_dialog: false,
+            about_dialog: false
         };
     },
     created() {
-        let route = this.$route.name;
-        if (route !== "domain") {
-            this.active = route;
-        }
+        this.active = get_current_route();
         this.init();
     },
     methods: {
+        choose_route(index) {
+            choose_route(index, () => {
+                this.active = index;
+            })
+        },
         connect() {
             window.localStorage.setItem("url", this.url);
             this.load = false;
