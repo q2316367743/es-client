@@ -25,7 +25,7 @@
                     <div class="senior-side-item">
                         <div class="senior-item-label">参数：</div>
                         <div class="code-mirror" ref="code_mirror">
-                            <VueCodemirror v-model="param" :options="options"></VueCodemirror>
+                            <codemirror v-model="param" :options="options"></codemirror>
                         </div>
                     </div>
                     <div class="senior-side-item">
@@ -68,7 +68,7 @@
                 :close-on-click-modal="false"
                 v-if="condition_dialog"
             >
-                <VueCodemirror v-model="param" :options="options"></VueCodemirror>
+                <codemirror v-model="param" :options="options"></codemirror>
                 <div slot="footer">
                     <el-button @click="format">格式化</el-button>
                     <el-button type="primary" @click="search">搜索</el-button>
@@ -80,7 +80,6 @@
 
 <script>
 // 引入CodeMirror
-import { codemirror  } from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
 // 引入主题后还需要在 options 中指定主题才会生效
 import "codemirror/theme/idea.css";
@@ -94,8 +93,7 @@ export default {
     data: () => {
         let senior_url = localStorage.getItem("senior_url");
         if (!senior_url) {
-            let url = localStorage.getItem("url");
-            senior_url = url;
+            senior_url = localStorage.getItem("url");
         }
         let senior_link = localStorage.getItem("senior_link");
         if (!senior_link) {
@@ -139,7 +137,6 @@ export default {
         };
     },
     components: {
-        VueCodemirror: codemirror,
         JsonViewer,
     },
     methods: {

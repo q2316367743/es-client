@@ -2,13 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import less from 'less'
+import 'less'
 import './main.less'
+import codemirror from "vue-codemirror";
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
-Vue.use(less)
+Vue.use(codemirror)
 
 new Vue({
     render: h => h(App),

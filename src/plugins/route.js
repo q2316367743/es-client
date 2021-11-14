@@ -19,3 +19,12 @@ export function choose_route(route, callback) {
     window.location.href = url[0] + '#' + route;
     callback()
 }
+
+export function check_route(route) {
+    let href = window.location.href;
+    let url = href.split('#');
+    if (url.length > 1) {
+        return url[1] === route;
+    }
+    return false;
+}

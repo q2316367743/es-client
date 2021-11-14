@@ -31,9 +31,10 @@
                 <el-dropdown split-button @click="init">
                     刷新
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>每隔5秒</el-dropdown-item>
-                        <el-dropdown-item>每隔30秒</el-dropdown-item>
-                        <el-dropdown-item>每隔一分钟</el-dropdown-item>
+                        <el-dropdown-item @click.native="set_interval(5000)">每隔5秒</el-dropdown-item>
+                        <el-dropdown-item @click.native="set_interval(30000)">每隔30秒</el-dropdown-item>
+                        <el-dropdown-item @click.native="set_interval(60000)">每隔一分钟</el-dropdown-item>
+                        <el-dropdown-item @click.native="clear_interval">取消刷新</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <el-button @click="index_dialog = true" type="primary" style="margin-left: 10px">新建索引</el-button>
@@ -77,8 +78,10 @@
                             <el-dropdown-item disabled>ForceMerge</el-dropdown-item>
                             <el-dropdown-item disabled>网关快照</el-dropdown-item>
                             <el-dropdown-item disabled>测试分析器</el-dropdown-item>
-                            <el-dropdown-item v-if="index.state === 'open'" @click.native="close(index.name)">关闭</el-dropdown-item>
-                            <el-dropdown-item v-if="index.state === 'close'" @click.native="open(index.name)">开启</el-dropdown-item>
+                            <el-dropdown-item v-if="index.state === 'open'" @click.native="close(index.name)">关闭
+                            </el-dropdown-item>
+                            <el-dropdown-item v-if="index.state === 'close'" @click.native="open(index.name)">开启
+                            </el-dropdown-item>
                             <el-dropdown-item @click.native="remove_index(index.name)">删除</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -165,6 +168,7 @@
 import cluster_api from "@/apis/cluster.js";
 import index_api from "@/apis/index.js";
 import {prettyDataUnit} from "@/utils/fieldUtil";
+import {check_route} from "@/plugins/route";
 import JsonViewer from "vue-json-viewer";
 
 export default {
@@ -204,6 +208,7 @@ export default {
                 name: "",
                 order: "NAME_ASC",
             },
+            interval_id: -1
         };
     },
     created() {
@@ -239,6 +244,33 @@ export default {
                     this.search();
                 });
             });
+        },
+        set_interval(millisecond) {
+            if (this.interval_id !== -1) {
+                clearInterval(this.interval_id);
+                this.interval_id = -1;
+            }
+            this.$message({
+                message: `开始每隔${millisecond / 1000}秒刷新一次`,
+                type: 'success'
+            })
+            this.init();
+            this.interval_id = setInterval(() => {
+                if (check_route('home')) {
+                    this.init();
+                }else {
+                    clearInterval(this.interval_id);
+                    this.interval_id = -1;
+                }
+            }, millisecond);
+        },
+        clear_interval() {
+            this.$message({
+                message: '取消刷新',
+                type: 'success'
+            })
+            clearInterval(this.interval_id);
+            this.interval_id = -1;
         },
         condition_name_proposal(queryString, cb) {
             let proposal = this.indices
@@ -327,19 +359,19 @@ export default {
                 }
             });
         },
-        close(index){
+        close(index) {
             index_api._close(index, (res) => {
                 this.$alert(JSON.stringify(res));
                 this.init();
             });
         },
-        open(index){
+        open(index) {
             index_api._open(index, (res) => {
                 this.$alert(JSON.stringify(res));
                 this.init();
             });
         },
-        flush(index){
+        flush(index) {
             index_api._flush(index, (res) => {
                 this.$alert(JSON.stringify(res));
                 this.init();
