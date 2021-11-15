@@ -18,14 +18,16 @@ function parse_index(value, result) {
 }
 
 function parse_condition(value, result) {
-    console.log('构建条件')
     value = value.trim();
-    let cdt = value.split('=');
-    let condition = {};
-    condition[cdt[0].trim()] = cdt[1].trim();
-    result.condition.query.bool.must.push({
-        term: condition
-    })
+    let cdt_and = value.split('and');
+    for (let item of cdt_and) {
+        let cdt = item.split('=');
+        let condition = {};
+        condition[cdt[0].trim()] = cdt[1].trim();
+        result.condition.query.bool.must.push({
+            term: condition
+        })
+    }
 }
 
 function parse_order(value, result) {
@@ -36,7 +38,7 @@ function parse_order(value, result) {
         let order = {};
         if (temps.length === 2) {
             order[temps[0]] = {
-                order: 'desc'
+                order: temps[1].trim()
             }
         }else if (temps.length === 1) {
             order[temps[0]] = {
@@ -62,6 +64,9 @@ function parse_limit(value, result) {
  * SQL转换器
  */
 export function convert(sql) {
+    // 全部转换为小写
+    sql = sql.toLowerCase();
+    sql = sql.replace("\n", " ");
     // 需要的一些方法
     let result = {
         index: '',

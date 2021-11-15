@@ -22,7 +22,7 @@
             <div class="author">
                 <el-link href="https://esion.xyz" target="_blank">云落天都</el-link>
                 <div style="margin-top: 5px">
-                    <el-link @click="about_dialog = true">v0.4.0</el-link>
+                    <el-link @click="about_dialog = true">v0.4.2</el-link>
                 </div>
             </div>
         </div>

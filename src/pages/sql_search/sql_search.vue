@@ -1,8 +1,39 @@
 <template>
     <div class="sql-search">
         <div class="el-card condition is-always-shadow">
-            <div class="el-card__header">SQL查询</div>
-            <div class="el-card__body">
+            <div class="el-card__header">
+                <span>
+                    <span>SQL查询</span>
+                    <el-button
+                        type="text"
+                        style="margin-left: 10px"
+                        @click="explain_dialog = true"
+                    >?</el-button>
+                </span>
+                <el-button
+                    style="
+							float: right;
+							padding: 3px 13px 3px 0;
+							margin-left: 10px;
+						"
+                    type="text"
+                    @click="is_show = !is_show"
+                >{{ is_show ? "收起" : "展开" }}
+                </el-button>
+                <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text"
+                    @click="execute_query"
+                >刷新
+                </el-button>
+                <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text"
+                    @click="show_query"
+                >显示查询语句
+                </el-button>
+            </div>
+            <div class="el-card__body" v-show="is_show">
                 <codemirror v-model="sql" :options="options"></codemirror>
                 <div class="option">
                     <el-button type="primary" @click="execute_query">执行</el-button>
@@ -37,6 +68,27 @@
                 sort
             ></json-viewer>
         </el-dialog>
+        <el-dialog
+            title="说明"
+            :visible.sync="explain_dialog"
+            width="70%"
+            append-to-body
+            custom-class="es-dialog"
+            :close-on-click-modal="false"
+        >
+            <p>目前仅支持select, from, where, and, order by, asc, desc, limit关键字，条件仅支持=</p>
+            <h2 style="margin: 20px 10px">例如：</h2>
+            <code>
+                <pre>
+select *
+from javascript
+where id = 1
+and sex = 1
+order by age desc
+limit 0, 10
+                </pre>
+            </code>
+        </el-dialog>
     </div>
 </template>
 
@@ -52,6 +104,7 @@ import "codemirror/mode/sql/sql.js";
 import axios from "axios";
 
 import {convert} from '@/plugins/sql_convert'
+
 export default {
     components: {
         JsonViewer
@@ -59,6 +112,7 @@ export default {
     data: () => {
         return {
             sql: '',
+            is_show: true,
             options: {
                 tabSize: 4, // 缩进格式
                 theme: "idea", // 主题，对应主题库 JS 需要提前引入
@@ -74,7 +128,8 @@ export default {
             },
             condition_data: {},
             condition_dialog: false,
-            result: {}
+            result: {},
+            explain_dialog: false
         }
     },
     methods: {
@@ -101,12 +156,14 @@ export default {
 <style lang="less">
 .sql-search {
     margin: 10px;
-    .condition{
+
+    .condition {
         .option {
             margin-top: 10px;
             width: 100%;
         }
     }
+
     .result {
         margin-top: 10px;
     }
