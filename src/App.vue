@@ -568,7 +568,6 @@ export default {
 				}
 
 				.cluster-name {
-					width: 100px;
 					text-align: center;
 					font-size: 20px;
 					font-weight: bold;
