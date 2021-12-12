@@ -128,6 +128,8 @@
                 :expand-depth="4"
                 copyable
                 sort
+                expanded
+                preview-mode
             ></json-viewer>
         </el-dialog>
         <el-dialog

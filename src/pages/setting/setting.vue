@@ -110,7 +110,8 @@ export default {
             this.$prompt('请输入新链接', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                closeOnClickModal: false
+                closeOnClickModal: false,
+                inputValue: 'http://'
             }).then(({value}) => {
                 url_dao.update({
                     time: new Date().getTime(),
