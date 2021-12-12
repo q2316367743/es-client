@@ -28,7 +28,7 @@
 					<el-link @click="message_dialog = true">意见反馈</el-link>
 				</div>
 				<div style="margin-top: 5px">
-					<el-link @click="about_dialog = true">v0.4.2</el-link>
+					<el-link @click="about_dialog = true">v0.4.3</el-link>
 				</div>
 			</div>
 		</div>

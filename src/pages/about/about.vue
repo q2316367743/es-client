@@ -13,6 +13,15 @@
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
+                <el-timeline-item timestamp="2021-12-12" placement="top">
+                    <el-card>
+                        <div>0.4.3</div>
+                        <ol>
+                            <li>增加了意见反馈</li>
+                            <li>高级搜索增加快速完成</li>
+                        </ol>
+                    </el-card>
+                </el-timeline-item>
                 <el-timeline-item timestamp="2021-11-13" placement="top">
                     <el-card>
                         <div>0.4.0</div>
