@@ -21,7 +21,7 @@ npm install
 npm run build
 ```
 
-之后在`/chrome`文件夹下建立`es-client`文件夹，将`/electron/html`文件夹中内容复制到`/chrome/es-client`文件夹中
+之后在 `/chrome`文件夹下建立 `es-client`文件夹，将 `/dist`文件夹中内容复制到 `/chrome/es-client`文件夹中
 
 安装：打开浏览器，打开拓展，将chrome拖入浏览器
 
@@ -36,19 +36,20 @@ npm install
 npm run build
 ```
 
-文件在`/electron/html`
+文件在 `/dist`
 
 ### exe应用
 
 ```bash
 npm install
 npm run build
+cp -r dist/* electron/html
 cd electron
 npm install
 npm run package:win32
 ```
 
-文件在`/electron/out/es-client-win32-x64`
+文件在 `/electron/out/es-client-win32-x64`
 
 ## 预览
 
