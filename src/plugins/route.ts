@@ -2,7 +2,7 @@
  * 路由管理
  */
 
-export function get_current_route() {
+export function get_current_route(): string {
     let href = window.location.href;
     let url = href.split('#');
     let path = "home";
@@ -13,14 +13,14 @@ export function get_current_route() {
     return path;
 }
 
-export function choose_route(route, callback) {
+export function choose_route(route: string, callback: () => void) {
     let href = window.location.href;
     let url = href.split('#');
     window.location.href = url[0] + '#' + route;
     callback()
 }
 
-export function check_route(route) {
+export function check_route(route: string) {
     let href = window.location.href;
     let url = href.split('#');
     if (url.length > 1) {

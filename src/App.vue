@@ -102,7 +102,7 @@
 		</div>
 		<el-dialog
 			title="信息"
-			:visible.sync="info_dialog"
+			v-model="info_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -118,7 +118,7 @@
 		</el-dialog>
 		<el-dialog
 			title="状态"
-			:visible.sync="stats_dialog"
+			v-model="stats_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -134,7 +134,7 @@
 		</el-dialog>
 		<el-dialog
 			title="节点状态"
-			:visible.sync="nodes_stats_dialog"
+			v-model="nodes_stats_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -150,7 +150,7 @@
 		</el-dialog>
 		<el-dialog
 			title="集群节点"
-			:visible.sync="nodes_dialog"
+			v-model="nodes_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -166,7 +166,7 @@
 		</el-dialog>
 		<el-dialog
 			title="插件"
-			:visible.sync="node_plugins_dialog"
+			v-model="node_plugins_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -182,7 +182,7 @@
 		</el-dialog>
 		<el-dialog
 			title="群集状态"
-			:visible.sync="cluster_state_dialog"
+			v-model="cluster_state_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -198,7 +198,7 @@
 		</el-dialog>
 		<el-dialog
 			title="集群健康值"
-			:visible.sync="cluster_health_dialog"
+			v-model="cluster_health_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -214,7 +214,7 @@
 		</el-dialog>
 		<el-dialog
 			title="模板"
-			:visible.sync="template_dialog"
+			v-model="template_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -230,7 +230,7 @@
 		</el-dialog>
 		<el-dialog
 			title="关于"
-			:visible.sync="about_dialog"
+			v-model="about_dialog"
 			width="70%"
 			append-to-body
 			custom-class="es-dialog"
@@ -241,7 +241,7 @@
 		</el-dialog>
 		<el-dialog
 			title="意见反馈"
-			:visible.sync="message_dialog"
+			v-model="message_dialog"
 			width="600px"
 			append-to-body
 			:close-on-click-modal="false"
@@ -267,21 +267,22 @@
 					></el-input>
 				</el-form-item>
 			</el-form>
-			<div slot="footer">
+			<template #footer>
 				<el-button type="primary" @click="message_submit"
 					>提交</el-button
 				>
-			</div>
+			</template>
 		</el-dialog>
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import cluster_api from "@/apis/cluster.js";
-import url_dao from "@/database/url.js";
+import url_dao from "@/dao/UrlDao";
 import { get_current_route, choose_route } from "@/plugins/route";
 import JsonViewer from "vue-json-viewer";
 import axios from "axios";
+import { ElMessage } from 'element-plus'
 
 // 引入页面组件
 import home from "@/pages/home/home.vue";
@@ -291,7 +292,10 @@ import sql_search from "@/pages/sql_search/sql_search.vue";
 import setting from "@/pages/setting/setting.vue";
 import about from "@/pages/about/about.vue";
 
-export default {
+import { defineComponent } from 'vue';
+import Url from "./entity/Url";
+
+export default defineComponent({
 	components: {
 		JsonViewer,
 		home,
@@ -310,7 +314,7 @@ export default {
 		return {
 			active: "home",
 			url: url,
-			url_history: [],
+			url_history: [] as Array<Url>,
 			load: true,
 			cluster_health_main: {
 				cluster_name: "",
@@ -383,7 +387,7 @@ export default {
 		this.init();
 	},
 	methods: {
-		choose_route(index) {
+		choose_route(index: string) {
 			choose_route(index, () => {
 				this.active = index;
 			});
@@ -396,67 +400,68 @@ export default {
 			});
 			this.init();
 		},
-		url_proposal(queryString, cb) {
+		url_proposal(queryString: string, cb: any) {
 			let proposal = this.url_history.map((item) => {
 				return { value: item };
 			});
 			cb(proposal);
 		},
 		init() {
-			cluster_api._cluster_health((res) => {
+			cluster_api._cluster_health((res: any) => {
 				this.cluster_health_main = res;
 			});
-			url_dao.list().then((items) => {
+			url_dao.list((items) => {
 				this.url_history = [];
 				for (let item of items) {
-					this.url_history.push(item.value);
+					// NOTE: 此处应该取全部
+					this.url_history.push(item);
 				}
 			});
 		},
 		info() {
-			cluster_api.info((res) => {
+			cluster_api.info((res: any) => {
 				this.info_data = res;
 				this.info_dialog = true;
 			});
 		},
 		stats() {
-			cluster_api._stats((res) => {
+			cluster_api._stats((res: any) => {
 				this.stats_data = res;
 				this.stats_dialog = true;
 			});
 		},
 		nodes() {
-			cluster_api._nodes((res) => {
+			cluster_api._nodes((res: any) => {
 				this.nodes_data = res;
 				this.nodes_dialog = true;
 			});
 		},
 		nodes_stats() {
-			cluster_api._nodes_stats((res) => {
+			cluster_api._nodes_stats((res: any) => {
 				this.nodes_stats_data = res;
 				this.nodes_stats_dialog = true;
 			});
 		},
 		node_plugins() {
-			cluster_api._nodes_plugins((res) => {
+			cluster_api._nodes_plugins((res: any) => {
 				this.node_plugins_data = res;
 				this.node_plugins_dialog = true;
 			});
 		},
 		cluster_state() {
-			cluster_api._cluster_state((res) => {
+			cluster_api._cluster_state((res: any) => {
 				this.cluster_state_data = res;
 				this.cluster_state_dialog = true;
 			});
 		},
 		cluster_health() {
-			cluster_api._cluster_health((res) => {
+			cluster_api._cluster_health((res: any) => {
 				this.cluster_health_data = res;
 				this.cluster_health_dialog = true;
 			});
 		},
 		template() {
-			cluster_api._template((res) => {
+			cluster_api._template((res: any) => {
 				this.template_data = res;
 				this.template_dialog = true;
 			});
@@ -473,7 +478,7 @@ export default {
 							if (response.status === 200) {
 								let res = response.data;
 								if (res.code === 200) {
-									this.$message.success("提交成功");
+									ElMessage.success("提交成功");
 									this.message_data = {
 										name: "",
 										email: "",
@@ -481,23 +486,23 @@ export default {
 										type: 2,
 									};
 								} else {
-									this.$message.error(res.msg);
+									ElMessage.error(res.msg);
 								}
 							} else {
-								this.$message.error("服务器异常");
+								ElMessage.error("服务器异常");
 							}
 							this.message_dialog = false;
 						})
 						.catch((e) => {
 							console.error(e);
-							this.$message.error("服务器发生异常");
+							ElMessage.error("服务器发生异常");
 							this.message_dialog = false;
 						});
 				}
 			});
 		},
 	},
-};
+});
 </script>
 
 <style lang="less">

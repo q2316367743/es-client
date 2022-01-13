@@ -296,14 +296,15 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import cluster_api from "@/apis/cluster.js";
 import index_api from "@/apis/index.js";
 import { prettyDataUnit } from "@/utils/fieldUtil";
 import { check_route } from "@/plugins/route";
 import JsonViewer from "vue-json-viewer";
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
 	components: {
 		JsonViewer,
 	},
@@ -582,7 +583,7 @@ export default {
 			this.json_data = data;
 		},
 	},
-};
+});
 </script>
 
 <style lang="less">

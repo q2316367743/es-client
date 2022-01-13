@@ -1,6 +1,6 @@
 <template>
     <el-card class="setting">
-        <div slot="header">设置</div>
+        <template #header>设置</template>
         <div class="option">
             <el-button type="primary" size="small" @click="add" v-if="active === 'url_history'">新增</el-button>
         </div>
@@ -13,135 +13,100 @@
         <div class="url-history" v-if="active === 'url_history'">
             <el-table :data="url_histories" class="data">
                 <el-table-column type="index" width="150" label="索引"></el-table-column>
-                <el-table-column prop="value" label="内容">
-                </el-table-column>
+                <el-table-column prop="value" label="内容"></el-table-column>
                 <el-table-column label="时间" width="180">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <div>{{ prettyDate(scope.row.time, 'yyyy-MM-dd') }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column label="置顶">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-switch
                             v-model="scope.row.is_top"
                             :active-value="1"
                             :inactive-value="0"
                             @change="enable(scope.row)"
-                        >
-                        </el-switch>
+                        ></el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-button type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
                         <el-button type="danger" size="small" @click="remove(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="page">
-                <el-pagination
-                    layout="prev, pager, next"
-                    :page-size="limit"
-                    :current-page="page"
-                    :total="total"
-                >
-                </el-pagination>
-            </div>
         </div>
         <div v-if="active === 'senior_param'">历史记录</div>
     </el-card>
 </template>
 
-<script>
-import url_dao from "@/database/url";
-import {prettyDate} from "@/utils/fieldUtil";
+<script lang="ts">
+import url_dao from "@/dao/UrlDao";
+import Url from "@/entity/Url";
 
-export default {
+import dayjs from 'dayjs'
+import { ElMessageBox, ElMessage } from 'element-plus'
+import { defineComponent } from "vue";
+
+export default defineComponent({
     data: () => {
         return {
             active: "base",
-            url_histories: [],
-            page: 1,
-            limit: 10,
-            total: 1,
+            url_histories: [] as Array<Url>,
         };
     },
     created() {
         this.init();
     },
     methods: {
-        prettyDate,
+        prettyDate(date: Date, format: string) {
+            return dayjs(date).format(format);
+        },
         init() {
             this.url_histories = [];
-            url_dao.page(this.page, this.limit).then((items) => {
-                for (let item of items) {
-                    this.url_histories.push(item);
-                }
-            });
-            url_dao.count().then((total) => {
-                this.total = total;
-            });
+            url_dao.list((urls: Url[]) => {
+                this.url_histories = urls;
+            })
         },
-        enable(record) {
-            url_dao.update(record).then(() => {
+        enable(record: Url) {
+            url_dao.updateById(record, record.id!, () => {
                 this.init();
-                this.$parent.init();
             });
         },
-        edit(record) {
-            this.$prompt('请输入新链接', '提示', {
+        edit(record: Url) {
+            ElMessageBox.prompt('请输入新链接', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 inputValue: record.value,
                 closeOnClickModal: false
-            }).then(({value}) => {
-                url_dao.update({
-                    id: record.id,
-                    time: record.time,
-                    is_top: record.is_top,
-                    value: value
-                }).then(() => {
+            }).then(({ value }) => {
+                url_dao.updateById(record, record.id!, () => {
                     this.init();
-                    this.$parent.init();
                 });
             })
         },
         add() {
-            this.$prompt('请输入新链接', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                closeOnClickModal: false,
-                inputValue: 'http://'
-            }).then(({value}) => {
-                url_dao.update({
-                    time: new Date().getTime(),
-                    is_top: 0,
-                    value: value
-                }).then(() => {
-                    this.init();
-                    this.$parent.init();
-                });
-            })
+            // TODO: 此处使用dialog
         },
-        remove(id) {
-            this.$confirm('此操作将永久删除该链接, 是否继续?', '提示', {
+        remove(id: number) {
+            ElMessageBox.confirm('此操作将永久删除该链接, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
                 closeOnClickModal: false
             }).then(() => {
-                url_dao.remove(id).then(() => {
-                    this.$message({
+                url_dao.deleteById(id, () => {
+                    ElMessage({
                         message: '删除成功',
                         type: 'success'
                     });
                     this.init();
-                    this.$parent.init();
                 })
             })
         }
     },
-};
+});
 </script>
 
 <style lang="less">
@@ -189,6 +154,4 @@ export default {
         }
     }
 }
-
-
 </style>
