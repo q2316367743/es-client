@@ -7,7 +7,7 @@
             <el-tab-pane label="历史记录" name="senior_param"></el-tab-pane>
         </el-tabs>
         <div v-if="active === 'base'">基础设置</div>
-        <url-setting class="url" v-if="active === 'url_history'"></url-setting>
+        <url-setting v-if="active === 'url_history'"></url-setting>
         <div v-if="active === 'senior_param'">历史记录</div>
     </el-card>
 </template>

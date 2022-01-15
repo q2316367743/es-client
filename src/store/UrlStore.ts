@@ -18,7 +18,7 @@ export const useUrlStore = defineStore('url', {
         list: (state) => {
             return state.urls;
         },
-        cuuent: (state) => {
+        current: (state) => {
             return state.url;
         }
     },

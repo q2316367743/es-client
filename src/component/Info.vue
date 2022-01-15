@@ -4,18 +4,20 @@
         <el-dropdown>
             <el-button type="primary">
                 <span>信息</span>
-                <i class="el-icon-arrow-down el-icon--right"></i>
+                <el-icon class="el-icon--right">
+                    <arrow-down />
+                </el-icon>
             </el-button>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item @click="info">信息</el-dropdown-item>
-                    <el-dropdown-item @click="stats">状态</el-dropdown-item>
-                    <el-dropdown-item @click="nodes_stats">节点状态</el-dropdown-item>
-                    <el-dropdown-item @click="nodes">集群节点</el-dropdown-item>
-                    <el-dropdown-item @click="node_plugins">插件</el-dropdown-item>
-                    <el-dropdown-item @click="cluster_state">群集状态</el-dropdown-item>
-                    <el-dropdown-item @click="cluster_health">集群健康值</el-dropdown-item>
-                    <el-dropdown-item @click="template">模板</el-dropdown-item>
+                    <el-dropdown-item @click.prevent="info">信息</el-dropdown-item>
+                    <el-dropdown-item>状态</el-dropdown-item>
+                    <el-dropdown-item>节点状态</el-dropdown-item>
+                    <el-dropdown-item>集群节点</el-dropdown-item>
+                    <el-dropdown-item>插件</el-dropdown-item>
+                    <el-dropdown-item>群集状态</el-dropdown-item>
+                    <el-dropdown-item>集群健康值</el-dropdown-item>
+                    <el-dropdown-item>模板</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -110,14 +112,16 @@
     </el-dialog>
 </template>
 <script lang="ts">
-import cluster_api from "@/apis/cluster.js";
+import cluster_api from "@/apis/cluster";
 
 import { defineComponent } from "vue";
 import JsonViewer from "vue-json-viewer";
+import { ArrowDown } from '@element-plus/icons-vue'
 
 export default defineComponent({
     components: {
         JsonViewer,
+        ArrowDown
     },
     data: () => ({
         info_data: {},
@@ -142,48 +146,6 @@ export default defineComponent({
             cluster_api.info((res: any) => {
                 this.info_data = res;
                 this.info_dialog = true;
-            });
-        },
-        stats() {
-            cluster_api._stats((res: any) => {
-                this.stats_data = res;
-                this.stats_dialog = true;
-            });
-        },
-        nodes() {
-            cluster_api._nodes((res: any) => {
-                this.nodes_data = res;
-                this.nodes_dialog = true;
-            });
-        },
-        nodes_stats() {
-            cluster_api._nodes_stats((res: any) => {
-                this.nodes_stats_data = res;
-                this.nodes_stats_dialog = true;
-            });
-        },
-        node_plugins() {
-            cluster_api._nodes_plugins((res: any) => {
-                this.node_plugins_data = res;
-                this.node_plugins_dialog = true;
-            });
-        },
-        cluster_state() {
-            cluster_api._cluster_state((res: any) => {
-                this.cluster_state_data = res;
-                this.cluster_state_dialog = true;
-            });
-        },
-        cluster_health() {
-            cluster_api._cluster_health((res: any) => {
-                this.cluster_health_data = res;
-                this.cluster_health_dialog = true;
-            });
-        },
-        template() {
-            cluster_api._template((res: any) => {
-                this.template_data = res;
-                this.template_dialog = true;
             });
         },
     }

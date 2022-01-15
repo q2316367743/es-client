@@ -8,13 +8,13 @@ class UrlDao extends Dexie {
     constructor() {
         super('es-client');
         this.version(1).stores({
-            url: '++id, &name, &value, sequence, create_time, update_time, is_deleted'
+            url: '++id, &name, &value, sequence, create_time, update_time'
         });
         this.url = this.table('url');
     }
 
     list(callback: (urls: Array<Url>) => void): void {
-        this.url.where("is_deleted").equals(0).toArray().then(record => {
+        this.url.orderBy('sequence').toArray().then(record => {
             callback(record);
         });
     }
@@ -23,7 +23,7 @@ class UrlDao extends Dexie {
         this.url.get(id).then((url?: Url) => {
             if (url) {
                 callback(url);
-            }else {
+            } else {
                 ElMessage({
                     message: '链接不存在，请重试',
                     type: 'error',
@@ -33,12 +33,31 @@ class UrlDao extends Dexie {
     }
 
     insert(url: Url, callback: () => void): void {
-        this.url.put(url).then(() => callback());
+        this.url.put({
+            name: url.name,
+            value: url.value,
+            sequence: url.sequence,
+            create_time: new Date(),
+            update_time: new Date()
+        }).then(callback);
     }
 
+    /**
+     * 更新数据根据，
+     * 
+     * @param url 链接
+     * @param id ID
+     * @param callback 回调函数
+     */
     updateById(url: Url, id: number, callback: () => void): void {
         url.id = id;
-        this.url.put(url).then(() => callback());
+        url.update_time = new Date();
+        this.url.put({
+            name: url.name,
+            value: url.value,
+            sequence: url.sequence,
+            update_time: new Date()
+        }).then(callback);
     }
 
     deleteById(id: number, callback: () => void): void {
@@ -50,8 +69,7 @@ class UrlDao extends Dexie {
                 });
                 return;
             }
-            url.is_deleted = 1;
-            this.url.put(url).then(() => callback());
+            this.url.delete(id).then(callback);
         })
     }
 

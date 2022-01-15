@@ -28,6 +28,7 @@
 					<div class="cluster-name">{{ cluster_name }}</div>
 				</div>
 				<!-- 各种信息弹框 -->
+				<info></info>
 			</div>
 			<div class="content">
 				<home v-show="active === 'home'"></home>
@@ -56,25 +57,28 @@ import { useUrlStore } from "./store/UrlStore";
 // 引入页面组件
 import about from "@/page/about/about.vue";
 import setting from '@/page/setting/setting.vue'
+import Info from '@/component/Info.vue';
 
 import { defineComponent } from 'vue';
-import Url from "./entity/Url";
+import { mapState } from "pinia";
 
 export default defineComponent({
 	components: {
+		Info,
 		about,
 		setting
 	},
 	data: () => {
-		useUrlStore().reset();
 		return {
 			active: "home",
 			url: "",
-			urls: useUrlStore().list as Array<Url>,
 			load: true,
 			cluster_name: "",
 			about_dialog: false
 		};
+	},
+	computed: {
+		...mapState(useUrlStore, ['urls'])
 	},
 	methods: {
 		select_url(value: string) {
