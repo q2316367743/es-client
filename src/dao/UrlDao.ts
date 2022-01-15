@@ -6,9 +6,9 @@ class UrlDao extends Dexie {
     public url: Dexie.Table<Url, number>;
 
     constructor() {
-        super('mysql_database_design');
+        super('es-client');
         this.version(1).stores({
-            url: '++id, &name, &value, sequence, create_time, update_time, is_deleted' // Primary key and indexed props
+            url: '++id, &name, &value, sequence, create_time, update_time, is_deleted'
         });
         this.url = this.table('url');
     }
