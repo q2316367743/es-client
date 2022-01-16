@@ -17,7 +17,9 @@ service.interceptors.request.use(
         }
         // 基础链接每次动态取值
         config.baseURL = useUrlStore().current;
-        console.log(config.baseURL, config.url)
+        if (config.baseURL === '') {
+            throw new Error('请选择链接')
+        }
         return config
     },
     error => {

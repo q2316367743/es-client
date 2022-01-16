@@ -8,20 +8,29 @@
         :close-on-click-modal="false"
         top="10vh"
     >
-        <json-viewer :value="json" :expand-depth="4" copyable sort></json-viewer>
+        <json-viewer :value="json" :expand-depth="4" copyable sort :expanded="open" preview-mode></json-viewer>
     </el-dialog>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import JsonViewer from 'vue-json-viewer';
 
 export default defineComponent({
+    components: {
+        JsonViewer
+    },
     props: {
         value: Boolean,
         title: String,
-        json: Object
+        json: Object,
+        open: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     },
     data: () => ({
-        visible: false
+        visible: false,
     }),
     created() {
         this.visible = this.value;
@@ -29,10 +38,10 @@ export default defineComponent({
     watch: {
         visible(now) {
             this.$emit("update:value", now);
+            console.log('打开json对话框', now)
         }
     }
 });
 </script>
 <style scoped>
-
 </style>

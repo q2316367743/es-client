@@ -31,7 +31,7 @@
 				<info></info>
 			</div>
 			<div class="content">
-				<home v-show="active === 'home'"></home>
+				<home v-show="active === 'home'" v-if="load"></home>
 				<base_search v-show="active === 'base_search'"></base_search>
 				<senior_search v-show="active === 'senior_search'"></senior_search>
 				<sql_search v-show="active === 'sql_search'"></sql_search>
@@ -59,6 +59,9 @@ import about from "@/page/about/about.vue";
 import setting from '@/page/setting/setting.vue'
 import Info from '@/component/Info.vue';
 
+// 页面
+import home from '@/page/home/home.vue';
+
 import { defineComponent } from 'vue';
 import { mapState } from "pinia";
 
@@ -66,7 +69,8 @@ export default defineComponent({
 	components: {
 		Info,
 		about,
-		setting
+		setting,
+		home
 	},
 	data: () => {
 		return {
@@ -86,6 +90,11 @@ export default defineComponent({
 	methods: {
 		select_url(value: string) {
 			useUrlStore().choose(value);
+			// 刷新组件
+			this.load = false;
+			this.$nextTick(() => {
+				this.load = true;
+			})
 		},
 		select_menu(index: string) {
 			// 切换url的hash值
