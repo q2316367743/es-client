@@ -66,7 +66,6 @@ export default defineComponent({
     },
     methods: {
         prettyDate(date: Date) {
-            console.log(date, dayjs(date).format());
             return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
         },
         remove(id: number) {
@@ -102,6 +101,7 @@ export default defineComponent({
                     name: this.url.name,
                     value: this.url.value,
                     sequence: this.url.sequence
+                    // eslint-disable-next-line
                 }, this.url.id!, () => {
                     useUrlStore().reset();
                     ElMessage.success('更新成功');

@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useUrlStore } from '@/store/UrlStore';
+import axios from '@/plugins/axios'
 
 import { Info } from '@/view/Info'
 
@@ -9,19 +9,15 @@ import { Info } from '@/view/Info'
 export default {
     info(success: (data: Info) => void, error?: (e: Error) => void): void {
         const url = useUrlStore().current;
-        if (!url) {
-            throw new Error('URL为空，请选择URL');
-        }
         axios({
             baseURL: url,
             method: 'GET',
+            url: '/'
         }).then(response => {
             success(response.data);
         }).catch(e => {
             if (error) {
                 error(e);
-            } else {
-                console.log(e, e.response)
             }
         })
     },

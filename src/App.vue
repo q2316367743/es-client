@@ -80,6 +80,9 @@ export default defineComponent({
 	computed: {
 		...mapState(useUrlStore, ['urls'])
 	},
+	created() {
+		useUrlStore().reset();
+	},
 	methods: {
 		select_url(value: string) {
 			useUrlStore().choose(value);
