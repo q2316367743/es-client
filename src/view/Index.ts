@@ -43,4 +43,18 @@ export interface Index {
      */
     replica: Map<string, Array<object>>;
 
+    /**
+     * 分片数量
+     * 
+     * 用于新增
+     */
+    number_of_shards?: number;
+
+    /**
+     * 副本数量
+     * 
+     * 用于新增
+     */
+    number_of_replicas?: number;
+
 }

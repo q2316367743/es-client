@@ -31,7 +31,7 @@
 				<info></info>
 			</div>
 			<div class="content">
-				<home v-show="active === 'home'" v-if="load"></home>
+				<home v-show="active === 'home'"></home>
 				<base_search v-show="active === 'base_search'"></base_search>
 				<senior_search v-show="active === 'senior_search'"></senior_search>
 				<sql_search v-show="active === 'sql_search'"></sql_search>

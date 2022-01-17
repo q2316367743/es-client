@@ -40,6 +40,10 @@ export function check_route(route: string): boolean {
     let url = href.split('#');
     if (url.length > 1) {
         return url[1] === route;
+    }else {
+        if (route === 'home') {
+            return true;
+        }
     }
     return false;
 }

@@ -3,9 +3,9 @@
         <div
             class="title"
             v-bind:style="{
-                color: state ? '#000000' : '#888888',
+                color: index?.state === 'open' ? '#000000' : '#888888',
             }"
-        >{{ index.name }}</div>
+        >{{ index?.name }}</div>
         <div class="detail">
             <div>
                 size:
@@ -43,8 +43,8 @@
                         <el-dropdown-item disabled>ForceMerge</el-dropdown-item>
                         <el-dropdown-item disabled>网关快照</el-dropdown-item>
                         <el-dropdown-item disabled>测试分析器</el-dropdown-item>
-                        <el-dropdown-item v-if="index.state === 'open'">关闭</el-dropdown-item>
-                        <el-dropdown-item v-if="index.state === 'close'">开启</el-dropdown-item>
+                        <el-dropdown-item v-if="index?.state === 'open'">关闭</el-dropdown-item>
+                        <el-dropdown-item v-if="index?.state === 'close'">开启</el-dropdown-item>
                         <el-dropdown-item>删除</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -60,15 +60,19 @@
         </div>
         <div class="expand_btn">
             <el-button type="text" @click="show_expand = !show_expand">
-                <i class="el-icon-arrow-up" v-if="show_expand"></i>
-                <i class="el-icon-arrow-down" v-else></i>
+                <el-icon v-if="show_expand">
+                    <arrow-up></arrow-up>
+                </el-icon>
+                <el-icon v-else>
+                    <ArrowDown></ArrowDown>
+                </el-icon>
             </el-button>
         </div>
         <div class="expand" v-show="show_expand">
-            <div v-for="(value, key) in index.shard" :key="key">
+            <div v-for="(value, key) in index?.shard" :key="key">
                 <div class="shard" v-for="(item, idx) in value" :key="idx">{{ key }}</div>
             </div>
-            <div v-for="(value, key) in index.replica" :key="key">
+            <div v-for="(value, key) in index?.replica" :key="key">
                 <div class="replica" v-for="(item, idx) in value" :key="idx">{{ key }}</div>
             </div>
         </div>
@@ -77,10 +81,10 @@
 <script lang="ts">
 import { Index } from "@/view/Index";
 import { defineComponent, PropType } from "vue";
-import { ArrowDown } from '@element-plus/icons-vue';
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
 
 export default defineComponent({
-    components: { ArrowDown },
+    components: { ArrowDown, ArrowUp },
     props: {
         index: Object as PropType<Index>
     },
@@ -88,9 +92,6 @@ export default defineComponent({
         state: false,
         show_expand: false
     }),
-    created() {
-        console.log(this.index)
-    }
 });
 </script>
 <style lang="less">

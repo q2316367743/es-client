@@ -1,8 +1,6 @@
 import axios from '@/plugins/axios'
 
 import { Info } from '@/view/Info'
-import { ClusterState } from '@/view/ClusterState';
-import { State } from '@/view/State';
 
 /**
  * 与集群相关的API
@@ -18,8 +16,8 @@ export default {
         axios({
             method: 'GET',
             url: '/'
-        }).then(response => {
-            success(response.data);
+        }).then((response: any) => {
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -29,37 +27,21 @@ export default {
     /**
      * _cluster_state
      * 
-     * @param success 成功回调
-     * @param error 失败回调
      */
-    _cluster_state(success: (data: any) => void, error?: (e: Error) => void): void {
-        axios({
+    _cluster_state(): Promise<any> {
+        return axios({
             method: 'GET',
             url: '/_cluster/state'
-        }).then(response => {
-            success(response.data);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            }
         })
     },
     /**
      * _stats
      * 
-     * @param success 成功回调
-     * @param error 失败回调
      */
-    _stats(success: (data: any) => void, error?: (e: Error) => void): void {
-        axios({
+    _stats(): Promise<any> {
+        return axios({
             method: 'GET',
             url: '/_stats'
-        }).then(response => {
-            success(response.data);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            }
         })
     },
 }

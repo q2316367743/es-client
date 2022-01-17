@@ -1,15 +1,22 @@
+import { Index } from '@/view/Index';
 import axios from 'axios';
 
 /**
  * 与索引有关的API
  */
 export default {
-    new_alias(index, alias, success, error) {
+    /**
+     * 为索引新建别名
+     * @param index 索引名称
+     * @param alias 别名
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    new_alias(index: string, alias: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: '_aliases',
-            data: {"actions": [{"add": {"index": index, "alias": alias}}]}
+            data: { "actions": [{ "add": { "index": index, "alias": alias } }] }
         }).then(response => {
             success(response.data);
         }).catch(e => {
@@ -20,12 +27,18 @@ export default {
             }
         })
     },
-    remove_alias(index, alias, success, error) {
+    /**
+     * 移除索引
+     * @param index 索引名称
+     * @param alias 别名
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    remove_alias(index: string, alias: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: '_aliases',
-            data: {"actions": [{"remove": {"index": index, "alias": alias}}]}
+            data: { "actions": [{ "remove": { "index": index, "alias": alias } }] }
         }).then(response => {
             success(response.data);
         }).catch(e => {
@@ -36,9 +49,14 @@ export default {
             }
         })
     },
-    _refresh(index, success, error) {
+    /**
+     * 刷新索引
+     * @param index 索引名称
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    _refresh(index: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: `${index}/_refresh`,
         }).then(response => {
@@ -51,9 +69,14 @@ export default {
             }
         })
     },
-    save(data, success, error) {
+    /**
+     * 新建索引
+     * @param data 索引信息
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    save(data: Index, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'PUT',
             url: data.name,
             data: {
@@ -72,9 +95,14 @@ export default {
             }
         })
     },
-    remove(index, success, error) {
+    /**
+     * 移除索引
+     * @param index 索引名称
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    remove(index: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'DELETE',
             url: index,
         }).then(response => {
@@ -87,9 +115,14 @@ export default {
             }
         })
     },
-    _close(index, success, error){
+    /**
+     * 关闭索引
+     * @param index 索引名称
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    _close(index: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: `${index}/_close`,
         }).then(response => {
@@ -102,9 +135,14 @@ export default {
             }
         })
     },
-    _open(index, success, error){
+    /**
+     * 打开索引
+     * @param index 索引名称
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    _open(index: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: `${index}/_open`,
         }).then(response => {
@@ -117,9 +155,15 @@ export default {
             }
         })
     },
-    _flush(index, success, error){
+    /**
+     * 刷新索引
+     * 
+     * @param index 索引名称
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    _flush(index: string, success: (data: any) => void, error?: (e: Error) => void) {
         axios({
-            baseURL: localStorage.getItem('url'),
             method: 'POST',
             url: `${index}/_flush`,
         }).then(response => {

@@ -32,7 +32,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     // 响应不作处理
     response => {
-        return response;
+        return response.data;
     },
     error => {
         console.error('err', error) // for debug
