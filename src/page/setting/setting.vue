@@ -6,9 +6,9 @@
             <el-tab-pane label="链接管理" name="url_history" class="url"></el-tab-pane>
             <el-tab-pane label="历史记录" name="senior_param"></el-tab-pane>
         </el-tabs>
-        <div v-if="active === 'base'">基础设置</div>
-        <url-setting v-if="active === 'url_history'"></url-setting>
-        <div v-if="active === 'senior_param'">历史记录</div>
+        <BaseSetting v-if="active === 'base'"></BaseSetting>
+        <url-setting v-else-if="active === 'url_history'"></url-setting>
+        <div v-else-if="active === 'senior_param'">历史记录</div>
     </el-card>
 </template>
 
@@ -16,10 +16,12 @@
 import { defineComponent } from "vue";
 
 import UrlSetting from "./component/UrlSetting.vue";
+import BaseSetting from "./component/BaseSetting.vue";
 
 export default defineComponent({
     components: {
-        UrlSetting
+        UrlSetting,
+        BaseSetting
     },
     data: () => {
         return {
@@ -45,6 +47,7 @@ export default defineComponent({
         left: 0;
         right: 0;
         bottom: 0;
+        overflow-y: auto;
     }
 
     .option {

@@ -36,12 +36,12 @@ export interface Index {
     /**
      * 分片
      */
-    shard: Map<string, Array<object>>;
+    shard: any;
 
     /**
      * 副本
      */
-    replica: Map<string, Array<object>>;
+    replica: any;
 
     /**
      * 分片数量
@@ -56,5 +56,15 @@ export interface Index {
      * 用于新增
      */
     number_of_replicas?: number;
+
+    /**
+     * 集群状态
+     */
+    cluster_stats: any;
+
+    /**
+     * 节点状态
+     */
+    stats: any;
 
 }

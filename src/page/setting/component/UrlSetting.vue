@@ -128,7 +128,6 @@ export default defineComponent({
     .el-card__body {
         .data {
             padding: 20px;
-            height: 100%;
             width: 100%;
         }
 

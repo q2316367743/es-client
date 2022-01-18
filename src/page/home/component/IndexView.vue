@@ -14,7 +14,7 @@
             <div>docs: {{ index?.doc_count }}</div>
         </div>
         <div class="option">
-            <el-dropdown>
+            <el-dropdown @command="info">
                 <el-button type="primary" size="small">
                     信息
                     <el-icon class="el-icon--right">
@@ -23,8 +23,8 @@
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item>索引状态</el-dropdown-item>
-                        <el-dropdown-item>索引信息</el-dropdown-item>
+                        <el-dropdown-item command="state">索引状态</el-dropdown-item>
+                        <el-dropdown-item command="cluster_stats">索引信息</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -70,28 +70,66 @@
         </div>
         <div class="expand" v-show="show_expand">
             <div v-for="(value, key) in index?.shard" :key="key">
-                <div class="shard" v-for="(item, idx) in value" :key="idx">{{ key }}</div>
+                <div
+                    class="shard"
+                    v-for="(item, idx) in value"
+                    :key="idx"
+                    @click="showShardOrReplica(item, idx)"
+                >{{ key }}</div>
             </div>
             <div v-for="(value, key) in index?.replica" :key="key">
-                <div class="replica" v-for="(item, idx) in value" :key="idx">{{ key }}</div>
+                <div
+                    class="replica"
+                    v-for="(item, idx) in value"
+                    :key="idx"
+                    @click="showShardOrReplica(item, idx)"
+                >{{ key }}</div>
             </div>
         </div>
     </div>
+    <json-dialog :title="title" :json="json" :open="open" v-model="show_dialog"></json-dialog>
 </template>
 <script lang="ts">
-import { Index } from "@/view/Index";
 import { defineComponent, PropType } from "vue";
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
+import { ElMessage } from "element-plus";
+import { Index } from "@/view/Index";
+import JsonDialog from "@/component/JsonDialog.vue";
 
 export default defineComponent({
-    components: { ArrowDown, ArrowUp },
+    components: { ArrowDown, ArrowUp, JsonDialog },
     props: {
         index: Object as PropType<Index>
     },
     data: () => ({
         state: false,
-        show_expand: false
+        show_expand: false,
+        title: '',
+        open: true,
+        json: {},
+        show_dialog: false
     }),
+    methods: {
+        showShardOrReplica(json: any, idx: number) {
+            this.title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
+            this.json = json;
+            this.show_dialog = true;
+        },
+        info(command: string) {
+            if (command === 'state') {
+                this.title = this.index?.name!;
+                this.json = this.index?.stats!;
+                console.log(this.json)
+                this.show_dialog = true;
+            } else if (command === 'cluster_stats') {
+                this.title = this.index?.name!;
+                this.json = this.index?.cluster_stats!;
+                this.show_dialog = true;
+            } else {
+                ElMessage.error('信息：命令不存在')
+            }
+        },
+    }
 });
 </script>
 <style lang="less">
@@ -140,7 +178,7 @@ export default defineComponent({
                 width: 40px;
                 height: 40px;
                 text-align: center;
-                line-height: 32px;
+                line-height: 40px;
                 margin: 4px;
                 cursor: pointer;
             }
@@ -150,7 +188,7 @@ export default defineComponent({
                 width: 40px;
                 height: 40px;
                 text-align: center;
-                line-height: 32px;
+                line-height: 40px;
                 margin: 4px;
                 cursor: pointer;
             }

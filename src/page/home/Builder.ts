@@ -26,10 +26,11 @@ export default async function Builder(url: string): Promise<Array<Index>> {
         }
         let state = indecis[key].state;
         let shards = cluster_indecis[key].shards;
-        let shard = new Map<string, Array<any>>();
-        let replica = new Map<string, Array<any>>();
-        for (let idx in shards.keys) {
-            let items = shards.get(idx);
+        let shard = {} as any;
+        let replica = {} as any;
+        for (let idx in shards) {
+            // 数组
+            let items = shards[idx];
             let replica_temp = [];
             let shard_temp = [];
             for (let item of items!) {
@@ -40,18 +41,20 @@ export default async function Builder(url: string): Promise<Array<Index>> {
                 }
             }
             // NOTE: 分片和副本可能都是list
-            shard.set(idx, shard_temp);
-            replica.set(idx, replica_temp);
+            shard[idx] = shard_temp;
+            replica[idx] = replica_temp;
         }
         indices.push({
             name: key,
-            alias: [],
+            alias: indecis[key].aliases,
             original_size: size,
             size: prettyDataUnit(size),
             doc_count: docs,
             state: state,
             shard,
-            replica
+            replica,
+            cluster_stats: indecis[key],
+            stats: stats_indecis[key]
         });
     }
     return new Promise((resolve, reject) => {
