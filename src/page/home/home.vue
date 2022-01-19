@@ -92,23 +92,29 @@ export default defineComponent({
 	},
 	methods: {
 		// 初始化状态
-		async init() {
+		init() {
 			// 初始化时加载
 			const loading = ElLoading.service({
 				lock: true,
 				text: '获取索引信息中',
 				background: 'rgba(0, 0, 0, 0.7)',
 			})
-			this.indices = await Builder(this.url);
-			// 初始化
-			this.condition = {
-				name: "",
-				order: "NAME_ASC",
-			};
-			this.show_indices = this.indices.sort((a, b) => {
-				return a.name.localeCompare(b.name, "zh-CN");
-			});
-			loading.close();
+			Builder(this.url).then((indices) => {
+				this.indices = indices;
+				// 初始化
+				this.condition = {
+					name: "",
+					order: "NAME_ASC",
+				};
+				this.show_indices = this.indices.sort((a, b) => {
+					return a.name.localeCompare(b.name, "zh-CN");
+				});
+				this.$nextTick(() => {
+					loading.close();
+				})
+			}).catch(() => {
+				loading.close();
+			})
 		},
 		set_interval(millisecond: number) {
 			if (millisecond === -1) {

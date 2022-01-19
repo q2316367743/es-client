@@ -10,12 +10,21 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useSettingStore } from "@/store/SettingStore";
 
 export default defineComponent({
     data: () => ({
-        is_save_log: true,
-        log_max_day: 30
+        is_save_log: useSettingStore().getIsSaveLog,
+        log_max_day: useSettingStore().getLogMaxDay
     }),
+    watch: {
+        is_save_log() {
+            useSettingStore().setIsSaveLog(this.is_save_log);
+        },
+        log_max_day() {
+            useSettingStore().setLogMaxDay(this.log_max_day);
+        }
+    }
 });
 </script>
 <style scoped>
