@@ -3,11 +3,36 @@
 		<div class="menu">
 			<div class="logo">ES-client</div>
 			<el-menu :default-active="active" style="height: 100%" @select="select_menu">
-				<el-menu-item index="home">概览</el-menu-item>
-				<el-menu-item index="base_search">基本查询</el-menu-item>
-				<el-menu-item index="senior_search">高级查询</el-menu-item>
-				<el-menu-item index="sql_search">SQL查询</el-menu-item>
-				<el-menu-item index="setting">设置</el-menu-item>
+				<el-menu-item index="home">
+					<el-icon>
+						<home-filled />
+					</el-icon>
+					<template #title>{{ $t('app.menu.home') }}</template>
+				</el-menu-item>
+				<el-menu-item index="base_search">
+					<el-icon>
+						<search />
+					</el-icon>
+					<template #title>{{ $t('app.menu.base_search') }}</template>
+				</el-menu-item>
+				<el-menu-item index="senior_search">
+					<el-icon>
+						<data-board />
+					</el-icon>
+					<template #title>{{ $t('app.menu.senior_search') }}</template>
+				</el-menu-item>
+				<el-menu-item index="sql_search">
+					<el-icon>
+						<coin />
+					</el-icon>
+					<template #title>{{ $t('app.menu.sql_search') }}</template>
+				</el-menu-item>
+				<el-menu-item index="setting">
+					<el-icon>
+						<operation />
+					</el-icon>
+					<template #title>{{ $t('app.menu.setting') }}</template>
+				</el-menu-item>
 			</el-menu>
 			<div class="author">
 				<div style="margin-top: 5px">
@@ -21,10 +46,16 @@
 		<div class="main">
 			<div class="top">
 				<div class="app-option">
-					<el-select v-model="url" class="m-2" placeholder="请选择索引地址" style="padding-top: 9px;" @change="select_url">
+					<el-select
+						v-model="url"
+						class="m-2"
+						:placeholder="$t('app.link_placeholder')"
+						style="padding-top: 9px;"
+						@change="select_url"
+					>
 						<el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
 					</el-select>
-					<el-button>连接</el-button>
+					<el-button>{{$t('app.connect')}}</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
 				</div>
 				<!-- 各种信息弹框 -->
@@ -64,13 +95,12 @@ import home from '@/page/home/home.vue';
 
 import { defineComponent } from 'vue';
 import { mapState } from "pinia";
+import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@element-plus/icons-vue';
+
 
 export default defineComponent({
 	components: {
-		Info,
-		about,
-		setting,
-		home
+		Info, about, setting, home, Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard
 	},
 	data: () => {
 		return {

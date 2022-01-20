@@ -3,21 +3,21 @@
     <div class="info">
         <el-dropdown @command="handleCommand">
             <el-button type="primary">
-                <span>信息</span>
+                <span>{{ $t('app.info') }}</span>
                 <el-icon class="el-icon--right">
                     <arrow-down />
                 </el-icon>
             </el-button>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item command="info">信息</el-dropdown-item>
-                    <el-dropdown-item>状态</el-dropdown-item>
-                    <el-dropdown-item>节点状态</el-dropdown-item>
-                    <el-dropdown-item>集群节点</el-dropdown-item>
-                    <el-dropdown-item>插件</el-dropdown-item>
-                    <el-dropdown-item>群集状态</el-dropdown-item>
-                    <el-dropdown-item>集群健康值</el-dropdown-item>
-                    <el-dropdown-item>模板</el-dropdown-item>
+                    <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.status') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.node_status') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.cluster_nodes') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.plugin') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.cluster_status') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.cluster_health') }}</el-dropdown-item>
+                    <el-dropdown-item>{{ $t('app.template') }}</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>

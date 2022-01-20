@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { getDefaultLanguage } from '@/utils/GlobalUtil';
 
 // 初始化
 let is_save_log = true;
@@ -14,12 +15,15 @@ export const useSettingStore = defineStore('setting', {
     state: () => {
         return {
             is_save_log,
-            log_max_day
+            log_max_day,
+            language: getDefaultLanguage()
         }
     },
     getters: {
         getIsSaveLog: (state) => state.is_save_log,
-        getLogMaxDay: (state) => state.log_max_day
+        getLogMaxDay: (state) => state.log_max_day,
+        getLanguage: (state) => state.language,
+
     },
     actions: {
         setIsSaveLog(is_save_log: boolean): void {
@@ -29,6 +33,10 @@ export const useSettingStore = defineStore('setting', {
         setLogMaxDay(log_max_day: number): void {
             this.log_max_day = log_max_day;
             localStorage.setItem('log_max_day', log_max_day.toString());
-        }
+        },
+        setLanguage(language: string): void {
+            this.language = language;
+            localStorage.setItem('language', language);
+        },
     }
 })

@@ -2,7 +2,7 @@
     <el-card class="setting">
         <template #header>设置</template>
         <el-tabs v-model="active">
-            <el-tab-pane label="基础设置" name="base"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
             <el-tab-pane label="链接管理" name="url_history" class="url"></el-tab-pane>
             <el-tab-pane label="历史记录" name="senior_param"></el-tab-pane>
         </el-tabs>
