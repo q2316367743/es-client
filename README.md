@@ -1,18 +1,20 @@
 # es-client
 
-仿照[elasticsearch head](https://github.com/mobz/elasticsearch-head)编写的es查询客户端，使用vue+element-ui编写.
+仿照[elasticsearch head](https://github.com/mobz/elasticsearch-head)编写的es查询客户端，使用vite+vue3+ts+element-plus编写。
 
 ## 项目使用
 
 目前可以打包成
 
+- chrome插件（推荐）
 - 静态文件
 - exe应用
-- chrome插件
+
+预览地址：[es-client](https://project.esion.xyz/es-client/)**（注意：需要开启es的跨域）**
 
 ## 项目打包
 
-## chrome插件
+### chrome插件
 
 如果你使用的是edge浏览器，本项目已经推送edge商店，插件地址：[es-client](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 
@@ -23,11 +25,11 @@ npm run build
 
 之后在 `/chrome`文件夹下建立 `es-client`文件夹，将 `/dist`文件夹中内容复制到 `/chrome/es-client`文件夹中
 
-安装：打开浏览器，打开拓展，将chrome拖入浏览器
+安装：打开浏览器，打开拓展，将`chrome`文件夹拖入浏览器
 
-## 火狐拓展
+### 火狐拓展
 
-以增加火狐拓展源文件，但由于不会翻墙，所以无法发布到火狐拓展中心
+已增加火狐拓展源文件，但由于不会翻墙，所以无法发布到火狐拓展中心
 
 ### 静态文件
 
