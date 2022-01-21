@@ -3,8 +3,8 @@
         <template #header>设置</template>
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
-            <el-tab-pane label="链接管理" name="url_history" class="url"></el-tab-pane>
-            <el-tab-pane label="历史记录" name="senior_param"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.link.title')" name="url_history" class="url"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.history.title')" name="senior_param"></el-tab-pane>
         </el-tabs>
         <BaseSetting v-if="active === 'base'"></BaseSetting>
         <url-setting v-else-if="active === 'url_history'"></url-setting>

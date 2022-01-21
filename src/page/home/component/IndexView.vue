@@ -16,36 +16,36 @@
         <div class="option">
             <el-dropdown @command="info">
                 <el-button type="primary" size="small">
-                    信息
+                    {{$t('home.index.info.self')}}
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item command="state">索引状态</el-dropdown-item>
-                        <el-dropdown-item command="cluster_stats">索引信息</el-dropdown-item>
+                        <el-dropdown-item command="state">{{$t('home.index.info.index_status')}}</el-dropdown-item>
+                        <el-dropdown-item command="cluster_stats">{{$t('home.index.info.index_info')}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
             <el-dropdown style="margin-left: 10px">
                 <el-button type="primary" size="small">
-                    <span>动作</span>
+                    <span>{{$t('home.index.active.self')}}</span>
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item>新建别名</el-dropdown-item>
-                        <el-dropdown-item>刷新</el-dropdown-item>
-                        <el-dropdown-item>Flush刷新</el-dropdown-item>
-                        <el-dropdown-item disabled>ForceMerge</el-dropdown-item>
-                        <el-dropdown-item disabled>网关快照</el-dropdown-item>
-                        <el-dropdown-item disabled>测试分析器</el-dropdown-item>
-                        <el-dropdown-item v-if="index?.state === 'open'">关闭</el-dropdown-item>
-                        <el-dropdown-item v-if="index?.state === 'close'">开启</el-dropdown-item>
-                        <el-dropdown-item>删除</el-dropdown-item>
+                        <el-dropdown-item>{{$t('home.index.active.new_alias')}}</el-dropdown-item>
+                        <el-dropdown-item>{{$t('home.index.active.refresh')}}</el-dropdown-item>
+                        <el-dropdown-item>{{$t('home.index.active.flush_refresh')}}</el-dropdown-item>
+                        <el-dropdown-item disabled>{{$t('home.index.active.ForceMerge')}}</el-dropdown-item>
+                        <el-dropdown-item disabled>{{$t('home.index.active.gateway_snapshot')}}</el-dropdown-item>
+                        <el-dropdown-item disabled>{{$t('home.index.active.test_profiler')}}</el-dropdown-item>
+                        <el-dropdown-item v-if="index?.state === 'open'">{{$t('home.index.active.close')}}</el-dropdown-item>
+                        <el-dropdown-item v-if="index?.state === 'close'">{{$t('home.index.active.open')}}</el-dropdown-item>
+                        <el-dropdown-item>{{$t('home.index.active.delete')}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>

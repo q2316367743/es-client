@@ -2,35 +2,35 @@
 	<div>
 		<div class="home-option">
 			<div style="display: flex">
-				<el-input v-model="condition.name" placeholder="请输入索引名称" style="width: 300px" @input="search"></el-input>
+				<el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')" style="width: 300px" @input="search"></el-input>
 				<el-select
 					v-model="condition.order"
-					placeholder="请选择"
+					:placeholder="$t('home.order_placeholder')"
 					style="margin-left: 5px"
 					@change="search"
 				>
-					<el-option label="名称正序(A-Z)" value="NAME_ASC"></el-option>
-					<el-option label="名称倒序(Z-A)" value="NAME_DESC"></el-option>
-					<el-option label="大小正序" value="SIZE_ASC"></el-option>
-					<el-option label="大小倒序" value="SIZE_DESC"></el-option>
-					<el-option label="文档正序" value="DOC_ASC"></el-option>
-					<el-option label="文档倒序" value="DOC_DESC"></el-option>
+					<el-option :label="$t('home.order_name_asc')" value="NAME_ASC"></el-option>
+					<el-option :label="$t('home.order_name_desc')" value="NAME_DESC"></el-option>
+					<el-option :label="$t('home.order_size_asc')" value="SIZE_ASC"></el-option>
+					<el-option :label="$t('home.order_size_desc')" value="SIZE_DESC"></el-option>
+					<el-option :label="$t('home.order_doc_asc')" value="DOC_ASC"></el-option>
+					<el-option :label="$t('home.order_doc_desc')" value="DOC_DESC"></el-option>
 				</el-select>
-				<el-button type="primary" style="margin-left: 5px" @click="search">搜索</el-button>
+				<el-button type="primary" style="margin-left: 5px" @click="search">{{$t('home.search')}}</el-button>
 			</div>
 			<div style="margin-right: 15px;display: flex;">
 				<el-dropdown split-button @click="init" @command="set_interval">
-					刷新
+					{{$t('home.refresh')}}
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item :command="5000">每隔5秒</el-dropdown-item>
-							<el-dropdown-item :command="30000">每隔30秒</el-dropdown-item>
-							<el-dropdown-item :command="60000">每隔一分钟</el-dropdown-item>
-							<el-dropdown-item :command="-1">取消刷新</el-dropdown-item>
+							<el-dropdown-item :command="5000">{{$t('home.refresh_5')}}</el-dropdown-item>
+							<el-dropdown-item :command="30000">{{$t('home.refresh_30')}}</el-dropdown-item>
+							<el-dropdown-item :command="60000">{{$t('home.refresh_60')}}</el-dropdown-item>
+							<el-dropdown-item :command="-1">{{$t('home.refresh_canel')}}</el-dropdown-item>
 						</el-dropdown-menu>
 					</template>
 				</el-dropdown>
-				<el-button type="primary" style="margin-left: 10px">新建索引</el-button>
+				<el-button type="primary" style="margin-left: 10px">{{$t('home.new_index')}}</el-button>
 			</div>
 		</div>
 		<div class="home-main" v-loading="index_loading">
