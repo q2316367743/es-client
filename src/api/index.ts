@@ -1,5 +1,5 @@
 import { Index } from '@/view/Index';
-import axios from 'axios';
+import axios from '@/plugins/axios'
 
 /**
  * 与索引有关的API
@@ -18,7 +18,7 @@ export default {
             url: '_aliases',
             data: { "actions": [{ "add": { "index": index, "alias": alias } }] }
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -40,7 +40,7 @@ export default {
             url: '_aliases',
             data: { "actions": [{ "remove": { "index": index, "alias": alias } }] }
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -60,7 +60,7 @@ export default {
             method: 'POST',
             url: `${index}/_refresh`,
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);

@@ -16,36 +16,42 @@
         <div class="option">
             <el-dropdown @command="info">
                 <el-button type="primary" size="small">
-                    {{$t('home.index.info.self')}}
+                    {{ $t('home.index.info.self') }}
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item command="state">{{$t('home.index.info.index_status')}}</el-dropdown-item>
-                        <el-dropdown-item command="cluster_stats">{{$t('home.index.info.index_info')}}</el-dropdown-item>
+                        <el-dropdown-item command="state">{{ $t('home.index.info.index_status') }}</el-dropdown-item>
+                        <el-dropdown-item
+                            command="cluster_stats"
+                        >{{ $t('home.index.info.index_info') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
-            <el-dropdown style="margin-left: 10px">
+            <el-dropdown style="margin-left: 10px" @command="active">
                 <el-button type="primary" size="small">
-                    <span>{{$t('home.index.active.self')}}</span>
+                    <span>{{ $t('home.index.active.self') }}</span>
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item>{{$t('home.index.active.new_alias')}}</el-dropdown-item>
-                        <el-dropdown-item>{{$t('home.index.active.refresh')}}</el-dropdown-item>
-                        <el-dropdown-item>{{$t('home.index.active.flush_refresh')}}</el-dropdown-item>
-                        <el-dropdown-item disabled>{{$t('home.index.active.ForceMerge')}}</el-dropdown-item>
-                        <el-dropdown-item disabled>{{$t('home.index.active.gateway_snapshot')}}</el-dropdown-item>
-                        <el-dropdown-item disabled>{{$t('home.index.active.test_profiler')}}</el-dropdown-item>
-                        <el-dropdown-item v-if="index?.state === 'open'">{{$t('home.index.active.close')}}</el-dropdown-item>
-                        <el-dropdown-item v-if="index?.state === 'close'">{{$t('home.index.active.open')}}</el-dropdown-item>
-                        <el-dropdown-item>{{$t('home.index.active.delete')}}</el-dropdown-item>
+                        <el-dropdown-item :command="1">{{ $t('home.index.active.new_alias') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('home.index.active.refresh') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('home.index.active.flush_refresh') }}</el-dropdown-item>
+                        <el-dropdown-item disabled>{{ $t('home.index.active.ForceMerge') }}</el-dropdown-item>
+                        <el-dropdown-item disabled>{{ $t('home.index.active.gateway_snapshot') }}</el-dropdown-item>
+                        <el-dropdown-item disabled>{{ $t('home.index.active.test_profiler') }}</el-dropdown-item>
+                        <el-dropdown-item
+                            v-if="index?.state === 'open'"
+                        >{{ $t('home.index.active.close') }}</el-dropdown-item>
+                        <el-dropdown-item
+                            v-if="index?.state === 'close'"
+                        >{{ $t('home.index.active.open') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('home.index.active.delete') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -56,6 +62,7 @@
                 :key="idx"
                 closable
                 style="margin-right: 5px"
+                @close="remove_alias(item)"
             >{{ item }}</el-tag>
         </div>
         <div class="expand_btn">
@@ -92,9 +99,11 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
-import { ElMessage } from "element-plus";
-import { Index } from "@/view/Index";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { useIndexStore } from '@/store/IndexStore';
+import Index from "@/view/Index";
 import JsonDialog from "@/component/JsonDialog.vue";
+import index_api from '@/api/index'
 
 export default defineComponent({
     components: { ArrowDown, ArrowUp, JsonDialog },
@@ -128,6 +137,49 @@ export default defineComponent({
             } else {
                 ElMessage.error('信息：命令不存在')
             }
+        },
+        active(command: number) {
+            switch (command) {
+                case 1:
+                    this, this.new_alias();
+                    break;
+                default:
+                    ElMessage.error('动作错误，请刷新重试');
+            }
+        },
+        /**
+         * 新建索引别名
+         * @param name 索引名称
+         */
+        new_alias() {
+            ElMessageBox.prompt("请输入新别名", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+            }).then(({ value }) => {
+                index_api.new_alias(this.index?.name!, value, (res: object) => {
+                    ElMessage.info(JSON.stringify(res));
+                    useIndexStore().reset();
+                });
+            });
+        },
+        /**
+         * 移除索引别名
+         * 
+         * @param name 索引名称
+         * @param alias 别名
+         */
+        remove_alias(alias: string) {
+            ElMessageBox.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            }).then(() => {
+                index_api.remove_alias(this.index?.name!, alias, (res: object) => {
+                    ElMessage.info(JSON.stringify(res));
+                    this.$emit('init');
+                    useIndexStore().reset();
+                });
+            });
         },
     }
 });

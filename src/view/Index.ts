@@ -1,7 +1,7 @@
 /**
  * 主页索引遍历
  */
-export interface Index {
+export default interface Index {
 
     /**
      * 索引名称

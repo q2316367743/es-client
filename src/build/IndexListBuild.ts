@@ -1,9 +1,9 @@
-import { Index } from "@/view/Index";
+import Index from "@/view/Index";
 import { prettyDataUnit } from "@/utils/fieldUtil";
 import cluster_api from "@/api/cluster";
 
 /**
- * 构造一个索引数组
+ * 索引列表构造器
  * 
  * @param url 链接
  * @returns 索引数组

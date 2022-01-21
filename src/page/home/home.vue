@@ -2,11 +2,17 @@
 	<div>
 		<div class="home-option">
 			<div style="display: flex">
-				<el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')" style="width: 300px" @input="search"></el-input>
+				<el-input
+					v-model="condition.name"
+					:placeholder="$t('home.index_placeholder')"
+					style="width: 300px"
+					@input="search"
+				></el-input>
 				<el-select
 					v-model="condition.order"
 					:placeholder="$t('home.order_placeholder')"
 					style="margin-left: 5px"
+					clearable
 					@change="search"
 				>
 					<el-option :label="$t('home.order_name_asc')" value="NAME_ASC"></el-option>
@@ -16,21 +22,21 @@
 					<el-option :label="$t('home.order_doc_asc')" value="DOC_ASC"></el-option>
 					<el-option :label="$t('home.order_doc_desc')" value="DOC_DESC"></el-option>
 				</el-select>
-				<el-button type="primary" style="margin-left: 5px" @click="search">{{$t('home.search')}}</el-button>
+				<el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
 			</div>
 			<div style="margin-right: 15px;display: flex;">
 				<el-dropdown split-button @click="init" @command="set_interval">
-					{{$t('home.refresh')}}
+					{{ $t('home.refresh') }}
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item :command="5000">{{$t('home.refresh_5')}}</el-dropdown-item>
-							<el-dropdown-item :command="30000">{{$t('home.refresh_30')}}</el-dropdown-item>
-							<el-dropdown-item :command="60000">{{$t('home.refresh_60')}}</el-dropdown-item>
-							<el-dropdown-item :command="-1">{{$t('home.refresh_canel')}}</el-dropdown-item>
+							<el-dropdown-item :command="5000">{{ $t('home.refresh_5') }}</el-dropdown-item>
+							<el-dropdown-item :command="30000">{{ $t('home.refresh_30') }}</el-dropdown-item>
+							<el-dropdown-item :command="60000">{{ $t('home.refresh_60') }}</el-dropdown-item>
+							<el-dropdown-item :command="-1">{{ $t('home.refresh_canel') }}</el-dropdown-item>
 						</el-dropdown-menu>
 					</template>
 				</el-dropdown>
-				<el-button type="primary" style="margin-left: 10px">{{$t('home.new_index')}}</el-button>
+				<el-button type="primary" style="margin-left: 10px">{{ $t('home.new_index') }}</el-button>
 			</div>
 		</div>
 		<div class="home-main" v-loading="index_loading">
@@ -41,15 +47,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ElMessage, ElMessageBox } from "element-plus";
-import { ElLoading } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
-import Builder from './Builder';
-import index_api from "@/api/index";
 import { check_route } from "@/plugins/route";
 import { useUrlStore } from '@/store/UrlStore';
+import { useIndexStore } from '@/store/IndexStore';
 
-import { Index } from "@/view/Index";
+import Index from "@/view/Index";
 
 import IndexView from "./component/IndexView.vue";
 import { mapState } from 'pinia';
@@ -60,8 +64,6 @@ export default defineComponent({
 	},
 	data: () => {
 		return {
-			// 全部索引
-			indices: [] as Array<Index>,
 			// 根据条件过滤后的索引
 			show_indices: [] as Array<Index>,
 			// 搜索条件
@@ -76,45 +78,18 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapState(useUrlStore, ['url'])
-	},
-	created() {
-		// 获取状态
-		if (this.url !== '') {
-			this.init();
-		}
+		...mapState(useUrlStore, ['url']),
+		...mapState(useIndexStore, ['indices'])
 	},
 	watch: {
-		url() {
-			console.log('状态刷新')
-			this.init();
+		indices() {
+			this.search()
 		}
 	},
 	methods: {
 		// 初始化状态
 		init() {
-			// 初始化时加载
-			const loading = ElLoading.service({
-				lock: true,
-				text: '获取索引信息中',
-				background: 'rgba(0, 0, 0, 0.7)',
-			})
-			Builder(this.url).then((indices) => {
-				this.indices = indices;
-				// 初始化
-				this.condition = {
-					name: "",
-					order: "NAME_ASC",
-				};
-				this.show_indices = this.indices.sort((a, b) => {
-					return a.name.localeCompare(b.name, "zh-CN");
-				});
-				this.$nextTick(() => {
-					loading.close();
-				})
-			}).catch(() => {
-				loading.close();
-			})
+			useIndexStore().reset();
 		},
 		set_interval(millisecond: number) {
 			if (millisecond === -1) {
@@ -142,39 +117,6 @@ export default defineComponent({
 			});
 			clearInterval(Number(this.interval));
 			this.interval = null;
-		},
-		/**
-		 * 新建索引别名
-		 * @param name 索引名称
-		 */
-		new_alias(name: string) {
-			ElMessageBox.prompt("请输入新别名", "提示", {
-				confirmButtonText: "确定",
-				cancelButtonText: "取消",
-			}).then(({ value }) => {
-				index_api.new_alias(name, value, (res: object) => {
-					ElMessageBox.alert(JSON.stringify(res));
-					this.init();
-				});
-			});
-		},
-		/**
-		 * 移除索引别名
-		 * 
-		 * @param name 索引名称
-		 * @param alias 别名
-		 */
-		remove_alias(name: string, alias: string) {
-			ElMessageBox.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
-				confirmButtonText: "确定",
-				cancelButtonText: "取消",
-				type: "warning",
-			}).then(() => {
-				index_api.remove_alias(name, alias, (res: object) => {
-					ElMessageBox.alert(JSON.stringify(res));
-					this.init();
-				});
-			});
 		},
 		/**
 		 * 基于当前索引数组进行过滤

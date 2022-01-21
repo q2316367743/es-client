@@ -48,14 +48,14 @@
 				<div class="app-option">
 					<el-select
 						v-model="url"
-						class="m-2"
 						:placeholder="$t('app.link_placeholder')"
 						style="padding-top: 9px;"
+						clearable
 						@change="select_url"
 					>
 						<el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
 					</el-select>
-					<el-button>{{$t('app.connect')}}</el-button>
+					<el-button @click="connect">{{$t('app.connect')}}</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
 				</div>
 				<!-- 各种信息弹框 -->
@@ -85,6 +85,7 @@
 
 <script lang="ts">
 import { useUrlStore } from "./store/UrlStore";
+import { useIndexStore } from '@/store/IndexStore';
 // 引入页面组件
 import about from "@/page/about/about.vue";
 import setting from '@/page/setting/setting.vue'
@@ -120,11 +121,15 @@ export default defineComponent({
 	methods: {
 		select_url(value: string) {
 			useUrlStore().choose(value);
+			useIndexStore().reset(value);
 			// 刷新组件
 			this.load = false;
 			this.$nextTick(() => {
 				this.load = true;
 			})
+		},
+		connect(){
+			useIndexStore().reset();
 		},
 		select_menu(index: string) {
 			// 切换url的hash值
