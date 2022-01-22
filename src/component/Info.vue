@@ -27,7 +27,7 @@
     </div>
 </template>
 <script lang="ts">
-import clusterApi from "@/api/clusterApi";
+import clusterApi from "@/api/ClusterApi";
 
 import { defineComponent } from "vue";
 import { ArrowDown } from '@element-plus/icons-vue'

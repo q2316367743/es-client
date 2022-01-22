@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
 import { useUrlStore } from '@/store/UrlStore';
-import clusterApi from '@/api/clusterApi'
+import clusterApi from '@/api/ClusterApi'
 
 export const useIndexStore = defineStore('index', {
     state: () => {

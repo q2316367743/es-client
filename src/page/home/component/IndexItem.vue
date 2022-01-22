@@ -45,10 +45,12 @@
                         <el-dropdown-item disabled>{{ $t('home.index.active.ForceMerge') }}</el-dropdown-item>
                         <el-dropdown-item disabled>{{ $t('home.index.active.gateway_snapshot') }}</el-dropdown-item>
                         <el-dropdown-item disabled>{{ $t('home.index.active.test_profiler') }}</el-dropdown-item>
-                        <el-dropdown-item  :command="7"
+                        <el-dropdown-item
+                            :command="7"
                             v-if="index?.state === 'open'"
                         >{{ $t('home.index.active.close') }}</el-dropdown-item>
-                        <el-dropdown-item  :command="8"
+                        <el-dropdown-item
+                            :command="8"
                             v-if="index?.state === 'close'"
                         >{{ $t('home.index.active.open') }}</el-dropdown-item>
                         <el-dropdown-item :command="9">{{ $t('home.index.active.delete') }}</el-dropdown-item>
@@ -104,7 +106,7 @@ import { useIndexStore } from '@/store/IndexStore';
 import Index from "@/view/Index";
 import JsonDialog from "@/component/JsonDialog.vue";
 import indexApi from '@/api/IndexApi'
-import cluster_api from "@/api/clusterApi";
+import clusterApi from "@/api/ClusterApi";
 
 export default defineComponent({
     components: { ArrowDown, ArrowUp, JsonDialog },
@@ -129,7 +131,7 @@ export default defineComponent({
             if (command === 'state') {
                 this.title = this.index?.name!;
                 // 实时获取最新的
-                cluster_api._stats().then(state => {
+                clusterApi._stats().then(state => {
                     this.json = state.indices[this.title];
                     this.show_dialog = true;
                 }).catch(() => {
@@ -137,7 +139,7 @@ export default defineComponent({
                 })
             } else if (command === 'cluster_stats') {
                 this.title = this.index?.name!;
-                cluster_api._cluster_state().then(cluster_stats => {
+                clusterApi._cluster_state().then(cluster_stats => {
                     this.json = cluster_stats.metadata.indices[this.title];
                     this.show_dialog = true;
                 }).catch(() => {
@@ -219,25 +221,25 @@ export default defineComponent({
         open_index() {
             indexApi._open(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                useIndexStore().reset();
             })
         },
         close_index() {
             indexApi._close(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                useIndexStore().reset();
             })
         },
         flush_index() {
             indexApi._flush(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                useIndexStore().reset();
             })
         },
         refresh_index() {
             indexApi._refresh(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                useIndexStore().reset();
             })
         }
     }

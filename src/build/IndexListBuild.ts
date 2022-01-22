@@ -1,6 +1,6 @@
 import Index from "@/view/Index";
 import { prettyDataUnit } from "@/utils/fieldUtil";
-import cluster_api from "@/api/clusterApi";
+import clusterApi from "@/api/ClusterApi";
 
 /**
  * 索引列表构造器
@@ -10,8 +10,8 @@ import cluster_api from "@/api/clusterApi";
  */
 export default async function Builder(url: string): Promise<Array<Index>> {
     let indices = new Array<Index>();
-    let cluster_stats = await cluster_api._cluster_state();
-    let stats = await cluster_api._stats()
+    let cluster_stats = await clusterApi._cluster_state();
+    let stats = await clusterApi._stats()
     let indecis = cluster_stats.metadata.indices as any;
     let stats_indecis = stats.indices as any;
     let cluster_indecis = cluster_stats.routing_table.indices as any;
