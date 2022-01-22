@@ -1,5 +1,6 @@
-import { Index } from '@/view/Index';
+import {Index} from '@/entity/Index';
 import axios from '@/plugins/axios'
+import IndexSaveBuild from '@/build/IndexSaveBuild';
 
 /**
  * 与索引有关的API
@@ -79,14 +80,9 @@ export default {
         axios({
             method: 'PUT',
             url: data.name,
-            data: {
-                "settings": {
-                    "number_of_shards": data.number_of_shards,
-                    "number_of_replicas": data.number_of_replicas
-                }
-            }
+            data: IndexSaveBuild(data)
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -106,7 +102,7 @@ export default {
             method: 'DELETE',
             url: index,
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -126,7 +122,7 @@ export default {
             method: 'POST',
             url: `${index}/_close`,
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -146,7 +142,7 @@ export default {
             method: 'POST',
             url: `${index}/_open`,
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);
@@ -156,7 +152,7 @@ export default {
         })
     },
     /**
-     * 刷新索引
+     * flush索引
      * 
      * @param index 索引名称
      * @param success 成功回调
@@ -167,7 +163,7 @@ export default {
             method: 'POST',
             url: `${index}/_flush`,
         }).then(response => {
-            success(response.data);
+            success(response);
         }).catch(e => {
             if (error) {
                 error(e);

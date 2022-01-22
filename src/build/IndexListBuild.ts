@@ -1,6 +1,6 @@
 import Index from "@/view/Index";
 import { prettyDataUnit } from "@/utils/fieldUtil";
-import cluster_api from "@/api/cluster";
+import cluster_api from "@/api/clusterApi";
 
 /**
  * 索引列表构造器
@@ -52,9 +52,7 @@ export default async function Builder(url: string): Promise<Array<Index>> {
             doc_count: docs,
             state: state,
             shard,
-            replica,
-            cluster_stats: indecis[key],
-            stats: stats_indecis[key]
+            replica
         });
     }
     return new Promise((resolve, reject) => {

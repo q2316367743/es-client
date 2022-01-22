@@ -2,6 +2,10 @@
 
 仿照[elasticsearch head](https://github.com/mobz/elasticsearch-head)编写的es查询客户端，使用vite+vue3+ts+element-plus编写。
 
+## 注意：
+
+目前项目正在使用`vite+vue3+ts+element-plus`进行重构，如需试用浏览，请查看vue2分支
+
 ## 项目使用
 
 目前可以打包成

@@ -7,7 +7,7 @@ export default {
         'setting': 'setting'
     },
     'link_placeholder': 'please select an index address',
-    'connect': 'connect',
+    'refresh': 'refresh',
     'info': 'info',
     'status': 'status',
     'node_status': 'node status',

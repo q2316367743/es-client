@@ -40,18 +40,18 @@
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item :command="1">{{ $t('home.index.active.new_alias') }}</el-dropdown-item>
-                        <el-dropdown-item>{{ $t('home.index.active.refresh') }}</el-dropdown-item>
-                        <el-dropdown-item>{{ $t('home.index.active.flush_refresh') }}</el-dropdown-item>
+                        <el-dropdown-item :command="2">{{ $t('home.index.active.refresh') }}</el-dropdown-item>
+                        <el-dropdown-item :command="3">{{ $t('home.index.active.flush_refresh') }}</el-dropdown-item>
                         <el-dropdown-item disabled>{{ $t('home.index.active.ForceMerge') }}</el-dropdown-item>
                         <el-dropdown-item disabled>{{ $t('home.index.active.gateway_snapshot') }}</el-dropdown-item>
                         <el-dropdown-item disabled>{{ $t('home.index.active.test_profiler') }}</el-dropdown-item>
-                        <el-dropdown-item
+                        <el-dropdown-item  :command="7"
                             v-if="index?.state === 'open'"
                         >{{ $t('home.index.active.close') }}</el-dropdown-item>
-                        <el-dropdown-item
+                        <el-dropdown-item  :command="8"
                             v-if="index?.state === 'close'"
                         >{{ $t('home.index.active.open') }}</el-dropdown-item>
-                        <el-dropdown-item>{{ $t('home.index.active.delete') }}</el-dropdown-item>
+                        <el-dropdown-item :command="9">{{ $t('home.index.active.delete') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -93,8 +93,8 @@
                 >{{ key }}</div>
             </div>
         </div>
+        <json-dialog :title="title" :json="json" :open="open" v-model="show_dialog"></json-dialog>
     </div>
-    <json-dialog :title="title" :json="json" :open="open" v-model="show_dialog"></json-dialog>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
@@ -103,7 +103,8 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useIndexStore } from '@/store/IndexStore';
 import Index from "@/view/Index";
 import JsonDialog from "@/component/JsonDialog.vue";
-import index_api from '@/api/index'
+import indexApi from '@/api/IndexApi'
+import cluster_api from "@/api/clusterApi";
 
 export default defineComponent({
     components: { ArrowDown, ArrowUp, JsonDialog },
@@ -127,13 +128,21 @@ export default defineComponent({
         info(command: string) {
             if (command === 'state') {
                 this.title = this.index?.name!;
-                this.json = this.index?.stats!;
-                console.log(this.json)
-                this.show_dialog = true;
+                // 实时获取最新的
+                cluster_api._stats().then(state => {
+                    this.json = state.indices[this.title];
+                    this.show_dialog = true;
+                }).catch(() => {
+                    ElMessage.error('获取索引状态错误')
+                })
             } else if (command === 'cluster_stats') {
                 this.title = this.index?.name!;
-                this.json = this.index?.cluster_stats!;
-                this.show_dialog = true;
+                cluster_api._cluster_state().then(cluster_stats => {
+                    this.json = cluster_stats.metadata.indices[this.title];
+                    this.show_dialog = true;
+                }).catch(() => {
+                    ElMessage.error('获取索引信息错误')
+                })
             } else {
                 ElMessage.error('信息：命令不存在')
             }
@@ -141,7 +150,22 @@ export default defineComponent({
         active(command: number) {
             switch (command) {
                 case 1:
-                    this, this.new_alias();
+                    this.new_alias();
+                    break;
+                case 2:
+                    this.refresh_index();
+                    break;
+                case 3:
+                    this.flush_index();
+                    break;
+                case 7:
+                    this.close_index();
+                    break;
+                case 8:
+                    this.open_index();
+                    break;
+                case 9:
+                    this.remove_index();
                     break;
                 default:
                     ElMessage.error('动作错误，请刷新重试');
@@ -156,7 +180,7 @@ export default defineComponent({
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
             }).then(({ value }) => {
-                index_api.new_alias(this.index?.name!, value, (res: object) => {
+                indexApi.new_alias(this.index?.name!, value, (res: object) => {
                     ElMessage.info(JSON.stringify(res));
                     useIndexStore().reset();
                 });
@@ -174,13 +198,48 @@ export default defineComponent({
                 cancelButtonText: "取消",
                 type: "warning",
             }).then(() => {
-                index_api.remove_alias(this.index?.name!, alias, (res: object) => {
+                indexApi.remove_alias(this.index?.name!, alias, (res: object) => {
                     ElMessage.info(JSON.stringify(res));
-                    this.$emit('init');
                     useIndexStore().reset();
                 });
             });
         },
+        remove_index() {
+            ElMessageBox.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            }).then(() => {
+                indexApi.remove(this.index?.name!, (res: object) => {
+                    ElMessage.info(JSON.stringify(res));
+                    useIndexStore().reset();
+                });
+            });
+        },
+        open_index() {
+            indexApi._open(this.index?.name!, (res: any) => {
+                ElMessage.info(JSON.stringify(res));
+                    useIndexStore().reset();
+            })
+        },
+        close_index() {
+            indexApi._close(this.index?.name!, (res: any) => {
+                ElMessage.info(JSON.stringify(res));
+                    useIndexStore().reset();
+            })
+        },
+        flush_index() {
+            indexApi._flush(this.index?.name!, (res: any) => {
+                ElMessage.info(JSON.stringify(res));
+                    useIndexStore().reset();
+            })
+        },
+        refresh_index() {
+            indexApi._refresh(this.index?.name!, (res: any) => {
+                ElMessage.info(JSON.stringify(res));
+                    useIndexStore().reset();
+            })
+        }
     }
 });
 </script>

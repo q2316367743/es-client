@@ -18,7 +18,7 @@ interface Url {
     /**
      * 排序
      */
-    sequence?: number;
+    sequence: number;
 
     /**
      * 创建时间

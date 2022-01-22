@@ -1,7 +1,5 @@
 import axios from '@/plugins/axios'
 
-import { Info } from '@/view/Info'
-
 /**
  * 与集群相关的API
  */
@@ -12,17 +10,11 @@ export default {
      * @param success 成功回调
      * @param error 失败回调
      */
-    info(success: (data: Info) => void, error?: (e: Error) => void): void {
-        axios({
+    info(): Promise<any> {
+        return axios({
             method: 'GET',
             url: '/'
-        }).then((response: any) => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            }
-        })
+        });
     },
     /**
      * _cluster_state

@@ -10,19 +10,31 @@ let log_max_day = 30;
 if (localStorage.getItem('log_max_day')) {
     log_max_day = parseInt(localStorage.getItem('log_max_day')!);
 }
+let default_shard = 5;
+if (localStorage.getItem('default_shard')) {
+    default_shard = parseInt(localStorage.getItem('default_shard')!);
+}
+let default_replica = 1;
+if (localStorage.getItem('default_replica')) {
+    default_replica = parseInt(localStorage.getItem('default_replica')!);
+}
 
 export const useSettingStore = defineStore('setting', {
     state: () => {
         return {
             is_save_log,
             log_max_day,
-            language: getDefaultLanguage()
+            language: getDefaultLanguage(),
+            default_shard,
+            default_replica
         }
     },
     getters: {
         getIsSaveLog: (state) => state.is_save_log,
         getLogMaxDay: (state) => state.log_max_day,
         getLanguage: (state) => state.language,
+        getDefaultShard: (state) => state.default_shard,
+        getDefayltReplica: (state) => state.default_replica
 
     },
     actions: {
@@ -37,6 +49,14 @@ export const useSettingStore = defineStore('setting', {
         setLanguage(language: string): void {
             this.language = language;
             localStorage.setItem('language', language);
+        },
+        setDefauletShard(default_shard: number): void {
+            this.default_shard = default_shard;
+            localStorage.setItem('default_shard', default_shard.toString());
+        },
+        setDefaultReplica(default_replica: number): void {
+            this.default_replica = default_replica;
+            localStorage.setItem('default_replica', default_replica.toString());
         },
     }
 })

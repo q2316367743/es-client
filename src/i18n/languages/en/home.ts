@@ -8,12 +8,6 @@ export default {
     'order_doc_asc': 'doc asc',
     'order_doc_desc': 'doc_desc',
     'search': 'search',
-    'refresh': 'refresh',
-    'refresh_5': 'every 5 seconds',
-    'refresh_30': 'every 30 seconds',
-    'refresh_60': 'every 1 minute',
-    'refresh_canel': 'cancel refresh',
-    'new_index': 'new index',
     'index': {
         'info': {
             'self': 'info',
@@ -32,5 +26,17 @@ export default {
             'close': 'close',
             'delete': 'delete'
         }
+    },
+    'new_index': {
+        'self': 'new index',
+        'name': 'name',
+        'base_setting': 'base setting',
+        'shard_number': 'shard number',
+        'replica_number': 'replica number',
+        'field_setting': 'field setting',
+        'field_name': 'field name',
+        'field_type': 'field type',
+        'add': 'add',
+        'delete': 'delete'
     }
 }

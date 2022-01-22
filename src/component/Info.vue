@@ -1,32 +1,33 @@
 <!-- 此处是右上角详情 -->
 <template>
-    <div class="info">
-        <el-dropdown @command="handleCommand">
-            <el-button type="primary">
-                <span>{{ $t('app.info') }}</span>
-                <el-icon class="el-icon--right">
-                    <arrow-down />
-                </el-icon>
-            </el-button>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.status') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.node_status') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.cluster_nodes') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.plugin') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.cluster_status') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.cluster_health') }}</el-dropdown-item>
-                    <el-dropdown-item>{{ $t('app.template') }}</el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
+    <div>
+        <div class="info">
+            <el-dropdown @command="handleCommand">
+                <el-button type="primary">
+                    <span>{{ $t('app.info') }}</span>
+                    <el-icon class="el-icon--right">
+                        <arrow-down />
+                    </el-icon>
+                </el-button>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.status') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.node_status') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.cluster_nodes') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.plugin') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.cluster_status') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.cluster_health') }}</el-dropdown-item>
+                        <el-dropdown-item>{{ $t('app.template') }}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+        </div>
+        <json-dialog :json="info_data" title="信息" v-model="info_dialog"></json-dialog>
     </div>
-    <json-dialog :json="info_data" title="信息" v-model="info_dialog"></json-dialog>
 </template>
 <script lang="ts">
-import clusterApi from "@/api/cluster";
-import { Info } from '@/view/Info'
+import clusterApi from "@/api/clusterApi";
 
 import { defineComponent } from "vue";
 import { ArrowDown } from '@element-plus/icons-vue'
@@ -39,7 +40,7 @@ export default defineComponent({
         JsonDialog
     },
     data: () => ({
-        info_data: {} as Info,
+        info_data: {},
         info_dialog: false,
         stats_data: {},
         stats_dialog: false,
@@ -57,11 +58,9 @@ export default defineComponent({
         template_dialog: false,
     }),
     methods: {
-        info() {
-            clusterApi.info((res: Info) => {
-                this.info_data = res;
-                this.info_dialog = true;
-            });
+        async info() {
+            this.info_data = await clusterApi.info();
+            this.info_dialog = true;
         },
         handleCommand(command: string) {
             switch (command) {

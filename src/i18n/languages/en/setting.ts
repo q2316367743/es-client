@@ -3,7 +3,9 @@ export default {
         'title': 'base setting',
         'language': 'language:',
         'is_save_log': 'store log:',
-        'log_max_day': 'maximum log storage days:'
+        'log_max_day': 'maximum log storage days:',
+        'default_shard_number': 'default shard number',
+        'default_replica_number': 'default replica number'
     },
     'link': {
         'title': 'link management',

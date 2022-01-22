@@ -1,57 +1,59 @@
 <template>
-    <el-table :data="urls" class="data">
-        <el-table-column type="index" width="150" :label="$t('setting.link.index')"></el-table-column>
-        <el-table-column prop="name" :label="$t('setting.link.name')" width="180"></el-table-column>
-        <el-table-column prop="value" :label="$t('setting.link.url')"></el-table-column>
-        <el-table-column :label="$t('setting.link.create_time')" width="240">
-            <template #default="scope">
-                <div>{{ prettyDate(scope.row.create_time) }}</div>
-            </template>
-        </el-table-column>
-        <el-table-column :label="$t('setting.link.operation')">
-            <template #default="scope">
+    <div>
+        <el-table :data="urls" class="data">
+            <el-table-column type="index" width="150" :label="$t('setting.link.index')"></el-table-column>
+            <el-table-column prop="name" :label="$t('setting.link.name')" width="180"></el-table-column>
+            <el-table-column prop="value" :label="$t('setting.link.url')"></el-table-column>
+            <el-table-column :label="$t('setting.link.create_time')" width="240">
+                <template #default="scope">
+                    <div>{{ prettyDate(scope.row.create_time) }}</div>
+                </template>
+            </el-table-column>
+            <el-table-column :label="$t('setting.link.operation')">
+                <template #default="scope">
+                    <el-button
+                        type="primary"
+                        size="small"
+                        @click="edit_open(scope.row)"
+                    >{{ $t('setting.link.edit') }}</el-button>
+                    <el-button
+                        type="danger"
+                        size="small"
+                        @click="remove(scope.row.id)"
+                    >{{ $t('setting.link.delete') }}</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-button
+            type="primary"
+            circle
+            class="add-btn"
+            @click="edit_dialog = true; edit_save = true;"
+        >+</el-button>
+        <el-dialog
+            :title="(edit_save ? $t('setting.link.add') : $t('setting.link.update')) + ' ' + $t('setting.link.url')"
+            v-model="edit_dialog"
+            width="600px"
+        >
+            <el-form :model="url" label-width="80px">
+                <el-form-item :label="$t('setting.link.name')">
+                    <el-input v-model="url.name"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.url')">
+                    <el-input v-model="url.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.sequence')">
+                    <el-input-number v-model="url.sequence" controls-position="right" size="large" />
+                </el-form-item>
+            </el-form>
+            <template #footer>
                 <el-button
                     type="primary"
-                    size="small"
-                    @click="edit_open(scope.row)"
-                >{{ $t('setting.link.edit') }}</el-button>
-                <el-button
-                    type="danger"
-                    size="small"
-                    @click="remove(scope.row.id)"
-                >{{ $t('setting.link.delete') }}</el-button>
+                    @click="url_submit"
+                >{{ edit_save ? $t('setting.link.add') : $t('setting.link.update') }}</el-button>
             </template>
-        </el-table-column>
-    </el-table>
-    <el-button
-        type="primary"
-        circle
-        class="add-btn"
-        @click="edit_dialog = true; edit_save = true;"
-    >+</el-button>
-    <el-dialog
-        :title="(edit_save ? $t('setting.link.add') : $t('setting.link.update')) + ' ' + $t('setting.link.url')"
-        v-model="edit_dialog"
-        width="600px"
-    >
-        <el-form :model="url" label-width="80px">
-            <el-form-item :label="$t('setting.link.name')">
-                <el-input v-model="url.name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('setting.link.url')">
-                <el-input v-model="url.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('setting.link.sequence')">
-                <el-input-number v-model="url.sequence" controls-position="right" size="large" />
-            </el-form-item>
-        </el-form>
-        <template #footer>
-            <el-button
-                type="primary"
-                @click="url_submit"
-            >{{ edit_save ? $t('setting.link.add') : $t('setting.link.update') }}</el-button>
-        </template>
-    </el-dialog>
+        </el-dialog>
+    </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";

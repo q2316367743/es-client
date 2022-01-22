@@ -8,12 +8,6 @@ export default {
     'order_doc_asc': '文档正序',
     'order_doc_desc': '文档倒序',
     'search': '搜索',
-    'refresh': '刷新',
-    'refresh_5': '每隔5秒',
-    'refresh_30': '每隔30秒',
-    'refresh_60': '每隔一分钟',
-    'refresh_canel': '取消刷新',
-    'new_index': '新建索引',
     'index': {
         'info': {
             'self': '信息',
@@ -32,5 +26,17 @@ export default {
             'close': '关闭',
             'delete': '删除'
         }
+    },
+    'new_index': {
+        'self': '新建索引',
+        'name': '名称',
+        'base_setting': '基础设置',
+        'shard_number': '分片数',
+        'replica_number': '副本数',
+        'field_setting': '字段设置',
+        'field_name': '字段名称',
+        'field_type': '字段类型',
+        'add': '新增',
+        'delete': '删除'
     }
 }

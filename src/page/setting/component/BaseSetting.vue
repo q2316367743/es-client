@@ -12,6 +12,12 @@
         <el-form-item :label="$t('setting.base.log_max_day')">
             <el-input-number v-model="log_max_day"></el-input-number>
         </el-form-item>
+        <el-form-item label="默认分片数">
+            <el-input-number v-model="default_shard"></el-input-number>
+        </el-form-item>
+        <el-form-item label="默认副本数">
+            <el-input-number v-model="default_replica"></el-input-number>
+        </el-form-item>
     </el-form>
 </template>
 <script lang="ts">
@@ -23,6 +29,8 @@ export default defineComponent({
         is_save_log: useSettingStore().getIsSaveLog,
         log_max_day: useSettingStore().getLogMaxDay,
         language: useSettingStore().language,
+        default_shard: useSettingStore().getDefaultShard,
+        default_replica: useSettingStore().getDefayltReplica,
     }),
     watch: {
         is_save_log() {
@@ -34,7 +42,13 @@ export default defineComponent({
         language() {
             useSettingStore().setLanguage(this.language);
             this.$i18n.locale = this.language;
-        }
+        },
+        default_shard() {
+            useSettingStore().setDefauletShard(this.default_shard);
+        },
+        default_replica() {
+            useSettingStore().setDefaultReplica(this.default_replica);
+        },
     }
 });
 </script>

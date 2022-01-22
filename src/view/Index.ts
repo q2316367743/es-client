@@ -43,28 +43,4 @@ export default interface Index {
      */
     replica: any;
 
-    /**
-     * 分片数量
-     * 
-     * 用于新增
-     */
-    number_of_shards?: number;
-
-    /**
-     * 副本数量
-     * 
-     * 用于新增
-     */
-    number_of_replicas?: number;
-
-    /**
-     * 集群状态
-     */
-    cluster_stats: any;
-
-    /**
-     * 节点状态
-     */
-    stats: any;
-
 }

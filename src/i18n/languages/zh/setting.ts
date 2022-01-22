@@ -3,7 +3,9 @@ export default {
         'title': '基础设置',
         'language': '语言：',
         'is_save_log': '是否存储日志：',
-        'log_max_day': '日志最大存储天数：'
+        'log_max_day': '日志最大存储天数：',
+        'default_shard_number': '默认分片数',
+        'default_replica_number': '默认副本数'
     },
     'link': {
         'title': '链接管理',

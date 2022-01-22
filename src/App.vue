@@ -55,8 +55,9 @@
 					>
 						<el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
 					</el-select>
-					<el-button @click="connect">{{$t('app.connect')}}</el-button>
+					<el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
+					<div>{{ name }}</div>
 				</div>
 				<!-- 各种信息弹框 -->
 				<info></info>
@@ -113,7 +114,8 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapState(useUrlStore, ['urls'])
+		...mapState(useUrlStore, ['urls']),
+		...mapState(useIndexStore, ['name'])
 	},
 	created() {
 		useUrlStore().reset();
@@ -128,7 +130,7 @@ export default defineComponent({
 				this.load = true;
 			})
 		},
-		connect(){
+		refresh() {
 			useIndexStore().reset();
 		},
 		select_menu(index: string) {

@@ -24,48 +24,96 @@
 				</el-select>
 				<el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
 			</div>
-			<div style="margin-right: 15px;display: flex;">
-				<el-dropdown split-button @click="init" @command="set_interval">
-					{{ $t('home.refresh') }}
-					<template #dropdown>
-						<el-dropdown-menu>
-							<el-dropdown-item :command="5000">{{ $t('home.refresh_5') }}</el-dropdown-item>
-							<el-dropdown-item :command="30000">{{ $t('home.refresh_30') }}</el-dropdown-item>
-							<el-dropdown-item :command="60000">{{ $t('home.refresh_60') }}</el-dropdown-item>
-							<el-dropdown-item :command="-1">{{ $t('home.refresh_canel') }}</el-dropdown-item>
-						</el-dropdown-menu>
-					</template>
-				</el-dropdown>
-				<el-button type="primary" style="margin-left: 10px">{{ $t('home.new_index') }}</el-button>
+			<div style="margin-right: 15px;">
+				<el-button
+					type="primary"
+					style="margin-left: 10px"
+					@click="index_dialog = true"
+				>{{ $t('home.new_index.self') }}</el-button>
 			</div>
 		</div>
 		<div class="home-main" v-loading="index_loading">
-			<index-view v-for="view, index in show_indices" :index="view" :key="index"></index-view>
+			<index-item v-for="view, index in show_indices" :index="view" :key="index"></index-item>
 		</div>
+		<el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
+			<el-form>
+				<el-form-item :label="$t('home.new_index.name')">
+					<el-input v-model="index.name" style="width: 300px;"></el-input>
+				</el-form-item>
+			</el-form>
+			<el-collapse v-model="index_collapse">
+				<el-collapse-item :title="$t('home.new_index.base_setting')" name="1">
+					<el-form>
+						<el-form-item :label="$t('home.new_index.shard_number')">
+							<el-input-number v-model="index.settings.number_of_shards" controls-position="right"></el-input-number>
+						</el-form-item>
+						<el-form-item :label="$t('home.new_index.replica_number')">
+							<el-input-number v-model="index.settings.number_of_replicas" controls-position="right"></el-input-number>
+						</el-form-item>
+					</el-form>
+				</el-collapse-item>
+				<el-collapse-item :title="$t('home.new_index.field_setting')" name="2">
+					<div v-if="index.mapping.length === 0">
+						<el-button
+							type="primary"
+							@click="index.mapping.push({ field: '', 'type': 'text' })"
+						>{{ $t('home.new_index.add') }}</el-button>
+					</div>
+					<el-form v-else>
+						<div v-for="property, idx in index.mapping" :key="idx">
+							<el-form :inline="true">
+								<el-form-item :label="$t('home.new_index.field_name')">
+									<el-input v-model="property.field"></el-input>
+								</el-form-item>
+								<el-form-item :label="$t('home.new_index.field_type')">
+									<el-select v-model="property.type">
+										<el-option v-for="type in types" :key="type" :label="type" :value="type"></el-option>
+									</el-select>
+								</el-form-item>
+								<el-form-item>
+									<el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
+								</el-form-item>
+								<el-form-item>
+									<el-button type="danger" @click="removeProperty(property)">{{ $t('home.new_index.delete') }}</el-button>
+								</el-form-item>
+							</el-form>
+						</div>
+					</el-form>
+				</el-collapse-item>
+			</el-collapse>
+			<template #footer>
+				<el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
+			</template>
+		</el-dialog>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ElMessage } from 'element-plus'
+import { mapState } from 'pinia';
+import _ from 'lodash';
 
-import { check_route } from "@/plugins/route";
 import { useUrlStore } from '@/store/UrlStore';
 import { useIndexStore } from '@/store/IndexStore';
+import { useSettingStore } from '@/store/SettingStore';
 
-import Index from "@/view/Index";
+import IndexView from "@/view/Index";
+import { Index, Property } from '@/entity/Index';
 
-import IndexView from "./component/IndexView.vue";
-import { mapState } from 'pinia';
+import indexApi from '@/api/IndexApi';
+
+import IndexItem from "./component/IndexItem.vue";
+import { ElMessage } from 'element-plus';
+
 
 export default defineComponent({
 	components: {
-		IndexView
+		IndexItem
 	},
 	data: () => {
 		return {
 			// 根据条件过滤后的索引
-			show_indices: [] as Array<Index>,
+			show_indices: [] as Array<IndexView>,
 			// 搜索条件
 			condition: {
 				name: "",
@@ -74,50 +122,37 @@ export default defineComponent({
 			// 定时器
 			interval: {} as NodeJS.Timer | null,
 			// 列表加载中
-			index_loading: false
+			index_loading: false,
+			index: {
+				name: '',
+				settings: {
+					number_of_replicas: useSettingStore().getDefayltReplica,
+					number_of_shards: useSettingStore().getDefaultShard
+				},
+				mapping: [] as Array<Property>
+			} as Index,
+			index_dialog: false,
+			index_collapse: '1',
+			types: ['string', 'text', 'keyword', 'integer', 'long', 'short', 'byte', 'double', 'float', 'boolean', 'date']
 		};
 	},
 	computed: {
 		...mapState(useUrlStore, ['url']),
-		...mapState(useIndexStore, ['indices'])
+		...mapState(useIndexStore, ['indices']),
+		...mapState(useSettingStore, ['default_replica', 'default_shard'])
 	},
 	watch: {
 		indices() {
 			this.search()
+		},
+		default_replica() {
+			this.index.settings.number_of_replicas = useSettingStore().getDefayltReplica
+		},
+		default_shard() {
+			this.index.settings.number_of_shards = useSettingStore().getDefaultShard
 		}
 	},
 	methods: {
-		// 初始化状态
-		init() {
-			useIndexStore().reset();
-		},
-		set_interval(millisecond: number) {
-			if (millisecond === -1) {
-				this.clear_interval();
-				return;
-			}
-			ElMessage({
-				message: `开始每隔${millisecond / 1000}秒刷新一次`,
-				type: "success",
-			});
-			this.init();
-			this.interval = setInterval(() => {
-				console.log(check_route("home"))
-				if (check_route("home")) {
-					this.init();
-				} else {
-					this.clear_interval();
-				}
-			}, millisecond);
-		},
-		clear_interval() {
-			ElMessage({
-				message: "取消刷新",
-				type: "success",
-			});
-			clearInterval(Number(this.interval));
-			this.interval = null;
-		},
 		/**
 		 * 基于当前索引数组进行过滤
 		 */
@@ -163,6 +198,36 @@ export default defineComponent({
 				this.index_loading = false;
 			})
 		},
+		addProperty() {
+			this.index.mapping.push({ field: '', 'type': 'text' })
+		},
+		removeProperty(property: Property) {
+			_.remove(this.index.mapping, (target: Property) => {
+				return property.field === target.field;
+			})
+		},
+		addIndex() {
+			// 新增
+			indexApi.save(this.index, (data: any) => {
+				// 显示对话框
+				ElMessage.info(JSON.stringify(data));
+				// 刷新索引
+				useIndexStore().reset();
+			})
+			// 关闭弹框
+			this.index_dialog = false;
+			this.$nextTick(() => {
+				// 重置
+				this.index = {
+					name: '',
+					settings: {
+						number_of_replicas: this.default_replica,
+						number_of_shards: this.default_shard
+					},
+					mapping: [] as Array<Property>
+				} as Index;
+			})
+		}
 	},
 });
 </script>

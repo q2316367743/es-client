@@ -7,7 +7,7 @@ export default {
         'setting': '设置'
     },
     'link_placeholder': '请选择索引地址',
-    'connect': '连接',
+    'refresh': '刷新',
     'info': '信息',
     'status': '状态',
     'node_status': '节点状态',

@@ -15,7 +15,7 @@ class UrlDao extends Dexie {
 
     list(callback: (urls: Array<Url>) => void): void {
         this.url.orderBy('sequence').toArray().then(record => {
-            callback(record);
+            callback(record.sort((a, b) => a.sequence - b.sequence));
         });
     }
 
@@ -50,9 +50,8 @@ class UrlDao extends Dexie {
      * @param callback 回调函数
      */
     updateById(url: Url, id: number, callback: () => void): void {
-        url.id = id;
-        url.update_time = new Date();
         this.url.put({
+            id: id,
             name: url.name,
             value: url.value,
             sequence: url.sequence,
