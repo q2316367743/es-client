@@ -38,7 +38,6 @@ export default defineComponent({
     watch: {
         visible(now) {
             this.$emit("update:value", now);
-            console.log('打开json对话框', now)
         }
     }
 });

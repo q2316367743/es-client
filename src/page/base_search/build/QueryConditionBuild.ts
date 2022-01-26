@@ -4,13 +4,7 @@ import BaseQuery from "@/entity/BaseQuery";
  * 获取基础查询请求体
  * @returns 基础查询请求体
  */
-function getBaseBody(from?: number, size?: number): any {
-    if (!from) {
-        from = 0;
-    }
-    if (!size) {
-        size = 10;
-    }
+function getBaseBody(page: number, size: number): any {
     return {
         query: {
             bool: {
@@ -19,8 +13,8 @@ function getBaseBody(from?: number, size?: number): any {
                 should: [],
             },
         },
-        from: 0,
-        size: 10,
+        from: (page - 1) * size,
+        size: size,
         sort: [],
         aggs: {},
     };
@@ -30,7 +24,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     let condition = {} as any;
     let expression = {} as any;
     // 不同的条件，查询方式和表达式不同
-    expression[query.field] = query.value;
+    expression[query.field.name.substring(5)] = query.value;
     condition[query.condition] = expression;
     array.push(condition);
 }
@@ -40,7 +34,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
  * 
  * @param querys 查询条件
  */
-export default function QueruConditionBuild(querys: Array<BaseQuery>, from?: number, size?: number): any {
+export default function QueruConditionBuild(querys: Array<BaseQuery>, page: number, size: number): any {
     let must = [] as Array<any>;
     let must_not = [] as Array<any>;
     let should = [] as Array<any>;
@@ -53,9 +47,9 @@ export default function QueruConditionBuild(querys: Array<BaseQuery>, from?: num
             buildQuery(query, should);
         }
     }
-    let body = getBaseBody(from, size);
-    body.query.must = must;
-    body.query.must_not = must_not;
-    body.query.should = should;
+    let body = getBaseBody(page, size);
+    body.query.bool.must = must;
+    body.query.bool.must_not = must_not;
+    body.query.bool.should = should;
     return body;
 }

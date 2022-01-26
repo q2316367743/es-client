@@ -1,6 +1,7 @@
 import Index from "@/view/Index";
 import { prettyDataUnit } from "@/utils/fieldUtil";
 import clusterApi from "@/api/ClusterApi";
+import IndexFieldBuild from "./IndexFieldBuild";
 
 /**
  * 索引列表构造器
@@ -8,7 +9,7 @@ import clusterApi from "@/api/ClusterApi";
  * @param url 链接
  * @returns 索引数组
  */
-export default async function Builder(url: string): Promise<Array<Index>> {
+export default async function Builder(): Promise<Array<Index>> {
     let indices = new Array<Index>();
     let cluster_stats = await clusterApi._cluster_state();
     let stats = await clusterApi._stats()
@@ -52,7 +53,8 @@ export default async function Builder(url: string): Promise<Array<Index>> {
             doc_count: docs,
             state: state,
             shard,
-            replica
+            replica,
+            fields: IndexFieldBuild(indecis[key].mappings)
         });
     }
     return new Promise((resolve, reject) => {

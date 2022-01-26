@@ -1,0 +1,245 @@
+<template>
+    <div class="base-search">
+        <div class="base-option">
+            <div class="el-card es-card is-always-shadow">
+                <div class="el-card__header">
+                    <span>查询条件</span>
+                    <el-button
+                        style="
+							float: right;
+							padding: 3px 13px 3px 0;
+							margin-left: 10px;
+						"
+                        type="text"
+                        @click="is_show = !is_show"
+                    >{{ is_show ? "收起" : "展开" }}</el-button>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="search">刷新</el-button>
+                    <el-button
+                        style="float: right; padding: 3px 0"
+                        type="text"
+                        @click="show_body"
+                    >显示查询语句</el-button>
+                </div>
+                <div class="el-card__body" v-show="is_show">
+                    <el-form label-position="top" label-width="80px" style="overflow: auto">
+                        <el-form-item label="文档：">
+                            <el-select v-model="index" filterable placeholder="请选择" clearable>
+                                <el-option
+                                    v-for="item, idx in indices"
+                                    :key="idx"
+                                    :label="item.name"
+                                    :value="item.name"
+                                ></el-option>
+                            </el-select>
+                            <el-button type="primary" style="margin-left: 10px" @click="search">搜索</el-button>
+                            <el-button style="margin-left: 10px" @click="clear">清空</el-button>
+                        </el-form-item>
+                        <el-form-item label="条件：" style="min-width: 1100px">
+                            <div v-if="field_condition.length === 0">
+                                <el-button type="primary" @click="field_condition_add">新增</el-button>
+                            </div>
+                            <div>
+                                <div
+                                    v-for="(item, idx) in field_condition"
+                                    :key="idx"
+                                    style="margin-bottom: 10px;display: flex;"
+                                >
+                                    <field-condition-item
+                                        v-model:value="field_condition[idx]"
+                                        :fields="fields"
+                                    ></field-condition-item>
+                                    <el-button
+                                        type="primary"
+                                        style="margin-left: 10px"
+                                        @click="field_condition_add"
+                                    >新增</el-button>
+                                    <el-button
+                                        type="danger"
+                                        @click="field_condition_remove(item.id)"
+                                    >移除</el-button>
+                                </div>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </div>
+        <div class="base-content">
+            <el-card>
+                <json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
+                <div class="page">
+                    <el-pagination
+                        background
+                        layout="sizes, prev, pager, next"
+                        :total="total"
+                        :current-page="page"
+                        :page-size="size"
+                        @size-change="sizeChange"
+                        @current-change="pageChange"
+                    ></el-pagination>
+                </div>
+            </el-card>
+        </div>
+        <el-dialog
+            title="查询条件"
+            v-model="condition_dialog"
+            width="70%"
+            append-to-body
+            custom-class="es-dialog"
+            :close-on-click-modal="false"
+        >
+            <json-viewer :value="condition_data" :expand-depth="4" copyable sort expanded preview-mode></json-viewer>
+        </el-dialog>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import JsonViewer from "vue-json-viewer";
+import { ElMessageBox } from "element-plus";
+import axios from "@/plugins/axios";
+import BaseQuery from '@/entity/BaseQuery';
+import QueryConditionBuild from './build/QueryConditionBuild';
+import FieldConditionItem from "./component/FieldConditionItem.vue";
+import { mapState } from "pinia";
+import { useIndexStore } from "@/store/IndexStore";
+import Index from "@/view/Index";
+import Field from "@/view/Field";
+
+// 公共方法
+
+export default defineComponent({
+    components: {
+        JsonViewer,
+        FieldConditionItem
+    },
+    data: () => {
+        return {
+            // 是否显示查询语句
+            is_show: true,
+            // 选择的索引名称
+            index: '',
+            // 条件
+            field_condition: new Array<BaseQuery>(),
+            fields: new Array<Field>(),
+            // 分页
+            page: 1,
+            size: 10,
+            total: 0,
+            // 条件对话框
+            condition_dialog: false,
+            // 渲染后的数据
+            condition_data: {},
+            // 查询结果
+            result: {} as any,
+        };
+    },
+    computed: {
+        ...mapState(useIndexStore, ['indices'])
+    },
+    watch: {
+        index() {
+            if (this.index === '') {
+                this.fields = new Array<Field>();
+                return;
+            }
+            for (let index of this.indices) {
+                if (index.name === this.index) {
+                    this.fields = index.fields;
+                    return
+                }
+            }
+            this.fields = new Array<Field>();
+            return;
+        }
+    },
+    methods: {
+        field_condition_add(): void {
+            this.field_condition.push({
+                id: new Date().getTime(),
+                type: '',
+                field: {
+                    name: '',
+                    type: ''
+                },
+                condition: '',
+                value: '',
+                extra_left_cindition: '',
+                extra_left_value: '',
+                extra_right_cindition: '',
+                extra_right_value: ''
+            });
+        },
+        field_condition_remove(id: number): void {
+            if (this.field_condition.length === 0) {
+                return;
+            }
+            this.field_condition = this.field_condition.filter((item) => {
+                return item.id !== id;
+            });
+        },
+        show_body() {
+            this.condition_data = QueryConditionBuild(this.field_condition, this.page, this.size);
+            this.condition_dialog = true;
+        },
+        search() {
+            if (this.index.length === 0) {
+                ElMessageBox.alert("请选择索引");
+                return;
+            }
+            axios({
+                url: `/${this.index}/_search`,
+                method: "POST",
+                data: QueryConditionBuild(this.field_condition, this.page, this.size),
+            }).then((response) => {
+                this.result = response;
+                if (this.result.hits) {
+                    this.total = this.result.hits.total
+                } else {
+                    this.total = 0;
+                }
+            });
+        },
+        clear() {
+            this.index = "";
+            this.field_condition = [{
+                id: new Date().getTime(),
+                type: '',
+                field: {
+                    name: '',
+                    type: ''
+                },
+                condition: '',
+                value: '',
+                extra_left_cindition: '',
+                extra_left_value: '',
+                extra_right_cindition: '',
+                extra_right_value: ''
+            }];
+        },
+        sizeChange(size: number) {
+            this.size = size;
+            this.search();
+        },
+        pageChange(page: number) {
+            this.page = page;
+            this.search();
+        }
+    },
+});
+</script>
+
+<style lang="less">
+.base-search {
+    padding: 10px;
+
+    .base-content {
+        margin-top: 20px;
+        .page {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+    }
+}
+</style>

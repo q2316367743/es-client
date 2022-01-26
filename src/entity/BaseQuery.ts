@@ -1,4 +1,11 @@
+import Field from "@/view/Field";
+
 export default interface BaseQuery {
+
+    /**
+     * 唯一标识，时间戳
+     */
+    id: number;
 
     /**
      * 查询类型
@@ -9,7 +16,7 @@ export default interface BaseQuery {
     /**
      * 字段
      */
-    field: string;
+    field: Field;
 
     /**
      * 条件

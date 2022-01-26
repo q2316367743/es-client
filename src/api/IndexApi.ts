@@ -24,7 +24,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -46,7 +46,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -66,7 +66,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -87,7 +87,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -107,7 +107,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -127,7 +127,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -147,7 +147,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     },
@@ -168,7 +168,7 @@ export default {
             if (error) {
                 error(e);
             } else {
-                console.log(e, e.response)
+                console.error(e, e.response)
             }
         })
     }

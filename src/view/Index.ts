@@ -1,3 +1,5 @@
+import Field from "./Field";
+
 /**
  * 主页索引遍历
  */
@@ -42,5 +44,10 @@ export default interface Index {
      * 副本
      */
     replica: any;
+
+    /**
+     * 字段
+     */
+    fields: Array<Field>;
 
 }

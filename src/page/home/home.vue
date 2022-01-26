@@ -74,7 +74,10 @@
 									<el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
 								</el-form-item>
 								<el-form-item>
-									<el-button type="danger" @click="removeProperty(property)">{{ $t('home.new_index.delete') }}</el-button>
+									<el-button
+										type="danger"
+										@click="removeProperty(property)"
+									>{{ $t('home.new_index.delete') }}</el-button>
 								</el-form-item>
 							</el-form>
 						</div>

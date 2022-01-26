@@ -2,7 +2,6 @@ import Index from "@/view/Index";
 import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
-import { useUrlStore } from '@/store/UrlStore';
 import clusterApi from '@/api/ClusterApi'
 
 export const useIndexStore = defineStore('index', {
@@ -26,15 +25,7 @@ export const useIndexStore = defineStore('index', {
         /**
          * 重新获取链接
          */
-        async reset(url?: string) {
-            if (!url) {
-                url = useUrlStore().current;
-            }
-            if (url === '' || !url) {
-                this.indices = [];
-                this.name = '';
-                return;
-            }
+        async reset() {
             // 初始化时加载
             const loading = ElLoading.service({
                 lock: true,
@@ -43,12 +34,13 @@ export const useIndexStore = defineStore('index', {
             })
             try {
                 // 获取索引信息
-                this.indices = await indexListBuild(url);
+                this.indices = await indexListBuild();
                 // 获取基本信息
                 let info = await clusterApi.info();
                 this.name = info.name as string;
                 loading.close();
             } catch (e: any) {
+                console.error(e)
                 loading.close();
 
             }

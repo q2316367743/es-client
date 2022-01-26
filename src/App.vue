@@ -57,14 +57,14 @@
 					</el-select>
 					<el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
-					<div>{{ name }}</div>
+					<div style="font-weight: bold">{{ name }}</div>
 				</div>
 				<!-- 各种信息弹框 -->
 				<info></info>
 			</div>
 			<div class="content">
 				<home v-show="active === 'home'"></home>
-				<base_search v-show="active === 'base_search'"></base_search>
+				<base-search v-show="active === 'base_search'"></base-search>
 				<senior_search v-show="active === 'senior_search'"></senior_search>
 				<sql_search v-show="active === 'sql_search'"></sql_search>
 				<setting v-show="active === 'setting'"></setting>
@@ -94,6 +94,7 @@ import Info from '@/component/Info.vue';
 
 // 页面
 import home from '@/page/home/home.vue';
+import BaseSearch from "@/page/base_search/BaseSearch.vue";
 
 import { defineComponent } from 'vue';
 import { mapState } from "pinia";
@@ -102,7 +103,7 @@ import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@e
 
 export default defineComponent({
 	components: {
-		Info, about, setting, home, Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard
+		Info, about, setting, home, BaseSearch, Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard
 	},
 	data: () => {
 		return {
