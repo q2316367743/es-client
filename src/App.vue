@@ -65,8 +65,8 @@
 			<div class="content">
 				<home v-show="active === 'home'"></home>
 				<base-search v-show="active === 'base_search'"></base-search>
-				<senior_search v-show="active === 'senior_search'"></senior_search>
-				<sql_search v-show="active === 'sql_search'"></sql_search>
+				<senior-search v-show="active === 'senior_search'"></senior-search>
+				<sql-search v-show="active === 'sql_search'"></sql-search>
 				<setting v-show="active === 'setting'"></setting>
 			</div>
 		</div>
@@ -88,13 +88,15 @@
 import { useUrlStore } from "./store/UrlStore";
 import { useIndexStore } from '@/store/IndexStore';
 // 引入页面组件
-import about from "@/page/about/about.vue";
-import setting from '@/page/setting/setting.vue'
 import Info from '@/component/Info.vue';
 
 // 页面
-import home from '@/page/home/home.vue';
-import BaseSearch from "@/page/base_search/BaseSearch.vue";
+import About from "@/page/About/About.vue";
+import Home from "./page/home/home.vue";
+import BaseSearch from "@/page/BaseSearch/BaseSearch.vue";
+import SeniorSearch from '@/page/SeniorSearch/SeniorSearch.vue';
+import SqlSearch from "@/page/SqlSearch/SqlSearch.vue";
+import Setting from '@/page/Setting/Setting.vue'
 
 import { defineComponent } from 'vue';
 import { mapState } from "pinia";
@@ -103,13 +105,12 @@ import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@e
 
 export default defineComponent({
 	components: {
-		Info, about, setting, home, BaseSearch, Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard
+		Info, About, Setting, Home, BaseSearch, SeniorSearch, SqlSearch, Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard
 	},
 	data: () => {
 		return {
 			active: "home",
 			url: "",
-			load: true,
 			cluster_name: "",
 			about_dialog: false
 		};
@@ -124,12 +125,9 @@ export default defineComponent({
 	methods: {
 		select_url(value: string) {
 			useUrlStore().choose(value);
-			useIndexStore().reset(value);
-			// 刷新组件
-			this.load = false;
-			this.$nextTick(() => {
-				this.load = true;
-			})
+			if (value !== '') {
+				useIndexStore().reset();
+			}
 		},
 		refresh() {
 			useIndexStore().reset();

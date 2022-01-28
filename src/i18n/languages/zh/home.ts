@@ -12,7 +12,8 @@ export default {
         'info': {
             'self': '信息',
             'index_status': '索引状态',
-            'index_info': '索引信息'
+            'index_info': '索引信息',
+            'data_preview': '数据预览'
         },
         'active': {
             'self': '动作',

@@ -12,7 +12,8 @@ export default {
         'info': {
             'self': 'info',
             'index_status': 'index status',
-            'index_info': 'index info'
+            'index_info': 'index info',
+            'data_preview': 'data preview'
         },
         'active': {
             'self': 'active',

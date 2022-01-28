@@ -88,7 +88,14 @@
             custom-class="es-dialog"
             :close-on-click-modal="false"
         >
-            <json-viewer :value="condition_data" :expand-depth="4" copyable sort expanded preview-mode></json-viewer>
+            <json-viewer
+                :value="condition_data"
+                :expand-depth="4"
+                copyable
+                sort
+                expanded
+                preview-mode
+            ></json-viewer>
         </el-dialog>
     </div>
 </template>
@@ -103,7 +110,6 @@ import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./component/FieldConditionItem.vue";
 import { mapState } from "pinia";
 import { useIndexStore } from "@/store/IndexStore";
-import Index from "@/view/Index";
 import Field from "@/view/Field";
 
 // 公共方法
@@ -121,7 +127,6 @@ export default defineComponent({
             index: '',
             // 条件
             field_condition: new Array<BaseQuery>(),
-            fields: new Array<Field>(),
             // 分页
             page: 1,
             size: 10,
@@ -135,22 +140,27 @@ export default defineComponent({
         };
     },
     computed: {
-        ...mapState(useIndexStore, ['indices'])
+        ...mapState(useIndexStore, ['indices']),
+        fields() {
+            if (this.index === '') {
+                return new Array<Field>();
+            }
+            // 重置字段
+            for (let index of this.indices) {
+                if (index.name === this.index) {
+                    return index.fields;
+                }
+            }
+            return new Array<Field>();
+        }
     },
     watch: {
         index() {
-            if (this.index === '') {
-                this.fields = new Array<Field>();
-                return;
+            // 索引变化，重置查询
+            this.clear();
+            if(this.index !== '') {
+                this.search();
             }
-            for (let index of this.indices) {
-                if (index.name === this.index) {
-                    this.fields = index.fields;
-                    return
-                }
-            }
-            this.fields = new Array<Field>();
-            return;
         }
     },
     methods: {
@@ -201,21 +211,11 @@ export default defineComponent({
             });
         },
         clear() {
-            this.index = "";
-            this.field_condition = [{
-                id: new Date().getTime(),
-                type: '',
-                field: {
-                    name: '',
-                    type: ''
-                },
-                condition: '',
-                value: '',
-                extra_left_cindition: '',
-                extra_left_value: '',
-                extra_right_cindition: '',
-                extra_right_value: ''
-            }];
+            this.page = 1,
+            this.size = 10;
+            this.total = 0;
+            this.field_condition = new Array<BaseQuery>();
+            this.result = {};
         },
         sizeChange(size: number) {
             this.size = size;

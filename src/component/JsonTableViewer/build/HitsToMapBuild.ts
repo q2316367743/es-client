@@ -1,5 +1,3 @@
-import { List } from "lodash";
-
 /**
  * hit转数组构造器
  */

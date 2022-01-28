@@ -12,10 +12,10 @@
         <el-form-item :label="$t('setting.base.log_max_day')">
             <el-input-number v-model="log_max_day"></el-input-number>
         </el-form-item>
-        <el-form-item label="默认分片数">
+        <el-form-item :label="$t('setting.base.default_shard_number')">
             <el-input-number v-model="default_shard"></el-input-number>
         </el-form-item>
-        <el-form-item label="默认副本数">
+        <el-form-item :label="$t('setting.base.default_replica_number')">
             <el-input-number v-model="default_replica"></el-input-number>
         </el-form-item>
     </el-form>

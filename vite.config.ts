@@ -11,7 +11,8 @@ function _resolve(dir: string) {
 export default defineConfig({
     resolve: {
         alias: {
-            '@': _resolve('src')
+            '@': _resolve('src'),
+            'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
         }
     },
     plugins: [vue()],

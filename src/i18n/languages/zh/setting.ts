@@ -4,8 +4,8 @@ export default {
         'language': '语言：',
         'is_save_log': '是否存储日志：',
         'log_max_day': '日志最大存储天数：',
-        'default_shard_number': '默认分片数',
-        'default_replica_number': '默认副本数'
+        'default_shard_number': '默认分片数：',
+        'default_replica_number': '默认副本数：'
     },
     'link': {
         'title': '链接管理',
@@ -20,6 +20,8 @@ export default {
         'add': '新增',
         'update': '修改',
         'sequence': '排序',
+        'test': '测试',
+        'result': '结果'
     },
     'history': {
         'title': '历史记录'

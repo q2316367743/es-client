@@ -1,6 +1,7 @@
+import { defineStore } from "pinia";
 import Url from "@/entity/Url";
 import urlDao from "@/dao/UrlDao";
-import { defineStore } from "pinia";
+import { useIndexStore } from "./IndexStore";
 
 export const useUrlStore = defineStore('url', {
     state: () => {
@@ -36,6 +37,9 @@ export const useUrlStore = defineStore('url', {
          */
         choose(url: string) {
             this.url = url;
+            if (url === '') {
+                useIndexStore().clear();
+            }
         }
     }
 })

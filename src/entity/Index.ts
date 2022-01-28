@@ -36,6 +36,11 @@ export interface Setting {
 export interface Property {
 
     /**
+     * 唯一标识，时间戳
+     */
+    id: number;
+
+    /**
      * 字段
      */
     field: string;

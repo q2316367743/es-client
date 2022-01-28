@@ -202,11 +202,11 @@ export default defineComponent({
 			})
 		},
 		addProperty() {
-			this.index.mapping.push({ field: '', 'type': 'text' })
+			this.index.mapping.push({ id: new Date().getTime(), field: '', 'type': 'text' })
 		},
 		removeProperty(property: Property) {
 			_.remove(this.index.mapping, (target: Property) => {
-				return property.field === target.field;
+				return property.id === target.id;
 			})
 		},
 		addIndex() {

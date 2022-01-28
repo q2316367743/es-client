@@ -44,6 +44,10 @@ export const useIndexStore = defineStore('index', {
                 loading.close();
 
             }
+        },
+        clear() {
+            this.name = '';
+            this.indices = new Array<Index>();
         }
     }
 })

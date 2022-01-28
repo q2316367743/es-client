@@ -1,0 +1,24 @@
+<template>
+    <el-card class="sql-search">
+        <template #header>SQL查询</template>
+        <el-empty description="暂不支持"></el-empty>
+    </el-card>
+</template>
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+    data: () => ({
+
+    }),
+});
+</script>
+<style lang="less">
+.sql-search {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+}
+</style>

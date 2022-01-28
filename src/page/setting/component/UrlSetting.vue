@@ -35,45 +35,81 @@
             v-model="edit_dialog"
             width="600px"
         >
-            <el-form :model="url" label-width="80px">
-                <el-form-item :label="$t('setting.link.name')">
+            <el-form :model="url" label-width="100px" ref="urlForm" :rules="url_rules">
+                <el-form-item :label="$t('setting.link.name')" prop="name">
                     <el-input v-model="url.name"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setting.link.url')">
+                <el-form-item :label="$t('setting.link.url')" prop="value">
                     <el-input v-model="url.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setting.link.sequence')">
+                <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
                     <el-input-number v-model="url.sequence" controls-position="right" size="large" />
                 </el-form-item>
             </el-form>
             <template #footer>
+                <el-button @click="test">{{ $t('setting.link.test') }}</el-button>
                 <el-button
                     type="primary"
                     @click="url_submit"
                 >{{ edit_save ? $t('setting.link.add') : $t('setting.link.update') }}</el-button>
             </template>
         </el-dialog>
+        <json-dialog
+            v-model="test_dialog"
+            :json="test_data"
+            :title="$t('setting.link.result')"
+            open
+        ></json-dialog>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ElMessageBox, ElMessage } from 'element-plus'
+import type { ElForm } from 'element-plus'
 import dayjs from 'dayjs'
 import { mapState } from "pinia";
+import axios from 'axios';
 
 import { useUrlStore } from "@/store/UrlStore";
 import url_dao from "@/dao/UrlDao";
 import Url from "@/entity/Url";
+import JsonDialog from "@/component/JsonDialog.vue";
 
 export default defineComponent({
+    components: { JsonDialog },
     data: () => ({
         url: {
             name: '',
             value: 'http://',
             sequence: 0,
         } as Url,
+        url_rules: {
+            name: [
+                {
+                    required: true,
+                    message: '请输入链接名',
+                    trigger: 'blur',
+                }
+            ],
+            value: [
+                {
+                    required: true,
+                    message: '请输入链接',
+                    trigger: 'blur',
+                }
+            ],
+            sequence: [
+                {
+                    required: true,
+                    message: '请输入排序',
+                    trigger: 'blur',
+                }
+            ]
+        },
         edit_dialog: false,
-        edit_save: true
+        edit_save: true,
+        test_dialog: false,
+        test_data: {} as any
     }),
     computed: {
         ...mapState(useUrlStore, ['urls'])
@@ -107,35 +143,58 @@ export default defineComponent({
             this.edit_dialog = true;
         },
         url_submit() {
-            if (this.edit_save) {
-                // 新增
-                url_dao.insert({
-                    name: this.url.name,
-                    value: this.url.value,
-                    sequence: this.url.sequence
-                }, () => {
-                    useUrlStore().reset();
-                    ElMessage.success('新增成功');
-                });
-            } else {
-                // 更新
-                url_dao.updateById({
-                    name: this.url.name,
-                    value: this.url.value,
-                    sequence: this.url.sequence
-                    // eslint-disable-next-line
-                }, this.url.id!, () => {
-                    useUrlStore().reset();
-                    ElMessage.success('更新成功');
-                });
-            }
-            this.edit_dialog = false;
-            // 重置数据
-            this.url = {
-                name: '',
-                value: 'http://',
-                sequence: 0,
-            }
+            let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
+            urlForm.validate((valid) => {
+                if (valid) {
+                    if (this.edit_save) {
+                        // 新增
+                        url_dao.insert({
+                            name: this.url.name,
+                            value: this.url.value,
+                            sequence: this.url.sequence
+                        }, () => {
+                            useUrlStore().reset();
+                            ElMessage.success('新增成功');
+                        });
+                    } else {
+                        // 更新
+                        url_dao.updateById({
+                            name: this.url.name,
+                            value: this.url.value,
+                            sequence: this.url.sequence
+                            // eslint-disable-next-line
+                        }, this.url.id!, () => {
+                            useUrlStore().reset();
+                            ElMessage.success('更新成功');
+                        });
+                    }
+                    this.edit_dialog = false;
+                    // 重置数据
+                    this.url = {
+                        name: '',
+                        value: 'http://',
+                        sequence: 0,
+                    }
+                }
+            });
+        },
+        test() {
+            let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
+            urlForm.validate((valid) => {
+                if (valid) {
+                    axios({
+                        baseURL: this.url.value,
+                        url: '/',
+                        method: 'GET',
+                    }).then((response) => {
+                        this.test_dialog = true;
+                        this.test_data = response.data;
+                    }).catch((e) => {
+                        console.error(e);
+                        ElMessage.error('连接失败');
+                    });
+                }
+            })
         }
     }
 });

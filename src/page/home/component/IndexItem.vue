@@ -27,6 +27,7 @@
                         <el-dropdown-item
                             command="cluster_stats"
                         >{{ $t('home.index.info.index_info') }}</el-dropdown-item>
+                        <el-dropdown-item command="data">{{ $t('home.index.info.data_preview') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -96,6 +97,7 @@
             </div>
         </div>
         <json-dialog :title="title" :json="json" :open="open" v-model="show_dialog"></json-dialog>
+        <json-dialog :title="index?.name" :json="data_json" v-model="data_dialog"></json-dialog>
     </div>
 </template>
 <script lang="ts">
@@ -107,6 +109,7 @@ import Index from "@/view/Index";
 import JsonDialog from "@/component/JsonDialog.vue";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
+import axios from '@/plugins/axios';
 
 export default defineComponent({
     components: { ArrowDown, ArrowUp, JsonDialog },
@@ -119,7 +122,9 @@ export default defineComponent({
         title: '',
         open: true,
         json: {},
-        show_dialog: false
+        show_dialog: false,
+        data_dialog: false,
+        data_json: {} as any
     }),
     methods: {
         showShardOrReplica(json: any, idx: number) {
@@ -144,6 +149,14 @@ export default defineComponent({
                     this.show_dialog = true;
                 }).catch(() => {
                     ElMessage.error('获取索引信息错误')
+                })
+            } else if (command === 'data') { 
+                axios({
+                    url: `/${this.index?.name}/_search`,
+                    method: 'GET'
+                }).then((result) => {
+                    this.data_dialog = true;
+                    this.data_json = result;
                 })
             } else {
                 ElMessage.error('信息：命令不存在')
