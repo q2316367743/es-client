@@ -71,6 +71,7 @@
                     <el-pagination
                         background
                         layout="sizes, prev, pager, next"
+                        hide-on-single-page
                         :total="total"
                         :current-page="page"
                         :page-size="size"

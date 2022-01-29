@@ -1,4 +1,4 @@
-import Dexie from 'dexie';
+import Dexie, { Transaction } from 'dexie';
 import { ElMessage } from 'element-plus'
 import Url from '@/entity/Url';
 
@@ -7,8 +7,10 @@ class UrlDao extends Dexie {
 
     constructor() {
         super('es-client');
-        this.version(1).stores({
+        this.version(2).stores({
             url: '++id, &name, &value, sequence, create_time, update_time'
+        }).upgrade((trans: Transaction) => {
+            // 版本升级，结构改变。不会，暂时不处理
         });
         this.url = this.table('url');
     }

@@ -3,118 +3,133 @@
 		<el-card style="min-height: 550px">
 			<template #header>高级查询</template>
 			<div class="senior-main">
-				<div class="senior-side">
-					<el-form>
-						<el-form-item label="链接：">
-							<el-input v-model="link"></el-input>
-						</el-form-item>
-						<el-form-item label="方式：">
-							<el-select v-model="method" placeholder="请选择">
-								<el-option label="GET" value="GET"></el-option>
-								<el-option label="POST" value="POST"></el-option>
-								<el-option label="PUT" value="PUT"></el-option>
-								<el-option label="DELETE" value="DELETE"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="参数：">
-							<div class="code-mirror" ref="code_mirror">
-							</div>
-						</el-form-item>
-						<el-form-item>
-							<el-button type="success" @click="condition_dialog = true">全屏显示</el-button>
-							<el-button @click="format">格式化</el-button>
-							<el-button type="primary" @click="search">搜索</el-button>
-						</el-form-item>
-					</el-form>
+				<div class="side">
+					<div class="link">
+						<div style="width: 54px;">链接：</div>
+						<el-select v-model="method" placeholder="请选择" style="width: 100px;">
+							<el-option label="GET" value="GET"></el-option>
+							<el-option label="POST" value="POST"></el-option>
+							<el-option label="PUT" value="PUT"></el-option>
+							<el-option label="DELETE" value="DELETE"></el-option>
+						</el-select>
+						<el-input v-model="link" style="width: 294px;margin: 0 6px;"></el-input>
+						<el-button type="primary" @click="search">搜索</el-button>
+					</div>
+					<div class="param">
+						<div style="width: 54px;">参数：</div>
+						<el-input
+							v-model="param"
+							placeholder="请输入?后参数(key=value&key=value)"
+							type="textarea"
+							:rows="7"
+							v-show="method === 'GET'"
+							style="width: 466px;"
+						></el-input>
+						<monaco-editor v-model="param" height="100%" v-show="method !== 'GET'"></monaco-editor>
+					</div>
 				</div>
 				<div class="senior-content">
 					<json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
 				</div>
 			</div>
-			<el-dialog
-				title="查询条件"
-				v-model="condition_dialog"
-				width="70%"
-				append-to-body
-				top="7vh"
-				:close-on-click-modal="false"
-				v-if="condition_dialog"
-			>
-				<codemirror v-model="param" :options="options"></codemirror>
-				<div slot="footer">
-					<el-button @click="format">格式化</el-button>
-					<el-button type="primary" @click="search">搜索</el-button>
-				</div>
-			</el-dialog>
 		</el-card>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ElMessage } from "element-plus";
-// 引入CodeMirror
-import codemirror from "vue-codemirror";
-import "codemirror/lib/codemirror.css";
-// 引入主题后还需要在 options 中指定主题才会生效
-import "codemirror/theme/idea.css";
-// 语法高亮
-import "codemirror/mode/javascript/javascript.js";
-// 引入axios
-import axios from "@/plugins/axios";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { Method } from "axios";
 import JsonViewer from "vue-json-viewer";
+// 引入monaco
+import MonacoEditor from "@/component/MonacoEditor.vue";
+// 引入axios
+import axios from "@/plugins/axios";
+import tipDao from '@/dao/TipDao';
+import Tip from "@/entity/Tip";
 
 export default defineComponent({
 	data: () => ({
 		link: '',
 		method: 'GET' as Method,
 		param: '',
-		options: {
-			tabSize: 4, // 缩进格式
-			theme: "idea", // 主题，对应主题库 JS 需要提前引入
-			lineNumbers: true, // 显示行号
-			line: true,
-			mode: "javascript",
-			smartIndent: true,
-			styleActiveLine: true, // 高亮选中行
-			showCursorWhenSelecting: true,
-			hintOptions: {
-				completeSingle: true, // 当匹配只有一项的时候是否自动补全
-			},
-		},
 		result: {},
-		condition_dialog: false,
 	}),
-	components: { JsonViewer, codemirror },
+	components: { JsonViewer, MonacoEditor },
 	methods: {
-		format() {
-			try {
-				if (this.param.length === 0) {
-					return;
+		async search() {
+			let isContinue = await this.tips(this.method, this.link);
+			if (isContinue) {
+				if (this.method === 'GET') {
+					axios({
+						url: this.link,
+						method: this.method,
+						params: this.param
+					}).then((response) => {
+						this.result = response;
+					});
+				} else {
+					let data = {};
+					try {
+						data = JSON.parse(this.param);
+					} catch (e: any) {
+						console.error(e);
+						ElMessage.error('JSON格式错误');
+					}
+					axios({
+						url: this.link,
+						method: this.method,
+						data
+					}).then((response) => {
+						this.result = response;
+					});
+
 				}
-				this.param = JSON.stringify(JSON.parse(this.param), null, 4);
-			} catch (error) {
-				ElMessage.error("格式化错误");
 			}
 		},
-		search() {
-			this.condition_dialog = false;
-			let data = {};
-			try {
-				data = JSON.parse(this.param);
-			} catch (e: any) {
-				console.error(e);
-				ElMessage.error('JSON格式错误');
+		async tips(method: Method, link: string): Promise<boolean> {
+			let tips = await tipDao.list();
+			for (let tip of tips) {
+				if (tip.mode === 1) {
+					if (tip.method === method && this.link === link) {
+						try {
+							await ElMessageBox.confirm('此操作为危险操作，是否继续？', '危险操作提示', {
+								confirmButtonText: '继续',
+								cancelButtonText: '取消',
+								type: 'warning',
+							});
+							return new Promise((resolve, reject) => {
+								resolve(true);
+							});
+						} catch (e) {
+							return new Promise((resolve, reject) => {
+								resolve(false);
+							});
+						}
+					}
+				} else if (tip.mode === 2) {
+					if (tip.method === method && link.indexOf(link) > -1) {
+						try {
+							await ElMessageBox.confirm('此操作为危险操作，是否继续？', '危险操作提示', {
+								confirmButtonText: '继续',
+								cancelButtonText: '取消',
+								type: 'warning',
+							});
+							return new Promise((resolve, reject) => {
+								resolve(true);
+							});
+						} catch (e) {
+							return new Promise((resolve, reject) => {
+								resolve(false);
+							});
+						}
+					}
+				}
 			}
-			axios({
-				url: this.link,
-				method: this.method,
-				data
-			}).then((response) => {
-				this.result = response.data;
+			return new Promise((resolve, reject) => {
+				resolve(true);
 			});
-		},
+		}
 	},
 });
 </script>
@@ -143,36 +158,35 @@ export default defineComponent({
 		position: relative;
 		height: 100%;
 
-		.senior-side {
+		.side {
 			position: absolute;
 			top: 0;
 			left: 0;
 			bottom: 0;
-			width: 420px;
+			width: 520px;
 
-			.senior-side-item {
+			.link {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 32px;
 				display: flex;
-				margin-bottom: 10px;
-
-				.senior-item-label {
-					width: 60px;
-					line-height: 40px;
-				}
-
-				.el-input {
-					width: 360px;
-				}
-
-				.el-textarea {
-					width: 360px;
-				}
+			}
+			.param {
+				position: absolute;
+				top: 42px;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				display: flex;
 			}
 		}
 
 		.senior-content {
 			position: absolute;
 			top: 0;
-			left: 440px;
+			left: 540px;
 			bottom: 0;
 			right: 0;
 			overflow: auto;

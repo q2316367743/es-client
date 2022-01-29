@@ -1,55 +1,23 @@
 <template>
-    <div class="vue-codemirror">
+    <div class="codemirror">
         <textarea ref="textarea" :name="name" :placeholder="placeholder"></textarea>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-// lib
 import CodeMirror from 'codemirror';
-import { EditorEventMap } from 'codemirror'
 
-// pollfill
-if (typeof Object.assign != 'function') {
-    Object.defineProperty(Object, 'assign', {
-        value(target: any) {
-            if (target == null) {
-                throw new TypeError('Cannot convert undefined or null to object')
-            }
-            const to = Object(target)
-            for (let index = 1; index < arguments.length; index++) {
-                const nextSource = arguments[index]
-                if (nextSource != null) {
-                    for (const nextKey in nextSource) {
-                        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                            to[nextKey] = nextSource[nextKey]
-                        }
-                    }
-                }
-            }
-            return to
-        },
-        writable: true,
-        configurable: true
-    })
-}
-
-// export
 export default defineComponent({
-    name: 'codemirror',
+    name: 'CodeMirror',
     data() {
         return {
             content: '',
             codemirror: {} as CodeMirror.EditorFromTextArea,
-            cminstance: {} as CodeMirror.EditorFromTextArea
         }
     },
     props: {
-        code: String,
-        value: String,
-        marker: Function,
-        unseenLines: Array,
+        modelValue: String,
         name: {
             type: String,
             default: 'codemirror'
@@ -61,133 +29,42 @@ export default defineComponent({
         options: {
             type: Object as PropType<CodeMirror.EditorConfiguration>,
             default: () => ({})
-        },
-        globalOptions: {
-            type: Object,
-            default: () => ({})
-        },
+        }
     },
     watch: {
         options: {
             deep: true,
             handler(options: any) {
                 for (const key in options) {
-                    this.cminstance.setOption(key as keyof CodeMirror.EditorConfiguration, options[key])
+                    this.codemirror.setOption(key as keyof CodeMirror.EditorConfiguration, options[key])
                 }
             }
         },
-        merge() {
-            this.$nextTick(this.switchMerge)
-        },
-        code(newVal) {
-            this.handerCodeChange(newVal)
-        },
-        value(newVal) {
-            this.handerCodeChange(newVal)
-        },
-    },
-    methods: {
-        initialize() {
-            const cmOptions = Object.assign({}, this.globalOptions, this.options)
-            let textarea = this.$refs.textarea as HTMLTextAreaElement;
-            this.codemirror = CodeMirror.fromTextArea(textarea, cmOptions)
-            this.cminstance = this.codemirror
-            this.cminstance.setValue(this.code || this.value || this.content)
-            this.cminstance.on('change', cm => {
-                this.content = cm.getValue()
-                if (this.$emit) {
-                    this.$emit('input', this.content)
-                }
-            })
-
-            // 所有有效事件（驼峰命名）+ 去重
-            const tmpEvents = {}
-            const allEvents = [
-                'scroll',
-                'changes',
-                'beforeChange',
-                'cursorActivity',
-                'keyHandled',
-                'inputRead',
-                'electricInput',
-                'beforeSelectionChange',
-                'viewportChange',
-                'swapDoc',
-                'gutterClick',
-                'gutterContextMenu',
-                'focus',
-                'blur',
-                'refresh',
-                'optionChange',
-                'scrollCursorIntoView',
-                'update'
-            ]
-                .forEach((event: string) => {
-                    // 循环事件，并兼容 run-time 事件命名
-                    event = event as keyof EditorEventMap;
-                    this.cminstance.on(event, (...args: string[]) => {
-                        // console.log('当有事件触发了', event, args)
-                        this.$emit(event, ...args)
-                        const lowerCaseEvent = event.replace(/([A-Z])/g, '-$1').toLowerCase()
-                        if (lowerCaseEvent !== event) {
-                            this.$emit(lowerCaseEvent, ...args)
-                        }
-                    })
-                })
-
-            this.$emit('ready', this.codemirror)
-            this.unseenLineMarkers()
-
-            // prevents funky dynamic rendering
-            this.refresh()
-        },
-        refresh() {
-            this.$nextTick(() => {
-                this.cminstance.refresh()
-            })
-        },
-        destroy() {
-            // garbage cleanup
-            const element = this.cminstance.doc.cm.getWrapperElement()
-            element && element.remove && element.remove()
-        },
-        handerCodeChange(newVal: string) {
-            const cm_value = this.cminstance.getValue()
+        modelValue(newVal) {
+            const cm_value = this.codemirror.getValue()
             if (newVal !== cm_value) {
-                const scrollInfo = this.cminstance.getScrollInfo()
-                this.cminstance.setValue(newVal)
-                this.content = newVal
-                this.cminstance.scrollTo(scrollInfo.left, scrollInfo.top)
-            }
-            this.unseenLineMarkers()
-        },
-        unseenLineMarkers() {
-            if (this.unseenLines !== undefined && this.marker !== undefined) {
-                this.unseenLines.forEach(line => {
-                    const info = this.cminstance.lineInfo(line)
-                    this.cminstance.setGutterMarker(line, 'breakpoints', info.gutterMarkers ? null : this.marker())
-                })
+                console.log(newVal, typeof newVal)
+                this.codemirror.setValue(newVal);
+                this.content = newVal;
             }
         },
-        switchMerge() {
-            // Save current values
-            const history = this.cminstance.doc.history
-            const cleanGeneration = this.cminstance.doc.cleanGeneration
-            this.options.value = this.cminstance.getValue()
-
-            this.destroy()
-            this.initialize()
-
-            // Restore values
-            this.cminstance.doc.history = history
-            this.cminstance.doc.cleanGeneration = cleanGeneration
-        }
     },
     mounted() {
-        this.initialize()
-    },
-    beforeDestroy() {
-        this.destroy()
+        let textarea = this.$refs.textarea as HTMLTextAreaElement;
+        this.codemirror = CodeMirror.fromTextArea(textarea, this.options)
+        this.codemirror.setValue(this.modelValue || this.content)
+        this.codemirror.on('change', cm => {
+            this.content = cm.getValue()
+            if (this.$emit) {
+                this.$emit('update:modelValue', this.content)
+            }
+        })
+        this.codemirror.refresh();
     }
 })
 </script>
+<style lang="less">
+.codemirror {
+    width: 100%;
+}
+</style>
