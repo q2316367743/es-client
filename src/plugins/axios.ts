@@ -10,11 +10,6 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
     config => {
-        if (!config.url) {
-            // URL必须存在，
-            throw new Error('URL必须存在');
-
-        }
         // 基础链接每次动态取值
         config.baseURL = useUrlStore().current;
         if (config.baseURL === '') {

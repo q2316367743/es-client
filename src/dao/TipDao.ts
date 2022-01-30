@@ -1,17 +1,14 @@
 import Dexie from 'dexie';
 import { ElMessage } from 'element-plus'
 import Tip from '@/entity/Tip';
+import dexie from '@/plugins/dexie'
 
-class TipDao extends Dexie {
+class TipDao {
 
     public tips: Dexie.Table<Tip, number>;
 
     constructor() {
-        super('es-client');
-        this.version(1).stores({
-            url: '++id, method, link, mode, create_time, update_time'
-        })
-        this.tips = this.table('tip');
+        this.tips = dexie.getTip();
     }
 
     list(): Promise<Array<Tip>> {

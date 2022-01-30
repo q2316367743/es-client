@@ -47,7 +47,7 @@ export default async function Builder(): Promise<Array<Index>> {
         }
         indices.push({
             name: key,
-            alias: indecis[key].aliases,
+            alias: indecis[key].aliases ? indecis[key].aliases : new Array<string>(),
             original_size: size,
             size: prettyDataUnit(size),
             doc_count: docs,

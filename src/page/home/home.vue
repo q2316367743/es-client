@@ -7,6 +7,7 @@
 					:placeholder="$t('home.index_placeholder')"
 					style="width: 300px"
 					@input="search"
+					clearable
 				></el-input>
 				<el-select
 					v-model="condition.order"

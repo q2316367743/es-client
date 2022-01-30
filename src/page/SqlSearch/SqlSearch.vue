@@ -1,7 +1,7 @@
 <template>
     <el-card class="sql-search">
         <template #header>SQL查询</template>
-        <el-empty description="暂不支持"></el-empty>
+        <el-empty description="敬请期待"></el-empty>
     </el-card>
 </template>
 <script lang="ts">

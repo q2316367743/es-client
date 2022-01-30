@@ -12,7 +12,19 @@
 							<el-option label="PUT" value="PUT"></el-option>
 							<el-option label="DELETE" value="DELETE"></el-option>
 						</el-select>
-						<el-input v-model="link" style="width: 294px;margin: 0 6px;"></el-input>
+						<el-autocomplete
+							v-model="link"
+							style="width: 294px;margin: 0 6px;"
+							:fetch-suggestions="fetchSuggestions"
+							@keyup.enter.native="search"
+							@select="handleSelect"
+							placeholder="请输入链接"
+							clearable
+						>
+							<template #default="{ item }">
+								<div class="value">{{ item }}</div>
+							</template>
+						</el-autocomplete>
 						<el-button type="primary" @click="search">搜索</el-button>
 					</div>
 					<div class="param">
@@ -38,15 +50,15 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import { Method } from "axios";
 import JsonViewer from "vue-json-viewer";
 // 引入monaco
 import MonacoEditor from "@/component/MonacoEditor.vue";
 // 引入axios
 import axios from "@/plugins/axios";
-import tipDao from '@/dao/TipDao';
-import Tip from "@/entity/Tip";
+import { validateTip } from '@/utils/GlobalUtil';
+import LinkProcessor from "./LinkProcessor";
 
 export default defineComponent({
 	data: () => ({
@@ -54,12 +66,19 @@ export default defineComponent({
 		method: 'GET' as Method,
 		param: '',
 		result: {},
+		suggestions: []
 	}),
 	components: { JsonViewer, MonacoEditor },
+	watch: {
+		link(newValue) {
+			if (newValue === '') {
+				this.result = {};
+			}
+		}
+	},
 	methods: {
 		async search() {
-			let isContinue = await this.tips(this.method, this.link);
-			if (isContinue) {
+			if (await validateTip(this.method, this.link)) {
 				if (this.method === 'GET') {
 					axios({
 						url: this.link,
@@ -70,11 +89,13 @@ export default defineComponent({
 					});
 				} else {
 					let data = {};
-					try {
-						data = JSON.parse(this.param);
-					} catch (e: any) {
-						console.error(e);
-						ElMessage.error('JSON格式错误');
+					if (this.param != '') {
+						try {
+							data = JSON.parse(this.param);
+						} catch (e: any) {
+							console.error(e);
+							ElMessage.error('JSON格式错误');
+						}
 					}
 					axios({
 						url: this.link,
@@ -87,48 +108,12 @@ export default defineComponent({
 				}
 			}
 		},
-		async tips(method: Method, link: string): Promise<boolean> {
-			let tips = await tipDao.list();
-			for (let tip of tips) {
-				if (tip.mode === 1) {
-					if (tip.method === method && this.link === link) {
-						try {
-							await ElMessageBox.confirm('此操作为危险操作，是否继续？', '危险操作提示', {
-								confirmButtonText: '继续',
-								cancelButtonText: '取消',
-								type: 'warning',
-							});
-							return new Promise((resolve, reject) => {
-								resolve(true);
-							});
-						} catch (e) {
-							return new Promise((resolve, reject) => {
-								resolve(false);
-							});
-						}
-					}
-				} else if (tip.mode === 2) {
-					if (tip.method === method && link.indexOf(link) > -1) {
-						try {
-							await ElMessageBox.confirm('此操作为危险操作，是否继续？', '危险操作提示', {
-								confirmButtonText: '继续',
-								cancelButtonText: '取消',
-								type: 'warning',
-							});
-							return new Promise((resolve, reject) => {
-								resolve(true);
-							});
-						} catch (e) {
-							return new Promise((resolve, reject) => {
-								resolve(false);
-							});
-						}
-					}
-				}
-			}
-			return new Promise((resolve, reject) => {
-				resolve(true);
-			});
+		fetchSuggestions(queryString: string, cb: (links: string[]) => void) {
+			cb(LinkProcessor(queryString));
+		},
+		handleSelect(item: string) {
+			this.link = item;
+			this.search()
 		}
 	},
 });
