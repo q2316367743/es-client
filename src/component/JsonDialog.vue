@@ -8,7 +8,7 @@
         :close-on-click-modal="false"
         top="10vh"
     >
-        <json-viewer :value="json" :expand-depth="4" copyable sort :expanded="open" preview-mode></json-viewer>
+        <json-viewer :value="json" :expand-depth="4" copyable sort :expanded="open" :preview-mode="previewMode"></json-viewer>
     </el-dialog>
 </template>
 <script lang="ts">
@@ -27,6 +27,11 @@ export default defineComponent({
             type: Boolean,
             required: false,
             default: false
+        },
+        previewMode: {
+            type: Boolean,
+            required: false,
+            default: true
         }
     },
     data: () => ({
@@ -42,5 +47,9 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
+<style>
+.es-dialog .el-dialog__body {
+    height: 65vh;
+    overflow: auto;
+}
 </style>

@@ -97,7 +97,7 @@
             </div>
         </div>
         <json-dialog :title="title" :json="json" :open="open" v-model="show_dialog"></json-dialog>
-        <json-dialog :title="index?.name" :json="data_json" v-model="data_dialog"></json-dialog>
+        <json-dialog :title="index?.name" :json="data_json" :open="open" v-model="data_dialog"></json-dialog>
     </div>
 </template>
 <script lang="ts">

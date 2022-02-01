@@ -1,12 +1,16 @@
 <template>
 	<div class="senior-search">
 		<el-card style="min-height: 550px">
-			<template #header>高级查询</template>
+			<template #header>{{ $t('senior_search.senior_search') }}</template>
 			<div class="senior-main">
 				<div class="side">
 					<div class="link">
-						<div style="width: 54px;">链接：</div>
-						<el-select v-model="method" placeholder="请选择" style="width: 100px;">
+						<div style="width: 54px;height: 32px;line-height: 32px;">{{ $t('senior_search.link') }}</div>
+						<el-select
+							v-model="method"
+							:placeholder="$t('senior_search.please_select')"
+							style="width: 100px;"
+						>
 							<el-option label="GET" value="GET"></el-option>
 							<el-option label="POST" value="POST"></el-option>
 							<el-option label="PUT" value="PUT"></el-option>
@@ -18,26 +22,34 @@
 							:fetch-suggestions="fetchSuggestions"
 							@keyup.enter.native="search"
 							@select="handleSelect"
-							placeholder="请输入链接"
+							:placeholder="$t('senior_search.please_enter_a_link')"
 							clearable
 						>
 							<template #default="{ item }">
 								<div class="value">{{ item }}</div>
 							</template>
 						</el-autocomplete>
-						<el-button type="primary" @click="search">搜索</el-button>
+						<el-button
+							type="primary"
+							@click="search"
+						>{{ link.indexOf('search') > -1 ? $t('senior_search.search') : $t('senior_search.execute') }}</el-button>
 					</div>
 					<div class="param">
-						<div style="width: 54px;">参数：</div>
-						<el-input
-							v-model="param"
-							placeholder="请输入?后参数(key=value&key=value)"
-							type="textarea"
-							:rows="7"
-							v-show="method === 'GET'"
-							style="width: 466px;"
-						></el-input>
-						<monaco-editor v-model="param" height="100%" v-show="method !== 'GET'"></monaco-editor>
+						<div class="label">参数：</div>
+						<div class="param-content">
+							<div class="get" v-show="method === 'GET'">
+								<el-button type="primary" @click="addGetParam">{{ $t('senior_search.add') }}</el-button>
+								<el-button @click="truncateGetParam">{{ $t('senior_search.clear') }}</el-button>
+								<div class="item" v-for="(param, index) in get_params" :key="index">
+									<el-input v-model="param.key" :placeholder="$t('senior_search.please_enter_key')"></el-input>
+									<div style="text-align: center;">=</div>
+									<el-input v-model="param.value" :placeholder="$t('senior_search.please_enter_value')"></el-input>
+									<div></div>
+									<el-button type="danger" @click="removeGetParam(param.id)">{{ $t('senior_search.remove') }}</el-button>
+								</div>
+							</div>
+							<monaco-editor v-model="params" height="100%" v-show="method !== 'GET'" class="post"></monaco-editor>
+						</div>
 					</div>
 				</div>
 				<div class="senior-content">
@@ -59,14 +71,18 @@ import MonacoEditor from "@/component/MonacoEditor.vue";
 import axios from "@/plugins/axios";
 import { validateTip } from '@/utils/GlobalUtil';
 import LinkProcessor from "./LinkProcessor";
+import Param from '@/view/Param'
+import getParamBuild from "./build/GetParamBuild";
 
 export default defineComponent({
 	data: () => ({
 		link: '',
 		method: 'GET' as Method,
-		param: '',
+		params: '',
 		result: {},
-		suggestions: []
+		suggestions: [],
+		// GET请求参数
+		get_params: new Array<Param>()
 	}),
 	components: { JsonViewer, MonacoEditor },
 	watch: {
@@ -83,18 +99,18 @@ export default defineComponent({
 					axios({
 						url: this.link,
 						method: this.method,
-						params: this.param
+						params: getParamBuild(this.get_params)
 					}).then((response) => {
 						this.result = response;
 					});
 				} else {
 					let data = {};
-					if (this.param != '') {
+					if (this.params != '') {
 						try {
-							data = JSON.parse(this.param);
+							data = JSON.parse(this.params);
 						} catch (e: any) {
 							console.error(e);
-							ElMessage.error('JSON格式错误');
+							ElMessage.error(this.$t('senior_search.json_format_error'));
 						}
 					}
 					axios({
@@ -113,7 +129,19 @@ export default defineComponent({
 		},
 		handleSelect(item: string) {
 			this.link = item;
-			this.search()
+		},
+		addGetParam() {
+			this.get_params.push({
+				id: new Date().getTime(),
+				key: '',
+				value: ''
+			});
+		},
+		removeGetParam(id: number) {
+			this.get_params = this.get_params.filter(e => e.id !== id);
+		},
+		truncateGetParam() {
+			this.get_params = new Array<Param>();
 		}
 	},
 });
@@ -164,7 +192,35 @@ export default defineComponent({
 				left: 0;
 				right: 0;
 				bottom: 0;
-				display: flex;
+				overflow-y: auto;
+				.label {
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 54px;
+					height: 32px;
+					line-height: 32px;
+				}
+				.param-content {
+					position: absolute;
+					top: 0px;
+					left: 54px;
+					right: 0px;
+					bottom: 0px;
+					overflow: hidden;
+					.get {
+						width: 466px;
+						.item {
+							display: grid;
+							grid-template-rows: 1fr;
+							grid-template-columns: 0.5fr 26px 1fr 12px auto;
+							margin-top: 12px;
+						}
+					}
+					.post {
+						padding-top: 5px;
+					}
+				}
 			}
 		}
 

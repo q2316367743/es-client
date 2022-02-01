@@ -3,7 +3,7 @@
         <div class="base-option">
             <div class="el-card es-card is-always-shadow">
                 <div class="el-card__header">
-                    <span>查询条件</span>
+                    <span>{{$t('base_search.query_criteria')}}</span>
                     <el-button
                         style="
 							float: right;
@@ -12,18 +12,18 @@
 						"
                         type="text"
                         @click="is_show = !is_show"
-                    >{{ is_show ? "收起" : "展开" }}</el-button>
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="search">刷新</el-button>
+                    >{{ is_show ? $t('base_search.close') : $t('base_search.open') }}</el-button>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="search">{{$t('base_search.refresh')}}</el-button>
                     <el-button
                         style="float: right; padding: 3px 0"
                         type="text"
                         @click="show_body"
-                    >显示查询语句</el-button>
+                    >{{$t('base_search.display_query_statement')}}</el-button>
                 </div>
                 <div class="el-card__body" v-show="is_show">
                     <el-form label-position="top" label-width="80px" style="overflow: auto">
-                        <el-form-item label="文档：">
-                            <el-select v-model="index" filterable placeholder="请选择" clearable>
+                        <el-form-item :label="$t('base_search.document')">
+                            <el-select v-model="index" filterable :placeholder="$t('base_search.please_select')" clearable>
                                 <el-option
                                     v-for="item, idx in indices"
                                     :key="idx"
@@ -31,12 +31,12 @@
                                     :value="item.name"
                                 ></el-option>
                             </el-select>
-                            <el-button type="primary" style="margin-left: 10px" @click="search">搜索</el-button>
-                            <el-button style="margin-left: 10px" @click="clear">清空</el-button>
+                            <el-button type="primary" style="margin-left: 10px" @click="search">{{$t('base_search.search')}}</el-button>
+                            <el-button style="margin-left: 10px" @click="clear">{{$t('base_search.clear')}}</el-button>
                         </el-form-item>
                         <el-form-item label="条件：" style="min-width: 1100px">
                             <div v-if="field_condition.length === 0">
-                                <el-button type="primary" @click="field_condition_add">新增</el-button>
+                                <el-button type="primary" @click="field_condition_add">{{$t('base_search.add')}}</el-button>
                             </div>
                             <div>
                                 <div
@@ -52,11 +52,11 @@
                                         type="primary"
                                         style="margin-left: 10px"
                                         @click="field_condition_add"
-                                    >新增</el-button>
+                                    >{{$t('base_search.add')}}</el-button>
                                     <el-button
                                         type="danger"
                                         @click="field_condition_remove(item.id)"
-                                    >移除</el-button>
+                                    >{{$t('base_search.remove')}}</el-button>
                                 </div>
                             </div>
                         </el-form-item>
@@ -82,7 +82,7 @@
             </el-card>
         </div>
         <el-dialog
-            title="查询条件"
+            :title="$t('base_search.query_criteria')"
             v-model="condition_dialog"
             width="70%"
             append-to-body
@@ -195,7 +195,7 @@ export default defineComponent({
         },
         search() {
             if (this.index.length === 0) {
-                ElMessageBox.alert("请选择索引");
+                ElMessageBox.alert(this.$t('base_search.please_select_an_index'));
                 return;
             }
             axios({

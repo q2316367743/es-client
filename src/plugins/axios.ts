@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { useUrlStore } from '@/store/UrlStore'
+import i18n from '@/i18n'
 
 // 创建一个axios实例
 const service = axios.create({
@@ -13,8 +14,8 @@ service.interceptors.request.use(
         // 基础链接每次动态取值
         config.baseURL = useUrlStore().current;
         if (config.baseURL === '') {
-            console.error(config.url);
-            throw new Error('请选择链接')
+            // @ts-ignore
+            throw new Error(i18n.global.locale.value == 'zh' ? '请选择链接' : 'please select a link')
         }
         return config
     },

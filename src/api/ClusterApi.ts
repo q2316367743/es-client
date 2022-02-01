@@ -36,4 +36,34 @@ export default {
             url: '/_stats'
         })
     },
+    _nodes_stats(): Promise<any> {
+        return axios({
+            method: 'GET',
+            url: '/_nodes/stats'
+        })
+    },
+    _nodes(): Promise<any> {
+        return axios({
+            method: 'GET',
+            url: '/_nodes'
+        })
+    },
+    _nodes_plugins(): Promise<any> {
+        return axios({
+            method: 'GET',
+            url: '/_nodes/plugins'
+        })
+    },
+    _cluster_health(): Promise<any> {
+        return axios({
+            method: 'GET',
+            url: '/_cluster/health'
+        })
+    },
+    _template(): Promise<any> {
+        return axios({
+            method: 'GET',
+            url: '/_template'
+        })
+    }
 }

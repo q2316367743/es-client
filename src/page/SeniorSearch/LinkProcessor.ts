@@ -1,7 +1,7 @@
 import { useIndexStore } from "@/store/IndexStore";
 
 // 附加操作
-const options = ['', '_search', '_setting', '_mapping'];
+const options = ['', '_doc', '_search', '_setting', '_mapping'];
 
 // 独立操作
 const sign = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/shards?v', '/_cat/shards/', '/_cat/master?v',

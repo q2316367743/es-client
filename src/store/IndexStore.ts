@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
+import { useUrlStore } from "./UrlStore";
 
 export const useIndexStore = defineStore('index', {
     state: () => {
@@ -37,10 +38,10 @@ export const useIndexStore = defineStore('index', {
                 this.indices = await indexListBuild();
                 // 获取基本信息
                 let info = await clusterApi.info();
-                this.name = info.name as string;
+                this.name = info.cluster_name as string;
                 loading.close();
             } catch (e: any) {
-                console.error(e)
+                useUrlStore().choose('');
                 loading.close();
 
             }

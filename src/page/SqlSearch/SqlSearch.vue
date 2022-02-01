@@ -1,6 +1,6 @@
 <template>
     <el-card class="sql-search">
-        <template #header>SQL查询</template>
+        <template #header>{{ $t('app.menu.sql_search') }}</template>
         <el-empty description="敬请期待"></el-empty>
     </el-card>
 </template>

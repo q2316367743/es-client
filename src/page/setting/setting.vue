@@ -1,6 +1,6 @@
 <template>
     <el-card class="setting">
-        <template #header>设置</template>
+        <template #header>{{ $t('app.menu.setting') }}</template>
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
             <el-tab-pane :label="$t('setting.link.title')" name="url_history" class="url"></el-tab-pane>

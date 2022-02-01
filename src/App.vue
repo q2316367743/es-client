@@ -21,12 +21,12 @@
 					</el-icon>
 					<template #title>{{ $t('app.menu.senior_search') }}</template>
 				</el-menu-item>
-				<el-menu-item index="sql_search">
+				<!-- <el-menu-item index="sql_search">
 					<el-icon>
 						<coin />
 					</el-icon>
 					<template #title>{{ $t('app.menu.sql_search') }}</template>
-				</el-menu-item>
+				</el-menu-item> -->
 				<el-menu-item index="setting">
 					<el-icon>
 						<operation />
@@ -116,8 +116,16 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapState(useUrlStore, ['urls']),
+		...mapState(useUrlStore, {
+			'urls': 'urls',
+			'url_store': 'url'
+		}),
 		...mapState(useIndexStore, ['name'])
+	},
+	watch: {
+		url_store() {
+			this.url = this.url_store;
+		}
 	},
 	created() {
 		useUrlStore().reset();

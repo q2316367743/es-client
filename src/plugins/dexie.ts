@@ -9,7 +9,7 @@ class Instance extends Dexie {
 
     constructor() {
         super('es-client');
-        this.version(1).stores({
+        this.version(2).stores({
             url: '++id, &name, &value, sequence, create_time, update_time',
             tip: '++id, method, link, mode, create_time, update_time'
         })
