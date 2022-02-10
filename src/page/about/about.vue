@@ -2,17 +2,66 @@
     <div class="about">
         <div class="block">
             <span>仿照</span>
-            <el-link href="https://github.com/mobz/elasticsearch-head" target="_blank">elasticsearch head</el-link>
-            <span>编写的es查询客户端，使用vue+element-ui编写比elasticsearch-head更美观，比Kibana更加轻量</span>
+            <el-link
+                href="https://github.com/mobz/elasticsearch-head"
+                target="_blank"
+            >elasticsearch head</el-link>
+            <span>编写的es查询客户端，使用</span>
+            <el-link href="https://v3.cn.vuejs.org/">vue3</el-link>
+            <span>+</span>
+            <el-link href="https://vitejs.cn/">vite2</el-link>
+            <span>+</span>
+            <el-link href="https://www.typescriptlang.org/">typescript</el-link>
+            <span>+</span>
+            <el-link href="https://element-plus.gitee.io/zh-CN/">element-plus</el-link>
+            <span>编写，比elasticsearch-head更美观，比Kibana更加轻量</span>
         </div>
         <div class="title-1">项目地址</div>
         <div content="content">
-            <div>码云地址：<el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">es-client</el-link></div>
-            <div>微软edge插件商店地址：<el-link href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo" target="_blank">es-client</el-link></div>
+            <div>
+                码云地址：
+                <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">es-client</el-link>
+            </div>
+            <div>
+                微软edge插件商店地址：
+                <el-link
+                    href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
+                    target="_blank"
+                >es-client</el-link>
+            </div>
+        </div>
+        <div class="title-1">意见反馈</div>
+        <div content="content">
+            <li>
+                <span>在</span>
+                <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">码云</el-link>
+                <span>提交issue或评论</span>
+            </li>
+            <li>
+                <span>在</span>
+                <el-link
+                    href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
+                    target="_blank"
+                >edge插件商店</el-link>
+                <span>进行评论</span>
+            </li>
         </div>
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
+                <el-timeline-item timestamp="2022-02-10" placement="top">
+                    <el-card>
+                        <div>0.5.0</div>
+                        <ol>
+                            <li>使用ts和vue3进行重写</li>
+                            <li>支持国际化</li>
+                            <li>高级搜索中不允许修改链接</li>
+                            <li>设置中的链接管理希望有名称用于区分</li>
+                            <li>上面的链接管理可以通过下拉框名称进行连接</li>
+                            <li>高级搜索去除选择链接地址</li>
+                        </ol>
+                    </el-card>
+                </el-timeline-item>
                 <el-timeline-item timestamp="2021-12-18" placement="top">
                     <el-card>
                         <div>0.4.4</div>
@@ -111,7 +160,7 @@ export default defineComponent({
     }
 
     .content {
-        ol{
+        ol {
             padding: 20px;
         }
     }

@@ -57,7 +57,7 @@
 					<div v-if="index.mapping.length === 0">
 						<el-button
 							type="primary"
-							@click="index.mapping.push({ field: '', 'type': 'text' })"
+							@click="addProperty"
 						>{{ $t('home.new_index.add') }}</el-button>
 					</div>
 					<el-form v-else>
