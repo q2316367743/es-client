@@ -77,7 +77,7 @@ import getParamBuild from "./build/GetParamBuild";
 export default defineComponent({
 	data: () => ({
 		link: '',
-		method: 'GET' as Method,
+		method: 'POST' as Method,
 		params: '',
 		result: {},
 		suggestions: [],
