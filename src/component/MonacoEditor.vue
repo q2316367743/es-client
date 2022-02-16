@@ -57,7 +57,6 @@ export default defineComponent({
         });
         editor.onDidChangeModelContent((e) => {
             const value = editor.getValue()
-            console.log(e, value);
             if (this.content !== value) {
                 this.$emit('update:modelValue', value);
             }

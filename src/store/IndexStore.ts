@@ -47,7 +47,7 @@ export const useIndexStore = defineStore('index', {
             } catch (e: any) {
                 useUrlStore().choose('');
                 loading.close();
-
+                console.error(e);
             }
         },
         clear() {
