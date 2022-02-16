@@ -19,7 +19,7 @@
                     <el-button
                         type="danger"
                         size="small"
-                        @click="remove(scope.row.id)"
+                        @click="remove(scope.row.id, scope.row.value)"
                     >{{ $t('setting.link.delete') }}</el-button>
                 </template>
             </el-table-column>
@@ -71,6 +71,7 @@ import { mapState } from "pinia";
 import axios from 'axios';
 
 import { useUrlStore } from "@/store/UrlStore";
+import { useIndexStore } from "@/store/IndexStore";
 import url_dao from "@/dao/UrlDao";
 import Url from "@/entity/Url";
 import JsonDialog from "@/component/JsonDialog.vue";
@@ -121,7 +122,7 @@ export default defineComponent({
         prettyDate(date: Date) {
             return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
         },
-        remove(id: number) {
+        remove(id: number, value: string) {
             ElMessageBox.confirm('此操作将永久删除该链接, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -133,7 +134,11 @@ export default defineComponent({
                         message: '删除成功',
                         type: 'success'
                     });
+                    if (useUrlStore().current === value) {
+                        useUrlStore().choose("");
+                    }
                     useUrlStore().reset();
+                    useIndexStore().reset();
                 })
             })
         },

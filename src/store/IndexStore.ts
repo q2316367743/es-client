@@ -32,7 +32,11 @@ export const useIndexStore = defineStore('index', {
                 lock: true,
                 text: '获取索引信息中',
                 background: 'rgba(0, 0, 0, 0.7)',
-            })
+            });
+            if (useUrlStore().current === '') {
+                loading.close();
+                return;
+            }
             try {
                 // 获取索引信息
                 this.indices = await indexListBuild();

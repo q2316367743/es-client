@@ -26,7 +26,7 @@
 						<coin />
 					</el-icon>
 					<template #title>{{ $t('app.menu.sql_search') }}</template>
-				</el-menu-item> -->
+				</el-menu-item>-->
 				<el-menu-item index="setting">
 					<el-icon>
 						<operation />
@@ -54,6 +54,7 @@
 						@change="select_url"
 					>
 						<el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
+						<el-option label="新增" value="add"></el-option>
 					</el-select>
 					<el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
@@ -81,14 +82,39 @@
 		>
 			<about></about>
 		</el-dialog>
+		<el-dialog
+			:title="$t('setting.link.add') + $t('setting.link.url')"
+			v-model="url_add_dialog"
+			width="600px"
+		>
+			<el-form :model="url_add_data" label-width="100px" ref="urlForm" :rules="url_rules">
+				<el-form-item :label="$t('setting.link.name')" prop="name">
+					<el-input v-model="url_add_data.name"></el-input>
+				</el-form-item>
+				<el-form-item :label="$t('setting.link.url')" prop="value">
+					<el-input v-model="url_add_data.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
+				</el-form-item>
+				<el-form-item :label="$t('setting.link.sequence')" prop="sequence">
+					<el-input-number v-model="url_add_data.sequence" controls-position="right" size="large" />
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<el-button @click="test">{{ $t('setting.link.test') }}</el-button>
+				<el-button type="primary" @click="url_submit">{{ $t('setting.link.add') }}</el-button>
+			</template>
+		</el-dialog>
+		<json-dialog v-model="test_dialog" :json="test_data" :title="$t('setting.link.result')" open></json-dialog>
 	</div>
 </template>
 
 <script lang="ts">
 import { useUrlStore } from "./store/UrlStore";
 import { useIndexStore } from '@/store/IndexStore';
+import type { ElForm } from 'element-plus'
+import { ElMessage } from 'element-plus'
 // 引入页面组件
 import Info from '@/component/Info.vue';
+import JsonDialog from "@/component/JsonDialog.vue";
 
 // 页面
 import About from "@/page/About/About.vue";
@@ -101,18 +127,53 @@ import Setting from '@/page/Setting/Setting.vue'
 import { defineComponent } from 'vue';
 import { mapState } from "pinia";
 import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@element-plus/icons-vue';
-
+import Url from "./entity/Url";
+import url_dao from "@/dao/UrlDao";
+import axios from 'axios';
 
 export default defineComponent({
 	components: {
-		Info, About, Setting, Home, BaseSearch, SeniorSearch, SqlSearch, Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard
+		Info, About, Setting, Home, BaseSearch, SeniorSearch,
+		SqlSearch, Fold, Expand, HomeFilled, Search, Operation,
+		Coin, DataBoard, JsonDialog
 	},
 	data: () => {
 		return {
 			active: "home",
 			url: "",
 			cluster_name: "",
-			about_dialog: false
+			about_dialog: false,
+			url_add_dialog: false,
+			url_add_data: {
+				name: '',
+				value: 'http://',
+				sequence: 0,
+			} as Url,
+			url_rules: {
+				name: [
+					{
+						required: true,
+						message: '请输入链接名',
+						trigger: 'blur',
+					}
+				],
+				value: [
+					{
+						required: true,
+						message: '请输入链接',
+						trigger: 'blur',
+					}
+				],
+				sequence: [
+					{
+						required: true,
+						message: '请输入排序',
+						trigger: 'blur',
+					}
+				]
+			},
+			test_dialog: false,
+			test_data: {} as any
 		};
 	},
 	computed: {
@@ -132,6 +193,12 @@ export default defineComponent({
 	},
 	methods: {
 		select_url(value: string) {
+			if (value === 'add') {
+				// 新增，打开新增面板
+				this.url = "";
+				this.url_add_dialog = true;
+				return;
+			}
 			useUrlStore().choose(value);
 			if (value !== '') {
 				useIndexStore().reset();
@@ -141,9 +208,52 @@ export default defineComponent({
 			useIndexStore().reset();
 		},
 		select_menu(index: string) {
-			// 切换url的hash值
 			// 切换active
 			this.active = index;
+		},
+		url_submit() {
+			let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
+			urlForm.validate((valid) => {
+				if (valid) {
+					let targetValue = this.url_add_data.value + "";
+					// 新增
+					url_dao.insert({
+						name: this.url_add_data.name,
+						value: this.url_add_data.value,
+						sequence: this.url_add_data.sequence
+					}, () => {
+						useUrlStore().choose(targetValue);
+						ElMessage.success('新增成功');
+						useUrlStore().reset();
+						useIndexStore().reset();
+					});
+					this.url_add_dialog = false;
+					// 重置数据
+					this.url_add_data = {
+						name: '',
+						value: 'http://',
+						sequence: 0,
+					}
+				}
+			});
+		},
+		test() {
+			let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
+			urlForm.validate((valid) => {
+				if (valid) {
+					axios({
+						baseURL: this.url_add_data.value,
+						url: '/',
+						method: 'GET',
+					}).then((response) => {
+						this.test_dialog = true;
+						this.test_data = response.data;
+					}).catch((e) => {
+						console.error(e);
+						ElMessage.error('连接失败');
+					});
+				}
+			})
 		}
 	},
 });
