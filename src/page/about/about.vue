@@ -29,6 +29,13 @@
                     target="_blank"
                 >es-client</el-link>
             </div>
+            <div>
+                Firefox插件商店地址：
+                <el-link
+                    href="https://addons.mozilla.org/addon/es-client"
+                    target="_blank"
+                >es-client</el-link>
+            </div>
         </div>
         <div class="title-1">意见反馈</div>
         <div content="content">
@@ -49,6 +56,23 @@
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
+                <el-timeline-item timestamp="2022-02-17" placement="top">
+                    <el-card>
+                        <div>0.6.0</div>
+                        <ol>
+                            <li>链接管理优化，可以在首页上面新增链接</li>
+                            <li>基础查询功能优化</li>
+                            <ul style="padding-left: 20px;padding-top: 5px;">
+                                <li>文档选择中增加别名</li>
+                                <li>文档按照名称排序</li>
+                                <li>字段按照名称排序</li>
+                            </ul>
+                            <li>增加<el-link herf="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link></li>
+                            <li>多个列表新增返回顶部</li>
+                        </ol>
+                        <div>链接在设置 => 链接管理中管理，进行增删改查</div>
+                    </el-card>
+                </el-timeline-item>
                 <el-timeline-item timestamp="2022-02-10" placement="top">
                     <el-card>
                         <div>0.5.0</div>

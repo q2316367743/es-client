@@ -57,6 +57,7 @@
 				</div>
 			</div>
 		</el-card>
+        <el-backtop target=".senior-content" />
 	</div>
 </template>
 

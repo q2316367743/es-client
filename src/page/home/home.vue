@@ -35,6 +35,7 @@
 		</div>
 		<div class="home-main" v-loading="index_loading">
 			<index-item v-for="view, index in show_indices" :index="view" :key="index"></index-item>
+			<el-backtop target=".home-main" />
 		</div>
 		<el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
 			<el-form>

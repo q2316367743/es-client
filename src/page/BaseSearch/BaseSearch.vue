@@ -100,6 +100,7 @@
                 </div>
             </el-card>
         </div>
+        <el-backtop target=".content" />
         <el-dialog
             :title="$t('base_search.query_criteria')"
             v-model="condition_dialog"
