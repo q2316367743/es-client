@@ -11,5 +11,6 @@ export default {
     'condition': 'condition:',
     'add': 'add',
     'remove': 'remove',
-    'please_select_an_index': 'please select an index'
+    'please_select_an_index': 'please select an index',
+    'select_placeholder': 'please select'
 }

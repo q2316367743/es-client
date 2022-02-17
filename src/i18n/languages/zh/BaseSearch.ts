@@ -11,5 +11,6 @@ export default {
     'condition': '条件：',
     'add': '新增',
     'remove': '移除',
-    'please_select_an_index': '请选择索引'
+    'please_select_an_index': '请选择索引',
+    'select_placeholder': '请选择'
 }

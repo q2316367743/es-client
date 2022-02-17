@@ -192,7 +192,7 @@ export default defineComponent({
 		select_url(value: string) {
 			if (value === 'add') {
 				// 新增，打开新增面板
-				this.url = "";
+				this.url = useUrlStore().current;
 				this.url_add_dialog = true;
 				return;
 			}

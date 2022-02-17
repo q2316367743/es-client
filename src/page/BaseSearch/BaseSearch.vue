@@ -3,7 +3,7 @@
         <div class="base-option">
             <div class="el-card es-card is-always-shadow">
                 <div class="el-card__header">
-                    <span>{{$t('base_search.query_criteria')}}</span>
+                    <span>{{ $t('base_search.query_criteria') }}</span>
                     <el-button
                         style="
 							float: right;
@@ -13,17 +13,26 @@
                         type="text"
                         @click="is_show = !is_show"
                     >{{ is_show ? $t('base_search.close') : $t('base_search.open') }}</el-button>
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="search">{{$t('base_search.refresh')}}</el-button>
+                    <el-button
+                        style="float: right; padding: 3px 0"
+                        type="text"
+                        @click="search"
+                    >{{ $t('base_search.refresh') }}</el-button>
                     <el-button
                         style="float: right; padding: 3px 0"
                         type="text"
                         @click="show_body"
-                    >{{$t('base_search.display_query_statement')}}</el-button>
+                    >{{ $t('base_search.display_query_statement') }}</el-button>
                 </div>
                 <div class="el-card__body" v-show="is_show">
                     <el-form label-position="top" label-width="80px" style="overflow: auto">
                         <el-form-item :label="$t('base_search.document')">
-                            <el-select v-model="index" filterable :placeholder="$t('base_search.please_select')" clearable>
+                            <el-select
+                                v-model="index"
+                                filterable
+                                :placeholder="$t('base_search.please_select')"
+                                clearable
+                            >
                                 <el-option
                                     v-for="item, idx in indices"
                                     :key="idx"
@@ -31,12 +40,22 @@
                                     :value="item.name"
                                 ></el-option>
                             </el-select>
-                            <el-button type="primary" style="margin-left: 10px" @click="search">{{$t('base_search.search')}}</el-button>
-                            <el-button style="margin-left: 10px" @click="clear">{{$t('base_search.clear')}}</el-button>
+                            <el-button
+                                type="primary"
+                                style="margin-left: 10px"
+                                @click="search"
+                            >{{ $t('base_search.search') }}</el-button>
+                            <el-button
+                                style="margin-left: 10px"
+                                @click="clear"
+                            >{{ $t('base_search.clear') }}</el-button>
                         </el-form-item>
                         <el-form-item label="条件：" style="min-width: 1100px">
                             <div v-if="field_condition.length === 0">
-                                <el-button type="primary" @click="field_condition_add">{{$t('base_search.add')}}</el-button>
+                                <el-button
+                                    type="primary"
+                                    @click="field_condition_add"
+                                >{{ $t('base_search.add') }}</el-button>
                             </div>
                             <div>
                                 <div
@@ -52,11 +71,11 @@
                                         type="primary"
                                         style="margin-left: 10px"
                                         @click="field_condition_add"
-                                    >{{$t('base_search.add')}}</el-button>
+                                    >{{ $t('base_search.add') }}</el-button>
                                     <el-button
                                         type="danger"
                                         @click="field_condition_remove(item.id)"
-                                    >{{$t('base_search.remove')}}</el-button>
+                                    >{{ $t('base_search.remove') }}</el-button>
                                 </div>
                             </div>
                         </el-form-item>
@@ -113,8 +132,12 @@ import { mapState } from "pinia";
 import { useIndexStore } from "@/store/IndexStore";
 import Field from "@/view/Field";
 
-// 公共方法
+interface Name {
+    name: string;
+    fields: Array<Field>;
+}
 
+// 公共方法
 export default defineComponent({
     components: {
         JsonViewer,
@@ -141,7 +164,25 @@ export default defineComponent({
         };
     },
     computed: {
-        ...mapState(useIndexStore, ['indices']),
+        ...mapState(useIndexStore, {
+            indices: (state) => {
+                let names = new Array<Name>();
+                let indices = state.indices;
+                indices.forEach(e => {
+                    names.push({
+                        name: e.name,
+                        fields: e.fields
+                    });
+                    e.alias.forEach(a => names.push({
+                        name: a,
+                        fields: e.fields
+                    }))
+                });
+                return names.sort((a, b) => {
+                    return a.name.localeCompare(b.name, "zh-CN");
+                });
+            }
+        }),
         fields() {
             if (this.index === '') {
                 return new Array<Field>();
@@ -149,17 +190,19 @@ export default defineComponent({
             // 重置字段
             for (let index of this.indices) {
                 if (index.name === this.index) {
-                    return index.fields;
+                    return index.fields.sort((a, b) => {
+                        return a.name.localeCompare(b.name, "zh-CN");
+                    });
                 }
             }
             return new Array<Field>();
-        }
+        },
     },
     watch: {
         index() {
             // 索引变化，重置查询
             this.clear();
-            if(this.index !== '') {
+            if (this.index !== '') {
                 this.search();
             }
         }
@@ -168,7 +211,7 @@ export default defineComponent({
         field_condition_add(): void {
             this.field_condition.push({
                 id: new Date().getTime(),
-                type: '',
+                type: 'must',
                 field: {
                     name: '',
                     type: ''
@@ -213,7 +256,7 @@ export default defineComponent({
         },
         clear() {
             this.page = 1,
-            this.size = 10;
+                this.size = 10;
             this.total = 0;
             this.field_condition = new Array<BaseQuery>();
             this.result = {};
