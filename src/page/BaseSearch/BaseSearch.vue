@@ -1,106 +1,108 @@
 <template>
     <div class="base-search">
-        <div class="base-option">
-            <div class="el-card es-card is-always-shadow">
-                <div class="el-card__header">
-                    <span>{{ $t('base_search.query_criteria') }}</span>
-                    <el-button
-                        style="
+        <el-scrollbar>
+            <div class="base-option">
+                <div class="el-card es-card is-always-shadow">
+                    <div class="el-card__header">
+                        <span>{{ $t('base_search.query_criteria') }}</span>
+                        <el-button
+                            style="
 							float: right;
 							padding: 3px 13px 3px 0;
 							margin-left: 10px;
 						"
-                        type="text"
-                        @click="is_show = !is_show"
-                    >{{ is_show ? $t('base_search.close') : $t('base_search.open') }}</el-button>
-                    <el-button
-                        style="float: right; padding: 3px 0"
-                        type="text"
-                        @click="search"
-                    >{{ $t('base_search.refresh') }}</el-button>
-                    <el-button
-                        style="float: right; padding: 3px 0"
-                        type="text"
-                        @click="show_body"
-                    >{{ $t('base_search.display_query_statement') }}</el-button>
-                </div>
-                <div class="el-card__body" v-show="is_show">
-                    <el-form label-position="top" label-width="80px" style="overflow: auto">
-                        <el-form-item :label="$t('base_search.document')">
-                            <el-select
-                                v-model="index"
-                                filterable
-                                :placeholder="$t('base_search.please_select')"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item, idx in indices"
-                                    :key="idx"
-                                    :label="item.name"
-                                    :value="item.name"
-                                ></el-option>
-                            </el-select>
-                            <el-button
-                                type="primary"
-                                style="margin-left: 10px"
-                                @click="search"
-                            >{{ $t('base_search.search') }}</el-button>
-                            <el-button
-                                style="margin-left: 10px"
-                                @click="clear"
-                            >{{ $t('base_search.clear') }}</el-button>
-                        </el-form-item>
-                        <el-form-item label="条件：" style="min-width: 1100px">
-                            <div v-if="field_condition.length === 0">
+                            type="text"
+                            @click="is_show = !is_show"
+                        >{{ is_show ? $t('base_search.close') : $t('base_search.open') }}</el-button>
+                        <el-button
+                            style="float: right; padding: 3px 0"
+                            type="text"
+                            @click="search"
+                        >{{ $t('base_search.refresh') }}</el-button>
+                        <el-button
+                            style="float: right; padding: 3px 0"
+                            type="text"
+                            @click="show_body"
+                        >{{ $t('base_search.display_query_statement') }}</el-button>
+                    </div>
+                    <div class="el-card__body" v-show="is_show">
+                        <el-form label-position="top" label-width="80px" style="overflow: auto">
+                            <el-form-item :label="$t('base_search.document')">
+                                <el-select
+                                    v-model="index"
+                                    filterable
+                                    :placeholder="$t('base_search.please_select')"
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item, idx in indices"
+                                        :key="idx"
+                                        :label="item.name"
+                                        :value="item.name"
+                                    ></el-option>
+                                </el-select>
                                 <el-button
                                     type="primary"
-                                    @click="field_condition_add"
-                                >{{ $t('base_search.add') }}</el-button>
-                            </div>
-                            <div>
-                                <div
-                                    v-for="(item, idx) in field_condition"
-                                    :key="idx"
-                                    style="margin-bottom: 10px;display: flex;"
-                                >
-                                    <field-condition-item
-                                        v-model:value="field_condition[idx]"
-                                        :fields="fields"
-                                    ></field-condition-item>
+                                    style="margin-left: 10px"
+                                    @click="search"
+                                >{{ $t('base_search.search') }}</el-button>
+                                <el-button
+                                    style="margin-left: 10px"
+                                    @click="clear"
+                                >{{ $t('base_search.clear') }}</el-button>
+                            </el-form-item>
+                            <el-form-item label="条件：" style="min-width: 1100px">
+                                <div v-if="field_condition.length === 0">
                                     <el-button
                                         type="primary"
-                                        style="margin-left: 10px"
                                         @click="field_condition_add"
                                     >{{ $t('base_search.add') }}</el-button>
-                                    <el-button
-                                        type="danger"
-                                        @click="field_condition_remove(item.id)"
-                                    >{{ $t('base_search.remove') }}</el-button>
                                 </div>
-                            </div>
-                        </el-form-item>
-                    </el-form>
+                                <div>
+                                    <div
+                                        v-for="(item, idx) in field_condition"
+                                        :key="idx"
+                                        style="margin-bottom: 10px;display: flex;"
+                                    >
+                                        <field-condition-item
+                                            v-model:value="field_condition[idx]"
+                                            :fields="fields"
+                                        ></field-condition-item>
+                                        <el-button
+                                            type="primary"
+                                            style="margin-left: 10px"
+                                            @click="field_condition_add"
+                                        >{{ $t('base_search.add') }}</el-button>
+                                        <el-button
+                                            type="danger"
+                                            @click="field_condition_remove(item.id)"
+                                        >{{ $t('base_search.remove') }}</el-button>
+                                    </div>
+                                </div>
+                            </el-form-item>
+                        </el-form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="base-content">
-            <el-card>
-                <json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
-                <div class="page">
-                    <el-pagination
-                        background
-                        layout="sizes, prev, pager, next"
-                        hide-on-single-page
-                        :total="total"
-                        :current-page="page"
-                        :page-size="size"
-                        @size-change="sizeChange"
-                        @current-change="pageChange"
-                    ></el-pagination>
-                </div>
-            </el-card>
-        </div>
-        <el-backtop target=".content" />
+            <div class="base-content">
+                <el-card>
+                    <json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
+                    <div class="page">
+                        <el-pagination
+                            background
+                            layout="sizes, prev, pager, next"
+                            hide-on-single-page
+                            :total="total"
+                            :current-page="page"
+                            :page-size="size"
+                            @size-change="sizeChange"
+                            @current-change="pageChange"
+                        ></el-pagination>
+                    </div>
+                </el-card>
+            </div>
+        </el-scrollbar>
+        <el-backtop target=".el-scrollbar__wrap" />
         <el-dialog
             :title="$t('base_search.query_criteria')"
             v-model="condition_dialog"
@@ -276,7 +278,11 @@ export default defineComponent({
 
 <style lang="less">
 .base-search {
-    padding: 10px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
 
     .base-content {
         margin-top: 20px;

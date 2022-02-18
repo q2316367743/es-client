@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="home">
 		<div class="home-option">
 			<div style="display: flex">
 				<el-input
@@ -34,8 +34,10 @@
 			</div>
 		</div>
 		<div class="home-main" v-loading="index_loading">
-			<index-item v-for="view, index in show_indices" :index="view" :key="index"></index-item>
-			<el-backtop target=".home-main" />
+			<el-scrollbar>
+				<index-item v-for="view, index in show_indices" :index="view" :key="index"></index-item>
+			</el-scrollbar>
+			<el-backtop target=".el-scrollbar__wrap" />
 		</div>
 		<el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
 			<el-form>
@@ -56,10 +58,7 @@
 				</el-collapse-item>
 				<el-collapse-item :title="$t('home.new_index.field_setting')" name="2">
 					<div v-if="index.mapping.length === 0">
-						<el-button
-							type="primary"
-							@click="addProperty"
-						>{{ $t('home.new_index.add') }}</el-button>
+						<el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
 					</div>
 					<el-form v-else>
 						<div v-for="property, idx in index.mapping" :key="idx">
@@ -238,22 +237,29 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-.home-option {
+.home {
 	position: absolute;
-	top: 15px;
-	left: 10px;
-	right: 10px;
-	height: 40px;
-	display: flex;
-	justify-content: space-between;
-}
-
-.home-main {
-	position: absolute;
-	top: 60px;
+	top: 0px;
 	left: 5px;
-	right: 5px;
-	bottom: 5px;
-	overflow: auto;
+	right: 10px;
+	bottom: 10px;
+	.home-option {
+		position: absolute;
+		top: 0px;
+		left: 5px;
+		right: 10px;
+		height: 40px;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.home-main {
+		position: absolute;
+		top: 40px;
+		left: 1px;
+		right: 5px;
+		bottom: 5px;
+		overflow: auto;
+	}
 }
 </style>
