@@ -6,6 +6,8 @@ export default {
         'sql_search': 'sql search',
         'setting': 'setting'
     },
+    'add': '新增',
+    'about': '关于',
     'link_placeholder': 'please select an index address',
     'refresh': 'refresh',
     'info': 'info',

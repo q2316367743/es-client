@@ -6,6 +6,8 @@ export default {
         'sql_search': 'SQL查询',
         'setting': '设置'
     },
+    'add': '新增',
+    'about': '关于',
     'link_placeholder': '请选择索引地址',
     'refresh': '刷新',
     'info': '信息',

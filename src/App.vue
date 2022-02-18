@@ -51,7 +51,7 @@
 						@change="select_url"
 					>
 						<el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
-						<el-option label="新增" value="add"></el-option>
+						<el-option :label="$t('app.add')" value="add"></el-option>
 					</el-select>
 					<el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
 					<div class="cluster-name">{{ cluster_name }}</div>
@@ -69,7 +69,7 @@
 			</div>
 		</div>
 		<el-dialog
-			title="关于"
+			:title="$t('app.about')"
 			v-model="about_dialog"
 			width="70%"
 			append-to-body
