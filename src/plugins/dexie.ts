@@ -4,8 +4,8 @@ import Url from '@/entity/Url';
 
 class Instance extends Dexie {
 
-    private tip: Dexie.Table<Tip, number>;
-    private url: Dexie.Table<Url, number>;
+    private readonly tip: Dexie.Table<Tip, number>;
+    private readonly url: Dexie.Table<Url, number>;
 
     constructor() {
         super('es-client');

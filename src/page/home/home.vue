@@ -35,7 +35,7 @@
 		</div>
 		<div class="home-main" v-loading="index_loading">
 			<el-scrollbar>
-				<index-item v-for="view, index in show_indices" :index="view" :key="index"></index-item>
+				<index-item v-for="(view, index) in show_indices" :index="view" :key="index"></index-item>
 			</el-scrollbar>
 			<el-backtop target=".el-scrollbar__wrap" />
 		</div>
@@ -61,7 +61,7 @@
 						<el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
 					</div>
 					<el-form v-else>
-						<div v-for="property, idx in index.mapping" :key="idx">
+						<div v-for="(property, idx) in index.mapping" :key="idx">
 							<el-form :inline="true">
 								<el-form-item :label="$t('home.new_index.field_name')">
 									<el-input v-model="property.field"></el-input>
@@ -130,7 +130,7 @@ export default defineComponent({
 			index: {
 				name: '',
 				settings: {
-					number_of_replicas: useSettingStore().getDefayltReplica,
+					number_of_replicas: useSettingStore().getDefaultReplica,
 					number_of_shards: useSettingStore().getDefaultShard
 				},
 				mapping: [] as Array<Property>
@@ -150,7 +150,7 @@ export default defineComponent({
 			this.search()
 		},
 		default_replica() {
-			this.index.settings.number_of_replicas = useSettingStore().getDefayltReplica
+			this.index.settings.number_of_replicas = useSettingStore().getDefaultReplica
 		},
 		default_shard() {
 			this.index.settings.number_of_shards = useSettingStore().getDefaultShard
@@ -239,13 +239,13 @@ export default defineComponent({
 <style lang="less">
 .home {
 	position: absolute;
-	top: 0px;
+	top: 0;
 	left: 5px;
 	right: 10px;
 	bottom: 10px;
 	.home-option {
 		position: absolute;
-		top: 0px;
+		top: 0;
 		left: 5px;
 		right: 10px;
 		height: 40px;

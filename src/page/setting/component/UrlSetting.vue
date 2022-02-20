@@ -15,12 +15,14 @@
                         type="primary"
                         size="small"
                         @click="edit_open(scope.row)"
-                    >{{ $t('setting.link.edit') }}</el-button>
+                    >{{ $t('setting.link.edit') }}
+                    </el-button>
                     <el-button
                         type="danger"
                         size="small"
                         @click="remove(scope.row.id, scope.row.value)"
-                    >{{ $t('setting.link.delete') }}</el-button>
+                    >{{ $t('setting.link.delete') }}
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -29,7 +31,8 @@
             circle
             class="add-btn"
             @click="edit_dialog = true; edit_save = true;"
-        >+</el-button>
+        >+
+        </el-button>
         <el-dialog
             :title="(edit_save ? $t('setting.link.add') : $t('setting.link.update')) + ' ' + $t('setting.link.url')"
             v-model="edit_dialog"
@@ -43,7 +46,7 @@
                     <el-input v-model="url.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
-                    <el-input-number v-model="url.sequence" controls-position="right" size="large" />
+                    <el-input-number v-model="url.sequence" controls-position="right" size="large"/>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -51,7 +54,8 @@
                 <el-button
                     type="primary"
                     @click="url_submit"
-                >{{ edit_save ? $t('setting.link.add') : $t('setting.link.update') }}</el-button>
+                >{{ edit_save ? $t('setting.link.add') : $t('setting.link.update') }}
+                </el-button>
             </template>
         </el-dialog>
         <json-dialog
@@ -63,21 +67,21 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { ElMessageBox, ElMessage } from 'element-plus'
-import type { ElForm } from 'element-plus'
+import {defineComponent} from "vue";
+import {ElMessageBox, ElMessage} from 'element-plus'
+import type {ElForm} from 'element-plus'
 import dayjs from 'dayjs'
-import { mapState } from "pinia";
+import {mapState} from "pinia";
 import axios from 'axios';
 
-import { useUrlStore } from "@/store/UrlStore";
-import { useIndexStore } from "@/store/IndexStore";
+import {useUrlStore} from "@/store/UrlStore";
+import {useIndexStore} from "@/store/IndexStore";
 import url_dao from "@/dao/UrlDao";
 import Url from "@/entity/Url";
 import JsonDialog from "@/component/JsonDialog.vue";
 
 export default defineComponent({
-    components: { JsonDialog },
+    components: {JsonDialog},
     data: () => ({
         url: {
             name: '',
@@ -208,7 +212,6 @@ export default defineComponent({
 .setting {
     .el-card__body {
         .data {
-            padding: 20px;
             width: 100%;
         }
 

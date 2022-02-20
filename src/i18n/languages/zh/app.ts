@@ -4,6 +4,7 @@ export default {
         'base_search': '基础查询',
         'senior_search': '高级查询',
         'sql_search': 'SQL查询',
+        'data_chart': '数据图表',
         'setting': '设置'
     },
     'add': '新增',

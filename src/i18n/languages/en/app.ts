@@ -4,6 +4,7 @@ export default {
         'base_search': 'base search',
         'senior_search': 'senior search',
         'sql_search': 'sql search',
+        'data_chart': 'data chart',
         'setting': 'setting'
     },
     'add': '新增',

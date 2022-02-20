@@ -12,6 +12,9 @@ export const useIndexStore = defineStore('index', {
             indices: new Array<Index>(),
             // 服务器名称
             name: '',
+            active_shards: 0,
+            total_shards: 0,
+            status: ''
         }
     },
     getters: {
@@ -30,7 +33,7 @@ export const useIndexStore = defineStore('index', {
             // 初始化时加载
             const loading = ElLoading.service({
                 lock: true,
-                text: '获取索引信息中',
+                text: '准备索引信息中',
                 background: 'rgba(0, 0, 0, 0.7)',
             });
             if (useUrlStore().current === '') {
@@ -38,11 +41,18 @@ export const useIndexStore = defineStore('index', {
                 return;
             }
             try {
+                loading.setText('开始构建索引信息');
                 // 获取索引信息
                 this.indices = await indexListBuild();
                 // 获取基本信息
-                let info = await clusterApi.info();
-                this.name = info.cluster_name as string;
+                loading.setText('开始获取索引健康值');
+                let health = await clusterApi._cluster_health();
+                this.name = health.cluster_name as string;
+                console.log(health);
+                this.active_shards = health.active_shards as number;
+                let unassigned_shards = health.unassigned_shards as number;
+                this.total_shards = this.active_shards + unassigned_shards;
+                this.status = health.status as string;
                 loading.close();
             } catch (e: any) {
                 useUrlStore().choose('');

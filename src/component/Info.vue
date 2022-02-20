@@ -125,5 +125,8 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
+<style>
+.info {
+    padding-top: 10px;
+}
 </style>

@@ -14,10 +14,10 @@ export default async function Builder(): Promise<Array<Index>> {
     let cluster_stats = await clusterApi._cluster_state();
     let stats = await clusterApi._stats()
     let indecis = cluster_stats.metadata.indices as any;
-    let stats_indecis = stats.indices as any;
-    let cluster_indecis = cluster_stats.routing_table.indices as any;
+    let stats_indices = stats.indices as any;
+    let cluster_indices = cluster_stats.routing_table.indices as any;
     for (let key in indecis) {
-        let index = stats_indecis[key];
+        let index = stats_indices[key];
         let size = 0;
         let docs = 0;
         if (index) {
@@ -28,8 +28,8 @@ export default async function Builder(): Promise<Array<Index>> {
         let state = indecis[key].state;
         let shard = {} as any;
         let replica = {} as any;
-        if (cluster_indecis[key]) {
-            let shards = cluster_indecis[key].shards;
+        if (cluster_indices[key]) {
+            let shards = cluster_indices[key].shards;
             for (let idx in shards) {
                 // 数组
                 let items = shards[idx];
@@ -59,7 +59,7 @@ export default async function Builder(): Promise<Array<Index>> {
             fields: IndexFieldBuild(indecis[key].mappings)
         });
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         resolve(indices);
     })
 }
