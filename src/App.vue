@@ -6,19 +6,19 @@
             <el-menu :default-active="active" style="height: 100%" @select="select_menu">
                 <el-menu-item index="home">
                     <el-icon>
-                        <home-filled/>
+                        <home-filled />
                     </el-icon>
                     <template #title>{{ $t('app.menu.home') }}</template>
                 </el-menu-item>
                 <el-menu-item index="base_search">
                     <el-icon>
-                        <search/>
+                        <search />
                     </el-icon>
                     <template #title>{{ $t('app.menu.base_search') }}</template>
                 </el-menu-item>
                 <el-menu-item index="senior_search">
                     <el-icon>
-                        <data-board/>
+                        <data-board />
                     </el-icon>
                     <template #title>{{ $t('app.menu.senior_search') }}</template>
                 </el-menu-item>
@@ -30,13 +30,13 @@
                 </el-menu-item>-->
                 <el-menu-item index="data_chart">
                     <el-icon>
-                        <coin/>
+                        <coin />
                     </el-icon>
                     <template #title>{{ $t('app.menu.data_chart') }}</template>
                 </el-menu-item>
                 <el-menu-item index="setting">
                     <el-icon>
-                        <operation/>
+                        <operation />
                     </el-icon>
                     <template #title>{{ $t('app.menu.setting') }}</template>
                 </el-menu-item>
@@ -60,14 +60,20 @@
                         clearable
                         @change="select_url"
                     >
-                        <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
+                        <el-option
+                            v-for="url in urls"
+                            :key="url.id"
+                            :label="url.name"
+                            :value="url.value"
+                        ></el-option>
                         <el-option :label="$t('app.add')" value="add"></el-option>
                     </el-select>
                     <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
-                    <div class="cluster-name">{{ cluster_name }}</div>
                     <div style="font-weight: bold">{{ name }}</div>
-                    <div style="margin-left: 20px;" v-if="name !== ''">集群健康值: {{ status }} ({{ active_shards }} of {{ total_shards }})
-                    </div>
+                    <div
+                        style="margin-left: 20px;"
+                        v-if="name !== ''"
+                    >集群健康值: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
                 </div>
                 <!-- 多语言切换 -->
                 <el-dropdown @command="languageCommand">
@@ -112,10 +118,17 @@
                     <el-input v-model="url_add_data.name"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setting.link.url')" prop="value">
-                    <el-input v-model="url_add_data.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
+                    <el-input
+                        v-model="url_add_data.value"
+                        :placeholder="$t('setting.link.url_placeholder')"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
-                    <el-input-number v-model="url_add_data.sequence" controls-position="right" size="large"/>
+                    <el-input-number
+                        v-model="url_add_data.sequence"
+                        controls-position="right"
+                        size="large"
+                    />
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -123,16 +136,21 @@
                 <el-button type="primary" @click="url_submit">{{ $t('setting.link.add') }}</el-button>
             </template>
         </el-dialog>
-        <json-dialog v-model="test_dialog" :json="test_data" :title="$t('setting.link.result')" open></json-dialog>
+        <json-dialog
+            v-model="test_dialog"
+            :json="test_data"
+            :title="$t('setting.link.result')"
+            open
+        ></json-dialog>
     </div>
 </template>
 
 <script lang="ts">
-import {useUrlStore} from "./store/UrlStore";
-import {useIndexStore} from '@/store/IndexStore';
-import {useSettingStore} from "@/store/SettingStore";
-import type {ElForm} from 'element-plus'
-import {ElMessage} from 'element-plus'
+import { useUrlStore } from "./store/UrlStore";
+import { useIndexStore } from '@/store/IndexStore';
+import { useSettingStore } from "@/store/SettingStore";
+import type { ElForm } from 'element-plus'
+import { ElMessage } from 'element-plus'
 // 引入页面组件
 import Info from '@/component/Info.vue';
 import JsonDialog from "@/component/JsonDialog.vue";
@@ -147,9 +165,9 @@ import DataChart from "@/page/DataChart/DataChart.vue";
 import Setting from '@/page/Setting/Setting.vue'
 import Translate from "@/component/Translate.vue";
 
-import {defineComponent} from 'vue';
-import {mapState} from "pinia";
-import {Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard} from '@element-plus/icons-vue';
+import { defineComponent } from 'vue';
+import { mapState } from "pinia";
+import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@element-plus/icons-vue';
 import Url from "./entity/Url";
 import url_dao from "@/dao/UrlDao";
 import axios from 'axios';
@@ -164,7 +182,6 @@ export default defineComponent({
         return {
             active: "home",
             url: "",
-            cluster_name: "",
             about_dialog: false,
             url_add_dialog: false,
             url_add_data: {
