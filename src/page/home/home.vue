@@ -35,7 +35,12 @@
 		</div>
 		<div class="home-main" v-loading="index_loading">
 			<el-scrollbar>
-				<index-item v-for="(view, index) in show_indices" :index="view" :key="index"></index-item>
+				<index-item
+					v-for="(view, index) in show_indices"
+					:index="view"
+					:key="index"
+					@open-dialog="index_open_dialog"
+				></index-item>
 			</el-scrollbar>
 			<el-backtop target=".el-scrollbar__wrap" />
 		</div>
@@ -68,7 +73,7 @@
 								</el-form-item>
 								<el-form-item :label="$t('home.new_index.field_type')">
 									<el-select v-model="property.type">
-										<el-option v-for="type in types" :key="type" :label="type" :value="type"></el-option>
+										<el-option v-for="(type) in types" :key="type" :label="type" :value="type"></el-option>
 									</el-select>
 								</el-form-item>
 								<el-form-item>
@@ -89,6 +94,12 @@
 				<el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
 			</template>
 		</el-dialog>
+		<json-dialog
+			:title="index_item_title"
+			:json="index_item_data"
+			:open="true"
+			v-model="index_item_dialog"
+		></json-dialog>
 	</div>
 </template>
 
@@ -106,14 +117,13 @@ import { Index, Property } from '@/entity/Index';
 
 import indexApi from '@/api/IndexApi';
 
-import IndexItem from "./component/IndexItem.vue";
+import IndexItem from "./components/IndexItem.vue";
+import JsonDialog from "@/components/JsonDialog.vue";
 import { ElMessage } from 'element-plus';
 
 
 export default defineComponent({
-	components: {
-		IndexItem
-	},
+	components: { IndexItem, JsonDialog },
 	data: () => {
 		return {
 			// 根据条件过滤后的索引
@@ -137,7 +147,11 @@ export default defineComponent({
 			} as Index,
 			index_dialog: false,
 			index_collapse: '1',
-			types: ['string', 'text', 'keyword', 'integer', 'long', 'short', 'byte', 'double', 'float', 'boolean', 'date']
+			types: ['string', 'text', 'keyword', 'integer', 'long', 'short', 'byte', 'double', 'float', 'boolean', 'date'],
+			// 索引的详情对话框
+			index_item_dialog: false,
+			index_item_title: '',
+			index_item_data: {} as any
 		};
 	},
 	computed: {
@@ -231,6 +245,11 @@ export default defineComponent({
 					mapping: [] as Array<Property>
 				} as Index;
 			})
+		},
+		index_open_dialog(title: string, content: any) {
+			this.index_item_dialog = true;
+			this.index_item_title = title;
+			this.index_item_data = content;
 		}
 	},
 });

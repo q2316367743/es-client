@@ -48,7 +48,6 @@ export const useIndexStore = defineStore('index', {
                 loading.setText('开始获取索引健康值');
                 let health = await clusterApi._cluster_health();
                 this.name = health.cluster_name as string;
-                console.log(health);
                 this.active_shards = health.active_shards as number;
                 let unassigned_shards = health.unassigned_shards as number;
                 this.total_shards = this.active_shards + unassigned_shards;

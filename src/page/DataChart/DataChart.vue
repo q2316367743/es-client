@@ -15,7 +15,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 
-import ChartItem from "@/page/DataChart/component/ChartItem.vue";
+import ChartItem from "@/page/DataChart/components/ChartItem.vue";
 
 export default defineComponent({
     name: 'DataChart',

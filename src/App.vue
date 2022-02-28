@@ -73,7 +73,7 @@
                     <div
                         style="margin-left: 20px;"
                         v-if="name !== ''"
-                    >集群健康值: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
+                    >{{$t('app.cluster_health')}}: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
                 </div>
                 <!-- 多语言切换 -->
                 <el-dropdown @command="languageCommand">
@@ -152,8 +152,8 @@ import { useSettingStore } from "@/store/SettingStore";
 import type { ElForm } from 'element-plus'
 import { ElMessage } from 'element-plus'
 // 引入页面组件
-import Info from '@/component/Info.vue';
-import JsonDialog from "@/component/JsonDialog.vue";
+import Info from '@/components/Info.vue';
+import JsonDialog from "@/components/JsonDialog.vue";
 
 // 页面
 import About from "@/page/About/About.vue";
@@ -163,7 +163,7 @@ import SeniorSearch from '@/page/SeniorSearch/SeniorSearch.vue';
 import SqlSearch from "@/page/SqlSearch/SqlSearch.vue";
 import DataChart from "@/page/DataChart/DataChart.vue";
 import Setting from '@/page/Setting/Setting.vue'
-import Translate from "@/component/Translate.vue";
+import Translate from "@/components/Translate.vue";
 
 import { defineComponent } from 'vue';
 import { mapState } from "pinia";

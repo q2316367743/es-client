@@ -8,7 +8,16 @@
         :close-on-click-modal="false"
         top="10vh"
     >
-        <json-viewer :value="json" :expand-depth="4" copyable sort :expanded="open" :preview-mode="previewMode"></json-viewer>
+        <el-scrollbar>
+            <json-viewer
+                :value="json"
+                :expand-depth="4"
+                copyable
+                sort
+                :expanded="open"
+                :preview-mode="previewMode"
+            ></json-viewer>
+        </el-scrollbar>
     </el-dialog>
 </template>
 <script lang="ts">

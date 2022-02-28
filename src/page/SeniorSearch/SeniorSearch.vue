@@ -67,7 +67,7 @@ import { ElMessage } from "element-plus";
 import { Method } from "axios";
 import JsonViewer from "vue-json-viewer";
 // 引入monaco
-import MonacoEditor from "@/component/MonacoEditor.vue";
+import MonacoEditor from "@/components/MonacoEditor.vue";
 // 引入axios
 import axios from "@/plugins/axios";
 import { validateTip } from '@/utils/GlobalUtil';

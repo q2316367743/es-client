@@ -14,6 +14,7 @@
             <div>docs: {{ index?.doc_count }}</div>
         </div>
         <div class="option">
+            <!-- 索引的详情 -->
             <el-dropdown @command="info">
                 <el-button type="primary" size="small">
                     {{ $t('home.index.info.self') }}
@@ -23,14 +24,18 @@
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
+                        <!-- 索引状态 -->
                         <el-dropdown-item command="state">{{ $t('home.index.info.index_status') }}</el-dropdown-item>
+                        <!-- 索引详情 -->
                         <el-dropdown-item
                             command="cluster_stats"
                         >{{ $t('home.index.info.index_info') }}</el-dropdown-item>
+                        <!-- 数据预览 -->
                         <el-dropdown-item command="data">{{ $t('home.index.info.data_preview') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
+            <!-- 索引操作 -->
             <el-dropdown style="margin-left: 10px" @command="active">
                 <el-button type="primary" size="small">
                     <span>{{ $t('home.index.active.self') }}</span>
@@ -40,20 +45,29 @@
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
+                        <!-- 新建别名 -->
                         <el-dropdown-item :command="1">{{ $t('home.index.active.new_alias') }}</el-dropdown-item>
+                        <!-- 刷新 -->
                         <el-dropdown-item :command="2">{{ $t('home.index.active.refresh') }}</el-dropdown-item>
+                        <!-- flush 刷新 -->
                         <el-dropdown-item :command="3">{{ $t('home.index.active.flush_refresh') }}</el-dropdown-item>
+                        <!-- ForceMerge -->
                         <el-dropdown-item disabled>{{ $t('home.index.active.ForceMerge') }}</el-dropdown-item>
+                        <!-- 网关快照 -->
                         <el-dropdown-item disabled>{{ $t('home.index.active.gateway_snapshot') }}</el-dropdown-item>
+                        <!-- 测试分析器 -->
                         <el-dropdown-item disabled>{{ $t('home.index.active.test_profiler') }}</el-dropdown-item>
+                        <!-- 关闭 -->
                         <el-dropdown-item
                             :command="7"
                             v-if="index?.state === 'open'"
                         >{{ $t('home.index.active.close') }}</el-dropdown-item>
+                        <!-- 打开 -->
                         <el-dropdown-item
                             :command="8"
                             v-if="index?.state === 'close'"
                         >{{ $t('home.index.active.open') }}</el-dropdown-item>
+                        <!-- 删除 -->
                         <el-dropdown-item :command="9">{{ $t('home.index.active.delete') }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -96,8 +110,6 @@
                 >{{ key }}</div>
             </div>
         </div>
-        <json-dialog :title="title" :json="json" :open="open" v-model="show_dialog"></json-dialog>
-        <json-dialog :title="index?.name" :json="data_json" :open="open" v-model="data_dialog"></json-dialog>
     </div>
 </template>
 <script lang="ts">
@@ -106,57 +118,50 @@ import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useIndexStore } from '@/store/IndexStore';
 import Index from "@/view/Index";
-import JsonDialog from "@/component/JsonDialog.vue";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
 import axios from '@/plugins/axios';
 
 export default defineComponent({
-    components: { ArrowDown, ArrowUp, JsonDialog },
+    components: { ArrowDown, ArrowUp },
     props: {
         index: Object as PropType<Index>
     },
+    emits: ['openDialog'],
     data: () => ({
         state: false,
         show_expand: false,
-        title: '',
         open: true,
-        json: {},
         show_dialog: false,
         data_dialog: false,
-        data_json: {} as any
     }),
     methods: {
         showShardOrReplica(json: any, idx: number) {
-            this.title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
-            this.json = json;
-            this.show_dialog = true;
+            let title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
+            this.$emit('openDialog', title, json);
         },
         info(command: string) {
             if (command === 'state') {
-                this.title = this.index?.name!;
+                let title = this.index?.name!;
                 // 实时获取最新的
                 clusterApi._stats().then(state => {
-                    this.json = state.indices[this.title];
-                    this.show_dialog = true;
+                    this.$emit('openDialog', title, state.indices[title]);
                 }).catch(() => {
                     ElMessage.error('获取索引状态错误')
                 })
             } else if (command === 'cluster_stats') {
-                this.title = this.index?.name!;
+                let title = this.index?.name!;
                 clusterApi._cluster_state().then(cluster_stats => {
-                    this.json = cluster_stats.metadata.indices[this.title];
-                    this.show_dialog = true;
+                    this.$emit('openDialog', title, cluster_stats.metadata.indices[title]);
                 }).catch(() => {
                     ElMessage.error('获取索引信息错误')
                 })
-            } else if (command === 'data') { 
+            } else if (command === 'data') {
                 axios({
                     url: `/${this.index?.name}/_search`,
                     method: 'GET'
                 }).then((result) => {
-                    this.data_dialog = true;
-                    this.data_json = result;
+                    this.$emit('openDialog', this.index?.name, result);
                 })
             } else {
                 ElMessage.error('信息：命令不存在')

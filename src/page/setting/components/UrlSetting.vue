@@ -78,7 +78,7 @@ import {useUrlStore} from "@/store/UrlStore";
 import {useIndexStore} from "@/store/IndexStore";
 import url_dao from "@/dao/UrlDao";
 import Url from "@/entity/Url";
-import JsonDialog from "@/component/JsonDialog.vue";
+import JsonDialog from "@/components/JsonDialog.vue";
 
 export default defineComponent({
     components: {JsonDialog},

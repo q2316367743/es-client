@@ -13,8 +13,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import UrlSetting from "./component/UrlSetting.vue";
-import BaseSetting from "./component/BaseSetting.vue";
+import UrlSetting from "./components/UrlSetting.vue";
+import BaseSetting from "./components/BaseSetting.vue";
 
 export default defineComponent({
     components: {

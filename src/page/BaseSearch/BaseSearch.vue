@@ -130,7 +130,7 @@ import { ElMessageBox } from "element-plus";
 import axios from "@/plugins/axios";
 import BaseQuery from '@/entity/BaseQuery';
 import QueryConditionBuild from './build/QueryConditionBuild';
-import FieldConditionItem from "./component/FieldConditionItem.vue";
+import FieldConditionItem from "./components/FieldConditionItem.vue";
 import { mapState } from "pinia";
 import { useIndexStore } from "@/store/IndexStore";
 import Field from "@/view/Field";
