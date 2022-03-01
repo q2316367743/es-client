@@ -69,9 +69,9 @@
                         <el-option :label="$t('app.add')" value="add"></el-option>
                     </el-select>
                     <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
-                    <div style="font-weight: bold">{{ name }}</div>
+                    <div style="font-weight: bold;margin-left: 20px;font-size: 16px;">{{ name }}</div>
                     <div
-                        style="margin-left: 20px;"
+                        style="margin-left: 10px;"
                         v-if="name !== ''"
                     >{{$t('app.cluster_health')}}: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
                 </div>
@@ -156,13 +156,13 @@ import Info from '@/components/Info.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 
 // 页面
-import About from "@/page/About/About.vue";
-import Home from "./page/home/home.vue";
-import BaseSearch from "@/page/BaseSearch/BaseSearch.vue";
-import SeniorSearch from '@/page/SeniorSearch/SeniorSearch.vue';
-import SqlSearch from "@/page/SqlSearch/SqlSearch.vue";
-import DataChart from "@/page/DataChart/DataChart.vue";
-import Setting from '@/page/Setting/Setting.vue'
+import About from "@/page/about/index.vue";
+import Home from "./page/home/index.vue";
+import BaseSearch from "@/page/base_search/index.vue";
+import SeniorSearch from '@/page/senior_search/index.vue';
+import SqlSearch from "@/page/sql_search/index.vue";
+import DataChart from "@/page/data_chart/index.vue";
+import Setting from '@/page/setting/index.vue'
 import Translate from "@/components/Translate.vue";
 
 import { defineComponent } from 'vue';

@@ -1,7 +1,16 @@
 <template>
 	<div class="senior-search">
 		<el-card style="min-height: 550px">
-			<template #header>{{ $t('senior_search.senior_search') }}</template>
+			<template #header>
+				<div style="display: flex;justify-content: space-between;">
+					<div>{{ $t('senior_search.senior_search') }}</div>
+					<el-select v-model="view">
+						<el-option label="基础视图" :value="1"></el-option>
+						<el-option label="JSON视图" :value="2"></el-option>
+						<el-option label="表格视图" :value="3" disabled></el-option>
+					</el-select>
+				</div>
+			</template>
 			<div class="senior-main">
 				<div class="side">
 					<div class="link">
@@ -53,11 +62,14 @@
 					</div>
 				</div>
 				<div class="senior-content">
-					<json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
+					<el-scrollbar>
+						<base-viewer v-if="view === 1" :data="result"></base-viewer>
+						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="4" copyable sort></json-viewer>
+					</el-scrollbar>
 				</div>
 			</div>
 		</el-card>
-        <el-backtop target=".senior-content" />
+		<el-backtop target=".senior-content" />
 	</div>
 </template>
 
@@ -66,11 +78,11 @@ import { defineComponent } from "vue";
 import { ElMessage } from "element-plus";
 import { Method } from "axios";
 import JsonViewer from "vue-json-viewer";
-// 引入monaco
+import BaseViewer from "@/components/BaseViewer.vue";
 import MonacoEditor from "@/components/MonacoEditor.vue";
-// 引入axios
 import axios from "@/plugins/axios";
 import { validateTip } from '@/utils/GlobalUtil';
+
 import LinkProcessor from "./LinkProcessor";
 import Param from '@/view/Param'
 import getParamBuild from "./build/GetParamBuild";
@@ -83,9 +95,10 @@ export default defineComponent({
 		result: {},
 		suggestions: [],
 		// GET请求参数
-		get_params: new Array<Param>()
+		get_params: new Array<Param>(),
+		view: 2,
 	}),
-	components: { JsonViewer, MonacoEditor },
+	components: { JsonViewer, BaseViewer, MonacoEditor },
 	watch: {
 		link(newValue) {
 			if (newValue === '') {
