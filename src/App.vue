@@ -69,9 +69,9 @@
                         <el-option :label="$t('app.add')" value="add"></el-option>
                     </el-select>
                     <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
-                    <div style="font-weight: bold">{{ name }}</div>
+                    <div style="font-weight: bold;margin-left: 20px;font-size: 24px;">{{ name }}</div>
                     <div
-                        style="margin-left: 20px;"
+                        style="margin-left: 10px;"
                         v-if="name !== ''"
                     >{{$t('app.cluster_health')}}: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
                 </div>

@@ -126,7 +126,4 @@ export default defineComponent({
 });
 </script>
 <style>
-.info {
-    padding-top: 10px;
-}
 </style>
