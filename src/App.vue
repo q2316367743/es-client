@@ -73,7 +73,7 @@
                     <div
                         style="margin-left: 10px;"
                         v-if="name !== ''"
-                    >{{$t('app.cluster_health')}}: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
+                    >{{ $t('app.cluster_health') }}: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
                 </div>
                 <!-- 多语言切换 -->
                 <el-dropdown @command="languageCommand">
