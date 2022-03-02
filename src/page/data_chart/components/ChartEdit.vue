@@ -57,24 +57,19 @@
                 <el-button type="success">数据展示</el-button>
             </el-collapse-item>
         </el-collapse>
-        <el-dialog title="模板编辑" v-model="template_edit_dialog" fullscreen custom-class="template-edit">
-            <template #footer>
-                <el-button>清空</el-button>
-                <el-button type="primary">确定</el-button>
-            </template>
-        </el-dialog>
+        <template-render v-model="template_edit_dialog" :chart="chart"></template-render>
     </el-scrollbar>
 </template>
 <script lang="ts">
 import Chart from "@/entity/Chart";
 import Param from "@/view/Param";
 import MonacoEditor from "@/components/MonacoEditor.vue";
+import TemplateRender from "./TemplateRender.vue";
 import { defineComponent } from "vue";
-import template from 'art-template'
 
 export default defineComponent({
     name: 'ChartEdit',
-    components: { MonacoEditor },
+    components: { MonacoEditor, TemplateRender },
     data: () => ({
         chart: {
             id: new Date().getTime(),
@@ -87,7 +82,7 @@ export default defineComponent({
             data: '',
             template: ''
         } as Chart,
-        collapse_index: ['1', '2'],
+        collapse_index: ['1', '2', '3'],
         // GET请求参数
         get_params: new Array<Param>(),
         template_edit_dialog: false
@@ -106,9 +101,6 @@ export default defineComponent({
         truncateGetParam() {
             this.get_params = new Array<Param>();
         },
-        render() {
-            template.render(this.chart.template, {});
-        }
     }
 })
 </script>
@@ -121,29 +113,6 @@ export default defineComponent({
             grid-template-columns: 0.5fr 26px 1fr 12px auto;
             margin-top: 12px;
         }
-    }
-}
-.template-edit {
-    .el-dialog__header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 54px;
-    }
-    .el-dialog__body {
-        position: absolute;
-        top: 54px;
-        left: 0;
-        right: 0;
-        bottom: 62px;
-    }
-    .el-dialog__footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 62px;
     }
 }
 </style>
