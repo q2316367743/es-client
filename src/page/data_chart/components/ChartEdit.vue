@@ -70,6 +70,7 @@ import Chart from "@/entity/Chart";
 import Param from "@/view/Param";
 import MonacoEditor from "@/components/MonacoEditor.vue";
 import { defineComponent } from "vue";
+import template from 'art-template'
 
 export default defineComponent({
     name: 'ChartEdit',
@@ -104,6 +105,9 @@ export default defineComponent({
         },
         truncateGetParam() {
             this.get_params = new Array<Param>();
+        },
+        render() {
+            template.render(this.chart.template, {});
         }
     }
 })
