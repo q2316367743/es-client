@@ -1,28 +1,26 @@
 <!-- 此处是右上角详情 -->
 <template>
-    <div>
-        <div class="info">
-            <el-dropdown @command="handleCommand">
-                <el-button type="primary">
-                    <span>{{ $t('app.info') }}</span>
-                    <el-icon class="el-icon--right">
-                        <arrow-down />
-                    </el-icon>
-                </el-button>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
-                        <el-dropdown-item command="status">{{ $t('app.status') }}</el-dropdown-item>
-                        <el-dropdown-item command="node_status">{{ $t('app.node_status') }}</el-dropdown-item>
-                        <el-dropdown-item command="cluster_nodes">{{ $t('app.cluster_nodes') }}</el-dropdown-item>
-                        <el-dropdown-item command="plugin">{{ $t('app.plugin') }}</el-dropdown-item>
-                        <el-dropdown-item command="cluster_status">{{ $t('app.cluster_status') }}</el-dropdown-item>
-                        <el-dropdown-item command="cluster_health">{{ $t('app.cluster_health') }}</el-dropdown-item>
-                        <el-dropdown-item command="template">{{ $t('app.template') }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-        </div>
+    <div class="info">
+        <el-dropdown @command="handleCommand">
+            <el-button type="primary">
+                <span>{{ $t('app.info') }}</span>
+                <el-icon class="el-icon--right">
+                    <arrow-down />
+                </el-icon>
+            </el-button>
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
+                    <el-dropdown-item command="status">{{ $t('app.status') }}</el-dropdown-item>
+                    <el-dropdown-item command="node_status">{{ $t('app.node_status') }}</el-dropdown-item>
+                    <el-dropdown-item command="cluster_nodes">{{ $t('app.cluster_nodes') }}</el-dropdown-item>
+                    <el-dropdown-item command="plugin">{{ $t('app.plugin') }}</el-dropdown-item>
+                    <el-dropdown-item command="cluster_status">{{ $t('app.cluster_status') }}</el-dropdown-item>
+                    <el-dropdown-item command="cluster_health">{{ $t('app.cluster_health') }}</el-dropdown-item>
+                    <el-dropdown-item command="template">{{ $t('app.template') }}</el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
         <json-dialog :json="data" :title="title" v-model="dialog" :preview-mode="previewMode"></json-dialog>
     </div>
 </template>
@@ -126,4 +124,7 @@ export default defineComponent({
 });
 </script>
 <style>
+.info {
+    padding-top: 10px;
+}
 </style>

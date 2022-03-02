@@ -11,7 +11,7 @@
             <chart-item title="图表1" description="描述" update-time="2022-01-19 14:26:00"></chart-item>
         </el-space>
         <el-dialog title="新增数据图表" v-model="save_and_edit_dialog">
-            <chart-edit></chart-edit>
+            <chart-edit style="height: 50vh;overflow-y: auto;"></chart-edit>
         </el-dialog>
     </el-card>
 </template>
