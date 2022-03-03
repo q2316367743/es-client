@@ -118,13 +118,14 @@ import { Index, Property } from '@/entity/Index';
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
+import IndexContainer from './components/IndexContainer.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 import { ElMessage } from 'element-plus';
 
 
 export default defineComponent({
 	name: 'Home',
-	components: { IndexItem, JsonDialog },
+	components: { IndexItem, IndexContainer, JsonDialog },
 	data: () => {
 		return {
 			// 根据条件过滤后的索引
