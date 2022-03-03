@@ -123,6 +123,7 @@ import { ElMessage } from 'element-plus';
 
 
 export default defineComponent({
+	name: 'Home',
 	components: { IndexItem, JsonDialog },
 	data: () => {
 		return {

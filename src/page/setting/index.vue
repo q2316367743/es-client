@@ -17,6 +17,7 @@ import UrlSetting from "./components/UrlSetting.vue";
 import BaseSetting from "./components/BaseSetting.vue";
 
 export default defineComponent({
+    name: 'Setting',
     components: {
         UrlSetting,
         BaseSetting

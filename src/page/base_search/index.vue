@@ -142,6 +142,7 @@ interface Name {
 
 // 公共方法
 export default defineComponent({
+    name: 'BaseSearch',
     components: {
         JsonViewer,
         FieldConditionItem

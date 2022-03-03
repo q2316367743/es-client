@@ -123,6 +123,7 @@ import clusterApi from "@/api/ClusterApi";
 import axios from '@/plugins/axios';
 
 export default defineComponent({
+    name: 'IndexItem',
     components: { ArrowDown, ArrowUp },
     props: {
         index: Object as PropType<Index>

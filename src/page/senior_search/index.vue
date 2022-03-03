@@ -88,6 +88,7 @@ import Param from '@/view/Param'
 import getParamBuild from "@/build/GetParamBuild";
 
 export default defineComponent({
+	name: 'SeniorSearch',
 	data: () => ({
 		link: '',
 		method: 'POST' as Method,
