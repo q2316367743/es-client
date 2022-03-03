@@ -56,7 +56,7 @@ export default defineComponent({
             automaticLayout: true
         });
         editor.onDidChangeModelContent((e) => {
-            const value = editor.getValue()
+            const value = editor.getValue();
             if (this.content !== value) {
                 this.$emit('update:modelValue', value);
             }

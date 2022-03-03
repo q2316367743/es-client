@@ -1,17 +1,17 @@
 <template>
     <el-dialog title="模板编辑" v-model="defaultDialog" fullscreen custom-class="template-edit">
         <div class="source">
-            <div></div>
-            <div></div>
+            <json-viewer :expanded="true" :expand-depth="4" :value="data" class="data"></json-viewer>
+            <div class="template">
+                <monaco-editor v-model="template" height="100%" class="post"></monaco-editor>
+            </div>
         </div>
         <div class="target">
-            <code>
-                <pre>{{ result }}</pre>
-            </code>
+            <json-viewer :expanded="true" :expand-depth="4" :value="json"></json-viewer>
         </div>
         <template #footer>
             <div>
-                <el-button type="primary">获取数据</el-button>
+                <el-button type="primary" @click="search">获取数据</el-button>
                 <el-button type="success" @click="render">渲染</el-button>
             </div>
             <div>
@@ -22,9 +22,14 @@
     </el-dialog>
 </template>
 <script lang="ts">
-import Chart from "@/entity/Chart";
 import { defineComponent, PropType } from "vue";
-import doT from 'dot'
+import { ElMessage } from "element-plus";
+import doT from 'dot';
+import { Method } from "axios";
+import JsonViewer from 'vue-json-viewer';
+import Chart from "@/entity/Chart";
+import axios from "@/plugins/axios";
+import MonacoEditor from "@/components/MonacoEditor.vue";
 
 // doT.templateSettings = {
 //     evaluate: /\{\{([\s\S]+?)\}\}/g,
@@ -41,6 +46,7 @@ import doT from 'dot'
 // };
 
 export default defineComponent({
+    components: { JsonViewer, MonacoEditor },
     props: {
         modelValue: Boolean,
         chart: Object as PropType<Chart>
@@ -48,8 +54,8 @@ export default defineComponent({
     emits: ['update:modelValue'],
     data: () => ({
         defaultDialog: false,
-        data: { "name": "Jake", "age": 31 } as any,
-        template: "<div>Hi {{= it.name}}!</div><div>{{= it.age || ''}}</div>",
+        data: {} as any,
+        template: "",
         result: '',
     }),
     watch: {
@@ -60,12 +66,49 @@ export default defineComponent({
             this.$emit('update:modelValue', this.defaultDialog);
         }
     },
+    computed: {
+        json() {
+            try {
+                return JSON.parse(this.result);
+            }catch {
+                return {};
+            }
+        }
+    },
     created() {
         this.defaultDialog = this.modelValue;
     },
     methods: {
         render() {
             this.result = doT.template(this.template)(this.data);
+        },
+        search() {
+            if (this.chart!.method === 'GET') {
+                axios({
+                    url: this.chart!.path,
+                    method: this.chart!.method as Method,
+                    params: this.chart!.params
+                }).then((response) => {
+                    this.data = response;
+                });
+            } else {
+                let data = {};
+                if (this.chart!.params != '') {
+                    try {
+                        data = JSON.parse(this.chart!.data);
+                    } catch (e: any) {
+                        console.error(e);
+                        ElMessage.error('JSON格式化错误');
+                    }
+                }
+                axios({
+                    url: this.chart!.path,
+                    method: this.chart!.method as Method,
+                    data
+                }).then((response) => {
+                    this.data = response;
+                });
+            }
         }
     }
 });
@@ -86,19 +129,20 @@ export default defineComponent({
         right: 0;
         bottom: 62px;
         display: grid;
-        grid-template-rows: 1fr;
+        grid-template-rows: 100%;
         grid-template-columns: 1fr 1fr;
         .source {
             display: grid;
             grid-template-rows: 1fr 1fr;
             grid-template-columns: 1fr;
-            div {
-                margin: 20px;
+            & > div {
+                margin: 10px;
                 border: #909399 solid 1px;
+                overflow: auto;
             }
         }
         .target {
-            margin: 20px;
+            margin: 10px;
             border: #909399 solid 1px;
         }
     }

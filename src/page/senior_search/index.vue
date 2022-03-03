@@ -85,7 +85,7 @@ import { validateTip } from '@/utils/GlobalUtil';
 
 import LinkProcessor from "./LinkProcessor";
 import Param from '@/view/Param'
-import getParamBuild from "./build/GetParamBuild";
+import getParamBuild from "@/build/GetParamBuild";
 
 export default defineComponent({
 	data: () => ({
@@ -134,7 +134,6 @@ export default defineComponent({
 					}).then((response) => {
 						this.result = response;
 					});
-
 				}
 			}
 		},

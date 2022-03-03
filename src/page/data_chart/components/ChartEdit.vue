@@ -64,8 +64,10 @@
 import Chart from "@/entity/Chart";
 import Param from "@/view/Param";
 import MonacoEditor from "@/components/MonacoEditor.vue";
-import TemplateRender from "./TemplateRender.vue";
 import { defineComponent } from "vue";
+
+import TemplateRender from "./TemplateRender.vue";
+import getParamBuild from "@/build/GetParamBuild";
 
 export default defineComponent({
     name: 'ChartEdit',
@@ -87,6 +89,14 @@ export default defineComponent({
         get_params: new Array<Param>(),
         template_edit_dialog: false
     }),
+    watch: {
+        get_params: {
+            handler() {
+                this.chart.params = getParamBuild(this.get_params);
+            },
+            deep: true
+        }
+    },
     methods: {
         addGetParam() {
             this.get_params.push({
