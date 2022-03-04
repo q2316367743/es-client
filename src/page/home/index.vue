@@ -33,17 +33,22 @@
 				>{{ $t('home.new_index.self') }}</el-button>
 			</div>
 		</div>
-		<div class="home-main" v-loading="index_loading">
-			<el-scrollbar>
+		<!-- <div class="home-main" v-loading="index_loading"> -->
+		<!-- <el-scrollbar>
 				<index-item
 					v-for="(view, index) in show_indices"
 					:index="view"
 					:key="index"
 					@open-dialog="index_open_dialog"
 				></index-item>
-			</el-scrollbar>
-			<el-backtop target=".el-scrollbar__wrap" />
-		</div>
+		</el-scrollbar>-->
+		<index-container
+			:indices="show_indices"
+			v-loading="index_loading"
+			@open-dialog="index_open_dialog"
+		></index-container>
+		<el-backtop target=".el-scrollbar__wrap" />
+		<!-- </div> -->
 		<el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
 			<el-form>
 				<el-form-item :label="$t('home.new_index.name')">
@@ -272,15 +277,6 @@ export default defineComponent({
 		height: 40px;
 		display: flex;
 		justify-content: space-between;
-	}
-
-	.home-main {
-		position: absolute;
-		top: 40px;
-		left: 1px;
-		right: 5px;
-		bottom: 5px;
-		overflow: auto;
 	}
 }
 </style>

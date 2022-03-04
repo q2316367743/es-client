@@ -265,7 +265,7 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.home-main {
+.index-container {
     .card {
         margin: 5px;
         padding: 10px;
