@@ -38,6 +38,7 @@
                                     :options="indices"
                                     :placeholder="$t('base_search.please_select')"
                                     clearable
+                                    style="width: 360px;"
                                 >
                                 <template #default="{ item }">
                                     <div style="font-size: var(--el-font-size-base);">{{item.name}}</div>

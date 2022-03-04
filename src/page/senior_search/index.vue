@@ -16,7 +16,9 @@
 				<div class="side" :style="{ width: senior_width + 'px' }">
 					<!-- 链接选择 -->
 					<div class="link">
-						<div style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;">{{ $t('senior_search.link') }}</div>
+						<div
+							style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;"
+						>{{ $t('senior_search.link') }}</div>
 						<el-select
 							v-model="method"
 							:placeholder="$t('senior_search.please_select')"
@@ -68,7 +70,6 @@
 					class="senior-bar"
 					:style="{ left: senior_width + 10 + 'px' }"
 					@mousedown="onMouseDown"
-					@mouseup="onMouseUp"
 				></div>
 				<!-- 右面展示内容 -->
 				<div class="senior-content" :style="{ left: senior_width + 20 + 'px' }">
@@ -110,7 +111,8 @@ export default defineComponent({
 		// GET请求参数
 		get_params: new Array<Param>(),
 		view: 2,
-		is_down: false
+		is_down: false,
+		max_width: 520
 	}),
 	components: { JsonViewer, BaseViewer, MonacoEditor },
 	computed: { ...mapState(useSettingStore, ['senior_width']) },
@@ -122,19 +124,37 @@ export default defineComponent({
 		}
 	},
 	mounted() {
+		const side_width = 250;
+		const side_min_width = 270;
+		const right_min_width = 200;
+		// 获取最大宽度
+		this.max_width = window.outerWidth - side_width - right_min_width;
 		window.onmousemove = (ev: MouseEvent): void => {
 			if (this.is_down == false) {
 				return;
 			}
-			console.log(ev.pageX, ev.clientX, ev.offsetX, ev.screenX, ev.movementX)
-			let nx = ev.clientX - 250;
-			if (nx > 270) {
+			const nx = ev.clientX - side_width;
+			if (nx > side_min_width && nx < this.max_width) {
 				useSettingStore().setSeniorWidth(nx);
 			}
+		};
+		window.onresize = (): void => {
+			this.max_width = window.outerWidth - side_width - right_min_width;
+			if (this.senior_width > this.max_width) {
+				useSettingStore().setSeniorWidth(this.max_width);
+			}
+			if (this.senior_width < side_min_width) {
+				useSettingStore().setSeniorWidth(270);
+			}
+		};
+		window.onmouseup = (): void => {
+			this.is_down = false;
 		}
 	},
 	beforeUnmount() {
 		window.onmousemove = null;
+		window.onresize = null;
+		window.onmouseup = null;
 	},
 	methods: {
 		async search() {
@@ -189,9 +209,6 @@ export default defineComponent({
 		onMouseDown() {
 			this.is_down = true;
 		},
-		onMouseUp() {
-			this.is_down = false;
-		}
 	},
 });
 </script>

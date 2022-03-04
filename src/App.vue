@@ -28,12 +28,6 @@
                     </el-icon>
                     <template #title>{{ $t('app.menu.sql_search') }}</template>
                 </el-menu-item>-->
-                <el-menu-item index="data_chart">
-                    <el-icon>
-                        <coin />
-                    </el-icon>
-                    <template #title>{{ $t('app.menu.data_chart') }}</template>
-                </el-menu-item>
                 <el-menu-item index="setting">
                     <el-icon>
                         <operation />
@@ -161,7 +155,6 @@ import Home from "./page/home/index.vue";
 import BaseSearch from "@/page/base_search/index.vue";
 import SeniorSearch from '@/page/senior_search/index.vue';
 import SqlSearch from "@/page/sql_search/index.vue";
-import DataChart from "@/page/data_chart/index.vue";
 import Setting from '@/page/setting/index.vue'
 import Translate from "@/components/Translate.vue";
 
@@ -175,7 +168,7 @@ import axios from 'axios';
 export default defineComponent({
     components: {
         Info, About, Setting, Home, BaseSearch, SeniorSearch,
-        SqlSearch, DataChart, Fold, Expand, HomeFilled, Search, Operation,
+        SqlSearch, Fold, Expand, HomeFilled, Search, Operation,
         Coin, DataBoard, JsonDialog, Translate
     },
     data: () => {
