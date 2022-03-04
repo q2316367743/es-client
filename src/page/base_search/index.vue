@@ -1,8 +1,10 @@
 <template>
     <div class="base-search">
         <el-scrollbar>
+            <!-- 查询条件 -->
             <div class="base-option">
                 <div class="el-card es-card is-always-shadow">
+                    <!-- 标题 -->
                     <div class="el-card__header">
                         <span>{{ $t('base_search.query_criteria') }}</span>
                         <el-button
@@ -25,22 +27,22 @@
                             @click="show_body"
                         >{{ $t('base_search.display_query_statement') }}</el-button>
                     </div>
+                    <!-- 内容 -->
                     <div class="el-card__body" v-show="is_show">
                         <el-form label-position="top" label-width="80px" style="overflow: auto">
+                            <!-- 文档 -->
                             <el-form-item :label="$t('base_search.document')">
-                                <el-select
+                                <el-select-v2
                                     v-model="index"
                                     filterable
+                                    :options="indices"
                                     :placeholder="$t('base_search.please_select')"
                                     clearable
                                 >
-                                    <el-option
-                                        v-for="item, idx in indices"
-                                        :key="idx"
-                                        :label="item.name"
-                                        :value="item.name"
-                                    ></el-option>
-                                </el-select>
+                                <template #default="{ item }">
+                                    <div style="font-size: var(--el-font-size-base);">{{item.name}}</div>
+                                </template>
+                                </el-select-v2>
                                 <el-button
                                     type="primary"
                                     style="margin-left: 10px"
@@ -51,7 +53,11 @@
                                     @click="clear"
                                 >{{ $t('base_search.clear') }}</el-button>
                             </el-form-item>
-                            <el-form-item label="条件：" style="min-width: 1100px">
+                            <!-- 条件 -->
+                            <el-form-item
+                                :label="$t('base_search.condition')"
+                                style="min-width: 1100px"
+                            >
                                 <div v-if="field_condition.length === 0">
                                     <el-button
                                         type="primary"
@@ -84,6 +90,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 查询结果 -->
             <div class="base-content">
                 <el-card>
                     <json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
@@ -138,6 +145,8 @@ import Field from "@/view/Field";
 interface Name {
     name: string;
     fields: Array<Field>;
+    label: string;
+    value: string;
 }
 
 // 公共方法
@@ -175,11 +184,15 @@ export default defineComponent({
                 indices.forEach(e => {
                     names.push({
                         name: e.name,
-                        fields: e.fields
+                        fields: e.fields,
+                        label: e.name,
+                        value: e.name
                     });
                     e.alias.forEach(a => names.push({
                         name: a,
-                        fields: e.fields
+                        fields: e.fields,
+                        label: e.name,
+                        value: a
                     }))
                 });
                 return names.sort((a, b) => {
