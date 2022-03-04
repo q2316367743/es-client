@@ -12,13 +12,15 @@
 				</div>
 			</template>
 			<div class="senior-main">
-				<div class="side">
+				<!-- 左面查询条件 -->
+				<div class="side" :style="{ width: senior_width + 'px' }">
+					<!-- 链接选择 -->
 					<div class="link">
-						<div style="width: 54px;height: 32px;line-height: 32px;">{{ $t('senior_search.link') }}</div>
+						<div style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;">{{ $t('senior_search.link') }}</div>
 						<el-select
 							v-model="method"
 							:placeholder="$t('senior_search.please_select')"
-							style="width: 100px;"
+							style="min-width: 100px;width: 100px;"
 						>
 							<el-option label="GET" value="GET"></el-option>
 							<el-option label="POST" value="POST"></el-option>
@@ -43,6 +45,7 @@
 							@click="search"
 						>{{ link.indexOf('search') > -1 ? $t('senior_search.search') : $t('senior_search.execute') }}</el-button>
 					</div>
+					<!-- 请求参数 -->
 					<div class="param">
 						<div class="label">参数：</div>
 						<div class="param-content">
@@ -61,7 +64,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="senior-content">
+				<div
+					class="senior-bar"
+					:style="{ left: senior_width + 10 + 'px' }"
+					@mousedown="onMouseDown"
+					@mouseup="onMouseUp"
+				></div>
+				<!-- 右面展示内容 -->
+				<div class="senior-content" :style="{ left: senior_width + 20 + 'px' }">
 					<el-scrollbar>
 						<base-viewer v-if="view === 1" :data="result"></base-viewer>
 						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="4" copyable sort></json-viewer>
@@ -86,6 +96,8 @@ import { validateTip } from '@/utils/GlobalUtil';
 import LinkProcessor from "./LinkProcessor";
 import Param from '@/view/Param'
 import getParamBuild from "@/build/GetParamBuild";
+import { mapState } from "pinia";
+import { useSettingStore } from "@/store/SettingStore";
 
 export default defineComponent({
 	name: 'SeniorSearch',
@@ -98,14 +110,31 @@ export default defineComponent({
 		// GET请求参数
 		get_params: new Array<Param>(),
 		view: 2,
+		is_down: false
 	}),
 	components: { JsonViewer, BaseViewer, MonacoEditor },
+	computed: { ...mapState(useSettingStore, ['senior_width']) },
 	watch: {
 		link(newValue) {
 			if (newValue === '') {
 				this.result = {};
 			}
 		}
+	},
+	mounted() {
+		window.onmousemove = (ev: MouseEvent): void => {
+			if (this.is_down == false) {
+				return;
+			}
+			console.log(ev.pageX, ev.clientX, ev.offsetX, ev.screenX, ev.movementX)
+			let nx = ev.clientX - 250;
+			if (nx > 270) {
+				useSettingStore().setSeniorWidth(nx);
+			}
+		}
+	},
+	beforeUnmount() {
+		window.onmousemove = null;
 	},
 	methods: {
 		async search() {
@@ -141,7 +170,7 @@ export default defineComponent({
 		fetchSuggestions(queryString: string, cb: (links: string[]) => void) {
 			cb(LinkProcessor(queryString));
 		},
-		handleSelect(item: string) {
+		handleSelect(item: any) {
 			this.link = item;
 		},
 		addGetParam() {
@@ -156,6 +185,12 @@ export default defineComponent({
 		},
 		truncateGetParam() {
 			this.get_params = new Array<Param>();
+		},
+		onMouseDown() {
+			this.is_down = true;
+		},
+		onMouseUp() {
+			this.is_down = false;
 		}
 	},
 });
@@ -190,7 +225,6 @@ export default defineComponent({
 			top: 0;
 			left: 0;
 			bottom: 0;
-			width: 520px;
 
 			.link {
 				position: absolute;
@@ -238,10 +272,18 @@ export default defineComponent({
 			}
 		}
 
+		.senior-bar {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 9px;
+			border-left: var(--el-card-border-color) solid 1px;
+			cursor: ew-resize;
+		}
+
 		.senior-content {
 			position: absolute;
 			top: 0;
-			left: 540px;
 			bottom: 0;
 			right: 0;
 			overflow: auto;

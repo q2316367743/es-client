@@ -10,20 +10,25 @@ let default_replica = 1;
 if (localStorage.getItem('default_replica')) {
     default_replica = parseInt(localStorage.getItem('default_replica')!);
 }
+let senior_width = 520;
+if (localStorage.getItem("senior_width")) {
+    senior_width = parseInt(localStorage.getItem("senior_width")!);
+}
 
 export const useSettingStore = defineStore('setting', {
     state: () => {
         return {
             language: getDefaultLanguage(),
             default_shard,
-            default_replica
+            default_replica,
+            senior_width
         }
     },
     getters: {
         getLanguage: (state) => state.language,
         getDefaultShard: (state) => state.default_shard,
-        getDefaultReplica: (state) => state.default_replica
-
+        getDefaultReplica: (state) => state.default_replica,
+        getSeniorWidth: (state) => state.senior_width
     },
     actions: {
         setLanguage(language: string): void {
@@ -38,5 +43,9 @@ export const useSettingStore = defineStore('setting', {
             this.default_replica = default_replica;
             localStorage.setItem('default_replica', default_replica.toString());
         },
+        setSeniorWidth(senior_width: number) {
+            this.senior_width = senior_width;
+            localStorage.setItem('senior_width', senior_width.toString());
+        }
     }
 })

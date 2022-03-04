@@ -28,7 +28,7 @@ export default function LinkProcessor(target: string): Array<string> {
             links.push(temp);
         }
     }
-    return links;
+    return links.splice(0, 50);
 }
 
 function buildAllLink():Array<string> {
