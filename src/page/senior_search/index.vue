@@ -31,7 +31,7 @@
 						</el-select>
 						<el-autocomplete
 							v-model="link"
-							style="width: 294px;margin: 0 6px;"
+							style="width: 100%;margin: 0 6px;"
 							:fetch-suggestions="fetchSuggestions"
 							@keyup.enter.native="search"
 							@select="handleSelect"
@@ -90,7 +90,7 @@ import { ElMessage } from "element-plus";
 import { Method } from "axios";
 import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
-import MonacoEditor from "@/components/MonacoEditor.vue";
+import MonacoEditor from "@/components/MonacoEditor/index.vue";
 import axios from "@/plugins/axios";
 import { validateTip } from '@/utils/GlobalUtil';
 

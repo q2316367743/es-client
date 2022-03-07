@@ -29,7 +29,7 @@ import { Method } from "axios";
 import JsonViewer from 'vue-json-viewer';
 import Chart from "@/entity/Chart";
 import axios from "@/plugins/axios";
-import MonacoEditor from "@/components/MonacoEditor.vue";
+import MonacoEditor from "@/components/MonacoEditor/index.vue";
 
 // doT.templateSettings = {
 //     evaluate: /\{\{([\s\S]+?)\}\}/g,
