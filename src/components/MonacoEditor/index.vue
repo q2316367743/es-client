@@ -6,6 +6,8 @@ import { defineComponent } from "vue";
 import * as monaco from 'monaco-editor';
 
 import TipsBuild from './build/TipsBuild';
+import { mapState } from "pinia";
+import { useIndexStore } from "@/store/IndexStore";
 
 let instance = {} as monaco.editor.IStandaloneCodeEditor;
 
@@ -15,7 +17,7 @@ export default defineComponent({
         modelValue: String,
         name: {
             type: String,
-            default: 'codemirror'
+            default: 'monaco-editor'
         },
         placeholder: {
             type: String,
@@ -28,6 +30,13 @@ export default defineComponent({
         height: {
             type: String,
             default: '200px'
+        },
+        /**
+         * 当前的链接
+         */
+        link: {
+            type: String,
+            default: ''
         }
     },
     data: () => ({
@@ -37,6 +46,9 @@ export default defineComponent({
             height: '367px',
         }
     }),
+    computed: {
+        ...mapState(useIndexStore, ['indices'])
+    },
     watch: {
         modelValue(newValue) {
             if (newValue !== instance.getValue()) {
@@ -44,7 +56,20 @@ export default defineComponent({
                 instance.trigger(instance.getValue(), 'editor.action.formatDocument', null);
                 this.content = newValue;
             }
-
+        },
+        indices() {
+            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+                allowComments: true,
+                validate: true,
+                schemas: TipsBuild(this.indices, this.link)
+            });
+        },
+        link() {
+            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+                allowComments: true,
+                validate: true,
+                schemas: TipsBuild(this.indices, this.link)
+            });
         }
     },
     mounted() {
@@ -65,30 +90,11 @@ export default defineComponent({
             }
             return true;
         });
-        monaco.languages.registerCompletionItemProvider('json', {
-            provideCompletionItems: function(model: monaco.editor.ITextModel, position: monaco.Position) {
-            // find out if we are completing a property in the 'dependencies' object.
-                var textUntilPosition = model.getValueInRange({
-                    startLineNumber: 1, 
-                    startColumn: 1, 
-                    endLineNumber: position.lineNumber, 
-                    endColumn: position.column
-                    });
-                var suggestions: monaco.languages.CompletionItem[] = [];
-                var word = model.getWordUntilPosition(position);
-                var range = {
-                    startLineNumber: position.lineNumber,
-                    endLineNumber: position.lineNumber,
-                    startColumn: word.startColumn,
-                    endColumn: word.endColumn
-                };
-
-                if(textUntilPosition.charAt(textUntilPosition.length-2)=='.'){
-                    suggestions = TipsBuild();
-                }
-                return {suggestions: suggestions};
-            },
-        })
+        monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            allowComments: true,
+            validate: true,
+            schemas: TipsBuild(this.indices)
+        });
     }
 });
 </script>

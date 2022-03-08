@@ -87,7 +87,6 @@
                 <base-search v-show="active === 'base_search'"></base-search>
                 <senior-search v-show="active === 'senior_search'"></senior-search>
                 <sql-search v-show="active === 'sql_search'"></sql-search>
-                <data-chart v-show="active === 'data_chart'"></data-chart>
                 <setting v-show="active === 'setting'"></setting>
             </div>
         </div>
