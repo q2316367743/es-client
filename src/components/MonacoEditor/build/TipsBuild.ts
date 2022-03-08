@@ -30,26 +30,7 @@ export default function TipsBuild(indices: Array<Index>, link: string): SChema[]
     ]
 }
 
-// {
-//     "$id": "http://localhost:8080/dist/schemas/test1.json",
-//     "$schema": "http://json-schema.org/draft-07/schema#",
-//     "type": "object",
-//     "properties":
-//     {
-//       "p1":
-//       {
-//         "enum": ["v1", "v2"]
-//       },
-//       "p2":{
-//          "$ref":"http://localhost:8080/dist/schemas/test2.json"
-//       },
-//       "p3":
-//       {
-//         "type": "string",
-//         "description": "这是一个组件容器"
-//       }
-//     }
-//   }
+// schema指南: https://www.cnblogs.com/terencezhou/p/10474617.html
 
 function schemaBuild(indices: Array<Index>, link: string): any {
     let index_name = parseLink(indices, link);
