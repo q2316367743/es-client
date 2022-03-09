@@ -62,7 +62,7 @@
 									<el-button type="danger" @click="removeGetParam(param.id)">{{ $t('senior_search.remove') }}</el-button>
 								</div>
 							</div>
-							<monaco-editor v-model="params" height="100%" v-show="method !== 'GET'" class="post"></monaco-editor>
+							<monaco-editor v-model="params" :link="link" height="100%" v-show="method !== 'GET'" class="post"></monaco-editor>
 						</div>
 					</div>
 				</div>

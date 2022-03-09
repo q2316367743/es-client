@@ -65,10 +65,12 @@ export default defineComponent({
             });
         },
         link() {
+            let schemas = TipsBuild(this.indices, this.link);
+            console.log(schemas)
             monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
                 allowComments: true,
                 validate: true,
-                schemas: TipsBuild(this.indices, this.link)
+                schemas: schemas
             });
         }
     },
@@ -93,7 +95,7 @@ export default defineComponent({
         monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: true,
             validate: true,
-            schemas: TipsBuild(this.indices)
+            schemas: TipsBuild(this.indices, this.link)
         });
     }
 });

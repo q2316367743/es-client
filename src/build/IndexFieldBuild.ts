@@ -1,6 +1,6 @@
 import Field from "@/view/Field";
 
-export default function IndexFieldBuild(mappings: any): Array<Field> {
+export default function IndexFieldBuild(mappings: any, include_doc: boolean = true): Array<Field> {
     let fields = new Array<Field>();
     let properties = {} as any;
     if (mappings._doc) {
@@ -10,8 +10,12 @@ export default function IndexFieldBuild(mappings: any): Array<Field> {
     } else {
         return new Array<Field>();
     }
+    let prefix = '';
+    if (include_doc) {
+        prefix = '_doc';
+    }
     for (let key in properties) {
-        buildField(key, properties[key], fields, '_doc')
+        buildField(key, properties[key], fields, prefix)
     }
     return fields;
 }

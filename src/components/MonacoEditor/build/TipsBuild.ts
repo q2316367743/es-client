@@ -33,7 +33,11 @@ export default function TipsBuild(indices: Array<Index>, link: string): SChema[]
 // schema指南: https://www.cnblogs.com/terencezhou/p/10474617.html
 
 function schemaBuild(indices: Array<Index>, link: string): any {
-    let index_name = parseLink(indices, link);
+    let index = parseLink(indices, link);
+    let fields = new Array<string>();
+    if (index) {
+        index.fields.forEach(i => fields.push(i.name.substring(5)));
+    }
     return {
         "$id": "schema.json",
         "$schema": "https://esion.xyz/assert/es-client/schema.json",
@@ -42,26 +46,40 @@ function schemaBuild(indices: Array<Index>, link: string): any {
             "query": {
                 "type": "object",
                 "properties": {
-                    "must": {
-                        "type": "string"
-                    },
-                    "should": {
-                        "type": "string"
-                    },
-                    "must_not": {
-                        "type": "string"
+                    "type": "object",
+                    "boolean": {
+                        "type": "object",
+                        "properties": {
+                            "must": {
+                                "type": "array",
+                                "items": getQueryCondition(fields)
+                            },
+                            "should": {
+                                "type": "string"
+                            },
+                            "must_not": {
+                                "type": "string"
+                            },
+                            "filter": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
             "from": {
-                "type": "number"
+                "type": "number",
+                "default": 0,
             },
             "size": {
-                "type": "number"
+                "type": "number",
+                "default": 10,
             },
             "sort": {
                 "type": "array",
-                "items": sortBuild(indices, index_name),
+                "items": {
+                    "anyOf": sortBuild(fields)
+                },
             }
         }
     }
@@ -73,70 +91,78 @@ function schemaBuild(indices: Array<Index>, link: string): any {
  * @param indices 全部的索引
  * @param link 当前链接
  */
-function parseLink(indices: Array<Index>, link: string): string {
+function parseLink(indices: Array<Index>, link: string): Index | undefined {
     for (let index of indices) {
         if (link.indexOf(index.name) > -1) {
-            return index.name;
+            return index;
+        }
+        for (let alias of index.alias) {
+            if (link.indexOf(alias)) {
+                return index;
+            }
         }
     }
-    return "";
 }
+
+/* ============================= 排序构造器 ============================= */
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/7.6/search-request-body.html#request-body-search-sort
 
-function sortBuild(indices: Array<Index>, index: string): any[] {
+function sortBuild(fields: Array<string>): any[] {
     return [{
         "type": "object",
-        "properties": {
-            "create_time": {
-                "type": "object",
-                "properties": {
-                    "order": {
-                        "type": "string",
-                        "enum": ["asc", "desc"]
-                    },
-                    "mode": {
-                        "type": "string",
-                        "enum": ["min", "max", "sum", "avg", "median"]
-                    },
-                    "nested_path": {
-                        "type": "string"
-                    },
-                    "missing": {
-                        "type": "string",
-                        "default": "_last",
-                        "examples": ["_last", "_first"]
-                    },
-                    "unmapped_type": {
-                        "type": "string",
-                        "enum": getType()
-                    }
-                }
-            }
-        }
+        "properties": getSort(fields)
     }, {
-        "type": "object",
-        "properties": {
-            "update_time": {
-                "type": "object",
-                "properties": {
-                    "order": {
-                        "type": "string",
-                        "enum": ["asc", "desc"]
-                    }
-                }
-            }
-        }
+        "type": "string",
+        "enum": fields
     }]
 }
+
+function getSort(fields: Array<string>): any {
+    let properties = {} as any;
+    fields.forEach(field => {
+        properties[field] = {
+            "type": "object",
+            "properties": getBaseSort()
+        }
+    });
+    return properties;
+}
+
+function getBaseSort(): any {
+    return {
+        "order": {
+            "type": "string",
+            "enum": ["asc", "desc"]
+        },
+        "mode": {
+            "type": "string",
+            "enum": ["min", "max", "sum", "avg", "median"]
+        },
+        "nested_path": {
+            "type": "string"
+        },
+        "missing": {
+            "type": "string",
+            "default": "_last",
+            "examples": ["_last", "_first"]
+        },
+        "unmapped_type": {
+            "type": "string",
+            "enum": getType()
+        }
+    }
+}
+
+/* ============================= 类型生成器 ============================= */
 
 function getType(): Array<string> {
     return [...getCoreType(), ...getCompoundType(), ...getMapType(), ...getSpecialType()];
 }
 
 function getCoreType(): Array<string> {
-    return ["string", "text", "keyword", "integer", "long", "short", "byte", 
-    "double", "float", "half_float", "scaled_float", "boolean", "date", "range", "binary"];
+    return ["string", "text", "keyword", "integer", "long", "short", "byte",
+        "double", "float", "half_float", "scaled_float", "boolean", "date", "range", "binary"];
 }
 
 function getCompoundType(): Array<string> {
@@ -149,4 +175,68 @@ function getMapType(): Array<string> {
 
 function getSpecialType(): Array<string> {
     return ["ip", "completion", "token_count", "attachment", "percolator"]
+}
+
+/* ============================= 条件生成器 ============================= */
+
+function getQueryCondition(fields: Array<string>): any[] {
+    return [{
+        "type": "object",
+        "properties": {
+            "term": {
+                "type": "object",
+                "properties": termCondition(fields)
+            },
+            "terms": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "match": {
+                "type": "string"
+            },
+            "wildcard": {
+                "type": "string"
+            },
+            "prefix": {
+                "type": "string"
+            },
+            "range": {
+                "type": "string"
+            },
+            "fuzzy": {
+                "type": "string"
+            },
+            "query_string": {
+                "type": "string"
+            },
+            "missing": {
+                "type": "string"
+            }
+        }
+    }]
+}
+
+function termCondition(fields: Array<string>): any {
+    let properties = {} as any;
+    fields.forEach(field => {
+        properties[field] = termBaseCondition()
+    })
+    return properties;
+}
+
+function termBaseCondition(): any {
+    return {
+        "anyOf": [{
+            "type": "string"
+        }, {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "string"
+                }
+            }
+        }]
+    };
 }
