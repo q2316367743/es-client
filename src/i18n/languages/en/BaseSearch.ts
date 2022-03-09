@@ -12,5 +12,6 @@ export default {
     'add': 'add',
     'remove': 'remove',
     'please_select_an_index': 'please select an index',
-    'select_placeholder': 'please select'
+    'select_placeholder': 'please select',
+    'jump_to_senior_search': 'jump to senior search'
 }

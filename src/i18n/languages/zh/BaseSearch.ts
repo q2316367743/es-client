@@ -12,5 +12,6 @@ export default {
     'add': '新增',
     'remove': '移除',
     'please_select_an_index': '请选择索引',
-    'select_placeholder': '请选择'
+    'select_placeholder': '请选择',
+    'jump_to_senior_search': '跳转到高级查询'
 }

@@ -5,9 +5,9 @@
 				<div style="display: flex;justify-content: space-between;">
 					<div>{{ $t('senior_search.senior_search') }}</div>
 					<el-select v-model="view">
-						<el-option label="基础视图" :value="1"></el-option>
-						<el-option label="JSON视图" :value="2"></el-option>
-						<el-option label="表格视图" :value="3" disabled></el-option>
+						<el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
+						<el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
+						<el-option :label="$t('senior_search.table_view')" :value="3" disabled></el-option>
 					</el-select>
 				</div>
 			</template>

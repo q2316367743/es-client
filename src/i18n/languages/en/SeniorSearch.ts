@@ -11,5 +11,8 @@ export default {
     'clear': 'clear',
     'please_enter_key': 'please enter key',
     'please_enter_value': 'please enter value',
-    'json_format_error': 'JSON format _error'
+    'json_format_error': 'JSON format _error',
+    'json_view': 'json view',
+    'base_view': 'base view',
+    'table_view': 'table view'
 }

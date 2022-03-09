@@ -53,6 +53,11 @@
                                     style="margin-left: 10px"
                                     @click="clear"
                                 >{{ $t('base_search.clear') }}</el-button>
+                                <el-button
+                                    type="success"
+                                    style="margin-left: 10px"
+                                    @click="clear"
+                                >{{ $t('base_search.jump_to_senior_search') }}</el-button>
                             </el-form-item>
                             <!-- 条件 -->
                             <el-form-item

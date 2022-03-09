@@ -11,5 +11,8 @@ export default {
     'clear': '清空',
     'please_enter_key': '请输入键',
     'please_enter_value': '请输入值',
-    'json_format_error': 'JSON格式错误'
+    'json_format_error': 'JSON格式错误',
+    'json_view': 'json视图',
+    'base_view': '基础视图',
+    'table_view': '表格视图'
 }
