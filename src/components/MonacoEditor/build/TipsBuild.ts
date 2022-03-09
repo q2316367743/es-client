@@ -82,6 +82,8 @@ function parseLink(indices: Array<Index>, link: string): string {
     return "";
 }
 
+// https://www.elastic.co/guide/en/elasticsearch/reference/7.6/search-request-body.html#request-body-search-sort
+
 function sortBuild(indices: Array<Index>, index: string): any[] {
     return [{
         "type": "object",
