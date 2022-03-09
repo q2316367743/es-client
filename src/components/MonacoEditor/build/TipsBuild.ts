@@ -61,29 +61,7 @@ function schemaBuild(indices: Array<Index>, link: string): any {
             },
             "sort": {
                 "type": "array",
-                "items": [{
-                    "type": "object",
-                    "properties": {
-                        "create_time": {
-                            "type": "object",
-                            "properties": {
-                                "order": {
-                                    "type": "string",
-                                    "enum": ["asc", "desc"]
-                                }
-                            }
-                        },
-                        "update_time": {
-                            "type": "object",
-                            "properties": {
-                                "order": {
-                                    "type": "string",
-                                    "enum": ["asc", "desc"]
-                                }
-                            }
-                        }
-                    }
-                }]
+                "items": sortBuild(indices, index_name),
             }
         }
     }
@@ -104,6 +82,69 @@ function parseLink(indices: Array<Index>, link: string): string {
     return "";
 }
 
-function sortBuild(indices: Array<Index>, index: string): any {
+function sortBuild(indices: Array<Index>, index: string): any[] {
+    return [{
+        "type": "object",
+        "properties": {
+            "create_time": {
+                "type": "object",
+                "properties": {
+                    "order": {
+                        "type": "string",
+                        "enum": ["asc", "desc"]
+                    },
+                    "mode": {
+                        "type": "string",
+                        "enum": ["min", "max", "sum", "avg", "median"]
+                    },
+                    "nested_path": {
+                        "type": "string"
+                    },
+                    "missing": {
+                        "type": "string",
+                        "default": "_last",
+                        "examples": ["_last", "_first"]
+                    },
+                    "unmapped_type": {
+                        "type": "string",
+                        "enum": getType()
+                    }
+                }
+            }
+        }
+    }, {
+        "type": "object",
+        "properties": {
+            "update_time": {
+                "type": "object",
+                "properties": {
+                    "order": {
+                        "type": "string",
+                        "enum": ["asc", "desc"]
+                    }
+                }
+            }
+        }
+    }]
+}
 
+function getType(): Array<string> {
+    return [...getCoreType(), ...getCompoundType(), ...getMapType(), ...getSpecialType()];
+}
+
+function getCoreType(): Array<string> {
+    return ["string", "text", "keyword", "integer", "long", "short", "byte", 
+    "double", "float", "half_float", "scaled_float", "boolean", "date", "range", "binary"];
+}
+
+function getCompoundType(): Array<string> {
+    return ["array", "object", "nested"];
+}
+
+function getMapType(): Array<string> {
+    return ["geo_point", "geo_shape"];
+}
+
+function getSpecialType(): Array<string> {
+    return ["ip", "completion", "token_count", "attachment", "percolator"]
 }
