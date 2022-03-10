@@ -13,7 +13,7 @@
 			</template>
 			<div class="senior-main">
 				<!-- 左面查询条件 -->
-				<div class="side" :style="{ width: senior_width + 'px' }">
+				<div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
 					<!-- 链接选择 -->
 					<div class="link">
 						<div
@@ -46,6 +46,7 @@
 							type="primary"
 							@click="search"
 						>{{ link.indexOf('search') > -1 ? $t('senior_search.search') : $t('senior_search.execute') }}</el-button>
+						<el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
 					</div>
 					<!-- 请求参数 -->
 					<div class="param">
@@ -62,20 +63,41 @@
 									<el-button type="danger" @click="removeGetParam(param.id)">{{ $t('senior_search.remove') }}</el-button>
 								</div>
 							</div>
-							<monaco-editor v-model="params" :link="link" height="100%" v-show="method !== 'GET'" class="post"></monaco-editor>
+							<monaco-editor
+								ref="monaco_editor"
+								v-model="params"
+								:link="link"
+								height="100%"
+								v-show="method !== 'GET'"
+								class="post"
+							></monaco-editor>
 						</div>
 					</div>
 				</div>
 				<div
 					class="senior-bar"
-					:style="{ left: senior_width + 10 + 'px' }"
+					:style="{ left: senior_width_computed + 10 + 'px' }"
 					@mousedown="onMouseDown"
 				></div>
+				<div
+					class="senior-button"
+					:style="{ left: senior_width_computed + 5 + 'px', top: (max_height / 2 - 26) + 'px' }"
+					@click="hideLeft"
+				>←</div>
+				<div
+					class="senior-button"
+					:style="{ left: senior_width_computed + 5 + 'px', bottom: (max_height / 2 - 26) + 'px' }"
+					@click="hideRight"
+				>→</div>
 				<!-- 右面展示内容 -->
-				<div class="senior-content" :style="{ left: senior_width + 20 + 'px' }">
+				<div
+					class="senior-content"
+					:style="{ left: senior_width_computed + 20 + 'px' }"
+					v-show="mode !== 3"
+				>
 					<el-scrollbar>
 						<base-viewer v-if="view === 1" :data="result"></base-viewer>
-						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="4" copyable sort></json-viewer>
+						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded></json-viewer>
 					</el-scrollbar>
 				</div>
 			</div>
@@ -100,6 +122,17 @@ import getParamBuild from "@/build/GetParamBuild";
 import { mapState } from "pinia";
 import { useSettingStore } from "@/store/SettingStore";
 
+enum Mode {
+	HIDE_LEFT = 1,
+	DEFAULT = 2,
+	HIDE_RIGHT = 3
+}
+const side_width = 250;
+const side_min_width = 356;
+const right_min_width = 200;
+const right_add_width = 140;
+const outer_height = 190;
+
 export default defineComponent({
 	name: 'SeniorSearch',
 	data: () => ({
@@ -112,10 +145,24 @@ export default defineComponent({
 		get_params: new Array<Param>(),
 		view: 2,
 		is_down: false,
-		max_width: 520
+		max_width: 520,
+		max_height: 520,
+		mode: Mode.DEFAULT
 	}),
 	components: { JsonViewer, BaseViewer, MonacoEditor },
-	computed: { ...mapState(useSettingStore, ['senior_width']) },
+	computed: {
+		...mapState(useSettingStore, ['senior_width']),
+		senior_width_computed(): number {
+			switch (this.mode) {
+				case Mode.DEFAULT:
+					return this.senior_width;
+				case Mode.HIDE_LEFT:
+					return 0;
+				case Mode.HIDE_RIGHT:
+					return this.max_width + right_add_width;
+			}
+		}
+	},
 	watch: {
 		link(newValue) {
 			if (newValue === '') {
@@ -124,11 +171,9 @@ export default defineComponent({
 		}
 	},
 	mounted() {
-		const side_width = 250;
-		const side_min_width = 270;
-		const right_min_width = 200;
 		// 获取最大宽度
 		this.max_width = window.outerWidth - side_width - right_min_width;
+		this.max_height = window.innerHeight - outer_height;
 		window.onmousemove = (ev: MouseEvent): void => {
 			if (this.is_down == false) {
 				return;
@@ -140,6 +185,7 @@ export default defineComponent({
 		};
 		window.onresize = (): void => {
 			this.max_width = window.outerWidth - side_width - right_min_width;
+			this.max_height = window.innerHeight - outer_height;
 			if (this.senior_width > this.max_width) {
 				useSettingStore().setSeniorWidth(this.max_width);
 			}
@@ -188,7 +234,7 @@ export default defineComponent({
 			}
 		},
 		fetchSuggestions(queryString: string, cb: (links: string[]) => void) {
-			cb(LinkProcessor(queryString));
+			cb(LinkProcessor(queryString, this.method));
 		},
 		handleSelect(item: any) {
 			this.link = item;
@@ -207,8 +253,35 @@ export default defineComponent({
 			this.get_params = new Array<Param>();
 		},
 		onMouseDown() {
-			this.is_down = true;
+			if (this.mode === Mode.DEFAULT) {
+				this.is_down = true;
+			}
 		},
+		formatDocument() {
+			(this.$refs.monaco_editor as any).format();
+		},
+		hideLeft() {
+			console.log('向左')
+			switch (this.mode) {
+				case Mode.DEFAULT:
+					this.mode = Mode.HIDE_LEFT;
+					break;
+				case Mode.HIDE_RIGHT:
+					this.mode = Mode.DEFAULT;
+					break;
+			}
+		},
+		hideRight() {
+			console.log('向右')
+			switch (this.mode) {
+				case Mode.DEFAULT:
+					this.mode = Mode.HIDE_RIGHT;
+					break;
+				case Mode.HIDE_LEFT:
+					this.mode = Mode.DEFAULT;
+					break;
+			}
+		}
 	},
 });
 </script>
@@ -296,6 +369,20 @@ export default defineComponent({
 			width: 9px;
 			border-left: var(--el-card-border-color) solid 1px;
 			cursor: ew-resize;
+		}
+
+		.senior-button {
+			position: absolute;
+			width: 13px;
+			height: 13px;
+			border-radius: 13px;
+			line-height: 13px;
+			background-color: #ffffff;
+			font-size: 8px;
+			border-left: var(--el-card-border-color) solid 1px;
+			cursor: ew-resize;
+			border: #e4e7ed solid 1px;
+			cursor: pointer;
 		}
 
 		.senior-content {

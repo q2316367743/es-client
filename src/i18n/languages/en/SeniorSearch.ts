@@ -14,5 +14,6 @@ export default {
     'json_format_error': 'JSON format _error',
     'json_view': 'json view',
     'base_view': 'base view',
-    'table_view': 'table view'
+    'table_view': 'table view',
+    'format': 'format'
 }

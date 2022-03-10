@@ -1,7 +1,9 @@
 import { useIndexStore } from "@/store/IndexStore";
+import { Method } from "axios";
 
 // 附加操作
-const options = ['', '_doc', '_search', '_setting', '_mapping'];
+const options_get = ['', '_search', '_mapping'];
+const options_post = ['_doc', '_search', '_setting', '_mapping'];
 
 // 独立操作
 const sign = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/shards?v', '/_cat/shards/', '/_cat/master?v',
@@ -18,11 +20,15 @@ const sign = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/shards?v',
  * 链接处理器
  * @param target 目标链接
  */
-export default function LinkProcessor(target: string): Array<string> {
-    // 遍历全部的索引，构建基础链接
-    let tempLinks = buildAllLink();
+export default function LinkProcessor(target: string, method: Method): Array<string> {
     // 构建基础
     let links = new Array<string>();
+    // 如果没有输入，则不返回推荐
+    if (target === '') {
+        return links;
+    }
+    // 遍历全部的索引，构建基础链接
+    let tempLinks = buildAllLink(method);
     for (let temp of tempLinks) {
         if (temp.indexOf(target) > -1) {
             links.push(temp);
@@ -31,11 +37,27 @@ export default function LinkProcessor(target: string): Array<string> {
     return links.splice(0, 50);
 }
 
-function buildAllLink():Array<string> {
+function buildAllLink(method: Method): Array<string> {
     let links = new Array<string>();
-    let fields = buildFieldList();
-    sign.forEach(s => links.push(s));
-    fields.map(e => options.map(o => `/${e}/${o}`)).flat().forEach(f => links.push(f));
+    if (method === 'GET') {
+        let fields = buildFieldList();
+        // GET请求增加
+        fields.map(e => options_get.map(o => `/${e}/${o}`))
+            .flat()
+            .forEach(f => links.push(f));
+        sign.forEach(s => links.push(s));
+    } else if (method === 'POST') {
+        let fields = buildFieldList();
+        fields.map(e => options_post.map(o => `/${e}/${o}`))
+            .flat()
+            .forEach(f => links.push(f));
+    }else if (method === 'PUT') {
+        let fields = buildFieldList(false);
+        fields.map(e => links.push(`/${e}/`))
+    }else if (method === 'DELETE') {
+        let fields = buildFieldList(false);
+        fields.map(e => links.push(`/${e}/`))
+    }
     return links;
 }
 
@@ -43,15 +65,17 @@ function buildAllLink():Array<string> {
  * 此处获取别名+链接名称
  * @returns 全部的链接
  */
-function buildFieldList(): Array<string> {
+function buildFieldList(include_alias: boolean = true): Array<string> {
     // 准备数据
     let indices = useIndexStore().list;
     let fields = new Array<string>();
     // 遍历数据
     for (let index of indices) {
         // 插入别名
-        for (let alias of index.alias) {
-            fields.push(alias);
+        if (include_alias) {
+            for (let alias of index.alias) {
+                fields.push(alias);
+            }
         }
         // 插入本身
         fields.push(index.name);

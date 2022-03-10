@@ -14,5 +14,6 @@ export default {
     'json_format_error': 'JSON格式错误',
     'json_view': 'json视图',
     'base_view': '基础视图',
-    'table_view': '表格视图'
+    'table_view': '表格视图',
+    'format': '格式化'
 }

@@ -47,7 +47,7 @@ function schemaBuild(indices: Array<Index>, link: string): any {
                 "type": "object",
                 "properties": {
                     "type": "object",
-                    "boolean": {
+                    "bool": {
                         "type": "object",
                         "properties": {
                             "must": {
@@ -92,6 +92,9 @@ function schemaBuild(indices: Array<Index>, link: string): any {
  * @param link 当前链接
  */
 function parseLink(indices: Array<Index>, link: string): Index | undefined {
+    if (link === '') {
+        return;
+    }
     for (let index of indices) {
         if (link.indexOf(index.name) > -1) {
             return index;
@@ -185,13 +188,11 @@ function getQueryCondition(fields: Array<string>): any[] {
         "properties": {
             "term": {
                 "type": "object",
-                "properties": termCondition(fields)
+                "properties": ConditionBuild(fields, termBaseCondition)
             },
             "terms": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
+                "type": "object",
+                "properties": ConditionBuild(fields, termsBaseCondition)
             },
             "match": {
                 "type": "string"
@@ -218,10 +219,10 @@ function getQueryCondition(fields: Array<string>): any[] {
     }]
 }
 
-function termCondition(fields: Array<string>): any {
+function ConditionBuild(fields: Array<string>, condition: () => any): any {
     let properties = {} as any;
     fields.forEach(field => {
-        properties[field] = termBaseCondition()
+        properties[field] = condition()
     })
     return properties;
 }
@@ -231,10 +232,33 @@ function termBaseCondition(): any {
         "anyOf": [{
             "type": "string"
         }, {
+            "type": "number"
+        }, {
             "type": "object",
             "properties": {
                 "value": {
                     "type": "string"
+                },
+                "boot": {
+                    "type": "number"
+                }
+            }
+        }]
+    };
+}
+
+function termsBaseCondition(): any {
+    return {
+        "anyOf": [{
+            "type": "array"
+        }, {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "array"
+                },
+                "boot": {
+                    "type": "number"
                 }
             }
         }]

@@ -97,6 +97,11 @@ export default defineComponent({
             validate: true,
             schemas: TipsBuild(this.indices, this.link)
         });
+    },
+    methods: {
+        format() {
+            instance.getAction('editor.action.formatDocument').run();
+        }
     }
 });
 </script>

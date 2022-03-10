@@ -99,7 +99,7 @@
             <!-- 查询结果 -->
             <div class="base-content">
                 <el-card>
-                    <json-viewer :value="result" :expand-depth="4" copyable sort></json-viewer>
+                    <json-viewer :value="result" :expand-depth="6" copyable sort></json-viewer>
                     <div class="page">
                         <el-pagination
                             background
