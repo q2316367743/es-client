@@ -56,6 +56,7 @@ export default async function Builder(): Promise<Array<Index>> {
             state: state,
             shard,
             replica,
+            mapping: indecis[key].mappings,
             fields: IndexFieldBuild(indecis[key].mappings)
         });
     }

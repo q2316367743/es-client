@@ -261,7 +261,6 @@ export default defineComponent({
 			(this.$refs.monaco_editor as any).format();
 		},
 		hideLeft() {
-			console.log('向左')
 			switch (this.mode) {
 				case Mode.DEFAULT:
 					this.mode = Mode.HIDE_LEFT;
@@ -272,7 +271,6 @@ export default defineComponent({
 			}
 		},
 		hideRight() {
-			console.log('向右')
 			switch (this.mode) {
 				case Mode.DEFAULT:
 					this.mode = Mode.HIDE_RIGHT;

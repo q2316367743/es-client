@@ -46,6 +46,11 @@ export default interface Index {
     replica: any;
 
     /**
+     * 映射
+     */
+    mapping: any;
+
+    /**
      * 字段
      */
     fields: Array<Field>;

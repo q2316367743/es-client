@@ -1,4 +1,6 @@
 import Index from '@/view/Index';
+import SearchSchemaBuild from './SearchSchemaBuild';
+import DocSchemaBuild from './DocSchemaBuild';
 
 interface SChema {
 
@@ -20,6 +22,13 @@ interface SChema {
 
 }
 
+const default_schema = {
+    "$id": "schema_search.json",
+    "$schema": "https://esion.xyz/assert/es-client/schema_search.json",
+    "type": "object",
+    "properties": {}
+}
+
 export default function TipsBuild(indices: Array<Index>, link: string): SChema[] {
     return [
         {
@@ -34,55 +43,19 @@ export default function TipsBuild(indices: Array<Index>, link: string): SChema[]
 
 function schemaBuild(indices: Array<Index>, link: string): any {
     let index = parseLink(indices, link);
-    let fields = new Array<string>();
-    if (index) {
-        index.fields.forEach(i => fields.push(i.name.substring(5)));
+    if (!index) {
+        return default_schema;
     }
-    return {
-        "$id": "schema.json",
-        "$schema": "https://esion.xyz/assert/es-client/schema.json",
-        "type": "object",
-        "properties": {
-            "query": {
-                "type": "object",
-                "properties": {
-                    "type": "object",
-                    "bool": {
-                        "type": "object",
-                        "properties": {
-                            "must": {
-                                "type": "array",
-                                "items": getQueryCondition(fields)
-                            },
-                            "should": {
-                                "type": "string"
-                            },
-                            "must_not": {
-                                "type": "string"
-                            },
-                            "filter": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "from": {
-                "type": "number",
-                "default": 0,
-            },
-            "size": {
-                "type": "number",
-                "default": 10,
-            },
-            "sort": {
-                "type": "array",
-                "items": {
-                    "anyOf": sortBuild(fields)
-                },
-            }
+    if (link.indexOf('_search') > -1) {
+        let fields = new Array<string>();
+        if (index) {
+            index.fields.forEach(i => fields.push(i.name.substring(5)));
         }
+        return SearchSchemaBuild(fields);
+    }else if (link.indexOf('_doc') > -1) {
+        return DocSchemaBuild(index);
     }
+    return default_schema;
 }
 
 /**
@@ -105,162 +78,4 @@ function parseLink(indices: Array<Index>, link: string): Index | undefined {
             }
         }
     }
-}
-
-/* ============================= 排序构造器 ============================= */
-
-// https://www.elastic.co/guide/en/elasticsearch/reference/7.6/search-request-body.html#request-body-search-sort
-
-function sortBuild(fields: Array<string>): any[] {
-    return [{
-        "type": "object",
-        "properties": getSort(fields)
-    }, {
-        "type": "string",
-        "enum": fields
-    }]
-}
-
-function getSort(fields: Array<string>): any {
-    let properties = {} as any;
-    fields.forEach(field => {
-        properties[field] = {
-            "type": "object",
-            "properties": getBaseSort()
-        }
-    });
-    return properties;
-}
-
-function getBaseSort(): any {
-    return {
-        "order": {
-            "type": "string",
-            "enum": ["asc", "desc"]
-        },
-        "mode": {
-            "type": "string",
-            "enum": ["min", "max", "sum", "avg", "median"]
-        },
-        "nested_path": {
-            "type": "string"
-        },
-        "missing": {
-            "type": "string",
-            "default": "_last",
-            "examples": ["_last", "_first"]
-        },
-        "unmapped_type": {
-            "type": "string",
-            "enum": getType()
-        }
-    }
-}
-
-/* ============================= 类型生成器 ============================= */
-
-function getType(): Array<string> {
-    return [...getCoreType(), ...getCompoundType(), ...getMapType(), ...getSpecialType()];
-}
-
-function getCoreType(): Array<string> {
-    return ["string", "text", "keyword", "integer", "long", "short", "byte",
-        "double", "float", "half_float", "scaled_float", "boolean", "date", "range", "binary"];
-}
-
-function getCompoundType(): Array<string> {
-    return ["array", "object", "nested"];
-}
-
-function getMapType(): Array<string> {
-    return ["geo_point", "geo_shape"];
-}
-
-function getSpecialType(): Array<string> {
-    return ["ip", "completion", "token_count", "attachment", "percolator"]
-}
-
-/* ============================= 条件生成器 ============================= */
-
-function getQueryCondition(fields: Array<string>): any[] {
-    return [{
-        "type": "object",
-        "properties": {
-            "term": {
-                "type": "object",
-                "properties": ConditionBuild(fields, termBaseCondition)
-            },
-            "terms": {
-                "type": "object",
-                "properties": ConditionBuild(fields, termsBaseCondition)
-            },
-            "match": {
-                "type": "string"
-            },
-            "wildcard": {
-                "type": "string"
-            },
-            "prefix": {
-                "type": "string"
-            },
-            "range": {
-                "type": "string"
-            },
-            "fuzzy": {
-                "type": "string"
-            },
-            "query_string": {
-                "type": "string"
-            },
-            "missing": {
-                "type": "string"
-            }
-        }
-    }]
-}
-
-function ConditionBuild(fields: Array<string>, condition: () => any): any {
-    let properties = {} as any;
-    fields.forEach(field => {
-        properties[field] = condition()
-    })
-    return properties;
-}
-
-function termBaseCondition(): any {
-    return {
-        "anyOf": [{
-            "type": "string"
-        }, {
-            "type": "number"
-        }, {
-            "type": "object",
-            "properties": {
-                "value": {
-                    "type": "string"
-                },
-                "boot": {
-                    "type": "number"
-                }
-            }
-        }]
-    };
-}
-
-function termsBaseCondition(): any {
-    return {
-        "anyOf": [{
-            "type": "array"
-        }, {
-            "type": "object",
-            "properties": {
-                "value": {
-                    "type": "array"
-                },
-                "boot": {
-                    "type": "number"
-                }
-            }
-        }]
-    };
 }
