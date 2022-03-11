@@ -1,13 +1,9 @@
 import Index from '@/view/Index';
-import AbstractStrategy from "./AbstractStrategy";
+import Strategy from "./Strategy";
 import { getCoreStringType, getCoreNumberType } from '../util/TypeUtil';
 
 // 文档策略类
-class DocStrategy extends AbstractStrategy {
-
-    constructor() {
-        super('_doc');
-    }
+export default class DocStrategy implements Strategy {
 
     issue(index: Index): any {
         return {
@@ -43,7 +39,7 @@ class DocStrategy extends AbstractStrategy {
                     "type": "object",
                     "properties": property
                 }
-                this.baseTypeBuild(key, field.properties[key], property);
+                this.propertyBuild(key, field.properties[key], property);
             }
         } else {
             this.baseTypeBuild(field.type, name, properties);
@@ -55,7 +51,7 @@ class DocStrategy extends AbstractStrategy {
             properties[name] = {
                 "type": "number"
             }
-        } else if (getCoreStringType().findIndex((t) => t === type)) {
+        } else if (getCoreStringType().findIndex((t) => t === type) > -1) {
             properties[name] = {
                 "type": "string"
             }
@@ -63,7 +59,3 @@ class DocStrategy extends AbstractStrategy {
     }
 
 }
-
-const docStrategy = new DocStrategy()
-
-export default docStrategy;

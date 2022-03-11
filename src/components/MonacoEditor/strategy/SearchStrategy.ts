@@ -1,12 +1,9 @@
 import Index from '@/view/Index';
-import AbstractStrategy from "./AbstractStrategy";
+import Strategy from "./Strategy";
 import { getType } from '../util/TypeUtil';
 
-class SearchStrategy extends AbstractStrategy {
-
-    constructor() {
-        super('_search');
-    }
+// 搜索策略类
+export default class SearchStrategy implements Strategy {
 
     issue(index: Index): any {
         let fields = new Array<string>();
@@ -197,7 +194,3 @@ class SearchStrategy extends AbstractStrategy {
         };
     }
 }
-
-const searchStrategy = new SearchStrategy();
-
-export default searchStrategy;
