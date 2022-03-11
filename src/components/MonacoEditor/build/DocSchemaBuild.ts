@@ -4,15 +4,14 @@ import {getCoreStringType, getCoreNumberType} from '../util/TypeUtil';
 /**
  * 构造_doc的schema
  * 
- * @param fields 字段
+ * @param index 索引
  */
 export default function DocSchemaBuild(index: Index): any {
-    let temp = propertiesBuild(index.mapping);
     return {
         "$id": "schema_search.json",
         "$schema": "https://esion.xyz/assert/es-client/schema_search.json",
         "type": "object",
-        "properties": temp
+        "properties": propertiesBuild(index.mapping)
     }
 }
 
@@ -59,4 +58,3 @@ function baseTypeBuild(type: string, name: string, properties: any): void {
         }
     }
 }
-

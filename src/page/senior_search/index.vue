@@ -138,7 +138,7 @@ export default defineComponent({
 	data: () => ({
 		link: '',
 		method: 'POST' as Method,
-		params: '',
+		params: '{}',
 		result: {},
 		suggestions: [],
 		// GET请求参数
@@ -221,7 +221,12 @@ export default defineComponent({
 						} catch (e: any) {
 							console.error(e);
 							ElMessage.error(this.$t('senior_search.json_format_error'));
+							return;
 						}
+					}
+					if (this.link.indexOf('_doc') > -1 && this.params == '') {
+						// 如果是新增文档，但是没有参数，不进行查询
+						return;
 					}
 					axios({
 						url: this.link,

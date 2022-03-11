@@ -1,26 +1,6 @@
 import Index from '@/view/Index';
-import SearchSchemaBuild from './SearchSchemaBuild';
-import DocSchemaBuild from './DocSchemaBuild';
-
-interface SChema {
-
-    /**
-     * The URI of the schema, which is also the identifier of the schema.
-     */
-    readonly uri: string;
-    /**
-     * A list of glob patterns that describe for which file URIs the JSON schema will be used.
-     * '*' and '**' wildcards are supported. Exclusion patterns start with '!'.
-     * For example '*.schema.json', 'package.json', '!foo*.schema.json', 'foo/**\/BADRESP.json'.
-     * A match succeeds when there is at least one pattern matching and last matching pattern does not start with '!'.
-     */
-    readonly fileMatch?: string[];
-    /**
-     * The schema for the given URI.
-     */
-    readonly schema?: any;
-
-}
+import SChema from '@/entity/SChema';
+import StrategyContext from '../strategy/StrategyContext';
 
 const default_schema = {
     "$id": "schema_search.json",
@@ -29,7 +9,7 @@ const default_schema = {
     "properties": {}
 }
 
-export default function TipsBuild(indices: Array<Index>, link: string): SChema[] {
+export default function SchemaBuild(indices: Array<Index>, link: string): SChema[] {
     return [
         {
             uri: 'https://esion.xyz/assert/es-client/schema.json',
@@ -47,11 +27,9 @@ function schemaBuild(indices: Array<Index>, link: string): any {
         return default_schema;
     }
     if (link.indexOf('_search') > -1) {
-        let fields = new Array<string>();
-        index.fields.forEach(i => fields.push(i.name.substring(5)));
-        return SearchSchemaBuild(fields);
+        return StrategyContext.getStrategy('_search').issue(index);
     } else if (link.indexOf('_doc') > -1) {
-        return DocSchemaBuild(index);
+        return StrategyContext.getStrategy('_doc').issue(index);
     }
     return default_schema;
 }
