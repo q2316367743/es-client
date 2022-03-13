@@ -1,6 +1,7 @@
 import Index from '@/view/Index';
 import SChema from '@/entity/SChema';
 import StrategyContext from '../strategy/StrategyContext';
+import StrategyType from '../strategy/StrategyType';
 
 const default_schema = {
     "$id": "schema_search.json",
@@ -27,9 +28,9 @@ function schemaBuild(indices: Array<Index>, link: string): any {
         return default_schema;
     }
     if (link.indexOf('_search') > -1) {
-        return StrategyContext.getStrategy('_search').issue(index);
+        return StrategyContext.getStrategy(StrategyType.SEARCH).issue(index);
     } else if (link.indexOf('_doc') > -1) {
-        return StrategyContext.getStrategy('_doc').issue(index);
+        return StrategyContext.getStrategy(StrategyType.ADD).issue(index);
     }
     return default_schema;
 }

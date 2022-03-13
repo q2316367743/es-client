@@ -1,8 +1,12 @@
 import Strategy from "./Strategy";
+import StrategyType from './StrategyType'
 
 import DocStrategy from "./DocStrategy";
 import SearchStrategy from "./SearchStrategy";
 
+/**
+ * 策略上下文
+ */
 class StrategyContext {
 
     private static strategyMap = new Map<String, Strategy>();
@@ -21,7 +25,7 @@ class StrategyContext {
 
 }
 
-StrategyContext.register('_doc', new DocStrategy());
-StrategyContext.register('_search', new SearchStrategy());
+StrategyContext.register(StrategyType.ADD, new DocStrategy());
+StrategyContext.register(StrategyType.SEARCH, new SearchStrategy());
 
 export default StrategyContext; 

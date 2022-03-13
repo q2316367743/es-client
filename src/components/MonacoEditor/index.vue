@@ -5,7 +5,6 @@
 import { defineComponent } from "vue";
 import * as monaco from 'monaco-editor';
 
-import TipsBuild from './build/TipsBuild';
 import SchemaBuild from './build/SchemaBuild';
 import { mapState } from "pinia";
 import { useIndexStore } from "@/store/IndexStore";
@@ -62,13 +61,6 @@ export default defineComponent({
             this.update_schema();
         },
         link() {
-            let schemas = TipsBuild(this.indices, this.link);
-            console.log(schemas)
-            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-                allowComments: true,
-                validate: true,
-                schemas: schemas
-            });
             this.update_schema();
         }
     },

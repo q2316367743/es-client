@@ -234,7 +234,9 @@ export default defineComponent({
 						data
 					}).then((response) => {
 						this.result = response;
-					});
+					}).catch((e) => {
+						this.result = e.response.data
+					})
 				}
 			}
 		},
