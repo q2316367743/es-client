@@ -1,5 +1,5 @@
 <template>
-    <el-card class="setting">
+    <el-card class="setting" shadow="never">
         <template #header>{{ $t('app.menu.setting') }}</template>
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>

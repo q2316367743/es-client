@@ -1,6 +1,6 @@
 <template>
 	<div class="senior-search">
-		<el-card style="min-height: 550px">
+		<el-card style="min-height: 550px" shadow="never">
 			<template #header>
 				<div style="display: flex;justify-content: space-between;">
 					<div>{{ $t('senior_search.senior_search') }}</div>

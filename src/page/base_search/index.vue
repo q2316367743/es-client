@@ -3,7 +3,7 @@
         <el-scrollbar>
             <!-- 查询条件 -->
             <div class="base-option">
-                <div class="el-card es-card is-always-shadow">
+                <div class="el-card es-card">
                     <!-- 标题 -->
                     <div class="el-card__header">
                         <span>{{ $t('base_search.query_criteria') }}</span>
@@ -98,7 +98,7 @@
             </div>
             <!-- 查询结果 -->
             <div class="base-content">
-                <el-card>
+                <el-card shadow="never">
                     <json-viewer :value="result" :expand-depth="6" copyable sort></json-viewer>
                     <div class="page">
                         <el-pagination
