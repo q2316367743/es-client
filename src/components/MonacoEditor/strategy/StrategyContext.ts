@@ -1,5 +1,5 @@
 import Strategy from "./Strategy";
-import StrategyTypeEnum from './enumeration/StrategyTypeEnum'
+import StrategyTypeEnum from '../enumeration/StrategyTypeEnum'
 
 import DefaultStrategyImpl from './impl/DefaultStrategyImpl'
 import DocStrategyImpl from "./impl/DocStrategyImpl";

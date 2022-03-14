@@ -1,7 +1,7 @@
 import Index from '@/view/Index';
 import SChema from '@/entity/SChema';
 import StrategyContext from '../strategy/StrategyContext';
-import StrategyTypeEnum from '../strategy/enumeration/StrategyTypeEnum';
+import StrategyTypeEnum from '../enumeration/StrategyTypeEnum';
 
 export default function SchemaBuild(indices: Array<Index>, url: string): SChema[] {
     return [
