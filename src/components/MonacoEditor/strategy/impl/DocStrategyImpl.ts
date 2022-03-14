@@ -1,9 +1,9 @@
 import Index from '@/view/Index';
-import Strategy from "./Strategy";
-import { getCoreStringType, getCoreNumberType } from '../util/TypeUtil';
+import Strategy from "../Strategy";
+import { getCoreStringType, getCoreNumberType } from '../../util/TypeUtil';
 
 // 文档策略类
-export default class DocStrategy implements Strategy {
+export default class DocStrategyImpl implements Strategy {
 
     issue(index: Index): any {
         return {
@@ -32,13 +32,13 @@ export default class DocStrategy implements Strategy {
 
     private propertyBuild(name: string, field: any, properties: any): void {
         if (field.properties) {
+            let property = {} as any;
+            properties[name] = {
+                "type": "object",
+                "properties": property
+            }
             // 复合类型
             for (let key in field.properties) {
-                let property = {} as any;
-                properties[name] = {
-                    "type": "object",
-                    "properties": property
-                }
                 this.propertyBuild(key, field.properties[key], property);
             }
         } else {

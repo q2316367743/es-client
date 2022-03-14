@@ -13,7 +13,7 @@
         "url": "https://gitee.com/qiaoshengda/es-client"
     },
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vue-tsc --noEmit && vite build",
         "preview": "vite preview"
     },

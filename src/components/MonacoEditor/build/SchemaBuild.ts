@@ -1,38 +1,39 @@
 import Index from '@/view/Index';
 import SChema from '@/entity/SChema';
 import StrategyContext from '../strategy/StrategyContext';
-import StrategyType from '../strategy/StrategyType';
+import StrategyTypeEnum from '../strategy/enumeration/StrategyTypeEnum';
 
-const default_schema = {
-    "$id": "schema_search.json",
-    "$schema": "https://esion.xyz/assert/es-client/schema_search.json",
-    "type": "object",
-    "properties": {}
-}
-
-export default function SchemaBuild(indices: Array<Index>, link: string): SChema[] {
+export default function SchemaBuild(indices: Array<Index>, url: string): SChema[] {
     return [
         {
             uri: 'https://esion.xyz/assert/es-client/schema.json',
             fileMatch: ['*'],
-            schema: schemaBuild(indices, link)
+            schema: schemaBuild(indices, url)
         },
     ]
 }
 
 // schema指南: https://www.cnblogs.com/terencezhou/p/10474617.html
 
-function schemaBuild(indices: Array<Index>, link: string): any {
+function schemaBuild(indices: Array<Index>, url: string): any {
+    if (url === '') {
+        return StrategyContext.getStrategy(StrategyTypeEnum.DEFAULT).issue({} as Index);
+    }
+    // 链接的每一个部分
+    let links = url.split('/');
+    // 过滤掉空字符串
+    links = links.filter(l => l !== '');
+    let link = links[0] || '';
+    let option = links[1] || '';
     let index = parseLink(indices, link);
     if (!index) {
-        return default_schema;
+        return StrategyContext.getStrategy(StrategyTypeEnum.DEFAULT).issue({} as Index);
     }
-    if (link.indexOf('_search') > -1) {
-        return StrategyContext.getStrategy(StrategyType.SEARCH).issue(index);
-    } else if (link.indexOf('_doc') > -1) {
-        return StrategyContext.getStrategy(StrategyType.ADD).issue(index);
+    if (option.length > 0) {
+        return StrategyContext.getStrategy(option).issue(index);
+    } else {
+        return StrategyContext.getStrategy(StrategyTypeEnum.DEFAULT).issue({} as Index);
     }
-    return default_schema;
 }
 
 /**
@@ -46,11 +47,11 @@ function parseLink(indices: Array<Index>, link: string): Index | undefined {
         return;
     }
     for (let index of indices) {
-        if (link.indexOf(index.name) > -1) {
+        if (link === index.name) {
             return index;
         }
         for (let alias of index.alias) {
-            if (link.indexOf(alias)) {
+            if (link === alias) {
                 return index;
             }
         }

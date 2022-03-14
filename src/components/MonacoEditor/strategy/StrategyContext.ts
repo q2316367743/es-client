@@ -1,31 +1,42 @@
 import Strategy from "./Strategy";
-import StrategyType from './StrategyType'
+import StrategyTypeEnum from './enumeration/StrategyTypeEnum'
 
-import DocStrategy from "./DocStrategy";
-import SearchStrategy from "./SearchStrategy";
+import DefaultStrategyImpl from './impl/DefaultStrategyImpl'
+import DocStrategyImpl from "./impl/DocStrategyImpl";
+import SearchStrategyImpl from "./impl/SearchStrategyImpl";
 
 /**
  * 策略上下文
  */
 class StrategyContext {
 
-    private static strategyMap = new Map<String, Strategy>();
+    private strategyMap = new Map<String, Strategy>();
+    private static instance = new StrategyContext();
 
-    public static register(name: string, strategy: Strategy) {
+    private constructor(){}
+
+    public static getInstance(): StrategyContext {
+        return this.instance;
+    }
+
+    public register(name: string, strategy: Strategy) {
         this.strategyMap.set(name, strategy);
     }
 
-    public static getStrategy(name: string): Strategy {
+    public getStrategy(name: string): Strategy {
         let strategy = this.strategyMap.get(name);
         if (!strategy) {
-            throw new Error('【' + name + '】策略不存在');
+            return this.strategyMap.get(StrategyTypeEnum.DEFAULT)!;
         }
         return strategy;
     }
 
 }
 
-StrategyContext.register(StrategyType.ADD, new DocStrategy());
-StrategyContext.register(StrategyType.SEARCH, new SearchStrategy());
+const strategyContext = StrategyContext.getInstance();
 
-export default StrategyContext; 
+strategyContext.register(StrategyTypeEnum.DEFAULT, new DefaultStrategyImpl());
+strategyContext.register(StrategyTypeEnum.ADD, new DocStrategyImpl());
+strategyContext.register(StrategyTypeEnum.SEARCH, new SearchStrategyImpl());
+
+export default strategyContext; 

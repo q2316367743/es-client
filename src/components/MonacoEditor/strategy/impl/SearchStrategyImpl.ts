@@ -1,9 +1,9 @@
 import Index from '@/view/Index';
-import Strategy from "./Strategy";
-import { getType } from '../util/TypeUtil';
+import Strategy from "..//Strategy";
+import { getType } from '../../util/TypeUtil';
 
 // 搜索策略类
-export default class SearchStrategy implements Strategy {
+export default class SearchStrategyImpl implements Strategy {
 
     issue(index: Index): any {
         let fields = new Array<string>();
