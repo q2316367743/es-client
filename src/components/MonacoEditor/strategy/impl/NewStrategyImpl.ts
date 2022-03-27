@@ -22,7 +22,10 @@ export default class DocStrategyImpl implements Strategy {
                     }
                 },
                 "mapping": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                        
+                    }
                 }
             }
         }
