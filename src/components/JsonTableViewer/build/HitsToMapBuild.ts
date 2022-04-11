@@ -15,7 +15,7 @@ function buildHit(hit: any, records: Array<any>): void {
 
 /**
  * 解析个字段
- * @param hit 记录
+ * @param field 记录
  * @param records 全部结果
  * @param prefix 前缀
  */
