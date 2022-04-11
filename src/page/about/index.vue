@@ -56,7 +56,16 @@
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
-                <el-timeline-item timestamp="2022-0304" placement="top">
+                <el-timeline-item timestamp="2022-04-1" placement="top">
+                    <el-card>
+                        <div>0.8.0</div>
+                        <ol>
+                            <li>优化样式</li>
+                            <li>高级查询搜索增加语法提示</li>
+                        </ol>
+                    </el-card>
+                </el-timeline-item>
+                <el-timeline-item timestamp="2022-03-04" placement="top">
                     <el-card>
                         <div>0.7.0</div>
                         <ol>
