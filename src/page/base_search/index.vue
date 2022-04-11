@@ -51,13 +51,13 @@
                                 >{{ $t('base_search.search') }}</el-button>
                                 <el-button
                                     style="margin-left: 10px"
-                                    @click="clear"
+                                    @click="clear(true)"
                                 >{{ $t('base_search.clear') }}</el-button>
-                                <el-button
+                                <!-- <el-button
                                     type="success"
                                     style="margin-left: 10px"
                                     @click="clear"
-                                >{{ $t('base_search.jump_to_senior_search') }}</el-button>
+                                >{{ $t('base_search.jump_to_senior_search') }}</el-button> -->
                             </el-form-item>
                             <!-- 条件 -->
                             <el-form-item
@@ -277,12 +277,15 @@ export default defineComponent({
                 }
             });
         },
-        clear() {
+        clear(clear_index: boolean = false) {
             this.page = 1,
                 this.size = 10;
             this.total = 0;
             this.field_condition = new Array<BaseQuery>();
             this.result = {};
+            if (clear_index) {
+                this.index = '';
+            }
         },
         sizeChange(size: number) {
             this.size = size;
