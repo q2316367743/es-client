@@ -90,7 +90,6 @@ export default defineComponent({
         },
         update_schema() {
             let schemas = SchemaBuild(this.indices, this.link);
-            console.log(schemas)
             monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
                 allowComments: true,
                 validate: true,

@@ -2,20 +2,10 @@
 	<div class="home">
 		<div class="home-option">
 			<div style="display: flex">
-				<el-input
-					v-model="condition.name"
-					:placeholder="$t('home.index_placeholder')"
-					style="width: 300px"
-					@input="search"
-					clearable
-				></el-input>
-				<el-select
-					v-model="condition.order"
-					:placeholder="$t('home.order_placeholder')"
-					style="margin-left: 5px"
-					clearable
-					@change="search"
-				>
+				<el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')" style="width: 300px;height: 32px;"
+					@input="search" clearable></el-input>
+				<el-select v-model="condition.order" :placeholder="$t('home.order_placeholder')"
+					style="margin-left: 5px" clearable @change="search">
 					<el-option :label="$t('home.order_name_asc')" value="NAME_ASC"></el-option>
 					<el-option :label="$t('home.order_name_desc')" value="NAME_DESC"></el-option>
 					<el-option :label="$t('home.order_size_asc')" value="SIZE_ASC"></el-option>
@@ -26,27 +16,13 @@
 				<el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
 			</div>
 			<div style="margin-right: 15px;">
-				<el-button
-					type="primary"
-					style="margin-left: 10px"
-					@click="index_dialog = true"
-				>{{ $t('home.new_index.self') }}</el-button>
+				<el-button type="primary" style="margin-left: 10px" @click="index_dialog = true">{{
+						$t('home.new_index.self')
+				}}</el-button>
 			</div>
 		</div>
-		<!-- <div class="home-main" v-loading="index_loading"> -->
-		<!-- <el-scrollbar>
-				<index-item
-					v-for="(view, index) in show_indices"
-					:index="view"
-					:key="index"
-					@open-dialog="index_open_dialog"
-				></index-item>
-		</el-scrollbar>-->
-		<index-container
-			:indices="show_indices"
-			v-loading="index_loading"
-			@open-dialog="index_open_dialog"
-		></index-container>
+		<index-container :indices="show_indices" v-loading="index_loading" @open-dialog="index_open_dialog">
+		</index-container>
 		<el-backtop target=".el-scrollbar__wrap" />
 		<!-- </div> -->
 		<el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
@@ -59,10 +35,12 @@
 				<el-collapse-item :title="$t('home.new_index.base_setting')" name="1">
 					<el-form>
 						<el-form-item :label="$t('home.new_index.shard_number')">
-							<el-input-number v-model="index.settings.number_of_shards" controls-position="right"></el-input-number>
+							<el-input-number v-model="index.settings.number_of_shards" controls-position="right">
+							</el-input-number>
 						</el-form-item>
 						<el-form-item :label="$t('home.new_index.replica_number')">
-							<el-input-number v-model="index.settings.number_of_replicas" controls-position="right"></el-input-number>
+							<el-input-number v-model="index.settings.number_of_replicas" controls-position="right">
+							</el-input-number>
 						</el-form-item>
 					</el-form>
 				</el-collapse-item>
@@ -78,17 +56,18 @@
 								</el-form-item>
 								<el-form-item :label="$t('home.new_index.field_type')">
 									<el-select v-model="property.type">
-										<el-option v-for="(type) in types" :key="type" :label="type" :value="type"></el-option>
+										<el-option v-for="(type) in types" :key="type" :label="type" :value="type">
+										</el-option>
 									</el-select>
 								</el-form-item>
 								<el-form-item>
-									<el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
+									<el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}
+									</el-button>
 								</el-form-item>
 								<el-form-item>
-									<el-button
-										type="danger"
-										@click="removeProperty(property)"
-									>{{ $t('home.new_index.delete') }}</el-button>
+									<el-button type="danger" @click="removeProperty(property)">{{
+											$t('home.new_index.delete')
+									}}</el-button>
 								</el-form-item>
 							</el-form>
 						</div>
@@ -99,12 +78,8 @@
 				<el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
 			</template>
 		</el-dialog>
-		<json-dialog
-			:title="index_item_title"
-			:json="index_item_data"
-			:open="true"
-			v-model="index_item_dialog"
-		></json-dialog>
+		<json-dialog :title="index_item_title" :json="index_item_data" :open="true" v-model="index_item_dialog">
+		</json-dialog>
 	</div>
 </template>
 
@@ -269,6 +244,7 @@ export default defineComponent({
 	left: 5px;
 	right: 10px;
 	bottom: 10px;
+
 	.home-option {
 		position: absolute;
 		top: 0;

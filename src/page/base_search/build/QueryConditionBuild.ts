@@ -27,13 +27,13 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     if (query.condition === 'match' ||
         query.condition === 'term' ||
         query.condition === 'wildcard') {
-        expression[query.field.name.substring(5)] = query.value;
+        expression[query.field.substring(5)] = query.value;
     } else if (query.condition === 'range') {
         let value = {} as any;
         value[query.extra_left_cindition] = query.extra_left_value;
         value[query.extra_right_cindition] == query.extra_right_value;
-        expression[query.field.name.substring(5)] = value;
-    }else {
+        expression[query.field.substring(5)] = value;
+    } else {
         throw new Error('查询条件不支持')
     }
     condition[query.condition] = expression;

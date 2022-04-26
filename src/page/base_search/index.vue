@@ -7,52 +7,35 @@
                     <!-- 标题 -->
                     <div class="el-card__header">
                         <span>{{ $t('base_search.query_criteria') }}</span>
-                        <el-button
-                            style="
+                        <el-button style="
 							float: right;
 							padding: 3px 13px 3px 0;
 							margin-left: 10px;
-						"
-                            type="text"
-                            @click="is_show = !is_show"
-                        >{{ is_show ? $t('base_search.close') : $t('base_search.open') }}</el-button>
-                        <el-button
-                            style="float: right; padding: 3px 0"
-                            type="text"
-                            @click="search"
-                        >{{ $t('base_search.refresh') }}</el-button>
-                        <el-button
-                            style="float: right; padding: 3px 0"
-                            type="text"
-                            @click="show_body"
-                        >{{ $t('base_search.display_query_statement') }}</el-button>
+						" type="text" @click="is_show = !is_show">{{ is_show ? $t('base_search.close') : $t('base_search.open') }}
+                        </el-button>
+                        <el-button style="float: right; padding: 3px 0" type="text" @click="search">{{
+                                $t('base_search.refresh')
+                        }}</el-button>
+                        <el-button style="float: right; padding: 3px 0" type="text" @click="show_body">{{
+                                $t('base_search.display_query_statement')
+                        }}</el-button>
                     </div>
                     <!-- 内容 -->
                     <div class="el-card__body" v-show="is_show">
                         <el-form label-position="top" label-width="80px" style="overflow: auto">
                             <!-- 文档 -->
                             <el-form-item :label="$t('base_search.document')">
-                                <el-select-v2
-                                    v-model="index"
-                                    filterable
-                                    :options="indices"
-                                    :placeholder="$t('base_search.please_select')"
-                                    clearable
-                                    style="width: 360px;"
-                                >
-                                <template #default="{ item }">
-                                    <div style="font-size: var(--el-font-size-base);">{{item.name}}</div>
-                                </template>
+                                <el-select-v2 v-model="index" filterable :options="indices"
+                                    :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
+                                    <template #default="{ item }">
+                                        <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
+                                    </template>
                                 </el-select-v2>
-                                <el-button
-                                    type="primary"
-                                    style="margin-left: 10px"
-                                    @click="search"
-                                >{{ $t('base_search.search') }}</el-button>
-                                <el-button
-                                    style="margin-left: 10px"
-                                    @click="clear(true)"
-                                >{{ $t('base_search.clear') }}</el-button>
+                                <el-button type="primary" style="margin-left: 10px" @click="search">{{
+                                        $t('base_search.search')
+                                }}</el-button>
+                                <el-button style="margin-left: 10px" @click="clear(true)">{{ $t('base_search.clear') }}
+                                </el-button>
                                 <!-- <el-button
                                     type="success"
                                     style="margin-left: 10px"
@@ -60,35 +43,21 @@
                                 >{{ $t('base_search.jump_to_senior_search') }}</el-button> -->
                             </el-form-item>
                             <!-- 条件 -->
-                            <el-form-item
-                                :label="$t('base_search.condition')"
-                                style="min-width: 1100px"
-                            >
+                            <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
                                 <div v-if="field_condition.length === 0">
-                                    <el-button
-                                        type="primary"
-                                        @click="field_condition_add"
-                                    >{{ $t('base_search.add') }}</el-button>
+                                    <el-button type="primary" @click="field_condition_add">{{ $t('base_search.add') }}
+                                    </el-button>
                                 </div>
                                 <div>
-                                    <div
-                                        v-for="(item, idx) in field_condition"
-                                        :key="idx"
-                                        style="margin-bottom: 10px;display: flex;"
-                                    >
-                                        <field-condition-item
-                                            v-model:value="field_condition[idx]"
-                                            :fields="fields"
-                                        ></field-condition-item>
-                                        <el-button
-                                            type="primary"
-                                            style="margin-left: 10px"
-                                            @click="field_condition_add"
-                                        >{{ $t('base_search.add') }}</el-button>
-                                        <el-button
-                                            type="danger"
-                                            @click="field_condition_remove(item.id)"
-                                        >{{ $t('base_search.remove') }}</el-button>
+                                    <div v-for="(item, idx) in field_condition" :key="idx"
+                                        style="margin-bottom: 10px;display: flex;">
+                                        <field-condition-item v-model:value="field_condition[idx]" :fields="fields">
+                                        </field-condition-item>
+                                        <el-button type="primary" style="margin-left: 10px"
+                                            @click="field_condition_add">{{ $t('base_search.add') }}</el-button>
+                                        <el-button type="danger" @click="field_condition_remove(item.id)">{{
+                                                $t('base_search.remove')
+                                        }}</el-button>
                                     </div>
                                 </div>
                             </el-form-item>
@@ -101,37 +70,17 @@
                 <el-card shadow="never">
                     <json-viewer :value="result" :expand-depth="6" copyable sort></json-viewer>
                     <div class="page">
-                        <el-pagination
-                            background
-                            layout="sizes, prev, pager, next"
-                            hide-on-single-page
-                            :total="total"
-                            :current-page="page"
-                            :page-size="size"
-                            @size-change="sizeChange"
-                            @current-change="pageChange"
-                        ></el-pagination>
+                        <el-pagination background layout="sizes, prev, pager, next" :total="total"
+                            :current-page="page" :page-size="size" @size-change="sizeChange"
+                            @current-change="pageChange"></el-pagination>
                     </div>
                 </el-card>
             </div>
         </el-scrollbar>
         <el-backtop target=".el-scrollbar__wrap" />
-        <el-dialog
-            :title="$t('base_search.query_criteria')"
-            v-model="condition_dialog"
-            width="70%"
-            append-to-body
-            custom-class="es-dialog"
-            :close-on-click-modal="false"
-        >
-            <json-viewer
-                :value="condition_data"
-                :expand-depth="4"
-                copyable
-                sort
-                expanded
-                preview-mode
-            ></json-viewer>
+        <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
+            custom-class="es-dialog" :close-on-click-modal="false">
+            <json-viewer :value="condition_data" :expand-depth="4" copyable sort expanded preview-mode></json-viewer>
         </el-dialog>
     </div>
 </template>
@@ -235,10 +184,7 @@ export default defineComponent({
             this.field_condition.push({
                 id: new Date().getTime(),
                 type: 'must',
-                field: {
-                    name: '',
-                    type: ''
-                },
+                field: '',
                 condition: '',
                 value: '',
                 extra_left_cindition: '',
@@ -309,6 +255,7 @@ export default defineComponent({
 
     .base-content {
         margin-top: 20px;
+
         .page {
             width: 100%;
             text-align: center;

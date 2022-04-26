@@ -29,7 +29,7 @@ function buildField(name: string, field: any, fields: Array<Field>, prefix: stri
             type: field.type
         });
         fields.push({
-            name: realName,
+            name: realName + '.keyword',
             type: 'keyword'
         });
     } else if (field.properties) {

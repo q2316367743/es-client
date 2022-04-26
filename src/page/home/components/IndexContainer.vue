@@ -2,12 +2,8 @@
     <div class="index-container" @scroll="handleScroll">
         <div class="phantom" :style="{ minHeight: minHeight }">
             <div class="index-content" :style="{ transform: translate3d }">
-                <index-item
-                    v-for="(item, index) in items"
-                    :key="index"
-                    :index="item"
-                    @open-dialog="openDialog"
-                ></index-item>
+                <index-item v-for="(item, index) in items" :key="index" :index="item" @open-dialog="openDialog">
+                </index-item>
             </div>
         </div>
     </div>

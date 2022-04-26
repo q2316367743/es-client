@@ -16,16 +16,12 @@
             filterable
             :placeholder="$t('base_search.select_placeholder')"
             style="margin-left: 10px"
-            value-key="name"
         >
             <el-option
                 v-for="(field, idx) in fields"
                 :key="idx"
                 :label="field.name"
-                :value="{
-                    name: field.name,
-                    type: field.type
-                }"
+                :value="field.name"
             ></el-option>
         </el-select>
         <!-- 选择查询条件 -->
@@ -53,7 +49,7 @@
             style="width: 180px; margin-left: 10px"
             v-if="condition.condition !== 'range'"
         ></el-input>
-        <div style="display: inline-block;margin-top: 5px;" v-if="condition.condition === 'range'">
+        <div style="display: inline-block;margin-left: 10px;" v-if="condition.condition === 'range'">
             <el-select
                 v-model="condition.extra_left_cindition"
                 :placeholder="$t('base_search.select_placeholder')"

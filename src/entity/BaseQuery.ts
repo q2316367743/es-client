@@ -16,7 +16,7 @@ export default interface BaseQuery {
     /**
      * 字段
      */
-    field: Field;
+    field: string;
 
     /**
      * 条件
