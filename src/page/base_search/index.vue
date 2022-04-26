@@ -5,42 +5,50 @@
             <div class="base-option">
                 <div class="el-card es-card">
                     <!-- 标题 -->
-                    <div class="el-card__header">
-                        <span>{{ $t('base_search.query_criteria') }}</span>
-                        <el-button style="
-							float: right;
-							padding: 3px 13px 3px 0;
-							margin-left: 10px;
-						" type="text" @click="is_show = !is_show">{{ is_show ? $t('base_search.close') : $t('base_search.open') }}
-                        </el-button>
-                        <el-button style="float: right; padding: 3px 0" type="text" @click="search">{{
-                                $t('base_search.refresh')
-                        }}</el-button>
-                        <el-button style="float: right; padding: 3px 0" type="text" @click="show_body">{{
-                                $t('base_search.display_query_statement')
-                        }}</el-button>
+                    <div class="el-card__header base-option-header">
+                        <div>{{ $t('base_search.query_criteria') }}</div>
+                        <div class="right">
+                            <el-button type="text" @click="show_body">{{ $t('base_search.display_query_statement') }}
+                            </el-button>
+                            <el-button type="text" @click="search">{{ $t('base_search.refresh') }}</el-button>
+                            <el-button type="text" @click="is_show = !is_show">{{ is_show ? $t('base_search.close') :
+                                    $t('base_search.open')
+                            }}
+                            </el-button>
+                        </div>
                     </div>
                     <!-- 内容 -->
                     <div class="el-card__body" v-show="is_show">
                         <el-form label-position="top" label-width="80px" style="overflow: auto">
                             <!-- 文档 -->
-                            <el-form-item :label="$t('base_search.document')">
-                                <el-select-v2 v-model="index" filterable :options="indices"
-                                    :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
-                                    <template #default="{ item }">
-                                        <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
-                                    </template>
-                                </el-select-v2>
-                                <el-button type="primary" style="margin-left: 10px" @click="search">{{
-                                        $t('base_search.search')
-                                }}</el-button>
-                                <el-button style="margin-left: 10px" @click="clear(true)">{{ $t('base_search.clear') }}
-                                </el-button>
-                                <!-- <el-button
-                                    type="success"
-                                    style="margin-left: 10px"
-                                    @click="clear"
-                                >{{ $t('base_search.jump_to_senior_search') }}</el-button> -->
+                            <el-form-item>
+                                <el-form-item :label="$t('base_search.document')" style="margin-right: 100px;margin-bottom: 20px;">
+                                    <el-select-v2 v-model="index" filterable :options="indices"
+                                        :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
+                                        <template #default="{ item }">
+                                            <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
+                                        </template>
+                                    </el-select-v2>
+                                    <el-button type="primary" style="margin-left: 10px" @click="search">{{
+                                            $t('base_search.search')
+                                    }}</el-button>
+                                    <el-button style="margin-left: 10px" @click="clear(true)">{{ $t('base_search.clear')
+                                    }}
+                                    </el-button>
+                                </el-form-item>
+                                <el-form-item label="视图：" style="margin-right: 100px;margin-bottom: 20px;">
+                                    <el-select v-model="view">
+                                        <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
+                                        <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
+                                        <el-option :label="$t('senior_search.table_view')" :value="3" disabled>
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="分页：">
+                                    <el-pagination background layout="sizes, prev, pager, next" :total="total"
+                                        :current-page="page" :page-size="size" @size-change="sizeChange"
+                                        @current-change="pageChange"></el-pagination>
+                                </el-form-item>
                             </el-form-item>
                             <!-- 条件 -->
                             <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
@@ -68,12 +76,9 @@
             <!-- 查询结果 -->
             <div class="base-content">
                 <el-card shadow="never">
-                    <json-viewer :value="result" :expand-depth="6" copyable sort></json-viewer>
-                    <div class="page">
-                        <el-pagination background layout="sizes, prev, pager, next" :total="total"
-                            :current-page="page" :page-size="size" @size-change="sizeChange"
-                            @current-change="pageChange"></el-pagination>
-                    </div>
+                    <base-viewer v-if="view === 1" :data="result"></base-viewer>
+                    <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+                    </json-viewer>
                 </el-card>
             </div>
         </el-scrollbar>
@@ -88,6 +93,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import JsonViewer from "vue-json-viewer";
+import BaseViewer from "@/components/BaseViewer.vue";
 import { ElMessageBox } from "element-plus";
 import axios from "@/plugins/axios";
 import BaseQuery from '@/entity/BaseQuery';
@@ -109,6 +115,7 @@ export default defineComponent({
     name: 'BaseSearch',
     components: {
         JsonViewer,
+        BaseViewer,
         FieldConditionItem
     },
     data: () => {
@@ -129,6 +136,8 @@ export default defineComponent({
             condition_data: {},
             // 查询结果
             result: {} as any,
+            // 视图
+            view: 2
         };
     },
     computed: {
@@ -252,6 +261,17 @@ export default defineComponent({
     left: 10px;
     right: 10px;
     bottom: 10px;
+
+    .base-option {
+        .base-option-header {
+            display: flex;
+            justify-content: space-between;
+
+            .right {
+                display: flex;
+            }
+        }
+    }
 
     .base-content {
         margin-top: 20px;

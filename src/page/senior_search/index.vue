@@ -16,88 +16,66 @@
 				<div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
 					<!-- 链接选择 -->
 					<div class="link">
-						<div
-							style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;"
-						>{{ $t('senior_search.link') }}</div>
-						<el-select
-							v-model="method"
-							:placeholder="$t('senior_search.please_select')"
-							style="min-width: 100px;width: 100px;"
-						>
+						<div style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;">{{
+								$t('senior_search.link')
+						}}</div>
+						<el-select v-model="method" :placeholder="$t('senior_search.please_select')"
+							style="min-width: 100px;width: 100px;">
 							<el-option label="GET" value="GET"></el-option>
 							<el-option label="POST" value="POST"></el-option>
 							<el-option label="PUT" value="PUT"></el-option>
 							<el-option label="DELETE" value="DELETE"></el-option>
 						</el-select>
-						<el-autocomplete
-							v-model="link"
-							style="width: 100%;margin: 0 6px;"
-							:fetch-suggestions="fetchSuggestions"
-							@keyup.enter.native="search"
-							@select="handleSelect"
-							:placeholder="$t('senior_search.please_enter_a_link')"
-							clearable
-						>
+						<el-autocomplete v-model="link" style="width: 100%;margin: 0 6px;"
+							:fetch-suggestions="fetchSuggestions" @keyup.enter.native="search" @select="handleSelect"
+							:placeholder="$t('senior_search.please_enter_a_link')" clearable>
 							<template #default="{ item }">
 								<div class="value">{{ item }}</div>
 							</template>
 						</el-autocomplete>
-						<el-button
-							type="primary"
-							@click="search"
-						>{{ link.indexOf('search') > -1 ? $t('senior_search.search') : $t('senior_search.execute') }}</el-button>
+						<el-button type="primary" @click="search">{{ link.indexOf('search') > -1 ?
+								$t('senior_search.search') : $t('senior_search.execute')
+						}}</el-button>
 						<el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
 					</div>
 					<!-- 请求参数 -->
 					<div class="param">
-						<div class="label">参数：</div>
+						<div class="label">{{ $t('senior_search.param') }}</div>
 						<div class="param-content">
 							<div class="get" v-show="method === 'GET'">
 								<el-button type="primary" @click="addGetParam">{{ $t('senior_search.add') }}</el-button>
 								<el-button @click="truncateGetParam">{{ $t('senior_search.clear') }}</el-button>
 								<div class="item" v-for="(param, index) in get_params" :key="index">
-									<el-input v-model="param.key" :placeholder="$t('senior_search.please_enter_key')"></el-input>
+									<el-input v-model="param.key" :placeholder="$t('senior_search.please_enter_key')">
+									</el-input>
 									<div style="text-align: center;">=</div>
-									<el-input v-model="param.value" :placeholder="$t('senior_search.please_enter_value')"></el-input>
+									<el-input v-model="param.value"
+										:placeholder="$t('senior_search.please_enter_value')"></el-input>
 									<div></div>
-									<el-button type="danger" @click="removeGetParam(param.id)">{{ $t('senior_search.remove') }}</el-button>
+									<el-button type="danger" @click="removeGetParam(param.id)">{{
+											$t('senior_search.remove')
+									}}</el-button>
 								</div>
 							</div>
-							<monaco-editor
-								ref="monaco_editor"
-								v-model="params"
-								:link="link"
-								height="100%"
-								v-show="method !== 'GET'"
-								class="post"
-							></monaco-editor>
+							<monaco-editor ref="monaco_editor" v-model="params" :link="link" height="100%"
+								v-show="method !== 'GET'" class="post"></monaco-editor>
 						</div>
 					</div>
 				</div>
-				<div
-					class="senior-bar"
-					:style="{ left: senior_width_computed + 10 + 'px' }"
-					@mousedown="onMouseDown"
-				></div>
-				<div
-					class="senior-button"
+				<div class="senior-bar" :style="{ left: senior_width_computed + 10 + 'px' }" @mousedown="onMouseDown">
+				</div>
+				<div class="senior-button"
 					:style="{ left: senior_width_computed + 5 + 'px', top: (max_height / 2 - 26) + 'px' }"
-					@click="hideLeft"
-				>←</div>
-				<div
-					class="senior-button"
+					@click="hideLeft">←</div>
+				<div class="senior-button"
 					:style="{ left: senior_width_computed + 5 + 'px', bottom: (max_height / 2 - 26) + 'px' }"
-					@click="hideRight"
-				>→</div>
+					@click="hideRight">→</div>
 				<!-- 右面展示内容 -->
-				<div
-					class="senior-content"
-					:style="{ left: senior_width_computed + 20 + 'px' }"
-					v-show="mode !== 3"
-				>
+				<div class="senior-content" :style="{ left: senior_width_computed + 20 + 'px' }" v-show="mode !== 3">
 					<el-scrollbar>
 						<base-viewer v-if="view === 1" :data="result"></base-viewer>
-						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded></json-viewer>
+						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+						</json-viewer>
 					</el-scrollbar>
 				</div>
 			</div>
@@ -329,6 +307,7 @@ export default defineComponent({
 				height: 32px;
 				display: flex;
 			}
+
 			.param {
 				position: absolute;
 				top: 42px;
@@ -336,6 +315,7 @@ export default defineComponent({
 				right: 0;
 				bottom: 0;
 				overflow-y: auto;
+
 				.label {
 					position: absolute;
 					top: 0px;
@@ -344,6 +324,7 @@ export default defineComponent({
 					height: 32px;
 					line-height: 32px;
 				}
+
 				.param-content {
 					position: absolute;
 					top: 0px;
@@ -351,8 +332,10 @@ export default defineComponent({
 					right: 0px;
 					bottom: 0px;
 					overflow: hidden;
+
 					.get {
 						width: 466px;
+
 						.item {
 							display: grid;
 							grid-template-rows: 1fr;
@@ -360,6 +343,7 @@ export default defineComponent({
 							margin-top: 12px;
 						}
 					}
+
 					.post {
 						padding-top: 5px;
 					}
@@ -407,7 +391,7 @@ export default defineComponent({
 	height: 300px;
 }
 
-.el-dialog__body > .vue-codemirror > .CodeMirror {
+.el-dialog__body>.vue-codemirror>.CodeMirror {
 	min-height: 420px;
 }
 </style>
