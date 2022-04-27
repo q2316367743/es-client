@@ -44,7 +44,7 @@
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="分页：">
+                                <el-form-item label="分页：" style="margin-right: 100px;margin-bottom: 20px;">
                                     <el-pagination background layout="sizes, prev, pager, next" :total="total"
                                         :current-page="page" :page-size="size" @size-change="sizeChange"
                                         @current-change="pageChange"></el-pagination>
