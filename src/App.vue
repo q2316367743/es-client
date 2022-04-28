@@ -10,12 +10,12 @@
                     </el-icon>
                     <template #title>{{ $t('app.menu.home') }}</template>
                 </el-menu-item>
-                <!-- <el-menu-item index="data_browse">
+                <el-menu-item index="data_browse">
                     <el-icon>
                         <coin />
                     </el-icon>
                     <template #title>{{ $t('app.menu.data_browse') }}</template>
-                </el-menu-item> -->
+                </el-menu-item>
                 <el-menu-item index="base_search">
                     <el-icon>
                         <search />
@@ -73,7 +73,7 @@
             </div>
             <div class="content">
                 <home v-show="active === 'home'"></home>
-                <!-- <data-browse v-show="active === 'data_browse'"></data-browse> -->
+                <data-browse v-show="active === 'data_browse'"></data-browse>
                 <base-search v-show="active === 'base_search'"></base-search>
                 <senior-search v-show="active === 'senior_search'"></senior-search>
                 <sql-search v-show="active === 'sql_search'"></sql-search>
