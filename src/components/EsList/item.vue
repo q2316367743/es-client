@@ -1,5 +1,5 @@
 <template>
-    <div class="es-list-item" @click="on_click">
+    <div class="es-list-item" :class="choose ? 'es-list-item-choose' : ''" @click="on_click">
         <div class="name">
             <slot></slot>
         </div>
@@ -11,7 +11,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
     name: 'es-list-item',
     props: {
-        add: {
+        choose: {
             default: false,
             required: false,
             type: Boolean
@@ -48,6 +48,10 @@ export default defineComponent({
             margin-left: 10px;
         }
 
+    }
+
+    .es-list-item-choose {
+        background-color: #f2f2f2;
     }
 
 }

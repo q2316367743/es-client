@@ -22,7 +22,8 @@
                         <el-form label-position="top" label-width="80px" style="overflow: auto">
                             <!-- 文档 -->
                             <el-form-item>
-                                <el-form-item :label="$t('base_search.document')" style="margin-right: 100px;margin-bottom: 20px;">
+                                <el-form-item :label="$t('base_search.document')"
+                                    style="margin-right: 100px;margin-bottom: 20px;">
                                     <el-select-v2 v-model="index" filterable :options="indices"
                                         :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
                                         <template #default="{ item }">
@@ -40,7 +41,7 @@
                                     <el-select v-model="view">
                                         <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                                         <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                                        <el-option :label="$t('senior_search.table_view')" :value="3" disabled>
+                                        <el-option :label="$t('senior_search.table_view')" :value="3">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
@@ -79,6 +80,7 @@
                     <base-viewer v-if="view === 1" :data="result"></base-viewer>
                     <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
                     </json-viewer>
+                    <table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
                 </el-card>
             </div>
         </el-scrollbar>
@@ -94,6 +96,7 @@
 import { defineComponent } from "vue";
 import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
+import TableViewer from "@/components/TableViewer/index.vue"
 import { ElMessageBox } from "element-plus";
 import axios from "@/plugins/axios";
 import BaseQuery from '@/entity/BaseQuery';
@@ -116,6 +119,7 @@ export default defineComponent({
     components: {
         JsonViewer,
         BaseViewer,
+        TableViewer,
         FieldConditionItem
     },
     data: () => {
@@ -226,7 +230,13 @@ export default defineComponent({
             }).then((response) => {
                 this.result = response;
                 if (this.result.hits) {
-                    this.total = this.result.hits.total
+                    if (parseInt(this.result.hits.total)) {
+                        this.total = parseInt(this.result.hits.total)
+                    } else if (parseInt(this.result.hits.total.value)) {
+                        this.total = parseInt(this.result.hits.total.value);
+                    } else {
+                        this.total = 0;
+                    }
                 } else {
                     this.total = 0;
                 }

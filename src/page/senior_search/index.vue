@@ -7,7 +7,7 @@
 					<el-select v-model="view">
 						<el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
 						<el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-						<el-option :label="$t('senior_search.table_view')" :value="3" disabled></el-option>
+						<el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
 					</el-select>
 				</div>
 			</template>
@@ -76,6 +76,7 @@
 						<base-viewer v-if="view === 1" :data="result"></base-viewer>
 						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
 						</json-viewer>
+						<table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
 					</el-scrollbar>
 				</div>
 			</div>
@@ -90,6 +91,7 @@ import { ElMessage } from "element-plus";
 import { Method } from "axios";
 import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
+import TableViewer from "@/components/TableViewer/index.vue";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
 import axios from "@/plugins/axios";
 import { validateTip } from '@/utils/GlobalUtil';
@@ -127,7 +129,7 @@ export default defineComponent({
 		max_height: 520,
 		mode: Mode.DEFAULT
 	}),
-	components: { JsonViewer, BaseViewer, MonacoEditor },
+	components: { JsonViewer, BaseViewer, MonacoEditor, TableViewer },
 	computed: {
 		...mapState(useSettingStore, ['senior_width']),
 		senior_width_computed(): number {
