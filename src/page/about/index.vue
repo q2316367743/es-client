@@ -52,6 +52,7 @@
                 >edge插件商店</el-link>
                 <span>进行评论</span>
             </li>
+            <li>如果有好的想法，可以提交<el-link href="https://gitee.com/qiaoshengda/es-client/pulls">Pull Requests</el-link></li>
         </div>
         <div class="title-1">更新日志</div>
         <div class="content">
