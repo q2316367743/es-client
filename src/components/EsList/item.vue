@@ -1,0 +1,54 @@
+<template>
+    <div class="es-list-item" @click="on_click">
+        <div class="name">
+            <slot></slot>
+        </div>
+    </div>
+</template>
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+    name: 'es-list-item',
+    props: {
+        add: {
+            default: false,
+            required: false,
+            type: Boolean
+        }
+    },
+    emits: ['click', 'btn-click'],
+    data: () => ({
+
+    }),
+    methods: {
+        on_click(e: any) {
+            this.$emit('click', e);
+        },
+    }
+});
+</script>
+<style scoped lang="less">
+.es-list {
+    .es-list-item {
+        height: 30px;
+        line-height: 30px;
+        background-color: #ffffff;
+        margin: 3px;
+        cursor: pointer;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f2f2f2;
+
+        }
+
+        .name {
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+    }
+
+}
+</style>

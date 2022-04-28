@@ -5,7 +5,8 @@ export default {
         'senior_search': 'senior search',
         'sql_search': 'sql search',
         'data_chart': 'data chart',
-        'setting': 'setting'
+        'setting': 'setting',
+        'data_browse': 'data browse'
     },
     'add': '新增',
     'about': '关于',

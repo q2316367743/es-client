@@ -10,6 +10,12 @@
                     </el-icon>
                     <template #title>{{ $t('app.menu.home') }}</template>
                 </el-menu-item>
+                <!-- <el-menu-item index="data_browse">
+                    <el-icon>
+                        <coin />
+                    </el-icon>
+                    <template #title>{{ $t('app.menu.data_browse') }}</template>
+                </el-menu-item> -->
                 <el-menu-item index="base_search">
                     <el-icon>
                         <search />
@@ -22,12 +28,6 @@
                     </el-icon>
                     <template #title>{{ $t('app.menu.senior_search') }}</template>
                 </el-menu-item>
-                <!-- <el-menu-item index="sql_search">
-                    <el-icon>
-                        <coin />
-                    </el-icon>
-                    <template #title>{{ $t('app.menu.sql_search') }}</template>
-                </el-menu-item>-->
                 <el-menu-item index="setting">
                     <el-icon>
                         <operation />
@@ -37,7 +37,7 @@
             </el-menu>
             <div class="author">
                 <div style="margin-top: 5px">
-                    <el-link @click="about_dialog = true">v0.8.0</el-link>
+                    <el-link @click="about_dialog = true">v0.8.1</el-link>
                 </div>
             </div>
         </div>
@@ -47,27 +47,16 @@
             <div class="top">
                 <!-- 左侧 -->
                 <div class="app-option">
-                    <el-select
-                        v-model="url"
-                        :placeholder="$t('app.link_placeholder')"
-                        style="padding-top: 9px;"
-                        clearable
-                        @change="select_url"
-                    >
-                        <el-option
-                            v-for="url in urls"
-                            :key="url.id"
-                            :label="url.name"
-                            :value="url.value"
-                        ></el-option>
+                    <el-select v-model="url" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
+                        clearable @change="select_url">
+                        <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
                         <el-option :label="$t('app.add')" value="add"></el-option>
                     </el-select>
                     <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
                     <div style="font-weight: bold;margin-left: 20px;font-size: 16px;">{{ name }}</div>
-                    <div
-                        style="margin-left: 10px;"
-                        v-if="name !== ''"
-                    >{{ $t('app.cluster_health') }}: {{ status }} ({{ active_shards }} of {{ total_shards }})</div>
+                    <div style="margin-left: 10px;" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }} ({{
+                            active_shards
+                    }} of {{ total_shards }})</div>
                 </div>
                 <!-- 多语言切换 -->
                 <el-dropdown @command="languageCommand">
@@ -84,44 +73,27 @@
             </div>
             <div class="content">
                 <home v-show="active === 'home'"></home>
+                <!-- <data-browse v-show="active === 'data_browse'"></data-browse> -->
                 <base-search v-show="active === 'base_search'"></base-search>
                 <senior-search v-show="active === 'senior_search'"></senior-search>
                 <sql-search v-show="active === 'sql_search'"></sql-search>
                 <setting v-show="active === 'setting'"></setting>
             </div>
         </div>
-        <el-dialog
-            :title="$t('app.about')"
-            v-model="about_dialog"
-            width="70%"
-            append-to-body
-            custom-class="es-dialog"
-            :close-on-click-modal="false"
-            top="10vh"
-        >
+        <el-dialog :title="$t('app.about')" v-model="about_dialog" width="70%" append-to-body custom-class="es-dialog"
+            :close-on-click-modal="false" top="10vh">
             <about></about>
         </el-dialog>
-        <el-dialog
-            :title="$t('setting.link.add') + $t('setting.link.url')"
-            v-model="url_add_dialog"
-            width="600px"
-        >
+        <el-dialog :title="$t('setting.link.add') + $t('setting.link.url')" v-model="url_add_dialog" width="600px">
             <el-form :model="url_add_data" label-width="100px" ref="urlForm" :rules="url_rules">
                 <el-form-item :label="$t('setting.link.name')" prop="name">
                     <el-input v-model="url_add_data.name"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setting.link.url')" prop="value">
-                    <el-input
-                        v-model="url_add_data.value"
-                        :placeholder="$t('setting.link.url_placeholder')"
-                    ></el-input>
+                    <el-input v-model="url_add_data.value" :placeholder="$t('setting.link.url_placeholder')"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
-                    <el-input-number
-                        v-model="url_add_data.sequence"
-                        controls-position="right"
-                        size="large"
-                    />
+                    <el-input-number v-model="url_add_data.sequence" controls-position="right" size="large" />
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -129,12 +101,7 @@
                 <el-button type="primary" @click="url_submit">{{ $t('setting.link.add') }}</el-button>
             </template>
         </el-dialog>
-        <json-dialog
-            v-model="test_dialog"
-            :json="test_data"
-            :title="$t('setting.link.result')"
-            open
-        ></json-dialog>
+        <json-dialog v-model="test_dialog" :json="test_data" :title="$t('setting.link.result')" open></json-dialog>
     </div>
 </template>
 
@@ -155,6 +122,8 @@ import BaseSearch from "@/page/base_search/index.vue";
 import SeniorSearch from '@/page/senior_search/index.vue';
 import SqlSearch from "@/page/sql_search/index.vue";
 import Setting from '@/page/setting/index.vue'
+import DataBrowse from '@/page/data_browse/index.vue';
+
 import Translate from "@/components/Translate.vue";
 
 import { defineComponent } from 'vue';
@@ -168,7 +137,7 @@ export default defineComponent({
     components: {
         Info, About, Setting, Home, BaseSearch, SeniorSearch,
         SqlSearch, Fold, Expand, HomeFilled, Search, Operation,
-        Coin, DataBoard, JsonDialog, Translate
+        Coin, DataBoard, JsonDialog, Translate, DataBrowse
     },
     data: () => {
         return {

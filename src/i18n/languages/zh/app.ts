@@ -5,7 +5,8 @@ export default {
         'senior_search': '高级查询',
         'sql_search': 'SQL查询',
         'data_chart': '数据图表',
-        'setting': '设置'
+        'setting': '设置',
+        'data_browse': '数据浏览'
     },
     'add': '新增',
     'about': '关于',

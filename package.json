@@ -1,6 +1,6 @@
 {
     "name": "es-client",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "description": "elasticsearch客户端",
     "author": {
         "name": "Esion",
