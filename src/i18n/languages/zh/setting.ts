@@ -5,7 +5,8 @@ export default {
         'is_save_log': '是否存储日志：',
         'log_max_day': '日志最大存储天数：',
         'default_shard_number': '默认分片数：',
-        'default_replica_number': '默认副本数：'
+        'default_replica_number': '默认副本数：',
+        'default_viewer': '默认视图：'
     },
     'link': {
         'title': '链接管理',

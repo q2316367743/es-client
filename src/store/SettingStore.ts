@@ -14,6 +14,10 @@ let senior_width = 520;
 if (localStorage.getItem("senior_width")) {
     senior_width = parseInt(localStorage.getItem("senior_width")!);
 }
+let default_viewer = 2;
+if (localStorage.getItem("default_viewer")) {
+    default_viewer = parseInt(localStorage.getItem("default_viewer")!);
+}
 
 export const useSettingStore = defineStore('setting', {
     state: () => {
@@ -21,14 +25,16 @@ export const useSettingStore = defineStore('setting', {
             language: getDefaultLanguage(),
             default_shard,
             default_replica,
-            senior_width
+            senior_width,
+            default_viewer
         }
     },
     getters: {
         getLanguage: (state) => state.language,
         getDefaultShard: (state) => state.default_shard,
         getDefaultReplica: (state) => state.default_replica,
-        getSeniorWidth: (state) => state.senior_width
+        getSeniorWidth: (state) => state.senior_width,
+        getDefaultViewer: (state) => state.default_viewer
     },
     actions: {
         setLanguage(language: string): void {
@@ -46,6 +52,10 @@ export const useSettingStore = defineStore('setting', {
         setSeniorWidth(senior_width: number) {
             this.senior_width = senior_width;
             localStorage.setItem('senior_width', senior_width.toString());
+        },
+        setDefaultViewer(default_viewer: number) {
+            this.default_viewer = default_viewer;
+            localStorage.setItem('default_viewer', default_viewer.toString());
         }
     }
 })

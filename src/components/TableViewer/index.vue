@@ -1,13 +1,14 @@
 <template>
     <div>
-        <el-empty v-if="is_error" description="结果集解析错误" />
-        <el-table :data="items" border stripe>
-            <el-table-column v-for="(mapping, index) in mappings" :prop="mapping" :key="index" :label="mapping">
+        <el-empty v-if="is_error" description="数据为空" />
+        <el-table v-else :data="items" border stripe>
+            <el-table-column v-for="(mapping, index) in mappings" :prop="mapping" :key="index" :label="mapping"
+                width="200">
                 <template #default="scope">
                     <div class="column">
                         {{ (typeof scope.row[mapping] === 'string') ? scope.row[mapping] :
-                            JSON.stringify(scope.row[mapping])
-                    }}
+                                JSON.stringify(scope.row[mapping])
+                        }}
                     </div>
                 </template>
             </el-table-column>
@@ -27,7 +28,7 @@ export default defineComponent({
     data: () => ({
         is_error: false,
         items: [] as Array<any>,
-        mappings: [] as Array<string>
+        mappings: [] as Array<string>,
     }),
     watch: {
         data() {
@@ -55,7 +56,7 @@ export default defineComponent({
                 }
             }
             for (let item of this.data.hits.hits) {
-                let i = {};
+                let i = {} as any;
                 for (let key in item) {
                     if (key !== '_source') {
                         i[key] = item[key];
@@ -105,5 +106,9 @@ export default defineComponent({
 </script>
 <style scoped lang="less">
 .column {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
