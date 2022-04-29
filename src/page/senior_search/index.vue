@@ -76,7 +76,7 @@
 						<base-viewer v-if="view === 1" :data="result"></base-viewer>
 						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
 						</json-viewer>
-						<table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
+						<table-viewer v-if="view === 3" :data="result"></table-viewer>
 					</el-scrollbar>
 				</div>
 			</div>
