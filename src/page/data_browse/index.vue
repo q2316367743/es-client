@@ -94,13 +94,15 @@ export default defineComponent({
         }
     },
     methods: {
-        choose(index_name: string) {
-            if (this.choose_index !== index_name) {
-                this.choose_index = index_name;
-            } else {
-                this.choose_index = '';
-                this.no_choose();
-                return;
+        choose(index_name: string, verify: boolean = true) {
+            if (verify) {
+                if (this.choose_index !== index_name) {
+                    this.choose_index = index_name;
+                } else {
+                    this.choose_index = '';
+                    this.no_choose();
+                    return;
+                }
             }
             for (let index of this.indices) {
                 if (index.name === index_name) {
@@ -143,11 +145,11 @@ export default defineComponent({
         },
         sizeChange(size: number) {
             this.size = size;
-            this.choose(this.choose_index);
+            this.choose(this.choose_index, false);
         },
         pageChange(page: number) {
             this.page = page;
-            this.choose(this.choose_index);
+            this.choose(this.choose_index, false);
         }
     }
 });
