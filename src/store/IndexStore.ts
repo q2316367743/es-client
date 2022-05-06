@@ -4,6 +4,8 @@ import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
 import { useUrlStore } from "./UrlStore";
+// 引入插件
+import mitt from '@/plugins/mitt'
 
 export const useIndexStore = defineStore('index', {
     state: () => {
@@ -30,16 +32,17 @@ export const useIndexStore = defineStore('index', {
          * 重新获取链接
          */
         async reset() {
+            if (useUrlStore().current === '') {
+                // 发布索引更新事件消息
+                mitt.emit("update_index");
+                return;
+            }
             // 初始化时加载
             const loading = ElLoading.service({
                 lock: true,
                 text: '准备索引信息中',
                 background: 'rgba(0, 0, 0, 0.7)',
             });
-            if (useUrlStore().current === '') {
-                loading.close();
-                return;
-            }
             try {
                 loading.setText('开始构建索引信息');
                 // 获取索引信息
@@ -52,6 +55,8 @@ export const useIndexStore = defineStore('index', {
                 let unassigned_shards = health.unassigned_shards as number;
                 this.total_shards = this.active_shards + unassigned_shards;
                 this.status = health.status as string;
+                // 发布索引更新事件消息
+                mitt.emit("update_index");
                 loading.close();
             } catch (e: any) {
                 useUrlStore().choose('');

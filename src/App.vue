@@ -47,13 +47,17 @@
             <div class="top">
                 <!-- 左侧 -->
                 <div class="app-option">
+                    <!-- 索引服务器选择 -->
                     <el-select v-model="url" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
                         clearable @change="select_url">
                         <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value"></el-option>
                         <el-option :label="$t('app.add')" value="add"></el-option>
                     </el-select>
+                    <!-- 刷新按钮 -->
                     <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
+                    <!-- 服务器名称 -->
                     <div style="font-weight: bold;margin-left: 20px;font-size: 16px;">{{ name }}</div>
+                    <!-- 服务器状态 -->
                     <div style="margin-left: 10px;" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }} ({{
                             active_shards
                     }} of {{ total_shards }})</div>
@@ -106,15 +110,21 @@
 </template>
 
 <script lang="ts">
-import { useUrlStore } from "./store/UrlStore";
+// 引入状态管理
+import { useUrlStore } from "@/store/UrlStore";
 import { useIndexStore } from '@/store/IndexStore';
 import { useSettingStore } from "@/store/SettingStore";
+// 引入框架
 import type { ElForm } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import { defineComponent } from 'vue';
+import { mapState } from "pinia";
+import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@element-plus/icons-vue';
+import axios from 'axios';
 // 引入页面组件
 import Info from '@/components/Info.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
-
+import Translate from "@/components/Translate.vue";
 // 页面
 import About from "@/page/about/index.vue";
 import Home from "./page/home/index.vue";
@@ -123,15 +133,9 @@ import SeniorSearch from '@/page/senior_search/index.vue';
 import SqlSearch from "@/page/sql_search/index.vue";
 import Setting from '@/page/setting/index.vue'
 import DataBrowse from '@/page/data_browse/index.vue';
-
-import Translate from "@/components/Translate.vue";
-
-import { defineComponent } from 'vue';
-import { mapState } from "pinia";
-import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@element-plus/icons-vue';
-import Url from "./entity/Url";
+// 其他
+import Url from "@/entity/Url";
 import url_dao from "@/dao/UrlDao";
-import axios from 'axios';
 
 export default defineComponent({
     components: {
@@ -201,9 +205,8 @@ export default defineComponent({
                 return;
             }
             useUrlStore().choose(value);
-            if (value !== '') {
-                useIndexStore().reset();
-            }
+            // 索引刷新
+            useIndexStore().reset();
         },
         refresh() {
             useIndexStore().reset();

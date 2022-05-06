@@ -2,8 +2,8 @@
 	<div class="home">
 		<div class="home-option">
 			<div style="display: flex">
-				<el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')" style="width: 300px;height: 32px;"
-					@input="search" clearable></el-input>
+				<el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')"
+					style="width: 300px;height: 32px;" @input="search" clearable></el-input>
 				<el-select v-model="condition.order" :placeholder="$t('home.order_placeholder')"
 					style="margin-left: 5px" clearable @change="search">
 					<el-option :label="$t('home.order_name_asc')" value="NAME_ASC"></el-option>
@@ -87,6 +87,7 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'pinia';
 import _ from 'lodash';
+import { ElMessage } from 'element-plus';
 
 import { useUrlStore } from '@/store/UrlStore';
 import { useIndexStore } from '@/store/IndexStore';
@@ -94,13 +95,13 @@ import { useSettingStore } from '@/store/SettingStore';
 
 import IndexView from "@/view/Index";
 import { Index, Property } from '@/entity/Index';
-
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
 import IndexContainer from './components/IndexContainer.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
-import { ElMessage } from 'element-plus';
+
+import mitt from '@/plugins/mitt';
 
 
 export default defineComponent({
@@ -142,15 +143,18 @@ export default defineComponent({
 		...mapState(useSettingStore, ['default_replica', 'default_shard'])
 	},
 	watch: {
-		indices() {
-			this.search()
-		},
 		default_replica() {
 			this.index.settings.number_of_replicas = useSettingStore().getDefaultReplica
 		},
 		default_shard() {
 			this.index.settings.number_of_shards = useSettingStore().getDefaultShard
 		}
+	},
+	created() {
+		mitt.on('update_index', () => {
+			this.search();
+			console.log(this.indices);
+		})
 	},
 	methods: {
 		/**
