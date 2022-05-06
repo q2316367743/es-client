@@ -153,7 +153,6 @@ export default defineComponent({
 	created() {
 		mitt.on('update_index', () => {
 			this.search();
-			console.log(this.indices);
 		})
 	},
 	methods: {
