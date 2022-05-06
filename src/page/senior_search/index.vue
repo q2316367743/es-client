@@ -76,7 +76,7 @@
 						<base-viewer v-if="view === 1" :data="result"></base-viewer>
 						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
 						</json-viewer>
-						<table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
+						<table-viewer v-if="view === 3" :data="result"></table-viewer>
 					</el-scrollbar>
 				</div>
 			</div>
@@ -123,7 +123,7 @@ export default defineComponent({
 		suggestions: [],
 		// GET请求参数
 		get_params: new Array<Param>(),
-		view: 2,
+		view: useSettingStore().getDefaultViewer,
 		is_down: false,
 		max_width: 520,
 		max_height: 520,
@@ -131,7 +131,7 @@ export default defineComponent({
 	}),
 	components: { JsonViewer, BaseViewer, MonacoEditor, TableViewer },
 	computed: {
-		...mapState(useSettingStore, ['senior_width']),
+		...mapState(useSettingStore, ['senior_width', 'default_viewer']),
 		senior_width_computed(): number {
 			switch (this.mode) {
 				case Mode.DEFAULT:
@@ -148,6 +148,9 @@ export default defineComponent({
 			if (newValue === '') {
 				this.result = {};
 			}
+		},
+		default_viewer() {
+			this.view = useSettingStore().getDefaultViewer
 		}
 	},
 	mounted() {

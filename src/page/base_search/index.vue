@@ -104,6 +104,7 @@ import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./components/FieldConditionItem.vue";
 import { mapState } from "pinia";
 import { useIndexStore } from "@/store/IndexStore";
+import { useSettingStore } from "@/store/SettingStore";
 import Field from "@/view/Field";
 
 interface Name {
@@ -140,8 +141,9 @@ export default defineComponent({
             condition_data: {},
             // 查询结果
             result: {} as any,
+            mapping: {} as any,
             // 视图
-            view: 2
+            view: useSettingStore().getDefaultViewer
         };
     },
     computed: {
@@ -168,6 +170,7 @@ export default defineComponent({
                 });
             }
         }),
+        ...mapState(useSettingStore, ['default_viewer']),
         fields() {
             if (this.index === '') {
                 return new Array<Field>();
@@ -190,6 +193,9 @@ export default defineComponent({
             if (this.index !== '') {
                 this.search();
             }
+        },
+        default_viewer() {
+            this.view = useSettingStore().getDefaultViewer
         }
     },
     methods: {
@@ -243,8 +249,8 @@ export default defineComponent({
             });
         },
         clear(clear_index: boolean = false) {
-            this.page = 1,
-                this.size = 10;
+            this.page = 1;
+            this.size = 10;
             this.total = 0;
             this.field_condition = new Array<BaseQuery>();
             this.result = {};

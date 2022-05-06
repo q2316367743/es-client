@@ -37,6 +37,7 @@ export default defineComponent({
         margin: 3px;
         cursor: pointer;
         cursor: pointer;
+        border-bottom: 1px solid #e4e7ed;
 
         &:hover {
             background-color: #f2f2f2;
@@ -44,7 +45,7 @@ export default defineComponent({
         }
 
         .name {
-            font-size: 12px;
+            font-size: 14px;
             margin-left: 10px;
         }
 
