@@ -10,13 +10,14 @@
         </div>
         <div class="browse-main">
             <div class="browse-search" :class="show_side ? 'browse-search-open' : 'browse-search-hide'">
-                <el-input v-model="keyword" @input="render_index_list"></el-input>
+                <el-input v-model="keyword" @input="render_index_list" clearable></el-input>
             </div>
             <div class="browse-side" :class="show_side ? 'browse-side-open' : 'browse-side-hide'">
                 <el-scrollbar @click="no_choose()">
                     <es-list>
                         <es-list-item v-for="(index, idx) in index_list" :key="idx"
-                            :choose="choose_index === index.name" @click.stop="choose(index.name)">{{
+                            :choose="choose_index === index.name" @click.stop="choose(index.name)"
+                            :aliases="index.alias">{{
                                     index.name
                             }}</es-list-item>
                     </es-list>
@@ -50,21 +51,23 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
+import { mapState } from 'pinia';
+import JsonViewer from "vue-json-viewer";
 
 import EsList from '@/components/EsList/index.vue';
 import EsListItem from '@/components/EsList/item.vue';
-import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import { mapState } from 'pinia';
+import BaseViewer from "@/components/BaseViewer.vue";
+import TableViewer from "@/components/TableViewer/index.vue"
 
 import { useIndexStore } from '@/store/IndexStore';
 import { useSettingStore } from "@/store/SettingStore";
 
 import axios from "@/plugins/axios";
+import mitt from '@/plugins/mitt';
+
 import Index from "@/view/Index";
 
-import JsonViewer from "vue-json-viewer";
-import BaseViewer from "@/components/BaseViewer.vue";
-import TableViewer from "@/components/TableViewer/index.vue"
 
 export default defineComponent({
     name: 'data_browse',
@@ -86,12 +89,17 @@ export default defineComponent({
         keyword: '',
     }),
     watch: {
-        indices() {
-            this.render_index_list()
-        },
         default_viewer() {
             this.view = useSettingStore().getDefaultViewer
         }
+    },
+    created() {
+        mitt.on('update_index', () => {
+            // 重置条件
+            this.no_choose();
+            // 重新渲染
+            this.render_index_list();
+        });
     },
     methods: {
         choose(index_name: string, verify: boolean = true) {
@@ -117,7 +125,13 @@ export default defineComponent({
             }).then((response) => {
                 this.result = response;
                 if (this.result.hits) {
-                    this.total = this.result.hits.total
+                    if (parseInt(this.result.hits.total)) {
+                        this.total = parseInt(this.result.hits.total)
+                    } else if (parseInt(this.result.hits.total.value)) {
+                        this.total = parseInt(this.result.hits.total.value);
+                    } else {
+                        this.total = 0;
+                    }
                 } else {
                     this.total = 0;
                 }

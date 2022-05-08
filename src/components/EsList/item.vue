@@ -1,7 +1,12 @@
 <template>
     <div class="es-list-item" :class="choose ? 'es-list-item-choose' : ''" @click="on_click">
         <div class="name">
-            <slot></slot>
+            <div>
+                <slot></slot>
+            </div>
+            <div>
+                <el-tag v-for="alias, index of aliases" :key="index">{{ alias }}</el-tag>
+            </div>
         </div>
     </div>
 </template>
@@ -15,6 +20,11 @@ export default defineComponent({
             default: false,
             required: false,
             type: Boolean
+        },
+        aliases: {
+            default: [],
+            required: false,
+            type: Array
         }
     },
     emits: ['click', 'btn-click'],
@@ -31,10 +41,10 @@ export default defineComponent({
 <style scoped lang="less">
 .es-list {
     .es-list-item {
-        height: 30px;
-        line-height: 30px;
+        height: 35px;
+        line-height: 35px;
         background-color: #ffffff;
-        margin: 3px;
+        margin: 0 3px;
         cursor: pointer;
         cursor: pointer;
         border-bottom: 1px solid #e4e7ed;
@@ -47,6 +57,11 @@ export default defineComponent({
         .name {
             font-size: 14px;
             margin-left: 10px;
+            display: flex;
+            justify-content: space-between;
+            .el-tag {
+                margin-left: 5px;
+            }
         }
 
     }

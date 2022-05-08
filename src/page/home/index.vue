@@ -152,8 +152,16 @@ export default defineComponent({
 	},
 	created() {
 		mitt.on('update_index', () => {
+			// 重置条件
+			this.condition = {
+				name: "",
+				order: "NAME_ASC",
+			};
+			this.index_item_dialog = false;
+			this.index_item_title = '';
+			this.index_item_data = {} as any;
 			this.search();
-		})
+		});
 	},
 	methods: {
 		/**

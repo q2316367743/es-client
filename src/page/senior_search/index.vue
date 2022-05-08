@@ -89,17 +89,21 @@
 import { defineComponent } from "vue";
 import { ElMessage } from "element-plus";
 import { Method } from "axios";
+import { mapState } from "pinia";
 import JsonViewer from "vue-json-viewer";
+
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
+
 import axios from "@/plugins/axios";
+import mitt from '@/plugins/mitt';
+
 import { validateTip } from '@/utils/GlobalUtil';
 
 import LinkProcessor from "./LinkProcessor";
 import Param from '@/view/Param'
 import getParamBuild from "@/build/GetParamBuild";
-import { mapState } from "pinia";
 import { useSettingStore } from "@/store/SettingStore";
 
 enum Mode {
@@ -152,6 +156,18 @@ export default defineComponent({
 		default_viewer() {
 			this.view = useSettingStore().getDefaultViewer
 		}
+	},
+	created() {
+		mitt.on('update_index', () => {
+			// 重置条件
+			this.link = '';
+			this.method = 'POST' as Method;
+			this.params = '{}';
+			this.result = {};
+			this.suggestions = [];
+			// GET请求参数
+			this.get_params = new Array<Param>();
+		});
 	},
 	mounted() {
 		// 获取最大宽度

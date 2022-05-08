@@ -20,19 +20,21 @@
                     <!-- 内容 -->
                     <div class="el-card__body" v-show="is_show">
                         <el-form label-position="top" label-width="80px" style="overflow: auto">
-                            <!-- 文档 -->
                             <el-form-item>
                                 <el-form-item :label="$t('base_search.document')"
                                     style="margin-right: 100px;margin-bottom: 20px;">
+                                    <!-- 文档 -->
                                     <el-select-v2 v-model="index" filterable :options="indices"
                                         :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
                                         <template #default="{ item }">
                                             <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
                                         </template>
                                     </el-select-v2>
+                                    <!-- 搜索 -->
                                     <el-button type="primary" style="margin-left: 10px" @click="search">{{
                                             $t('base_search.search')
                                     }}</el-button>
+                                    <!-- 清空 -->
                                     <el-button style="margin-left: 10px" @click="clear(true)">{{ $t('base_search.clear')
                                     }}
                                     </el-button>
@@ -99,6 +101,7 @@ import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
 import { ElMessageBox } from "element-plus";
 import axios from "@/plugins/axios";
+import mitt from '@/plugins/mitt';
 import BaseQuery from '@/entity/BaseQuery';
 import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./components/FieldConditionItem.vue";
@@ -197,6 +200,12 @@ export default defineComponent({
         default_viewer() {
             this.view = useSettingStore().getDefaultViewer
         }
+    },
+    created() {
+        mitt.on('update_index', () => {
+            // 重置条件
+            this.clear(true);
+        });
     },
     methods: {
         field_condition_add(): void {
