@@ -59,6 +59,15 @@
             <el-timeline>
                 <el-timeline-item timestamp="2022-04-29" placement="top">
                     <el-card>
+                        <div>0.9.1</div>
+                        <ol>
+                            <li>修复服务器地址更新页面不刷新问题</li>
+                            <li>数据预览增加别名</li>
+                        </ol>
+                    </el-card>
+                </el-timeline-item>
+                <el-timeline-item timestamp="2022-04-29" placement="top">
+                    <el-card>
                         <div>0.9.0</div>
                         <ol>
                             <li>新增数据浏览功能</li>

@@ -13,8 +13,8 @@
 ## 项目预览
 
 - [网页端](https://project.esion.xyz/es-client/)**（注意：需要开启es的跨域）**
-- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
-- [火狐插件](https://addons.mozilla.org/addon/es-client/)
+- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)**（审核有些慢）**
+- [火狐插件](https://addons.mozilla.org/addon/es-client/)**（推荐）**
 
 ## 项目打包
 
