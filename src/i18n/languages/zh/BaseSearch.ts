@@ -9,6 +9,7 @@ export default {
     'search': '搜索',
     'clear': '清空',
     'condition': '条件：',
+    'order': '排序：',
     'add': '新增',
     'remove': '移除',
     'please_select_an_index': '请选择索引',

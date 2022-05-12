@@ -32,7 +32,7 @@ service.interceptors.response.use(
         return response.data;
     },
     error => {
-        console.error('err', error) // for debug
+        console.error('err', error)
         ElMessage({
             message: error.message,
             type: 'error',

@@ -1,6 +1,7 @@
 <template>
     <div>
-        <el-empty v-if="is_error" description="数据为空" />
+        <el-empty v-if="flag == 0" description="数据为空" />
+        <json-viewer v-else-if="flag == 1" :value="data" :expand-depth="10" copyable sort expanded></json-viewer>
         <el-table v-else :data="items" stripe>
             <el-table-column type="expand">
                 <template #default="props">
@@ -41,7 +42,7 @@ export default defineComponent({
     },
     components: { ZoomIn, JsonDialog, JsonViewer },
     data: () => ({
-        is_error: false,
+        flag: 0,
         items: [] as Array<any>,
         mappings: [] as Array<string>,
         json_dialog: false,
@@ -59,10 +60,13 @@ export default defineComponent({
         render() {
             // 当变化时，进行渲染
             if (!this.verify_index()) {
-                this.is_error = true;
+                this.flag = 0;
+                if (this.data?.status) {
+                    this.flag = 1;
+                }
                 return;
             } else {
-                this.is_error = false;
+                this.flag = 2;
             }
             this.items = [];
             this.mappings = ['_id', '_index', '_score'];

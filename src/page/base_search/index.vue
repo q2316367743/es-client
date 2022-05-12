@@ -59,17 +59,41 @@
                                     <el-button type="primary" @click="field_condition_add">{{ $t('base_search.add') }}
                                     </el-button>
                                 </div>
-                                <div>
-                                    <div v-for="(item, idx) in field_condition" :key="idx"
-                                        style="margin-bottom: 10px;display: flex;">
-                                        <field-condition-item v-model:value="field_condition[idx]" :fields="fields">
-                                        </field-condition-item>
-                                        <el-button type="primary" style="margin-left: 10px"
-                                            @click="field_condition_add">{{ $t('base_search.add') }}</el-button>
-                                        <el-button type="danger" @click="field_condition_remove(item.id)">{{
-                                                $t('base_search.remove')
-                                        }}</el-button>
-                                    </div>
+                                <div v-for="(item, idx) in field_condition" :key="idx"
+                                    style="margin-bottom: 10px;display: flex;">
+                                    <field-condition-item v-model:value="field_condition[idx]" :fields="fields">
+                                    </field-condition-item>
+                                    <el-button type="primary" style="margin-left: 10px" @click="field_condition_add">{{
+                                            $t('base_search.add')
+                                    }}</el-button>
+                                    <el-button type="danger" @click="field_condition_remove(item.id)">{{
+                                            $t('base_search.remove')
+                                    }}</el-button>
+                                </div>
+                            </el-form-item>
+                            <!-- 排序 -->
+                            <el-form-item :label="$t('base_search.order')">
+                                <div v-if="orders.length === 0">
+                                    <el-button type="primary" @click="order_add">{{ $t('base_search.add') }}
+                                    </el-button>
+                                </div>
+                                <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders" :key="idx">
+                                    <el-select v-model="orders[idx].field" filterable
+                                        :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
+                                        <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
+                                            :value="field.name"></el-option>
+                                    </el-select>
+                                    <el-select v-model="orders[idx].type" filterable
+                                        :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
+                                        <el-option label="asc" value="asc"></el-option>
+                                        <el-option label="desc" value="desc"></el-option>
+                                    </el-select>
+                                    <el-button type="primary" style="margin-left: 10px" @click="order_add">{{
+                                            $t('base_search.add')
+                                    }}</el-button>
+                                    <el-button type="danger" @click="order_remove(order.id)">{{
+                                            $t('base_search.remove')
+                                    }}</el-button>
                                 </div>
                             </el-form-item>
                         </el-form>
@@ -103,6 +127,7 @@ import { ElMessageBox } from "element-plus";
 import axios from "@/plugins/axios";
 import mitt from '@/plugins/mitt';
 import BaseQuery from '@/entity/BaseQuery';
+import BaseOrder from "@/entity/BaseOrder";
 import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./components/FieldConditionItem.vue";
 import { mapState } from "pinia";
@@ -146,7 +171,8 @@ export default defineComponent({
             result: {} as any,
             mapping: {} as any,
             // 视图
-            view: useSettingStore().getDefaultViewer
+            view: useSettingStore().getDefaultViewer,
+            orders: new Array<BaseOrder>()
         };
     },
     computed: {
@@ -230,7 +256,7 @@ export default defineComponent({
             });
         },
         show_body() {
-            this.condition_data = QueryConditionBuild(this.field_condition, this.page, this.size);
+            this.condition_data = QueryConditionBuild(this.field_condition, this.page, this.size, this.orders);
             this.condition_dialog = true;
         },
         search() {
@@ -241,7 +267,7 @@ export default defineComponent({
             axios({
                 url: `/${this.index}/_search`,
                 method: "POST",
-                data: QueryConditionBuild(this.field_condition, this.page, this.size),
+                data: QueryConditionBuild(this.field_condition, this.page, this.size, this.orders),
             }).then((response) => {
                 this.result = response;
                 if (this.result.hits) {
@@ -255,6 +281,8 @@ export default defineComponent({
                 } else {
                     this.total = 0;
                 }
+            }).catch((e) => {
+                this.result = e.response.data;
             });
         },
         clear(clear_index: boolean = false) {
@@ -274,6 +302,21 @@ export default defineComponent({
         pageChange(page: number) {
             this.page = page;
             this.search();
+        },
+        order_add() {
+            this.orders.push({
+                id: new Date().getTime(),
+                field: '',
+                type: 'asc'
+            });
+        },
+        order_remove(id: number) {
+            if (this.orders.length === 0) {
+                return;
+            }
+            this.orders = this.orders.filter((item) => {
+                return item.id !== id;
+            });
         }
     },
 });

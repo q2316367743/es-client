@@ -9,6 +9,7 @@ export default {
     'search': 'search',
     'clear': 'clear',
     'condition': 'condition:',
+    'order': 'order:',
     'add': 'add',
     'remove': 'remove',
     'please_select_an_index': 'please select an index',

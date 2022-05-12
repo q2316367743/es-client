@@ -1,4 +1,5 @@
 import BaseQuery from "@/entity/BaseQuery";
+import BaseOrder from "@/entity/BaseOrder";
 
 /**
  * 获取基础查询请求体
@@ -40,12 +41,22 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     array.push(condition);
 }
 
+function buildOrder(orders: Array<BaseOrder>, body: any) {
+    body.sort = {};
+    for (let order of orders) {
+        if (order.field === '' || order.type === null) {
+            continue;
+        }
+        body.sort[order.field.substring(5)] = { order: order.type };
+    }
+}
+
 /**
  * 构造es查询条件
  * 
  * @param querys 查询条件
  */
-export default function QueruConditionBuild(querys: Array<BaseQuery>, page: number, size: number): any {
+export default function QueruConditionBuild(querys: Array<BaseQuery>, page: number, size: number, orders: Array<BaseOrder>): any {
     let must = [] as Array<any>;
     let must_not = [] as Array<any>;
     let should = [] as Array<any>;
@@ -62,5 +73,8 @@ export default function QueruConditionBuild(querys: Array<BaseQuery>, page: numb
     body.query.bool.must = must;
     body.query.bool.must_not = must_not;
     body.query.bool.should = should;
+    if (orders.length > 0) {
+        buildOrder(orders, body);
+    }
     return body;
 }
