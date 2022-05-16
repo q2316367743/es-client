@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "es-client",
-    "version": "0.9.1",
+    "version": "0.9.2",
     "description": "elasticsearch管理客户端",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "icons": {
