@@ -77,7 +77,8 @@
                                     <el-button type="primary" @click="order_add">{{ $t('base_search.add') }}
                                     </el-button>
                                 </div>
-                                <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders" :key="idx">
+                                <div style="display: flex;margin-bottom: 10px;width: 100%;"
+                                    v-for="(order, idx) in orders" :key="idx">
                                     <el-select v-model="orders[idx].field" filterable
                                         :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
                                         <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
@@ -290,6 +291,7 @@ export default defineComponent({
             this.size = 10;
             this.total = 0;
             this.field_condition = new Array<BaseQuery>();
+            this.orders = new Array<BaseOrder>();
             this.result = {};
             if (clear_index) {
                 this.index = '';
