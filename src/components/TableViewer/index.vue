@@ -1,19 +1,22 @@
 <template>
     <div>
-        <el-empty v-if="flag == 0" description="数据为空" />
+        <el-empty v-if="flag == 0" :description="$t('app.component.data_is_empty')" />
         <json-viewer v-else-if="flag == 1" :value="data" :expand-depth="10" copyable sort expanded></json-viewer>
-        <div v-else>
-            <div style="text-align: right;padding-right: 40px;padding-bottom: 20px;">
+        <div v-else class="table-viewer-show">
+            <div class="table-viewer-column">
                 <el-popover placement="bottom" trigger="click">
                     <template #reference>
-                        <el-button style="margin-right: 16px">显示列</el-button>
+                        <el-button style="margin-right: 16px">{{ $t('app.component.display_column') }}</el-button>
                     </template>
+                    <el-checkbox v-model="check_all" :indeterminate="isIndeterminate" @change="handle_check_all_change">
+                        {{ $t('app.component.check_all') }}
+                    </el-checkbox>
                     <div v-for="(mapping, index) in mappings" :prop="mapping" :key="index">
                         <el-checkbox :label="mapping.field" v-model="mapping.is_show"></el-checkbox>
                     </div>
                 </el-popover>
             </div>
-            <el-table :data="items" stripe>
+            <el-table :data="items" stripe class="table-viewer-table">
                 <el-table-column type="expand">
                     <template #default="props">
                         <json-viewer :value="props.row.__self__" :expand-depth="10" copyable sort expanded>
@@ -38,7 +41,7 @@
                 </el-table-column>
             </el-table>
         </div>
-        <json-dialog title="数据预览" :json="json_data" :open="true" v-model="json_dialog">
+        <json-dialog :title="$t('home.index.info.data_preview')" :json="json_data" :open="true" v-model="json_dialog">
         </json-dialog>
     </div>
 </template>
@@ -51,7 +54,7 @@ import JsonViewer from 'vue-json-viewer';
 interface Col {
 
     field: string;
-    is_show: true;
+    is_show: boolean;
 
 }
 
@@ -67,7 +70,8 @@ export default defineComponent({
         items: [] as Array<any>,
         mappings: [] as Array<Col>,
         json_dialog: false,
-        json_data: {} as any
+        json_data: {} as any,
+        check_all: true
     }),
     watch: {
         data() {
@@ -77,6 +81,11 @@ export default defineComponent({
     computed: {
         cols() {
             return this.mappings.filter(e => e.is_show);
+        },
+        isIndeterminate() {
+            // 展示的
+            let temp = this.mappings.filter(e => e.is_show);
+            return temp.length > 0 && temp.length < this.mappings.length;
         }
     },
     created() {
@@ -106,6 +115,7 @@ export default defineComponent({
                 is_show: true
             }];
             let verify_mapping = this.verify_mapping();
+            // 原生映射
             if (verify_mapping) {
                 for (let key in this.mapping._doc.properties) {
                     this.mappings.push({
@@ -124,6 +134,7 @@ export default defineComponent({
                             i[source] = item[key][source];
                             if (!verify_mapping) {
                                 if (this.mappings.map(mapping => mapping.field).indexOf(source) === -1) {
+                                    // 渲染映射
                                     this.mappings.push({
                                         field: source,
                                         is_show: true
@@ -137,6 +148,8 @@ export default defineComponent({
                 i['__self__'] = item;
                 this.items.push(i);
             }
+            // 每次渲染清空状态
+            this.check_all = true;
         },
         verify_index(): boolean {
             if (!this.data) {
@@ -164,10 +177,46 @@ export default defineComponent({
             }
             return true;
         },
+        handle_check_all_change() {
+            if (this.isIndeterminate) {
+                // 如果处于中间态，则全选
+                this.mappings.forEach(e => e.is_show = true);
+                this.check_all = true;
+            } else {
+                // 如果不是处于中间态
+                if (!this.check_all) {
+                    // 如果全选，则改为全不选
+                    this.mappings.forEach(e => e.is_show = false);
+                    this.check_all = false;
+                } else {
+                    // 如果全不选，则改为全选
+                    this.mappings.forEach(e => e.is_show = true);
+                    this.check_all = true;
+                }
+            }
+        }
     }
 });
 </script>
 <style scoped lang="less">
+.table-viewer-show {
+    overflow: auto;
+}
+
+.table-viewer-column {
+    z-index: 10;
+    position: absolute;
+    right: 20px;
+    top: 0;
+}
+
+.table-viewer-table {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    left: 0;
+}
+
 .column {
     max-width: 200px;
     overflow: hidden;

@@ -1,65 +1,58 @@
 <template>
 	<div class="senior-search">
-		<el-card style="min-height: 550px" shadow="never">
-			<template #header>
-				<div style="display: flex;justify-content: space-between;">
-					<div>{{ $t('senior_search.senior_search') }}</div>
-					<el-select v-model="view">
-						<el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
-						<el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-						<el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+		<div class="el-card is-never-shadow" style="min-height: 550px" shadow="never">
+			<div class="el-card__header" style="display: flex;justify-content: space-between;">
+				<div style="display: flex;">
+					<div style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;">{{
+							$t('senior_search.link')
+					}}</div>
+					<el-select v-model="method" :placeholder="$t('senior_search.please_select')"
+						style="min-width: 100px;">
+						<el-option label="GET" value="GET"></el-option>
+						<el-option label="POST" value="POST"></el-option>
+						<el-option label="PUT" value="PUT"></el-option>
+						<el-option label="DELETE" value="DELETE"></el-option>
 					</el-select>
+					<el-autocomplete v-model="link" style="min-width: 100px;width: 300px;margin: 0 6px;"
+						:fetch-suggestions="fetchSuggestions" @keyup.enter.native="search" @select="handleSelect"
+						:placeholder="$t('senior_search.please_enter_a_link')" clearable>
+						<template #default="{ item }">
+							<div class="value">{{ item }}</div>
+						</template>
+					</el-autocomplete>
+					<el-button type="primary" @click="search">{{ link.indexOf('search') > -1 ?
+							$t('senior_search.search') : $t('senior_search.execute')
+					}}</el-button>
+					<el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
 				</div>
-			</template>
+				<el-select v-model="view">
+					<el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
+					<el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
+					<el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+				</el-select>
+			</div>
 			<div class="senior-main">
 				<!-- 左面查询条件 -->
 				<div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
-					<!-- 链接选择 -->
-					<div class="link">
-						<div style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;">{{
-								$t('senior_search.link')
-						}}</div>
-						<el-select v-model="method" :placeholder="$t('senior_search.please_select')"
-							style="min-width: 100px;width: 100px;">
-							<el-option label="GET" value="GET"></el-option>
-							<el-option label="POST" value="POST"></el-option>
-							<el-option label="PUT" value="PUT"></el-option>
-							<el-option label="DELETE" value="DELETE"></el-option>
-						</el-select>
-						<el-autocomplete v-model="link" style="width: 100%;margin: 0 6px;"
-							:fetch-suggestions="fetchSuggestions" @keyup.enter.native="search" @select="handleSelect"
-							:placeholder="$t('senior_search.please_enter_a_link')" clearable>
-							<template #default="{ item }">
-								<div class="value">{{ item }}</div>
-							</template>
-						</el-autocomplete>
-						<el-button type="primary" @click="search">{{ link.indexOf('search') > -1 ?
-								$t('senior_search.search') : $t('senior_search.execute')
-						}}</el-button>
-						<el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
-					</div>
 					<!-- 请求参数 -->
-					<div class="param">
-						<div class="label">{{ $t('senior_search.param') }}</div>
-						<div class="param-content">
-							<div class="get" v-show="method === 'GET'">
-								<el-button type="primary" @click="addGetParam">{{ $t('senior_search.add') }}</el-button>
-								<el-button @click="truncateGetParam">{{ $t('senior_search.clear') }}</el-button>
-								<div class="item" v-for="(param, index) in get_params" :key="index">
-									<el-input v-model="param.key" :placeholder="$t('senior_search.please_enter_key')">
-									</el-input>
-									<div style="text-align: center;">=</div>
-									<el-input v-model="param.value"
-										:placeholder="$t('senior_search.please_enter_value')"></el-input>
-									<div></div>
-									<el-button type="danger" @click="removeGetParam(param.id)">{{
-											$t('senior_search.remove')
-									}}</el-button>
-								</div>
+					<div class="param" :style="method === 'GET' ? 'overflow: auto' : ''">
+						<div class="get" v-show="method === 'GET'">
+							<el-button type="primary" @click="addGetParam">{{ $t('senior_search.add') }}</el-button>
+							<el-button @click="truncateGetParam">{{ $t('senior_search.clear') }}</el-button>
+							<div class="item" v-for="(param, index) in get_params" :key="index">
+								<el-input v-model="param.key" :placeholder="$t('senior_search.please_enter_key')">
+								</el-input>
+								<div style="text-align: center;">=</div>
+								<el-input v-model="param.value" :placeholder="$t('senior_search.please_enter_value')">
+								</el-input>
+								<div></div>
+								<el-button type="danger" @click="removeGetParam(param.id)">{{
+										$t('senior_search.remove')
+								}}</el-button>
 							</div>
-							<monaco-editor ref="monaco_editor" v-model="params" :link="link" height="100%"
-								v-show="method !== 'GET'" class="post"></monaco-editor>
 						</div>
+						<monaco-editor ref="monaco_editor" v-model="params" :link="link" height="100%"
+							v-show="method !== 'GET'" class="post"></monaco-editor>
 					</div>
 				</div>
 				<div class="senior-bar" :style="{ left: senior_width_computed + 10 + 'px' }" @mousedown="onMouseDown">
@@ -72,16 +65,14 @@
 					@click="hideRight">→</div>
 				<!-- 右面展示内容 -->
 				<div class="senior-content" :style="{ left: senior_width_computed + 20 + 'px' }" v-show="mode !== 3">
-					<el-scrollbar>
-						<base-viewer v-if="view === 1" :data="result"></base-viewer>
-						<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-						</json-viewer>
-						<table-viewer v-if="view === 3" :data="result"></table-viewer>
-					</el-scrollbar>
+					<base-viewer v-if="view === 1" :data="result"></base-viewer>
+					<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+					</json-viewer>
+					<table-viewer v-if="view === 3" :data="result"></table-viewer>
+					<el-backtop target=".senior-content" :right="40" :bottom="60" />
 				</div>
 			</div>
-		</el-card>
-		<el-backtop target=".senior-content" />
+		</div>
 	</div>
 </template>
 
@@ -113,7 +104,7 @@ enum Mode {
 }
 const side_width = 250;
 const side_min_width = 356;
-const right_min_width = 200;
+const right_min_width = 150;
 const right_add_width = 140;
 const outer_height = 190;
 
@@ -335,39 +326,20 @@ export default defineComponent({
 				left: 0;
 				right: 0;
 				bottom: 0;
-				overflow-y: auto;
 
-				.label {
-					position: absolute;
-					top: 0px;
-					left: 0px;
-					width: 54px;
-					height: 32px;
-					line-height: 32px;
+				.get {
+					width: 466px;
+
+					.item {
+						display: grid;
+						grid-template-rows: 1fr;
+						grid-template-columns: 0.5fr 26px 1fr 12px auto;
+						margin-top: 12px;
+					}
 				}
 
-				.param-content {
-					position: absolute;
-					top: 0px;
-					left: 54px;
-					right: 0px;
-					bottom: 0px;
-					overflow: hidden;
-
-					.get {
-						width: 466px;
-
-						.item {
-							display: grid;
-							grid-template-rows: 1fr;
-							grid-template-columns: 0.5fr 26px 1fr 12px auto;
-							margin-top: 12px;
-						}
-					}
-
-					.post {
-						padding-top: 5px;
-					}
+				.post {
+					padding-top: 5px;
 				}
 			}
 		}
@@ -397,12 +369,11 @@ export default defineComponent({
 
 		.senior-content {
 			position: absolute;
-			top: 0;
+			top: 20px;
 			bottom: 0;
 			right: 0;
 			overflow: auto;
 			padding: 5px;
-			border: #f2f2f2 solid 1px;
 		}
 	}
 }

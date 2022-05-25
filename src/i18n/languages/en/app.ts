@@ -8,8 +8,8 @@ export default {
         'setting': 'setting',
         'data_browse': 'data browse'
     },
-    'add': '新增',
-    'about': '关于',
+    'add': 'add',
+    'about': 'about',
     'link_placeholder': 'please select an index address',
     'refresh': 'refresh',
     'info': 'info',
@@ -20,4 +20,9 @@ export default {
     'cluster_status': 'cluster status',
     'cluster_health': 'cluster health',
     'template': 'template',
+    'component': {
+        'data_is_empty': 'Data is empty',
+        'display_column': 'display column',
+        'check_all': 'check all'
+    }
 }

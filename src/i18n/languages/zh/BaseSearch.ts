@@ -8,6 +8,7 @@ export default {
     'please_select': '请选择',
     'search': '搜索',
     'clear': '清空',
+    'view': '视图：',
     'condition': '条件：',
     'order': '排序：',
     'add': '新增',

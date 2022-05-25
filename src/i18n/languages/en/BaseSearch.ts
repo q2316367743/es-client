@@ -8,6 +8,7 @@ export default {
     'please_select': 'please select',
     'search': 'search',
     'clear': 'clear',
+    'view': 'view:',
     'condition': 'condition:',
     'order': 'order:',
     'add': 'add',

@@ -34,19 +34,19 @@
             </div>
             <div class="browse-content" :class="show_side ? 'browse-content-open' : 'browse-content-hide'">
                 <div class="operation">
-                    <el-pagination background layout="sizes, prev, pager, next" :total="total" :current-page="page"
-                        :page-size="size" @size-change="sizeChange" @current-change="pageChange"></el-pagination>
+                    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                        :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
+                    </el-pagination>
                 </div>
                 <div class="container">
-                    <el-scrollbar style="margin-top: 10px">
-                        <base-viewer v-if="view === 1" :data="result"></base-viewer>
-                        <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-                        </json-viewer>
-                        <table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
-                    </el-scrollbar>
+                    <base-viewer v-if="view === 1" :data="result"></base-viewer>
+                    <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+                    </json-viewer>
+                    <table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
                 </div>
             </div>
         </div>
+        <el-backtop :right="40" :bottom="60" target=".browse-content" v-show="show_top" />
     </div>
 </template>
 <script lang="ts">
@@ -87,6 +87,7 @@ export default defineComponent({
         total: 0,
         index_list: [] as Array<Index>,
         keyword: '',
+        show_top: true
     }),
     watch: {
         default_viewer() {
@@ -99,6 +100,9 @@ export default defineComponent({
             this.no_choose();
             // 重新渲染
             this.render_index_list();
+        });
+        mitt.on('active_switch', (index) => {
+            this.show_top = (index === 'data_browse')
         });
     },
     methods: {
@@ -270,18 +274,20 @@ export default defineComponent({
             right: 0;
             bottom: 0;
             padding: 0 10px;
+            overflow: auto;
 
             .operation {
                 position: absolute;
-                top: 0;
+                top: 10px;
                 left: 15px;
                 right: 0;
                 height: 32px;
+                z-index: 1;
             }
 
             .container {
                 position: absolute;
-                top: 42px;
+                top: 10px;
                 left: 20px;
                 right: 0;
                 bottom: 10px;

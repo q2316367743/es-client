@@ -20,4 +20,9 @@ export default {
     'cluster_status': '集群状态',
     'cluster_health': '集群健康值',
     'template': '模板',
+    'component': {
+        'data_is_empty': '数据为空',
+        'display_column': '显示列',
+        'check_all': '全选'
+    }
 }
