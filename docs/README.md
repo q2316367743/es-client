@@ -30,15 +30,3 @@ npm run dev
 ![图片-1653033316089](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033316089.png)
 - 设置
 ![图片-1653033335849](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033335849.png)
-
-## 项目功能
-
-- 链接管理功能
-- 索引浏览功能
-- 索引管理功能
-- 语法提示与高亮
-- 。。。
-
-## 详细文档
-
-<https://docs.esion.xyz/es-client>
