@@ -3,9 +3,6 @@
 		<div class="el-card is-never-shadow" style="min-height: 550px" shadow="never">
 			<div class="el-card__header" style="display: flex;justify-content: space-between;">
 				<div style="display: flex;">
-					<div style="min-width: 54px;width: 54px;height: 32px;line-height: 32px;">{{
-							$t('senior_search.link')
-					}}</div>
 					<el-select v-model="method" :placeholder="$t('senior_search.please_select')"
 						style="min-width: 100px;">
 						<el-option label="GET" value="GET"></el-option>
