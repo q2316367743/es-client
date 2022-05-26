@@ -23,7 +23,7 @@
 		</div>
 		<index-container :indices="show_indices" v-loading="index_loading" @open-dialog="index_open_dialog">
 		</index-container>
-		<el-backtop target=".el-scrollbar__wrap" />
+		<el-backtop :right="40" :bottom="60" target=".index-container" />
 		<!-- </div> -->
 		<el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
 			<el-form>
