@@ -1,7 +1,9 @@
 <template>
     <div class="data-browse">
         <div class="browse-header">
-            <div>数据浏览</div>
+            <div>
+                <el-input v-model="keyword" @input="render_index_list" clearable style="width: 375px;"></el-input>
+            </div>
             <el-select v-model="view">
                 <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                 <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
@@ -9,9 +11,6 @@
             </el-select>
         </div>
         <div class="browse-main">
-            <div class="browse-search" :class="show_side ? 'browse-search-open' : 'browse-search-hide'">
-                <el-input v-model="keyword" @input="render_index_list" clearable></el-input>
-            </div>
             <div class="browse-side" :class="show_side ? 'browse-side-open' : 'browse-side-hide'">
                 <el-scrollbar @click="no_choose()">
                     <es-list>
@@ -201,33 +200,9 @@ export default defineComponent({
         right: 0;
         bottom: 0;
 
-        .browse-search {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 32px;
-            padding-left: 5px;
-
-            .el-input {
-                width: 395px;
-            }
-        }
-
-        .browse-search-hide {
-            width: 0;
-
-            .el-input {
-                display: none;
-            }
-        }
-
-        .browse-search-open {
-            width: 400px;
-        }
-
         .browse-side {
             position: absolute;
-            top: 42px;
+            top: 0;
             left: 0;
             bottom: 0;
             border-right: #f2f2f2 solid 1px;
