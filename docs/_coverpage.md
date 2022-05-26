@@ -1,4 +1,4 @@
-# <b>elasticsearch客户端</b> <small>0.9.3</small>
+# <b>elasticsearch客户端</b> <small>1.0.0</small>
 
 > es-client
 

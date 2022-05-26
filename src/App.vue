@@ -38,7 +38,7 @@
                 </el-menu>
                 <div class="author">
                     <div style="margin-top: 5px">
-                        <el-link @click="about_dialog = true">v0.9.3</el-link>
+                        <el-link @click="about_dialog = true">v1.0.0</el-link>
                     </div>
                 </div>
             </div>
