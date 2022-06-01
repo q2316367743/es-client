@@ -8,6 +8,7 @@
                 <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                 <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                 <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
             </el-select>
         </div>
         <div class="browse-main">
@@ -42,6 +43,7 @@
                     <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
                     </json-viewer>
                     <table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
+                    <editor-viewer v-if="view === 4" v-model="result" height="calc(100% - 64px)"></editor-viewer>
                 </div>
             </div>
         </div>
@@ -57,7 +59,8 @@ import JsonViewer from "vue-json-viewer";
 import EsList from '@/components/EsList/index.vue';
 import EsListItem from '@/components/EsList/item.vue';
 import BaseViewer from "@/components/BaseViewer.vue";
-import TableViewer from "@/components/TableViewer/index.vue"
+import TableViewer from "@/components/TableViewer/index.vue";
+import EditorViewer from "@/components/EditorViewer/index.vue";
 
 import { useIndexStore } from '@/store/IndexStore';
 import { useSettingStore } from "@/store/SettingStore";
@@ -70,7 +73,7 @@ import Index from "@/view/Index";
 
 export default defineComponent({
     name: 'data_browse',
-    components: { EsList, EsListItem, ArrowLeft, ArrowRight, JsonViewer, BaseViewer, TableViewer },
+    components: { EsList, EsListItem, ArrowLeft, ArrowRight, JsonViewer, BaseViewer, TableViewer, EditorViewer },
     computed: {
         ...mapState(useIndexStore, ['indices']),
         ...mapState(useSettingStore, ['default_viewer']),
@@ -171,7 +174,7 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped lang="less">
+<style lang="less">
 .data-browse {
     position: absolute;
     top: 10px;
@@ -266,6 +269,20 @@ export default defineComponent({
                 left: 20px;
                 right: 0;
                 bottom: 10px;
+
+                .base-viewer {
+                    .base-viewer-show {
+                        padding-top: 40px;
+                    }
+                }
+
+                .jv-container {
+                    padding-top: 20px;
+                }
+
+                .editor-viewer {
+                    padding-top: 50px;
+                }
             }
         }
 

@@ -15,5 +15,6 @@ export default {
     'json_view': 'json view',
     'base_view': 'base view',
     'table_view': 'table view',
+    'editor_view': 'editor view',
     'format': 'format'
 }

@@ -11,6 +11,7 @@
                 <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                 <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                 <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
             </el-select>
         </el-form-item>
     </el-form>

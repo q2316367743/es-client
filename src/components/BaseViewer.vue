@@ -1,7 +1,7 @@
 <!-- 基础视图 -->
 <template>
-    <code style="font-size: 14px;">
-        <pre style="margin-left: 12px;margin-right: 12px;">{{ data }}</pre>
+    <code class="base-viewer">
+        <pre class="base-viewer-show">{{ data }}</pre>
     </code>
 </template>
 <script lang="ts">
@@ -28,4 +28,12 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.base-viewer {
+    font-size: 14px;
+}
+
+.base-viewer-show {
+    margin-left: 12px;
+    margin-right: 12px;
+}
 </style>
