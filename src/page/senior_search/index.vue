@@ -67,7 +67,7 @@
 					<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
 					</json-viewer>
 					<table-viewer v-if="view === 3" :data="result"></table-viewer>
-					<editor-viewer v-if="view === 4" v-model="result"  height="calc(100% - 64px)"></editor-viewer>
+					<senior-search-editor-viewer v-if="view === 4" v-model="result"  height="calc(100% - 64px)"></senior-search-editor-viewer>
 					<el-backtop target=".senior-content" :right="40" :bottom="60" />
 				</div>
 			</div>
@@ -85,7 +85,7 @@ import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
-import EditorViewer from "@/components/EditorViewer/index.vue";
+import SeniorSearchEditorViewer from "@/components/EditorViewer/senior-search.vue";
 
 import axios from "@/plugins/axios";
 import mitt from '@/plugins/mitt';
@@ -124,7 +124,7 @@ export default defineComponent({
 		max_height: 520,
 		mode: Mode.DEFAULT
 	}),
-	components: { JsonViewer, BaseViewer, MonacoEditor, TableViewer, EditorViewer },
+	components: { JsonViewer, BaseViewer, MonacoEditor, TableViewer, SeniorSearchEditorViewer },
 	computed: {
 		...mapState(useSettingStore, ['senior_width', 'default_viewer']),
 		senior_width_computed(): number {
