@@ -22,8 +22,8 @@
                 <el-select v-model="view">
                     <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                     <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                    <el-option :label="$t('senior_search.table_view')" :value="3">
-                    </el-option>
+                    <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                    <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
                 </el-select>
             </div>
         </div>
@@ -84,14 +84,16 @@
             </div>
             <!-- 查询结果 -->
             <div class="base-content">
-                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total" :current-page="page"
-                    :page-size="size" @size-change="sizeChange" @current-change="pageChange">
+                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                    :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
                 </el-pagination>
                 <base-viewer v-if="view === 1" :data="result"></base-viewer>
                 <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
                 </json-viewer>
                 <table-viewer v-if="view === 3" :data="result" :mapping="mapping">
                 </table-viewer>
+                <base-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100vh - 220px)">
+                </base-search-editor-viewer>
             </div>
         </div>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
@@ -104,19 +106,25 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { ElMessageBox } from "element-plus";
+import { mapState } from "pinia";
+
 import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
-import { ElMessageBox } from "element-plus";
+import BaseSearchEditorViewer from "@/components/EditorViewer/base-search.vue";
+
 import axios from "@/plugins/axios";
 import mitt from '@/plugins/mitt';
-import BaseQuery from '@/entity/BaseQuery';
-import BaseOrder from "@/entity/BaseOrder";
-import QueryConditionBuild from './build/QueryConditionBuild';
-import FieldConditionItem from "./components/FieldConditionItem.vue";
-import { mapState } from "pinia";
+
 import { useIndexStore } from "@/store/IndexStore";
 import { useSettingStore } from "@/store/SettingStore";
+
+import BaseQuery from '@/entity/BaseQuery';
+import BaseOrder from "@/entity/BaseOrder";
+
+import QueryConditionBuild from './build/QueryConditionBuild';
+import FieldConditionItem from "./components/FieldConditionItem.vue";
 import Field from "@/view/Field";
 
 interface Name {
@@ -133,6 +141,7 @@ export default defineComponent({
         JsonViewer,
         BaseViewer,
         TableViewer,
+        BaseSearchEditorViewer,
         FieldConditionItem
     },
     data: () => {
@@ -367,6 +376,10 @@ export default defineComponent({
 
             .base-search-table-view {
                 position: absolute;
+            }
+
+            .editor-viewer {
+                margin-top: 10px;
             }
         }
     }

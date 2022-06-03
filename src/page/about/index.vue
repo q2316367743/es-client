@@ -2,10 +2,7 @@
     <div class="about">
         <div class="block">
             <span>仿照</span>
-            <el-link
-                href="https://github.com/mobz/elasticsearch-head"
-                target="_blank"
-            >elasticsearch head</el-link>
+            <el-link href="https://github.com/mobz/elasticsearch-head" target="_blank">elasticsearch head</el-link>
             <span>编写的es查询客户端，使用</span>
             <el-link href="https://v3.cn.vuejs.org/">vue3</el-link>
             <span>+</span>
@@ -26,15 +23,11 @@
                 微软edge插件商店地址：
                 <el-link
                     href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                    target="_blank"
-                >es-client</el-link>
+                    target="_blank">es-client</el-link>
             </div>
             <div>
                 Firefox插件商店地址：
-                <el-link
-                    href="https://addons.mozilla.org/addon/es-client"
-                    target="_blank"
-                >es-client</el-link>
+                <el-link href="https://addons.mozilla.org/addon/es-client" target="_blank">es-client</el-link>
             </div>
         </div>
         <div class="title-1">意见反馈</div>
@@ -48,15 +41,24 @@
                 <span>在</span>
                 <el-link
                     href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                    target="_blank"
-                >edge插件商店</el-link>
+                    target="_blank">edge插件商店</el-link>
                 <span>进行评论</span>
             </li>
-            <li>如果有好的想法，可以提交<el-link href="https://gitee.com/qiaoshengda/es-client/pulls">Pull Requests</el-link></li>
+            <li>如果有好的想法，可以提交<el-link href="https://gitee.com/qiaoshengda/es-client/pulls">Pull Requests</el-link>
+            </li>
         </div>
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
+                <el-timeline-item timestamp="2022-06-02" placement="top">
+                    <el-card>
+                        <div>1.1.0</div>
+                        <ol>
+                            <li>去除无用语句</li>
+                            <li>新增编辑器视图</li>
+                        </ol>
+                    </el-card>
+                </el-timeline-item>
                 <el-timeline-item timestamp="2022-05-26" placement="top">
                     <el-card>
                         <div>1.0.0</div>
@@ -139,7 +141,8 @@
                                 <li>文档按照名称排序</li>
                                 <li>字段按照名称排序</li>
                             </ul>
-                            <li>增加<el-link herf="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link></li>
+                            <li>增加<el-link herf="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link>
+                            </li>
                             <li>多个列表新增返回顶部</li>
                         </ol>
                         <div>链接在设置 => 链接管理中管理，进行增删改查</div>
@@ -240,6 +243,7 @@ export default defineComponent({
     .block {
         padding-left: 10px;
         border-left: #3d3d3d solid 5px;
+
         a {
             line-height: 21px;
             padding-left: 3px;

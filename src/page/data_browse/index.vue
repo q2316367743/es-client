@@ -39,11 +39,12 @@
                     </el-pagination>
                 </div>
                 <div class="container">
-                    <base-viewer v-if="view === 1" :data="result"></base-viewer>
-                    <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+                    <base-viewer v-if="view === 1" :data="data_browse_result"></base-viewer>
+                    <json-viewer v-else-if="view === 2" :value="data_browse_result" :expand-depth="6" copyable sort
+                        expanded>
                     </json-viewer>
-                    <table-viewer v-if="view === 3" :data="result" :mapping="mapping"></table-viewer>
-                    <editor-viewer v-if="view === 4" v-model="result" height="calc(100% - 64px)"></editor-viewer>
+                    <table-viewer v-if="view === 3" :data="data_browse_result" :mapping="mapping"></table-viewer>
+                    <base-browse-editor-viewer v-if="view === 4" v-model="data_browse_result"></base-browse-editor-viewer>
                 </div>
             </div>
         </div>
@@ -60,7 +61,7 @@ import EsList from '@/components/EsList/index.vue';
 import EsListItem from '@/components/EsList/item.vue';
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue";
-import EditorViewer from "@/components/EditorViewer/index.vue";
+import BaseBrowseEditorViewer from "@/components/EditorViewer/base-browse.vue";
 
 import { useIndexStore } from '@/store/IndexStore';
 import { useSettingStore } from "@/store/SettingStore";
@@ -73,7 +74,7 @@ import Index from "@/view/Index";
 
 export default defineComponent({
     name: 'data_browse',
-    components: { EsList, EsListItem, ArrowLeft, ArrowRight, JsonViewer, BaseViewer, TableViewer, EditorViewer },
+    components: { EsList, EsListItem, ArrowLeft, ArrowRight, JsonViewer, BaseViewer, TableViewer, BaseBrowseEditorViewer },
     computed: {
         ...mapState(useIndexStore, ['indices']),
         ...mapState(useSettingStore, ['default_viewer']),
@@ -82,7 +83,7 @@ export default defineComponent({
         show_side: true,
         choose_index: '',
         view: useSettingStore().getDefaultViewer,
-        result: {} as any,
+        data_browse_result: {} as any,
         mapping: {},
         page: 1,
         size: 10,
@@ -129,12 +130,12 @@ export default defineComponent({
                 method: "POST",
                 data: { from: (this.page - 1) * this.size, size: this.size },
             }).then((response) => {
-                this.result = response;
-                if (this.result.hits) {
-                    if (parseInt(this.result.hits.total)) {
-                        this.total = parseInt(this.result.hits.total)
-                    } else if (parseInt(this.result.hits.total.value)) {
-                        this.total = parseInt(this.result.hits.total.value);
+                this.data_browse_result = response;
+                if (this.data_browse_result.hits) {
+                    if (parseInt(this.data_browse_result.hits.total)) {
+                        this.total = parseInt(this.data_browse_result.hits.total)
+                    } else if (parseInt(this.data_browse_result.hits.total.value)) {
+                        this.total = parseInt(this.data_browse_result.hits.total.value);
                     } else {
                         this.total = 0;
                     }
@@ -145,7 +146,7 @@ export default defineComponent({
         },
         no_choose() {
             this.choose_index = '';
-            this.result = {} as any;
+            this.data_browse_result = {} as any;
             this.mapping = {};
             this.page = 1;
             this.size = 10;
