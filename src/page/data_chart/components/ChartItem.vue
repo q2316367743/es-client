@@ -3,15 +3,15 @@
         <template #header>
             <div class="header">
                 <div>{{ title }}</div>
-                <el-button type="text" style="color: #F56C6C">删除</el-button>
+                <el-button link type="primary" style="color: #F56C6C">删除</el-button>
             </div>
         </template>
         <div class="body">
             <div class="description">{{ description }}</div>
             <div class="update-time">{{ updateTime }}</div>
             <div class="option">
-                <el-button type="text">查看</el-button>
-                <el-button type="text">编辑</el-button>
+                <el-button link type="primary">查看</el-button>
+                <el-button link type="primary">编辑</el-button>
             </div>
         </div>
     </el-card>

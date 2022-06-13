@@ -3,7 +3,7 @@
         <template #header>
             <div class="card-header">
                 <span>数据图表</span>
-                <el-button class="button" type="text" @click="save_and_edit_dialog = true">新增</el-button>
+                <el-button class="button" link type="primary" @click="save_and_edit_dialog = true">新增</el-button>
             </div>
         </template>
         <el-space class="card-body">

@@ -78,7 +78,7 @@
                     </el-form-item>
                 </el-form>
                 <div class="base-search-condition-sentence">
-                    <el-button type="text" @click="show_body">{{ $t('base_search.display_query_statement') }}
+                    <el-button link type="primary" @click="show_body">{{ $t('base_search.display_query_statement') }}
                     </el-button>
                 </div>
             </div>

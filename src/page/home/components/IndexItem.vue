@@ -83,7 +83,7 @@
             >{{ item }}</el-tag>
         </div>
         <div class="expand_btn">
-            <el-button type="text" @click="show_expand = !show_expand">
+            <el-button link type="primary" @click="show_expand = !show_expand">
                 <el-icon v-if="show_expand">
                     <arrow-up></arrow-up>
                 </el-icon>
