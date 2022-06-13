@@ -19,6 +19,21 @@ npm install
 npm run dev
 ```
 
+## 自行打包
+
+1. 安装依赖：`yarn`
+2. 构建：`yarn build`
+3. 在`chrome`文件夹中创建文件夹`es-client`，并将dist中文件复制到`chrome/es-client`中
+4. 创建文件：`index.js`
+5. 将`index.html`中顶部`script`的内容复制到`index.js`中
+6. 删除`index.html`中顶部`script`的内容，并使用`script:src`引入`index.js`
+7. 修改`index.js`中内容，将`/monacoeditorwork/*`改成`./monacoeditorwork/*`
+8. 在`index.html`中`<head></head>`中插入`<script src="./registerSW.js"></script>`
+
+> 上面步骤是打包`chrome`插件，如果是应用程序打包，去掉第三步，其他不变。
+
+> 如果是火狐插件打包，将第三步的`chrome`换成`firefox`，并且删除`monacoeditorwork`文件夹中除了`json.worker.bundle.js`以外的其他文件，并修改新建的`index.js`文件，删除除了`"json": "./monacoeditorwork/json.worker.bundle.js"`以外的其他引用
+
 ## 项目预览
 
 - 首页
