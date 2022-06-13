@@ -28,6 +28,7 @@
         "less-loader": "^10.2.0",
         "lodash": "^4.17.21",
         "mitt": "^3.0.0",
+        "monaco-editor": "^0.33.0",
         "pinia": "^2.0.13",
         "vite-plugin-monaco-editor": "^1.0.10",
         "vue": "^3.2.33",
