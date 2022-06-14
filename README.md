@@ -7,9 +7,10 @@
 
 本项目已经推送到Firefox拓展和Edge外接程序中，但由于Edge审核比较慢，所以Firefox的更新速度会比Edge快一些，谷歌插件商店上架比较麻烦，所以并未上架。
 
-- [website](https://project.esion.xyz/es-client/)**（功能体验）**
+- [website](https://project.esion.xyz/es-client/)**（基本用不了）**
 - [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)**（审核有些慢）**
 - [火狐插件](https://addons.mozilla.org/addon/es-client/)**（推荐）**
+- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/v1.1.0)**完整功能**
 
 ## 开发
 
