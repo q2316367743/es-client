@@ -33,7 +33,7 @@
 				<!-- 左面查询条件 -->
 				<div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
 					<!-- 请求参数 -->
-					<div class="param" :style="method === 'GET' ? 'overflow: auto' : ''">
+					<div class="param" :style="method === 'GET' ? 'overflow: auto;padding-left: 20px;' : ''">
 						<div class="get" v-show="method === 'GET'">
 							<el-button type="primary" @click="addGetParam">{{ $t('senior_search.add') }}</el-button>
 							<el-button @click="truncateGetParam">{{ $t('senior_search.clear') }}</el-button>
