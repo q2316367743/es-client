@@ -22,14 +22,15 @@ npm run dev
 
 ## 自行打包
 
-1. 安装依赖：`yarn`
-2. 构建：`yarn build`
+本项目可以使用`yarn` 或 `pnpm`
+
+1. 安装依赖：`yarn` | `pnpm install`
+2. 构建：`yarn build` | `pnpm run build`
 3. 在`chrome`文件夹中创建文件夹`es-client`，并将dist中文件复制到`chrome/es-client`中
 4. 创建文件：`index.js`
 5. 将`index.html`中顶部`script`的内容复制到`index.js`中
 6. 删除`index.html`中顶部`script`的内容，并使用`script:src`引入`index.js`
 7. 修改`index.js`中内容，将`/monacoeditorwork/*`改成`./monacoeditorwork/*`
-8. 在`index.html`中`<head></head>`中插入`<script src="./registerSW.js"></script>`
 
 > 上面步骤是打包`chrome`插件，如果是应用程序打包，去掉第三步，其他不变。
 
