@@ -1,5 +1,5 @@
 <template>
-    <div class="editor-viewer" ref="container" style="width: 100%;height: calc(100vh - 220px);"></div>
+    <div class="editor-viewer" ref="container" style="width: 100%;height: calc(100vh - 205px);"></div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";

@@ -102,7 +102,7 @@ enum Mode {
 	DEFAULT = 2,
 	HIDE_RIGHT = 3
 }
-const side_width = 250;
+const side_width = 227;
 const side_min_width = 356;
 const right_min_width = 150;
 const right_add_width = 140;

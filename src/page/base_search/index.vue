@@ -92,7 +92,7 @@
                 </json-viewer>
                 <table-viewer v-if="view === 3" :data="result" :mapping="mapping">
                 </table-viewer>
-                <base-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100vh - 220px)">
+                <base-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100vh - 205px)">
                 </base-search-editor-viewer>
             </div>
         </div>
