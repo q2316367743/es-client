@@ -141,7 +141,7 @@
                                 <li>文档按照名称排序</li>
                                 <li>字段按照名称排序</li>
                             </ul>
-                            <li>增加<el-link herf="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link>
+                            <li>增加<el-link href="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link>
                             </li>
                             <li>多个列表新增返回顶部</li>
                         </ol>
