@@ -40,7 +40,7 @@
                         </div>
                         <div v-for="(item, idx) in field_condition" :key="idx"
                             style="margin-bottom: 10px;display: flex;">
-                            <field-condition-item v-model:value="field_condition[idx]" :fields="fields">
+                            <field-condition-item v-model="field_condition[idx]" :fields="fields">
                             </field-condition-item>
                             <el-button type="primary" style="margin-left: 10px" @click="field_condition_add">{{
                                     $t('base_search.add')
@@ -236,19 +236,21 @@ export default defineComponent({
                 field: '',
                 condition: 'term',
                 value: '',
-                extra_left_cindition: '',
+                extra_left_condition: '',
                 extra_left_value: '',
-                extra_right_cindition: '',
+                extra_right_condition: '',
                 extra_right_value: ''
             });
         },
         field_condition_remove(id: number): void {
+            console.log(this.field_condition, id);
             if (this.field_condition.length === 0) {
                 return;
             }
             this.field_condition = this.field_condition.filter((item) => {
                 return item.id !== id;
             });
+            console.log(this.field_condition, id);
         },
         show_body() {
             this.condition_data = QueryConditionBuild(this.field_condition, this.page, this.size, this.orders);

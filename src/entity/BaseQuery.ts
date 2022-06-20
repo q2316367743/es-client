@@ -33,7 +33,7 @@ export default interface BaseQuery {
      * 额外左条件
      * ['gt', 'gte']
      */
-    extra_left_cindition: string;
+    extra_left_condition: string;
 
     /**
      * 额外左条件值
@@ -44,7 +44,7 @@ export default interface BaseQuery {
      * 额外右条件
      * ['lt', 'lte']
      */
-    extra_right_cindition: string;
+    extra_right_condition: string;
 
     /**
      * 额外右条件值

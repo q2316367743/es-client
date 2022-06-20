@@ -31,8 +31,8 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
         expression[query.field.substring(5)] = query.value;
     } else if (query.condition === 'range') {
         let value = {} as any;
-        value[query.extra_left_cindition] = query.extra_left_value;
-        value[query.extra_right_cindition] == query.extra_right_value;
+        value[query.extra_left_condition] = query.extra_left_value;
+        value[query.extra_right_condition] == query.extra_right_value;
         expression[query.field.substring(5)] = value;
     } else {
         throw new Error('查询条件不支持')
