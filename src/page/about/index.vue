@@ -50,6 +50,15 @@
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
+                <el-timeline-item timestamp="2022-06-20" placement="top">
+                    <el-card>
+                        <div>1.2.0</div>
+                        <ol>
+                            <li>修复基础查询字段【移除】问题</li>
+                            <li>修复部分布局</li>
+                        </ol>
+                    </el-card>
+                </el-timeline-item>
                 <el-timeline-item timestamp="2022-06-02" placement="top">
                     <el-card>
                         <div>1.1.0</div>
