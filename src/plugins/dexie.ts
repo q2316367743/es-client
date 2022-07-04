@@ -11,10 +11,12 @@ class Instance extends Dexie {
 
     constructor() {
         super('es-client');
-        this.version(3).stores({
-            url: '++id, &name, &value, sequence, create_time, update_time',
+        this.version(4).stores({
+            url: '++id, &name, &value, sequence, create_time, update_time, is_auth, username, password',
             tip: '++id, method, link, mode, create_time, update_time',
             chart: '++id, create_time, update_time, &name, index_id, description, method, path, params, data, template'
+        }).upgrade(trans => {
+            console.log(trans)
         })
         this.tip = this.table('tip');
         this.url = this.table('url');

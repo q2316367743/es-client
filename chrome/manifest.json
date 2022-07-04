@@ -5,7 +5,7 @@
     "description": "elasticsearch管理客户端",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "icons": {
-        "16": "icons/logo_16.png"
+        "16": "icons/logo_200.png"
     },
     "browser_action": {},
     "background": {
