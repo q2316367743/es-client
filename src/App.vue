@@ -7,31 +7,31 @@
                 <el-menu :default-active="active" style="height: 100%" @select="select_menu">
                     <el-menu-item index="home">
                         <el-icon>
-                            <home-filled />
+                            <home-filled/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.home') }}</template>
                     </el-menu-item>
                     <el-menu-item index="data_browse">
                         <el-icon>
-                            <coin />
+                            <coin/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.data_browse') }}</template>
                     </el-menu-item>
                     <el-menu-item index="base_search">
                         <el-icon>
-                            <search />
+                            <search/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.base_search') }}</template>
                     </el-menu-item>
                     <el-menu-item index="senior_search">
                         <el-icon>
-                            <data-board />
+                            <data-board/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.senior_search') }}</template>
                     </el-menu-item>
                     <el-menu-item index="setting">
                         <el-icon>
-                            <operation />
+                            <operation/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.setting') }}</template>
                     </el-menu-item>
@@ -49,9 +49,9 @@
                     <!-- 左侧 -->
                     <div class="app-option">
                         <!-- 索引服务器选择 -->
-                        <el-select v-model="url" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
-                            clearable @change="select_url">
-                            <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.value">
+                        <el-select v-model="url_id" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
+                                   clearable @change="select_url">
+                            <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
                             </el-option>
                             <el-option :label="$t('app.add')" value="add"></el-option>
                         </el-select>
@@ -62,8 +62,9 @@
                         <!-- 服务器状态 -->
                         <div style="margin-left: 10px;" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }}
                             ({{
-                                    active_shards
-                            }} of {{ total_shards }})</div>
+                                active_shards
+                            }} of {{ total_shards }})
+                        </div>
                     </div>
                     <!-- 多语言切换 -->
                     <el-dropdown @command="languageCommand">
@@ -88,7 +89,7 @@
                 </div>
             </div>
             <el-dialog :title="$t('app.about')" v-model="about_dialog" width="70%" append-to-body
-                custom-class="es-dialog" :close-on-click-modal="false" top="10vh">
+                       custom-class="es-dialog" :close-on-click-modal="false" top="10vh">
                 <about></about>
             </el-dialog>
             <el-dialog :title="$t('setting.link.add') + $t('setting.link.url')" v-model="url_add_dialog" width="600px">
@@ -101,7 +102,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
-                        <el-input-number v-model="url_add_data.sequence" controls-position="right" size="large" />
+                        <el-input-number v-model="url_add_data.sequence" controls-position="right" size="large"/>
                     </el-form-item>
                 </el-form>
                 <template #footer>
@@ -116,15 +117,15 @@
 
 <script lang="ts">
 // 引入状态管理
-import { useUrlStore } from "@/store/UrlStore";
-import { useIndexStore } from '@/store/IndexStore';
-import { useSettingStore } from "@/store/SettingStore";
+import {useUrlStore} from "@/store/UrlStore";
+import {useIndexStore} from '@/store/IndexStore';
+import {useSettingStore} from "@/store/SettingStore";
 // 引入框架
-import type { ElForm } from 'element-plus'
-import { ElMessage } from 'element-plus'
-import { defineComponent } from 'vue';
-import { mapState } from "pinia";
-import { Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard } from '@element-plus/icons-vue';
+import type {ElForm} from 'element-plus'
+import {ElMessage} from 'element-plus'
+import {defineComponent} from 'vue';
+import {mapState} from "pinia";
+import {Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard} from '@element-plus/icons-vue';
 import axios from 'axios';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
@@ -154,7 +155,7 @@ export default defineComponent({
     data: () => {
         return {
             active: "home",
-            url: "",
+            url_id: undefined as number | undefined,
             about_dialog: false,
             url_add_dialog: false,
             url_add_data: {
@@ -199,7 +200,7 @@ export default defineComponent({
     },
     watch: {
         url_store() {
-            this.url = this.url_store?.value!;
+            this.url_id = this.url_store?.id!;
         }
     },
     created() {
@@ -212,14 +213,14 @@ export default defineComponent({
         }
     },
     methods: {
-        select_url(value: string) {
+        select_url(value: string | number) {
             if (value === 'add') {
                 // 新增，打开新增面板
-                this.url = useUrlStore().current;
+                this.url_id = undefined;
                 this.url_add_dialog = true;
                 return;
             }
-            useUrlStore().choose(useUrlStore().url?.id!);
+            useUrlStore().choose(value as number);
             // 索引刷新
             useIndexStore().reset();
         },
