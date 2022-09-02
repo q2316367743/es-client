@@ -30,7 +30,7 @@ class UrlDao {
         })
     }
 
-    insert(url: Url, callback: () => void): void {
+    insert(url: Url, callback: (id: number) => void): void {
         this.url.put({
             name: url.name,
             value: url.value,

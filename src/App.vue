@@ -199,7 +199,7 @@ export default defineComponent({
     },
     watch: {
         url_store() {
-            this.url = this.url_store;
+            this.url = this.url_store?.value!;
         }
     },
     created() {
@@ -219,7 +219,7 @@ export default defineComponent({
                 this.url_add_dialog = true;
                 return;
             }
-            useUrlStore().choose(value);
+            useUrlStore().choose(useUrlStore().url?.id!);
             // 索引刷新
             useIndexStore().reset();
         },
@@ -241,8 +241,8 @@ export default defineComponent({
                         name: this.url_add_data.name,
                         value: this.url_add_data.value,
                         sequence: this.url_add_data.sequence
-                    }, () => {
-                        useUrlStore().choose(targetValue);
+                    }, (id) => {
+                        useUrlStore().choose(id);
                         ElMessage.success('新增成功');
                         useUrlStore().reset();
                         useIndexStore().reset();

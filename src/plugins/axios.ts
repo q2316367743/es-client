@@ -17,6 +17,7 @@ service.interceptors.request.use(
             // @ts-ignore
             throw new Error(i18n.global.locale.value == 'zh' ? '请选择链接' : 'please select a link')
         }
+        // TODO: 如果有密码应该追加密码
         return config
     },
     error => {

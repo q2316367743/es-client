@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import Url from "@/entity/Url";
 import urlDao from "@/dao/UrlDao";
 import { useIndexStore } from "./IndexStore";
+import { ElMessage } from "element-plus";
 
 export const useUrlStore = defineStore('url', {
     state: () => {
@@ -9,7 +10,7 @@ export const useUrlStore = defineStore('url', {
             // 全部的链接
             urls: new Array<Url>(),
             // 当前选中的链接
-            url: ''
+            url: {} as Url | undefined
         }
     },
     getters: {
@@ -19,8 +20,8 @@ export const useUrlStore = defineStore('url', {
         list: (state) => {
             return state.urls;
         },
-        current: (state) => {
-            return state.url;
+        current: (state): string => {
+            return state.url ? state.url.value! : '';
         }
     },
     actions: {
@@ -30,14 +31,26 @@ export const useUrlStore = defineStore('url', {
         reset() {
             urlDao.list(urls => {
                 this.urls = urls;
-            })
+            });
         },
         /**
          * 选择链接
          */
-        choose(url: string) {
-            this.url = url;
-            if (url === '') {
+        choose(id: number) {
+            if (id) {
+                // 查询URL
+                let url = this.urls.find(e => e.id! = id);
+                if (!url) {
+                    ElMessage({
+                        showClose: true,
+                        type: 'error',
+                        message: '系统异常，未找到url'
+                    });
+                    return;
+                }
+                this.url = url;
+            } else {
+                this.url = undefined;
                 useIndexStore().clear();
             }
         }
