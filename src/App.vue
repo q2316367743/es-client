@@ -143,6 +143,7 @@ import DataBrowse from '@/page/data_browse/index.vue';
 import Url from "@/entity/Url";
 import url_dao from "@/dao/UrlDao";
 import mitt from '@/plugins/mitt';
+import emitter from "@/plugins/mitt";
 
 export default defineComponent({
     components: {
@@ -209,6 +210,7 @@ export default defineComponent({
     },
     methods: {
         select_url(value: string | number) {
+            emitter.emit('update_url');
             if (value === 'add') {
                 // 新增，打开新增面板
                 this.url_id = undefined;
