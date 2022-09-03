@@ -5,7 +5,8 @@
             v-bind:style="{
                 color: index?.state === 'open' ? '#000000' : '#888888',
             }"
-        >{{ index?.name }}</div>
+        >{{ index?.name }}
+        </div>
         <div class="detail">
             <div>
                 size:
@@ -19,7 +20,7 @@
                 <el-button type="primary" size="small">
                     {{ $t('home.index.info.self') }}
                     <el-icon class="el-icon--right">
-                        <arrow-down />
+                        <arrow-down/>
                     </el-icon>
                 </el-button>
                 <template #dropdown>
@@ -29,7 +30,8 @@
                         <!-- 索引详情 -->
                         <el-dropdown-item
                             command="cluster_stats"
-                        >{{ $t('home.index.info.index_info') }}</el-dropdown-item>
+                        >{{ $t('home.index.info.index_info') }}
+                        </el-dropdown-item>
                         <!-- 数据预览 -->
                         <el-dropdown-item command="data">{{ $t('home.index.info.data_preview') }}</el-dropdown-item>
                     </el-dropdown-menu>
@@ -40,7 +42,7 @@
                 <el-button type="primary" size="small">
                     <span>{{ $t('home.index.active.self') }}</span>
                     <el-icon class="el-icon--right">
-                        <arrow-down />
+                        <arrow-down/>
                     </el-icon>
                 </el-button>
                 <template #dropdown>
@@ -61,12 +63,14 @@
                         <el-dropdown-item
                             :command="7"
                             v-if="index?.state === 'open'"
-                        >{{ $t('home.index.active.close') }}</el-dropdown-item>
+                        >{{ $t('home.index.active.close') }}
+                        </el-dropdown-item>
                         <!-- 打开 -->
                         <el-dropdown-item
                             :command="8"
                             v-if="index?.state === 'close'"
-                        >{{ $t('home.index.active.open') }}</el-dropdown-item>
+                        >{{ $t('home.index.active.open') }}
+                        </el-dropdown-item>
                         <!-- 删除 -->
                         <el-dropdown-item :command="9">{{ $t('home.index.active.delete') }}</el-dropdown-item>
                     </el-dropdown-menu>
@@ -80,7 +84,9 @@
                 closable
                 style="margin-right: 5px"
                 @close="remove_alias(item)"
-            >{{ item }}</el-tag>
+            >{{ item }}
+            </el-tag>
+            <el-button size="small" @click="active(1)">新增</el-button>
         </div>
         <div class="expand_btn">
             <el-button link type="primary" @click="show_expand = !show_expand">
@@ -99,7 +105,8 @@
                     v-for="(item, idx) in value"
                     :key="idx"
                     @click="showShardOrReplica(item, idx)"
-                >{{ key }}</div>
+                >{{ key }}
+                </div>
             </div>
             <div v-for="(value, key) in index?.replica" :key="key">
                 <div
@@ -107,16 +114,17 @@
                     v-for="(item, idx) in value"
                     :key="idx"
                     @click="showShardOrReplica(item, idx)"
-                >{{ key }}</div>
+                >{{ key }}
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
-import { ElMessage, ElMessageBox } from "element-plus";
-import { useIndexStore } from '@/store/IndexStore';
+import {defineComponent, PropType} from "vue";
+import {ArrowDown, ArrowUp} from '@element-plus/icons-vue';
+import {ElMessage, ElMessageBox} from "element-plus";
+import {useIndexStore} from '@/store/IndexStore';
 import Index from "@/view/Index";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
@@ -124,7 +132,7 @@ import axios from '@/plugins/axios';
 
 export default defineComponent({
     name: 'IndexItem',
-    components: { ArrowDown, ArrowUp },
+    components: {ArrowDown, ArrowUp},
     props: {
         index: Object as PropType<Index>
     },
@@ -200,7 +208,7 @@ export default defineComponent({
             ElMessageBox.prompt("请输入新别名", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-            }).then(({ value }) => {
+            }).then(({value}) => {
                 indexApi.new_alias(this.index?.name!, value, (res: object) => {
                     ElMessage.info(JSON.stringify(res));
                     useIndexStore().reset();
@@ -209,7 +217,7 @@ export default defineComponent({
         },
         /**
          * 移除索引别名
-         * 
+         *
          * @param name 索引名称
          * @param alias 别名
          */
@@ -304,6 +312,7 @@ export default defineComponent({
         .expand {
             margin-top: 10px;
             display: flex;
+
             .shard {
                 border: #000000 solid 4px;
                 background-color: aquamarine;
@@ -314,6 +323,7 @@ export default defineComponent({
                 margin: 4px;
                 cursor: pointer;
             }
+
             .replica {
                 border: #666666 solid 4px;
                 background-color: #f2f2f2;
