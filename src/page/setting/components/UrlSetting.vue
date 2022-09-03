@@ -9,6 +9,11 @@
                     <div>{{ prettyDate(scope.row.create_time) }}</div>
                 </template>
             </el-table-column>
+            <el-table-column :label="$t('setting.link.is_auth')" width="240">
+                <template #default="scope">
+                    <div>{{ scope.row.is_auth ? $t('setting.link.need_auth') : $t('setting.link.not_auth') }}</div>
+                </template>
+            </el-table-column>
             <el-table-column :label="$t('setting.link.operation')">
                 <template #default="scope">
                     <el-button
@@ -47,6 +52,15 @@
                 </el-form-item>
                 <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
                     <el-input-number v-model="url.sequence" controls-position="right" size="large"/>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.is_auth')" prop="is_auth">
+                    <el-switch v-model="url.is_auth" size="large" active-text="true" inactive-text="false"/>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.auth_user')" prop="auth_user" v-if="url.is_auth">
+                    <el-input v-model="url.auth_user" size="large"/>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.auth_password')" prop="auth_password" v-if="url.is_auth">
+                    <el-input v-model="url.auth_password" size="large"/>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -87,6 +101,9 @@ export default defineComponent({
             name: '',
             value: 'http://',
             sequence: 0,
+            is_auth: false,
+            auth_user: '',
+            auth_password: ''
         } as Url,
         url_rules: {
             name: [
@@ -139,7 +156,7 @@ export default defineComponent({
                         type: 'success'
                     });
                     if (useUrlStore().current === value) {
-                        useUrlStore().choose("");
+                        useUrlStore().choose();
                     }
                     useUrlStore().reset();
                     useIndexStore().reset();
@@ -160,7 +177,10 @@ export default defineComponent({
                         url_dao.insert({
                             name: this.url.name,
                             value: this.url.value,
-                            sequence: this.url.sequence
+                            sequence: this.url.sequence,
+                            is_auth: this.url.is_auth,
+                            auth_user: this.url.auth_user,
+                            auth_password: this.url.auth_password
                         }, () => {
                             useUrlStore().reset();
                             ElMessage.success('新增成功');
@@ -170,7 +190,10 @@ export default defineComponent({
                         url_dao.updateById({
                             name: this.url.name,
                             value: this.url.value,
-                            sequence: this.url.sequence
+                            sequence: this.url.sequence,
+                            is_auth: this.url.is_auth,
+                            auth_user: this.url.auth_user,
+                            auth_password: this.url.auth_password
                             // eslint-disable-next-line
                         }, this.url.id!, () => {
                             useUrlStore().reset();

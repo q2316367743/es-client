@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import Url from "@/entity/Url";
 import urlDao from "@/dao/UrlDao";
-import { useIndexStore } from "./IndexStore";
-import { ElMessage } from "element-plus";
+import {useIndexStore} from "./IndexStore";
+import {ElMessage} from "element-plus";
 
 export const useUrlStore = defineStore('url', {
     state: () => {
@@ -36,7 +36,7 @@ export const useUrlStore = defineStore('url', {
         /**
          * 选择链接
          */
-        choose(id: number) {
+        choose(id?: number) {
             if (id) {
                 // 查询URL
                 let url = this.urls.find(e => e.id! = id);

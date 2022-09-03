@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ElMessageBox } from "element-plus";
+import {ElMessageBox} from "element-plus";
 import tipDao from '@/dao/TipDao';
 
 let languages = ['zh', 'en'] as Array<string>;
@@ -17,7 +17,7 @@ export function getDefaultLanguage(): string {
 
 /**
  * 验证请求方式方法是否可以被执行
- * 
+ *
  * @param method 请求方式
  * @param link 链接
  * @returns 是否可以执行
@@ -35,9 +35,7 @@ export async function validateTip(method: string, link: string): Promise<boolean
             }
         }
     }
-    return new Promise((resolve, reject) => {
-        resolve(true);
-    });
+    return Promise.resolve(true);
 }
 
 async function showTip(): Promise<boolean> {
@@ -47,12 +45,8 @@ async function showTip(): Promise<boolean> {
             cancelButtonText: '取消',
             type: 'warning',
         });
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
+        return Promise.resolve(true);
     } catch (e) {
-        return new Promise((resolve, reject) => {
-            resolve(false);
-        });
+        return Promise.resolve(false);
     }
 }

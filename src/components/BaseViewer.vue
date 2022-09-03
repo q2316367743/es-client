@@ -1,11 +1,11 @@
 <!-- 基础视图 -->
 <template>
-    <code class="base-viewer">
-        <pre class="base-viewer-show">{{ data }}</pre>
-    </code>
+    <pre class="base-viewer">
+        <code class="base-viewer-show">{{ data }}</code>
+    </pre>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
 export default defineComponent({
     props: {

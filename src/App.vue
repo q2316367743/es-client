@@ -61,9 +61,7 @@
                         <div style="font-weight: bold;margin-left: 20px;font-size: 16px;">{{ name }}</div>
                         <!-- 服务器状态 -->
                         <div style="margin-left: 10px;" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }}
-                            ({{
-                                active_shards
-                            }} of {{ total_shards }})
+                            ({{ active_shards }} of {{ total_shards }})
                         </div>
                     </div>
                     <!-- 多语言切换 -->
@@ -192,15 +190,12 @@ export default defineComponent({
         };
     },
     computed: {
-        ...mapState(useUrlStore, {
-            'urls': 'urls',
-            'url_store': 'url'
-        }),
+        ...mapState(useUrlStore, ['urls', 'url']),
         ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status'])
     },
     watch: {
-        url_store() {
-            this.url_id = this.url_store?.id!;
+        url() {
+            this.url_id = this.url?.id!;
         }
     },
     created() {
@@ -236,7 +231,6 @@ export default defineComponent({
             let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
             urlForm.validate((valid) => {
                 if (valid) {
-                    let targetValue = this.url_add_data.value + "";
                     // 新增
                     url_dao.insert({
                         name: this.url_add_data.name,

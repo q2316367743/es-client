@@ -59,7 +59,7 @@ export const useIndexStore = defineStore('index', {
                 mitt.emit("update_index");
                 loading.close();
             } catch (e: any) {
-                useUrlStore().choose('');
+                useUrlStore().choose();
                 loading.close();
                 console.error(e);
             }
