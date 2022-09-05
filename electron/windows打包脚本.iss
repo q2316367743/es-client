@@ -1,17 +1,17 @@
-; è„šæœ¬ç”± Inno Setup è„šæœ¬å‘å¯¼ ç”Ÿæˆï¼
-; æœ‰å…³åˆ›å»º Inno Setup è„šæœ¬æ–‡ä»¶çš„è¯¦ç»†èµ„æ–™è¯·æŸ¥é˜…å¸®åŠ©æ–‡æ¡£ï¼
+; ½Å±¾ÓÉ Inno Setup ½Å±¾Ïòµ¼ Éú³É£¡
+; ÓĞ¹Ø´´½¨ Inno Setup ½Å±¾ÎÄ¼şµÄÏêÏ¸×ÊÁÏÇë²éÔÄ°ïÖúÎÄµµ£¡
 
 #define MyAppName "es-client"
 #define MyAppVersion "1.3.0"
-#define MyAppPublisher "esion"
+#define MyAppPublisher "ÂäÓê²»»Ú"
 #define MyAppURL "https://blog.esion.xyz"
 #define MyAppExeName "es-client.exe"
 
 [Setup]
-; æ³¨: AppIdçš„å€¼ä¸ºå•ç‹¬æ ‡è¯†è¯¥åº”ç”¨ç¨‹åºã€‚
-; ä¸è¦ä¸ºå…¶ä»–å®‰è£…ç¨‹åºä½¿ç”¨ç›¸åŒçš„AppIdå€¼ã€‚
-; (è‹¥è¦ç”Ÿæˆæ–°çš„ GUIDï¼Œå¯åœ¨èœå•ä¸­ç‚¹å‡» "å·¥å…·|ç”Ÿæˆ GUID"ã€‚)
-AppId={{ED17E6A6-BBF0-4841-A858-43197EEB6EBA}
+; ×¢: AppIdµÄÖµÎªµ¥¶À±êÊ¶¸ÃÓ¦ÓÃ³ÌĞò¡£
+; ²»ÒªÎªÆäËû°²×°³ÌĞòÊ¹ÓÃÏàÍ¬µÄAppIdÖµ¡£
+; (ÈôÒªÉú³ÉĞÂµÄ GUID£¬¿ÉÔÚ²Ëµ¥ÖĞµã»÷ "¹¤¾ß|Éú³É GUID"¡£)
+AppId={{7EA23393-6B51-4A52-99C1-F987BA415AA3}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -21,11 +21,13 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-; ç§»é™¤ä»¥ä¸‹è¡Œï¼Œä»¥åœ¨ç®¡ç†å®‰è£…æ¨¡å¼ä¸‹è¿è¡Œï¼ˆä¸ºæ‰€æœ‰ç”¨æˆ·å®‰è£…ï¼‰ã€‚
-PrivilegesRequired=lowest
+LicenseFile=D:\Documents\Html\es-client\LICENSE
+; ÒÔÏÂĞĞÈ¡Ïû×¢ÊÍ£¬ÒÔÔÚ·Ç¹ÜÀí°²×°Ä£Ê½ÏÂÔËĞĞ£¨½öÎªµ±Ç°ÓÃ»§°²×°£©¡£
+;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename=es-client install
-SetupIconFile=D:\Documents\Html\es-client\public\favicon.ico
+OutputDir=C:\Users\Administrator\Desktop
+OutputBaseFilename=es-clientv1.2.0
+SetupIconFile=D:\Documents\Html\es-client\electron\html\favicon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -39,7 +41,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "D:\Documents\Html\es-client\electron\out\es-client-win32-x64\es-client.exe"; DestDir: "{app}"; Flags: ignoreversion
-; æ³¨æ„: ä¸è¦åœ¨ä»»ä½•å…±äº«ç³»ç»Ÿæ–‡ä»¶ä¸Šä½¿ç”¨â€œFlags: ignoreversionâ€
+Source: "D:\Documents\Html\es-client\electron\out\es-client-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; ×¢Òâ: ²»ÒªÔÚÈÎºÎ¹²ÏíÏµÍ³ÎÄ¼şÉÏÊ¹ÓÃ¡°Flags: ignoreversion¡±
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
