@@ -39,7 +39,7 @@ export const useUrlStore = defineStore('url', {
         choose(id?: number) {
             if (id) {
                 // 查询URL
-                let url = this.urls.find(e => e.id! = id);
+                let url = this.urls.find(e => e.id! === id);
                 if (!url) {
                     ElMessage({
                         showClose: true,

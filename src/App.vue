@@ -38,7 +38,7 @@
                 </el-menu>
                 <div class="author">
                     <div style="margin-top: 5px">
-                        <el-link @click="about_dialog = true">v1.2.0</el-link>
+                        <el-link @click="about_dialog = true">v1.3.0</el-link>
                     </div>
                 </div>
             </div>
@@ -210,6 +210,7 @@ export default defineComponent({
     },
     methods: {
         select_url(value: string | number) {
+            console.log(typeof value, value)
             emitter.emit('update_url');
             if (value === 'add') {
                 // 新增，打开新增面板

@@ -50,6 +50,17 @@
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
+                <el-timeline-item timestamp="2022-09-05" placement="top">
+                    <el-card>
+                        <div>1.3.0</div>
+                        <ol>
+                            <li>增加认证</li>
+                            <li>刷新索引不会重置搜索条件</li>
+                            <li>更便捷的别名新增</li>
+                        </ol>
+                        <div>注意：如果使用认证，如果显示跨域问题，需要在elasticsearch中加入<code>http.cors.allow-headers: "Content-Type"</code></div>
+                    </el-card>
+                </el-timeline-item>
                 <el-timeline-item timestamp="2022-06-20" placement="top">
                     <el-card>
                         <div>1.2.0</div>
