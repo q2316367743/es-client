@@ -12,6 +12,7 @@
 - [火狐插件](https://addons.mozilla.org/addon/es-client/)
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/tag/v1.3.0)**（完整功能）**
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
+- [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 - [想天浏览器独立应用](https://www.apps.vip/apps/)**（完整功能）**
 
 ## 开发
