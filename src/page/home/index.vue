@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <!-- 上面的搜索条件 -->
         <div class="home-option">
             <div style="display: flex">
                 <el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')"
@@ -16,31 +17,32 @@
                 <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
             </div>
             <div style="margin-right: 15px;">
-                <el-button type="primary" style="margin-left: 10px" @click="index_dialog = true">{{
+                <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true">{{
                         $t('home.new_index.self')
                     }}
                 </el-button>
             </div>
         </div>
-        <index-container :indices="show_indices" v-loading="index_loading" @open-dialog="index_open_dialog">
-        </index-container>
+        <!-- 索引容器 -->
+        <index-container :indices="showIndices" v-loading="indexLoading" @open-dialog="index_open_dialog"/>
+        <!-- 返回顶部 -->
         <el-backtop :right="40" :bottom="60" target=".index-container"/>
-        <!-- </div> -->
-        <el-dialog :title="$t('home.new_index.self')" v-model="index_dialog" width="850px">
+        <!-- 新增索引 -->
+        <el-dialog :title="$t('home.new_index.self')" v-model="indexDialog" width="850px">
             <el-form>
                 <el-form-item :label="$t('home.new_index.name')">
                     <el-input v-model="index.name" style="width: 300px;"></el-input>
                 </el-form-item>
             </el-form>
-            <el-collapse v-model="index_collapse">
+            <el-collapse v-model="indexCollapse">
                 <el-collapse-item :title="$t('home.new_index.base_setting')" name="1">
                     <el-form>
                         <el-form-item :label="$t('home.new_index.shard_number')">
-                            <el-input-number v-model="index.settings.number_of_shards" controls-position="right">
+                            <el-input-number v-model="index.settings.numberOfShards" controls-position="right">
                             </el-input-number>
                         </el-form-item>
                         <el-form-item :label="$t('home.new_index.replica_number')">
-                            <el-input-number v-model="index.settings.number_of_replicas" controls-position="right">
+                            <el-input-number v-model="index.settings.numberOfReplicas" controls-position="right">
                             </el-input-number>
                         </el-form-item>
                     </el-form>
@@ -80,7 +82,7 @@
                 <el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
             </template>
         </el-dialog>
-        <json-dialog :title="index_item_title" :json="index_item_data" :open="true" v-model="index_item_dialog">
+        <json-dialog :title="indexItemTitle" :json="indexItemData" :open="true" v-model="indexItemDialog">
         </json-dialog>
     </div>
 </template>
@@ -112,7 +114,7 @@ export default defineComponent({
     data: () => {
         return {
             // 根据条件过滤后的索引
-            show_indices: [] as Array<IndexView>,
+            showIndices: [] as Array<IndexView>,
             // 搜索条件
             condition: {
                 name: "",
@@ -121,42 +123,42 @@ export default defineComponent({
             // 定时器
             interval: {} as NodeJS.Timer | null,
             // 列表加载中
-            index_loading: false,
+            indexLoading: false,
             index: {
                 name: '',
                 settings: {
-                    number_of_replicas: useSettingStore().getDefaultReplica,
-                    number_of_shards: useSettingStore().getDefaultShard
+                    numberOfReplicas: useSettingStore().getDefaultReplica,
+                    numberOfShards: useSettingStore().getDefaultShard
                 },
                 mapping: [] as Array<Property>
             } as Index,
-            index_dialog: false,
-            index_collapse: '1',
+            indexDialog: false,
+            indexCollapse: '1',
             types: ['string', 'text', 'keyword', 'integer', 'long', 'short', 'byte', 'double', 'float', 'boolean', 'date'],
             // 索引的详情对话框
-            index_item_dialog: false,
-            index_item_title: '',
-            index_item_data: {} as any
+            indexItemDialog: false,
+            indexItemTitle: '',
+            indexItemData: {} as any
         };
     },
     computed: {
         ...mapState(useUrlStore, ['url']),
         ...mapState(useIndexStore, ['indices']),
-        ...mapState(useSettingStore, ['default_replica', 'default_shard'])
+        ...mapState(useSettingStore, ['instance'])
     },
     watch: {
         default_replica() {
-            this.index.settings.number_of_replicas = useSettingStore().getDefaultReplica
+            this.index.settings.numberOfReplicas = useSettingStore().getDefaultReplica
         },
         default_shard() {
-            this.index.settings.number_of_shards = useSettingStore().getDefaultShard
+            this.index.settings.numberOfShards = useSettingStore().getDefaultShard
         }
     },
     created() {
         mitt.on('update_index', () => {
-            this.index_item_dialog = false;
-            this.index_item_title = '';
-            this.index_item_data = {} as any;
+            this.indexItemDialog = false;
+            this.indexItemTitle = '';
+            this.indexItemData = {} as any;
             this.search();
         });
         mitt.on('update_url', () => {
@@ -164,9 +166,9 @@ export default defineComponent({
                 name: "",
                 order: "NAME_ASC",
             }
-            this.index_item_dialog = false;
-            this.index_item_title = '';
-            this.index_item_data = {} as any;
+            this.indexItemDialog = false;
+            this.indexItemTitle = '';
+            this.indexItemData = {} as any;
             this.search();
         });
     },
@@ -175,45 +177,45 @@ export default defineComponent({
          * 基于当前索引数组进行过滤
          */
         search() {
-            this.index_loading = true;
-            this.show_indices = this.indices.filter((item) => {
+            this.indexLoading = true;
+            this.showIndices = this.indices.filter((item) => {
                 return item.name.indexOf(this.condition.name) > -1;
             });
             // 排序
             switch (this.condition.order) {
                 case "NAME_ASC":
-                    this.show_indices = this.show_indices.sort((a, b) => {
+                    this.showIndices = this.showIndices.sort((a, b) => {
                         return a.name.localeCompare(b.name, "zh-CN");
                     });
                     break;
                 case "NAME_DESC":
-                    this.show_indices = this.show_indices.sort((a, b) => {
+                    this.showIndices = this.showIndices.sort((a, b) => {
                         return b.name.localeCompare(a.name, "zh-CN");
                     });
                     break;
                 case "SIZE_ASC":
-                    this.show_indices = this.show_indices.sort((a, b) => {
+                    this.showIndices = this.showIndices.sort((a, b) => {
                         return a.original_size - b.original_size;
                     });
                     break;
                 case "SIZE_DESC":
-                    this.show_indices = this.show_indices.sort((a, b) => {
+                    this.showIndices = this.showIndices.sort((a, b) => {
                         return b.original_size - a.original_size;
                     });
                     break;
                 case "DOC_ASC":
-                    this.show_indices = this.show_indices.sort((a, b) => {
+                    this.showIndices = this.showIndices.sort((a, b) => {
                         return a.doc_count - b.doc_count;
                     });
                     break;
                 case "DOC_DESC":
-                    this.show_indices = this.show_indices.sort((a, b) => {
+                    this.showIndices = this.showIndices.sort((a, b) => {
                         return b.doc_count - a.doc_count;
                     });
                     break;
             }
             this.$nextTick(() => {
-                this.index_loading = false;
+                this.indexLoading = false;
             })
         },
         addProperty() {
@@ -233,23 +235,23 @@ export default defineComponent({
                 useIndexStore().reset();
             })
             // 关闭弹框
-            this.index_dialog = false;
+            this.indexDialog = false;
             this.$nextTick(() => {
                 // 重置
                 this.index = {
                     name: '',
                     settings: {
-                        number_of_replicas: this.default_replica,
-                        number_of_shards: this.default_shard
+                        numberOfReplicas: this.instance.defaultReplica,
+                        numberOfShards: this.instance.defaultShard
                     },
                     mapping: [] as Array<Property>
                 } as Index;
             })
         },
         index_open_dialog(title: string, content: any) {
-            this.index_item_dialog = true;
-            this.index_item_title = title;
-            this.index_item_data = content;
+            this.indexItemDialog = true;
+            this.indexItemTitle = title;
+            this.indexItemData = content;
         }
     },
 });

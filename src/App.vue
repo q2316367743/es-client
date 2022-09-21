@@ -11,19 +11,19 @@
                         </el-icon>
                         <template #title>{{ $t('app.menu.home') }}</template>
                     </el-menu-item>
-                    <el-menu-item index="data_browse">
+                    <el-menu-item index="data browse">
                         <el-icon>
                             <coin/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.data_browse') }}</template>
                     </el-menu-item>
-                    <el-menu-item index="base_search">
+                    <el-menu-item index="base search">
                         <el-icon>
                             <search/>
                         </el-icon>
                         <template #title>{{ $t('app.menu.base_search') }}</template>
                     </el-menu-item>
-                    <el-menu-item index="senior_search">
+                    <el-menu-item index="senior search">
                         <el-icon>
                             <data-board/>
                         </el-icon>
@@ -138,12 +138,13 @@ import BaseSearch from "@/page/base_search/index.vue";
 import SeniorSearch from '@/page/senior_search/index.vue';
 import SqlSearch from "@/page/sql_search/index.vue";
 import Setting from '@/page/setting/index.vue'
-import DataBrowse from '@/page/data_browse/index.vue';
+import DataBrowse from '@/page/dataBrowse/index.vue';
 // 其他
 import Url from "@/entity/Url";
 import url_dao from "@/dao/UrlDao";
 import mitt from '@/plugins/mitt';
 import emitter from "@/plugins/mitt";
+import MessageEventEnum from "./enumeration/MessageEventEnum";
 
 export default defineComponent({
     components: {
@@ -228,7 +229,7 @@ export default defineComponent({
         select_menu(index: string) {
             // 切换active
             this.active = index;
-            mitt.emit('active_switch', index);
+            mitt.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
         url_submit() {
             let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;

@@ -138,6 +138,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.0.tgz#67c7b724e1bcdd7a8821ce0d5ee184d3b4dd525a"
   integrity sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==
 
+"@types/web-bluetooth@^0.0.15":
+  version "0.0.15"
+  resolved "https://r.cnpmjs.org/@types/web-bluetooth/-/web-bluetooth-0.0.15.tgz#d60330046a6ed8a13b4a53df3813c44942ebdf72"
+  integrity sha512-w7hEHXnPMEZ+4nGKl/KDRVpxkwYxYExuHOYXyzIzCDzEZ9ZCGMAewulr9IqJu2LR4N37fcnb1XVeuZ09qgOxhA==
+
 "@types/zrender@*":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/zrender/-/zrender-4.0.2.tgz#da360c7ddb32311f11f38706c82fd88bcafdf661"
@@ -321,15 +326,37 @@
     "@vueuse/shared" "8.6.0"
     vue-demi "*"
 
+"@vueuse/core@^9.2.0":
+  version "9.2.0"
+  resolved "https://r.cnpmjs.org/@vueuse/core/-/core-9.2.0.tgz#58e3588b9bc5a69010aa9104b00056ee9ebff738"
+  integrity sha512-/MZ6qpz6uSyaXrtoeBWQzAKRG3N7CvfVWvQxiM3ei3Xe5ydOjjtVbo7lGl9p8dECV93j7W8s63A8H0kFLpLyxg==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.15"
+    "@vueuse/metadata" "9.2.0"
+    "@vueuse/shared" "9.2.0"
+    vue-demi "*"
+
 "@vueuse/metadata@8.6.0":
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-8.6.0.tgz#34771443a72ee891ae001a70aa05dd9a1d799372"
   integrity sha512-F+CKPvaExsm7QgRr8y+ZNJFwXasn89rs5wth/HeX9lJ1q8XEt+HJ16Q5Sxh4rfG5YSKXrStveVge8TKvPjMjFA==
 
+"@vueuse/metadata@9.2.0":
+  version "9.2.0"
+  resolved "https://r.cnpmjs.org/@vueuse/metadata/-/metadata-9.2.0.tgz#6bf7c9c44b9f5ece405837226a0e04a997994458"
+  integrity sha512-exN4KE6iquxDCdt72BgEhb3tlOpECtD61AUdXnUqBTIUCl70x1Ar/QXo3bYcvxmdMS2/peQyfeTzBjRTpvL5xw==
+
 "@vueuse/shared@8.6.0":
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-8.6.0.tgz#63dad9fc4b73a7fccbe5d6b97adeacf73d4fec41"
   integrity sha512-Y/IVywZo7IfEoSSEtCYpkVEmPV7pU35mEIxV7PbD/D3ly18B3mEsBaPbtDkNM/QP3zAZ5mn4nEkOfddX4uwuIA==
+  dependencies:
+    vue-demi "*"
+
+"@vueuse/shared@9.2.0":
+  version "9.2.0"
+  resolved "https://r.cnpmjs.org/@vueuse/shared/-/shared-9.2.0.tgz#7831051b2c1d01c3413c749468ee53a86024510e"
+  integrity sha512-NnRp/noSWuXW0dKhZK5D0YLrDi0nmZ18UeEgwXQq7Ul5TTP93lcNnKjrHtd68j2xFB/l59yPGFlCryL692bnrA==
   dependencies:
     vue-demi "*"
 

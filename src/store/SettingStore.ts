@@ -1,61 +1,50 @@
-import { defineStore } from "pinia";
-import { getDefaultLanguage } from '@/utils/GlobalUtil';
+import {defineStore} from "pinia";
+import {getDefaultLanguage} from '@/utils/GlobalUtil';
+import {useLocalStorage} from "@vueuse/core";
+import Setting from "@/entity/Setting";
 
-// 初始化
-let default_shard = 5;
-if (localStorage.getItem('default_shard')) {
-    default_shard = parseInt(localStorage.getItem('default_shard')!);
-}
-let default_replica = 1;
-if (localStorage.getItem('default_replica')) {
-    default_replica = parseInt(localStorage.getItem('default_replica')!);
-}
-let senior_width = 520;
-if (localStorage.getItem("senior_width")) {
-    senior_width = parseInt(localStorage.getItem("senior_width")!);
-}
-let default_viewer = 2;
-if (localStorage.getItem("default_viewer")) {
-    default_viewer = parseInt(localStorage.getItem("default_viewer")!);
-}
 
 export const useSettingStore = defineStore('setting', {
     state: () => {
+        let setting = useLocalStorage('setting', {
+            defaultViewer: 2,
+            defaultReplica: 1,
+            defaultShard: 5,
+            seniorWidth: 520,
+            pageSize: 20
+        } as Setting);
         return {
             language: getDefaultLanguage(),
-            default_shard,
-            default_replica,
-            senior_width,
-            default_viewer
+            instance: setting
         }
     },
     getters: {
         getLanguage: (state) => state.language,
-        getDefaultShard: (state) => state.default_shard,
-        getDefaultReplica: (state) => state.default_replica,
-        getSeniorWidth: (state) => state.senior_width,
-        getDefaultViewer: (state) => state.default_viewer
+        getDefaultShard: (state) => state.instance.defaultShard,
+        getDefaultReplica: (state) => state.instance.defaultReplica,
+        getSeniorWidth: (state) => state.instance.seniorWidth,
+        getDefaultViewer: (state) => state.instance.defaultViewer,
+        getPageSize: (state) => state.instance.pageSize
     },
     actions: {
         setLanguage(language: string): void {
             this.language = language;
             localStorage.setItem('language', language);
         },
-        setDefaultShard(default_shard: number): void {
-            this.default_shard = default_shard;
-            localStorage.setItem('default_shard', default_shard.toString());
+        setDefaultShard(defaultShard: number): void {
+            this.instance.defaultShard = defaultShard;
         },
-        setDefaultReplica(default_replica: number): void {
-            this.default_replica = default_replica;
-            localStorage.setItem('default_replica', default_replica.toString());
+        setDefaultReplica(defaultReplica: number): void {
+            this.instance.defaultReplica = defaultReplica;
         },
-        setSeniorWidth(senior_width: number) {
-            this.senior_width = senior_width;
-            localStorage.setItem('senior_width', senior_width.toString());
+        setSeniorWidth(seniorWidth: number) {
+            this.instance.seniorWidth = seniorWidth;
         },
-        setDefaultViewer(default_viewer: number) {
-            this.default_viewer = default_viewer;
-            localStorage.setItem('default_viewer', default_viewer.toString());
+        setDefaultViewer(defaultViewer: number) {
+            this.instance.defaultViewer = defaultViewer;
+        },
+        setPageSize(pageSize: number) {
+            this.instance.pageSize = pageSize;
         }
     }
 })

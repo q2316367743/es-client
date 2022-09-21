@@ -48,7 +48,7 @@
                 <template #dropdown>
                     <el-dropdown-menu>
                         <!-- 新建别名 -->
-                        <el-dropdown-item :command="1">{{ $t('home.index.active.new_alias') }}</el-dropdown-item>
+                        <el-dropdown-item :command="1">{{ $t('home.index.active.newAlias') }}</el-dropdown-item>
                         <!-- 刷新 -->
                         <el-dropdown-item :command="2">{{ $t('home.index.active.refresh') }}</el-dropdown-item>
                         <!-- flush 刷新 -->
@@ -83,14 +83,14 @@
                 :key="idx"
                 closable
                 style="margin-right: 5px"
-                @close="remove_alias(item)"
+                @close="removeAlias(item)"
             >{{ item }}
             </el-tag>
             <el-button size="small" @click="active(1)">新增</el-button>
         </div>
-        <div class="expand_btn">
-            <el-button link type="primary" @click="show_expand = !show_expand">
-                <el-icon v-if="show_expand">
+        <div class="expand-btn">
+            <el-button link type="primary" @click="showExpand = !showExpand">
+                <el-icon v-if="showExpand">
                     <arrow-up></arrow-up>
                 </el-icon>
                 <el-icon v-else>
@@ -98,7 +98,7 @@
                 </el-icon>
             </el-button>
         </div>
-        <div class="expand" v-show="show_expand">
+        <div class="expand" v-show="showExpand">
             <div v-for="(value, key) in index?.shard" :key="key">
                 <div
                     class="shard"
@@ -139,10 +139,10 @@ export default defineComponent({
     emits: ['openDialog'],
     data: () => ({
         state: false,
-        show_expand: false,
+        showExpand: false,
         open: true,
-        show_dialog: false,
-        data_dialog: false,
+        showDialog: false,
+        dataDialog: false,
     }),
     methods: {
         showShardOrReplica(json: any, idx: number) {
@@ -179,32 +179,28 @@ export default defineComponent({
         active(command: number) {
             switch (command) {
                 case 1:
-                    this.new_alias();
+                    this.newAlias();
                     break;
                 case 2:
-                    this.refresh_index();
+                    this.refreshIndex();
                     break;
                 case 3:
-                    this.flush_index();
+                    this.flushIndex();
                     break;
                 case 7:
-                    this.close_index();
+                    this.closeIndex();
                     break;
                 case 8:
-                    this.open_index();
+                    this.openIndex();
                     break;
                 case 9:
-                    this.remove_index();
+                    this.removeIndex();
                     break;
                 default:
                     ElMessage.error('动作错误，请刷新重试');
             }
         },
-        /**
-         * 新建索引别名
-         * @param name 索引名称
-         */
-        new_alias() {
+        newAlias() {
             ElMessageBox.prompt("请输入新别名", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -215,13 +211,7 @@ export default defineComponent({
                 });
             });
         },
-        /**
-         * 移除索引别名
-         *
-         * @param name 索引名称
-         * @param alias 别名
-         */
-        remove_alias(alias: string) {
+        removeAlias(alias: string) {
             ElMessageBox.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -233,7 +223,7 @@ export default defineComponent({
                 });
             });
         },
-        remove_index() {
+        removeIndex() {
             ElMessageBox.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -245,25 +235,25 @@ export default defineComponent({
                 });
             });
         },
-        open_index() {
+        openIndex() {
             indexApi._open(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
                 useIndexStore().reset();
             })
         },
-        close_index() {
+        closeIndex() {
             indexApi._close(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
                 useIndexStore().reset();
             })
         },
-        flush_index() {
+        flushIndex() {
             indexApi._flush(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
                 useIndexStore().reset();
             })
         },
-        refresh_index() {
+        refreshIndex() {
             indexApi._refresh(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
                 useIndexStore().reset();
@@ -303,7 +293,7 @@ export default defineComponent({
             right: 212px;
         }
 
-        .expand_btn {
+        .expand-btn {
             position: absolute;
             top: 63px;
             right: 12px;

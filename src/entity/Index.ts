@@ -24,12 +24,12 @@ export interface Setting {
     /**
      * 分片数量
      */
-    number_of_shards: number;
+    numberOfShards: number;
 
     /**
      * 副本数量
      */
-    number_of_replicas: number;
+    numberOfReplicas: number;
 
 }
 
