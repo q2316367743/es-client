@@ -79,10 +79,10 @@
                 </div>
                 <div class="content">
                     <home v-show="active === 'home'"></home>
-                    <data-browse v-show="active === 'data_browse'"></data-browse>
-                    <base-search v-show="active === 'base_search'"></base-search>
-                    <senior-search v-show="active === 'senior_search'"></senior-search>
-                    <sql-search v-show="active === 'sql_search'"></sql-search>
+                    <data-browse v-show="active === 'data browse'"></data-browse>
+                    <base-search v-show="active === 'base search'"></base-search>
+                    <senior-search v-show="active === 'senior search'"></senior-search>
+                    <sql-search v-show="active === 'sql search'"></sql-search>
                     <setting v-show="active === 'setting'"></setting>
                 </div>
             </div>
@@ -123,7 +123,7 @@ import type {ElForm} from 'element-plus'
 import {ElMessage} from 'element-plus'
 import {defineComponent} from 'vue';
 import {mapState} from "pinia";
-import {Fold, Expand, HomeFilled, Search, Operation, Coin, DataBoard} from '@element-plus/icons-vue';
+import {Coin, DataBoard, Expand, Fold, HomeFilled, Operation, Search} from '@element-plus/icons-vue';
 import axios from 'axios';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
@@ -143,7 +143,7 @@ import DataBrowse from '@/page/dataBrowse/index.vue';
 import Url from "@/entity/Url";
 import url_dao from "@/dao/UrlDao";
 import mitt from '@/plugins/mitt';
-import emitter from "@/plugins/mitt";
+import emitter from '@/plugins/mitt';
 import MessageEventEnum from "./enumeration/MessageEventEnum";
 
 export default defineComponent({
@@ -210,7 +210,7 @@ export default defineComponent({
         }
     },
     methods: {
-        select_url(value: string | number) {
+        async select_url(value: string | number) {
             console.log(typeof value, value)
             emitter.emit('update_url');
             if (value === 'add') {
@@ -219,12 +219,24 @@ export default defineComponent({
                 this.url_add_dialog = true;
                 return;
             }
-            useUrlStore().choose(value as number);
+
+            // 先进性索引刷新
+            // 选择索引
+            await useUrlStore().choose(value as number);
             // 索引刷新
-            useIndexStore().reset();
+            await useIndexStore().reset();
+
+            // 当刷新完成之后，在发送消息
+            // 选择一个有效的链接
+            if (typeof value === 'number') {
+                emitter.emit(MessageEventEnum.INDEX_CONNECT)
+            } else {
+                emitter.emit(MessageEventEnum.INDEX_CLEAN)
+            }
         },
-        refresh() {
-            useIndexStore().reset();
+        async refresh() {
+            await useIndexStore().reset();
+            emitter.emit(MessageEventEnum.INDEX_REFRESH)
         },
         select_menu(index: string) {
             // 切换active
@@ -241,10 +253,12 @@ export default defineComponent({
                         value: this.url_add_data.value,
                         sequence: this.url_add_data.sequence
                     }, (id) => {
-                        useUrlStore().choose(id);
-                        ElMessage.success('新增成功');
-                        useUrlStore().reset();
-                        useIndexStore().reset();
+                        useUrlStore().reset(() => {
+                            // 刷新索引列表
+                            // 选择索引
+                            this.select_url(id);
+                            ElMessage.success('新增成功');
+                        });
                     });
                     this.url_add_dialog = false;
                     // 重置数据

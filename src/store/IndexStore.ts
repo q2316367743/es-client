@@ -33,8 +33,6 @@ export const useIndexStore = defineStore('index', {
          */
         async reset() {
             if (useUrlStore().current === '') {
-                // 发布索引更新事件消息
-                mitt.emit("update_index");
                 return;
             }
             // 初始化时加载
@@ -55,8 +53,6 @@ export const useIndexStore = defineStore('index', {
                 let unassigned_shards = health.unassigned_shards as number;
                 this.total_shards = this.active_shards + unassigned_shards;
                 this.status = health.status as string;
-                // 发布索引更新事件消息
-                mitt.emit("update_index");
                 loading.close();
             } catch (e: any) {
                 useUrlStore().choose();

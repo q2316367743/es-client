@@ -15,7 +15,7 @@
             <div class="browse-side" :class="showSide ? 'browse-side-open' : 'browse-side-hide'">
                 <el-scrollbar @click="clearChoose">
                     <es-list>
-                        <es-list-item v-for="(index, idx) in index_list" :key="idx"
+                        <es-list-item v-for="(index, idx) in indexList" :key="idx"
                                       :choose="chooseIndex === index.name" @click.stop="choose(index.name)"
                                       :aliases="index.alias">{{
                                 index.name
@@ -102,7 +102,7 @@ export default defineComponent({
         page: 1,
         size: 10,
         total: 0,
-        index_list: [] as Array<Index>,
+        indexList: [] as Array<Index>,
         keyword: '',
         showTop: true
     }),
@@ -129,6 +129,7 @@ export default defineComponent({
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (page) => {
             this.showTop = (page === PageNameEnum.DATA_BROWSER)
         });
+        this.renderIndexList();
     },
     methods: {
         choose(index_name: string, verify: boolean = true) {
@@ -176,13 +177,15 @@ export default defineComponent({
         },
         renderIndexList() {
             // 第一步，过滤
-            let index_list = [] as Array<Index>;
+            let indexList = [] as Array<Index>;
             for (let index of this.indices) {
+                // TODO: 此处关键字支持全模糊
                 if (this.keyword === '' || index.name.indexOf(this.keyword) > -1) {
-                    index_list.push(index);
+                    indexList.push(index);
                 }
             }
-            this.index_list = index_list.sort((a, b) => {
+            // 排序
+            this.indexList = indexList.sort((a, b) => {
                 return a.name.localeCompare(b.name, "zh-CN");
             });
         },

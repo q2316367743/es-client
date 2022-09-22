@@ -22,15 +22,21 @@ export const useUrlStore = defineStore('url', {
         },
         current: (state): string => {
             return state.url ? state.url.value! : '';
+        },
+        id: (state): number | undefined => {
+            return state.url ? state.url.id! : undefined;
         }
     },
     actions: {
         /**
          * 重新获取链接
          */
-        reset() {
+        reset(callback?: () => void) {
             urlDao.list(urls => {
                 this.urls = urls;
+                if (callback) {
+                    callback()
+                }
             });
         },
         /**

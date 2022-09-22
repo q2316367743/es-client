@@ -48,7 +48,7 @@
                 <template #dropdown>
                     <el-dropdown-menu>
                         <!-- 新建别名 -->
-                        <el-dropdown-item :command="1">{{ $t('home.index.active.newAlias') }}</el-dropdown-item>
+                        <el-dropdown-item :command="1">{{ $t('home.index.active.new_alias') }}</el-dropdown-item>
                         <!-- 刷新 -->
                         <el-dropdown-item :command="2">{{ $t('home.index.active.refresh') }}</el-dropdown-item>
                         <!-- flush 刷新 -->

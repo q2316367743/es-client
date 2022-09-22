@@ -106,6 +106,7 @@ import IndexContainer from './components/IndexContainer.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 
 import mitt from '@/plugins/mitt';
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 
 export default defineComponent({
@@ -155,17 +156,31 @@ export default defineComponent({
         }
     },
     created() {
-        mitt.on('update_index', () => {
+        mitt.on(MessageEventEnum.INDEX_REFRESH, () => {
             this.indexItemDialog = false;
             this.indexItemTitle = '';
             this.indexItemData = {} as any;
             this.search();
         });
-        mitt.on('update_url', () => {
+        mitt.on(MessageEventEnum.INDEX_CONNECT, () => {
+            // 重置查询条件
             this.condition = {
                 name: "",
                 order: "NAME_ASC",
             }
+            // 充值页面
+            this.indexItemDialog = false;
+            this.indexItemTitle = '';
+            this.indexItemData = {} as any;
+            this.search();
+        });
+        mitt.on(MessageEventEnum.INDEX_CLEAN, () => {
+            // 重置查询条件
+            this.condition = {
+                name: "",
+                order: "NAME_ASC",
+            }
+            // 充值页面
             this.indexItemDialog = false;
             this.indexItemTitle = '';
             this.indexItemData = {} as any;

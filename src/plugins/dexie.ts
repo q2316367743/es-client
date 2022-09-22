@@ -20,7 +20,7 @@ class Instance extends Dexie {
         })
         this.tip = this.table('tip');
         this.url = this.table('url');
-        this.chart = this.table('chart')
+        this.chart = this.table('chart');
     }
 
     public getUrl(): Dexie.Table<Url, number> {
