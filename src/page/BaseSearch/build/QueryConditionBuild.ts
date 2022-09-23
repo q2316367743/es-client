@@ -32,7 +32,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     } else if (query.condition === 'range') {
         let value = {} as any;
         value[query.extra_left_condition] = query.extra_left_value;
-        value[query.extra_right_condition] == query.extra_right_value;
+        value[query.extra_right_condition] = query.extra_right_value;
         expression[query.field.substring(5)] = value;
     } else {
         throw new Error('查询条件不支持')
@@ -47,20 +47,23 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
         if (order.field === '' || order.type === null) {
             continue;
         }
-        body.sort[order.field.substring(5)] = { order: order.type };
+        body.sort[order.field.substring(5)] = {order: order.type};
     }
 }
 
 /**
  * 构造es查询条件
- * 
- * @param querys 查询条件
+ *
+ * @param queries 查询条件
+ * @param page 页码
+ * @param size 每页数目
+ * @param orders 排序
  */
-export default function QueruConditionBuild(querys: Array<BaseQuery>, page: number, size: number, orders: Array<BaseOrder>): any {
+export default function QueryConditionBuild(queries: Array<BaseQuery>, page: number, size: number, orders: Array<BaseOrder>): any {
     let must = [] as Array<any>;
     let must_not = [] as Array<any>;
     let should = [] as Array<any>;
-    for (let query of querys) {
+    for (let query of queries) {
         if (query.type === 'must') {
             buildQuery(query, must);
         } else if (query.type === 'must_not') {

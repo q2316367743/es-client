@@ -144,7 +144,7 @@ interface Name {
 
 // 公共方法
 export default defineComponent({
-    name: 'BaseSearch',
+    name: 'base-search',
     components: {
         JsonViewer,
         BaseViewer,
@@ -199,7 +199,7 @@ export default defineComponent({
                 });
             }
         }),
-        ...mapState(useSettingStore, ['default_viewer']),
+        ...mapState(useSettingStore, ["instance"]),
         fields() {
             if (this.index === '') {
                 return new Array<Field>();
@@ -223,7 +223,7 @@ export default defineComponent({
                 this.search();
             }
         },
-        default_viewer() {
+        instance() {
             this.view = useSettingStore().getDefaultViewer
         }
     },

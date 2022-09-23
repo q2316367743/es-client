@@ -23,7 +23,8 @@
                 微软edge插件商店地址：
                 <el-link
                     href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                    target="_blank">es-client</el-link>
+                    target="_blank">es-client
+                </el-link>
             </div>
             <div>
                 Firefox插件商店地址：
@@ -32,20 +33,24 @@
         </div>
         <div class="title-1">意见反馈</div>
         <div content="content">
-            <li>
-                <span>在</span>
-                <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">码云</el-link>
-                <span>提交issue或评论</span>
-            </li>
-            <li>
-                <span>在</span>
-                <el-link
-                    href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                    target="_blank">edge插件商店</el-link>
-                <span>进行评论</span>
-            </li>
-            <li>如果有好的想法，可以提交<el-link href="https://gitee.com/qiaoshengda/es-client/pulls">Pull Requests</el-link>
-            </li>
+            <ul>
+                <li>
+                    <span>在</span>
+                    <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">码云</el-link>
+                    <span>提交issue或评论</span>
+                </li>
+                <li>
+                    <span>在</span>
+                    <el-link
+                        href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
+                        target="_blank">edge插件商店
+                    </el-link>
+                    <span>进行评论</span>
+                </li>
+                <li>如果有好的想法，可以提交
+                    <el-link href="https://gitee.com/qiaoshengda/es-client/pulls">Pull Requests</el-link>
+                </li>
+            </ul>
         </div>
         <div class="title-1">更新日志</div>
         <div class="content">
@@ -58,7 +63,8 @@
                             <li>刷新索引不会重置搜索条件</li>
                             <li>更便捷的别名新增</li>
                         </ol>
-                        <div>注意：如果使用认证，如果显示跨域问题，需要在elasticsearch中加入<code>http.cors.allow-headers: "Content-Type"</code></div>
+                        <div>注意：如果使用认证，如果显示跨域问题，需要在elasticsearch中加入<code>http.cors.allow-headers:
+                            "Content-Type"</code></div>
                     </el-card>
                 </el-timeline-item>
                 <el-timeline-item timestamp="2022-06-20" placement="top">
@@ -161,7 +167,8 @@
                                 <li>文档按照名称排序</li>
                                 <li>字段按照名称排序</li>
                             </ul>
-                            <li>增加<el-link href="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link>
+                            <li>增加
+                                <el-link href="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link>
                             </li>
                             <li>多个列表新增返回顶部</li>
                         </ol>
@@ -246,7 +253,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import {defineComponent} from "vue"
 
 
 export default defineComponent({

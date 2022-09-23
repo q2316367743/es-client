@@ -5,13 +5,13 @@
                 <slot></slot>
             </div>
             <div>
-                <el-tag v-for="alias, index of aliases" :key="index">{{ alias }}</el-tag>
+                <el-tag v-for="(alias, index) of aliases" :key="index">{{ alias }}</el-tag>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
 export default defineComponent({
     name: 'es-list-item',
@@ -28,9 +28,7 @@ export default defineComponent({
         }
     },
     emits: ['click', 'btn-click'],
-    data: () => ({
-
-    }),
+    data: () => ({}),
     methods: {
         on_click(e: any) {
             this.$emit('click', e);
@@ -59,6 +57,7 @@ export default defineComponent({
             margin-left: 10px;
             display: flex;
             justify-content: space-between;
+
             .el-tag {
                 margin-left: 5px;
             }

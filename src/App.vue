@@ -132,13 +132,13 @@ import Info from '@/components/Info.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/components/Translate.vue";
 // 页面
-import About from "@/page/about/index.vue";
+import About from "@/page/About/index.vue";
 import Home from "./page/home/index.vue";
-import BaseSearch from "@/page/base_search/index.vue";
-import SeniorSearch from '@/page/senior_search/index.vue';
+import BaseSearch from "@/page/BaseSearch/index.vue";
+import SeniorSearch from '@/page/SeniorSearch/index.vue';
 import SqlSearch from "@/page/sql_search/index.vue";
-import Setting from '@/page/setting/index.vue'
-import DataBrowse from '@/page/dataBrowse/index.vue';
+import Setting from '@/page/Setting/index.vue'
+import DataBrowse from '@/page/DataBrowse/index.vue';
 // 其他
 import Url from "@/entity/Url";
 import url_dao from "@/dao/UrlDao";
