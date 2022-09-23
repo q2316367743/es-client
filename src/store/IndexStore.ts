@@ -4,8 +4,6 @@ import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
 import { useUrlStore } from "./UrlStore";
-// 引入插件
-import mitt from '@/plugins/mitt'
 
 export const useIndexStore = defineStore('index', {
     state: () => {

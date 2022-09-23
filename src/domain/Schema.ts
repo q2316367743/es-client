@@ -1,4 +1,4 @@
-export default interface SChema {
+export default interface Schema {
 
     /**
      * The URI of the schema, which is also the identifier of the schema.

@@ -11,7 +11,8 @@ export const useSettingStore = defineStore('setting', {
             defaultReplica: 1,
             defaultShard: 5,
             seniorWidth: 520,
-            pageSize: 20
+            pageSize: 20,
+            pageStep: 10
         } as Setting);
         return {
             language: getDefaultLanguage(),
@@ -24,7 +25,8 @@ export const useSettingStore = defineStore('setting', {
         getDefaultReplica: (state) => state.instance.defaultReplica,
         getSeniorWidth: (state) => state.instance.seniorWidth,
         getDefaultViewer: (state) => state.instance.defaultViewer,
-        getPageSize: (state) => state.instance.pageSize
+        getPageSize: (state) => state.instance.pageSize,
+        getPageStep: (state) => state.instance.pageStep
     },
     actions: {
         setLanguage(language: string): void {
@@ -45,6 +47,9 @@ export const useSettingStore = defineStore('setting', {
         },
         setPageSize(pageSize: number) {
             this.instance.pageSize = pageSize;
+        },
+        setPageStep(pageStep: number) {
+            this.instance.pageStep = pageStep;
         }
     }
 })

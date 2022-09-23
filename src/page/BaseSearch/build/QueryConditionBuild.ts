@@ -1,5 +1,5 @@
-import BaseQuery from "@/entity/BaseQuery";
-import BaseOrder from "@/entity/BaseOrder";
+import BaseQuery from "@/domain/BaseQuery";
+import BaseOrder from "@/domain/BaseOrder";
 
 /**
  * 获取基础查询请求体

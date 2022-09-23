@@ -1,3 +1,6 @@
+/**
+ * 基础排序
+ */
 export default interface BaseOrder {
 
     id: number;

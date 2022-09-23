@@ -1,9 +1,9 @@
 import Index from '@/view/Index';
-import SChema from '@/entity/SChema';
+import Schema from '@/domain/Schema';
 import StrategyContext from '../strategy/StrategyContext';
 import StrategyTypeEnum from '../enumeration/StrategyTypeEnum';
 
-export default function SchemaBuild(indices: Array<Index>, url: string): SChema[] {
+export default function SchemaBuild(indices: Array<Index>, url: string): Schema[] {
     return [
         {
             uri: 'https://esion.xyz/assert/es-client/schema.json',

@@ -28,4 +28,9 @@ export default interface Setting {
      */
     pageSize: number;
 
+    /**
+     * 默认页码跨度
+     */
+    pageStep: number;
+
 }

@@ -45,7 +45,7 @@
     </div>
 </template>
 <script lang="ts">
-import BaseQuery from "@/entity/BaseQuery";
+import BaseQuery from "@/domain/BaseQuery";
 import Field from "@/view/Field";
 import { defineComponent, PropType } from "vue";
 

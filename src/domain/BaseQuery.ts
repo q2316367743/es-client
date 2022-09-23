@@ -1,5 +1,6 @@
-import Field from "@/view/Field";
-
+/**
+ * 基础查询
+ */
 export default interface BaseQuery {
 
     /**
@@ -8,7 +9,7 @@ export default interface BaseQuery {
     id: number;
 
     /**
-     * 查询类型
+     * 查询类型 <br />
      * ['must', 'should', 'must_not']
      */
     type: string,
@@ -19,7 +20,7 @@ export default interface BaseQuery {
     field: string;
 
     /**
-     * 条件
+     * 条件 <br />
      * ['match', 'wildcard', 'prefix', 'range', 'fuzzy', 'query_string', 'text', 'missing']
      */
     condition: string;
@@ -30,7 +31,7 @@ export default interface BaseQuery {
     value: string;
 
     /**
-     * 额外左条件
+     * 额外左条件<br />
      * ['gt', 'gte']
      */
     extra_left_condition: string;
@@ -41,7 +42,7 @@ export default interface BaseQuery {
     extra_left_value: string;
 
     /**
-     * 额外右条件
+     * 额外右条件<br />
      * ['lt', 'lte']
      */
     extra_right_condition: string;

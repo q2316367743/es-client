@@ -127,8 +127,8 @@ import mitt from '@/plugins/mitt';
 import {useIndexStore} from "@/store/IndexStore";
 import {useSettingStore} from "@/store/SettingStore";
 
-import BaseQuery from '@/entity/BaseQuery';
-import BaseOrder from "@/entity/BaseOrder";
+import BaseQuery from '@/domain/BaseQuery';
+import BaseOrder from "@/domain/BaseOrder";
 
 import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./components/FieldConditionItem.vue";

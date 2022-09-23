@@ -1,4 +1,4 @@
-import {Index} from '@/entity/Index';
+import {Index} from '@/domain';
 import axios from '@/plugins/axios'
 import IndexSaveBuild from '@/build/IndexSaveBuild';
 
