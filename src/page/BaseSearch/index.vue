@@ -1,6 +1,6 @@
 <template>
     <div class="base-search">
-        <!-- 查询 -->
+        <!-- 顶部菜单栏 -->
         <div class="base-option el-card es-card">
             <div class="left">
                 <el-select-v2 v-model="index" filterable :options="indices"
@@ -29,26 +29,26 @@
                 </el-select>
             </div>
         </div>
-        <!-- 真正的展示 -->
+        <!-- 核心查询区 -->
         <div class="base-display">
             <!-- 查询条件 -->
             <div class="base-condition el-card">
                 <el-form label-position="top" label-width="80px" style="overflow: auto">
                     <!-- 条件 -->
                     <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
-                        <div v-if="field_condition.length === 0">
-                            <el-button type="primary" @click="field_condition_add">{{ $t('base_search.add') }}
+                        <div v-if="fieldConditions.length === 0">
+                            <el-button type="primary" @click="fieldConditionAdd">{{ $t('base_search.add') }}
                             </el-button>
                         </div>
-                        <div v-for="(item, idx) in field_condition" :key="idx"
+                        <div v-for="(item, idx) in fieldConditions" :key="idx"
                              style="margin-bottom: 10px;display: flex;">
-                            <field-condition-item v-model="field_condition[idx]" :fields="fields">
+                            <field-condition-item v-model="fieldConditions[idx]" :fields="fields">
                             </field-condition-item>
-                            <el-button type="primary" style="margin-left: 10px" @click="field_condition_add">{{
+                            <el-button type="primary" style="margin-left: 10px" @click="fieldConditionAdd">{{
                                     $t('base_search.add')
                                 }}
                             </el-button>
-                            <el-button type="danger" @click="field_condition_remove(item.id)">{{
+                            <el-button type="danger" @click="fieldConditionRemove(item.id)">{{
                                     $t('base_search.remove')
                                 }}
                             </el-button>
@@ -84,7 +84,7 @@
                     </el-form-item>
                 </el-form>
                 <div class="base-search-condition-sentence">
-                    <el-button link type="primary" @click="show_body">{{ $t('base_search.display_query_statement') }}
+                    <el-button link type="primary" @click="showBody">{{ $t('base_search.display_query_statement') }}
                     </el-button>
                 </div>
             </div>
@@ -157,7 +157,7 @@ export default defineComponent({
             // 选择的索引名称
             index: '',
             // 条件
-            field_condition: new Array<BaseQuery>(),
+            fieldConditions: new Array<BaseQuery>(),
             // 分页
             page: 1,
             size: 10,
@@ -237,8 +237,8 @@ export default defineComponent({
         });
     },
     methods: {
-        field_condition_add(): void {
-            this.field_condition.push({
+        fieldConditionAdd(): void {
+            this.fieldConditions.push({
                 id: new Date().getTime(),
                 type: 'must',
                 field: '',
@@ -250,18 +250,18 @@ export default defineComponent({
                 extra_right_value: ''
             });
         },
-        field_condition_remove(id: number): void {
-            console.log(this.field_condition, id);
-            if (this.field_condition.length === 0) {
+        fieldConditionRemove(id: number): void {
+            console.log(this.fieldConditions, id);
+            if (this.fieldConditions.length === 0) {
                 return;
             }
-            this.field_condition = this.field_condition.filter((item) => {
+            this.fieldConditions = this.fieldConditions.filter((item) => {
                 return item.id !== id;
             });
-            console.log(this.field_condition, id);
+            console.log(this.fieldConditions, id);
         },
-        show_body() {
-            this.condition_data = QueryConditionBuild(this.field_condition, this.page, this.size, this.orders);
+        showBody() {
+            this.condition_data = QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders);
             this.condition_dialog = true;
         },
         search() {
@@ -272,7 +272,7 @@ export default defineComponent({
             axios({
                 url: `/${this.index}/_search`,
                 method: "POST",
-                data: QueryConditionBuild(this.field_condition, this.page, this.size, this.orders),
+                data: QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders),
             }).then((response) => {
                 this.result = response;
                 if (this.result.hits) {
@@ -294,7 +294,7 @@ export default defineComponent({
             this.page = 1;
             this.size = 10;
             this.total = 0;
-            this.field_condition = new Array<BaseQuery>();
+            this.fieldConditions = new Array<BaseQuery>();
             this.orders = new Array<BaseOrder>();
             this.result = {};
             if (clear_index) {
@@ -341,7 +341,7 @@ export default defineComponent({
         top: 0;
         left: 0;
         right: 0;
-        padding: 18px 20px 0 20px;
+        padding: 9px 10px 0 10px;
         display: flex;
         justify-content: space-between;
         height: 50px;
@@ -353,7 +353,7 @@ export default defineComponent({
 
     .base-display {
         position: absolute;
-        top: 70px;
+        top: 40px;
         left: 0;
         right: 0;
         bottom: 0;

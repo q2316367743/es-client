@@ -1,6 +1,7 @@
 <template>
     <div class="data-browse">
-        <div class="browse-header">
+        <!-- 顶部标题栏 -->
+        <div class="browse-header el-card es-card">
             <div>
                 <el-input v-model="keyword" @input="renderIndexList" clearable style="width: 375px;"></el-input>
             </div>
@@ -11,7 +12,9 @@
                 <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
             </el-select>
         </div>
-        <div class="browse-main">
+        <!-- 下面主要内容 -->
+        <div class="browse-main el-card es-card">
+            <!-- 左侧 -->
             <div class="browse-side" :class="showSide ? 'browse-side-open' : 'browse-side-hide'">
                 <el-scrollbar @click="clearChoose">
                     <es-list>
@@ -24,6 +27,7 @@
                     </es-list>
                 </el-scrollbar>
             </div>
+            <!-- 是否隐藏左侧的按钮 -->
             <div class="browse-operation" :class="showSide ? 'browse-operation-open' : 'browse-operation-hide'"
                  @click="showSide = !showSide">
                 <el-icon v-if="showSide" :size="12">
@@ -33,6 +37,7 @@
                     <arrow-right/>
                 </el-icon>
             </div>
+            <!-- 数据展示 -->
             <div class="browse-content" :class="showSide ? 'browse-content-open' : 'browse-content-hide'">
                 <div class="operation">
                     <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
@@ -207,24 +212,23 @@ export default defineComponent({
     left: 10px;
     right: 10px;
     bottom: 10px;
-    border: 1px solid #e4e7ed;
 
     .browse-header {
-        padding: 18px 20px;
         border-bottom: 1px solid #e4e7ed;
         box-sizing: border-box;
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 60px;
+        height: 50px;
         display: flex;
         justify-content: space-between;
+        padding: 9px 10px 0 10px;
     }
 
     .browse-main {
         position: absolute;
-        top: 70px;
+        top: 62px;
         left: 0;
         right: 0;
         bottom: 0;

@@ -1,6 +1,8 @@
 <template>
 	<div class="senior-search">
-		<div class="el-card is-never-shadow" style="min-height: 550px" shadow="never">
+        <!-- 左侧查询条件 -->
+		<div class="el-card is-never-shadow" style="min-height: 550px">
+            <!-- 上半部分 -->
 			<div class="el-card__header" style="display: flex;justify-content: space-between;">
 				<div style="display: flex;">
 					<el-select v-model="method" :placeholder="$t('senior_search.please_select')"
@@ -29,6 +31,7 @@
 					<el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
 				</el-select>
 			</div>
+            <!-- 下半部分 -->
 			<div class="senior-main">
 				<!-- 左面查询条件 -->
 				<div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
@@ -53,8 +56,10 @@
 							v-show="method !== 'GET'" class="post"></monaco-editor>
 					</div>
 				</div>
+                <!-- 中间分隔栏 -->
 				<div class="senior-bar" :style="{ left: senior_width_computed + 10 + 'px' }" @mousedown="onMouseDown">
 				</div>
+                <!-- 两个快捷按钮 -->
 				<div class="senior-button"
 					:style="{ left: senior_width_computed + 5 + 'px', top: (max_height / 2 - 26) + 'px' }"
 					@click="hideLeft">←</div>
@@ -126,11 +131,11 @@ export default defineComponent({
 	}),
 	components: { JsonViewer, BaseViewer, MonacoEditor, TableViewer, SeniorSearchEditorViewer },
 	computed: {
-		...mapState(useSettingStore, ['senior_width', 'default_viewer']),
+		...mapState(useSettingStore, ['instance']),
 		senior_width_computed(): number {
 			switch (this.mode) {
 				case Mode.DEFAULT:
-					return this.senior_width;
+					return this.instance.seniorWidth;
 				case Mode.HIDE_LEFT:
 					return 0;
 				case Mode.HIDE_RIGHT:
@@ -165,7 +170,7 @@ export default defineComponent({
 		this.max_width = window.outerWidth - side_width - right_min_width;
 		this.max_height = window.innerHeight - outer_height;
 		window.onmousemove = (ev: MouseEvent): void => {
-			if (this.is_down == false) {
+			if (!this.is_down) {
 				return;
 			}
 			const nx = ev.clientX - side_width;
@@ -176,10 +181,10 @@ export default defineComponent({
 		window.onresize = (): void => {
 			this.max_width = window.outerWidth - side_width - right_min_width;
 			this.max_height = window.innerHeight - outer_height;
-			if (this.senior_width > this.max_width) {
+			if (this.instance.seniorWidth > this.max_width) {
 				useSettingStore().setSeniorWidth(this.max_width);
 			}
-			if (this.senior_width < side_min_width) {
+			if (this.instance.seniorWidth < side_min_width) {
 				useSettingStore().setSeniorWidth(270);
 			}
 		};
@@ -362,9 +367,7 @@ export default defineComponent({
 			background-color: #ffffff;
 			font-size: 8px;
 			border-left: var(--el-card-border-color) solid 1px;
-			cursor: ew-resize;
-			border: #e4e7ed solid 1px;
-			cursor: pointer;
+            cursor: pointer;
 		}
 
 		.senior-content {
