@@ -209,7 +209,6 @@ export default defineComponent({
     },
     methods: {
         async select_url(value: string | number) {
-            console.log(typeof value, value)
             emitter.emit('update_url');
             if (value === 'add') {
                 // 新增，打开新增面板

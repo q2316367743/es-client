@@ -1,9 +1,10 @@
 <template>
     <div>
-        <el-empty v-if="flag == 0" :description="$t('app.component.data_is_empty')" />
-        <json-viewer v-else-if="flag == 1" :value="data" :expand-depth="10" copyable sort expanded></json-viewer>
+        <el-empty v-if="flag === 0" :description="$t('app.component.data_is_empty')"/>
+        <json-viewer v-else-if="flag === 1" :value="data" :expand-depth="10" copyable sort expanded></json-viewer>
         <div v-else class="table-viewer-show">
             <div class="table-viewer-column">
+                <el-button style="margin-right: 6px" type="primary">新增</el-button>
                 <el-popover placement="bottom" trigger="click">
                     <template #reference>
                         <el-button style="margin-right: 16px">{{ $t('app.component.display_column') }}</el-button>
@@ -11,7 +12,7 @@
                     <el-checkbox v-model="check_all" :indeterminate="isIndeterminate" @change="handle_check_all_change">
                         {{ $t('app.component.check_all') }}
                     </el-checkbox>
-                    <div v-for="(mapping, index) in mappings" :prop="mapping" :key="index">
+                    <div v-for="(mapping, index) in mappings" :key="index">
                         <el-checkbox :label="mapping.field" v-model="mapping.is_show"></el-checkbox>
                     </div>
                 </el-popover>
@@ -24,16 +25,16 @@
                     </template>
                 </el-table-column>
                 <el-table-column sortable v-for="(mapping, index) in cols" :prop="mapping.field" :key="index"
-                    :label="mapping.field" width="200" show-overflow-tooltip>
+                                 :label="mapping.field" width="200" show-overflow-tooltip>
                     <template #default="scope">
                         <div class="column">
-                            {{ (typeof scope.row[mapping.field] === 'string') ? scope.row[mapping.field] :
+                            {{
+                                (typeof scope.row[mapping.field] === 'string') ? scope.row[mapping.field] :
                                     JSON.stringify(scope.row[mapping.field])
                             }}
-                            <div class="dialog-open" @click="json_data = scope.row[mapping.field]; json_dialog = true"
-                                :expanded="true">
+                            <div class="dialog-open" @click="json_data = scope.row[mapping.field]; json_dialog = true">
                                 <el-icon>
-                                    <zoom-in />
+                                    <zoom-in/>
                                 </el-icon>
                             </div>
                         </div>
@@ -46,8 +47,8 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { ZoomIn } from "@element-plus/icons-vue";
+import {defineComponent, PropType} from "vue";
+import {ZoomIn} from "@element-plus/icons-vue";
 import JsonDialog from "@/components/JsonDialog.vue";
 import JsonViewer from 'vue-json-viewer';
 
@@ -64,7 +65,7 @@ export default defineComponent({
         data: Object as PropType<any>,
         mapping: Object as PropType<any>
     },
-    components: { ZoomIn, JsonDialog, JsonViewer },
+    components: {ZoomIn, JsonDialog, JsonViewer},
     data: () => ({
         flag: 0,
         items: [] as Array<any>,
@@ -158,10 +159,8 @@ export default defineComponent({
             if (!this.data.hits) {
                 return false;
             }
-            if (!this.data.hits.hits) {
-                return false;
-            }
-            return true;
+            return this.data.hits.hits;
+
         },
         verify_mapping() {
             if (!this.mapping) {
@@ -172,10 +171,8 @@ export default defineComponent({
                 return false;
             }
 
-            if (!this.mapping._doc.properties) {
-                return false;
-            }
-            return true;
+            return this.mapping._doc.properties;
+
         },
         handle_check_all_change() {
             if (this.isIndeterminate) {

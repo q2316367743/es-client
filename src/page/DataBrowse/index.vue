@@ -80,6 +80,7 @@ import mitt from '@/plugins/mitt';
 import Index from "@/view/Index";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import SearchUtil from "@/utils/SearchUtil";
 
 
 export default defineComponent({
@@ -182,15 +183,9 @@ export default defineComponent({
         },
         renderIndexList() {
             // 第一步，过滤
-            let indexList = [] as Array<Index>;
-            for (let index of this.indices) {
-                // TODO: 此处关键字支持全模糊
-                if (this.keyword === '' || index.name.indexOf(this.keyword) > -1) {
-                    indexList.push(index);
-                }
-            }
+            this.indexList = SearchUtil.match(this.indices, this.keyword, 'name');
             // 排序
-            this.indexList = indexList.sort((a, b) => {
+            this.indexList = this.indexList.sort((a, b) => {
                 return a.name.localeCompare(b.name, "zh-CN");
             });
         },

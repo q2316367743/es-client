@@ -1,5 +1,5 @@
 import Index from "@/view/Index";
-import { prettyDataUnit } from "@/utils/fieldUtil";
+import { prettyDataUnit } from "@/utils/FieldUtil";
 import clusterApi from "@/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
 
