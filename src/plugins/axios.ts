@@ -1,12 +1,11 @@
 import axios from 'axios'
 import {ElMessage} from 'element-plus'
 import {useUrlStore} from '@/store/UrlStore'
+import {useSettingStore} from '@/store/SettingStore'
 import i18n from '@/i18n'
 
 // 创建一个axios实例
-const service = axios.create({
-    timeout: 5000
-})
+const service = axios.create()
 
 // 请求拦截器
 service.interceptors.request.use(
@@ -24,6 +23,8 @@ service.interceptors.request.use(
                 password: url.auth_password
             }
         }
+        // 设置超时时间
+        config.timeout = useSettingStore().getTimeout
         return config
     },
     error => {

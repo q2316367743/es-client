@@ -8,7 +8,9 @@
         "default_replica_number": "default replica number:",
         "default_viewer": "default viewer:",
         "page_size": "Default page size:",
-        "page_step": "Default page step:"
+        "page_step": "Default page step:",
+        "timeout": "timeout:",
+        "timeout_placeholder": "ms"
     },
     "link": {
         "title": "link management",

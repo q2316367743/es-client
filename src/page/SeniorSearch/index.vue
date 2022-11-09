@@ -209,24 +209,25 @@ export default defineComponent({
 						this.result = response;
 					});
 				} else {
-					let data = {};
+					let data = {} as any;
 					if (this.params != '') {
 						try {
 							data = JSON.parse(this.params);
 						} catch (e: any) {
 							console.error(e);
-							ElMessage.error(this.$t('senior_search.json_format_error'));
-							return;
+                            // 不必强行校验json格式
+                            data = this.params;
 						}
 					}
 					if (this.link.indexOf('_doc') > -1 && this.params == '') {
 						// 如果是新增文档，但是没有参数，不进行查询
+                        this.result = {};
 						return;
 					}
 					axios({
 						url: this.link,
 						method: this.method,
-						data
+						data: data
 					}).then((response) => {
 						this.result = response;
 					}).catch((e) => {

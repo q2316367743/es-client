@@ -3,7 +3,6 @@ import {getDefaultLanguage} from '@/utils/GlobalUtil';
 import {useLocalStorage} from "@vueuse/core";
 import Setting from "@/entity/Setting";
 
-
 export const useSettingStore = defineStore('setting', {
     state: () => {
         let setting = useLocalStorage('setting', {
@@ -12,7 +11,8 @@ export const useSettingStore = defineStore('setting', {
             defaultShard: 5,
             seniorWidth: 520,
             pageSize: 20,
-            pageStep: 10
+            pageStep: 10,
+            timeout: 5000
         } as Setting);
         return {
             language: getDefaultLanguage(),
@@ -26,7 +26,8 @@ export const useSettingStore = defineStore('setting', {
         getSeniorWidth: (state) => state.instance.seniorWidth,
         getDefaultViewer: (state) => state.instance.defaultViewer,
         getPageSize: (state) => state.instance.pageSize,
-        getPageStep: (state) => state.instance.pageStep
+        getPageStep: (state) => state.instance.pageStep,
+        getTimeout: (state): number => state.instance.timeout
     },
     actions: {
         setLanguage(language: string): void {
@@ -50,6 +51,9 @@ export const useSettingStore = defineStore('setting', {
         },
         setPageStep(pageStep: number) {
             this.instance.pageStep = pageStep;
+        },
+        setTimeOut(timeout: number) {
+            this.instance.timeout = timeout;
         }
     }
 })

@@ -8,7 +8,9 @@
         "default_replica_number": "默认副本数：",
         "default_viewer": "默认视图：",
         "page_size": "默认分页大小：",
-        "page_step": "默认分页步长："
+        "page_step": "默认分页步长：",
+        "timeout": "超时时间：",
+        "timeout_placeholder": "单位：毫秒"
     },
     "link": {
         "title": "链接管理",

@@ -33,4 +33,9 @@ export default interface Setting {
      */
     pageStep: number;
 
+    /**
+     * 超时时间
+     */
+    timeout: number;
+
 }

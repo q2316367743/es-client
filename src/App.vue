@@ -101,6 +101,15 @@
                 <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
                     <el-input-number v-model="url_add_data.sequence" controls-position="right" size="large"/>
                 </el-form-item>
+                <el-form-item :label="$t('setting.link.is_auth')" prop="is_auth">
+                    <el-switch v-model="url_add_data.is_auth" size="large" active-text="true" inactive-text="false"/>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.auth_user')" prop="auth_user" v-if="url.is_auth">
+                    <el-input v-model="url_add_data.auth_user" size="large"/>
+                </el-form-item>
+                <el-form-item :label="$t('setting.link.auth_password')" prop="auth_password" v-if="url.is_auth">
+                    <el-input v-model="url_add_data.auth_password" size="large"/>
+                </el-form-item>
             </el-form>
             <template #footer>
                 <el-button @click="test">{{ $t('setting.link.test') }}</el-button>
@@ -160,6 +169,9 @@ export default defineComponent({
                 name: '',
                 value: 'http://',
                 sequence: 0,
+                is_auth: false,
+                auth_user: '',
+                auth_password: ''
             } as Url,
             url_rules: {
                 name: [
@@ -248,7 +260,10 @@ export default defineComponent({
                     url_dao.insert({
                         name: this.url_add_data.name,
                         value: this.url_add_data.value,
-                        sequence: this.url_add_data.sequence
+                        sequence: this.url_add_data.sequence,
+                        is_auth: this.url_add_data.is_auth,
+                        auth_user: this.url_add_data.auth_user,
+                        auth_password: this.url_add_data.auth_password
                     }, (id) => {
                         useUrlStore().reset(() => {
                             // 刷新索引列表
