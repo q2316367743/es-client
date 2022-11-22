@@ -3,9 +3,9 @@ import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
-import { useUrlStore } from "./UrlStore";
+import useUrlStore from "@/store/UrlStore";
 
-export const useIndexStore = defineStore('index', {
+const useIndexStore = defineStore('index', {
     state: () => {
         return {
             // 全部的索引
@@ -63,4 +63,6 @@ export const useIndexStore = defineStore('index', {
             this.indices = new Array<Index>();
         }
     }
-})
+});
+
+export default useIndexStore;

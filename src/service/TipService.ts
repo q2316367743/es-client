@@ -1,14 +1,13 @@
 import Dexie from 'dexie';
 import { ElMessage } from 'element-plus'
 import Tip from '@/entity/Tip';
-import dexie from '@/plugins/dexie'
 
-class TipDao {
+export default class TipService {
 
-    public tips: Dexie.Table<Tip, number>;
+    private readonly tips: Dexie.Table<Tip, number>;
 
-    constructor() {
-        this.tips = dexie.getTip();
+    constructor(tips: Dexie.Table<Tip, number>) {
+        this.tips = tips;
     }
 
     list(): Promise<Array<Tip>> {
@@ -56,7 +55,3 @@ class TipDao {
     }
 
 }
-
-const tipDao = new TipDao();
-
-export default tipDao;

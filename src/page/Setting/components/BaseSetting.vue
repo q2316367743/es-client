@@ -21,14 +21,14 @@
             <el-input-number v-model="instance.pageStep"></el-input-number>
         </el-form-item>
         <el-form-item :label="$t('setting.base.timeout')">
-            <el-input-number v-model="instance.timeout" min="0" step="1000"
-                             :placeholder="$t('setting.base.timeout_placeholder')"></el-input-number>
+            <el-input-number v-model="instance.timeout" :min="0" :step="1000"
+                :placeholder="$t('setting.base.timeout_placeholder')"></el-input-number>
         </el-form-item>
     </el-form>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {useSettingStore} from "@/store/SettingStore";
+import { defineComponent } from "vue";
+import useSettingStore from "@/store/SettingStore";
 
 export default defineComponent({
     data: () => ({
@@ -37,4 +37,5 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+
 </style>

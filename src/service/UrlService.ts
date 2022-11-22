@@ -1,14 +1,13 @@
 import Dexie from 'dexie';
 import {ElMessage} from 'element-plus'
 import Url from '@/entity/Url';
-import dexie from '@/plugins/dexie'
 
-class UrlDao {
+export default class UrlService {
 
-    public url: Dexie.Table<Url, number>;
+    private readonly url: Dexie.Table<Url, number>;
 
-    constructor() {
-        this.url = dexie.getUrl();
+    constructor(url: Dexie.Table<Url, number>) {
+        this.url = url;
     }
 
     list(callback: (urls: Array<Url>) => void): void {
@@ -77,7 +76,3 @@ class UrlDao {
     }
 
 }
-
-const urlDao = new UrlDao();
-
-export default urlDao;

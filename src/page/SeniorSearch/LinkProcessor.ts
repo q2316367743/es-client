@@ -1,4 +1,4 @@
-import { useIndexStore } from "@/store/IndexStore";
+import useIndexStore from "@/store/IndexStore";
 import { Method } from "axios";
 
 // 附加操作
@@ -51,10 +51,10 @@ function buildAllLink(method: Method): Array<string> {
         fields.map(e => options_post.map(o => `/${e}/${o}`))
             .flat()
             .forEach(f => links.push(f));
-    }else if (method === 'PUT') {
+    } else if (method === 'PUT') {
         let fields = buildFieldList(false);
         fields.map(e => links.push(`/${e}/`))
-    }else if (method === 'DELETE') {
+    } else if (method === 'DELETE') {
         let fields = buildFieldList(false);
         fields.map(e => links.push(`/${e}/`))
     }

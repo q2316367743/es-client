@@ -6,31 +6,31 @@
             <el-menu :default-active="active" style="height: 100%" @select="select_menu">
                 <el-menu-item index="home">
                     <el-icon>
-                        <home-filled/>
+                        <home-filled />
                     </el-icon>
                     <template #title>{{ $t('app.menu.home') }}</template>
                 </el-menu-item>
                 <el-menu-item index="data browse">
                     <el-icon>
-                        <coin/>
+                        <coin />
                     </el-icon>
                     <template #title>{{ $t('app.menu.data_browse') }}</template>
                 </el-menu-item>
                 <el-menu-item index="base search">
                     <el-icon>
-                        <search/>
+                        <search />
                     </el-icon>
                     <template #title>{{ $t('app.menu.base_search') }}</template>
                 </el-menu-item>
                 <el-menu-item index="senior search">
                     <el-icon>
-                        <data-board/>
+                        <data-board />
                     </el-icon>
                     <template #title>{{ $t('app.menu.senior_search') }}</template>
                 </el-menu-item>
                 <el-menu-item index="setting">
                     <el-icon>
-                        <operation/>
+                        <operation />
                     </el-icon>
                     <template #title>{{ $t('app.menu.setting') }}</template>
                 </el-menu-item>
@@ -49,7 +49,7 @@
                 <div class="app-option">
                     <!-- 索引服务器选择 -->
                     <el-select v-model="url_id" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
-                               clearable @change="select_url">
+                        clearable @change="select_url">
                         <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
                         </el-option>
                         <el-option :label="$t('app.add')" value="add"></el-option>
@@ -85,59 +85,30 @@
                 <setting v-show="active === 'setting'"></setting>
             </div>
         </div>
-        <el-dialog :title="$t('app.about')" v-model="about_dialog" width="70%" append-to-body
-                   custom-class="es-dialog" :close-on-click-modal="false" top="10vh">
+        <el-dialog :title="$t('app.about')" v-model="about_dialog" width="70%" append-to-body custom-class="es-dialog"
+            :close-on-click-modal="false" top="10vh">
             <about></about>
         </el-dialog>
-        <el-dialog :title="$t('setting.link.add') + $t('setting.link.url')" v-model="url_add_dialog" width="600px">
-            <el-form :model="url_add_data" label-width="100px" ref="urlForm" :rules="url_rules">
-                <el-form-item :label="$t('setting.link.name')" prop="name">
-                    <el-input v-model="url_add_data.name"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('setting.link.url')" prop="value">
-                    <el-input v-model="url_add_data.value" :placeholder="$t('setting.link.url_placeholder')">
-                    </el-input>
-                </el-form-item>
-                <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
-                    <el-input-number v-model="url_add_data.sequence" controls-position="right" size="large"/>
-                </el-form-item>
-                <el-form-item :label="$t('setting.link.is_auth')" prop="is_auth">
-                    <el-switch v-model="url_add_data.is_auth" size="large" active-text="true" inactive-text="false"/>
-                </el-form-item>
-                <el-form-item :label="$t('setting.link.auth_user')" prop="auth_user" v-if="url.is_auth">
-                    <el-input v-model="url_add_data.auth_user" size="large"/>
-                </el-form-item>
-                <el-form-item :label="$t('setting.link.auth_password')" prop="auth_password" v-if="url.is_auth">
-                    <el-input v-model="url_add_data.auth_password" size="large"/>
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <el-button @click="test">{{ $t('setting.link.test') }}</el-button>
-                <el-button type="primary" @click="url_submit">{{ $t('setting.link.add') }}</el-button>
-            </template>
-        </el-dialog>
-        <json-dialog v-model="test_dialog" :json="test_data" :title="$t('setting.link.result')" open></json-dialog>
+        <save-or-update-url v-model="urlDialog"></save-or-update-url>
     </el-config-provider>
 </template>
 
 <script lang="ts">
 // 引入状态管理
-import {useUrlStore} from "@/store/UrlStore";
-import {useIndexStore} from '@/store/IndexStore';
-import {useSettingStore} from "@/store/SettingStore";
+import useUrlStore from "@/store/UrlStore";
+import useIndexStore from '@/store/IndexStore';
+import useSettingStore from "@/store/SettingStore";
 // 引入框架
-import type {ElForm} from 'element-plus'
-import {ElMessage} from 'element-plus'
-import {defineComponent} from 'vue';
-import {mapState} from "pinia";
-import {Coin, DataBoard, Expand, Fold, HomeFilled, Operation, Search} from '@element-plus/icons-vue';
-import axios from 'axios';
+import { defineComponent } from 'vue';
+import { mapState } from "pinia";
+import { Coin, DataBoard, Expand, Fold, HomeFilled, Operation, Search } from '@element-plus/icons-vue';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
 // 引入页面组件
 import Info from '@/components/Info.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/components/Translate.vue";
+import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 // 页面
 import About from "@/page/About/index.vue";
 import Home from "./page/Home/index.vue";
@@ -147,8 +118,6 @@ import SqlSearch from "@/page/sql_search/index.vue";
 import Setting from '@/page/Setting/index.vue'
 import DataBrowse from '@/page/DataBrowse/index.vue';
 // 其他
-import Url from "@/entity/Url";
-import url_dao from "@/dao/UrlDao";
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
 import MessageEventEnum from "./enumeration/MessageEventEnum";
@@ -157,47 +126,14 @@ export default defineComponent({
     components: {
         Info, About, Setting, Home, BaseSearch, SeniorSearch,
         SqlSearch, Fold, Expand, HomeFilled, Search, Operation,
-        Coin, DataBoard, JsonDialog, Translate, DataBrowse
+        Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl
     },
     data: () => {
         return {
             active: "home",
             url_id: undefined as number | undefined,
             about_dialog: false,
-            url_add_dialog: false,
-            url_add_data: {
-                name: '',
-                value: 'http://',
-                sequence: 0,
-                is_auth: false,
-                auth_user: '',
-                auth_password: ''
-            } as Url,
-            url_rules: {
-                name: [
-                    {
-                        required: true,
-                        message: '请输入链接名',
-                        trigger: 'blur',
-                    }
-                ],
-                value: [
-                    {
-                        required: true,
-                        message: '请输入链接',
-                        trigger: 'blur',
-                    }
-                ],
-                sequence: [
-                    {
-                        required: true,
-                        message: '请输入排序',
-                        trigger: 'blur',
-                    }
-                ]
-            },
-            test_dialog: false,
-            test_data: {} as any,
+            urlDialog: false,
             locale: zhCn
         };
     },
@@ -225,10 +161,9 @@ export default defineComponent({
             if (value === 'add') {
                 // 新增，打开新增面板
                 this.url_id = undefined;
-                this.url_add_dialog = true;
+                this.urlDialog = true;
                 return;
             }
-
             // 先进性索引刷新
             // 选择索引
             await useUrlStore().choose(value as number);
@@ -252,54 +187,6 @@ export default defineComponent({
             this.active = index;
             mitt.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
-        url_submit() {
-            let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
-            urlForm.validate((valid) => {
-                if (valid) {
-                    // 新增
-                    url_dao.insert({
-                        name: this.url_add_data.name,
-                        value: this.url_add_data.value,
-                        sequence: this.url_add_data.sequence,
-                        is_auth: this.url_add_data.is_auth,
-                        auth_user: this.url_add_data.auth_user,
-                        auth_password: this.url_add_data.auth_password
-                    }, (id) => {
-                        useUrlStore().reset(() => {
-                            // 刷新索引列表
-                            // 选择索引
-                            this.select_url(id);
-                            ElMessage.success('新增成功');
-                        });
-                    });
-                    this.url_add_dialog = false;
-                    // 重置数据
-                    this.url_add_data = {
-                        name: '',
-                        value: 'http://',
-                        sequence: 0,
-                    }
-                }
-            });
-        },
-        test() {
-            let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
-            urlForm.validate((valid) => {
-                if (valid) {
-                    axios({
-                        baseURL: this.url_add_data.value,
-                        url: '/',
-                        method: 'GET',
-                    }).then((response) => {
-                        this.test_dialog = true;
-                        this.test_data = response.data;
-                    }).catch((e) => {
-                        console.error(e);
-                        ElMessage.error('连接失败');
-                    });
-                }
-            })
-        },
         languageCommand(command: string) {
             useSettingStore().setLanguage(command);
             this.$i18n.locale = command;
@@ -314,4 +201,5 @@ export default defineComponent({
 </script>
 
 <style lang="less">
+
 </style>

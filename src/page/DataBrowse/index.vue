@@ -18,10 +18,9 @@
             <div class="browse-side" :class="showSide ? 'browse-side-open' : 'browse-side-hide'">
                 <el-scrollbar @click="clearChoose">
                     <es-list>
-                        <es-list-item v-for="(index, idx) in indexList" :key="idx"
-                                      :choose="chooseIndex === index.name" @click.stop="choose(index.name)"
-                                      :aliases="index.alias">{{
-                                index.name
+                        <es-list-item v-for="(index, idx) in indexList" :key="idx" :choose="chooseIndex === index.name"
+                            @click.stop="choose(index.name)" :aliases="index.alias">{{
+                                    index.name
                             }}
                         </es-list-item>
                     </es-list>
@@ -29,40 +28,39 @@
             </div>
             <!-- 是否隐藏左侧的按钮 -->
             <div class="browse-operation" :class="showSide ? 'browse-operation-open' : 'browse-operation-hide'"
-                 @click="showSide = !showSide">
+                @click="showSide = !showSide">
                 <el-icon v-if="showSide" :size="12">
-                    <arrow-left/>
+                    <arrow-left />
                 </el-icon>
                 <el-icon v-else :size="12">
-                    <arrow-right/>
+                    <arrow-right />
                 </el-icon>
             </div>
             <!-- 数据展示 -->
             <div class="browse-content" :class="showSide ? 'browse-content-open' : 'browse-content-hide'">
                 <div class="operation">
                     <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                                   :current-page="page" :page-size="size" @size-change="sizeChange"
-                                   @current-change="pageChange">
+                        :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
                     </el-pagination>
                 </div>
                 <div class="container">
                     <base-viewer v-if="view === 1" :data="data_browse_result"></base-viewer>
                     <json-viewer v-else-if="view === 2" :value="data_browse_result" :expand-depth="6" copyable sort
-                                 expanded>
+                        expanded>
                     </json-viewer>
                     <table-viewer v-if="view === 3" :data="data_browse_result" :mapping="mapping"></table-viewer>
-                    <base-browse-editor-viewer v-if="view === 4"
-                                               v-model="data_browse_result"></base-browse-editor-viewer>
+                    <base-browse-editor-viewer v-if="view === 4" v-model="data_browse_result">
+                    </base-browse-editor-viewer>
                 </div>
             </div>
         </div>
-        <el-backtop :right="40" :bottom="60" target=".browse-content" v-show="showTop"/>
+        <el-backtop :right="40" :bottom="60" target=".browse-content" v-show="showTop" />
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
-import {mapState} from 'pinia';
+import { defineComponent } from "vue";
+import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
+import { mapState } from 'pinia';
 import JsonViewer from "vue-json-viewer";
 
 import EsList from '@/components/EsList/index.vue';
@@ -71,8 +69,8 @@ import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue";
 import BaseBrowseEditorViewer from "@/components/EditorViewer/base-browse.vue";
 
-import {useIndexStore} from '@/store/IndexStore';
-import {useSettingStore} from "@/store/SettingStore";
+import useIndexStore from '@/store/IndexStore';
+import useSettingStore from "@/store/SettingStore";
 
 import axios from "@/plugins/axios";
 import mitt from '@/plugins/mitt';
@@ -157,7 +155,7 @@ export default defineComponent({
             axios({
                 url: `/${index_name}/_search`,
                 method: "POST",
-                data: {from: (this.page - 1) * this.size, size: this.size},
+                data: { from: (this.page - 1) * this.size, size: this.size },
             }).then((response) => {
                 this.data_browse_result = response;
                 if (this.data_browse_result.hits) {

@@ -1,4 +1,4 @@
-interface Url {
+export default interface Url {
 
     /**
      * ID
@@ -46,5 +46,3 @@ interface Url {
     auth_password?: string;
 
 }
-
-export default Url;

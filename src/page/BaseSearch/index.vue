@@ -4,7 +4,7 @@
         <div class="base-option el-card es-card">
             <div class="left">
                 <el-select-v2 v-model="index" filterable :options="indices"
-                              :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
+                    :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
                     <template #default="{ item }">
                         <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
                     </template>
@@ -12,12 +12,12 @@
                 <!-- 搜索 -->
                 <el-button type="success" style="margin-left: 10px" @click="search">{{
                         $t('base_search.search')
-                    }}
+                }}
                 </el-button>
                 <!-- 清空 -->
                 <el-button style="margin-left: 10px" @click="clear(true)">{{
                         $t('base_search.clear')
-                    }}
+                }}
                 </el-button>
             </div>
             <div class="right">
@@ -41,16 +41,16 @@
                             </el-button>
                         </div>
                         <div v-for="(item, idx) in fieldConditions" :key="idx"
-                             style="margin-bottom: 10px;display: flex;">
+                            style="margin-bottom: 10px;display: flex;">
                             <field-condition-item v-model="fieldConditions[idx]" :fields="fields">
                             </field-condition-item>
                             <el-button type="primary" style="margin-left: 10px" @click="fieldConditionAdd">{{
                                     $t('base_search.add')
-                                }}
+                            }}
                             </el-button>
                             <el-button type="danger" @click="fieldConditionRemove(item.id)">{{
                                     $t('base_search.remove')
-                                }}
+                            }}
                             </el-button>
                         </div>
                     </el-form-item>
@@ -61,24 +61,24 @@
                             </el-button>
                         </div>
                         <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
-                             :key="idx">
+                            :key="idx">
                             <el-select v-model="orders[idx].field" filterable
-                                       :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
+                                :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
                                 <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
-                                           :value="field.name"></el-option>
+                                    :value="field.name"></el-option>
                             </el-select>
                             <el-select v-model="orders[idx].type" filterable
-                                       :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
+                                :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
                                 <el-option label="asc" value="asc"></el-option>
                                 <el-option label="desc" value="desc"></el-option>
                             </el-select>
                             <el-button type="primary" style="margin-left: 10px" @click="order_add">{{
                                     $t('base_search.add')
-                                }}
+                            }}
                             </el-button>
                             <el-button type="danger" @click="order_remove(order.id)">{{
                                     $t('base_search.remove')
-                                }}
+                            }}
                             </el-button>
                         </div>
                     </el-form-item>
@@ -91,8 +91,7 @@
             <!-- 查询结果 -->
             <div class="base-content">
                 <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                               :current-page="page" :page-size="size" @size-change="sizeChange"
-                               @current-change="pageChange">
+                    :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
                 </el-pagination>
                 <base-viewer v-if="view === 1" :data="result"></base-viewer>
                 <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
@@ -104,17 +103,17 @@
             </div>
         </div>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
-                   custom-class="es-dialog" :close-on-click-modal="false">
+            custom-class="es-dialog" :close-on-click-modal="false">
             <json-viewer :value="condition_data" :expand-depth="4" copyable sort expanded preview-mode></json-viewer>
         </el-dialog>
-        <el-backtop :right="40" :bottom="60" target=".base-display" v-show="show_top"/>
+        <el-backtop :right="40" :bottom="60" target=".base-display" v-show="show_top" />
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {ElMessageBox} from "element-plus";
-import {mapState} from "pinia";
+import { defineComponent } from "vue";
+import { ElMessageBox } from "element-plus";
+import { mapState } from "pinia";
 
 import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
@@ -124,8 +123,8 @@ import BaseSearchEditorViewer from "@/components/EditorViewer/base-search.vue";
 import axios from "@/plugins/axios";
 import mitt from '@/plugins/mitt';
 
-import {useIndexStore} from "@/store/IndexStore";
-import {useSettingStore} from "@/store/SettingStore";
+import useIndexStore from "@/store/IndexStore";
+import useSettingStore from "@/store/SettingStore";
 
 import BaseQuery from '@/domain/BaseQuery';
 import BaseOrder from "@/domain/BaseOrder";

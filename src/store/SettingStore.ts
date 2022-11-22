@@ -3,7 +3,7 @@ import {getDefaultLanguage} from '@/utils/GlobalUtil';
 import {useLocalStorage} from "@vueuse/core";
 import Setting from "@/entity/Setting";
 
-export const useSettingStore = defineStore('setting', {
+const useSettingStore = defineStore('setting', {
     state: () => {
         let setting = useLocalStorage('setting', {
             defaultViewer: 2,
@@ -56,4 +56,6 @@ export const useSettingStore = defineStore('setting', {
             this.instance.timeout = timeout;
         }
     }
-})
+});
+
+export default useSettingStore;

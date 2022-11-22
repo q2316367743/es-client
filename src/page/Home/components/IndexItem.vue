@@ -124,7 +124,7 @@
 import {defineComponent, PropType} from "vue";
 import {ArrowDown, ArrowUp} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
-import {useIndexStore} from '@/store/IndexStore';
+import useIndexStore from '@/store/IndexStore';
 import Index from "@/view/Index";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";

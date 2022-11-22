@@ -1,14 +1,14 @@
 import Dexie from 'dexie';
 import { ElMessage } from 'element-plus'
 import Chart from '@/entity/Chart';
-import dexie from '@/plugins/dexie'
 
-class UrlDao {
 
-    public chartResponse: Dexie.Table<Chart, number>;
+export default class ChartService {
 
-    constructor() {
-        this.chartResponse = dexie.getChart();
+    private readonly chartResponse: Dexie.Table<Chart, number>;
+
+    constructor(chartResponse: Dexie.Table<Chart, number>) {
+        this.chartResponse = chartResponse;
     }
 
     list(): Promise<Array<Chart>> {
@@ -49,7 +49,3 @@ class UrlDao {
     }
 
 }
-
-const urlDao = new UrlDao();
-
-export default urlDao;

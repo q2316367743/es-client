@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {ElMessage} from 'element-plus'
-import {useUrlStore} from '@/store/UrlStore'
-import {useSettingStore} from '@/store/SettingStore'
+import { ElMessage } from 'element-plus'
+import useUrlStore from '@/store/UrlStore'
+import useSettingStore from '@/store/SettingStore'
 import i18n from '@/i18n'
 
 // 创建一个axios实例

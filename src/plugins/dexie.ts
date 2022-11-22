@@ -3,7 +3,7 @@ import Tip from '@/entity/Tip';
 import Url from '@/entity/Url';
 import Chart from '@/entity/Chart';
 
-class Instance extends Dexie {
+export default class DexieInstance extends Dexie {
 
     private readonly tip: Dexie.Table<Tip, number>;
     private readonly url: Dexie.Table<Url, number>;
@@ -36,7 +36,3 @@ class Instance extends Dexie {
     }
 
 }
-
-const instance = new Instance();
-
-export default instance;

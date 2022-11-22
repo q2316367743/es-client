@@ -1,10 +1,11 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
+import { ElMessage } from "element-plus";
 import Url from "@/entity/Url";
-import urlDao from "@/dao/UrlDao";
-import {useIndexStore} from "./IndexStore";
-import {ElMessage} from "element-plus";
+import useIndexStore from "./IndexStore";
 
-export const useUrlStore = defineStore('url', {
+import { urlService } from "@/global/BeanFactory";
+
+const useUrlStore = defineStore('url', {
     state: () => {
         return {
             // 全部的链接
@@ -32,7 +33,7 @@ export const useUrlStore = defineStore('url', {
          * 重新获取链接
          */
         reset(callback?: () => void) {
-            urlDao.list(urls => {
+            urlService.list(urls => {
                 this.urls = urls;
                 if (callback) {
                     callback()
@@ -61,4 +62,6 @@ export const useUrlStore = defineStore('url', {
             }
         }
     }
-})
+});
+
+export default useUrlStore;

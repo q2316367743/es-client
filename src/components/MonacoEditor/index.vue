@@ -7,7 +7,7 @@ import * as monaco from 'monaco-editor';
 
 import SchemaBuild from './build/SchemaBuild';
 import { mapState } from "pinia";
-import { useIndexStore } from "@/store/IndexStore";
+import useIndexStore from "@/store/IndexStore";
 
 let instance = {} as monaco.editor.IStandaloneCodeEditor;
 

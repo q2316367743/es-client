@@ -100,7 +100,7 @@ import { validateTip } from '@/utils/GlobalUtil';
 import LinkProcessor from "./LinkProcessor";
 import Param from '@/view/Param'
 import getParamBuild from "@/build/GetParamBuild";
-import { useSettingStore } from "@/store/SettingStore";
+import useSettingStore from "@/store/SettingStore";
 
 enum Mode {
 	HIDE_LEFT = 1,
