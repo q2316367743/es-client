@@ -25,10 +25,10 @@ npm run dev
 
 ## 自行打包
 
-本项目可以使用`yarn` 或 `pnpm`
+本项目推荐使用`yarn`
 
-1. 安装依赖：`yarn` | `pnpm install`
-2. 构建：`yarn build` | `pnpm run build`
+1. 安装依赖：`yarn install`
+2. 构建：`yarn build`
 3. 在`chrome`文件夹中创建文件夹`es-client`，并将dist中文件复制到`chrome/es-client`中
 
 > 上面步骤是打包`chrome`插件，如果是应用程序打包，去掉第三步，其他不变。  
