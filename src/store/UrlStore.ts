@@ -22,7 +22,7 @@ const useUrlStore = defineStore('url', {
             return state.urls;
         },
         current: (state): string => {
-            return state.url ? state.url.value! : '';
+            return state.url && state.url.value ? state.url.value! : '';
         },
         id: (state): number | undefined => {
             return state.url ? state.url.id! : undefined;

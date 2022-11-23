@@ -12,7 +12,8 @@ service.interceptors.request.use(
     config => {
         // 基础链接每次动态取值
         config.baseURL = useUrlStore().current;
-        if (config.baseURL === '') {
+        console.log('发送请求', config.baseURL)
+        if (!config.baseURL || config.baseURL === '') {
             throw new Error(i18n.global.locale.value == 'zh' ? '请选择链接' : 'please select a link')
         }
         // TODO: 如果有密码应该追加密码
