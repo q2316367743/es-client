@@ -27,8 +27,7 @@ export default {
                 "超时时间可设置",
                 "基础搜索显示优化",
                 "新增链接逻辑优化"
-            ],
-            remark: "注意：如果使用认证，如果显示跨域问题，需要在elasticsearch中加入<code>http.cors.allow-headers:\"Content-Type\"</code>"
+            ]
         }, {
             version: "1.3.0",
             time: "2022-09-05",
