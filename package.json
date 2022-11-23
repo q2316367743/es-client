@@ -32,7 +32,6 @@
         "mitt": "^3.0.0",
         "monaco-editor": "^0.33.0",
         "pinia": "^2.0.13",
-        "vite-plugin-monaco-editor": "^1.0.10",
         "vue": "^3.2.33",
         "vue-i18n": "^9.2.0-beta.26",
         "vue-json-viewer": "^3.0.4"
