@@ -1,6 +1,6 @@
-import {defineStore} from "pinia";
-import {getDefaultLanguage} from '@/utils/GlobalUtil';
-import {useLocalStorage} from "@vueuse/core";
+import { defineStore } from "pinia";
+import { getDefaultLanguage } from '@/utils/GlobalUtil';
+import { useLocalStorage } from "@vueuse/core";
 import Setting from "@/entity/Setting";
 
 const useSettingStore = defineStore('setting', {
@@ -11,8 +11,7 @@ const useSettingStore = defineStore('setting', {
             defaultShard: 5,
             seniorWidth: 520,
             pageSize: 20,
-            pageStep: 10,
-            timeout: 5000
+            pageStep: 10
         } as Setting);
         return {
             language: getDefaultLanguage(),

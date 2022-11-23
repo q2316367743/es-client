@@ -161,7 +161,7 @@ export default defineComponent({
             fieldConditions: new Array<BaseQuery>(),
             // 分页
             page: 1,
-            size: 10,
+            size: useSettingStore().getPageSize,
             total: 0,
             // 条件对话框
             condition_dialog: false,
@@ -293,7 +293,7 @@ export default defineComponent({
         },
         clear(clear_index: boolean = false) {
             this.page = 1;
-            this.size = 10;
+            this.size = useSettingStore().getPageSize;
             this.total = 0;
             this.fieldConditions = new Array<BaseQuery>();
             this.orders = new Array<BaseOrder>();

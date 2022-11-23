@@ -104,7 +104,7 @@ export default defineComponent({
         data_browse_result: {} as any,
         mapping: {},
         page: 1,
-        size: 10,
+        size: useSettingStore().getPageSize,
         total: 0,
         indexList: [] as Array<Index>,
         keyword: '',
@@ -176,7 +176,7 @@ export default defineComponent({
             this.data_browse_result = {} as any;
             this.mapping = {};
             this.page = 1;
-            this.size = 10;
+            this.size = useSettingStore().getPageSize;
             this.total = 0;
         },
         renderIndexList() {

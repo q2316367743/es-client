@@ -1,5 +1,5 @@
 <template>
-    <el-form style="margin-top: 10px;">
+    <el-form style="margin-top: 10px;" label-width="160px">
         <el-form-item :label="$t('setting.base.default_shard_number')">
             <el-input-number v-model="instance.defaultShard"></el-input-number>
         </el-form-item>

@@ -1,7 +1,7 @@
 <template>
     <el-config-provider :locale="locale">
         <!-- 左侧菜单 -->
-        <div class="menu">
+        <div id="menu">
             <div class="logo">ES-client</div>
             <el-menu :default-active="active" style="height: 100%" @select="select_menu">
                 <el-menu-item index="home">
@@ -35,14 +35,14 @@
                     <template #title>{{ $t('app.menu.setting') }}</template>
                 </el-menu-item>
             </el-menu>
-            <div class="author">
+            <div class="version">
                 <div style="margin-top: 5px">
                     <el-link @click="aboutDialog = true">v{{Constant.version}}</el-link>
                 </div>
             </div>
         </div>
         <!-- 内容-->
-        <div class="main">
+        <div id="main">
             <!-- 顶部-->
             <div class="top">
                 <!-- 左侧 -->
@@ -85,6 +85,7 @@
                 <setting v-show="active === 'setting'"></setting>
             </div>
         </div>
+        <div id="footer"></div>
         <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body custom-class="es-dialog"
             :close-on-click-modal="false" top="10vh">
             <about></about>
@@ -137,7 +138,9 @@ export default defineComponent({
             aboutDialog: false,
             urlDialog: false,
             locale: zhCn,
-            Constant
+            Constant,
+            showLeft: true,
+            showBottom: false
         };
     },
     computed: {
