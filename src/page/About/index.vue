@@ -15,20 +15,9 @@
         </div>
         <div class="title-1">项目地址</div>
         <div content="content">
-            <div>
-                码云地址：
-                <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">es-client</el-link>
-            </div>
-            <div>
-                微软edge插件商店地址：
-                <el-link
-                    href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                    target="_blank">es-client
-                </el-link>
-            </div>
-            <div>
-                Firefox插件商店地址：
-                <el-link href="https://addons.mozilla.org/addon/es-client" target="_blank">es-client</el-link>
+            <div v-for="repo in data.repository">
+                {{ repo.name }}：
+                <el-link :href="repo.url" target="_blank">es-client</el-link>
             </div>
         </div>
         <div class="title-1">意见反馈</div>
@@ -55,196 +44,27 @@
         <div class="title-1">更新日志</div>
         <div class="content">
             <el-timeline>
-                <el-timeline-item timestamp="2022-09-05" placement="top">
+                <el-timeline-item :timestamp="log.time" placement="top" v-for="log in data.log">
                     <el-card>
-                        <div>1.3.0</div>
+                        <div>{{ log.version }}</div>
+                        <div v-if="log.title">{{ log.title }}</div>
                         <ol>
-                            <li>增加认证</li>
-                            <li>刷新索引不会重置搜索条件</li>
-                            <li>更便捷的别名新增</li>
+                            <template v-for="item in log.items">
+                                <li v-if="typeof item === 'string'">{{ item }}</li>
+                                <ol v-else>
+                                    <li v-for="i in item">{{ i }}</li>
+                                </ol>
+                            </template>
                         </ol>
-                        <div>注意：如果使用认证，如果显示跨域问题，需要在elasticsearch中加入<code>http.cors.allow-headers:
-                            "Content-Type"</code></div>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-06-20" placement="top">
-                    <el-card>
-                        <div>1.2.0</div>
-                        <ol>
-                            <li>修复基础查询字段【移除】问题</li>
-                            <li>修复部分布局</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-06-02" placement="top">
-                    <el-card>
-                        <div>1.1.0</div>
-                        <ol>
-                            <li>去除无用语句</li>
-                            <li>新增编辑器视图</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-05-26" placement="top">
-                    <el-card>
-                        <div>1.0.0</div>
-                        <ol>
-                            <li>页面布局重构，更加清爽</li>
-                            <li>页面增加返回顶部，更加灵活</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-05-17" placement="top">
-                    <el-card>
-                        <div>0.9.3</div>
-                        <ol>
-                            <li>修复高级查询语法提示错误</li>
-                            <li>表格视图增加列筛选</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-05-16" placement="top">
-                    <el-card>
-                        <div>0.9.2</div>
-                        <ol>
-                            <li>基础查询增加字段排序</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-04-29" placement="top">
-                    <el-card>
-                        <div>0.9.1</div>
-                        <ol>
-                            <li>修复服务器地址更新页面不刷新问题</li>
-                            <li>数据预览增加别名</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-04-29" placement="top">
-                    <el-card>
-                        <div>0.9.0</div>
-                        <ol>
-                            <li>新增数据浏览功能</li>
-                            <li>新增表格视图</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-04-28" placement="top">
-                    <el-card>
-                        <div>0.8.1</div>
-                        <ol>
-                            <li>修复基础查询字段选择失效问题</li>
-                            <li>完善基础查询条件</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-04-01" placement="top">
-                    <el-card>
-                        <div>0.8.0</div>
-                        <ol>
-                            <li>优化样式</li>
-                            <li>高级查询搜索增加语法提示</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-03-04" placement="top">
-                    <el-card>
-                        <div>0.7.0</div>
-                        <ol>
-                            <li>优化代码逻辑，减少卡顿</li>
-                            <li>增加集群健康值显示</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-02-17" placement="top">
-                    <el-card>
-                        <div>0.6.0</div>
-                        <ol>
-                            <li>链接管理优化，可以在首页上面新增链接</li>
-                            <li>基础查询功能优化</li>
-                            <ul style="padding-left: 20px;padding-top: 5px;">
-                                <li>文档选择中增加别名</li>
-                                <li>文档按照名称排序</li>
-                                <li>字段按照名称排序</li>
-                            </ul>
-                            <li>增加
-                                <el-link href="https://addons.mozilla.org/addon/es-client">Firefox插件</el-link>
-                            </li>
-                            <li>多个列表新增返回顶部</li>
-                        </ol>
-                        <div>链接在设置 => 链接管理中管理，进行增删改查</div>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2022-02-10" placement="top">
-                    <el-card>
-                        <div>0.5.0</div>
-                        <ol>
-                            <li>使用ts和vue3进行重写</li>
-                            <li>支持国际化</li>
-                            <li>高级搜索中不允许修改链接</li>
-                            <li>设置中的链接管理希望有名称用于区分</li>
-                            <li>上面的链接管理可以通过下拉框名称进行连接</li>
-                            <li>高级搜索去除选择链接地址</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2021-12-18" placement="top">
-                    <el-card>
-                        <div>0.4.4</div>
-                        <ol>
-                            <li>增加分片和副本的显示</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2021-12-12" placement="top">
-                    <el-card>
-                        <div>0.4.3</div>
-                        <ol>
-                            <li>增加了意见反馈</li>
-                            <li>高级搜索增加快速完成</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2021-11-13" placement="top">
-                    <el-card>
-                        <div>0.4.0</div>
-                        <ol>
-                            <li>重构了路由</li>
-                            <li>完成了首页功能</li>
-                            <li>完善了基础查询，但现在字段仍只支持一级对象类型</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2021-11-09" placement="top">
-                    <el-card>
-                        <div>0.3.0</div>
-                        <div>完成基本功能</div>
-                        <ol>
-                            <li>完成首页部分功能</li>
-                            <li>增加搜索历史</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2021-11-08" placement="top">
-                    <el-card>
-                        <div>0.2.0</div>
-                        <div>完成基本功能</div>
-                        <ol>
-                            <li>索引查询</li>
-                            <li>基础查询</li>
-                            <li>高级查询</li>
-                            <li>增加chrome插件</li>
-                        </ol>
-                    </el-card>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2021-11-08" placement="top">
-                    <el-card>
-                        <div>0.1.0</div>
-                        <div>完成项目雏形</div>
-                        <ol>
-                            <li>确定了基本功能</li>
-                            <li>完成了基本布局</li>
-                        </ol>
+                        <div v-if="log.remark">
+                            <span v-if="typeof log.remark === 'string'">{{ log.remark }}</span>
+                            <span v-else>
+                                <span v-for="item in log.remark">
+                                    <span v-if="item.type === 'string'">{{ item.value }}</span>
+                                    <el-link v-else :href="item.addon" target="_blank">{{ item.value }}</el-link>
+                                </span>
+                            </span>
+                        </div>
                     </el-card>
                 </el-timeline-item>
             </el-timeline>
@@ -253,11 +73,16 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue"
+import { defineComponent } from "vue"
+
+import Constant from "@/global/Constant";
 
 
 export default defineComponent({
-    name: "About"
+    name: "About",
+    data: () => ({
+        data: Constant
+    })
 });
 </script>
 

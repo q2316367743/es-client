@@ -37,7 +37,7 @@
             </el-menu>
             <div class="author">
                 <div style="margin-top: 5px">
-                    <el-link @click="about_dialog = true">v1.3.0</el-link>
+                    <el-link @click="aboutDialog = true">v{{Constant.version}}</el-link>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 <!-- 左侧 -->
                 <div class="app-option">
                     <!-- 索引服务器选择 -->
-                    <el-select v-model="url_id" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
+                    <el-select v-model="urlId" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
                         clearable @change="select_url">
                         <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
                         </el-option>
@@ -85,7 +85,7 @@
                 <setting v-show="active === 'setting'"></setting>
             </div>
         </div>
-        <el-dialog :title="$t('app.about')" v-model="about_dialog" width="70%" append-to-body custom-class="es-dialog"
+        <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body custom-class="es-dialog"
             :close-on-click-modal="false" top="10vh">
             <about></about>
         </el-dialog>
@@ -117,10 +117,12 @@ import SeniorSearch from '@/page/SeniorSearch/index.vue';
 import SqlSearch from "@/page/sql_search/index.vue";
 import Setting from '@/page/Setting/index.vue'
 import DataBrowse from '@/page/DataBrowse/index.vue';
-// 其他
-import mitt from '@/plugins/mitt';
+// 插件
 import emitter from '@/plugins/mitt';
-import MessageEventEnum from "./enumeration/MessageEventEnum";
+// 枚举
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+// 常量
+import Constant from '@/global/Constant'
 
 export default defineComponent({
     components: {
@@ -131,10 +133,11 @@ export default defineComponent({
     data: () => {
         return {
             active: "home",
-            url_id: undefined as number | undefined,
-            about_dialog: false,
+            urlId: undefined as number | undefined,
+            aboutDialog: false,
             urlDialog: false,
-            locale: zhCn
+            locale: zhCn,
+            Constant
         };
     },
     computed: {
@@ -143,7 +146,7 @@ export default defineComponent({
     },
     watch: {
         url() {
-            this.url_id = this.url?.id!;
+            this.urlId = this.url?.id!;
         }
     },
     created() {
@@ -160,7 +163,7 @@ export default defineComponent({
             emitter.emit('update_url');
             if (value === 'add') {
                 // 新增，打开新增面板
-                this.url_id = undefined;
+                this.urlId = undefined;
                 this.urlDialog = true;
                 return;
             }
@@ -185,7 +188,7 @@ export default defineComponent({
         select_menu(index: string) {
             // 切换active
             this.active = index;
-            mitt.emit(MessageEventEnum.PAGE_ACTIVE, index);
+            emitter.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
         languageCommand(command: string) {
             useSettingStore().setLanguage(command);
