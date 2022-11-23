@@ -2,7 +2,7 @@ import { Log, Repository } from "@/view/Data";
 
 export default {
     name: "es-client",
-    version: "1.4.0-beta",
+    version: "1.4.0",
     author: "Esion",
     repository: [
         {
@@ -20,7 +20,7 @@ export default {
     ] as Repository[],
     log: [
         {
-            version: "1.4.0-beta",
+            version: "1.4.0",
             time: "2022-11-23",
             items: [
                 "项目重构，结构调整",

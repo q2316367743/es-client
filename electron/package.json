@@ -1,6 +1,6 @@
 {
     "name": "electron",
-    "version": "1.4.0-beta",
+    "version": "1.4.0",
     "description": "",
     "main": "main.js",
     "scripts": {
