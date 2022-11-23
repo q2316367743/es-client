@@ -31,76 +31,78 @@
         </div>
         <!-- 核心查询区 -->
         <div class="base-display">
-            <!-- 查询条件 -->
-            <div class="base-condition el-card">
-                <el-form label-position="top" label-width="80px" style="overflow: auto">
-                    <!-- 条件 -->
-                    <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
-                        <div v-if="fieldConditions.length === 0">
-                            <el-button type="primary" @click="fieldConditionAdd">{{ $t('base_search.add') }}
-                            </el-button>
-                        </div>
-                        <div v-for="(item, idx) in fieldConditions" :key="idx"
-                            style="margin-bottom: 10px;display: flex;">
-                            <field-condition-item v-model="fieldConditions[idx]" :fields="fields">
-                            </field-condition-item>
-                            <el-button type="primary" style="margin-left: 10px" @click="fieldConditionAdd">{{
-                                    $t('base_search.add')
-                            }}
-                            </el-button>
-                            <el-button type="danger" @click="fieldConditionRemove(item.id)">{{
-                                    $t('base_search.remove')
-                            }}
-                            </el-button>
-                        </div>
-                    </el-form-item>
-                    <!-- 排序 -->
-                    <el-form-item :label="$t('base_search.order')">
-                        <div v-if="orders.length === 0">
-                            <el-button type="primary" @click="order_add">{{ $t('base_search.add') }}
-                            </el-button>
-                        </div>
-                        <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
-                            :key="idx">
-                            <el-select v-model="orders[idx].field" filterable
-                                :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
-                                <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
-                                    :value="field.name"></el-option>
-                            </el-select>
-                            <el-select v-model="orders[idx].type" filterable
-                                :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
-                                <el-option label="asc" value="asc"></el-option>
-                                <el-option label="desc" value="desc"></el-option>
-                            </el-select>
-                            <el-button type="primary" style="margin-left: 10px" @click="order_add">{{
-                                    $t('base_search.add')
-                            }}
-                            </el-button>
-                            <el-button type="danger" @click="order_remove(order.id)">{{
-                                    $t('base_search.remove')
-                            }}
-                            </el-button>
-                        </div>
-                    </el-form-item>
-                </el-form>
-                <div class="base-search-condition-sentence">
-                    <el-button link type="primary" @click="showBody">{{ $t('base_search.display_query_statement') }}
-                    </el-button>
+            <el-scrollbar>
+                <!-- 查询条件 -->
+                <div class="base-condition el-card">
+                    <el-form label-position="top" label-width="80px" style="overflow: auto">
+                        <!-- 条件 -->
+                        <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
+                            <div v-if="fieldConditions.length === 0">
+                                <el-button type="primary" @click="fieldConditionAdd">{{ $t('base_search.add') }}
+                                </el-button>
+                            </div>
+                            <div v-for="(item, idx) in fieldConditions" :key="idx"
+                                style="margin-bottom: 10px;display: flex;">
+                                <field-condition-item v-model="fieldConditions[idx]" :fields="fields">
+                                </field-condition-item>
+                                <el-button type="primary" style="margin-left: 10px" @click="fieldConditionAdd">{{
+                                        $t('base_search.add')
+                                }}
+                                </el-button>
+                                <el-button type="danger" @click="fieldConditionRemove(item.id)">{{
+                                        $t('base_search.remove')
+                                }}
+                                </el-button>
+                            </div>
+                        </el-form-item>
+                        <!-- 排序 -->
+                        <el-form-item :label="$t('base_search.order')">
+                            <div v-if="orders.length === 0">
+                                <el-button type="primary" @click="order_add">{{ $t('base_search.add') }}
+                                </el-button>
+                            </div>
+                            <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
+                                :key="idx">
+                                <el-select v-model="orders[idx].field" filterable
+                                    :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
+                                    <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
+                                        :value="field.name"></el-option>
+                                </el-select>
+                                <el-select v-model="orders[idx].type" filterable
+                                    :placeholder="$t('base_search.select_placeholder')" style="margin-left: 10px">
+                                    <el-option label="asc" value="asc"></el-option>
+                                    <el-option label="desc" value="desc"></el-option>
+                                </el-select>
+                                <el-button type="primary" style="margin-left: 10px" @click="order_add">{{
+                                        $t('base_search.add')
+                                }}
+                                </el-button>
+                                <el-button type="danger" @click="order_remove(order.id)">{{
+                                        $t('base_search.remove')
+                                }}
+                                </el-button>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                    <div class="base-search-condition-sentence">
+                        <el-button link type="primary" @click="showBody">{{ $t('base_search.display_query_statement') }}
+                        </el-button>
+                    </div>
                 </div>
-            </div>
-            <!-- 查询结果 -->
-            <div class="base-content">
-                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                    :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
-                </el-pagination>
-                <base-viewer v-if="view === 1" :data="result"></base-viewer>
-                <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-                </json-viewer>
-                <table-viewer v-if="view === 3" :data="result" :mapping="mapping">
-                </table-viewer>
-                <base-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100vh - 205px)">
-                </base-search-editor-viewer>
-            </div>
+                <!-- 查询结果 -->
+                <div class="base-content">
+                    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                        :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
+                    </el-pagination>
+                    <base-viewer v-if="view === 1" :data="result"></base-viewer>
+                    <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+                    </json-viewer>
+                    <table-viewer v-if="view === 3" :data="result" :mapping="mapping">
+                    </table-viewer>
+                    <base-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100vh - 205px)">
+                    </base-search-editor-viewer>
+                </div>
+            </el-scrollbar>
         </div>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
             custom-class="es-dialog" :close-on-click-modal="false">
@@ -352,7 +354,7 @@ export default defineComponent({
 
     .base-display {
         position: absolute;
-        top: 40px;
+        top: 50px;
         left: 0;
         right: 0;
         bottom: 0;
@@ -360,7 +362,8 @@ export default defineComponent({
 
         .base-condition {
             padding: 18px 20px;
-            margin-top: 22px;
+            margin-top: 12px;
+            position: relative;
 
             .base-search-condition-sentence {
                 position: absolute;

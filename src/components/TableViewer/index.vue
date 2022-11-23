@@ -4,7 +4,7 @@
         <json-viewer v-else-if="flag === 1" :value="data" :expand-depth="10" copyable sort expanded></json-viewer>
         <div v-else class="table-viewer-show">
             <div class="table-viewer-column">
-                <el-button style="margin-right: 6px" type="primary">新增</el-button>
+                <!-- <el-button style="margin-right: 6px" type="primary">新增</el-button> -->
                 <el-popover placement="bottom" trigger="click">
                     <template #reference>
                         <el-button style="margin-right: 16px">{{ $t('app.component.display_column') }}</el-button>

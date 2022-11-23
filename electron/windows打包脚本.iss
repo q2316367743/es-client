@@ -1,16 +1,16 @@
-; ½Å±¾ÓÉ Inno Setup ½Å±¾Ïòµ¼ Éú³É£¡
-; ÓÐ¹Ø´´½¨ Inno Setup ½Å±¾ÎÄ¼þµÄÏêÏ¸×ÊÁÏÇë²éÔÄ°ïÖúÎÄµµ£¡
+; ï¿½Å±ï¿½ï¿½ï¿½ Inno Setup ï¿½Å±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½É£ï¿½
+; ï¿½Ð¹Ø´ï¿½ï¿½ï¿½ Inno Setup ï¿½Å±ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä°ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½
 
 #define MyAppName "es-client"
-#define MyAppVersion "1.3.0"
-#define MyAppPublisher "ÂäÓê²»»Ú"
+#define MyAppVersion "1.4.0-beta"
+#define MyAppPublisher "ï¿½ï¿½ï¿½ê²»ï¿½ï¿½"
 #define MyAppURL "https://blog.esion.xyz"
 #define MyAppExeName "es-client.exe"
 
 [Setup]
-; ×¢: AppIdµÄÖµÎªµ¥¶À±êÊ¶¸ÃÓ¦ÓÃ³ÌÐò¡£
-; ²»ÒªÎªÆäËû°²×°³ÌÐòÊ¹ÓÃÏàÍ¬µÄAppIdÖµ¡£
-; (ÈôÒªÉú³ÉÐÂµÄ GUID£¬¿ÉÔÚ²Ëµ¥ÖÐµã»÷ "¹¤¾ß|Éú³É GUID"¡£)
+; ×¢: AppIdï¿½ï¿½ÖµÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½Ó¦ï¿½Ã³ï¿½ï¿½ï¿½
+; ï¿½ï¿½ÒªÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½AppIdÖµï¿½ï¿½
+; (ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ GUIDï¿½ï¿½ï¿½ï¿½ï¿½Ú²Ëµï¿½ï¿½Ðµï¿½ï¿½ "ï¿½ï¿½ï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ GUID"ï¿½ï¿½)
 AppId={{7EA23393-6B51-4A52-99C1-F987BA415AA3}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
@@ -22,7 +22,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=D:\Documents\Html\es-client\LICENSE
-; ÒÔÏÂÐÐÈ¡Ïû×¢ÊÍ£¬ÒÔÔÚ·Ç¹ÜÀí°²×°Ä£Ê½ÏÂÔËÐÐ£¨½öÎªµ±Ç°ÓÃ»§°²×°£©¡£
+; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½×¢ï¿½Í£ï¿½ï¿½ï¿½ï¿½Ú·Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½×°Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Îªï¿½ï¿½Ç°ï¿½Ã»ï¿½ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\Administrator\Desktop
@@ -42,7 +42,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "D:\Documents\Html\es-client\electron\out\es-client-win32-x64\es-client.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Documents\Html\es-client\electron\out\es-client-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-; ×¢Òâ: ²»ÒªÔÚÈÎºÎ¹²ÏíÏµÍ³ÎÄ¼þÉÏÊ¹ÓÃ¡°Flags: ignoreversion¡±
+; ×¢ï¿½ï¿½: ï¿½ï¿½Òªï¿½ï¿½ï¿½ÎºÎ¹ï¿½ï¿½ï¿½ÏµÍ³ï¿½Ä¼ï¿½ï¿½ï¿½Ê¹ï¿½Ã¡ï¿½Flags: ignoreversionï¿½ï¿½
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
