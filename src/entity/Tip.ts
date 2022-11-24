@@ -1,5 +1,3 @@
-import { Method } from "axios";
-
 export default interface Tip {
 
     /**

@@ -37,7 +37,7 @@
             </el-menu>
             <div class="version">
                 <div style="margin-top: 5px">
-                    <el-link @click="aboutDialog = true">v{{Constant.version}}</el-link>
+                    <el-link @click="aboutDialog = true">v{{ Constant.version }}</el-link>
                 </div>
             </div>
         </div>
@@ -85,11 +85,14 @@
                 <setting v-show="active === 'setting'"></setting>
             </div>
         </div>
-        <div id="footer"></div>
+        <!-- 底部状态栏 -->
+        <es-footer />
+        <!-- 关于弹窗 -->
         <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body custom-class="es-dialog"
             :close-on-click-modal="false" top="10vh">
             <about></about>
         </el-dialog>
+        <!-- 保存或新增URL弹窗 -->
         <save-or-update-url v-model="urlDialog"></save-or-update-url>
     </el-config-provider>
 </template>
@@ -106,10 +109,12 @@ import { Coin, DataBoard, Expand, Fold, HomeFilled, Operation, Search } from '@e
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
 // 引入页面组件
-import Info from '@/components/Info.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/components/Translate.vue";
 import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
+// 模块
+import Info from '@/module/info/index.vue';
+import EsFooter from '@/module/EsFooter/index.vue';
 // 页面
 import About from "@/page/About/index.vue";
 import Home from "./page/Home/index.vue";
@@ -129,7 +134,8 @@ export default defineComponent({
     components: {
         Info, About, Setting, Home, BaseSearch, SeniorSearch,
         SqlSearch, Fold, Expand, HomeFilled, Search, Operation,
-        Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl
+        Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl,
+        EsFooter
     },
     data: () => {
         return {

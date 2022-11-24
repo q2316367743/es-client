@@ -46,12 +46,12 @@
 import { defineComponent, PropType } from "vue";
 import JsonViewer from 'vue-json-viewer';
 import { ElForm, ElMessage } from "element-plus";
-import axios from 'axios';
 
 import Url from '@/entity/Url';
 
 import { urlService } from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
+import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
@@ -185,7 +185,7 @@ export default defineComponent({
             let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
             urlForm.validate((valid) => {
                 if (valid) {
-                    axios({
+                    httpStrategyContext.getStrategy().all({
                         baseURL: this.url.value,
                         url: '/',
                         method: 'GET',

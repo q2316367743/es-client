@@ -128,7 +128,6 @@ import useIndexStore from '@/store/IndexStore';
 import Index from "@/view/Index";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
-import axios from '@/plugins/axios';
 
 export default defineComponent({
     name: 'IndexItem',
@@ -166,10 +165,7 @@ export default defineComponent({
                     ElMessage.error('获取索引信息错误')
                 })
             } else if (command === 'data') {
-                axios({
-                    url: `/${this.index?.name}/_search`,
-                    method: 'GET'
-                }).then((result) => {
+                indexApi._search(this.index?.name).then((result) => {
                     this.$emit('openDialog', this.index?.name, result);
                 })
             } else {

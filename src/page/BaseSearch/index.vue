@@ -122,7 +122,8 @@ import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
 import BaseSearchEditorViewer from "@/components/EditorViewer/base-search.vue";
 
-import axios from "@/plugins/axios";
+import IndexApi from "@/api/IndexApi";
+
 import mitt from '@/plugins/mitt';
 
 import useIndexStore from "@/store/IndexStore";
@@ -270,26 +271,24 @@ export default defineComponent({
                 ElMessageBox.alert(this.$t('base_search.please_select_an_index'));
                 return;
             }
-            axios({
-                url: `/${this.index}/_search`,
-                method: "POST",
-                data: QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders),
-            }).then((response) => {
-                this.result = response;
-                if (this.result.hits) {
-                    if (parseInt(this.result.hits.total)) {
-                        this.total = parseInt(this.result.hits.total)
-                    } else if (parseInt(this.result.hits.total.value)) {
-                        this.total = parseInt(this.result.hits.total.value);
+            IndexApi._search(this.index,
+                QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders))
+                .then((response) => {
+                    this.result = response;
+                    if (this.result.hits) {
+                        if (parseInt(this.result.hits.total)) {
+                            this.total = parseInt(this.result.hits.total)
+                        } else if (parseInt(this.result.hits.total.value)) {
+                            this.total = parseInt(this.result.hits.total.value);
+                        } else {
+                            this.total = 0;
+                        }
                     } else {
                         this.total = 0;
                     }
-                } else {
-                    this.total = 0;
-                }
-            }).catch((e) => {
-                this.result = e.response.data;
-            });
+                }).catch((e) => {
+                    this.result = e.response.data;
+                });
         },
         clear(clear_index: boolean = false) {
             this.page = 1;

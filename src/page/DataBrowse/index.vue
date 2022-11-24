@@ -72,7 +72,8 @@ import BaseBrowseEditorViewer from "@/components/EditorViewer/base-browse.vue";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
 
-import axios from "@/plugins/axios";
+import IndexApi from "@/api/IndexApi";
+
 import mitt from '@/plugins/mitt';
 
 import Index from "@/view/Index";
@@ -152,10 +153,9 @@ export default defineComponent({
                     break;
                 }
             }
-            axios({
-                url: `/${index_name}/_search`,
-                method: "POST",
-                data: { from: (this.page - 1) * this.size, size: this.size },
+            IndexApi._search(index_name, {
+                from: (this.page - 1) * this.size,
+                size: this.size
             }).then((response) => {
                 this.data_browse_result = response;
                 if (this.data_browse_result.hits) {

@@ -1,5 +1,4 @@
 import useIndexStore from "@/store/IndexStore";
-import { Method } from "axios";
 
 // 附加操作
 const options_get = ['', '_search', '_mapping'];
@@ -20,7 +19,7 @@ const sign = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/shards?v',
  * 链接处理器
  * @param target 目标链接
  */
-export default function LinkProcessor(target: string, method: Method): Array<string> {
+export default function LinkProcessor(target: string, method: string): Array<string> {
     // 构建基础
     let links = new Array<string>();
     // 如果没有输入，则不返回推荐
@@ -37,7 +36,7 @@ export default function LinkProcessor(target: string, method: Method): Array<str
     return links.splice(0, 50);
 }
 
-function buildAllLink(method: Method): Array<string> {
+function buildAllLink(method: string): Array<string> {
     let links = new Array<string>();
     if (method === 'GET') {
         let fields = buildFieldList();

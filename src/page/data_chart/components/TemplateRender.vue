@@ -25,11 +25,11 @@
 import { defineComponent, PropType } from "vue";
 import { ElMessage } from "element-plus";
 import doT from 'dot';
-import { Method } from "axios";
 import JsonViewer from 'vue-json-viewer';
 import Chart from "@/entity/Chart";
-import axios from "@/plugins/axios";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
+
+import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 
 // doT.templateSettings = {
 //     evaluate: /\{\{([\s\S]+?)\}\}/g,
@@ -70,7 +70,7 @@ export default defineComponent({
         json() {
             try {
                 return JSON.parse(this.result);
-            }catch {
+            } catch {
                 return {};
             }
         }
@@ -84,9 +84,9 @@ export default defineComponent({
         },
         search() {
             if (this.chart!.method === 'GET') {
-                axios({
+                httpStrategyContext.getStrategy().all({
                     url: this.chart!.path,
-                    method: this.chart!.method as Method,
+                    method: this.chart!.method,
                     params: this.chart!.params
                 }).then((response) => {
                     this.data = response;
@@ -101,9 +101,9 @@ export default defineComponent({
                         ElMessage.error('JSON格式化错误');
                     }
                 }
-                axios({
+                httpStrategyContext.getStrategy().all({
                     url: this.chart!.path,
-                    method: this.chart!.method as Method,
+                    method: this.chart!.method,
                     data
                 }).then((response) => {
                     this.data = response;
@@ -122,6 +122,7 @@ export default defineComponent({
         right: 0;
         height: 54px;
     }
+
     .el-dialog__body {
         position: absolute;
         top: 54px;
@@ -131,21 +132,25 @@ export default defineComponent({
         display: grid;
         grid-template-rows: 100%;
         grid-template-columns: 1fr 1fr;
+
         .source {
             display: grid;
             grid-template-rows: 1fr 1fr;
             grid-template-columns: 1fr;
-            & > div {
+
+            &>div {
                 margin: 10px;
                 border: #909399 solid 1px;
                 overflow: auto;
             }
         }
+
         .target {
             margin: 10px;
             border: #909399 solid 1px;
         }
     }
+
     .el-dialog__footer {
         position: absolute;
         bottom: 0;

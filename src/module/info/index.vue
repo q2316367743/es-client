@@ -30,7 +30,7 @@ import clusterApi from "@/api/ClusterApi";
 import { defineComponent } from "vue";
 import { ArrowDown } from '@element-plus/icons-vue'
 
-import JsonDialog from "./JsonDialog.vue";
+import JsonDialog from "@/components/JsonDialog.vue";
 
 export default defineComponent({
     components: {

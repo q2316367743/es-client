@@ -1,8 +1,8 @@
 <template>
 	<div class="senior-search">
-        <!-- 左侧查询条件 -->
+		<!-- 左侧查询条件 -->
 		<div class="el-card is-never-shadow" style="min-height: 550px">
-            <!-- 上半部分 -->
+			<!-- 上半部分 -->
 			<div class="el-card__header" style="display: flex;justify-content: space-between;">
 				<div style="display: flex;">
 					<el-select v-model="method" :placeholder="$t('senior_search.please_select')"
@@ -31,7 +31,7 @@
 					<el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
 				</el-select>
 			</div>
-            <!-- 下半部分 -->
+			<!-- 下半部分 -->
 			<div class="senior-main">
 				<!-- 左面查询条件 -->
 				<div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
@@ -56,10 +56,10 @@
 							v-show="method !== 'GET'" class="post"></monaco-editor>
 					</div>
 				</div>
-                <!-- 中间分隔栏 -->
+				<!-- 中间分隔栏 -->
 				<div class="senior-bar" :style="{ left: senior_width_computed + 10 + 'px' }" @mousedown="onMouseDown">
 				</div>
-                <!-- 两个快捷按钮 -->
+				<!-- 两个快捷按钮 -->
 				<div class="senior-button"
 					:style="{ left: senior_width_computed + 5 + 'px', top: (max_height / 2 - 26) + 'px' }"
 					@click="hideLeft">←</div>
@@ -72,7 +72,8 @@
 					<json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
 					</json-viewer>
 					<table-viewer v-if="view === 3" :data="result"></table-viewer>
-					<senior-search-editor-viewer v-if="view === 4" v-model="result"  height="calc(100% - 64px)"></senior-search-editor-viewer>
+					<senior-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100% - 64px)">
+					</senior-search-editor-viewer>
 					<el-backtop target=".senior-content" :right="40" :bottom="60" />
 				</div>
 			</div>
@@ -82,8 +83,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ElMessage } from "element-plus";
-import { Method } from "axios";
 import { mapState } from "pinia";
 import JsonViewer from "vue-json-viewer";
 
@@ -92,8 +91,9 @@ import TableViewer from "@/components/TableViewer/index.vue";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
 import SeniorSearchEditorViewer from "@/components/EditorViewer/senior-search.vue";
 
-import axios from "@/plugins/axios";
 import mitt from '@/plugins/mitt';
+
+import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 
 import { validateTip } from '@/utils/GlobalUtil';
 
@@ -117,7 +117,7 @@ export default defineComponent({
 	name: 'SeniorSearch',
 	data: () => ({
 		link: '',
-		method: 'POST' as Method,
+		method: 'POST',
 		params: '{}',
 		result: {},
 		suggestions: [],
@@ -157,7 +157,7 @@ export default defineComponent({
 		mitt.on('update_index', () => {
 			// 重置条件
 			this.link = '';
-			this.method = 'POST' as Method;
+			this.method = 'POST';
 			this.params = '{}';
 			this.result = {};
 			this.suggestions = [];
@@ -201,7 +201,7 @@ export default defineComponent({
 		async search() {
 			if (await validateTip(this.method, this.link)) {
 				if (this.method === 'GET') {
-					axios({
+					httpStrategyContext.getStrategy().all({
 						url: this.link,
 						method: this.method,
 						params: getParamBuild(this.get_params)
@@ -215,16 +215,16 @@ export default defineComponent({
 							data = JSON.parse(this.params);
 						} catch (e: any) {
 							console.error(e);
-                            // 不必强行校验json格式
-                            data = this.params;
+							// 不必强行校验json格式
+							data = this.params;
 						}
 					}
 					if (this.link.indexOf('_doc') > -1 && this.params == '') {
 						// 如果是新增文档，但是没有参数，不进行查询
-                        this.result = {};
+						this.result = {};
 						return;
 					}
-					axios({
+					httpStrategyContext.getStrategy().all({
 						url: this.link,
 						method: this.method,
 						data: data
@@ -368,7 +368,7 @@ export default defineComponent({
 			background-color: #ffffff;
 			font-size: 8px;
 			border-left: var(--el-card-border-color) solid 1px;
-            cursor: pointer;
+			cursor: pointer;
 		}
 
 		.senior-content {

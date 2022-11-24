@@ -4,6 +4,7 @@ export default {
     name: "es-client",
     version: "1.4.0",
     author: "Esion",
+    platform: "browser",
     repository: [
         {
             "name": "Gitee",
