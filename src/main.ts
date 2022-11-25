@@ -1,9 +1,17 @@
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
-import {createPinia} from 'pinia';
+import { createPinia } from 'pinia';
 import App from './App.vue';
 import i18n from '@/i18n';
 import './main.less';
 
-createApp(App).use(createPinia()).use(ElementPlus).use(i18n).mount('#app');
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+
+createApp(App)
+    .use(createPinia())
+    .use(ElementPlus)
+    .use(i18n)
+    .use(VXETable)
+    .mount('#app');

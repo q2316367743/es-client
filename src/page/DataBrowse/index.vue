@@ -1,321 +1,316 @@
 <template>
-    <div class="data-browse">
-        <!-- 顶部标题栏 -->
-        <div class="browse-header el-card es-card">
-            <div>
-                <el-input v-model="keyword" @input="renderIndexList" clearable style="width: 375px;"></el-input>
-            </div>
-            <el-select v-model="view">
-                <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
-                <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
-                <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
-            </el-select>
-        </div>
-        <!-- 下面主要内容 -->
-        <div class="browse-main el-card es-card">
-            <!-- 左侧 -->
-            <div class="browse-side" :class="showSide ? 'browse-side-open' : 'browse-side-hide'">
-                <el-scrollbar @click="clearChoose">
-                    <es-list>
-                        <es-list-item v-for="(index, idx) in indexList" :key="idx" :choose="chooseIndex === index.name"
-                            @click.stop="choose(index.name)" :aliases="index.alias">{{
-                                    index.name
-                            }}
-                        </es-list-item>
-                    </es-list>
-                </el-scrollbar>
-            </div>
-            <!-- 是否隐藏左侧的按钮 -->
-            <div class="browse-operation" :class="showSide ? 'browse-operation-open' : 'browse-operation-hide'"
-                @click="showSide = !showSide">
-                <el-icon v-if="showSide" :size="12">
-                    <arrow-left />
-                </el-icon>
-                <el-icon v-else :size="12">
-                    <arrow-right />
-                </el-icon>
-            </div>
-            <!-- 数据展示 -->
-            <div class="browse-content" :class="showSide ? 'browse-content-open' : 'browse-content-hide'">
-                <div class="operation">
-                    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                        :current-page="page" :page-size="size" @size-change="sizeChange" @current-change="pageChange">
-                    </el-pagination>
+    <div id="data-browse">
+        <div class="option">
+            <div class="left">
+                <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
+                    <i class="vxe-icon-arrow-double-left" />
                 </div>
-                <div class="container">
-                    <base-viewer v-if="view === 1" :data="data_browse_result"></base-viewer>
-                    <json-viewer v-else-if="view === 2" :value="data_browse_result" :expand-depth="6" copyable sort
-                        expanded>
-                    </json-viewer>
-                    <table-viewer v-if="view === 3" :data="data_browse_result" :mapping="mapping"></table-viewer>
-                    <base-browse-editor-viewer v-if="view === 4" v-model="data_browse_result">
-                    </base-browse-editor-viewer>
+                <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
+                    <i class="vxe-icon-arrow-left" />
+                </div>
+                <el-dropdown trigger="click" @command="pageSizeChange">
+                    <div class="item" style="font-size: 12px;line-height: 20px;">
+                        {{ (page - 1) * size }} - {{ (Math.min(page * size, count)) }}
+                    </div>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="1">10</el-dropdown-item>
+                            <el-dropdown-item command="2">100</el-dropdown-item>
+                            <el-dropdown-item command="3">250</el-dropdown-item>
+                            <el-dropdown-item command="4">500</el-dropdown-item>
+                            <el-dropdown-item command="5">1,000</el-dropdown-item>
+                            <el-dropdown-item command="6">自定义</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+                <div class="item" style="font-size: 12px">
+                    / {{ count }}
+                </div>
+                <div class="item" :class="page * size > count ? 'disable' : ''" @click="nextPage">
+                    <i class="vxe-icon-arrow-right" />
+                </div>
+                <div class="item" :class="page * size > count ? 'disable' : ''" @click="toLast">
+                    <i class="vxe-icon-arrow-double-right" />
+                </div>
+                <div class="sep"></div>
+                <div class="item" @click="executeQuery">
+                    <i class="vxe-icon-refresh" />
+                </div>
+                <div class="sep"></div>
+                <div class="item">
+                    <i class="vxe-icon-add" />
+                </div>
+                <div class="item">
+                    <i class="vxe-icon-minus" />
+                </div>
+                <div class="item">
+                    <i class="vxe-icon-indicator" />
+                </div>
+                <div class="item" style="font-size: 14px">
+                    <i class="vxe-icon-eye-fill" />
+                </div>
+                <div class="item">
+                    <i class="vxe-icon-save" />
+                </div>
+            </div>
+            <div class="right">
+                <el-popover placement="bottom" :width="400" trigger="click" :visible="visible">
+                    <template #reference>
+                        <div class="item" style="display: flex;" @click="visible = !visible;">
+                            <div v-if="index === ''">未选择索引</div>
+                            <div v-else>{{ index }}</div>
+                            <el-icon :size="20" style="margin: 2px;">
+                                <arrow-down v-if="visible" />
+                                <arrow-up v-else />
+                            </el-icon>
+                        </div>
+                    </template>
+                    <el-scrollbar height="400px">
+                        <div v-for="index in indices" :command="index.name" class="data-browse-list-item"
+                            @click="indexChange(index.name)">
+                            <span>{{ index.name }}</span>
+                            <span v-if="index.alias && index.alias.length > 0">
+                                <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
+                            </span>
+                        </div>
+                    </el-scrollbar>
+                </el-popover>
+                <div class="item">
+                    <el-icon>
+                        <Download />
+                    </el-icon>
+                </div>
+                <el-dropdown trigger="click" @command="viewChange">
+                    <div class="item">
+                        <el-icon>
+                            <View />
+                        </el-icon>
+                    </div>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="1">
+                                <el-icon v-if="view === '1'">
+                                    <Check />
+                                </el-icon>
+                                <span>表格</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item command="2">
+                                <el-icon v-if="view === '2'">
+                                    <Check />
+                                </el-icon>
+                                <span>JSON</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item command="3">
+                                <el-icon v-if="view === '3'">
+                                    <Check />
+                                </el-icon>
+                                <span>编辑器</span>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+                <div class="item">
+                    <el-icon>
+                        <Operation />
+                    </el-icon>
                 </div>
             </div>
         </div>
-        <el-backtop :right="40" :bottom="60" target=".browse-content" v-show="showTop" />
+        <div class="condition"></div>
+        <div class="content"></div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
 import { mapState } from 'pinia';
-import JsonViewer from "vue-json-viewer";
+import { ElMessageBox } from "element-plus";
 
-import EsList from '@/components/EsList/index.vue';
-import EsListItem from '@/components/EsList/item.vue';
-import BaseViewer from "@/components/BaseViewer.vue";
-import TableViewer from "@/components/TableViewer/index.vue";
-import BaseBrowseEditorViewer from "@/components/EditorViewer/base-browse.vue";
+import { VxeTablePropTypes, VxeColumnPropTypes, VxeTableDefines } from 'vxe-table'
+import XEUtils from 'xe-utils';
 
-import useIndexStore from '@/store/IndexStore';
+import { ArrowDown, ArrowUp, Operation, Download, View, Check } from "@element-plus/icons-vue";
+
+import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
-
-import IndexApi from "@/api/IndexApi";
-
-import mitt from '@/plugins/mitt';
-
-import Index from "@/view/Index";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import PageNameEnum from "@/enumeration/PageNameEnum";
-import SearchUtil from "@/utils/SearchUtil";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
-        EsList,
-        EsListItem,
-        ArrowLeft,
-        ArrowRight,
-        JsonViewer,
-        BaseViewer,
-        TableViewer,
-        BaseBrowseEditorViewer
+        ArrowDown, ArrowUp, Operation, Download, View, Check
     },
     computed: {
         ...mapState(useIndexStore, ['indices']),
     },
     data: () => ({
-        defaultViewer: useSettingStore().instance.defaultViewer,
-        showSide: true,
-        chooseIndex: '',
-        view: useSettingStore().getDefaultViewer,
-        data_browse_result: {} as any,
-        mapping: {},
         page: 1,
         size: useSettingStore().getPageSize,
-        total: 0,
-        indexList: [] as Array<Index>,
-        keyword: '',
-        showTop: true
+        count: 1,
+        index: '',
+        visible: false,
+        view: '1'
     }),
-    watch: {
-        default_viewer() {
-            this.view = useSettingStore().getDefaultViewer
-        }
-    },
-    created() {
-        mitt.on(MessageEventEnum.INDEX_CONNECT, () => {
-            // 直接渲染列表
-            this.renderIndexList();
-        });
-        mitt.on(MessageEventEnum.INDEX_CLEAN, () => {
-            // 重置条件
-            this.clearChoose();
-            // 重新渲染
-            this.renderIndexList();
-        });
-        mitt.on(MessageEventEnum.INDEX_REFRESH, () => {
-            // 重新渲染
-            this.renderIndexList();
-        });
-        mitt.on(MessageEventEnum.PAGE_ACTIVE, (page) => {
-            this.showTop = (page === PageNameEnum.DATA_BROWSER)
-        });
-        this.renderIndexList();
-    },
     methods: {
-        choose(index_name: string, verify: boolean = true) {
-            if (verify) {
-                if (this.chooseIndex !== index_name) {
-                    this.chooseIndex = index_name;
-                } else {
-                    this.chooseIndex = '';
-                    this.clearChoose();
-                    return;
-                }
+        executeQuery() { },
+        // >----------------------------------- 上面按钮 ---------------------------------->
+        toFirst() {
+            if (this.page === 1) {
+                return;
             }
-            for (let index of this.indices) {
-                if (index.name === index_name) {
-                    this.mapping = index.mapping
-                    break;
-                }
-            }
-            IndexApi._search(index_name, {
-                from: (this.page - 1) * this.size,
-                size: this.size
-            }).then((response) => {
-                this.data_browse_result = response;
-                if (this.data_browse_result.hits) {
-                    if (parseInt(this.data_browse_result.hits.total)) {
-                        this.total = parseInt(this.data_browse_result.hits.total)
-                    } else if (parseInt(this.data_browse_result.hits.total.value)) {
-                        this.total = parseInt(this.data_browse_result.hits.total.value);
-                    } else {
-                        this.total = 0;
-                    }
-                } else {
-                    this.total = 0;
-                }
-            });
-        },
-        clearChoose() {
-            this.chooseIndex = '';
-            this.data_browse_result = {} as any;
-            this.mapping = {};
             this.page = 1;
-            this.size = useSettingStore().getPageSize;
-            this.total = 0;
+            this.executeQuery()
         },
-        renderIndexList() {
-            // 第一步，过滤
-            this.indexList = SearchUtil.match(this.indices, this.keyword, 'name');
-            // 排序
-            this.indexList = this.indexList.sort((a, b) => {
-                return a.name.localeCompare(b.name, "zh-CN");
-            });
+        prePage() {
+            if (this.page === 1) {
+                return;
+            }
+            this.page -= 1;
+            this.executeQuery()
         },
-        sizeChange(size: number) {
-            this.size = size;
-            this.choose(this.chooseIndex, false);
+        pageSizeChange(command: string) {
+            switch (command) {
+                case "1":
+                    this.size = 10;
+                    this.page = 1;
+                    this.executeQuery();
+                    break;
+                case "2":
+                    this.size = 100;
+                    this.page = 1;
+                    this.executeQuery();
+                    break;
+                case "3":
+                    this.size = 250;
+                    this.page = 1;
+                    this.executeQuery();
+                    break;
+                case "4":
+                    this.size = 500;
+                    this.page = 1;
+                    this.executeQuery();
+                    break;
+                case "5":
+                    this.size = 1000;
+                    this.page = 1;
+                    this.executeQuery();
+                    break;
+                case "6":
+                    ElMessageBox.prompt('请输入自定义分页大小', '自定义分页', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /\d+/,
+                        inputErrorMessage: '请输入正确的数字',
+                    })
+                        .then(({ value }) => {
+                            this.size = parseInt(value);
+                            this.page = 1;
+                            this.executeQuery();
+                        })
+                        .catch(() => {
+                        });
+                    break
+            }
         },
-        pageChange(page: number) {
-            this.page = page;
-            this.choose(this.chooseIndex, false);
+        nextPage() {
+            if (this.page * this.size > this.count) {
+                return;
+            }
+            this.page += 1;
+            this.executeQuery();
+        },
+        toLast() {
+            this.page = Math.ceil(this.count / this.size)
+            this.executeQuery();
+        },
+        indexChange(command: string) {
+            this.index = command;
+            this.visible = false;
+        },
+        viewChange(command: string) {
+            this.view = command
         }
+        // <----------------------------------------- 上面按钮 -----------------------------------------<
     }
 });
 </script>
 <style lang="less">
-.data-browse {
+#data-browse {
     position: absolute;
     top: 10px;
     left: 10px;
     right: 10px;
     bottom: 10px;
+    border: 1px solid #e4e7ed;
 
-    .browse-header {
-        border-bottom: 1px solid #e4e7ed;
-        box-sizing: border-box;
+    .option {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 50px;
+        height: 25px;
+        border-bottom: 1px solid #e4e7ed;
         display: flex;
         justify-content: space-between;
-        padding: 9px 10px 0 10px;
+
+        .left {
+            display: flex;
+        }
+
+        .right {
+            display: flex;
+        }
+
+
+        .item {
+            padding: 1px 5px;
+            line-height: 23px !important;
+            cursor: pointer;
+
+            &:hover {
+                border: 1px solid #f2f2f2;
+                padding: 0 4px;
+            }
+
+            &.disable {
+                color: #f2f2f2;
+
+                &:hover {
+                    border: 1px solid #ffffff;
+                }
+            }
+        }
+
     }
 
-    .browse-main {
+    .condition {
         position: absolute;
-        top: 62px;
+        top: 26px;
+        left: 0;
+        right: 0;
+        height: 30px;
+        border-bottom: 1px solid #e4e7ed;
+    }
+
+    .content {
+        position: absolute;
+        top: 55px;
         left: 0;
         right: 0;
         bottom: 0;
+    }
+}
 
-        .browse-side {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            border-right: #f2f2f2 solid 1px;
-        }
+.data-browse-list-item {
+    width: 374px;
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #f2f2f2;
+    cursor: pointer;
 
-        .browse-side-hide {
-            width: 0;
-
-        }
-
-        .browse-side-open {
-            width: 400px;
-        }
-
-        .browse-operation {
-            position: absolute;
-            top: 45%;
-            background-color: #e3e9ed;
-            width: 12px;
-            height: 56px;
-            line-height: 56px;
-            text-align: center;
-            cursor: pointer;
-            z-index: 1;
-
-            &:hover {
-                background-color: #ebf0f2;
-            }
-
-        }
-
-        .browse-operation-hide {
-            left: 0;
-
-        }
-
-        .browse-operation-open {
-            left: 400px;
-        }
-
-        .browse-content {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            padding: 0 10px;
-            overflow: auto;
-
-            .operation {
-                position: absolute;
-                top: 10px;
-                left: 15px;
-                right: 0;
-                height: 32px;
-                z-index: 1;
-            }
-
-            .container {
-                position: absolute;
-                top: 10px;
-                left: 20px;
-                right: 0;
-                bottom: 10px;
-
-                .base-viewer {
-                    .base-viewer-show {
-                        padding-top: 40px;
-                    }
-                }
-
-                .jv-container {
-                    padding-top: 20px;
-                }
-
-                .editor-viewer {
-                    padding-top: 50px;
-                }
-            }
-        }
-
-        .browse-content-hide {
-            left: 0;
-        }
-
-        .browse-content-open {
-            left: 400px;
-        }
+    &:hover {
+        background-color: #f2f2f2;
     }
 }
 </style>
