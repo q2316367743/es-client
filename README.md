@@ -57,4 +57,4 @@ npm run dev
 
 ## 详细文档
 
-<https://docs.esion.xyz/zh/es-client>
+<https://docs.esion.xyz/zh/es-client/overview>
