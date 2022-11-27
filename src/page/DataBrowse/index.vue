@@ -78,7 +78,7 @@
                         </el-scrollbar>
                     </template>
                 </vxe-pulldown>
-                <div class="item">
+                <div class="item" @click="exportDialog = true">
                     <i class="vxe-icon-print" />
                 </div>
                 <div class="item">
@@ -91,8 +91,18 @@
                 </div>
             </div>
         </div>
-        <div class="condition"></div>
-        <div class="content">
+        <div class="condition">
+            <div class="condition-item">
+                <div :class="where === '' ? 'disable' : ''" class="key">WHERE</div>
+                <el-input type="text" v-model="where" class="input" />
+            </div>
+            <div class="condition-sep"></div>
+            <div class="condition-item">
+                <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
+                <el-input type="text" v-model="orderBy" class="input" />
+            </div>
+        </div>
+        <div class="content-table">
             <vxe-table border height="100%" class="es-scrollbar" empty-text="请选择索引" :data="records" :loading="loading"
                 :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
                 :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
@@ -111,6 +121,40 @@
                     :formatter="format" />
             </vxe-table>
         </div>
+        <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :show-zoom="true" :resize="true"
+            width="600px" height="400px" :draggable="true">
+            <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
+                <el-form :model="exportConfig" label-width="120px">
+                    <el-form-item label="文件名">
+                        <el-input v-model="exportConfig.name" style="width: 214.5px;" />
+                    </el-form-item>
+                    <el-form-item label="保存类型">
+                        <el-select v-model="exportConfig.type">
+                            <el-option label="JSON数据（*.json）" :value="1" />
+                            <el-option label="网页（*.html）" :value="2" />
+                            <el-option label="XML数据（*.xml）" :value="3" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="选择数据">
+                        <el-select v-model="exportConfig.data">
+                            <el-option label="当前数据（当前页的数据）" :value="1" />
+                            <el-option label="选中数据（当前页选中的数据）" :value="2" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="文件内容">
+                        <el-select v-model="exportConfig.result">
+                            <el-option label="表格数据" :value="1" />
+                            <el-option label="原始数据" :value="2" />
+                            <el-option label="原始结果集" :value="3" />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <template #footer>
+                <el-button @click="exportDialog = false">取消</el-button>
+                <el-button type="primary">导出</el-button>
+            </template>
+        </vxe-modal>
     </div>
 </template>
 <script lang="ts">
@@ -163,6 +207,9 @@ export default defineComponent({
         // 下拉面板
         indexVisible: false,
 
+        // 弹窗
+        exportDialog: false,
+
         // 查询条件
         where: '',
         orderBy: '',
@@ -199,6 +246,11 @@ export default defineComponent({
         } as VxeTablePropTypes.SortConfig,
 
         exportConfig: {
+            name: '',
+            type: 1,
+            data: 1,
+            result: 1,
+            filed: new Array<string>()
         }
     }),
     methods: {
@@ -431,13 +483,44 @@ export default defineComponent({
         top: 26px;
         left: 0;
         right: 0;
-        height: 30px;
+        height: 35px;
         border-bottom: 1px solid #e4e7ed;
+        display: grid;
+        grid-template-columns: 1fr 1px 1fr;
+
+        .condition-item {
+            display: flex;
+            margin: 0 5px;
+
+            .key {
+                line-height: 35px;
+                color: #ff92bb;
+                font-weight: bold;
+
+                &.disable {
+                    color: #787878;
+                }
+            }
+
+            .input {
+                margin: 0 5px;
+
+                .el-input__inner {
+                    border: 0;
+                }
+            }
+        }
+
+        .condition-sep {
+            background-color: #787878;
+        }
+
+
     }
 
-    .content {
+    .content-table {
         position: absolute;
-        top: 55px;
+        top: 60px;
         left: 0;
         right: 0;
         bottom: 0;
