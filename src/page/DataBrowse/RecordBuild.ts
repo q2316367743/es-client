@@ -35,18 +35,35 @@ function initKey(headers: Array<Header>, headersSet: Set<string>): void {
     });
 }
 
-function renderRecord(source: any, record: any, headers: Array<Header>, headersSet: Set<string>) {
+function renderKey(prefix: string, key: string): string {
+    return prefix === '' ? key : prefix + '.' + key
+}
+
+function renderRecord(source: any, record: any, headers: Array<Header>, headersSet: Set<string>, prefix: string = '') {
     for (let key in source) {
-        if (!headersSet.has(key)) {
+        if (!headersSet.has(renderKey(prefix, key))) {
             headers.push({
-                field: key,
+                field: renderKey(prefix, key),
                 id: new Date().getTime(),
-                minWidth: Math.max(key.length * 20 + 15, 60)
+                minWidth: Math.max(renderKey(prefix, key).length * 20 + 15, 60)
             });
-            headersSet.add(key);
+            headersSet.add(renderKey(prefix, key));
         }
         if (typeof source[key] !== 'object') {
-            record[key] = source[key];
+            record[renderKey(prefix, key)] = source[key];
+        } else {
+            if (Array.isArray(source[key])) {
+                // 数组，直接显示
+                record[renderKey(prefix, key)] = JSON.stringify(source[key]);
+            } else {
+                // 对象，下一层
+                renderRecord(
+                    source[key],
+                    record,
+                    headers,
+                    headersSet,
+                    renderKey(prefix, key));
+            }
         }
     }
 }
@@ -72,7 +89,7 @@ export default function recordBuild(result: any, index: Index): { headers: Array
         let _index = hit['_index'];
         let _score = hit['_score'];
         let _source = hit['_source'];
-        let record = { _id, _index, _score };
+        let record = { _id, _index, _score, _source };
         renderRecord(_source, record, headers, headersSet);
         records.push(record);
 

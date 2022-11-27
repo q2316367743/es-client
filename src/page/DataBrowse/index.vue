@@ -33,14 +33,14 @@
                     <i class="vxe-icon-arrow-double-right" />
                 </div>
                 <div class="sep"></div>
-                <div class="item" :class="!index ? 'disable' : ''" @click="executeQuery">
+                <div class="item" :class="!index ? 'disable' : ''" @click="executeQuery(false)">
                     <i class="vxe-icon-refresh" />
                 </div>
                 <div class="sep"></div>
                 <div class="item" :class="!index ? 'disable' : ''">
                     <i class="vxe-icon-add" />
                 </div>
-                <div class="item" :class="!index ? 'disable' : ''">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
                     <i class="vxe-icon-minus" />
                 </div>
                 <div class="item" :class="!index ? 'disable' : ''">
@@ -54,62 +54,36 @@
                 </div>
             </div>
             <div class="right">
-                <el-popover placement="bottom" :width="400" trigger="click" :visible="visible">
-                    <template #reference>
-                        <div class="item" style="display: flex;" @click="visible = !visible;">
+                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browser-pulldown">
+                    <template #default>
+                        <div class="item" style="display: flex;" @click="indexVisible = !indexVisible;">
                             <div v-if="!index">未选择索引</div>
                             <div v-else>{{ index.name }}</div>
                             <el-icon :size="20" style="margin: 2px;">
-                                <arrow-up v-if="visible" />
+                                <arrow-up v-if="indexVisible" />
                                 <arrow-down v-else />
                             </el-icon>
                         </div>
                     </template>
-                    <el-empty v-if="indicesShow.length === 0" description="请选择链接" />
-                    <el-scrollbar v-else height="400px">
-                        <div v-for="index in indicesShow" :command="index.name" class="data-browse-list-item"
-                            @click="indexChange(index)">
-                            <span>{{ index.name }}</span>
-                            <span v-if="index.alias && index.alias.length > 0">
-                                <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
-                            </span>
-                        </div>
-                    </el-scrollbar>
-                </el-popover>
-                <div class="item">
-                    <el-icon>
-                        <Download />
-                    </el-icon>
-                </div>
-                <el-dropdown trigger="click" @command="viewChange">
-                    <div class="item">
-                        <el-icon>
-                            <View />
-                        </el-icon>
-                    </div>
                     <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item command="1">
-                                <el-icon v-if="view === '1'">
-                                    <Check />
-                                </el-icon>
-                                <span>表格</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item command="2">
-                                <el-icon v-if="view === '2'">
-                                    <Check />
-                                </el-icon>
-                                <span>JSON</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item command="3">
-                                <el-icon v-if="view === '3'">
-                                    <Check />
-                                </el-icon>
-                                <span>编辑器</span>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
+                        <el-empty v-if="indicesShow.length === 0" description="请选择链接" />
+                        <el-scrollbar v-else height="400px" style="width: 300px">
+                            <div v-for="index in indicesShow" :command="index.name" class="data-browse-list-item"
+                                @click="indexChange(index)">
+                                <span>{{ index.name }}</span>
+                                <span v-if="index.alias && index.alias.length > 0">
+                                    <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
+                                </span>
+                            </div>
+                        </el-scrollbar>
                     </template>
-                </el-dropdown>
+                </vxe-pulldown>
+                <div class="item">
+                    <i class="vxe-icon-print" />
+                </div>
+                <div class="item">
+                    <i class="vxe-icon-eye-fill" />
+                </div>
                 <div class="item">
                     <el-icon>
                         <Operation />
@@ -124,8 +98,14 @@
                 :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
                 :sort-config="sortConfig" @sort-change="sortChange" @checkbox-all="checkboxAll"
                 @checkbox-change="checkboxChange">
-                <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="seq" width="40" fixed="left"></vxe-column>
+                <vxe-column type="checkbox" width="60"></vxe-column>
+                <vxe-column type="expand" width="80">
+                    <template #content="{ row, rowIndex }">
+                        <json-viewer :value="row._source" :expand-depth="4" copyable sort :expanded="true"
+                            :preview-mode="true"></json-viewer>
+                    </template>
+                </vxe-column>
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
                     :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
                     :formatter="format" />
@@ -137,6 +117,7 @@
 import { defineComponent } from "vue";
 import { mapState } from 'pinia';
 import { ElMessage, ElMessageBox } from "element-plus";
+import JsonViewer from 'vue-json-viewer';
 
 import { VxeTablePropTypes, VxeColumnPropTypes, VxeTableDefines, VxeTableEvents } from 'vxe-table'
 import XEUtils from 'xe-utils';
@@ -159,7 +140,7 @@ import recordBuild from './RecordBuild';
 export default defineComponent({
     name: 'data-browse',
     components: {
-        ArrowDown, ArrowUp, Operation, Download, View, Check
+        ArrowDown, ArrowUp, Operation, Download, View, Check, JsonViewer
     },
     computed: {
         ...mapState(useIndexStore, ['indices']),
@@ -178,8 +159,9 @@ export default defineComponent({
         size: useSettingStore().getPageSize,
         count: 1,
         index: undefined as Index | undefined,
-        visible: false,
-        view: '1',
+
+        // 下拉面板
+        indexVisible: false,
 
         // 查询条件
         where: '',
@@ -220,7 +202,7 @@ export default defineComponent({
         }
     }),
     methods: {
-        executeQuery() {
+        executeQuery(renderHeader: boolean = true) {
             if (!this.index) {
                 return;
             }
@@ -231,7 +213,9 @@ export default defineComponent({
             ).then(result => {
                 this.result = result;
                 let { headers, records, count } = recordBuild(result, this.index!);
-                this.headers = headers;
+                if (renderHeader) {
+                    this.headers = headers;
+                }
                 this.records = records;
                 this.count = count;
             }).catch(e => {
@@ -384,13 +368,10 @@ export default defineComponent({
         indexChange(index: Index) {
             console.log(index)
             this.index = index;
-            this.visible = false;
+            this.indexVisible = false;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
             this.executeQuery();
-        },
-        viewChange(command: string) {
-            this.view = command
         }
         // <----------------------------------------- 上面按钮 -----------------------------------------<
     }
@@ -471,10 +452,17 @@ export default defineComponent({
     line-height: 40px;
     border-bottom: 1px solid #f2f2f2;
     cursor: pointer;
-    overflow-y: hidden;
+    overflow: hidden;
 
     &:hover {
         background-color: #f2f2f2;
+    }
+}
+
+// 下拉列表
+.data-browser-pulldown {
+    .vxe-pulldown--panel {
+        left: -120px;
     }
 }
 
