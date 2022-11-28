@@ -27,15 +27,17 @@ let a = {
 /**
  * 构造查询条件
  * 
- * where，条件支持：[=],[!=],[>],[>=],[<],[<=]，链接符号支持：[and],[or]
+ * must、should、mustNot，条件支持：[=],[!=],[>],[>=],[<],[<=]；[,]分割；链接符号支持：[and],[or]
  * orderBy：[asc],[desc]，[,]分割
  * 
- * @param where   查询条件
+ * @param must    must条件
+ * @param should  should条件
+ * @param mustNot must_not条件
  * @param orderBy 排序
  * @param page    第几页
  * @param size    每页大小
  */
-export default function ConditionBuild(where: string, orderBy: string, page: number, size: number): any {
+export default function ConditionBuild(must: string, should: string, mustNot: string, orderBy: string, page: number, size: number): any {
     let condition = {
         from: (page - 1) * size,
         size: size,
@@ -49,7 +51,7 @@ export default function ConditionBuild(where: string, orderBy: string, page: num
         }
     };
     // 条件构造
-    whereBuild(where, condition);
+    whereBuild(must, should, mustNot, condition);
     // 排序构造
     orderByBuild(orderBy, condition);
     // 返回结果集
@@ -93,6 +95,13 @@ function orderByBuild(orderBy: string, condition: any) {
  * @param where where条件
  * @param condition 查询条件
  */
-function whereBuild(where: string, condition: any) {
+function whereBuild(must: string, should: string, mustNot: string, condition: any) {
 
+}
+
+function templateBuild(template: string, condition: any): void {
+    let items = template.split(',');
+    for(let item of items) {
+        // 每一项：[key]{条件}[value]([and|or] [key]{条件}[value])
+    }
 }

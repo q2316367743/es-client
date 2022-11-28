@@ -24,13 +24,13 @@ function initKey(headers: Array<Header>, headersSet: Set<string>): void {
     headersSet.add('_index');
     headers.push({
         field: '_index',
-        id: new Date().getTime() + 1,
+        id: new Date().getTime() + 2,
         minWidth: 120,
     });
     headersSet.add('_score');
     headers.push({
         field: '_score',
-        id: new Date().getTime() + 1,
+        id: new Date().getTime() + 3,
         minWidth: 120,
     });
 }
@@ -44,7 +44,7 @@ function renderRecord(source: any, record: any, headers: Array<Header>, headersS
         if (!headersSet.has(renderKey(prefix, key))) {
             headers.push({
                 field: renderKey(prefix, key),
-                id: new Date().getTime(),
+                id: new Date().getTime() + Math.random() * 100,
                 minWidth: Math.max(renderKey(prefix, key).length * 20 + 15, 60)
             });
             headersSet.add(renderKey(prefix, key));

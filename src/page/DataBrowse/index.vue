@@ -43,7 +43,7 @@
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
                     <i class="vxe-icon-minus" />
                 </div>
-                <div class="item" :class="!index ? 'disable' : ''">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
                     <i class="vxe-icon-indicator" />
                 </div>
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" style="font-size: 14px">
@@ -78,7 +78,7 @@
                         </el-scrollbar>
                     </template>
                 </vxe-pulldown>
-                <div class="item" @click="exportDialog = true">
+                <div class="item" @click="openExportDialog">
                     <i class="vxe-icon-print" />
                 </div>
                 <div class="item">
@@ -93,13 +93,23 @@
         </div>
         <div class="condition">
             <div class="condition-item">
-                <div :class="where === '' ? 'disable' : ''" class="key">WHERE</div>
-                <el-input type="text" v-model="where" class="input" />
+                <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
+                <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)" />
+            </div>
+            <div class="condition-sep"></div>
+            <div class="condition-item">
+                <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
+                <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)" />
+            </div>
+            <div class="condition-sep"></div>
+            <div class="condition-item">
+                <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
+                <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)" />
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
-                <el-input type="text" v-model="orderBy" class="input" />
+                <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)" />
             </div>
         </div>
         <div class="content-table">
@@ -108,7 +118,7 @@
                 :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
                 :sort-config="sortConfig" @sort-change="sortChange" @checkbox-all="checkboxAll"
                 @checkbox-change="checkboxChange">
-                <vxe-column type="seq" width="40" fixed="left"></vxe-column>
+                <vxe-column type="seq" width="50" fixed="left"></vxe-column>
                 <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="expand" width="80">
                     <template #content="{ row, rowIndex }">
@@ -131,28 +141,31 @@
                     <el-form-item label="保存类型">
                         <el-select v-model="exportConfig.type">
                             <el-option label="JSON数据（*.json）" :value="1" />
-                            <el-option label="网页（*.html）" :value="2" />
+                            <el-option label="网页（*.html）" :value="2" disabled />
                             <el-option label="XML数据（*.xml）" :value="3" />
+                            <el-option label="YAML数据（*.yaml）" :value="4" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="选择数据">
                         <el-select v-model="exportConfig.data">
                             <el-option label="当前数据（当前页的数据）" :value="1" />
-                            <el-option label="选中数据（当前页选中的数据）" :value="2" />
+                            <el-option label="选中数据（当前页选中的数据）" :value="2" disabled />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="文件内容">
                         <el-select v-model="exportConfig.result">
                             <el-option label="表格数据" :value="1" />
                             <el-option label="原始数据" :value="2" />
-                            <el-option label="原始结果集" :value="3" />
+                            <el-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2" />
                         </el-select>
                     </el-form-item>
                 </el-form>
             </div>
             <template #footer>
+                <el-button @click="runExportDialog(1)" text>复制到剪切板</el-button>
                 <el-button @click="exportDialog = false">取消</el-button>
-                <el-button type="primary">导出</el-button>
+                <el-button @click="runExportDialog(2)" type="success">打印</el-button>
+                <el-button @click="runExportDialog(3)" type="primary">导出</el-button>
             </template>
         </vxe-modal>
     </div>
@@ -179,24 +192,14 @@ import IndexApi from "@/api/IndexApi";
 import conditionBuild from './ConditionBuild';
 import recordBuild from './RecordBuild';
 
-
+import './index.less';
+import ExportConfig from "./ExportConfig";
+import exportData from "./ExportData";
 
 export default defineComponent({
     name: 'data-browse',
     components: {
         ArrowDown, ArrowUp, Operation, Download, View, Check, JsonViewer
-    },
-    computed: {
-        ...mapState(useIndexStore, ['indices']),
-        indicesShow() {
-            if (this.indices.length === 0) {
-                return new Array<Index>();
-            }
-            // 此处是索引排序
-            return this.indices.sort((e1, e2) => {
-                return e1.name.localeCompare(e2.name, 'zh');
-            })
-        }
     },
     data: () => ({
         page: 1,
@@ -211,7 +214,9 @@ export default defineComponent({
         exportDialog: false,
 
         // 查询条件
-        where: '',
+        must: '',
+        should: '',
+        mustNot: '',
         orderBy: '',
 
         // 展示数据
@@ -244,15 +249,40 @@ export default defineComponent({
         sortConfig: {
             remote: true
         } as VxeTablePropTypes.SortConfig,
-
         exportConfig: {
             name: '',
             type: 1,
             data: 1,
             result: 1,
-            filed: new Array<string>()
-        }
+            config: 1,
+            fields: new Array<string>()
+        } as ExportConfig
     }),
+    computed: {
+        ...mapState(useIndexStore, ['indices']),
+        indicesShow() {
+            if (this.indices.length === 0) {
+                return new Array<Index>();
+            }
+            // 此处是索引排序
+            return this.indices.sort((e1, e2) => {
+                return e1.name.localeCompare(e2.name, 'zh');
+            })
+        }
+    },
+    watch: {
+        'exportConfig.type': {
+            handler(newValue) {
+                // 如果变为html，则不能导出全部数据
+                if (newValue === 2) {
+                    if (this.exportConfig.result === 3) {
+                        this.exportConfig.result = 1;
+                    }
+                }
+            },
+            immediate: true
+        }
+    },
     methods: {
         executeQuery(renderHeader: boolean = true) {
             if (!this.index) {
@@ -261,7 +291,7 @@ export default defineComponent({
             this.loading = true;
             IndexApi._search(
                 this.index?.name,
-                conditionBuild(this.where, this.orderBy, this.page, this.size)
+                conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
             ).then(result => {
                 this.result = result;
                 let { headers, records, count } = recordBuild(result, this.index!);
@@ -424,160 +454,43 @@ export default defineComponent({
             this.page = 1;
             this.size = useSettingStore().getPageSize;
             this.executeQuery();
+        },
+        openExportDialog() {
+            this.exportConfig = {
+                name: this.index ? this.index!.name : '',
+                type: 1,
+                data: 1,
+                result: 1,
+                config: 1,
+                fields: new Array<string>()
+            }
+            this.exportDialog = true;
+        },
+        runExportDialog(config: number) {
+            this.exportConfig.config = config;
+            // 根据类型判断结果
+            try {
+                exportData(this.exportConfig, this.records, this.result);
+                this.exportDialog = false;
+                // 提示
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: config === 1 ? '成功复制到剪切板' : config === 2 ? '成功打印' : config === 3 ? '成功导出' : '成功'
+                })
+            } catch (e) {
+                ElMessage({
+                    showClose: false,
+                    type: 'error',
+                    message: '导出失败，' + e
+                });
+                console.error(e)
+            }
         }
         // <----------------------------------------- 上面按钮 -----------------------------------------<
     }
 });
 </script>
 <style lang="less">
-#data-browse {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    border: 1px solid #e4e7ed;
 
-    .option {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 25px;
-        border-bottom: 1px solid #e4e7ed;
-        display: flex;
-        justify-content: space-between;
-
-        .left {
-            display: flex;
-        }
-
-        .right {
-            display: flex;
-        }
-
-
-        .item {
-            padding: 1px 5px;
-            line-height: 23px !important;
-            cursor: pointer;
-
-            &:hover {
-                border: 1px solid #f2f2f2;
-                padding: 0 4px;
-            }
-
-            &.disable {
-                color: #f2f2f2;
-
-                &:hover {
-                    border: 1px solid #ffffff;
-                }
-            }
-        }
-
-    }
-
-    .condition {
-        position: absolute;
-        top: 26px;
-        left: 0;
-        right: 0;
-        height: 35px;
-        border-bottom: 1px solid #e4e7ed;
-        display: grid;
-        grid-template-columns: 1fr 1px 1fr;
-
-        .condition-item {
-            display: flex;
-            margin: 0 5px;
-
-            .key {
-                line-height: 35px;
-                color: #ff92bb;
-                font-weight: bold;
-
-                &.disable {
-                    color: #787878;
-                }
-            }
-
-            .input {
-                margin: 0 5px;
-
-                .el-input__inner {
-                    border: 0;
-                }
-            }
-        }
-
-        .condition-sep {
-            background-color: #787878;
-        }
-
-
-    }
-
-    .content-table {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-}
-
-.data-browse-list-item {
-    width: 374px;
-    display: flex;
-    justify-content: space-between;
-    height: 40px;
-    line-height: 40px;
-    border-bottom: 1px solid #f2f2f2;
-    cursor: pointer;
-    overflow: hidden;
-
-    &:hover {
-        background-color: #f2f2f2;
-    }
-}
-
-// 下拉列表
-.data-browser-pulldown {
-    .vxe-pulldown--panel {
-        left: -120px;
-    }
-}
-
-/*滚动条整体部分*/
-.es-scrollbar ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-/*滚动条的轨道*/
-.es-scrollbar ::-webkit-scrollbar-track {
-    background-color: #FFFFFF;
-}
-
-/*滚动条里面的小方块，能向上向下移动*/
-.es-scrollbar ::-webkit-scrollbar-thumb {
-    background-color: #bfbfbf;
-    border-radius: 5px;
-    border: 1px solid #F1F1F1;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-}
-
-.es-scrollbar ::-webkit-scrollbar-thumb:hover {
-    background-color: #A8A8A8;
-}
-
-.es-scrollbar ::-webkit-scrollbar-thumb:active {
-    background-color: #787878;
-}
-
-/*边角，即两个滚动条的交汇处*/
-.es-scrollbar ::-webkit-scrollbar-corner {
-    background-color: #FFFFFF;
-}
 </style>
