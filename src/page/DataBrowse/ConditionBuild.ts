@@ -23,13 +23,12 @@ let a = {
 }
 
 
-
 /**
  * 构造查询条件
- * 
+ *
  * must、should、mustNot，条件支持：[=],[!=],[>],[>=],[<],[<=]；[,]分割；链接符号支持：[and],[or]
  * orderBy：[asc],[desc]，[,]分割
- * 
+ *
  * @param must    must条件
  * @param should  should条件
  * @param mustNot must_not条件
@@ -61,7 +60,7 @@ export default function ConditionBuild(must: string, should: string, mustNot: st
 /**
  * 排序构造
  * [asc],[desc]，[,]分割
- * 
+ *
  * @param orderBy 排序语句
  * @param condition 条件
  */
@@ -77,31 +76,133 @@ function orderByBuild(orderBy: string, condition: any) {
         }
         // 根据空格分割
         let temps = item.split(' ');
-        if (temps.length != 2) {
+        if (temps.length > 2 || temps.length < 1) {
             continue;
         }
-        condition.sort[temps[0].trim()] = {
-            order: temps[1].trim()
+        if (temps.length == 2) {
+            condition.sort[temps[0].trim()] = {
+                order: temps[1].trim()
+            }
+        } else {
+            condition.sort[temps[0].trim()] = {
+                order: 'asc'
+            }
         }
     }
 }
 
 /**
  * where语句构造
- * 
+ *
  * 条件支持：[=],[!=],[>],[>=],[<],[<=]
  * 链接符号支持：[and],[or]
- * 
- * @param where where条件
+ *
+ * @param must must条件
+ * @param should should
+ * @param mustNot mustNot
  * @param condition 查询条件
  */
 function whereBuild(must: string, should: string, mustNot: string, condition: any) {
-
+    if (must) {
+        templateBuild(must, condition.query.bool.must)
+    }
+    if (should) {
+        templateBuild(should, condition.query.bool.should)
+    }
+    if (mustNot) {
+        templateBuild(mustNot, condition.query.bool.must_not)
+    }
 }
 
-function templateBuild(template: string, condition: any): void {
+const CONDITION = new Set<string>(['>', '<', '=']);
+
+function templateBuild(template: string, condition: Array<any>): void {
     let items = template.split(',');
-    for(let item of items) {
+    for (let item of items) {
         // 每一项：[key]{条件}[value]([and|or] [key]{条件}[value])
+        let models = parseCondition(item);
+        console.log(item, models)
+        if (models.length === 3) {
+            let model = models[1];
+            if (model === '=') {
+                // term
+                let term = {} as any;
+                term[models[0]] = models[2];
+                condition.push({
+                    term
+                });
+            }
+            // TODO: >，<，>=，<=
+        } else if (models.length === 7) {
+            // TODO: >，<，>=，<=
+        }
     }
+}
+
+function parseCondition(condition: string): string[] {
+    let items = [];
+    let item = '';
+    // 是否是条件
+    let isSep = false;
+    // 是否是引号
+    let isBlock = false
+    for (let i = 0; i < condition.length; i++) {
+        let char = condition.charAt(i);
+        if (char === '\'') {
+            if (i > 0 && condition.charAt(i - 1) === '\\') {
+                // 转义
+                item = item.substring(0, item.length - 1)
+                item += char;
+            } else if (isBlock) {
+                if (item !== '') {
+                    items.push(item);
+                }
+                item = '';
+                isBlock = false;
+            } else {
+                if (item !== '') {
+                    items.push(item);
+                }
+                item = '';
+                isBlock = true;
+            }
+        } else if (isBlock) {
+            item += char;
+        } else if (CONDITION.has(char)) {
+            if (isSep) {
+                item += char;
+            } else {
+                if (item !== '') {
+                    items.push(item);
+                }
+                item = char;
+            }
+            if (!isSep) {
+                isSep = true;
+            }
+        } else if (char === ' ') {
+            if (item !== '') {
+                items.push(item);
+            }
+            item = '';
+        } else {
+            if (isSep) {
+                if (item !== '') {
+                    items.push(item);
+                }
+                item = char;
+            } else {
+                item += char;
+            }
+        }
+        if (isSep) {
+            isSep = false;
+        }
+    }
+
+    if (item) {
+        console.log(item)
+        items.push(item);
+    }
+    return items;
 }

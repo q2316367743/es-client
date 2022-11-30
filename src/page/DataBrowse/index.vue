@@ -3,10 +3,10 @@
         <div class="option">
             <div class="left">
                 <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
-                    <i class="vxe-icon-arrow-double-left" />
+                    <i class="vxe-icon-arrow-double-left"/>
                 </div>
                 <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
-                    <i class="vxe-icon-arrow-left" />
+                    <i class="vxe-icon-arrow-left"/>
                 </div>
                 <el-dropdown trigger="click" @command="pageSizeChange">
                     <div class="item" style="font-size: 12px;line-height: 20px;">
@@ -27,49 +27,47 @@
                     / {{ count }}
                 </div>
                 <div class="item" :class="page * size > count ? 'disable' : ''" @click="nextPage">
-                    <i class="vxe-icon-arrow-right" />
+                    <i class="vxe-icon-arrow-right"/>
                 </div>
                 <div class="item" :class="page * size > count ? 'disable' : ''" @click="toLast">
-                    <i class="vxe-icon-arrow-double-right" />
+                    <i class="vxe-icon-arrow-double-right"/>
                 </div>
                 <div class="sep"></div>
                 <div class="item" :class="!index ? 'disable' : ''" @click="executeQuery(false)">
-                    <i class="vxe-icon-refresh" />
+                    <i class="vxe-icon-refresh"/>
                 </div>
                 <div class="sep"></div>
                 <div class="item" :class="!index ? 'disable' : ''">
-                    <i class="vxe-icon-add" />
+                    <i class="vxe-icon-add"/>
                 </div>
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
-                    <i class="vxe-icon-minus" />
+                    <i class="vxe-icon-minus"/>
                 </div>
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
-                    <i class="vxe-icon-indicator" />
+                    <i class="vxe-icon-indicator"/>
                 </div>
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" style="font-size: 14px">
-                    <i class="vxe-icon-eye-fill" />
+                    <i class="vxe-icon-eye-fill"/>
                 </div>
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
-                    <i class="vxe-icon-save" />
+                    <i class="vxe-icon-save"/>
                 </div>
             </div>
             <div class="right">
                 <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browser-pulldown">
-                    <template #default>
-                        <div class="item" style="display: flex;" @click="indexVisible = !indexVisible;">
-                            <div v-if="!index">未选择索引</div>
-                            <div v-else>{{ index.name }}</div>
-                            <el-icon :size="20" style="margin: 2px;">
-                                <arrow-up v-if="indexVisible" />
-                                <arrow-down v-else />
-                            </el-icon>
-                        </div>
-                    </template>
+                    <div class="item" style="display: flex;" @click="indexVisible = !indexVisible;">
+                        <div v-if="!index">未选择索引</div>
+                        <div v-else>{{ index.name }}</div>
+                        <el-icon :size="20" style="margin: 2px;">
+                            <arrow-up v-if="indexVisible"/>
+                            <arrow-down v-else/>
+                        </el-icon>
+                    </div>
                     <template #dropdown>
-                        <el-empty v-if="indicesShow.length === 0" description="请选择链接" />
-                        <el-scrollbar v-else height="400px" style="width: 300px">
-                            <div v-for="index in indicesShow" :command="index.name" class="data-browse-list-item"
-                                @click="indexChange(index)">
+                        <el-empty v-if="indicesShow.length === 0" description="请选择链接"/>
+                        <el-scrollbar v-else height="400px" style="width: 400px">
+                            <div v-for="index in indicesShow" class="data-browse-list-item"
+                                 @click="indexChange(index)">
                                 <span>{{ index.name }}</span>
                                 <span v-if="index.alias && index.alias.length > 0">
                                     <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
@@ -79,14 +77,14 @@
                     </template>
                 </vxe-pulldown>
                 <div class="item" @click="openExportDialog">
-                    <i class="vxe-icon-print" />
+                    <i class="vxe-icon-print"/>
                 </div>
                 <div class="item">
-                    <i class="vxe-icon-eye-fill" />
+                    <i class="vxe-icon-eye-fill"/>
                 </div>
                 <div class="item">
                     <el-icon>
-                        <Operation />
+                        <Operation/>
                     </el-icon>
                 </div>
             </div>
@@ -94,69 +92,71 @@
         <div class="condition">
             <div class="condition-item">
                 <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
-                <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)" />
+                <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)"/>
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
-                <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)" />
+                <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)"/>
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
-                <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)" />
+                <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)"/>
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
-                <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)" />
+                <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)"/>
             </div>
         </div>
         <div class="content-table">
-            <vxe-table border height="100%" class="es-scrollbar" empty-text="请选择索引" :data="records" :loading="loading"
-                :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
-                :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
-                :sort-config="sortConfig" @sort-change="sortChange" @checkbox-all="checkboxAll"
-                @checkbox-change="checkboxChange">
+            <vxe-table border height="100%" class="es-scrollbar" :empty-text="record ? '什么也没有' : '请选择索引'"
+                       :data="records"
+                       :loading="loading"
+                       :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
+                       :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
+                       :sort-config="sortConfig" @sort-change="sortChange" @checkbox-all="checkboxAll"
+                       @checkbox-change="checkboxChange">
                 <vxe-column type="seq" width="50" fixed="left"></vxe-column>
                 <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="expand" width="80">
                     <template #content="{ row, rowIndex }">
                         <json-viewer :value="row._source" :expand-depth="4" copyable sort :expanded="true"
-                            :preview-mode="true"></json-viewer>
+                                     :preview-mode="true"></json-viewer>
                     </template>
                 </vxe-column>
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
-                    :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
-                    :formatter="format" />
+                            :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
+                            :formatter="format"/>
             </vxe-table>
         </div>
         <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :show-zoom="true" :resize="true"
-            width="600px" height="400px" :draggable="true">
+                   width="600px" height="400px" :draggable="true">
             <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
                 <el-form :model="exportConfig" label-width="120px">
                     <el-form-item label="文件名">
-                        <el-input v-model="exportConfig.name" style="width: 214.5px;" />
+                        <el-input v-model="exportConfig.name" style="width: 215px;"/>
                     </el-form-item>
                     <el-form-item label="保存类型">
                         <el-select v-model="exportConfig.type">
-                            <el-option label="JSON数据（*.json）" :value="1" />
-                            <el-option label="网页（*.html）" :value="2" disabled />
-                            <el-option label="XML数据（*.xml）" :value="3" />
-                            <el-option label="YAML数据（*.yaml）" :value="4" />
+                            <el-option label="JSON数据（*.json）" :value="1"/>
+                            <el-option label="网页（*.html）" :value="2" disabled/>
+                            <el-option label="XML数据（*.xml）" :value="3"/>
+                            <el-option label="YAML数据（*.yaml）" :value="4"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="选择数据">
                         <el-select v-model="exportConfig.data">
-                            <el-option label="当前数据（当前页的数据）" :value="1" />
-                            <el-option label="选中数据（当前页选中的数据）" :value="2" disabled />
+                            <el-option label="当前数据（当前页的数据）" :value="1"/>
+                            <el-option label="选中数据（当前页选中的数据）" :value="2" disabled/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="文件内容">
                         <el-select v-model="exportConfig.result">
-                            <el-option label="表格数据" :value="1" />
-                            <el-option label="原始数据" :value="2" />
-                            <el-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2" />
+                            <el-option label="表格数据" :value="1"/>
+                            <el-option label="原始数据" :value="2"/>
+                            <el-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2"/>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -171,15 +171,15 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from 'pinia';
-import { ElMessage, ElMessageBox } from "element-plus";
+import {defineComponent} from "vue";
+import {mapState} from 'pinia';
+import {ElMessage, ElMessageBox} from "element-plus";
 import JsonViewer from 'vue-json-viewer';
 
-import { VxeTablePropTypes, VxeColumnPropTypes, VxeTableDefines, VxeTableEvents } from 'vxe-table'
+import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
 
-import { ArrowDown, ArrowUp, Operation, Download, View, Check } from "@element-plus/icons-vue";
+import {ArrowDown, ArrowUp, Check, Download, Operation, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -236,7 +236,7 @@ export default defineComponent({
         tableTooltipConfig: {
             showAll: true,
             enterable: true,
-            contentMethod: ({ type, column, row, items, _columnIndex }) => {
+            contentMethod: ({type, column, row, items, _columnIndex}) => {
                 return column.title;
             }
         } as VxeTablePropTypes.TooltipConfig,
@@ -294,7 +294,7 @@ export default defineComponent({
                 conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
             ).then(result => {
                 this.result = result;
-                let { headers, records, count } = recordBuild(result, this.index!);
+                let {headers, records, count} = recordBuild(result, this.index!);
                 if (renderHeader) {
                     this.headers = headers;
                 }
@@ -424,7 +424,7 @@ export default defineComponent({
                         inputPattern: /\d+/,
                         inputErrorMessage: '请输入正确的数字',
                     })
-                        .then(({ value }) => {
+                        .then(({value}) => {
                             this.size = parseInt(value);
                             this.page = 1;
                             this.executeQuery();
@@ -453,6 +453,9 @@ export default defineComponent({
             this.indexVisible = false;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
+            this.must = '';
+            this.should = '';
+            this.mustNot = '';
             this.executeQuery();
         },
         openExportDialog() {
