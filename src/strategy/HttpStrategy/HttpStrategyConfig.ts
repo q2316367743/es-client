@@ -1,4 +1,6 @@
-type Method =
+import {AxiosRequestConfig } from "axios";
+
+export type Method =
     | 'get' | 'GET'
     | 'delete' | 'DELETE'
     | 'head' | 'HEAD'
@@ -15,10 +17,10 @@ interface BasicCredentials {
     password: string;
 }
 
-export default interface HttpStrategyConfig {
+export default interface HttpStrategyConfig extends AxiosRequestConfig{
 
-    url?: string;
-    method?: Method | string;
+    url: string;
+    method: Method | undefined;
     baseURL?: string;
     params?: any;
     paramsSerializer?: (params: any) => string;

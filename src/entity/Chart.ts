@@ -1,3 +1,5 @@
+import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
+
 export default interface Chart {
 
     /**
@@ -33,7 +35,7 @@ export default interface Chart {
     /**
      * 请求方式
      */
-    method: string;
+    method: Method;
 
     /**
      * 请求路径

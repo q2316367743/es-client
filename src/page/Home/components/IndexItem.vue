@@ -165,7 +165,7 @@ export default defineComponent({
                     ElMessage.error('获取索引信息错误')
                 })
             } else if (command === 'data') {
-                indexApi._search(this.index?.name).then((result) => {
+                indexApi._search(this.index!.name).then((result) => {
                     this.$emit('openDialog', this.index?.name, result);
                 })
             } else {
