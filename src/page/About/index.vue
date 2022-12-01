@@ -20,6 +20,10 @@
                 <el-link :href="repo.url" target="_blank">es-client</el-link>
             </div>
         </div>
+        <div class="title-1">文档</div>
+        <div class="content">
+            <el-link href="https://docs.esion.xyz/project-1/doc-1/" target="_blank">文档</el-link>
+        </div>
         <div class="title-1">意见反馈</div>
         <div content="content">
             <ul>

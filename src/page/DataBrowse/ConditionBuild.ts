@@ -131,10 +131,57 @@ function templateBuild(template: string, condition: Array<any>): void {
                 condition.push({
                     term
                 });
+            }else {
+                // TODO: >，<，>=，<=
+                let range = {} as any;
+                if (model === '>') {
+                    range[models[0]] = {
+                        gt: models[2]
+                    };
+                }else if (model === '<') {
+                    range[models[0]] = {
+                        lt: models[2]
+                    };
+                }else if (model === '>=') {
+                    range[models[0]] = {
+                        gte: models[2]
+                    };
+                }else if (model === '<=') {
+                    range[models[0]] = {
+                        lte: models[2]
+                    };
+                }
+                condition.push({
+                    range
+                })
             }
-            // TODO: >，<，>=，<=
         } else if (models.length === 7) {
             // TODO: >，<，>=，<=
+            let range = {} as any;
+            range[models[0]] = {}
+            let model1 = models[1];
+            let model2 = models[5];
+            if (model1 === '>') {
+                range[models[0]]['gt'] = models[2];
+            }else if (model1 === '<') {
+                range[models[0]]['lt'] = models[2];
+            }else if (model1 === '>=') {
+                range[models[0]]['gte'] = models[2];
+            }else if (model1 === '<=') {
+                range[models[0]]['lte'] = models[2];
+            }
+            if (model2 === '>') {
+                range[models[0]]['gt'] = models[6];
+            }else if (model2 === '<') {
+                range[models[0]]['lt'] = models[6];
+            }else if (model2 === '>=') {
+                range[models[0]]['gte'] = models[6];
+            }else if (model2 === '<=') {
+                range[models[0]]['lte'] = models[6];
+            }
+            condition.push({
+                range
+            })
         }
     }
 }
@@ -176,8 +223,6 @@ function parseCondition(condition: string): string[] {
                     items.push(item);
                 }
                 item = char;
-            }
-            if (!isSep) {
                 isSep = true;
             }
         } else if (char === ' ') {
@@ -194,9 +239,9 @@ function parseCondition(condition: string): string[] {
             } else {
                 item += char;
             }
-        }
-        if (isSep) {
-            isSep = false;
+            if (isSep) {
+                isSep = false;
+            }
         }
     }
 

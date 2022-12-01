@@ -2,7 +2,7 @@ import { Log, Repository } from "@/view/Data";
 
 export default {
     name: "es-client",
-    version: "1.4.0",
+    version: "1.5.0",
     author: "Esion",
     platform: "browser",
     repository: [
@@ -21,6 +21,12 @@ export default {
     ] as Repository[],
     log: [
         {
+            version: "1.5.0",
+            time: "2022-12-01",
+            items: [
+                "数据浏览功能强化"
+            ]
+        }, {
             version: "1.4.0",
             time: "2022-11-23",
             items: [

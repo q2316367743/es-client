@@ -69,7 +69,6 @@ function renderRecord(source: any, record: any, headers: Array<Header>, headersS
 }
 
 export default function recordBuild(result: any, index: Index): { headers: Array<Header>, records: Array<any>, count: number } {
-    console.log(result)
     let headers = new Array<Header>();
     let headersSet = new Set<string>();
     let records = new Array<any>();
