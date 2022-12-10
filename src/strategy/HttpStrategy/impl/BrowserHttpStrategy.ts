@@ -38,7 +38,7 @@ export default class BrowserHttpStrategy implements HttpStrategy {
         if (!config.baseURL || config.baseURL === '') {
             throw new Error(i18n.global.locale.value == 'zh' ? '请选择链接' : 'please select a link')
         }
-        // TODO: 如果有密码应该追加密码
+        // 如果有密码应该追加密码
         let url = useUrlStore().url;
         if (url && url.is_auth && url.auth_user && url.auth_password) {
             config.auth = {
