@@ -1,6 +1,7 @@
 import Constant from "@/global/Constant";
 import HttpStrategy from "./HttpStrategy";
 import BrowserHttpStrategy from "./impl/BrowserHttpStrategy";
+import HttpType from "@/enumeration/HttpType";
 
 class HttpStrategyContext {
 
@@ -21,7 +22,7 @@ class HttpStrategyContext {
     public getStrategy(): HttpStrategy {
         let strategy = this.strategyMap.get(Constant.platform);
         if (!strategy) {
-            return this.strategyMap.get('browser')!;
+            return this.strategyMap.get(HttpType.BROWSER)!;
         }
         return strategy;
     }
@@ -30,6 +31,6 @@ class HttpStrategyContext {
 
 const httpStrategyContext = HttpStrategyContext.getInstance();
 
-httpStrategyContext.register('browser', new BrowserHttpStrategy());
+httpStrategyContext.register(HttpType.BROWSER, new BrowserHttpStrategy());
 
 export default httpStrategyContext;

@@ -185,7 +185,7 @@ export default defineComponent({
             let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
             urlForm.validate((valid) => {
                 if (valid) {
-                    httpStrategyContext.getStrategy().all({
+                    httpStrategyContext.getStrategy().base({
                         baseURL: this.url.value,
                         url: '/',
                         method: 'GET',
@@ -198,9 +198,9 @@ export default defineComponent({
                         this.testData = {
                             icon: 'success',
                             title: '链接成功',
-                            name: response.data.name,
-                            version: response.data.version.number,
-                            luceneVersion: response.data.version.lucene_version
+                            name: response.name,
+                            version: response.version.number,
+                            luceneVersion: response.version.lucene_version
                         }
                     }).catch((e) => {
                         console.error(e);

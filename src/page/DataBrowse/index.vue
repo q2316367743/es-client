@@ -37,24 +37,25 @@
                     <i class="vxe-icon-refresh"/>
                 </div>
                 <div class="sep"></div>
-                <div class="item" :class="!index ? 'disable' : ''">
+                <div class="item" :class="!index ? 'disable' : ''" @click="recordAdd">
                     <i class="vxe-icon-add"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReduce">
                     <i class="vxe-icon-minus"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReset">
                     <i class="vxe-icon-indicator"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" style="font-size: 14px">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" style="font-size: 14px"
+                     @click="recordPreview">
                     <i class="vxe-icon-eye-fill"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordSave">
                     <i class="vxe-icon-save"/>
                 </div>
             </div>
             <div class="right">
-                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browser-pulldown">
+                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browser-pull-down">
                     <div class="item" style="display: flex;" @click="indexVisible = !indexVisible;">
                         <div v-if="!index">未选择索引</div>
                         <div v-else>{{ index.name }}</div>
@@ -82,11 +83,20 @@
                 <div class="item">
                     <i class="vxe-icon-eye-fill"/>
                 </div>
-                <div class="item">
-                    <el-icon>
-                        <Operation/>
-                    </el-icon>
-                </div>
+                <el-dropdown trigger="click">
+                    <div class="item">
+                        <el-icon>
+                            <Operation/>
+                        </el-icon>
+                    </div>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item>
+                                <el-link href="https://docs.esion.xyz/project-1/doc-2/" target="_blank">帮助</el-link>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
             </div>
         </div>
         <div class="condition">
@@ -131,7 +141,7 @@
                             :formatter="format"/>
             </vxe-table>
         </div>
-        <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :show-zoom="true" :resize="true"
+        <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :resize="true"
                    width="600px" height="400px" :draggable="true">
             <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
                 <el-form :model="exportConfig" label-width="120px">
@@ -341,7 +351,6 @@ export default defineComponent({
                     this.orderBy = ''
                 }
             } else {
-                let items = this.orderBy.split(',');
                 if (this.orderBy.includes(column.field)) {
                     // 存在排序字段
                     // 如果需要排序
@@ -445,6 +454,56 @@ export default defineComponent({
             this.page = Math.ceil(this.count / this.size)
             this.executeQuery();
         },
+        recordAdd() {
+            if (!this.index) {
+                return;
+            }
+            ElMessage({
+                showClose: true,
+                type: "warning",
+                message: '暂不可用'
+            })
+        },
+        recordReduce() {
+            if (this.deleteRowIndies.size === 0) {
+                return;
+            }
+            ElMessage({
+                showClose: true,
+                type: "warning",
+                message: '暂不可用'
+            })
+        },
+        recordReset() {
+            if (this.deleteRowIndies.size === 0) {
+                return;
+            }
+            ElMessage({
+                showClose: true,
+                type: "warning",
+                message: '暂不可用'
+            })
+        },
+        recordPreview() {
+            if (this.deleteRowIndies.size === 0) {
+                return;
+            }
+            ElMessage({
+                showClose: true,
+                type: "warning",
+                message: '暂不可用'
+            })
+        },
+        recordSave() {
+            if (this.deleteRowIndies.size === 0) {
+                return;
+            }
+            ElMessage({
+                showClose: true,
+                type: "warning",
+                message: '暂不可用'
+            })
+        },
 
         // 右侧
         indexChange(index: Index) {
@@ -459,6 +518,24 @@ export default defineComponent({
             this.executeQuery();
         },
         openExportDialog() {
+            // 选择了索引
+            if (!this.index) {
+                ElMessage({
+                    showClose: true,
+                    type: "warning",
+                    message: "请选择索引"
+                });
+                return;
+            }
+            // 有记录
+            if (this.records.length === 0) {
+                ElMessage({
+                    showClose: true,
+                    type: "warning",
+                    message: "数据为空"
+                });
+                return;
+            }
             this.exportConfig = {
                 name: this.index ? this.index!.name : '',
                 type: 1,
