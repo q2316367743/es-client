@@ -15,24 +15,45 @@
     left: 0;
     right: 0;
     bottom: 0;
-
+    background-color: #f5f5f5;
 }
 
-#menu {
+#navigation {
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 21px;
-    width: 200px;
+    top: 16px;
+    left: 16px;
+    bottom: 16px;
+    width: 184px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    background-color: #ffffff;
     overflow: hidden;
+
+    &.full-screen {
+        width: 50px;
+    }
 
     .logo {
         width: 100%;
-        text-align: center;
         font-weight: bold;
         font-size: 24px;
         height: 50px;
         line-height: 50px;
+        padding: 0 16px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .menu-list {
+        height: 56px;
+        cursor: pointer;
+        line-height: 56px;
+        padding-left: 16px;
+        &:hover {
+            background-color: #ecf5ff;
+        }
+        &.active {
+            color: #0d84ff;
+        }
     }
 
     .version {
@@ -46,61 +67,63 @@
     }
 }
 
-#main {
+#index {
     position: absolute;
-    top: 0;
-    left: 200px;
-    right: 0;
-    bottom: 21px;
-
-    .top {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 50px;
-        line-height: 50px;
-        display: grid;
-        grid-template-columns: 1fr 50px 115px;
-        grid-template-rows: 50px;
-
-        .app-option {
-            display: flex;
-            margin-left: 5px;
-
-            .el-input {
-                margin-left: 5px;
-            }
-
-            .el-button {
-                margin-left: 14px;
-                margin-top: 9px;
-            }
-
-            .cluster-name {
-                text-align: center;
-                font-size: 20px;
-                font-weight: bold;
-                margin-left: 10px;
-            }
-        }
+    top: 16px;
+    left: 216px;
+    height: 50px;
+    line-height: 50px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    background-color: #ffffff;
+    &.full-screen {
+        display: none;
     }
+    .app-option {
+        display: flex;
+        margin-left: 5px;
 
-    .content {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: hidden;
+        .el-input {
+            margin-left: 5px;
+        }
+
+        .el-button {
+            margin-left: 14px;
+            margin-top: 9px;
+        }
+
+        .cluster-name {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
     }
 }
 
-#footer {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 21px;
-    border-top: 1px solid #dcdfe6;
+#menu {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    height: 50px;
+    padding: 0 16px;
+    display: flex;
+    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    background-color: #ffffff;
+    &.full-screen {
+        display: none;
+    }
+}
+
+#main {
+    position: fixed;
+    top: 82px;
+    left: 216px;
+    right: 16px;
+    bottom: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    background-color: #ffffff;
+    &.full-screen {
+        top: 16px;
+        left: 82px;
+    }
 }

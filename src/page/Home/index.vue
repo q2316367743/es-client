@@ -275,8 +275,8 @@ export default defineComponent({
 <style lang="less">
 .home {
     position: absolute;
-    top: 0;
-    left: 5px;
+    top: 10px;
+    left: 10px;
     right: 10px;
     bottom: 10px;
 

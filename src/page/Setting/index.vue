@@ -1,6 +1,5 @@
 <template>
     <el-card class="setting" shadow="never">
-        <template #header>{{ $t('app.menu.setting') }}</template>
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
             <el-tab-pane :label="$t('setting.link.title')" name="url_history" class="url"></el-tab-pane>
@@ -39,21 +38,5 @@ export default defineComponent({
     left: 10px;
     right: 10px;
     bottom: 10px;
-
-    .el-card__body {
-        position: absolute;
-        top: 58px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow-y: auto;
-    }
-
-    .option {
-        position: absolute;
-        top: 20px;
-        right: 25px;
-        z-index: 10;
-    }
 }
 </style>

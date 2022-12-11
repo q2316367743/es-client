@@ -235,7 +235,7 @@ export default defineComponent({
             this.clear(true);
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
-            this.show_top = (index === 'base_search')
+            this.show_top = (index === 'base search')
         });
     },
     methods: {

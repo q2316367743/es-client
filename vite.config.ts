@@ -3,6 +3,9 @@ import vue from '@vitejs/plugin-vue'
 const path = require('path')
 // import path from 'path'
 
+// 插件
+import { visualizer } from 'rollup-plugin-visualizer';
+
 function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
 }
@@ -15,6 +18,6 @@ export default defineConfig({
             'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
         }
     },
-    plugins: [vue()],
+    plugins: [vue(), visualizer({ open: true })],
     base: './'
 })

@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="right">
-                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browser-pull-down">
+                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browse-pull-down">
                     <div class="item" style="display: flex;" @click="indexVisible = !indexVisible;">
                         <div v-if="!index">未选择索引</div>
                         <div v-else>{{ index.name }}</div>
@@ -132,8 +132,11 @@
                 <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="expand" width="80">
                     <template #content="{ row, rowIndex }">
-                        <json-viewer :value="row._source" :expand-depth="4" copyable sort :expanded="true"
-                                     :preview-mode="true"></json-viewer>
+                        <div class="data-browse-expand">
+                            <json-viewer :value="row._source" :expand-depth="4" copyable sort :expanded="true"
+                                         :preview-mode="true"></json-viewer>
+                            <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
+                        </div>
                     </template>
                 </vxe-column>
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
@@ -205,6 +208,7 @@ import recordBuild from './RecordBuild';
 import './index.less';
 import ExportConfig from "./ExportConfig";
 import exportData from "./ExportData";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 export default defineComponent({
     name: 'data-browse',
@@ -566,8 +570,18 @@ export default defineComponent({
                 });
                 console.error(e)
             }
-        }
+        },
         // <----------------------------------------- 上面按钮 -----------------------------------------<
+
+        // >----------------------------------------- 功能 ----------------------------------------->
+        copy(value: any) {
+            BrowserUtil.copy(JSON.stringify(value, null, 4));
+            ElMessage({
+                showClose: true,
+                type: 'success',
+                message: '复制成功'
+            })
+        }
     }
 });
 </script>
