@@ -79,6 +79,7 @@
                 </el-collapse-item>
             </el-collapse>
             <template #footer>
+                <el-button type="info" text @click="copyIndex">复制到剪切板</el-button>
                 <el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
             </template>
         </el-dialog>
@@ -107,6 +108,8 @@ import JsonDialog from "@/components/JsonDialog.vue";
 
 import mitt from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import BrowserUtil from "@/utils/BrowserUtil";
+import IndexSaveBuild from "@/build/IndexSaveBuild";
 
 
 export default defineComponent({
@@ -146,14 +149,6 @@ export default defineComponent({
         ...mapState(useUrlStore, ['url']),
         ...mapState(useIndexStore, ['indices']),
         ...mapState(useSettingStore, ['instance'])
-    },
-    watch: {
-        default_replica() {
-            this.index.settings.numberOfReplicas = useSettingStore().getDefaultReplica
-        },
-        default_shard() {
-            this.index.settings.numberOfShards = useSettingStore().getDefaultShard
-        }
     },
     created() {
         mitt.on(MessageEventEnum.INDEX_REFRESH, () => {
@@ -251,6 +246,27 @@ export default defineComponent({
             })
             // 关闭弹框
             this.indexDialog = false;
+            this.$nextTick(() => {
+                // 重置
+                this.index = {
+                    name: '',
+                    settings: {
+                        numberOfReplicas: this.instance.defaultReplica,
+                        numberOfShards: this.instance.defaultShard
+                    },
+                    mapping: [] as Array<Property>
+                } as Index;
+            })
+        },
+        copyIndex() {
+            BrowserUtil.copy(JSON.stringify(IndexSaveBuild(this.index), null, 4));
+            // 关闭弹框
+            this.indexDialog = false;
+            ElMessage({
+                showClose: true,
+                type: "success",
+                message: "成功复制到剪切板"
+            });
             this.$nextTick(() => {
                 // 重置
                 this.index = {

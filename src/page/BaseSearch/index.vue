@@ -93,8 +93,7 @@
                 <!-- 查询结果 -->
                 <div class="base-content">
                     <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                                   :current-page="page" :page-size="size" @size-change="sizeChange"
-                                   @current-change="pageChange"></el-pagination>
+                                   v-model:current-page="page" v-model:page-size="size"></el-pagination>
                     <data-view :view="view" :result="result" :mapping="mapping"/>
                 </div>
             </el-scrollbar>
@@ -222,7 +221,15 @@ export default defineComponent({
         },
         instance() {
             this.view = useSettingStore().getDefaultViewer
-        }
+        },
+        size(newValue: number) {
+            this.size = newValue;
+            this.search();
+        },
+        page(newValue: number) {
+            this.page = newValue;
+            this.search();
+        },
     },
     created() {
         mitt.on('update_index', () => {
@@ -295,14 +302,6 @@ export default defineComponent({
             if (clear_index) {
                 this.index = '';
             }
-        },
-        sizeChange(size: number) {
-            this.size = size;
-            this.search();
-        },
-        pageChange(page: number) {
-            this.page = page;
-            this.search();
         },
         order_add() {
             this.orders.push({
