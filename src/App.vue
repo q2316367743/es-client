@@ -114,7 +114,7 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
 // 引入页面组件
 import JsonDialog from "@/components/JsonDialog.vue";
-import Translate from "@/components/Translate.vue";
+import Translate from "@/icon/Translate.vue";
 import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 // 模块
 import Info from '@/module/info/index.vue';

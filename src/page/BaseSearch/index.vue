@@ -25,7 +25,6 @@
                     <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                     <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                     <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
-                    <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
                 </el-select>
             </div>
         </div>
@@ -95,15 +94,8 @@
                 <div class="base-content">
                     <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
                                    :current-page="page" :page-size="size" @size-change="sizeChange"
-                                   @current-change="pageChange">
-                    </el-pagination>
-                    <base-viewer v-if="view === 1" :data="result"></base-viewer>
-                    <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-                    </json-viewer>
-                    <table-viewer v-if="view === 3" :data="result" :mapping="mapping">
-                    </table-viewer>
-                    <base-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100vh - 205px)">
-                    </base-search-editor-viewer>
+                                   @current-change="pageChange"></el-pagination>
+                    <data-view :view="view" :result="result" :mapping="mapping"/>
                 </div>
             </el-scrollbar>
             <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="show_top"/>
@@ -139,6 +131,7 @@ import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./components/FieldConditionItem.vue";
 import Field from "@/view/Field";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import DataView from "@/components/DataView/index.vue";
 
 interface Name {
     name: string;
@@ -151,6 +144,7 @@ interface Name {
 export default defineComponent({
     name: 'base-search',
     components: {
+        DataView,
         JsonViewer,
         BaseViewer,
         TableViewer,

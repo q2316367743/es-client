@@ -31,7 +31,6 @@
                     <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                     <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                     <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
-                    <el-option :label="$t('senior_search.editor_view')" :value="4"></el-option>
                 </el-select>
             </div>
             <!-- 下半部分 -->
@@ -75,12 +74,7 @@
                 <!-- 右面展示内容 -->
                 <div class="senior-content" :style="{ left: senior_width_computed + 20 + 'px' }" v-show="mode !== 3">
                     <el-scrollbar style="height: 100%;">
-                        <base-viewer v-if="view === 1" :data="result"></base-viewer>
-                        <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-                        </json-viewer>
-                        <table-viewer v-if="view === 3" :data="result"></table-viewer>
-                        <senior-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100% - 64px)">
-                        </senior-search-editor-viewer>
+                        <data-view :view="view" :result="result" />
                     </el-scrollbar>
                     <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap" v-show="show_top" />
                 </div>
@@ -111,6 +105,7 @@ import getParamBuild from "@/build/GetParamBuild";
 import useSettingStore from "@/store/SettingStore";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import DataView from "@/components/DataView/index.vue";
 
 enum Mode {
     HIDE_LEFT = 1,
@@ -141,7 +136,7 @@ export default defineComponent({
         mode: Mode.DEFAULT,
         show_top: true
     }),
-    components: {JsonViewer, BaseViewer, MonacoEditor, TableViewer, SeniorSearchEditorViewer},
+    components: {DataView, JsonViewer, BaseViewer, MonacoEditor, TableViewer, SeniorSearchEditorViewer},
     computed: {
         ...mapState(useSettingStore, ['instance']),
         senior_width_computed(): number {
