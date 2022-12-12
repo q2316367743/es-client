@@ -74,13 +74,15 @@
                 </div>
                 <!-- 右面展示内容 -->
                 <div class="senior-content" :style="{ left: senior_width_computed + 20 + 'px' }" v-show="mode !== 3">
-                    <base-viewer v-if="view === 1" :data="result"></base-viewer>
-                    <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-                    </json-viewer>
-                    <table-viewer v-if="view === 3" :data="result"></table-viewer>
-                    <senior-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100% - 64px)">
-                    </senior-search-editor-viewer>
-                    <el-backtop target=".senior-content" :right="40" :bottom="60"/>
+                    <el-scrollbar style="height: 100%;">
+                        <base-viewer v-if="view === 1" :data="result"></base-viewer>
+                        <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
+                        </json-viewer>
+                        <table-viewer v-if="view === 3" :data="result"></table-viewer>
+                        <senior-search-editor-viewer v-if="view === 4" v-model="result" height="calc(100% - 64px)">
+                        </senior-search-editor-viewer>
+                    </el-scrollbar>
+                    <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap" v-show="show_top" />
                 </div>
             </div>
         </div>
@@ -108,6 +110,7 @@ import Param from '@/view/Param'
 import getParamBuild from "@/build/GetParamBuild";
 import useSettingStore from "@/store/SettingStore";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 enum Mode {
     HIDE_LEFT = 1,
@@ -135,7 +138,8 @@ export default defineComponent({
         is_down: false,
         max_width: 520,
         max_height: 520,
-        mode: Mode.DEFAULT
+        mode: Mode.DEFAULT,
+        show_top: true
     }),
     components: {JsonViewer, BaseViewer, MonacoEditor, TableViewer, SeniorSearchEditorViewer},
     computed: {
@@ -171,6 +175,9 @@ export default defineComponent({
             this.suggestions = [];
             // GET请求参数
             this.get_params = new Array<Param>();
+        });
+        mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
+            this.show_top = (index === 'senior search')
         });
     },
     mounted() {

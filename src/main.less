@@ -9,6 +9,10 @@
     overflow: auto;
 }
 
+html, body {
+    height: 100%;
+}
+
 #app {
     position: fixed;
     top: 0;
@@ -48,9 +52,11 @@
         cursor: pointer;
         line-height: 56px;
         padding-left: 16px;
+
         &:hover {
             background-color: #ecf5ff;
         }
+
         &.active {
             color: #0d84ff;
         }
@@ -75,28 +81,31 @@
     line-height: 50px;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
     background-color: #ffffff;
+    display: flex;
+    margin-left: 5px;
+
     &.full-screen {
         display: none;
     }
-    .app-option {
-        display: flex;
+
+    .el-input {
         margin-left: 5px;
+    }
 
-        .el-input {
-            margin-left: 5px;
-        }
+    .el-button {
+        margin-left: 14px;
+        margin-top: 9px;
+    }
 
-        .el-button {
-            margin-left: 14px;
-            margin-top: 9px;
-        }
+    .cluster-name {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
 
-        .cluster-name {
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
+    .server-status {
+        margin: 0 10px;
     }
 }
 
@@ -109,6 +118,7 @@
     display: flex;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
     background-color: #ffffff;
+
     &.full-screen {
         display: none;
     }
@@ -122,6 +132,7 @@
     bottom: 16px;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
     background-color: #ffffff;
+
     &.full-screen {
         top: 16px;
         left: 82px;

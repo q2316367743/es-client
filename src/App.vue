@@ -23,7 +23,8 @@
                 <span v-if="fullScreen"><el-icon><search/></el-icon></span>
                 <span v-else>{{ $t('app.menu.base_search') }}</span>
             </div>
-            <div class="menu-list" :class="active === 'senior search' ? 'active' : ''" @click="selectMenu('senior search')">
+            <div class="menu-list" :class="active === 'senior search' ? 'active' : ''"
+                 @click="selectMenu('senior search')">
                 <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
                 <span v-else>{{ $t('app.menu.senior_search') }}</span>
             </div>
@@ -39,23 +40,20 @@
         </div>
         <!-- 顶部-->
         <div id="index" :class="fullScreen ? 'full-screen' : ''">
-            <!-- 左侧 -->
-            <div class="app-option">
-                <!-- 索引服务器选择 -->
-                <el-select v-model="urlId" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
-                           clearable @change="select_url">
-                    <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
-                    </el-option>
-                    <el-option :label="$t('app.add')" value="add"></el-option>
-                </el-select>
-                <!-- 刷新按钮 -->
-                <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
-                <!-- 服务器名称 -->
-                <div style="font-weight: bold;margin-left: 20px;font-size: 16px;">{{ name }}</div>
-                <!-- 服务器状态 -->
-                <div style="margin-left: 10px;" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }}
-                    ({{ active_shards }} of {{ total_shards }})
-                </div>
+            <!-- 索引服务器选择 -->
+            <el-select v-model="urlId" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
+                       clearable @change="select_url">
+                <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
+                </el-option>
+                <el-option :label="$t('app.add')" value="add"></el-option>
+            </el-select>
+            <!-- 刷新按钮 -->
+            <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
+            <!-- 服务器名称 -->
+            <div class="cluster-name">{{ name }}</div>
+            <!-- 服务器状态 -->
+            <div class="server-status" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }}
+                ({{ active_shards }} of {{ total_shards }})
             </div>
         </div>
         <div id="menu" :class="fullScreen ? 'full-screen' : ''">
@@ -100,15 +98,17 @@ import useSettingStore from "@/store/SettingStore";
 import {defineComponent} from 'vue';
 import {mapState} from "pinia";
 import {
-    Coin, Filter,
+    Coin,
     DataBoard,
+    DataLine,
     Expand,
+    Filter,
     Fold,
     HomeFilled,
     Operation,
     Search,
     Setting as SettingIcon,
-    DataLine, Tickets
+    Tickets
 } from '@element-plus/icons-vue';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
