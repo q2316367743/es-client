@@ -28,3 +28,5 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+stats.html

@@ -33,9 +33,7 @@
                 <span v-else>{{ $t('app.menu.setting') }}</span>
             </div>
             <div class="version">
-                <div style="margin-top: 5px">
-                    <el-link @click="aboutDialog = true">v{{ Constant.version }}</el-link>
-                </div>
+                <el-link @click="aboutDialog = true">v{{ Constant.version }}</el-link>
             </div>
         </div>
         <!-- 顶部-->
@@ -60,12 +58,12 @@
             <!-- 主题切换 -->
             <div class="menu-item" @click="darkChange">
                 <el-icon :size="24">
-                    <moon-icon v-if="isDark" />
-                    <sun-icon v-else />
+                    <moon-icon v-if="isDark"/>
+                    <sun-icon v-else/>
                 </el-icon>
             </div>
             <!-- 多语言切换 -->
-            <el-dropdown @command="languageCommand">
+            <el-dropdown @command="languageCommand" trigger="click">
                 <div class="menu-item">
                     <el-icon :size="24">
                         <translate></translate>
@@ -159,7 +157,7 @@ export default defineComponent({
     data: () => {
         let isDark = useDark({
             initialValue: "light",
-            selector: '#app',
+            selector: 'body',
             attribute: 'theme-mode',
             valueDark: 'dark',
             valueLight: 'light',

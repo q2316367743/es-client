@@ -4,9 +4,9 @@
         <div class="home-option">
             <div style="display: flex">
                 <el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')"
-                    style="width: 300px;height: 32px;" @input="search" clearable></el-input>
+                          style="width: 300px;height: 32px;" @input="search" clearable></el-input>
                 <el-select v-model="condition.order" :placeholder="$t('home.order_placeholder')"
-                    style="margin-left: 5px" clearable @change="search">
+                           style="margin-left: 5px" clearable @change="search">
                     <el-option :label="$t('home.order_name_asc')" value="NAME_ASC"></el-option>
                     <el-option :label="$t('home.order_name_desc')" value="NAME_DESC"></el-option>
                     <el-option :label="$t('home.order_size_asc')" value="SIZE_ASC"></el-option>
@@ -16,17 +16,15 @@
                 </el-select>
                 <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
             </div>
-            <div style="margin-right: 15px;">
-                <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true">{{
-                        $t('home.new_index.self')
+            <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true">{{
+                    $t('home.new_index.self')
                 }}
-                </el-button>
-            </div>
+            </el-button>
         </div>
         <!-- 索引容器 -->
-        <index-container :indices="showIndices" v-loading="indexLoading" @open-dialog="index_open_dialog" />
+        <index-container :indices="showIndices" v-loading="indexLoading" @open-dialog="index_open_dialog"/>
         <!-- 返回顶部 -->
-        <el-backtop :right="40" :bottom="60" target=".index-container" />
+        <el-backtop :right="40" :bottom="60" target=".index-container"/>
         <!-- 新增索引 -->
         <el-dialog :title="$t('home.new_index.self')" v-model="indexDialog" width="850px">
             <el-form>
@@ -70,7 +68,7 @@
                                 <el-form-item>
                                     <el-button type="danger" @click="removeProperty(property)">{{
                                             $t('home.new_index.delete')
-                                    }}
+                                        }}
                                     </el-button>
                                 </el-form-item>
                             </el-form>
@@ -89,17 +87,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import {defineComponent} from 'vue';
+import {mapState} from 'pinia';
 import _ from 'lodash';
-import { ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 
 import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from '@/store/SettingStore';
 
 import IndexView from "@/view/Index";
-import { Index, Property } from '@/domain';
+import {Index, Property} from '@/domain';
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
@@ -114,7 +112,7 @@ import IndexSaveBuild from "@/build/IndexSaveBuild";
 
 export default defineComponent({
     name: 'Home',
-    components: { IndexItem, IndexContainer, JsonDialog },
+    components: {IndexItem, IndexContainer, JsonDialog},
     data: () => {
         return {
             // 根据条件过滤后的索引
@@ -229,7 +227,7 @@ export default defineComponent({
             })
         },
         addProperty() {
-            this.index.mapping.push({ id: new Date().getTime(), field: '', 'type': 'text' })
+            this.index.mapping.push({id: new Date().getTime(), field: '', 'type': 'text'})
         },
         removeProperty(property: Property) {
             _.remove(this.index.mapping, (target: Property) => {

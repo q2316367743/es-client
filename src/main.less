@@ -14,19 +14,136 @@
 html, body {
     height: 100%;
 }
+body[theme-mode=light] {
+    --bg-color: #f2f2f2;
+    --text-color: #000000;
+    --container-color: #ffffff;
+    --hover-color: #ecf5ff;
+    --disable-color: #888888;
+    --shadow-color: rgba(0, 0, 0, .12);
+}
 
 // 主题变量
-#app[theme-mode=light] {
-    --bg-color: #f5f5f5;
-    --container-color: #ffffff;
-    --text-color: #000000;
-    --hover-color: #ecf5ff;
-}
-#app[theme-mode=dark] {
+body[theme-mode=dark] {
     --bg-color: #17191a;
-    --container-color: #26292c;
     --text-color: #ffffff;
+    --container-color: #26292c;
     --hover-color: #414343;
+    --disable-color: #808080;
+    --shadow-color: var(--container-color);
+
+    // 重写element-plus
+    --el-text-color-primary: var(--text-color);
+    --el-text-color-regular: var(--disable-color);
+    --el-fill-color-light: var(--container-color);
+    --el-bg-color: var(--bg-color);
+    --el-fill-color-blank: var(--el-bg-color);
+    --el-bg-color-overlay: var(--el-bg-color);
+    --el-fill-color: var(--el-bg-color);
+    --el-disabled-bg-color: var(--hover-color);
+
+    // element-plus
+
+    .el-dialog {
+        --el-dialog-bg-color: #26292c !important;
+    }
+
+    .el-card {
+        --el-card-bg-color: #26292c !important;
+    }
+
+    .el-dropdown__popper {
+        --el-dropdown-menuItem-hover-fill: var(--bg-color);
+    }
+
+    .el-button {
+        --el-button-hover-bg-color: var(--hover-color);
+    }
+
+    .el-backtop {
+        --el-backtop-bg-color: var(--container-color);
+        --el-backtop-hover-bg-color: var(--hover-color);
+    }
+
+    .el-select-v2__combobox-input {
+        color: var(--text-color);
+    }
+
+    // jsonViewer
+
+    .jv-container.jv-light {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+
+        .jv-item.jv-object {
+            color: var(--text-color) !important;
+        }
+
+        .jv-key {
+            color: var(--text-color) !important;
+        }
+
+        .jv-ellipsis {
+            background-color: var(--container-color);
+
+        }
+
+        .jv-item.jv-array {
+            color: var(--text-color) !important;
+
+        }
+    }
+
+    // vxe
+
+    #data-browse {
+        .condition {
+            .condition-item {
+                .input {
+                    background-color: var(--container-color);
+                    color: var(--text-color);
+                }
+            }
+        }
+    }
+
+    .vxe-table--render-default {
+        color: var(--text-color);
+
+        .vxe-table--body-wrapper {
+            background-color: var(--container-color);
+        }
+    }
+
+    .vxe-table--render-default.border--full {
+        .vxe-table--header-wrapper {
+            background-color: var(--container-color);
+        }
+    }
+
+    .vxe-table {
+        .vxe-table--header-wrapper {
+            color: var(--el-text-color-regular);
+        }
+    }
+
+    .vxe-pulldown {
+        color: var(--text-color);
+    }
+
+    .vxe-pulldown--panel {
+        color: var(--text-color);
+
+        .vxe-pulldown--wrapper {
+            background-color: var(--container-color);
+        }
+    }
+
+    .vxe-table--render-default .vxe-body--row.row--current {
+        background-color: var(--hover-color);
+
+    }
+
 }
 
 #app {
@@ -45,7 +162,7 @@ html, body {
     left: 16px;
     bottom: 16px;
     width: 184px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
     overflow: hidden;
 
@@ -75,7 +192,7 @@ html, body {
         }
 
         &.active {
-            color: #0d84ff;
+            color: var(--el-color-primary);
         }
     }
 
@@ -86,7 +203,10 @@ html, body {
         bottom: 20px;
         text-align: center;
         font-size: 14px;
-        color: #3d3d3d;
+
+        .el-link {
+            color: var(--text-color);
+        }
     }
 }
 
@@ -96,7 +216,7 @@ html, body {
     left: 216px;
     height: 50px;
     line-height: 50px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
     display: flex;
 
@@ -131,7 +251,7 @@ html, body {
     right: 16px;
     height: 50px;
     display: flex;
-    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
 
     &.full-screen {
@@ -142,7 +262,8 @@ html, body {
         width: 50px;
         padding: 13px 13px;
         cursor: pointer;
-        .el-icon{
+
+        .el-icon {
             color: var(--text-color);
         }
     }
@@ -154,7 +275,7 @@ html, body {
     left: 216px;
     right: 16px;
     bottom: 16px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
 
     &.full-screen {

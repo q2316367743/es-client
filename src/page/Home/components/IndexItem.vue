@@ -3,7 +3,7 @@
         <div
             class="title"
             v-bind:style="{
-                color: index?.state === 'open' ? '#000000' : '#888888',
+                color: index?.state === 'open' ? 'var(--text-color)' : 'var(--disable-color)',
             }"
         >{{ index?.name }}
         </div>
