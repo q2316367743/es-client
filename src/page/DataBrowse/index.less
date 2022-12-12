@@ -59,6 +59,7 @@
         .condition-item {
             display: flex;
             margin: 0 5px;
+            position: relative;
 
             .key {
                 line-height: 35px;
@@ -77,6 +78,19 @@
                 padding: 8px 0;
                 font-size: 1rem;
                 margin: 0 5px 1px;
+            }
+
+            .clear {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                cursor: pointer;
+                display: none;
+            }
+            &:hover {
+                .clear {
+                    display: block;
+                }
             }
         }
 
@@ -105,6 +119,7 @@
     border-bottom: 1px solid #f2f2f2;
     cursor: pointer;
     overflow: hidden;
+    padding-left: 16px;
 
     &:hover {
         background-color: #f2f2f2;

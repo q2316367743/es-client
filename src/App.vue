@@ -81,7 +81,7 @@
         </div>
         <!-- 关于弹窗 -->
         <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body custom-class="es-dialog"
-                   :close-on-click-modal="false" top="10vh">
+                   :close-on-click-modal="false" top="10vh" draggable>
             <about></about>
         </el-dialog>
         <!-- 保存或新增URL弹窗 -->

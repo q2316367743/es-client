@@ -1,5 +1,6 @@
 <template>
     <div id="data-browse">
+        <!-- 顶部按钮 -->
         <div class="option">
             <div class="left">
                 <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
@@ -99,27 +100,49 @@
                 </el-dropdown>
             </div>
         </div>
+        <!-- 输入条件 -->
         <div class="condition">
             <div class="condition-item">
                 <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
                 <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)"/>
+                <div class="clear" @click="must = ''">
+                    <el-icon>
+                        <circle-close/>
+                    </el-icon>
+                </div>
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
                 <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)"/>
+                <div class="clear" @click="should = ''">
+                    <el-icon>
+                        <circle-close/>
+                    </el-icon>
+                </div>
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
                 <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)"/>
+                <div class="clear" @click="mustNot = ''">
+                    <el-icon>
+                        <circle-close/>
+                    </el-icon>
+                </div>
             </div>
             <div class="condition-sep"></div>
             <div class="condition-item">
                 <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
                 <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)"/>
+                <div class="clear" @click="orderBy = ''">
+                    <el-icon>
+                        <circle-close/>
+                    </el-icon>
+                </div>
             </div>
         </div>
+        <!-- 数据表格 -->
         <div class="content-table">
             <vxe-table border height="100%" class="es-scrollbar" :empty-text="record ? '什么也没有' : '请选择索引'"
                        :data="records"
@@ -144,6 +167,7 @@
                             :formatter="format"/>
             </vxe-table>
         </div>
+        <!-- 导出弹窗 -->
         <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :resize="true"
                    width="600px" height="400px" :draggable="true">
             <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
@@ -192,7 +216,7 @@ import JsonViewer from 'vue-json-viewer';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
 
-import {ArrowDown, ArrowUp, Check, Download, Operation, View} from "@element-plus/icons-vue";
+import {ArrowDown, ArrowUp, Check, CircleClose, Download, Operation, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -213,7 +237,7 @@ import BrowserUtil from "@/utils/BrowserUtil";
 export default defineComponent({
     name: 'data-browse',
     components: {
-        ArrowDown, ArrowUp, Operation, Download, View, Check, JsonViewer
+        ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, JsonViewer
     },
     data: () => ({
         page: 1,
