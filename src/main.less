@@ -1,3 +1,5 @@
+// 全局配置
+
 * {
     margin: 0;
     padding: 0;
@@ -13,13 +15,28 @@ html, body {
     height: 100%;
 }
 
+// 主题变量
+#app[theme-mode=light] {
+    --bg-color: #f5f5f5;
+    --container-color: #ffffff;
+    --text-color: #000000;
+    --hover-color: #ecf5ff;
+}
+#app[theme-mode=dark] {
+    --bg-color: #17191a;
+    --container-color: #26292c;
+    --text-color: #ffffff;
+    --hover-color: #414343;
+}
+
 #app {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #f5f5f5;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 #navigation {
@@ -29,7 +46,7 @@ html, body {
     bottom: 16px;
     width: 184px;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
-    background-color: #ffffff;
+    background-color: var(--container-color);
     overflow: hidden;
 
     &.full-screen {
@@ -47,14 +64,14 @@ html, body {
         justify-content: space-between;
     }
 
-    .menu-list {
+    .nav-list {
         height: 56px;
         cursor: pointer;
         line-height: 56px;
         padding-left: 16px;
 
         &:hover {
-            background-color: #ecf5ff;
+            background-color: var(--hover-color);
         }
 
         &.active {
@@ -80,7 +97,7 @@ html, body {
     height: 50px;
     line-height: 50px;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
-    background-color: #ffffff;
+    background-color: var(--container-color);
     display: flex;
 
     &.full-screen {
@@ -113,13 +130,21 @@ html, body {
     top: 16px;
     right: 16px;
     height: 50px;
-    padding: 0 16px;
     display: flex;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
-    background-color: #ffffff;
+    background-color: var(--container-color);
 
     &.full-screen {
         display: none;
+    }
+
+    .menu-item {
+        width: 50px;
+        padding: 13px 13px;
+        cursor: pointer;
+        .el-icon{
+            color: var(--text-color);
+        }
     }
 }
 
@@ -130,7 +155,7 @@ html, body {
     right: 16px;
     bottom: 16px;
     box-shadow: 0 0 12px rgba(0, 0, 0, .12);
-    background-color: #ffffff;
+    background-color: var(--container-color);
 
     &.full-screen {
         top: 16px;

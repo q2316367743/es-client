@@ -11,24 +11,24 @@
                     </el-icon>
                 </div>
             </div>
-            <div class="menu-list" :class="active === 'home' ? 'active' : ''" @click="selectMenu('home')">
+            <div class="nav-list" :class="active === 'home' ? 'active' : ''" @click="selectMenu('home')">
                 <span v-if="fullScreen"><el-icon><data-line/></el-icon></span>
                 <span v-else>{{ $t('app.menu.home') }}</span>
             </div>
-            <div class="menu-list" :class="active === 'data browse' ? 'active' : ''" @click="selectMenu('data browse')">
+            <div class="nav-list" :class="active === 'data browse' ? 'active' : ''" @click="selectMenu('data browse')">
                 <span v-if="fullScreen"><el-icon><Tickets/></el-icon></span>
                 <span v-else>{{ $t('app.menu.data_browse') }}</span>
             </div>
-            <div class="menu-list" :class="active === 'base search' ? 'active' : ''" @click="selectMenu('base search')">
+            <div class="nav-list" :class="active === 'base search' ? 'active' : ''" @click="selectMenu('base search')">
                 <span v-if="fullScreen"><el-icon><search/></el-icon></span>
                 <span v-else>{{ $t('app.menu.base_search') }}</span>
             </div>
-            <div class="menu-list" :class="active === 'senior search' ? 'active' : ''"
+            <div class="nav-list" :class="active === 'senior search' ? 'active' : ''"
                  @click="selectMenu('senior search')">
                 <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
                 <span v-else>{{ $t('app.menu.senior_search') }}</span>
             </div>
-            <div class="menu-list" :class="active === 'setting' ? 'active' : ''" @click="selectMenu('setting')">
+            <div class="nav-list" :class="active === 'setting' ? 'active' : ''" @click="selectMenu('setting')">
                 <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
                 <span v-else>{{ $t('app.menu.setting') }}</span>
             </div>
@@ -57,9 +57,20 @@
             </div>
         </div>
         <div id="menu" :class="fullScreen ? 'full-screen' : ''">
+            <!-- 主题切换 -->
+            <div class="menu-item" @click="darkChange">
+                <el-icon :size="24">
+                    <moon-icon v-if="isDark" />
+                    <sun-icon v-else />
+                </el-icon>
+            </div>
             <!-- 多语言切换 -->
             <el-dropdown @command="languageCommand">
-                <translate style="padding-top: 18px;font-size: 16px;cursor: pointer"></translate>
+                <div class="menu-item">
+                    <el-icon :size="24">
+                        <translate></translate>
+                    </el-icon>
+                </div>
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item command="zh">中文</el-dropdown-item>
@@ -68,7 +79,9 @@
                 </template>
             </el-dropdown>
             <!-- 各种信息弹框 -->
-            <info></info>
+            <div class="menu-item">
+                <info></info>
+            </div>
         </div>
         <!-- 内容-->
         <div id="main" :class="fullScreen ? 'full-screen' : ''">
@@ -111,6 +124,7 @@ import {
 } from '@element-plus/icons-vue';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
+import {useDark, useToggle} from "@vueuse/core";
 // 引入页面组件
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/icon/Translate.vue";
@@ -130,14 +144,27 @@ import emitter from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 // 常量
 import Constant from '@/global/Constant'
+// 引入自定义图标
+import MoonIcon from "@/icon/MoonIcon.vue";
+import SunIcon from "@/icon/SunIcon.vue";
 
 export default defineComponent({
     components: {
+        SunIcon,
+        MoonIcon,
         Info, About, Setting, Home, BaseSearch, SeniorSearch, Filter,
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
         Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
     },
     data: () => {
+        let isDark = useDark({
+            initialValue: "light",
+            selector: '#app',
+            attribute: 'theme-mode',
+            valueDark: 'dark',
+            valueLight: 'light',
+        });
+        let toggleDark = useToggle(isDark);
         return {
             active: "home",
             urlId: undefined as number | undefined,
@@ -145,7 +172,9 @@ export default defineComponent({
             urlDialog: false,
             locale: zhCn,
             Constant,
-            fullScreen: false
+            fullScreen: false,
+            isDark,
+            toggleDark
         };
     },
     computed: {
@@ -206,6 +235,9 @@ export default defineComponent({
             } else if (command === 'en') {
                 this.locale = en;
             }
+        },
+        darkChange() {
+            this.toggleDark()
         },
         fullScreenSwitch() {
             this.fullScreen = !this.fullScreen;

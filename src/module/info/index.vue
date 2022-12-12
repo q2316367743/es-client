@@ -2,12 +2,9 @@
 <template>
     <div class="info">
         <el-dropdown @command="handleCommand">
-            <el-button type="primary">
-                <span>{{ $t('app.info') }}</span>
-                <el-icon class="el-icon--right">
-                    <arrow-down />
-                </el-icon>
-            </el-button>
+            <el-icon :size="24">
+                <info-icon />
+            </el-icon>
             <template #dropdown>
                 <el-dropdown-menu>
                     <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
@@ -31,9 +28,11 @@ import { defineComponent } from "vue";
 import { ArrowDown } from '@element-plus/icons-vue'
 
 import JsonDialog from "@/components/JsonDialog.vue";
+import InfoIcon from "@/icon/InfoIcon.vue";
 
 export default defineComponent({
     components: {
+        InfoIcon,
         ArrowDown,
         JsonDialog
     },
@@ -124,7 +123,4 @@ export default defineComponent({
 });
 </script>
 <style>
-.info {
-    padding-top: 10px;
-}
 </style>
