@@ -115,7 +115,6 @@ import {mapState} from "pinia";
 import JsonViewer from "vue-json-viewer";
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
-import BaseSearchEditorViewer from "@/components/EditorViewer/base-search.vue";
 
 import IndexApi from "@/api/IndexApi";
 
@@ -148,7 +147,6 @@ export default defineComponent({
         JsonViewer,
         BaseViewer,
         TableViewer,
-        BaseSearchEditorViewer,
         FieldConditionItem
     },
     data: () => {

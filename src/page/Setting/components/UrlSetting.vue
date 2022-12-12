@@ -33,8 +33,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ElMessageBox, ElMessage } from 'element-plus'
-import dayjs from 'dayjs'
 import { mapState } from "pinia";
+import {toDateString} from "xe-utils";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -64,7 +64,7 @@ export default defineComponent({
     },
     methods: {
         prettyDate(date: Date) {
-            return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+            return toDateString(date, "yyyy-MM-dd HH:mm:ss");
         },
         remove(id: number, value: string) {
             ElMessageBox.confirm('此操作将永久删除该链接, 是否继续?', '提示', {

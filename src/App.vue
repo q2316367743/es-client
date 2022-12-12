@@ -42,7 +42,7 @@
         <div id="index" :class="fullScreen ? 'full-screen' : ''">
             <!-- 索引服务器选择 -->
             <el-select v-model="urlId" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
-                       clearable @change="select_url">
+                       clearable @change="selectUrl">
                 <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
                 </el-option>
                 <el-option :label="$t('app.add')" value="add"></el-option>
@@ -76,7 +76,6 @@
             <data-browse v-show="active === 'data browse'"></data-browse>
             <base-search v-show="active === 'base search'"></base-search>
             <senior-search v-show="active === 'senior search'"></senior-search>
-            <sql-search v-show="active === 'sql search'"></sql-search>
             <setting v-show="active === 'setting'"></setting>
         </div>
         <!-- 关于弹窗 -->
@@ -123,7 +122,6 @@ import About from "@/page/About/index.vue";
 import Home from "./page/Home/index.vue";
 import BaseSearch from "@/page/BaseSearch/index.vue";
 import SeniorSearch from '@/page/SeniorSearch/index.vue';
-import SqlSearch from "@/page/sql_search/index.vue";
 import Setting from '@/page/Setting/index.vue'
 import DataBrowse from '@/page/DataBrowse/index.vue';
 // 插件
@@ -136,7 +134,7 @@ import Constant from '@/global/Constant'
 export default defineComponent({
     components: {
         Info, About, Setting, Home, BaseSearch, SeniorSearch, Filter,
-        SqlSearch, Fold, Expand, HomeFilled, Search, Operation, Tickets,
+        Fold, Expand, HomeFilled, Search, Operation, Tickets,
         Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
     },
     data: () => {
@@ -169,7 +167,7 @@ export default defineComponent({
         }
     },
     methods: {
-        async select_url(value: string | number) {
+        async selectUrl(value: string | number) {
             emitter.emit('update_url');
             if (value === 'add') {
                 // 新增，打开新增面板

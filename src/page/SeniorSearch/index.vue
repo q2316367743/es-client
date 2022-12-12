@@ -55,8 +55,7 @@
                                 </el-button>
                             </div>
                         </div>
-                        <monaco-editor ref="monaco_editor" v-model="params" :link="link" height="100%"
-                                       v-show="method !== 'GET'" class="post"></monaco-editor>
+                        <el-input v-show="method !== 'GET'" style="height: 100%" v-model="params" type="textarea" />
                     </div>
                 </div>
                 <!-- 中间分隔栏 -->
@@ -86,12 +85,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
-import JsonViewer from "vue-json-viewer";
-
-import BaseViewer from "@/components/BaseViewer.vue";
-import TableViewer from "@/components/TableViewer/index.vue";
-import MonacoEditor from "@/components/MonacoEditor/index.vue";
-import SeniorSearchEditorViewer from "@/components/EditorViewer/senior-search.vue";
 
 import mitt from '@/plugins/mitt';
 
@@ -136,7 +129,7 @@ export default defineComponent({
         mode: Mode.DEFAULT,
         show_top: true
     }),
-    components: {DataView, JsonViewer, BaseViewer, MonacoEditor, TableViewer, SeniorSearchEditorViewer},
+    components: {DataView},
     computed: {
         ...mapState(useSettingStore, ['instance']),
         senior_width_computed(): number {

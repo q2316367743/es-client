@@ -1,15 +1,14 @@
-import _ from 'lodash';
-import { ElMessageBox } from "element-plus";
+import {ElMessageBox} from "element-plus";
 
-import { tipService } from '@/global/BeanFactory';
+import {tipService} from '@/global/BeanFactory';
 
 let languages = ['zh', 'en'] as Array<string>;
 
 export function getDefaultLanguage(): string {
     let language = 'zh';
     if (localStorage.getItem('language')) {
-        let local = localStorage.getItem('language')!;
-        if (_.findIndex(languages, e => e === local) > -1) {
+        let local = localStorage.getItem('language') || "";
+        if (local in languages) {
             language = local;
         }
     }
