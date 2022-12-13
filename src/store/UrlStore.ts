@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
 import { ElMessage } from "element-plus";
+import {useTitle} from "@vueuse/core";
+
 import Url from "@/entity/Url";
 import useIndexStore from "./IndexStore";
 
 import { urlService } from "@/global/BeanFactory";
+
+const title = useTitle();
 
 const useUrlStore = defineStore('url', {
     state: () => {
@@ -56,8 +60,10 @@ const useUrlStore = defineStore('url', {
                     return;
                 }
                 this.url = url;
+                title.value = url.name || 'es-client';
             } else {
                 this.url = undefined;
+                title.value = 'es-client';
                 useIndexStore().clear();
             }
         }
