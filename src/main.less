@@ -21,6 +21,7 @@ body[theme-mode=light] {
     --hover-color: #ecf5ff;
     --disable-color: #888888;
     --shadow-color: rgba(0, 0, 0, .12);
+    --active-color: #409eff;
 }
 
 // 主题变量
@@ -31,16 +32,22 @@ body[theme-mode=dark] {
     --hover-color: #414343;
     --disable-color: #808080;
     --shadow-color: var(--container-color);
+    --active-color: #1177d7;
 
     // 重写element-plus
     --el-text-color-primary: var(--text-color);
-    --el-text-color-regular: var(--disable-color);
-    --el-fill-color-light: var(--container-color);
-    --el-bg-color: var(--bg-color);
+    --el-text-color-regular: #cfd3dc;
+    --el-fill-color-light: var(--hover-color);
+    --el-bg-color: var(--container-color);
     --el-fill-color-blank: var(--el-bg-color);
     --el-bg-color-overlay: var(--el-bg-color);
     --el-fill-color: var(--el-bg-color);
     --el-disabled-bg-color: var(--hover-color);
+    --el-color-primary-light-9: #18222c;
+    --el-color-primary-light-8: #1d3043;
+    --el-border-color: #4c4d4f;
+    --el-color-primary: #154d83;
+    --el-color-success: #386e20;
 
     // element-plus
 
@@ -56,8 +63,13 @@ body[theme-mode=dark] {
         --el-dropdown-menuItem-hover-fill: var(--bg-color);
     }
 
-    .el-button {
-        --el-button-hover-bg-color: var(--hover-color);
+    .el-button--primary {
+        --el-button-hover-bg-color: #063370;
+        --el-button-hover-border-color: #063370;
+    }
+    .el-button--success {
+        --el-button-hover-bg-color: #1f4f09;
+        --el-button-hover-border-color: #1f4f09;
     }
 
     .el-backtop {
@@ -69,10 +81,14 @@ body[theme-mode=dark] {
         color: var(--text-color);
     }
 
+    .el-button--primary.is-link {
+        --el-button-text-color: var(--active-color);
+    }
+
     // jsonViewer
 
     .jv-container.jv-light {
-        background-color: var(--bg-color);
+        background-color: var(--container-color);
         color: var(--text-color);
 
         .jv-item.jv-object {
@@ -141,7 +157,17 @@ body[theme-mode=dark] {
 
     .vxe-table--render-default .vxe-body--row.row--current {
         background-color: var(--hover-color);
+    }
 
+    .vxe-modal--wrapper{
+        color: var(--text-color);
+        .vxe-modal--box {
+            background-color: var(--container-color);
+            border: none;
+        }
+        .vxe-modal--header {
+            background-color: var(--hover-color);
+        }
     }
 
 }
@@ -192,7 +218,7 @@ body[theme-mode=dark] {
         }
 
         &.active {
-            color: var(--el-color-primary);
+            color: var(--active-color);
         }
     }
 

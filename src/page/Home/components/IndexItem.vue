@@ -128,6 +128,8 @@ import useIndexStore from '@/store/IndexStore';
 import Index from "@/view/Index";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -203,7 +205,7 @@ export default defineComponent({
             }).then(({value}) => {
                 indexApi.new_alias(this.index?.name!, value, (res: object) => {
                     ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                    this.reset();
                 });
             });
         },
@@ -215,7 +217,7 @@ export default defineComponent({
             }).then(() => {
                 indexApi.remove_alias(this.index?.name!, alias, (res: object) => {
                     ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                    this.reset();
                 });
             });
         },
@@ -227,33 +229,38 @@ export default defineComponent({
             }).then(() => {
                 indexApi.remove(this.index?.name!, (res: object) => {
                     ElMessage.info(JSON.stringify(res));
-                    useIndexStore().reset();
+                    this.reset();
                 });
             });
         },
         openIndex() {
             indexApi._open(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                useIndexStore().reset();
+                this.reset();
             })
         },
         closeIndex() {
             indexApi._close(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                useIndexStore().reset();
+                this.reset();
             })
         },
         flushIndex() {
             indexApi._flush(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                useIndexStore().reset();
+                this.reset();
             })
         },
         refreshIndex() {
             indexApi._refresh(this.index?.name!, (res: any) => {
                 ElMessage.info(JSON.stringify(res));
-                useIndexStore().reset();
+                this.reset();
             })
+        },
+        reset() {
+            useIndexStore().reset().then(() => {
+                emitter.emit(MessageEventEnum.INDEX_REFRESH);
+            });
         }
     }
 });

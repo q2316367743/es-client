@@ -185,6 +185,7 @@ export default defineComponent({
          * 基于当前索引数组进行过滤
          */
         search() {
+            console.log('搜索')
             this.indexLoading = true;
             this.showIndices = this.indices.filter((item) => {
                 return item.name.indexOf(this.condition.name) > -1;
