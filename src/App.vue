@@ -145,6 +145,7 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
+import {toggleDark} from "@/global/BeanFactory";
 
 export default defineComponent({
     components: {
@@ -155,14 +156,6 @@ export default defineComponent({
         Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
     },
     data: () => {
-        let isDark = useDark({
-            initialValue: "light",
-            selector: 'body',
-            attribute: 'theme-mode',
-            valueDark: 'dark',
-            valueLight: 'light',
-        });
-        let toggleDark = useToggle(isDark);
         return {
             active: "home",
             urlId: undefined as number | undefined,
@@ -170,9 +163,7 @@ export default defineComponent({
             urlDialog: false,
             locale: zhCn,
             Constant,
-            fullScreen: false,
-            isDark,
-            toggleDark
+            fullScreen: false
         };
     },
     computed: {
@@ -195,7 +186,7 @@ export default defineComponent({
     },
     methods: {
         async selectUrl(value: string | number) {
-            emitter.emit('update_url');
+            emitter.emit(MessageEventEnum.URL_UPDATE);
             if (value === 'add') {
                 // 新增，打开新增面板
                 this.urlId = undefined;
@@ -235,7 +226,8 @@ export default defineComponent({
             }
         },
         darkChange() {
-            this.toggleDark()
+            toggleDark();
+            emitter.emit(MessageEventEnum.SYSTEM_THEME);
         },
         fullScreenSwitch() {
             this.fullScreen = !this.fullScreen;

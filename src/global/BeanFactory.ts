@@ -4,6 +4,7 @@ import UrlService from "@/service/UrlService";
 import TipService from '@/service/TipService'
 
 import x2js from 'x2js';
+import {useDark, useToggle} from "@vueuse/core";
 
 const dexieInstance = new DexieInstance();
 
@@ -15,3 +16,12 @@ export const json2xml = new x2js({
     selfClosingElements: false,
     escapeMode: false
 });
+
+export const isDark = useDark({
+    initialValue: "light",
+    selector: 'body',
+    attribute: 'theme-mode',
+    valueDark: 'dark',
+    valueLight: 'light',
+});
+export const toggleDark = useToggle(isDark);

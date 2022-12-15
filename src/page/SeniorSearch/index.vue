@@ -36,7 +36,7 @@
             <!-- 下半部分 -->
             <div class="senior-main">
                 <!-- 左面查询条件 -->
-                <div class="side" :style="{ width: senior_width_computed + 'px' }" v-show="mode !== 1">
+                <div class="side">
                     <!-- 请求参数 -->
                     <div class="param" :style="method === 'GET' ? 'overflow: auto;padding-left: 20px;' : ''">
                         <div class="get" v-show="method === 'GET'">
@@ -55,27 +55,27 @@
                                 </el-button>
                             </div>
                         </div>
-                        <el-input v-show="method !== 'GET'" style="height: 100%" v-model="params" type="textarea" />
+                        <codemirror
+                            v-model="params"
+                            placeholder="请在这里输入查询条件"
+                            :style="{ height: '500px' }"
+                            :autofocus="true"
+                            :indent-with-tab="true"
+                            :tabSize="2"
+                            :extensions="extensions"
+                        />
                     </div>
                 </div>
                 <!-- 中间分隔栏 -->
-                <div class="senior-bar" :style="{ left: senior_width_computed + 10 + 'px' }" @mousedown="onMouseDown">
-                </div>
-                <!-- 两个快捷按钮 -->
-                <div class="senior-button"
-                     :style="{ left: senior_width_computed + 5 + 'px', top: (max_height / 2 - 26) + 'px' }"
-                     @click="hideLeft">←
-                </div>
-                <div class="senior-button"
-                     :style="{ left: senior_width_computed + 5 + 'px', bottom: (max_height / 2 - 26) + 'px' }"
-                     @click="hideRight">→
+                <div class="senior-bar">
                 </div>
                 <!-- 右面展示内容 -->
-                <div class="senior-content" :style="{ left: senior_width_computed + 20 + 'px' }" v-show="mode !== 3">
+                <div class="senior-content">
                     <el-scrollbar style="height: 100%;">
-                        <data-view :view="view" :result="result" />
+                        <data-view :view="view" :result="result"/>
                     </el-scrollbar>
-                    <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap" v-show="show_top" />
+                    <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
+                                v-show="show_top"/>
                 </div>
             </div>
         </div>
@@ -85,8 +85,12 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
+import {Codemirror} from 'vue-codemirror';
+import {json} from '@codemirror/lang-json';
+import {oneDark} from "@codemirror/theme-one-dark";
 
 import mitt from '@/plugins/mitt';
+import {isDark} from "@/global/BeanFactory";
 
 import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 
@@ -100,17 +104,6 @@ import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DataView from "@/components/DataView/index.vue";
 
-enum Mode {
-    HIDE_LEFT = 1,
-    DEFAULT = 2,
-    HIDE_RIGHT = 3
-}
-
-const side_width = 227;
-const side_min_width = 356;
-const right_min_width = 150;
-const right_add_width = 140;
-const outer_height = 190;
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -126,22 +119,12 @@ export default defineComponent({
         is_down: false,
         max_width: 520,
         max_height: 520,
-        mode: Mode.DEFAULT,
-        show_top: true
+        show_top: true,
+        extensions: [json().extension]
     }),
-    components: {DataView},
+    components: {DataView, Codemirror},
     computed: {
         ...mapState(useSettingStore, ['instance']),
-        senior_width_computed(): number {
-            switch (this.mode) {
-                case Mode.DEFAULT:
-                    return this.instance.seniorWidth;
-                case Mode.HIDE_LEFT:
-                    return 0;
-                case Mode.HIDE_RIGHT:
-                    return this.max_width + right_add_width;
-            }
-        }
     },
     watch: {
         link(newValue) {
@@ -154,7 +137,7 @@ export default defineComponent({
         }
     },
     created() {
-        mitt.on('update_index', () => {
+        mitt.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置条件
             this.link = '';
             this.method = 'POST';
@@ -167,39 +150,15 @@ export default defineComponent({
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.show_top = (index === 'senior search')
         });
+        mitt.on(MessageEventEnum.SYSTEM_THEME, () => {
+            if (isDark.value) {
+                this.extensions = [json().extension, oneDark];
+            }else {
+                this.extensions = [json()];
+            }
+        });
     },
-    mounted() {
-        // 获取最大宽度
-        this.max_width = window.outerWidth - side_width - right_min_width;
-        this.max_height = window.innerHeight - outer_height;
-        window.onmousemove = (ev: MouseEvent): void => {
-            if (!this.is_down) {
-                return;
-            }
-            const nx = ev.clientX - side_width;
-            if (nx > side_min_width && nx < this.max_width) {
-                useSettingStore().setSeniorWidth(nx);
-            }
-        };
-        window.onresize = (): void => {
-            this.max_width = window.outerWidth - side_width - right_min_width;
-            this.max_height = window.innerHeight - outer_height;
-            if (this.instance.seniorWidth > this.max_width) {
-                useSettingStore().setSeniorWidth(this.max_width);
-            }
-            if (this.instance.seniorWidth < side_min_width) {
-                useSettingStore().setSeniorWidth(270);
-            }
-        };
-        window.onmouseup = (): void => {
-            this.is_down = false;
-        }
-    },
-    beforeUnmount() {
-        window.onmousemove = null;
-        window.onresize = null;
-        window.onmouseup = null;
-    },
+    // 获取最大宽度
     methods: {
         async search() {
             if (await validateTip(this.method, this.link)) {
@@ -258,34 +217,9 @@ export default defineComponent({
         truncateGetParam() {
             this.get_params = new Array<Param>();
         },
-        onMouseDown() {
-            if (this.mode === Mode.DEFAULT) {
-                this.is_down = true;
-            }
-        },
         formatDocument() {
             (this.$refs.monaco_editor as any).format();
         },
-        hideLeft() {
-            switch (this.mode) {
-                case Mode.DEFAULT:
-                    this.mode = Mode.HIDE_LEFT;
-                    break;
-                case Mode.HIDE_RIGHT:
-                    this.mode = Mode.DEFAULT;
-                    break;
-            }
-        },
-        hideRight() {
-            switch (this.mode) {
-                case Mode.DEFAULT:
-                    this.mode = Mode.HIDE_RIGHT;
-                    break;
-                case Mode.HIDE_LEFT:
-                    this.mode = Mode.DEFAULT;
-                    break;
-            }
-        }
     },
 });
 </script>
@@ -319,6 +253,7 @@ export default defineComponent({
             top: 0;
             left: 0;
             bottom: 0;
+            width: 500px;
 
             .link {
                 position: absolute;
@@ -331,7 +266,7 @@ export default defineComponent({
 
             .param {
                 position: absolute;
-                top: 42px;
+                top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
@@ -356,10 +291,10 @@ export default defineComponent({
         .senior-bar {
             position: absolute;
             top: 0;
+            left: 510px;
             bottom: 0;
             width: 9px;
             border-left: var(--el-card-border-color) solid 1px;
-            cursor: ew-resize;
         }
 
         .senior-button {
@@ -379,18 +314,10 @@ export default defineComponent({
             top: 20px;
             bottom: 0;
             right: 0;
+            left: 520px;
             overflow: auto;
             padding: 5px;
         }
     }
-}
-
-.code-mirror {
-    width: 360px;
-    height: 300px;
-}
-
-.el-dialog__body > .vue-codemirror > .CodeMirror {
-    min-height: 420px;
 }
 </style>

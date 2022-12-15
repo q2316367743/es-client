@@ -14,6 +14,7 @@
 html, body {
     height: 100%;
 }
+
 body[theme-mode=light] {
     --bg-color: #f2f2f2;
     --text-color: #000000;
@@ -22,6 +23,9 @@ body[theme-mode=light] {
     --disable-color: #888888;
     --shadow-color: rgba(0, 0, 0, .12);
     --active-color: #409eff;
+
+
+
 }
 
 // 主题变量
@@ -67,6 +71,7 @@ body[theme-mode=dark] {
         --el-button-hover-bg-color: #063370;
         --el-button-hover-border-color: #063370;
     }
+
     .el-button--success {
         --el-button-hover-bg-color: #1f4f09;
         --el-button-hover-border-color: #1f4f09;
@@ -159,12 +164,14 @@ body[theme-mode=dark] {
         background-color: var(--hover-color);
     }
 
-    .vxe-modal--wrapper{
+    .vxe-modal--wrapper {
         color: var(--text-color);
+
         .vxe-modal--box {
             background-color: var(--container-color);
             border: none;
         }
+
         .vxe-modal--header {
             background-color: var(--hover-color);
         }

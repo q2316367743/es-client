@@ -1,6 +1,11 @@
 enum MessageEventEnum {
 
     /**
+     * 链接更新
+     */
+    URL_UPDATE = 'url:update',
+
+    /**
      * 索引连接
      */
     INDEX_CONNECT = 'index:connect',
@@ -18,7 +23,12 @@ enum MessageEventEnum {
     /**
      * 页面选择
      */
-    PAGE_ACTIVE = 'page:active'
+    PAGE_ACTIVE = 'page:active',
+
+    /**
+     * 主题变更
+     */
+    SYSTEM_THEME = 'system:theme'
 
 }
 
