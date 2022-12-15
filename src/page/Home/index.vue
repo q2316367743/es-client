@@ -108,6 +108,7 @@ import mitt from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import BrowserUtil from "@/utils/BrowserUtil";
 import IndexSaveBuild from "@/build/IndexSaveBuild";
+import {stringContain} from "@/utils/SearchUtil";
 
 
 export default defineComponent({
@@ -188,7 +189,7 @@ export default defineComponent({
             console.log('搜索')
             this.indexLoading = true;
             this.showIndices = this.indices.filter((item) => {
-                return item.name.indexOf(this.condition.name) > -1;
+                return stringContain(item.name, this.condition.name);
             });
             // 排序
             switch (this.condition.order) {

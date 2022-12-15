@@ -18,12 +18,13 @@ export function match(arr: Array<string>, keyword: string): Array<string> {
 
 /**
  * 字符串是否包含指定字符
- * @param template
- * @param keyword
+ * @param template 模板
+ * @param keyword 关键字
+ * @param toLow 是否大小写敏感，默认不敏感
  *
  * @return 是否包含
  */
-function stringContain(template: string, keyword: string): boolean {
+export function stringContain(template: string, keyword: string, toLow: boolean = false): boolean {
     for (let i = 0; i < keyword.length; i++) {
         let isContain = false;
         for (let j = 0; j < template.length; j++) {
