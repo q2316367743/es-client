@@ -145,7 +145,7 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
-import {toggleDark} from "@/global/BeanFactory";
+import {isDark, toggleDark} from "@/global/BeanFactory";
 
 export default defineComponent({
     components: {
@@ -163,7 +163,8 @@ export default defineComponent({
             urlDialog: false,
             locale: zhCn,
             Constant,
-            fullScreen: false
+            fullScreen: false,
+            isDark: isDark
         };
     },
     computed: {

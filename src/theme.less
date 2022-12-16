@@ -1,0 +1,262 @@
+body[theme-mode=light] {
+    --bg-color: #f2f2f2;
+    --text-color: #000000;
+    --container-color: #ffffff;
+    --hover-color: #ecf5ff;
+    --disable-color: #888888;
+    --shadow-color: rgba(0, 0, 0, .12);
+    --active-color: #409eff;
+
+
+}
+
+// 主题变量
+body[theme-mode=dark] {
+    --bg-color: #17191a;
+    --text-color: #ffffff;
+    --container-color: #26292c;
+    --hover-color: #414343;
+    --disable-color: #808080;
+    --shadow-color: var(--container-color);
+    --active-color: #1177d7;
+
+    // 重写element-plus
+    --el-text-color-primary: var(--text-color);
+    --el-text-color-regular: #cfd3dc;
+    --el-fill-color-light: var(--hover-color);
+    --el-bg-color: var(--container-color);
+    --el-fill-color-blank: var(--el-bg-color);
+    --el-bg-color-overlay: var(--el-bg-color);
+    --el-fill-color: var(--el-bg-color);
+    --el-disabled-bg-color: var(--hover-color);
+    --el-color-primary-light-9: #18222c;
+    --el-color-primary-light-8: #1d3043;
+    --el-border-color: #4c4d4f;
+    --el-color-primary: #154d83;
+    --el-color-success: #386e20;
+
+    // element-plus
+
+    .el-dialog {
+        --el-dialog-bg-color: #26292c !important;
+    }
+
+    .el-card {
+        --el-card-bg-color: #26292c !important;
+    }
+
+    .el-dropdown__popper {
+        --el-dropdown-menuItem-hover-fill: var(--bg-color);
+    }
+
+    .el-button--primary {
+        --el-button-hover-bg-color: #063370;
+        --el-button-hover-border-color: #063370;
+    }
+
+    .el-button--success {
+        --el-button-hover-bg-color: #1f4f09;
+        --el-button-hover-border-color: #1f4f09;
+    }
+
+    .el-backtop {
+        --el-backtop-bg-color: var(--container-color);
+        --el-backtop-hover-bg-color: var(--hover-color);
+    }
+
+    .el-select-v2__combobox-input {
+        color: var(--text-color);
+    }
+
+    .el-button--primary.is-link {
+        --el-button-text-color: var(--active-color);
+    }
+
+    // jsonViewer
+
+    .jv-container.jv-light {
+        background-color: var(--container-color);
+        color: var(--text-color);
+
+        .jv-item.jv-object {
+            color: var(--text-color) !important;
+        }
+
+        .jv-key {
+            color: var(--text-color) !important;
+        }
+
+        .jv-ellipsis {
+            background-color: var(--container-color);
+
+        }
+
+        .jv-item.jv-array {
+            color: var(--text-color) !important;
+
+        }
+    }
+
+    // vxe
+
+    #data-browse {
+        .condition {
+            .condition-item {
+                .input {
+                    background-color: var(--container-color);
+                    color: var(--text-color);
+                }
+            }
+        }
+    }
+
+    .vxe-table--render-default {
+        color: var(--text-color);
+
+        .vxe-table--body-wrapper {
+            background-color: var(--container-color);
+        }
+    }
+
+    .vxe-table--render-default.border--full {
+        .vxe-table--header-wrapper {
+            background-color: var(--container-color);
+        }
+    }
+
+    .vxe-table {
+        .vxe-table--header-wrapper {
+            color: var(--el-text-color-regular);
+        }
+    }
+
+    .vxe-pulldown {
+        color: var(--text-color);
+    }
+
+    .vxe-pulldown--panel {
+        color: var(--text-color);
+
+        .vxe-pulldown--wrapper {
+            background-color: var(--container-color);
+        }
+    }
+
+    .vxe-table--render-default .vxe-body--row.row--current {
+        background-color: var(--hover-color);
+    }
+
+    .vxe-modal--wrapper {
+        color: var(--text-color);
+
+        .vxe-modal--box {
+            background-color: var(--container-color);
+            border: none;
+        }
+
+        .vxe-modal--header {
+            background-color: var(--hover-color);
+        }
+    }
+
+    // CodeMirror
+    .cm-scroller {
+        color: #abb2bf;
+        background-color: #282c34;
+
+        .cm-content {
+            caret-color: #528bff;
+        }
+
+        .cm-cursor, .cm-dropCursor {
+            border-left-color: #528bff;
+        }
+
+        &.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection {
+            background-color: #3E4451;
+        }
+
+        .cm-panels {
+            background-color: #21252b;
+            color: #abb2bf;
+        }
+
+        .cm-panels.cm-panels-top {
+            border-bottom: 2px solid black;
+        }
+
+        .cm-panels.cm-panels-bottom {
+            border-top: 2px solid black;
+        }
+
+        .cm-searchMatch {
+            background-color: #72a1ff59;
+            outline: 1px solid #457dff;
+        }
+
+        .cm-searchMatch.cm-searchMatch-selected {
+            background-color: #6199ff2f;
+        }
+
+        .cm-activeLine {
+            background-color: #6699ff0b;
+        }
+
+        .cm-selectionMatch {
+            background-color: #aafe661a;
+        }
+
+        &.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket {
+            background-color: #bad0f847;
+            outline: 1px solid #515a6b;
+        }
+
+        .cm-gutters {
+            background-color: #282c34;
+            color: #7d8799;
+            border: none;
+        }
+
+        .cm-activeLineGutter {
+            background-color: #2c313a;
+        }
+
+        .cm-foldPlaceholder {
+            background-color: transparent;
+            border: none;
+            color: #ddd;
+        }
+
+        .cm-tooltip {
+            border: none;
+            background-color: #353a42;
+        }
+
+        .cm-tooltip .cm-tooltip-arrow:before {
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+        }
+
+        .cm-tooltip .cm-tooltip-arrow:after {
+            border-top-color: #353a42;
+            border-bottom-color: #353a42;
+        }
+
+        .cm-tooltip-autocomplete {
+            & > ul > li[aria-selected] {
+                background-color: #2c313a;
+                color: #abb2bf;
+            }
+        }
+        .ͼe {
+            color: #98c379;
+        }
+        .ͼc {
+            color: #d19a66;
+        }
+        .ͼd {
+            color: #e5c07b;
+        }
+    }
+
+}

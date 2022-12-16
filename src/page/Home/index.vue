@@ -89,7 +89,6 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {mapState} from 'pinia';
-import _ from 'lodash';
 import {ElMessage} from 'element-plus';
 
 import useUrlStore from '@/store/UrlStore';
@@ -109,6 +108,7 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import BrowserUtil from "@/utils/BrowserUtil";
 import IndexSaveBuild from "@/build/IndexSaveBuild";
 import {stringContain} from "@/utils/SearchUtil";
+import {filter} from "xe-utils";
 
 
 export default defineComponent({
@@ -232,9 +232,9 @@ export default defineComponent({
             this.index.mapping.push({id: new Date().getTime(), field: '', 'type': 'text'})
         },
         removeProperty(property: Property) {
-            _.remove(this.index.mapping, (target: Property) => {
-                return property.id === target.id;
-            })
+            this.index.mapping = this.index.mapping.filter((target: Property) => {
+                return property.id !== target.id;
+            });
         },
         addIndex() {
             // 新增

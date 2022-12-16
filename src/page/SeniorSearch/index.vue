@@ -87,10 +87,8 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
-import {oneDark} from "@codemirror/theme-one-dark";
 
 import mitt from '@/plugins/mitt';
-import {isDark} from "@/global/BeanFactory";
 
 import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 
@@ -120,7 +118,7 @@ export default defineComponent({
         max_width: 520,
         max_height: 520,
         show_top: true,
-        extensions: [json().extension]
+        extensions: [json()]
     }),
     components: {DataView, Codemirror},
     computed: {
@@ -149,13 +147,6 @@ export default defineComponent({
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.show_top = (index === 'senior search')
-        });
-        mitt.on(MessageEventEnum.SYSTEM_THEME, () => {
-            if (isDark.value) {
-                this.extensions = [json().extension, oneDark];
-            }else {
-                this.extensions = [json()];
-            }
         });
     },
     // 获取最大宽度
