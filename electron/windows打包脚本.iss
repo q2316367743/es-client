@@ -2,7 +2,7 @@
 ; �йش��� Inno Setup �ű��ļ�����ϸ��������İ����ĵ���
 
 #define MyAppName "es-client"
-#define MyAppVersion "1.5.0"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "���겻��"
 #define MyAppURL "https://blog.esion.xyz"
 #define MyAppExeName "es-client.exe"

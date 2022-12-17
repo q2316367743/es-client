@@ -51,13 +51,15 @@
                 <el-timeline>
                     <el-timeline-item :timestamp="log.time" placement="top" v-for="log in data.log">
                         <el-card>
-                            <div>{{ log.version }}</div>
+                            <div style="font-size: 24px;font-weight: bold;">{{ log.version }}</div>
                             <div v-if="log.title">{{ log.title }}</div>
                             <ol>
                                 <template v-for="item in log.items">
                                     <li v-if="typeof item === 'string'">{{ item }}</li>
                                     <ol v-else>
-                                        <li v-for="i in item">{{ i }}</li>
+                                        <li v-for="i in item">
+                                            <span v-html="i"></span>
+                                        </li>
                                     </ol>
                                 </template>
                             </ol>

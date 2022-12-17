@@ -2,7 +2,7 @@ import { Log, Repository } from "@/view/Data";
 
 export default {
     name: "es-client",
-    version: "1.5.0",
+    version: "2.0.0",
     author: "Esion",
     platform: "browser",
     repository: [
@@ -20,6 +20,20 @@ export default {
         }
     ] as Repository[],
     log: [
+        {
+            version: "2.0.0",
+            time: "2022-12-17",
+            items: [
+                "★全新的UI",
+                "★增加黑夜模式",
+                "修复了返回顶部",
+                "去除无用组件，优化打包大小",
+                "新增索引增加复制新增语句",
+                "选择URL后修改标题",
+                "首页搜索支持模糊搜索",
+                "文本编辑器改为CodeMirror"
+            ]
+        },
         {
             version: "1.5.0",
             time: "2022-12-01",
