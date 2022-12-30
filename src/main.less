@@ -88,18 +88,31 @@ html, body {
     box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
     display: flex;
+    padding: 0 9px;
 
     &.full-screen {
         display: none;
     }
 
-    .el-input {
-        margin-left: 5px;
-    }
 
     .el-button {
         margin-left: 14px;
         margin-top: 9px;
+    }
+}
+
+#title {
+    position: absolute;
+    top: 16px;
+    left: 538px;
+    height: 50px;
+    line-height: 50px;
+    box-shadow: 0 0 12px var(--shadow-color);
+    background-color: var(--container-color);
+    display: flex;
+
+    &.full-screen {
+        display: none;
     }
 
     .cluster-name {
@@ -112,6 +125,7 @@ html, body {
     .server-status {
         margin: 0 10px;
     }
+
 }
 
 #menu {

@@ -47,10 +47,13 @@
             </el-select>
             <!-- 刷新按钮 -->
             <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
+        </div>
+        <!-- 索引标题 -->
+        <div id="title" :class="fullScreen ? 'full-screen' : ''" v-if="name !== ''">
             <!-- 服务器名称 -->
             <div class="cluster-name">{{ name }}</div>
             <!-- 服务器状态 -->
-            <div class="server-status" v-if="name !== ''">{{ $t('app.cluster_health') }}: {{ status }}
+            <div class="server-status">{{ $t('app.cluster_health') }}: {{ status }}
                 ({{ active_shards }} of {{ total_shards }})
             </div>
         </div>
