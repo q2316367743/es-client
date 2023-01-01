@@ -3,46 +3,51 @@
         <el-scrollbar>
             <div class="block">
                 <span>仿照</span>
-                <el-link href="https://github.com/mobz/elasticsearch-head" target="_blank">elasticsearch head</el-link>
+                <el-link href="https://github.com/mobz/elasticsearch-head" target="_blank" type="primary">elasticsearch head</el-link>
                 <span>编写的es查询客户端，使用</span>
-                <el-link href="https://v3.cn.vuejs.org/">vue3</el-link>
+                <el-link href="https://v3.cn.vuejs.org/" type="primary">vue3</el-link>
                 <span>+</span>
-                <el-link href="https://vitejs.cn/">vite2</el-link>
+                <el-link href="https://vitejs.cn/" type="primary">vite2</el-link>
                 <span>+</span>
-                <el-link href="https://www.typescriptlang.org/">typescript</el-link>
+                <el-link href="https://www.typescriptlang.org/" type="primary">typescript</el-link>
                 <span>+</span>
-                <el-link href="https://element-plus.gitee.io/zh-CN/">element-plus</el-link>
+                <el-link href="https://element-plus.gitee.io/zh-CN/" type="primary">element-plus</el-link>
                 <span>编写，比elasticsearch-head更美观，比Kibana更加轻量</span>
             </div>
             <div class="title-1">项目地址</div>
             <div content="content">
                 <div v-for="repo in data.repository">
                     {{ repo.name }}：
-                    <el-link :href="repo.url" target="_blank">es-client</el-link>
+                    <el-link :href="repo.url" target="_blank" type="primary">es-client</el-link>
                 </div>
             </div>
             <div class="title-1">文档</div>
             <div class="content">
-                <el-link href="https://docs.esion.xyz/project-1/doc-1/" target="_blank">文档</el-link>
+                <el-link href="https://docs.esion.xyz/project-1/doc-1/" target="_blank" type="primary">文档</el-link>
             </div>
             <div class="title-1">意见反馈</div>
             <div content="content">
                 <ul>
+                    <li>金山文档：
+                        <el-link :href="data.feedback" target="_blank" type="primary">es-client问题反馈</el-link>
+                    </li>
                     <li>
                         <span>在</span>
-                        <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank">码云</el-link>
+                        <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank" type="primary">码云
+                        </el-link>
                         <span>提交issue或评论</span>
                     </li>
                     <li>
                         <span>在</span>
                         <el-link
                             href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                            target="_blank">edge插件商店
+                            target="_blank" type="primary">edge插件商店
                         </el-link>
                         <span>进行评论</span>
                     </li>
                     <li>如果有好的想法，可以提交
-                        <el-link href="https://gitee.com/qiaoshengda/es-client/pulls">Pull Requests</el-link>
+                        <el-link href="https://gitee.com/qiaoshengda/es-client/pulls" type="primary">Pull Requests
+                        </el-link>
                     </li>
                 </ul>
             </div>
@@ -97,6 +102,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .about {
     height: calc(100% - 5px);
+
     div {
         margin: 5px;
     }

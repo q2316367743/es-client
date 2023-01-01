@@ -14,6 +14,19 @@ function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
 }
 
+function outDir() {
+    switch (process.env.npm_lifecycle_event) {
+        case 'build:ts':
+            return 'dist';
+        case 'build:edge':
+            return 'chrome/es-client';
+        case 'build:firefox':
+            return 'firefox/es-client';
+        default:
+            return 'dist';
+    }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
     resolve: {
@@ -30,5 +43,8 @@ export default defineConfig({
             resolvers: [ElementPlusResolver()],
         }),
     ],
-    base: './'
+    base: './',
+    build: {
+        outDir: outDir()
+    }
 })

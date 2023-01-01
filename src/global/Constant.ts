@@ -19,6 +19,8 @@ export default {
             "url": "https://addons.mozilla.org/addon/es-client"
         }
     ] as Repository[],
+    // @ts-ignore
+    feedback: import.meta.env.VITE_FEEDBACK_URL,
     log: [
         {
             version: "2.0.0",

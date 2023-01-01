@@ -3,7 +3,7 @@ import Notification from "@/domain/Notification";
 
 const useNotificationStore = defineStore('notification', {
     state: () => ({
-        items: new Array<Notification>,
+        items: new Array<Notification>(),
         current: undefined as Notification | undefined
     }),
     actions: {

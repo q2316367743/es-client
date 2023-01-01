@@ -14,7 +14,9 @@
     },
     "scripts": {
         "dev": "vite --host",
-        "build": "vue-tsc --noEmit && vite build",
+        "build:edge": "vue-tsc --noEmit && vite build --mode=edge",
+        "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
+        "build:ts": "vue-tsc --noEmit && vite build --mode=tsbrowser",
         "preview": "vite preview"
     },
     "dependencies": {
