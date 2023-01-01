@@ -14,27 +14,6 @@ function verify(result: any, index: Index): boolean {
     return result.hits.hits;
 }
 
-function initKey(headers: Array<Header>, headersSet: Set<string>): void {
-    headersSet.add('_id');
-    headers.push({
-        field: '_id',
-        id: new Date().getTime() + 1,
-        minWidth: 90,
-    });
-    headersSet.add('_index');
-    headers.push({
-        field: '_index',
-        id: new Date().getTime() + 2,
-        minWidth: 120,
-    });
-    headersSet.add('_score');
-    headers.push({
-        field: '_score',
-        id: new Date().getTime() + 3,
-        minWidth: 120,
-    });
-}
-
 function renderKey(prefix: string, key: string): string {
     return prefix === '' ? key : prefix + '.' + key
 }
@@ -79,8 +58,6 @@ export default function recordBuild(result: any, index: Index): { headers: Array
             count: 0
         };
     }
-    // 初始化key
-    initKey(headers, headersSet);
     // 遍历每一个结果
     let hits = result.hits.hits as Array<any>;
     for (let hit of hits) {
@@ -96,6 +73,6 @@ export default function recordBuild(result: any, index: Index): { headers: Array
     return {
         headers,
         records,
-        count: result.hits.total
+        count: result.hits.total.value ? result.hits.total.value : result.hits.total
     };
 }

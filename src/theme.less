@@ -3,7 +3,7 @@ body[theme-mode=light] {
     --text-color: #000000;
     --container-color: #ffffff;
     --hover-color: #ecf5ff;
-    --disable-color: #888888;
+    --disable-color: #a8abb2;
     --shadow-color: rgba(0, 0, 0, .12);
     --active-color: #409eff;
 
@@ -16,7 +16,7 @@ body[theme-mode=dark] {
     --text-color: #ffffff;
     --container-color: #26292c;
     --hover-color: #414343;
-    --disable-color: #808080;
+    --disable-color: #a8abb2;
     --shadow-color: var(--container-color);
     --active-color: #1177d7;
 
@@ -70,6 +70,14 @@ body[theme-mode=dark] {
 
     .el-button--primary.is-link {
         --el-button-text-color: var(--active-color);
+    }
+
+    .el-tag {
+        --el-tag-text-color: var(--active-color);
+    }
+
+    .el-message-box {
+        border-color: var(--container-color);
     }
 
     // jsonViewer

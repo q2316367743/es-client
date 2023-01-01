@@ -14,6 +14,7 @@
                     <el-option :label="$t('home.order_doc_asc')" value="DOC_ASC"></el-option>
                     <el-option :label="$t('home.order_doc_desc')" value="DOC_DESC"></el-option>
                 </el-select>
+                <el-button style="margin-left: 5px" @click="condition.dialog = true">更多</el-button>
                 <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
             </div>
             <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true">{{
@@ -81,8 +82,19 @@
                 <el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
             </template>
         </el-dialog>
-        <json-dialog :title="indexItemTitle" :json="indexItemData" :open="true" v-model="indexItemDialog">
-        </json-dialog>
+        <json-dialog :title="indexItemTitle" :json="indexItemData" :open="true" v-model="indexItemDialog"/>
+        <!-- 更多查询条件 -->
+        <el-dialog v-model="condition.dialog" destroy-on-close append-to-body title="更多查询条件">
+            <el-form v-model="condition" label-width="80px" label-position="left">
+                <el-form-item label="状态">
+                    <el-radio-group v-model="condition.state">
+                        <el-radio :label="0">忽略</el-radio>
+                        <el-radio :label="1">开启</el-radio>
+                        <el-radio :label="2">关闭</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -108,7 +120,6 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import BrowserUtil from "@/utils/BrowserUtil";
 import IndexSaveBuild from "@/build/IndexSaveBuild";
 import {stringContain} from "@/utils/SearchUtil";
-import {filter} from "xe-utils";
 
 
 export default defineComponent({
@@ -120,8 +131,11 @@ export default defineComponent({
             showIndices: [] as Array<IndexView>,
             // 搜索条件
             condition: {
+                dialog: false,
                 name: "",
                 order: "NAME_ASC",
+                // 0不处理，1开启，2关闭
+                state: useSettingStore().getHomeSearchState
             },
             // 定时器
             interval: {} as NodeJS.Timer | null,
@@ -147,7 +161,6 @@ export default defineComponent({
     computed: {
         ...mapState(useUrlStore, ['url']),
         ...mapState(useIndexStore, ['indices']),
-        ...mapState(useSettingStore, ['instance'])
     },
     created() {
         mitt.on(MessageEventEnum.INDEX_REFRESH, () => {
@@ -159,8 +172,10 @@ export default defineComponent({
         mitt.on(MessageEventEnum.INDEX_CONNECT, () => {
             // 重置查询条件
             this.condition = {
+                dialog: false,
                 name: "",
                 order: "NAME_ASC",
+                state: useSettingStore().getHomeSearchState
             }
             // 充值页面
             this.indexItemDialog = false;
@@ -171,8 +186,10 @@ export default defineComponent({
         mitt.on(MessageEventEnum.INDEX_CLEAN, () => {
             // 重置查询条件
             this.condition = {
+                dialog: false,
                 name: "",
                 order: "NAME_ASC",
+                state: useSettingStore().getHomeSearchState
             }
             // 充值页面
             this.indexItemDialog = false;
@@ -186,11 +203,12 @@ export default defineComponent({
          * 基于当前索引数组进行过滤
          */
         search() {
-            console.log('搜索')
             this.indexLoading = true;
             this.showIndices = this.indices.filter((item) => {
                 return stringContain(item.name, this.condition.name);
-            });
+            }).filter(e => this.condition.state === 0 ||
+                (this.condition.state === 1 && e.state === 'open') ||
+                (this.condition.state === 2 && e.state === 'close'));
             // 排序
             switch (this.condition.order) {
                 case "NAME_ASC":
@@ -251,8 +269,8 @@ export default defineComponent({
                 this.index = {
                     name: '',
                     settings: {
-                        numberOfReplicas: this.instance.defaultReplica,
-                        numberOfShards: this.instance.defaultShard
+                        numberOfReplicas: useSettingStore().getDefaultReplica,
+                        numberOfShards: useSettingStore().getDefaultShard
                     },
                     mapping: [] as Array<Property>
                 } as Index;
@@ -272,8 +290,8 @@ export default defineComponent({
                 this.index = {
                     name: '',
                     settings: {
-                        numberOfReplicas: this.instance.defaultReplica,
-                        numberOfShards: this.instance.defaultShard
+                        numberOfReplicas: useSettingStore().getDefaultReplica,
+                        numberOfShards: useSettingStore().getDefaultShard
                     },
                     mapping: [] as Array<Property>
                 } as Index;

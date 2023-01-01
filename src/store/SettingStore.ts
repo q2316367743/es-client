@@ -11,7 +11,8 @@ const useSettingStore = defineStore('setting', {
             defaultShard: 5,
             seniorWidth: 520,
             pageSize: 20,
-            pageStep: 10
+            pageStep: 10,
+            homeSearchState: 0
         } as Setting);
         return {
             language: getDefaultLanguage(),
@@ -26,7 +27,8 @@ const useSettingStore = defineStore('setting', {
         getDefaultViewer: (state) => state.instance.defaultViewer in [1, 2, 3] ? state.instance.defaultViewer : 1,
         getPageSize: (state) => state.instance.pageSize,
         getPageStep: (state) => state.instance.pageStep,
-        getTimeout: (state): number => state.instance.timeout
+        getTimeout: (state): number => state.instance.timeout,
+        getHomeSearchState: (state): number => state.instance.homeSearchState,
     },
     actions: {
         setLanguage(language: string): void {
@@ -53,6 +55,9 @@ const useSettingStore = defineStore('setting', {
         },
         setTimeOut(timeout: number) {
             this.instance.timeout = timeout;
+        },
+        setHomeSearchState(homeSearchState: number) {
+            this.instance.homeSearchState = homeSearchState;
         }
     }
 });

@@ -38,4 +38,9 @@ export default interface Setting {
      */
     timeout: number;
 
+    /**
+     * 概览 => 搜索 => 状态
+     */
+    homeSearchState: number;
+
 }

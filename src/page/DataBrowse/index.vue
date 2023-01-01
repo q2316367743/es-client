@@ -105,7 +105,7 @@
             <div class="condition-item">
                 <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
                 <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="must = ''">
+                <div class="clear" @click="must = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -115,7 +115,7 @@
             <div class="condition-item">
                 <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
                 <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="should = ''">
+                <div class="clear" @click="should = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -125,7 +125,7 @@
             <div class="condition-item">
                 <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
                 <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="mustNot = ''">
+                <div class="clear" @click="mustNot = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -135,7 +135,7 @@
             <div class="condition-item">
                 <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
                 <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="orderBy = ''">
+                <div class="clear" @click="orderBy = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -144,7 +144,7 @@
         </div>
         <!-- 数据表格 -->
         <div class="content-table">
-            <vxe-table border height="100%" class="es-scrollbar" :empty-text="record ? '什么也没有' : '请选择索引'"
+            <vxe-table border height="100%" class="es-scrollbar" :empty-text="this.index ? '什么也没有' : '请选择索引'"
                        :data="records"
                        :loading="loading"
                        :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
@@ -162,6 +162,9 @@
                         </div>
                     </template>
                 </vxe-column>
+                <vxe-column field="_id" title="_id" show-overflow="tooltip" sortable :formatter="format"/>
+                <vxe-column field="_index" title="_index" show-overflow="tooltip" sortable :formatter="format"/>
+                <vxe-column field="_score" title="_score" show-overflow="tooltip" sortable :formatter="format"/>
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
                             :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
                             :formatter="format"/>
