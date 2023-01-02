@@ -2,6 +2,7 @@ import Constant from "@/global/Constant";
 import HttpStrategy from "./HttpStrategy";
 import BrowserHttpStrategy from "./impl/BrowserHttpStrategy";
 import HttpType from "@/enumeration/HttpType";
+import ServerHttpStrategy from "@/strategy/HttpStrategy/impl/ServerHttpStrategy";
 
 class HttpStrategyContext {
 
@@ -32,5 +33,6 @@ class HttpStrategyContext {
 const httpStrategyContext = HttpStrategyContext.getInstance();
 
 httpStrategyContext.register(HttpType.BROWSER, new BrowserHttpStrategy());
+httpStrategyContext.register(HttpType.SERVER, new ServerHttpStrategy());
 
 export default httpStrategyContext;

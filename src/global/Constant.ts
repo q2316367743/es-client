@@ -1,10 +1,12 @@
 import { Log, Repository } from "@/view/Data";
 
+
 export default {
     name: "es-client",
     version: "2.1.0",
     author: "Esion",
-    platform: "browser",
+    // @ts-ignore
+    platform: import.meta.env.VITE_PLATFORM,
     repository: [
         {
             "name": "Gitee",

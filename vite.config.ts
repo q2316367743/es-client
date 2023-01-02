@@ -22,6 +22,8 @@ function outDir() {
             return 'chrome/es-client';
         case 'build:firefox':
             return 'firefox/es-client';
+        case 'build:server':
+            return 'server/public';
         default:
             return 'dist';
     }

@@ -1,10 +1,14 @@
 enum HttpType {
 
+    /**
+     * 浏览器
+     */
     BROWSER = 'browser',
 
-    TS_BROWSER = "tsBrowser",
-
-    ELECTRON = "electron"
+    /**
+     * 服务器
+     */
+    SERVER = 'server'
 
 }
 
