@@ -2,7 +2,7 @@ import { Log, Repository } from "@/view/Data";
 
 export default {
     name: "es-client",
-    version: "2.0.0",
+    version: "2.1.0",
     author: "Esion",
     platform: "browser",
     repository: [
@@ -22,6 +22,16 @@ export default {
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,
     log: [
+        {
+            version: "2.1.0",
+            time: "2023-01-02",
+            items: [
+                "★数据浏览增加功能：新增数据、修改数据、删除数据",
+                "升级依赖版本，删除无用依赖，优化打包体积",
+                "解决由于按需导入引起的ElMessageBox样式问题",
+                "增加强迫症设置"
+            ]
+        },
         {
             version: "2.0.0",
             time: "2022-12-17",

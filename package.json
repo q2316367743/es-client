@@ -1,6 +1,6 @@
 {
     "name": "es-client",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "elasticsearch客户端",
     "author": {
         "name": "Esion",
@@ -14,6 +14,7 @@
     },
     "scripts": {
         "dev": "vite --host",
+        "build": "vue-tsc --noEmit && vite build",
         "build:edge": "vue-tsc --noEmit && vite build --mode=edge",
         "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
         "build:ts": "vue-tsc --noEmit && vite build --mode=tsbrowser",

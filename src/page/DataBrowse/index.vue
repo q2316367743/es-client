@@ -137,7 +137,7 @@
         </div>
         <!-- 数据表格 -->
         <div class="content-table">
-            <vxe-table border height="100%" class="es-scrollbar" :empty-text="this.index ? '什么也没有' : '请选择索引'"
+            <vxe-table border height="100%" class="es-scrollbar" :empty-text="index ? '什么也没有' : '请选择索引'"
                        :data="records" ref="vxeTable"
                        :loading="loading"
                        :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
@@ -205,6 +205,7 @@
         </vxe-modal>
         <vxe-modal v-model="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" :show-footer="true" :resize="true"
                    width="800px" height="520px" :draggable="true">
+            <!-- @ts-ignore -->
             <codemirror
                 v-model="addConfig.data"
                 placeholder="请在这里输入查询条件"
@@ -221,6 +222,7 @@
         </vxe-modal>
         <vxe-modal v-model="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`" :show-footer="true" :resize="true"
                    width="800px" height="520px" :draggable="true">
+            <!-- @ts-ignore -->
             <codemirror
                 v-model="editConfig.data"
                 placeholder="请在这里输入查询条件"
@@ -339,7 +341,7 @@ export default defineComponent({
             id: '',
             data: ''
         },
-        extensions: [json()]
+        extensions: [json()] as Array<any>
     }),
     computed: {
         ...mapState(useIndexStore, ['indices']),

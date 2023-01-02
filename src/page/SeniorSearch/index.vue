@@ -118,7 +118,7 @@ export default defineComponent({
         max_width: 520,
         max_height: 520,
         show_top: true,
-        extensions: [json()]
+        extensions: [json()] as Array<any>
     }),
     components: {DataView, Codemirror},
     computed: {
