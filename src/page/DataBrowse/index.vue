@@ -254,7 +254,7 @@ import {ArrowDown, ArrowUp, Check, CircleClose, Download, Operation, View} from 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
 
-import Index from "@/view/index";
+import Index from "@/view/index/index";
 import Header from "@/view/Header";
 
 import IndexApi from "@/api/IndexApi";

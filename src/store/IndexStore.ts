@@ -1,4 +1,4 @@
-import Index from "@/view/index";
+import Index from "@/view/index/index";
 import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'

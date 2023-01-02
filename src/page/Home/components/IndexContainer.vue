@@ -9,7 +9,7 @@
     </div>
 </template>
 <script lang="ts">
-import Index from "@/view/index";
+import Index from "@/view/index/index";
 import { defineComponent, PropType } from "vue";
 import IndexItem from "./IndexItem.vue";
 
