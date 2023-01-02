@@ -100,7 +100,7 @@
             <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="show_top"/>
         </div>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
-                   custom-class="es-dialog" :close-on-click-modal="false">
+                   class="es-dialog" :close-on-click-modal="false">
             <json-viewer :value="condition_data" :expand-depth="4" copyable sort expanded preview-mode></json-viewer>
         </el-dialog>
     </div>
@@ -232,7 +232,7 @@ export default defineComponent({
         },
     },
     created() {
-        mitt.on('update_index', () => {
+        mitt.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置条件
             this.clear(true);
         });

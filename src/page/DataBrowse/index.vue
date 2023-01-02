@@ -162,9 +162,9 @@
                         </div>
                     </template>
                 </vxe-column>
-                <vxe-column field="_id" title="_id" show-overflow="tooltip" sortable :formatter="format"/>
-                <vxe-column field="_index" title="_index" show-overflow="tooltip" sortable :formatter="format"/>
-                <vxe-column field="_score" title="_score" show-overflow="tooltip" sortable :formatter="format"/>
+                <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format"/>
+                <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable :formatter="format"/>
+                <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable :formatter="format"/>
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
                             :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
                             :formatter="format"/>
@@ -208,6 +208,22 @@
                 <el-button @click="runExportDialog(3)" type="primary">导出</el-button>
             </template>
         </vxe-modal>
+        <vxe-modal v-model="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" :show-footer="true" :resize="true"
+                   width="800px" height="520px" :draggable="true">
+            <codemirror
+                v-model="addConfig.data"
+                placeholder="请在这里输入查询条件"
+                :style="{ height: '400px' }"
+                :autofocus="true"
+                :indent-with-tab="true"
+                :tabSize="4"
+                :extensions="extensions"
+            />
+            <template #footer>
+                <el-button @click="addConfig.dialog = false">取消</el-button>
+                <el-button type="primary" @click="recordAddClick">新增</el-button>
+            </template>
+        </vxe-modal>
     </div>
 </template>
 <script lang="ts">
@@ -215,6 +231,7 @@ import {defineComponent} from "vue";
 import {mapState} from 'pinia';
 import {ElMessage, ElMessageBox} from "element-plus";
 import JsonViewer from 'vue-json-viewer';
+import {Codemirror} from 'vue-codemirror';
 
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
@@ -224,7 +241,7 @@ import {ArrowDown, ArrowUp, Check, CircleClose, Download, Operation, View} from 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
 
-import Index from "@/view/Index";
+import Index from "@/view/index";
 import Header from "@/view/Header";
 
 import IndexApi from "@/api/IndexApi";
@@ -236,11 +253,15 @@ import './index.less';
 import ExportConfig from "./ExportConfig";
 import exportData from "./ExportData";
 import BrowserUtil from "@/utils/BrowserUtil";
+import DataBuild from "@/page/DataBrowse/DataBuild";
+import {json} from '@codemirror/lang-json';
+import mitt from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'data-browse',
     components: {
-        ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, JsonViewer
+        ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, JsonViewer, Codemirror
     },
     data: () => ({
         page: 1,
@@ -297,7 +318,12 @@ export default defineComponent({
             result: 1,
             config: 1,
             fields: new Array<string>()
-        } as ExportConfig
+        } as ExportConfig,
+        addConfig: {
+            dialog: false,
+            data: ''
+        },
+        extensions: [json()]
     }),
     computed: {
         ...mapState(useIndexStore, ['indices']),
@@ -323,6 +349,35 @@ export default defineComponent({
             },
             immediate: true
         }
+    },
+    created() {
+        mitt.on(MessageEventEnum.URL_UPDATE, () => {
+            // 重置条件
+            this.index = undefined;
+            this.must = '';
+            this.should = '';
+            this.mustNot = '';
+            this.orderBy = '';
+            this.exportDialog = false;
+            this.addConfig.dialog = false;
+            this.indexVisible = false;
+            this.page = 1;
+            this.size = useSettingStore().getPageSize;
+            this.count = 1;
+            // 展示数据
+            this.headers = [] as Array<Header>;
+            this.result = {} as any;
+            this.records = new Array<any>();
+
+            //当前选中信息
+            this.record = undefined as any | undefined;
+            this.recordRowIndex = 0;
+            this.recordColumnIndex = 0;
+            // 删除的行索引
+            this.deleteRowIndies = new Set<number>();
+
+            this.loading = false;
+        });
     },
     methods: {
         executeQuery(renderHeader: boolean = true) {
@@ -489,10 +544,34 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            ElMessage({
-                showClose: true,
-                type: "warning",
-                message: '暂不可用'
+            this.addConfig = {
+                dialog: true,
+                data: DataBuild(this.index.mapping)
+            }
+        },
+        recordAddClick() {
+            if (!this.index) {
+                return;
+            }
+            IndexApi._doc(this.index.name, this.addConfig.data).then(() => {
+                ElMessage({
+                    showClose: true,
+                    type: "success",
+                    message: '新增成功'
+                });
+                this.addConfig.dialog = false;
+                // 延迟100ms，
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.executeQuery(false);
+                    }, 100);
+                })
+            }).catch((e) => {
+                ElMessage({
+                    showClose: true,
+                    type: "error",
+                    message: '新增失败，' + e
+                });
             })
         },
         recordReduce() {
@@ -538,7 +617,6 @@ export default defineComponent({
 
         // 右侧
         indexChange(index: Index) {
-            console.log(index)
             this.index = index;
             this.indexVisible = false;
             this.page = 1;

@@ -1,4 +1,4 @@
-import {Index, Setting} from "@/domain";
+import {Index, Setting} from '@/entity'
 
 function getDefaultBody(setting: Setting) {
     return {

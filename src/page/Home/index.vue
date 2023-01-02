@@ -107,8 +107,8 @@ import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from '@/store/SettingStore';
 
-import IndexView from "@/view/Index";
-import {Index, Property} from '@/domain';
+import IndexView from "@/view/index";
+import {Index, Property} from '@/entity';
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";

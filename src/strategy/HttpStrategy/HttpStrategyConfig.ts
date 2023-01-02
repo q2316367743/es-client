@@ -23,7 +23,6 @@ export default interface HttpStrategyConfig extends AxiosRequestConfig{
     method: Method | undefined;
     baseURL?: string;
     params?: any;
-    paramsSerializer?: (params: any) => string;
     data?: any;
     timeout?: number;
     auth?: BasicCredentials;

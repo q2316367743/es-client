@@ -93,7 +93,7 @@
             <setting v-show="active === 'setting'"></setting>
         </div>
         <!-- 关于弹窗 -->
-        <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body custom-class="es-dialog"
+        <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body class="es-dialog"
                    :close-on-click-modal="false" top="10vh" draggable>
             <about></about>
         </el-dialog>
@@ -190,13 +190,13 @@ export default defineComponent({
     },
     methods: {
         async selectUrl(value: string | number) {
-            emitter.emit(MessageEventEnum.URL_UPDATE);
             if (value === 'add') {
                 // 新增，打开新增面板
                 this.urlId = undefined;
                 this.urlDialog = true;
                 return;
             }
+            emitter.emit(MessageEventEnum.URL_UPDATE);
             // 先进性索引刷新
             // 选择索引
             await useUrlStore().choose(value as number);

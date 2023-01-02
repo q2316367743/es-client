@@ -1,4 +1,4 @@
-import { Index } from '@/domain';
+import { Index } from '@/entity';
 import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import IndexSaveBuild from '@/build/IndexSaveBuild';
 
@@ -178,6 +178,17 @@ export default {
             url: `/${index}/_search`,
             method: "POST",
             data: data || {}
+        })
+    },
+
+    _doc(index: string, data: string): Promise<any> {
+        return httpStrategyContext.getStrategy().all({
+            url: `/${index}/_doc`,
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         })
     }
 }

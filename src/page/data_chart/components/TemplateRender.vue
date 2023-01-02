@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="模板编辑" v-model="defaultDialog" fullscreen custom-class="template-edit">
+    <el-dialog title="模板编辑" v-model="defaultDialog" fullscreen class="template-edit">
         <div class="source">
             <json-viewer :expanded="true" :expand-depth="4" :value="data" class="data"></json-viewer>
             <div class="template">

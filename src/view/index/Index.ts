@@ -1,4 +1,5 @@
-import Field from "./Field";
+import Field from "../Field";
+import Mapping from "@/view/index/Mapping";
 
 /**
  * 主页索引遍历
@@ -48,7 +49,7 @@ export default interface Index {
     /**
      * 映射
      */
-    mapping: any;
+    mapping: Mapping;
 
     /**
      * 字段

@@ -1,5 +1,5 @@
 import Header from "@/view/Header";
-import Index from "@/view/Index";
+import Index from "@/view/index";
 
 function verify(result: any, index: Index): boolean {
     if (!index) {

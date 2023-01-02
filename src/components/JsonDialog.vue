@@ -4,7 +4,7 @@
         v-model="visible"
         width="70%"
         append-to-body
-        custom-class="es-dialog"
+        class="es-dialog"
         :close-on-click-modal="false"
         top="10vh"
     >
