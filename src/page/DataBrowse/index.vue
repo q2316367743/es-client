@@ -219,6 +219,22 @@
                 <el-button type="primary" @click="recordAddClick">新增</el-button>
             </template>
         </vxe-modal>
+        <vxe-modal v-model="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`" :show-footer="true" :resize="true"
+                   width="800px" height="520px" :draggable="true">
+            <codemirror
+                v-model="editConfig.data"
+                placeholder="请在这里输入查询条件"
+                :style="{ height: '400px' }"
+                :autofocus="true"
+                :indent-with-tab="true"
+                :tabSize="4"
+                :extensions="extensions"
+            />
+            <template #footer>
+                <el-button @click="addConfig.dialog = false">取消</el-button>
+                <el-button type="primary" @click="recordEditClick">修改</el-button>
+            </template>
+        </vxe-modal>
     </div>
 </template>
 <script lang="ts">
@@ -318,6 +334,11 @@ export default defineComponent({
             dialog: false,
             data: ''
         },
+        editConfig: {
+            dialog: false,
+            id: '',
+            data: ''
+        },
         extensions: [json()]
     }),
     computed: {
@@ -330,6 +351,13 @@ export default defineComponent({
             return this.indices.sort((e1, e2) => {
                 return e1.name.localeCompare(e2.name, 'zh');
             })
+        },
+        indexMap() {
+            let indexMap = new Map<string, any>();
+            for (let record of this.records) {
+                indexMap.set(record['_id'], record);
+            }
+            return indexMap;
         }
     },
     watch: {
@@ -548,7 +576,7 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            IndexApi._doc(this.index.name, this.addConfig.data).then(() => {
+            IndexApi._insert(this.index.name, this.addConfig.data).then(() => {
                 ElMessage({
                     showClose: true,
                     type: "success",
@@ -626,14 +654,64 @@ export default defineComponent({
 
         },
         recordEdit() {
+            if (!this.index) {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '请选择索引'
+                })
+                return;
+            }
             if (this.deleteRowIndies.size !== 1) {
                 return;
             }
-            ElMessage({
-                showClose: true,
-                type: "warning",
-                message: '暂不可用'
-            })
+            let record = this.indexMap.get(this.deleteRowIndies.keys().next().value);
+            this.editConfig = {
+                dialog: true,
+                id: record['_id'],
+                data: JSON.stringify(record['_source'], null, 4)
+            }
+        },
+        recordEditClick() {
+            if (!this.index) {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '请选择索引'
+                })
+                return;
+            }
+            if (this.deleteRowIndies.size !== 1) {
+                return;
+            }
+            IndexApi._update(this.index.name, this.editConfig.id, this.editConfig.data).then(() => {
+                ElMessage({
+                    showClose: true,
+                    type: "success",
+                    message: '修改成功'
+                });
+                this.editConfig.dialog = false;
+                // 延迟100ms，
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.executeQuery(false);
+                    }, 1000);
+                });
+                // 当前选中重置
+                this.record = undefined as any | undefined;
+                this.recordRowIndex = 0;
+                this.recordColumnIndex = 0;
+                // 删除的行索引
+                this.deleteRowIndies = new Set<string>();
+                // 清除选中行
+                (this.$refs['vxeTable'] as any).clearCheckboxRow();
+            }).catch(e => {
+                ElMessage({
+                    showClose: true,
+                    type: "error",
+                    message: '修改失败，' + e
+                })
+            });
         },
 
         // 右侧

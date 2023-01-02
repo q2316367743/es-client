@@ -181,7 +181,7 @@ export default {
         })
     },
 
-    _doc(index: string, data: string): Promise<any> {
+    _insert(index: string, data: string): Promise<any> {
         return httpStrategyContext.getStrategy().all({
             url: `/${index}/_doc`,
             method: "POST",
@@ -195,6 +195,16 @@ export default {
         return httpStrategyContext.getStrategy().all({
             url: `/${index}/_delete_by_query`,
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        })
+    },
+    _update(index: string, id: string, data: any): Promise<any> {
+        return httpStrategyContext.getStrategy().all({
+            url: `/${index}/_doc/${id}`,
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
             },
