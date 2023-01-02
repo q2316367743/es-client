@@ -1,7 +1,7 @@
 /**
  * 索引实体类
  */
-export interface Index {
+export interface IndexInstance {
 
     /**
      * 索引名称

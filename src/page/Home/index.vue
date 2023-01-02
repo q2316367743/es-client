@@ -107,8 +107,8 @@ import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from '@/store/SettingStore';
 
-import IndexView from "@/view/index";
-import {Index, Property} from '@/entity';
+import IndexView from "@/view/index/IndexView";
+import {IndexInstance, Property} from '@/entity/IndexInstance';
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
@@ -148,7 +148,7 @@ export default defineComponent({
                     numberOfShards: useSettingStore().getDefaultShard
                 },
                 mapping: [] as Array<Property>
-            } as Index,
+            } as IndexInstance,
             indexDialog: false,
             indexCollapse: '1',
             types: ['string', 'text', 'keyword', 'integer', 'long', 'short', 'byte', 'double', 'float', 'boolean', 'date'],
@@ -273,7 +273,7 @@ export default defineComponent({
                         numberOfShards: useSettingStore().getDefaultShard
                     },
                     mapping: [] as Array<Property>
-                } as Index;
+                } as IndexInstance;
             })
         },
         copyIndex() {
@@ -294,7 +294,7 @@ export default defineComponent({
                         numberOfShards: useSettingStore().getDefaultShard
                     },
                     mapping: [] as Array<Property>
-                } as Index;
+                } as IndexInstance;
             })
         },
         index_open_dialog(title: string, content: any) {

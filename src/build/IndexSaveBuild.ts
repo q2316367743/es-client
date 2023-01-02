@@ -1,4 +1,4 @@
-import {Index, Setting} from '@/entity'
+import {IndexInstance, Setting} from '@/entity/IndexInstance'
 
 function getDefaultBody(setting: Setting) {
     return {
@@ -18,7 +18,7 @@ function getDefaultBody(setting: Setting) {
  * 
  * @param index 索引信息
  */
-export default function IndexSaveBuild(index: Index): any {
+export default function IndexSaveBuild(index: IndexInstance): any {
     let body = getDefaultBody(index.settings);
     let properties = {} as any;
     for (let property of index.mapping) {

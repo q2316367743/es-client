@@ -254,7 +254,7 @@ import {ArrowDown, ArrowUp, Check, CircleClose, Download, Operation, View} from 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
 
-import Index from "@/view/index/index";
+import IndexView from "@/view/index/IndexView";
 import Header from "@/view/Header";
 
 import IndexApi from "@/api/IndexApi";
@@ -280,7 +280,7 @@ export default defineComponent({
         page: 1,
         size: useSettingStore().getPageSize,
         count: 1,
-        index: undefined as Index | undefined,
+        index: undefined as IndexView | undefined,
 
         // 下拉面板
         indexVisible: false,
@@ -347,7 +347,7 @@ export default defineComponent({
         ...mapState(useIndexStore, ['indices']),
         indicesShow() {
             if (this.indices.length === 0) {
-                return new Array<Index>();
+                return new Array<IndexView>();
             }
             // 此处是索引排序
             return this.indices.sort((e1, e2) => {
@@ -717,7 +717,7 @@ export default defineComponent({
         },
 
         // 右侧
-        indexChange(index: Index) {
+        indexChange(index: IndexView) {
             this.index = index;
             this.indexVisible = false;
             this.page = 1;

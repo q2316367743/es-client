@@ -1,4 +1,4 @@
-import Index from "@/view/index/index";
+import IndexView from "@/view/index/IndexView";
 import { prettyDataUnit } from "@/utils/FieldUtil";
 import clusterApi from "@/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
@@ -9,8 +9,8 @@ import IndexFieldBuild from "./IndexFieldBuild";
  * @param url 链接
  * @returns 索引数组
  */
-export default async function Builder(): Promise<Array<Index>> {
-    let indices = new Array<Index>();
+export default async function Builder(): Promise<Array<IndexView>> {
+    let indices = new Array<IndexView>();
     let cluster_stats = await clusterApi._cluster_state();
     let stats = await clusterApi._stats()
     let indecis = cluster_stats.metadata.indices as any;

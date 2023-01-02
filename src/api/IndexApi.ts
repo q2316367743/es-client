@@ -1,4 +1,4 @@
-import { Index } from '@/entity';
+import { IndexInstance } from '@/entity/IndexInstance';
 import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import IndexSaveBuild from '@/build/IndexSaveBuild';
 
@@ -76,7 +76,7 @@ export default {
      * @param success 成功回调
      * @param error 失败回调
      */
-    save(data: Index, success: (data: any) => void, error?: (e: Error) => void) {
+    save(data: IndexInstance, success: (data: any) => void, error?: (e: Error) => void) {
         httpStrategyContext.getStrategy().all({
             method: 'PUT',
             url: data.name,

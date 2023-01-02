@@ -1,4 +1,4 @@
-import Index from "@/view/index/index";
+import IndexView from "@/view/index/IndexView";
 import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import { ElLoading } from 'element-plus'
@@ -9,7 +9,7 @@ const useIndexStore = defineStore('index', {
     state: () => {
         return {
             // 全部的索引
-            indices: new Array<Index>(),
+            indices: new Array<IndexView>(),
             // 服务器名称
             name: '',
             active_shards: 0,
@@ -60,7 +60,7 @@ const useIndexStore = defineStore('index', {
         },
         clear() {
             this.name = '';
-            this.indices = new Array<Index>();
+            this.indices = new Array<IndexView>();
         }
     }
 });

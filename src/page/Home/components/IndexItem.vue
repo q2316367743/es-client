@@ -125,7 +125,7 @@ import {defineComponent, PropType} from "vue";
 import {ArrowDown, ArrowUp} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
 import useIndexStore from '@/store/IndexStore';
-import Index from "@/view/index/index";
+import IndexView from "@/view/index/IndexView";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
 import emitter from "@/plugins/mitt";
@@ -135,7 +135,7 @@ export default defineComponent({
     name: 'IndexItem',
     components: {ArrowDown, ArrowUp},
     props: {
-        index: Object as PropType<Index>
+        index: Object as PropType<IndexView>
     },
     emits: ['openDialog'],
     data: () => ({

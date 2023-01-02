@@ -4,7 +4,7 @@ import Mapping from "@/view/index/Mapping";
 /**
  * 主页索引遍历
  */
-export default interface Index {
+export default interface IndexView {
 
     /**
      * 索引名称

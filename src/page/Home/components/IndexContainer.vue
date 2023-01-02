@@ -9,7 +9,7 @@
     </div>
 </template>
 <script lang="ts">
-import Index from "@/view/index/index";
+import IndexView from "@/view/index/IndexView";
 import { defineComponent, PropType } from "vue";
 import IndexItem from "./IndexItem.vue";
 
@@ -20,10 +20,10 @@ export default defineComponent({
     components: { IndexItem },
     emits: ['openDialog'],
     props: {
-        indices: Object as PropType<Array<Index>>
+        indices: Object as PropType<Array<IndexView>>
     },
     data: () => ({
-        items: new Array<Index>(),
+        items: new Array<IndexView>(),
         translate3d: ''
     }),
     computed: {

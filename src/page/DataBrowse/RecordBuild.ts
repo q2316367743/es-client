@@ -1,7 +1,7 @@
 import Header from "@/view/Header";
-import Index from "@/view/index/index";
+import IndexView from "@/view/index/IndexView";
 
-function verify(result: any, index: Index): boolean {
+function verify(result: any, index: IndexView): boolean {
     if (!index) {
         return false
     }
@@ -47,7 +47,7 @@ function renderRecord(source: any, record: any, headers: Array<Header>, headersS
     }
 }
 
-export default function recordBuild(result: any, index: Index): { headers: Array<Header>, records: Array<any>, count: number } {
+export default function recordBuild(result: any, index: IndexView): { headers: Array<Header>, records: Array<any>, count: number } {
     let headers = new Array<Header>();
     let headersSet = new Set<string>();
     let records = new Array<any>();
