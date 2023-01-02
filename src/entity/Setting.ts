@@ -43,4 +43,9 @@ export default interface Setting {
      */
     homeSearchState: number;
 
+    /**
+     * 自动全屏
+     */
+    autoFullScreen: boolean;
+
 }

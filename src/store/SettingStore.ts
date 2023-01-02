@@ -12,7 +12,8 @@ const useSettingStore = defineStore('setting', {
             seniorWidth: 520,
             pageSize: 20,
             pageStep: 10,
-            homeSearchState: 0
+            homeSearchState: 0,
+            autoFullScreen: false
         } as Setting);
         return {
             language: getDefaultLanguage(),
@@ -29,35 +30,12 @@ const useSettingStore = defineStore('setting', {
         getPageStep: (state) => state.instance.pageStep,
         getTimeout: (state): number => state.instance.timeout,
         getHomeSearchState: (state): number => state.instance.homeSearchState,
+        getAutoFullScreen: (state): boolean => state.instance.autoFullScreen,
     },
     actions: {
         setLanguage(language: string): void {
             this.language = language;
             localStorage.setItem('language', language);
-        },
-        setDefaultShard(defaultShard: number): void {
-            this.instance.defaultShard = defaultShard;
-        },
-        setDefaultReplica(defaultReplica: number): void {
-            this.instance.defaultReplica = defaultReplica;
-        },
-        setSeniorWidth(seniorWidth: number) {
-            this.instance.seniorWidth = seniorWidth;
-        },
-        setDefaultViewer(defaultViewer: number) {
-            this.instance.defaultViewer = defaultViewer;
-        },
-        setPageSize(pageSize: number) {
-            this.instance.pageSize = pageSize;
-        },
-        setPageStep(pageStep: number) {
-            this.instance.pageStep = pageStep;
-        },
-        setTimeOut(timeout: number) {
-            this.instance.timeout = timeout;
-        },
-        setHomeSearchState(homeSearchState: number) {
-            this.instance.homeSearchState = homeSearchState;
         }
     }
 });

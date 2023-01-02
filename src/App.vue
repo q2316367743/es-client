@@ -206,9 +206,13 @@ export default defineComponent({
             // 当刷新完成之后，在发送消息
             // 选择一个有效的链接
             if (typeof value === 'number') {
-                emitter.emit(MessageEventEnum.INDEX_CONNECT)
+                emitter.emit(MessageEventEnum.INDEX_CONNECT);
+                // 选择链接
+                if (useSettingStore().getAutoFullScreen) {
+                    this.fullScreen = true;
+                }
             } else {
-                emitter.emit(MessageEventEnum.INDEX_CLEAN)
+                emitter.emit(MessageEventEnum.INDEX_CLEAN);
             }
         },
         async refresh() {

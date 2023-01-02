@@ -1,12 +1,12 @@
 <template>
-    <el-card class="setting" shadow="never">
+    <div class="setting">
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
             <el-tab-pane :label="$t('setting.link.title')" name="url_history" class="url"></el-tab-pane>
         </el-tabs>
         <BaseSetting v-if="active === 'base'"></BaseSetting>
         <url-setting v-else-if="active === 'url_history'"></url-setting>
-    </el-card>
+    </div>
 </template>
 
 <script lang="ts">
@@ -38,5 +38,6 @@ export default defineComponent({
     left: 10px;
     right: 10px;
     bottom: 10px;
+    padding: 10px;
 }
 </style>
