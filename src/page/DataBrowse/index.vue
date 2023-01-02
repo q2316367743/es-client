@@ -44,15 +44,8 @@
                 <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReduce">
                     <i class="vxe-icon-minus"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReset">
-                    <i class="vxe-icon-indicator"/>
-                </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" style="font-size: 14px"
-                     @click="recordPreview">
-                    <i class="vxe-icon-eye-fill"/>
-                </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordSave">
-                    <i class="vxe-icon-save"/>
+                <div class="item" :class="deleteRowIndies.size === 1 ? '' : 'disable'" @click="recordEdit">
+                    <i class="vxe-icon-edit"/>
                 </div>
             </div>
             <div class="right">
@@ -145,7 +138,7 @@
         <!-- 数据表格 -->
         <div class="content-table">
             <vxe-table border height="100%" class="es-scrollbar" :empty-text="this.index ? '什么也没有' : '请选择索引'"
-                       :data="records"
+                       :data="records" ref="vxeTable"
                        :loading="loading"
                        :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
                        :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
@@ -163,8 +156,10 @@
                     </template>
                 </vxe-column>
                 <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format"/>
-                <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable :formatter="format"/>
-                <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable :formatter="format"/>
+                <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable
+                            :formatter="format"/>
+                <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable
+                            :formatter="format"/>
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
                             :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
                             :formatter="format"/>
@@ -291,7 +286,7 @@ export default defineComponent({
         recordRowIndex: 0,
         recordColumnIndex: 0,
         // 删除的行索引
-        deleteRowIndies: new Set<number>(),
+        deleteRowIndies: new Set<string>(),
 
         // vxe表格相关配置
         loading: false,
@@ -374,7 +369,7 @@ export default defineComponent({
             this.recordRowIndex = 0;
             this.recordColumnIndex = 0;
             // 删除的行索引
-            this.deleteRowIndies = new Set<number>();
+            this.deleteRowIndies = new Set<string>();
 
             this.loading = false;
         });
@@ -460,12 +455,12 @@ export default defineComponent({
             this.executeQuery()
         },
         checkboxAll(param: VxeTableDefines.CheckboxAllEventParams) {
-            this.deleteRowIndies = new Set<number>();
-            param.$table.getCheckboxRecords().map(e => parseInt(e['_id'])).forEach(id => this.deleteRowIndies.add(id));
+            this.deleteRowIndies = new Set<string>();
+            param.$table.getCheckboxRecords().map(e => e['_id']).forEach(id => this.deleteRowIndies.add(id));
         },
         checkboxChange(param: VxeTableDefines.CheckboxChangeEventParams) {
-            this.deleteRowIndies = new Set<number>();
-            param.$table.getCheckboxRecords().map(e => parseInt(e['_id'])).forEach(id => this.deleteRowIndies.add(id));
+            this.deleteRowIndies = new Set<string>();
+            param.$table.getCheckboxRecords().map(e => e['_id']).forEach(id => this.deleteRowIndies.add(id));
         },
         // <----------------------------------- 表格事件 ----------------------------------<
 
@@ -564,7 +559,7 @@ export default defineComponent({
                 this.$nextTick(() => {
                     setTimeout(() => {
                         this.executeQuery(false);
-                    }, 100);
+                    }, 1000);
                 })
             }).catch((e) => {
                 ElMessage({
@@ -575,37 +570,63 @@ export default defineComponent({
             })
         },
         recordReduce() {
+            if (!this.index) {
+                return;
+            }
             if (this.deleteRowIndies.size === 0) {
                 return;
             }
-            ElMessage({
-                showClose: true,
-                type: "warning",
-                message: '暂不可用'
-            })
+            ElMessageBox.confirm("确定要删除这些索引，删除后将无法恢复！", "警告", {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let ids = new Array<string>();
+                this.deleteRowIndies.forEach(id => ids.push(id));
+                IndexApi._delete_by_query(this.index?.name!, {
+                    query: {
+                        bool: {
+                            must: [
+                                {
+                                    ids: {
+                                        values: ids
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }).then(() => {
+                    ElMessage({
+                        showClose: true,
+                        type: "success",
+                        message: '删除成功'
+                    });
+                    // 延迟100ms，
+                    this.$nextTick(() => {
+                        setTimeout(() => {
+                            this.executeQuery(false);
+                        }, 1000);
+                    });
+                    // 当前选中重置
+                    this.record = undefined as any | undefined;
+                    this.recordRowIndex = 0;
+                    this.recordColumnIndex = 0;
+                    // 删除的行索引
+                    this.deleteRowIndies = new Set<string>();
+                    // 清除选中行
+                    (this.$refs['vxeTable'] as any).clearCheckboxRow();
+                }).catch(e => {
+                    ElMessage({
+                        showClose: true,
+                        type: "error",
+                        message: '删除失败，' + e
+                    })
+                });
+            });
+
         },
-        recordReset() {
-            if (this.deleteRowIndies.size === 0) {
-                return;
-            }
-            ElMessage({
-                showClose: true,
-                type: "warning",
-                message: '暂不可用'
-            })
-        },
-        recordPreview() {
-            if (this.deleteRowIndies.size === 0) {
-                return;
-            }
-            ElMessage({
-                showClose: true,
-                type: "warning",
-                message: '暂不可用'
-            })
-        },
-        recordSave() {
-            if (this.deleteRowIndies.size === 0) {
+        recordEdit() {
+            if (this.deleteRowIndies.size !== 1) {
                 return;
             }
             ElMessage({

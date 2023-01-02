@@ -190,5 +190,15 @@ export default {
             },
             data: data
         })
+    },
+    _delete_by_query(index: string, data: any): Promise<any> {
+        return httpStrategyContext.getStrategy().all({
+            url: `/${index}/_delete_by_query`,
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        })
     }
 }
