@@ -578,11 +578,11 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            IndexApi._insert(this.index.name, this.addConfig.data).then(() => {
+            IndexApi._insert(this.index.name, this.addConfig.data).then((result) => {
                 ElMessage({
                     showClose: true,
                     type: "success",
-                    message: '新增成功'
+                    message: `新增成功，新数据ID【${result._id || ''}】`
                 });
                 this.addConfig.dialog = false;
                 // 延迟100ms，
