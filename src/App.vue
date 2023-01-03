@@ -32,8 +32,14 @@
                 <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
                 <span v-else>{{ $t('app.menu.setting') }}</span>
             </div>
-            <div class="version">
-                <el-link @click="aboutDialog = true">v{{ Constant.version }}</el-link>
+            <div class="dark" v-if="fullScreen">
+                <div class="nav-list" @click="darkChange">
+                    <i class="vxe-icon-moon" v-if="isDark"></i>
+                    <i class="vxe-icon-sunny" v-else></i>
+                </div>
+            </div>
+            <div class="version" v-else>
+                <el-link>v{{ Constant.version }}</el-link>
             </div>
         </div>
         <!-- 顶部-->
@@ -92,11 +98,6 @@
             <senior-search v-show="active === 'senior search'"></senior-search>
             <setting v-show="active === 'setting'"></setting>
         </div>
-        <!-- 关于弹窗 -->
-        <el-dialog :title="$t('app.about')" v-model="aboutDialog" width="70%" append-to-body class="es-dialog"
-                   :close-on-click-modal="false" top="10vh" draggable>
-            <about></about>
-        </el-dialog>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url v-model="urlDialog"></save-or-update-url>
     </el-config-provider>
@@ -125,7 +126,6 @@ import {
 } from '@element-plus/icons-vue';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
-import {useDark, useToggle} from "@vueuse/core";
 // 引入页面组件
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/icon/Translate.vue";
@@ -133,7 +133,6 @@ import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 // 模块
 import Info from '@/module/info/index.vue';
 // 页面
-import About from "@/page/About/index.vue";
 import Home from "./page/Home/index.vue";
 import BaseSearch from "@/page/BaseSearch/index.vue";
 import SeniorSearch from '@/page/SeniorSearch/index.vue';
@@ -154,7 +153,7 @@ export default defineComponent({
     components: {
         SunIcon,
         MoonIcon,
-        Info, About, Setting, Home, BaseSearch, SeniorSearch, Filter,
+        Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
         Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
     },
@@ -162,12 +161,11 @@ export default defineComponent({
         return {
             active: "home",
             urlId: undefined as number | undefined,
-            aboutDialog: false,
             urlDialog: false,
             locale: zhCn,
+            isDark,
             Constant,
-            fullScreen: false,
-            isDark: isDark
+            fullScreen: false
         };
     },
     computed: {

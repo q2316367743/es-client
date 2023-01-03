@@ -1,11 +1,11 @@
 <template>
     <vxe-toolbar ref="urlToolbar" custom export>
         <template #buttons>
-            <vxe-button @click="edit_open(undefined)">{{ $t('app.add') }}</vxe-button>
+            <el-button type="primary" @click="edit_open(undefined)">{{ $t('app.add') }}</el-button>
         </template>
         <template #tools>
-            <vxe-input v-model="condition.name" :placeholder="$t('setting.link.name')"
-                       style="margin-right: 10px;"></vxe-input>
+            <el-input v-model="condition.name" :placeholder="$t('setting.link.name')"
+                       style="margin-right: 10px;"></el-input>
         </template>
     </vxe-toolbar>
     <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">

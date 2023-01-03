@@ -80,6 +80,13 @@ body[theme-mode=dark] {
         border-color: var(--container-color);
     }
 
+    .el-tabs__item.is-active {
+        color: var(--active-color);
+    }
+    .el-tabs__active-bar {
+        background-color: var(--active-color);
+    }
+
     // jsonViewer
 
     .jv-container.jv-light {
@@ -165,6 +172,18 @@ body[theme-mode=dark] {
         .vxe-modal--header {
             background-color: var(--hover-color);
         }
+    }
+
+    .vxe-toolbar {
+        background-color: var(--container-color);
+    }
+    .vxe-header--column {
+        background-color: var(--container-color);
+        color: var(--text-color);
+    }
+    .vxe-button {
+        background-color: var(--container-color);
+        color: var(--text-color);
     }
 
     // CodeMirror
