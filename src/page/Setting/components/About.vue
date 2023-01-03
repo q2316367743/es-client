@@ -48,7 +48,8 @@
                     <span>进行评论</span>
                 </li>
                 <li>如果有好的想法，可以提交
-                    <el-link href="https://gitee.com/qiaoshengda/es-client/pulls" type="primary">Pull Requests
+                    <el-link href="https://gitee.com/qiaoshengda/es-client/pulls" target="_blank" type="primary">Pull
+                        Requests
                     </el-link>
                 </li>
             </ul>
