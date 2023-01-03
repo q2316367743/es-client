@@ -1,13 +1,14 @@
 <template>
-    <vxe-toolbar ref="urlToolbar" custom print>
+    <vxe-toolbar ref="urlToolbar" custom export>
         <template #buttons>
             <vxe-button @click="edit_open(undefined)">{{ $t('app.add') }}</vxe-button>
         </template>
         <template #tools>
-            <vxe-input v-model="condition.name" :placeholder="$t('setting.link.name')" style="margin-right: 10px;"></vxe-input>
+            <vxe-input v-model="condition.name" :placeholder="$t('setting.link.name')"
+                       style="margin-right: 10px;"></vxe-input>
         </template>
     </vxe-toolbar>
-    <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :print-config="printConfig">
+    <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column type="seq" width="150" :title="$t('setting.link.index')"></vxe-column>
         <vxe-column field="name" :title="$t('setting.link.name')" width="180"></vxe-column>
@@ -24,8 +25,8 @@
                 </el-button>
             </template>
         </vxe-column>
-        <vxe-column field="auth_user" title="用户名" :visible="false" />
-        <vxe-column field="auth_password" title="密码" :visible="false" />
+        <vxe-column field="auth_user" title="用户名" :visible="false"/>
+        <vxe-column field="auth_password" title="密码" :visible="false"/>
     </vxe-table>
     <save-or-update-url v-model="edit_dialog" :source="url"/>
 </template>
@@ -35,7 +36,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
 import {VxeTableDefines, VxeTableInstance} from "vxe-table/types/table";
-import {VxeToolbarInstance} from "vxe-table";
+import {VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -72,21 +73,23 @@ export default defineComponent({
         columnConfig: {
             resizable: true
         },
-        printConfig: {
-            sheetName: 'Elasticsearch链接',
-            modes: ['all', 'selected'],
+        exportConfig: {
+            filename: 'elasticsearch链接',
+            sheetName: 'elasticsearch链接',
             columns: [{
                 field: 'name'
             }, {
                 field: 'value'
-            },  {
+            }, {
                 field: 'is_auth'
             }, {
                 field: 'auth_user'
             }, {
                 field: 'auth_password'
-            }]
-        }
+            }],
+            // 自定义类型
+            types: ['csv', 'html', 'xml', 'txt']
+        } as VxeTablePropTypes.ExpandConfig
     }),
     computed: {
         ...mapState(useUrlStore, ['urls']),
