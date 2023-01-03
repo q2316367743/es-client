@@ -3,7 +3,7 @@ import { Log, Repository } from "@/view/Data";
 
 export default {
     name: "es-client",
-    version: "2.1.0",
+    version: "2.1.1",
     author: "Esion",
     // @ts-ignore
     platform: import.meta.env.VITE_PLATFORM,
@@ -24,6 +24,16 @@ export default {
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,
     log: [
+        {
+            version: "2.1.1",
+            time: "2023-01-03",
+            items: [
+                "紧急修复超时设置无效/异常",
+                "数据浏览 - 新增数据后展示新增ID",
+                "链接管理样式改版",
+                "左下角增加黑夜模式修改"
+            ]
+        },
         {
             version: "2.1.0",
             time: "2023-01-02",
