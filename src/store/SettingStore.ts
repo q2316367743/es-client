@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {getDefaultLanguage} from '@/utils/GlobalUtil';
 import {useLocalStorage} from "@vueuse/core";
 import Setting from "@/entity/Setting";
+import ArrayUtil from "@/utils/ArrayUtil";
 
 const useSettingStore = defineStore('setting', {
     state: () => {
@@ -12,6 +13,7 @@ const useSettingStore = defineStore('setting', {
             seniorWidth: 520,
             pageSize: 20,
             pageStep: 10,
+            timeout: 5000,
             homeSearchState: 0,
             autoFullScreen: false
         } as Setting);
@@ -25,11 +27,11 @@ const useSettingStore = defineStore('setting', {
         getDefaultShard: (state) => state.instance.defaultShard,
         getDefaultReplica: (state) => state.instance.defaultReplica,
         getSeniorWidth: (state) => state.instance.seniorWidth,
-        getDefaultViewer: (state) => state.instance.defaultViewer in [1, 2, 3] ? state.instance.defaultViewer : 1,
+        getDefaultViewer: (state) => ArrayUtil.contains([1, 2, 3], state.instance.defaultViewer) ? state.instance.defaultViewer : 1,
         getPageSize: (state) => state.instance.pageSize,
         getPageStep: (state) => state.instance.pageStep,
         getTimeout: (state): number => state.instance.timeout,
-        getHomeSearchState: (state): number => state.instance.homeSearchState,
+        getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
         getAutoFullScreen: (state): boolean => state.instance.autoFullScreen,
     },
     actions: {
