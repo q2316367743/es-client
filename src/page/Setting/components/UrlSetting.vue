@@ -89,7 +89,7 @@ export default defineComponent({
             }],
             // 自定义类型
             types: ['csv', 'html', 'xml', 'txt']
-        } as VxeTablePropTypes.ExpandConfig
+        } as VxeTablePropTypes.ExportConfig
     }),
     computed: {
         ...mapState(useUrlStore, ['urls']),
