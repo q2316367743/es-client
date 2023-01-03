@@ -152,6 +152,7 @@ export default defineComponent({
                             name: this.url.name,
                             value: this.url.value,
                             sequence: this.url.sequence,
+                            create_time: this.url.create_time || new Date(),
                             is_auth: this.url.is_auth,
                             auth_user: this.url.auth_user,
                             auth_password: this.url.auth_password

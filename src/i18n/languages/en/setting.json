@@ -19,6 +19,7 @@
         "url": "url",
         "url_placeholder": "Es server address (no slash at the end)",
         "create_time": "create time",
+        "update_time": "update time",
         "is_auth": "auth",
         "auth_user": "auth_user",
         "auth_password": "auth_password",

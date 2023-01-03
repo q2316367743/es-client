@@ -121,7 +121,6 @@ function templateBuild(template: string, condition: Array<any>): void {
     for (let item of items) {
         // 每一项：[key]{条件}[value]([and|or] [key]{条件}[value])
         let models = parseCondition(item);
-        console.log(item, models)
         if (models.length === 3) {
             let model = models[1];
             if (model === '=') {
@@ -246,7 +245,6 @@ function parseCondition(condition: string): string[] {
     }
 
     if (item) {
-        console.log(item)
         items.push(item);
     }
     return items;

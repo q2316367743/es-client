@@ -1,40 +1,41 @@
 <template>
-    <div>
-        <el-table :data="urls" class="data">
-            <el-table-column type="index" width="150" :label="$t('setting.link.index')"></el-table-column>
-            <el-table-column prop="name" :label="$t('setting.link.name')" width="180"></el-table-column>
-            <el-table-column prop="value" :label="$t('setting.link.url')"></el-table-column>
-            <el-table-column :label="$t('setting.link.create_time')" width="240">
-                <template #default="scope">
-                    <div>{{ prettyDate(scope.row.create_time) }}</div>
-                </template>
-            </el-table-column>
-            <el-table-column :label="$t('setting.link.is_auth')" width="240">
-                <template #default="scope">
-                    <div>{{ scope.row.is_auth ? $t('setting.link.need_auth') : $t('setting.link.not_auth') }}</div>
-                </template>
-            </el-table-column>
-            <el-table-column :label="$t('setting.link.operation')">
-                <template #default="scope">
-                    <el-button type="primary" size="small" @click="edit_open(scope.row)">{{ $t('setting.link.edit') }}
-                    </el-button>
-                    <el-button type="danger" size="small" @click="remove(scope.row.id, scope.row.value)">{{
-                            $t('setting.link.delete')
+    <vxe-toolbar ref="urlToolbar" custom print>
+        <template #buttons>
+            <vxe-button @click="edit_open(undefined)">{{ $t('app.add') }}</vxe-button>
+        </template>
+        <template #tools>
+            <vxe-input v-model="condition.name" :placeholder="$t('setting.link.name')" style="margin-right: 10px;"></vxe-input>
+        </template>
+    </vxe-toolbar>
+    <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :print-config="printConfig">
+        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column type="seq" width="150" :title="$t('setting.link.index')"></vxe-column>
+        <vxe-column field="name" :title="$t('setting.link.name')" width="180"></vxe-column>
+        <vxe-column field="value" :title="$t('setting.link.url')"></vxe-column>
+        <vxe-column field="update_time" :title="$t('setting.link.update_time')" width="240" :formatter="prettyDate"/>
+        <vxe-column field="is_auth" :title="$t('setting.link.is_auth')" width="240" :formatter="prettyAuth"/>
+        <vxe-column :title="$t('setting.link.operation')">
+            <template #default="{ row }">
+                <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
+                </el-button>
+                <el-button type="danger" size="small" @click="remove(row.id, row.value)">{{
+                        $t('setting.link.delete')
                     }}
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-button type="primary" circle class="add-btn" @click="edit_open(undefined)">+
-        </el-button>
-        <save-or-update-url v-model="edit_dialog" :source="url" />
-    </div>
+                </el-button>
+            </template>
+        </vxe-column>
+        <vxe-column field="auth_user" title="用户名" :visible="false" />
+        <vxe-column field="auth_password" title="密码" :visible="false" />
+    </vxe-table>
+    <save-or-update-url v-model="edit_dialog" :source="url"/>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { ElMessageBox, ElMessage } from 'element-plus'
-import { mapState } from "pinia";
+import {defineComponent} from "vue";
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
+import {VxeTableDefines, VxeTableInstance} from "vxe-table/types/table";
+import {VxeToolbarInstance} from "vxe-table";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -44,11 +45,21 @@ import Url from "@/entity/Url";
 import JsonDialog from "@/components/JsonDialog.vue";
 import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 
-import { urlService } from "@/global/BeanFactory";
+import {urlService} from "@/global/BeanFactory";
+
+interface Params {
+    cellValue: any
+    column: VxeTableDefines.ColumnInfo
+    row: any
+}
 
 export default defineComponent({
-    components: { JsonDialog, SaveOrUpdateUrl },
+    components: {JsonDialog, SaveOrUpdateUrl},
     data: () => ({
+        condition: {
+            name: '',
+            url: ''
+        },
         url: {
             name: '',
             value: 'http://',
@@ -58,13 +69,44 @@ export default defineComponent({
             auth_password: ''
         } as Url,
         edit_dialog: false,
+        columnConfig: {
+            resizable: true
+        },
+        printConfig: {
+            sheetName: 'Elasticsearch链接',
+            modes: ['all', 'selected'],
+            columns: [{
+                field: 'name'
+            }, {
+                field: 'value'
+            },  {
+                field: 'is_auth'
+            }, {
+                field: 'auth_user'
+            }, {
+                field: 'auth_password'
+            }]
+        }
     }),
     computed: {
-        ...mapState(useUrlStore, ['urls'])
+        ...mapState(useUrlStore, ['urls']),
+        showUrls() {
+            return this.urls.filter(url => this.condition.name === '' || (url.name && url.name.indexOf(this.condition.name) > -1))
+        }
+    },
+    mounted() {
+        let urlTable = this.$refs['urlTable'] as VxeTableInstance;
+        let urlToolbar = this.$refs['urlToolbar'] as VxeToolbarInstance;
+        this.$nextTick(() => {
+            urlTable.connect(urlToolbar);
+        });
     },
     methods: {
-        prettyDate(date: Date) {
-            return toDateString(date, "yyyy-MM-dd HH:mm:ss");
+        prettyDate(params: Params) {
+            return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");
+        },
+        prettyAuth(params: Params) {
+            return params.cellValue ? this.$t('setting.link.need_auth') : this.$t('setting.link.not_auth');
         },
         remove(id: number, value: string) {
             ElMessageBox.confirm('此操作将永久删除该链接, 是否继续?', '提示', {

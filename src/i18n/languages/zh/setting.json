@@ -19,6 +19,7 @@
         "url": "链接",
         "url_placeholder": "es服务器地址（尾部不要有斜线）",
         "create_time": "创建时间",
+        "update_time": "更新时间",
         "is_auth": "是否进行认证",
         "auth_user": "用户名",
         "auth_password": "密码",

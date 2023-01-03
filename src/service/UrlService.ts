@@ -55,6 +55,7 @@ export default class UrlService {
             name: url.name,
             value: url.value,
             sequence: url.sequence,
+            create_time: url.create_time,
             update_time: new Date(),
             is_auth: url.is_auth,
             auth_user: url.auth_user,
