@@ -7,12 +7,19 @@ import ArrayUtil from "@/utils/ArrayUtil";
  * @param mapping 索引映射
  */
 export default function DataBuild(mapping: Mapping): string {
-    let data = {} as any;
-    let properties = mapping._doc.properties;
-    for (let key in properties) {
-        buildItem(key, properties[key], data);
+    try {
+        let data = {} as any;
+        if (!mapping || !mapping._doc || !mapping._doc.properties) {
+            return '{}';
+        }
+        let properties = mapping._doc.properties;
+        for (let key in properties) {
+            buildItem(key, properties[key], data);
+        }
+        return JSON.stringify(data, null, 4);
+    } catch (ignore) {
+        return '{}';
     }
-    return JSON.stringify(data, null, 4);
 }
 
 function buildItem(key: string, properties: Properties, data: any) {
@@ -30,10 +37,10 @@ function buildItem(key: string, properties: Properties, data: any) {
         if (ArrayUtil.contains(['date', 'keyword', 'text'], properties.type)) {
             // 字符串类型
             data[key] = '';
-        }else if (ArrayUtil.contains(['long', 'integer', 'short'], properties.type)) {
+        } else if (ArrayUtil.contains(['long', 'integer', 'short'], properties.type)) {
             // 数值类型
             data[key] = 0;
-        }else {
+        } else {
             // 未知类型，设置为字符串
             data[key] = '';
         }
