@@ -5,7 +5,7 @@
         </template>
         <template #tools>
             <el-input v-model="condition.name" :placeholder="$t('setting.link.name')"
-                       style="margin-right: 10px;"></el-input>
+                      style="margin-right: 10px;"></el-input>
         </template>
     </vxe-toolbar>
     <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">
@@ -35,8 +35,7 @@ import {defineComponent} from "vue";
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
-import {VxeTableDefines, VxeTableInstance} from "vxe-table/types/table";
-import {VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
+import {VxeTablePropTypes, VxeToolbarInstance, VxeTableDefines, VxeTableInstance} from "vxe-table";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";

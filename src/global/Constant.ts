@@ -23,7 +23,7 @@ export default {
     ] as Repository[],
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,
-    log: [
+    logs: [
         {
             version: "2.1.1",
             time: "2023-01-03",

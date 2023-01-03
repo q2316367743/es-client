@@ -100,6 +100,10 @@
         </div>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url v-model="urlDialog"></save-or-update-url>
+        <el-dialog v-model="updateDialog" title="版本更新"
+                   close-on-click-modal append-to-body draggable lock-scroll>
+            <version-update/>
+        </el-dialog>
     </el-config-provider>
 </template>
 
@@ -132,6 +136,7 @@ import Translate from "@/icon/Translate.vue";
 import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 // 模块
 import Info from '@/module/info/index.vue';
+import VersionUpdate from "@/module/VersionUpdate/index.vue";
 // 页面
 import Home from "./page/Home/index.vue";
 import BaseSearch from "@/page/BaseSearch/index.vue";
@@ -147,11 +152,11 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
-import {isDark, toggleDark} from "@/global/BeanFactory";
+import {isDark, toggleDark, versionManage} from "@/global/BeanFactory";
 
 export default defineComponent({
     components: {
-        SunIcon,
+        SunIcon, VersionUpdate,
         MoonIcon,
         Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
@@ -165,7 +170,8 @@ export default defineComponent({
             locale: zhCn,
             isDark,
             Constant,
-            fullScreen: false
+            fullScreen: false,
+            updateDialog: false
         };
     },
     computed: {
@@ -185,6 +191,10 @@ export default defineComponent({
         } else if (language === 'en') {
             this.locale = en;
         }
+        this.$nextTick(() => {
+            this.updateDialog = !versionManage.checkUpdate();
+            versionManage.execUpdate();
+        })
     },
     methods: {
         async selectUrl(value: string | number) {

@@ -5,12 +5,15 @@ import TipService from '@/service/TipService'
 
 import x2js from 'x2js';
 import {useDark, useToggle} from "@vueuse/core";
+import VersionManage from "@/plugins/VersionManage";
 
 const dexieInstance = new DexieInstance();
 
 export const urlService = new UrlService(dexieInstance.getUrl());
 export const chartService = new ChartService(dexieInstance.getChart());
 export const tipService = new TipService(dexieInstance.getTip());
+
+export const versionManage = new VersionManage();
 
 export const json2xml = new x2js({
     selfClosingElements: false,

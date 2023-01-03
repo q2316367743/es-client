@@ -1,5 +1,9 @@
 # es-client
 
+
+[![star](https://up.apps.vip/yyscIcon/pendant2.png)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
+[![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client/stargazers)
+
 > 功能上仿照[elasticsearch head](https://github.com/mobz/elasticsearch-head)编写的elasticsearch查询客户端。
 > elasticsearch的客户端比较出名的就是elasticsearch head和Kibana了，但是elasticsearch head已经停止更新，且样式老旧，功能不全；而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+element-plus进行开发了一个elasticsearch的客户端。
 
@@ -13,7 +17,7 @@
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/tag/v1.3.0)**（完整功能）**
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
-- [想天浏览器独立应用](https://www.apps.vip/apps/)**（完整功能）**
+- [想天浏览器独立应用](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)**（完整功能）**
 
 ## 开发
 
@@ -28,11 +32,9 @@ npm run dev
 本项目推荐使用`yarn`
 
 1. 安装依赖：`yarn install`
-2. 构建：`yarn build`
-3. 在`chrome`文件夹中创建文件夹`es-client`，并将dist中文件复制到`chrome/es-client`中
-
-> 上面步骤是打包`chrome`插件，如果是应用程序打包，去掉第三步，其他不变。  
-> 如果是火狐插件打包，将第三步的`chrome`换成`firefox`
+2. 构建浏览器版本：`yarn build:ts`
+3. 构建Chrome插件：`yarn build:edge`
+4. 构建Firefox插件：`yarn build:firefox`
 
 ## 项目预览
 

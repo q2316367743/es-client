@@ -1,6 +1,6 @@
 <template>
     <el-timeline style="margin-top: 10px;">
-        <el-timeline-item :timestamp="log.time" placement="top" v-for="log in data.log">
+        <el-timeline-item :timestamp="log.time" placement="top" v-for="log in data.logs">
             <el-card shadow="hover">
                 <template #header>
                     <div style="font-size: 24px;font-weight: bold;">{{ log.version }}</div>
