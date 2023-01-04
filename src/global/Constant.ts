@@ -7,6 +7,8 @@ export default {
     author: "Esion",
     // @ts-ignore
     platform: import.meta.env.VITE_PLATFORM,
+    // @ts-ignore
+    mode: import.meta.env.VITE_MODE,
     repository: [
         {
             "name": "Gitee",

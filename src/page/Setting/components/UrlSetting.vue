@@ -12,7 +12,12 @@
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column type="seq" width="150" :title="$t('setting.link.index')"></vxe-column>
         <vxe-column field="name" :title="$t('setting.link.name')" width="180"></vxe-column>
-        <vxe-column field="value" :title="$t('setting.link.url')"></vxe-column>
+        <vxe-column field="value" :title="$t('setting.link.url')">
+            <template #default="{row}">
+                <el-link :href="row.value" type="primary" target="_blank">{{ row.value }}</el-link>
+                <div class="url-copy" @click="execCopy(row.value)">复制</div>
+            </template>
+        </vxe-column>
         <vxe-column field="update_time" :title="$t('setting.link.update_time')" width="240" :formatter="prettyDate"/>
         <vxe-column field="is_auth" :title="$t('setting.link.is_auth')" width="240" :formatter="prettyAuth"/>
         <vxe-column :title="$t('setting.link.operation')">
@@ -35,7 +40,7 @@ import {defineComponent} from "vue";
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
-import {VxeTablePropTypes, VxeToolbarInstance, VxeTableDefines, VxeTableInstance} from "vxe-table";
+import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -46,6 +51,7 @@ import JsonDialog from "@/components/JsonDialog.vue";
 import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 
 import {urlService} from "@/global/BeanFactory";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 interface Params {
     cellValue: any
@@ -141,6 +147,14 @@ export default defineComponent({
             };
             this.edit_dialog = true;
         },
+        execCopy(url: string) {
+            BrowserUtil.copy(url);
+            ElMessage({
+                showClose: true,
+                type: 'success',
+                message: '已成功复制到剪切板'
+            })
+        }
     }
 });
 </script>
@@ -165,6 +179,17 @@ export default defineComponent({
             bottom: 20px;
             width: 32px;
         }
+    }
+
+    .url-copy {
+        display: inline;
+        line-height: 22px;
+        background-color: var(--hover-color);
+        border-radius: 11px;
+        padding: 1px 5px;
+        margin-left: 5px;
+        margin-top: 2px;
+        cursor: pointer;
     }
 }
 </style>

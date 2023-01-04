@@ -433,3 +433,16 @@
     content: counter(entry825h2) '.' counter(entry825h3) '.' counter(entry825h4) '.' counter(entry825h5) '.' counter(entry825h6) '\3000';
     counter-increment: entry825h6
 }
+
+.entry .block .el-link {
+    padding-bottom: 0;
+}
+
+.entry .el-link {
+    padding-bottom: 2px;
+}
+
+
+.entry .el-link:hover {
+    padding-bottom: 0;
+}

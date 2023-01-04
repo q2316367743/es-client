@@ -11,8 +11,14 @@ export default class VersionManage {
         this.storageVersion = localStorage.getItem(this.KEY) || '';
     }
 
-    public checkUpdate(): boolean {
-        return this.currentVersion === this.storageVersion;
+    /**
+     * 检查更新
+     * 1：新用户
+     * 2：需要更新
+     * 3：不需要更新
+     */
+    public checkUpdate(): number {
+        return this.storageVersion === '' ? 1 :  this.currentVersion !== this.storageVersion ? 2 : 3;
     }
 
     public execUpdate(): void {

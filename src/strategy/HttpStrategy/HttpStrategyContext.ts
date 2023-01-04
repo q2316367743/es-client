@@ -21,7 +21,7 @@ class HttpStrategyContext {
     }
 
     public getStrategy(): HttpStrategy {
-        let strategy = this.strategyMap.get(Constant.platform);
+        let strategy = this.strategyMap.get(Constant.mode);
         if (!strategy) {
             return this.strategyMap.get(HttpType.BROWSER)!;
         }

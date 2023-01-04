@@ -104,6 +104,10 @@
                    close-on-click-modal append-to-body draggable lock-scroll>
             <version-update/>
         </el-dialog>
+        <el-dialog v-model="updateDialog" title="欢迎新用户"
+                   close-on-click-modal append-to-body draggable lock-scroll>
+            <new-user/>
+        </el-dialog>
     </el-config-provider>
 </template>
 
@@ -153,9 +157,11 @@ import Constant from '@/global/Constant'
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
 import {isDark, toggleDark, versionManage} from "@/global/BeanFactory";
+import NewUser from "@/module/NewUser/index.vue";
 
 export default defineComponent({
     components: {
+        NewUser,
         SunIcon, VersionUpdate,
         MoonIcon,
         Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
@@ -171,7 +177,8 @@ export default defineComponent({
             isDark,
             Constant,
             fullScreen: false,
-            updateDialog: false
+            updateDialog: false,
+            newDialog: false
         };
     },
     computed: {
@@ -192,7 +199,14 @@ export default defineComponent({
             this.locale = en;
         }
         this.$nextTick(() => {
-            this.updateDialog = !versionManage.checkUpdate();
+            switch (versionManage.checkUpdate()) {
+                case 1:
+                    this.newDialog = true;
+                    break;
+                case 2:
+                    this.updateDialog = true;
+                    break;
+            }
             versionManage.execUpdate();
         })
     },

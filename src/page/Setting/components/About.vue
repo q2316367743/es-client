@@ -27,7 +27,7 @@
         <div class="content">
             <el-link href="https://docs.esion.xyz/project-1/doc-1/" target="_blank" type="primary">文档</el-link>
         </div>
-        <div class="title-2">意见反馈</div>
+        <div class="title-2">建议反馈</div>
         <div content="content">
             <ul>
                 <li>金山文档：

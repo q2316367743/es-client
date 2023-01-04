@@ -6,7 +6,7 @@
     "author": {
         "name": "Esion",
         "email": "m17762618644@163.com",
-        "url": "https://www.esion.xyz"
+        "url": "https://blog.esion.xyz"
     },
     "repository": {
         "type": "gitee",
@@ -15,13 +15,13 @@
     },
     "scripts": {
         "dev": "vite --host",
+        "dev:serve": "node --loader ts-node/esm -r tsconfig-paths/register server/main.ts --files && yarn dev --mode=server",
         "build": "vue-tsc --noEmit && vite build",
         "build:edge": "vue-tsc --noEmit && vite build --mode=edge",
         "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
         "build:ts": "vue-tsc --noEmit && vite build --mode=tsbrowser",
         "build:server": "vue-tsc --noEmit && vite build --mode=server",
-        "preview": "vite preview",
-        "serve:dev": "node --loader ts-node/esm -r tsconfig-paths/register server/main.ts --files && yarn dev --mode=server"
+        "preview": "vite preview"
     },
     "dependencies": {
         "@codemirror/lang-json": "^6.0.1",
