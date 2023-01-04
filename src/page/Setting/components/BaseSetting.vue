@@ -1,5 +1,10 @@
 <template>
     <el-form style="margin-top: 10px;" label-width="160px" label-position="top">
+        <el-divider content-position="left">布局方式</el-divider>
+        <el-select v-model="layoutMode">
+            <el-option value="default" label="默认" />
+            <el-option value="classic" label="经典" />
+        </el-select>
         <el-divider content-position="left">新建索引</el-divider>
         <el-form-item :label="$t('setting.base.default_shard_number')">
             <el-input-number v-model="instance.defaultShard"></el-input-number>
@@ -50,6 +55,22 @@ import {mapState} from "pinia";
 export default defineComponent({
     computed: {
         ...mapState(useSettingStore, ['instance'])
+    },
+    data: () => ({
+        layoutMode: 'default'
+    }),
+    created() {
+        let attribute = document.body.getAttribute('layout-mode');
+        if (!attribute || attribute === '') {
+            document.body.setAttribute('layout-mode', this.layoutMode);
+        }else {
+            this.layoutMode = attribute;
+        }
+    },
+    watch: {
+        layoutMode(newValue: string) {
+            document.body.setAttribute('layout-mode', newValue);
+        }
     }
 });
 </script>

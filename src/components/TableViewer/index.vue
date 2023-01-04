@@ -78,10 +78,8 @@ export default defineComponent({
     },
     mounted() {
         this.render();
-        console.log(this.$refs)
         let tableViewerTable = this.$refs['tableViewerTable'] as VxeTableInstance;
         let tableViewerToolbar = this.$refs['tableViewerToolbar'] as VxeToolbarInstance;
-        console.log(tableViewerTable, tableViewerToolbar)
         this.$nextTick(() => {
             tableViewerTable.connect(tableViewerToolbar);
         });

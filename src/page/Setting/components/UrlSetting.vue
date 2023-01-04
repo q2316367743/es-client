@@ -10,17 +10,17 @@
     </vxe-toolbar>
     <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">
         <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column type="seq" width="150" :title="$t('setting.link.index')"></vxe-column>
+        <vxe-column type="seq" width="50" :title="$t('setting.link.index')"></vxe-column>
         <vxe-column field="name" :title="$t('setting.link.name')" width="180"></vxe-column>
-        <vxe-column field="value" :title="$t('setting.link.url')">
+        <vxe-column field="value" :title="$t('setting.link.url')" width="250">
             <template #default="{row}">
                 <el-link :href="row.value" type="primary" target="_blank">{{ row.value }}</el-link>
                 <div class="url-copy" @click="execCopy(row.value)">复制</div>
             </template>
         </vxe-column>
-        <vxe-column field="update_time" :title="$t('setting.link.update_time')" width="240" :formatter="prettyDate"/>
-        <vxe-column field="is_auth" :title="$t('setting.link.is_auth')" width="240" :formatter="prettyAuth"/>
-        <vxe-column :title="$t('setting.link.operation')">
+        <vxe-column field="update_time" :title="$t('setting.link.update_time')" width="160" :formatter="prettyDate"/>
+        <vxe-column field="is_auth" :title="$t('setting.link.is_auth')" width="120" :formatter="prettyAuth"/>
+        <vxe-column :title="$t('setting.link.operation')" width="140">
             <template #default="{ row }">
                 <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
                 </el-button>
