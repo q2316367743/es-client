@@ -20,6 +20,8 @@
         </vxe-column>
         <vxe-column field="update_time" :title="$t('setting.link.update_time')" width="160" :formatter="prettyDate"/>
         <vxe-column field="is_auth" :title="$t('setting.link.is_auth')" width="120" :formatter="prettyAuth"/>
+        <vxe-column field="auth_user" title="用户名" :visible="false"/>
+        <vxe-column field="auth_password" title="密码" :visible="false"/>
         <vxe-column :title="$t('setting.link.operation')" width="140">
             <template #default="{ row }">
                 <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
@@ -30,8 +32,6 @@
                 </el-button>
             </template>
         </vxe-column>
-        <vxe-column field="auth_user" title="用户名" :visible="false"/>
-        <vxe-column field="auth_password" title="密码" :visible="false"/>
     </vxe-table>
     <save-or-update-url v-model="edit_dialog" :source="url"/>
 </template>
