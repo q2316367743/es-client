@@ -26,6 +26,11 @@ enum MessageEventEnum {
     PAGE_ACTIVE = 'page:active',
 
     /**
+     * 设置页面切换
+     */
+    PAGE_SETTING_ACTIVE = 'page:setting:active',
+
+    /**
      * 主题变更
      */
     SYSTEM_THEME = 'system:theme'

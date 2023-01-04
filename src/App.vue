@@ -39,7 +39,16 @@
                 </div>
             </div>
             <div class="version" v-else>
-                <el-link>v{{ Constant.version }}</el-link>
+                <el-dropdown @command="versionCommand">
+                    <el-link>v{{ Constant.version }}</el-link>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="feedback">意见反馈</el-dropdown-item>
+                            <el-dropdown-item command="log">更新日志</el-dropdown-item>
+                            <el-dropdown-item command="about">关于</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
             </div>
         </div>
         <!-- 顶部-->
@@ -104,9 +113,13 @@
                    close-on-click-modal append-to-body draggable lock-scroll>
             <version-update/>
         </el-dialog>
-        <el-dialog v-model="updateDialog" title="欢迎新用户"
-                   close-on-click-modal append-to-body draggable lock-scroll>
-            <new-user/>
+        <el-dialog v-model="newDialog"
+                   close-on-click-modal append-to-body draggable lock-scroll top="5vh">
+            <setting-about />
+        </el-dialog>
+        <el-dialog v-model="feedbackDialog" title="问题反馈" top="25vh"
+                   :close-on-click-modal="false" append-to-body draggable lock-scroll>
+            <feedback-module/>
         </el-dialog>
     </el-config-provider>
 </template>
@@ -141,12 +154,14 @@ import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
 // 模块
 import Info from '@/module/info/index.vue';
 import VersionUpdate from "@/module/VersionUpdate/index.vue";
+import FeedbackModule from "@/module/Feedback/index.vue";
 // 页面
 import Home from "./page/Home/index.vue";
 import BaseSearch from "@/page/BaseSearch/index.vue";
 import SeniorSearch from '@/page/SeniorSearch/index.vue';
 import Setting from '@/page/Setting/index.vue'
 import DataBrowse from '@/page/DataBrowse/index.vue';
+import SettingAbout from "@/page/Setting/components/About.vue";
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
@@ -157,12 +172,11 @@ import Constant from '@/global/Constant'
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
 import {isDark, toggleDark, versionManage} from "@/global/BeanFactory";
-import NewUser from "@/module/NewUser/index.vue";
 
 export default defineComponent({
     components: {
-        NewUser,
-        SunIcon, VersionUpdate,
+        SettingAbout,
+        SunIcon, VersionUpdate, FeedbackModule,
         MoonIcon,
         Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
@@ -178,7 +192,8 @@ export default defineComponent({
             Constant,
             fullScreen: false,
             updateDialog: false,
-            newDialog: false
+            newDialog: false,
+            feedbackDialog: false
         };
     },
     computed: {
@@ -261,11 +276,30 @@ export default defineComponent({
         },
         fullScreenSwitch() {
             this.fullScreen = !this.fullScreen;
+        },
+        versionCommand(command: string) {
+            switch (command) {
+                case 'about':
+                    this.selectMenu('setting');
+                    emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'about');
+                    break;
+                case 'log':
+                    this.selectMenu('setting');
+                    emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'update');
+                    break;
+                case 'feedback':
+                    this.feedbackDialog = true;
+                    break;
+            }
         }
     },
 });
 </script>
 
 <style lang="less">
-
+.app-feedback {
+    width: calc(100vw - 40px);
+    height: calc(100vh - 58px - 60px);
+    border: none;
+}
 </style>

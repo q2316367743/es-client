@@ -30,4 +30,16 @@ export interface Item {
 
 }
 
-export type ItemType = 'string' | 'link'
+export type ItemType = 'string' | 'link';
+
+export interface Dependency {
+
+    name: string;
+
+    home: string;
+
+    licence: string;
+
+    version: string;
+
+}

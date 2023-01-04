@@ -212,8 +212,6 @@
     border-spacing: 0;
     -webkit-border-radius: .5em;
     -moz-border-radius: .5em;
-    -ms-border-radius: .5em;
-    -o-border-radius: .5em;
     border-radius: .5em
 }
 
@@ -292,12 +290,8 @@
     font-weight: inherit;
     text-decoration: inherit;
     -webkit-text-emphasis: filled circle;
-    -moz-text-emphasis: filled circle;
-    -ms-text-emphasis: filled circle;
     text-emphasis: filled circle;
     -webkit-text-emphasis-position: under;
-    -moz-text-emphasis-position: under;
-    -ms-text-emphasis-position: under;
     text-emphasis-position: under
 }
 
@@ -439,7 +433,8 @@
 }
 
 .entry .el-link {
-    padding-bottom: 2px;
+    padding-bottom: 1px;
+    font-size: 16px;
 }
 
 

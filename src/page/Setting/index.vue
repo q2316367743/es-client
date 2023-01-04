@@ -24,6 +24,8 @@ import UrlSetting from "./components/UrlSetting.vue";
 import BaseSetting from "./components/BaseSetting.vue";
 import SettingUpdate from "@/page/Setting/components/Update.vue";
 import SettingAbout from "@/page/Setting/components/About.vue";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'setting',
@@ -38,7 +40,11 @@ export default defineComponent({
             active: "base",
         };
     },
-    methods: {},
+    created() {
+        emitter.on(MessageEventEnum.PAGE_SETTING_ACTIVE, (active) => {
+            this.active = active as string;
+        })
+    }
 });
 </script>
 

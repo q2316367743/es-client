@@ -4,8 +4,9 @@ import App from './App.vue';
 import i18n from '@/i18n';
 
 // 引入样式
-import './theme.less';
-import './main.less';
+import '@/less/theme.less';
+import '@/less/main.less';
+import '@/less/post.css'
 import "element-plus/theme-chalk/el-message.css";
 import "element-plus/theme-chalk/el-message-box.css";
 import "element-plus/theme-chalk/el-loading.css";

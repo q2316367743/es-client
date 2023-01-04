@@ -7,7 +7,10 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Apache2_0: typeof import('./src/components/License/Apache2_0.vue')['default']
+    'Apache2.0': typeof import('./src/components/License/Apache2.0.vue')['default']
     BaseViewer: typeof import('./src/components/BaseViewer.vue')['default']
+    Bsd: typeof import('./src/components/License/Bsd.vue')['default']
     DataView: typeof import('./src/components/DataView/index.vue')['default']
     ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
@@ -47,6 +50,7 @@ declare module '@vue/runtime-core' {
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
+    Mit: typeof import('./src/components/License/Mit.vue')['default']
     SaveOrUpdateUrl: typeof import('./src/components/SaveOrUpdateUrl/index.vue')['default']
     TableViewer: typeof import('./src/components/TableViewer/index.vue')['default']
   }
