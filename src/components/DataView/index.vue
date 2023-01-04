@@ -1,10 +1,8 @@
 <template>
     <div class="data-view">
-        <base-viewer v-if="view === 1" :data="result"></base-viewer>
-        <json-viewer v-else-if="view === 2" :value="result" :expand-depth="6" copyable sort expanded>
-        </json-viewer>
-        <table-viewer v-if="view === 3" :data="result" :mapping="mapping">
-        </table-viewer>
+        <base-viewer v-show="view === 1" :data="result" />
+        <json-viewer v-show="view === 2" :value="result" :expand-depth="6" copyable sort expanded />
+        <table-viewer v-show="view === 3" :data="result" :mapping="mapping" />
     </div>
 </template>
 <script lang="ts">
@@ -25,7 +23,4 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.data-view {
-    margin-top: 16px;
-}
 </style>

@@ -58,10 +58,10 @@
                         <codemirror
                             v-model="params"
                             placeholder="请在这里输入查询条件"
-                            :style="{ height: '500px' }"
+                            :style="{ height: '100%' }"
                             :autofocus="true"
                             :indent-with-tab="true"
-                            :tabSize="2"
+                            :tabSize="4"
                             :extensions="extensions"
                         />
                     </div>
@@ -71,7 +71,7 @@
                 </div>
                 <!-- 右面展示内容 -->
                 <div class="senior-content">
-                    <el-scrollbar style="height: 100%;">
+                    <el-scrollbar>
                         <data-view :view="view" :result="result"/>
                     </el-scrollbar>
                     <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
@@ -101,6 +101,7 @@ import useSettingStore from "@/store/SettingStore";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DataView from "@/components/DataView/index.vue";
+import {ElMenu, ElMessage} from "element-plus";
 
 
 export default defineComponent({
@@ -209,7 +210,16 @@ export default defineComponent({
             this.get_params = new Array<Param>();
         },
         formatDocument() {
-            (this.$refs.monaco_editor as any).format();
+            try {
+                this.params = JSON.stringify(JSON.parse(this.params), null, 4);
+            }catch (e) {
+                console.error(e);
+                ElMessage({
+                    showClose: true,
+                    type: 'warning',
+                    message: '格式化失败，' + e
+                })
+            }
         },
     },
 });
@@ -236,13 +246,16 @@ export default defineComponent({
     }
 
     .senior-main {
-        position: relative;
-        height: 100%;
+        position: absolute;
+        top: 69px;
+        left: 0;
+        right: 0;
+        bottom: 0;
 
         .side {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 5px;
+            left: 5px;
             bottom: 0;
             width: 500px;
 
@@ -260,7 +273,7 @@ export default defineComponent({
                 top: 0;
                 left: 0;
                 right: 0;
-                bottom: 0;
+                bottom: 10px;
 
                 .get {
                     width: 466px;
@@ -302,12 +315,11 @@ export default defineComponent({
 
         .senior-content {
             position: absolute;
-            top: 20px;
-            bottom: 0;
-            right: 0;
-            left: 520px;
+            top: 5px;
+            bottom: 5px;
+            right: 5px;
+            left: 515px;
             overflow: auto;
-            padding: 5px;
         }
     }
 }
