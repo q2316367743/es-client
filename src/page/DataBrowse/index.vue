@@ -98,7 +98,7 @@
             <div class="condition-item">
                 <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
                 <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="must = '';executeQuery(false);">
+                <div class="clear" v-show="must !== ''" @click="must = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -108,7 +108,7 @@
             <div class="condition-item">
                 <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
                 <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="should = '';executeQuery(false);">
+                <div class="clear" v-show="should !== ''" @click="should = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -118,7 +118,7 @@
             <div class="condition-item">
                 <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
                 <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="mustNot = '';executeQuery(false);">
+                <div class="clear" v-show="mustNot !== ''" @click="mustNot = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
@@ -128,7 +128,7 @@
             <div class="condition-item">
                 <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
                 <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" @click="orderBy = '';executeQuery(false);">
+                <div class="clear" v-show="orderBy !== ''" @click="orderBy = '';executeQuery(false);">
                     <el-icon>
                         <circle-close/>
                     </el-icon>
