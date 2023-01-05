@@ -86,11 +86,12 @@
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import {Codemirror} from 'vue-codemirror';
+import {ElMessage} from "element-plus";
 import {json} from '@codemirror/lang-json';
 
 import mitt from '@/plugins/mitt';
 
-import {httpStrategyContext} from "@/global/BeanFactory";
+import {httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
 
 import {validateTip} from '@/utils/GlobalUtil';
 
@@ -101,7 +102,8 @@ import useSettingStore from "@/store/SettingStore";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DataView from "@/components/DataView/index.vue";
-import {ElMenu, ElMessage} from "element-plus";
+import SeniorSearchParam from "@/domain/SeniorSearchParam";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 
 export default defineComponent({
@@ -111,13 +113,12 @@ export default defineComponent({
         method: 'POST' as Method,
         params: '{}',
         result: {},
+        // 语法提示
         suggestions: [],
         // GET请求参数
         get_params: new Array<Param>(),
+        // 相关数据
         view: useSettingStore().getDefaultViewer,
-        is_down: false,
-        max_width: 520,
-        max_height: 520,
         show_top: true,
         extensions: [json()] as Array<any>
     }),
@@ -147,8 +148,17 @@ export default defineComponent({
             this.get_params = new Array<Param>();
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
-            this.show_top = (index === 'senior search')
+            this.show_top = (index === PageNameEnum.SENIOR_SEARCH)
         });
+        useSeniorSearchEvent.on((param: SeniorSearchParam) => {
+            this.result = {};
+            this.link = param.url;
+            this.method = param.method as Method;
+            this.params = param.param;
+            if (param.execute) {
+                this.search();
+            }
+        })
     },
     // 获取最大宽度
     methods: {
@@ -212,7 +222,7 @@ export default defineComponent({
         formatDocument() {
             try {
                 this.params = JSON.stringify(JSON.parse(this.params), null, 4);
-            }catch (e) {
+            } catch (e) {
                 console.error(e);
                 ElMessage({
                     showClose: true,

@@ -17,7 +17,7 @@
                 <el-button style="margin-left: 5px" @click="condition.dialog = true">更多</el-button>
                 <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
             </div>
-            <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true">{{
+            <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true" :disabled="!url">{{
                     $t('home.new_index.self')
                 }}
             </el-button>
@@ -78,6 +78,7 @@
                 </el-collapse-item>
             </el-collapse>
             <template #footer>
+                <el-button type="info" text @click="jumpToSeniorSearch">跳转到高级查询</el-button>
                 <el-button type="info" text @click="copyIndex">复制到剪切板</el-button>
                 <el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
             </template>
@@ -120,6 +121,8 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import BrowserUtil from "@/utils/BrowserUtil";
 import IndexSaveBuild from "@/build/IndexSaveBuild";
 import {stringContain} from "@/utils/SearchUtil";
+import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 
 export default defineComponent({
@@ -295,12 +298,32 @@ export default defineComponent({
                     },
                     mapping: [] as Array<Property>
                 } as IndexInstance;
-            })
+            });
         },
         index_open_dialog(title: string, content: any) {
             this.indexItemDialog = true;
             this.indexItemTitle = title;
             this.indexItemData = content;
+        },
+        jumpToSeniorSearch() {
+            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            useSeniorSearchEvent.emit({
+                url: this.index.name,
+                method: 'PUT',
+                param: JSON.stringify(IndexSaveBuild(this.index), null, 4),
+                execute: false
+            });
+            // 关闭弹框
+            this.indexDialog = false;
+            // 重置
+            this.index = {
+                name: '',
+                settings: {
+                    numberOfReplicas: useSettingStore().getDefaultReplica,
+                    numberOfShards: useSettingStore().getDefaultShard
+                },
+                mapping: [] as Array<Property>
+            } as IndexInstance;
         }
     },
 });

@@ -2,11 +2,11 @@ enum PageNameEnum {
 
     HOME = "home",
 
-    DATA_BROWSER = "data browser",
+    DATA_BROWSER = "data-browser",
 
-    BASE_SEARCH = "base search",
+    BASE_SEARCH = "base-search",
 
-    SENIOR_SEARCH = "senior search",
+    SENIOR_SEARCH = "senior-search",
 
     SETTING = "setting"
 

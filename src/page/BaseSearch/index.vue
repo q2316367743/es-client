@@ -88,6 +88,7 @@
                     <div class="base-search-condition-sentence">
                         <el-button link type="primary" @click="showBody">{{ $t('base_search.display_query_statement') }}
                         </el-button>
+                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到高级查询</el-button>
                     </div>
                 </div>
                 <!-- 查询结果 -->
@@ -130,6 +131,8 @@ import FieldConditionItem from "./components/FieldConditionItem.vue";
 import Field from "@/view/Field";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DataView from "@/components/DataView/index.vue";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 
 interface Name {
     name: string;
@@ -237,7 +240,7 @@ export default defineComponent({
             this.clear(true);
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
-            this.show_top = (index === 'base search')
+            this.show_top = (index === PageNameEnum.BASE_SEARCH)
         });
     },
     methods: {
@@ -273,22 +276,23 @@ export default defineComponent({
                 ElMessageBox.alert(this.$t('base_search.please_select_an_index'));
                 return;
             }
-            IndexApi._search(this.index,
-                QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders))
-                .then((response) => {
-                    this.result = response;
-                    if (this.result.hits) {
-                        if (parseInt(this.result.hits.total)) {
-                            this.total = parseInt(this.result.hits.total)
-                        } else if (parseInt(this.result.hits.total.value)) {
-                            this.total = parseInt(this.result.hits.total.value);
-                        } else {
-                            this.total = 0;
-                        }
+            IndexApi._search(
+                this.index,
+                QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders)
+            ).then((response) => {
+                this.result = response;
+                if (this.result.hits) {
+                    if (parseInt(this.result.hits.total)) {
+                        this.total = parseInt(this.result.hits.total)
+                    } else if (parseInt(this.result.hits.total.value)) {
+                        this.total = parseInt(this.result.hits.total.value);
                     } else {
                         this.total = 0;
                     }
-                }).catch((e) => {
+                } else {
+                    this.total = 0;
+                }
+            }).catch((e) => {
                 this.result = e.response.data;
             });
         },
@@ -317,6 +321,18 @@ export default defineComponent({
             this.orders = this.orders.filter((item) => {
                 return item.id !== id;
             });
+        },
+        jumpToSeniorSearch() {
+            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            useSeniorSearchEvent.emit({
+                url: `/${this.index}/_search`,
+                method: 'POST',
+                param: JSON.stringify(
+                    QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders),
+                    null,
+                    4),
+                execute: true
+            })
         }
     },
 });

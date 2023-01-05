@@ -11,24 +11,28 @@
                     </el-icon>
                 </div>
             </div>
-            <div class="nav-list" :class="active === 'home' ? 'active' : ''" @click="selectMenu('home')">
+            <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
+                 @click="selectMenu(PageNameEnum.HOME)">
                 <span v-if="fullScreen"><el-icon><data-line/></el-icon></span>
                 <span v-else>{{ $t('app.menu.home') }}</span>
             </div>
-            <div class="nav-list" :class="active === 'data browse' ? 'active' : ''" @click="selectMenu('data browse')">
+            <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
+                 @click="selectMenu(PageNameEnum.DATA_BROWSER)">
                 <span v-if="fullScreen"><el-icon><Tickets/></el-icon></span>
                 <span v-else>{{ $t('app.menu.data_browse') }}</span>
             </div>
-            <div class="nav-list" :class="active === 'base search' ? 'active' : ''" @click="selectMenu('base search')">
+            <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
+                 @click="selectMenu(PageNameEnum.BASE_SEARCH)">
                 <span v-if="fullScreen"><el-icon><search/></el-icon></span>
                 <span v-else>{{ $t('app.menu.base_search') }}</span>
             </div>
-            <div class="nav-list" :class="active === 'senior search' ? 'active' : ''"
-                 @click="selectMenu('senior search')">
+            <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
+                 @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
                 <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
                 <span v-else>{{ $t('app.menu.senior_search') }}</span>
             </div>
-            <div class="nav-list" :class="active === 'setting' ? 'active' : ''" @click="selectMenu('setting')">
+            <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
+                 @click="selectMenu( PageNameEnum.SETTING)">
                 <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
                 <span v-else>{{ $t('app.menu.setting') }}</span>
             </div>
@@ -101,11 +105,11 @@
         </div>
         <!-- 内容-->
         <div id="main" :class="fullScreen ? 'full-screen' : ''">
-            <home v-show="active === 'home'"></home>
-            <data-browse v-show="active === 'data browse'"></data-browse>
-            <base-search v-show="active === 'base search'"></base-search>
-            <senior-search v-show="active === 'senior search'"></senior-search>
-            <setting v-show="active === 'setting'"></setting>
+            <home v-show="active === PageNameEnum.HOME"></home>
+            <data-browse v-show="active === PageNameEnum.DATA_BROWSER"></data-browse>
+            <base-search v-show="active === PageNameEnum.BASE_SEARCH"></base-search>
+            <senior-search v-show="active === PageNameEnum.SENIOR_SEARCH"></senior-search>
+            <setting v-show="active === PageNameEnum.SETTING"></setting>
         </div>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url v-model="urlDialog"></save-or-update-url>
@@ -173,7 +177,8 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
-import {isDark, toggleDark, versionManage} from "@/global/BeanFactory";
+import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 export default defineComponent({
     components: {
@@ -186,7 +191,7 @@ export default defineComponent({
     },
     data: () => {
         return {
-            active: "home",
+            active: PageNameEnum.HOME,
             urlId: undefined as number | undefined,
             urlDialog: false,
             locale: zhCn,
@@ -195,7 +200,8 @@ export default defineComponent({
             fullScreen: false,
             updateDialog: false,
             newDialog: false,
-            feedbackDialog: false
+            feedbackDialog: false,
+            PageNameEnum
         };
     },
     computed: {
@@ -225,6 +231,9 @@ export default defineComponent({
                     break;
             }
             versionManage.execUpdate();
+        });
+        usePageJumpEvent.on((page: string) => {
+            this.selectMenu(page);
         })
     },
     methods: {
@@ -282,11 +291,11 @@ export default defineComponent({
         versionCommand(command: string) {
             switch (command) {
                 case 'about':
-                    this.selectMenu('setting');
+                    this.selectMenu(PageNameEnum.SETTING);
                     emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'about');
                     break;
                 case 'log':
-                    this.selectMenu('setting');
+                    this.selectMenu(PageNameEnum.SETTING);
                     emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'update');
                     break;
                 case 'feedback':

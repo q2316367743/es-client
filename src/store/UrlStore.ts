@@ -15,7 +15,7 @@ const useUrlStore = defineStore('url', {
             // 全部的链接
             urls: new Array<Url>(),
             // 当前选中的链接
-            url: {} as Url | undefined
+            url: undefined as Url | undefined
         }
     },
     getters: {

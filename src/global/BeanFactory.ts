@@ -4,9 +4,10 @@ import UrlService from "@/service/UrlService";
 import TipService from '@/service/TipService'
 
 import x2js from 'x2js';
-import {useDark, useToggle} from "@vueuse/core";
+import {useDark, useEventBus, useToggle} from "@vueuse/core";
 import VersionManage from "@/plugins/VersionManage";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import SeniorSearchParam from "@/domain/SeniorSearchParam";
 
 const dexieInstance = new DexieInstance();
 
@@ -32,3 +33,8 @@ export const isDark = useDark({
     valueLight: 'light',
 });
 export const toggleDark = useToggle(isDark);
+
+// 高级查询 - 事件总线
+export const useSeniorSearchEvent = useEventBus<SeniorSearchParam>("senior-search-event");
+// 页面跳转 - 事件总线
+export const usePageJumpEvent = useEventBus<string>('page-jump-event');

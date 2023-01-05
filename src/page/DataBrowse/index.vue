@@ -74,9 +74,11 @@
                 <div class="item" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
                 </div>
-                <div class="item">
-                    <i class="vxe-icon-eye-fill"/>
-                </div>
+                <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
+                    <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
+                        <i class="vxe-icon-eye-fill"/>
+                    </div>
+                </el-tooltip>
                 <el-dropdown trigger="click">
                     <div class="item">
                         <el-icon>
@@ -203,6 +205,7 @@
                 <el-button @click="runExportDialog(3)" type="primary">导出</el-button>
             </template>
         </vxe-modal>
+        <!-- 新增对话框 -->
         <vxe-modal v-model="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" :show-footer="true" :resize="true"
                    width="800px" height="520px" :draggable="true">
             <!-- @ts-ignore -->
@@ -216,11 +219,14 @@
                 :extensions="extensions"
             />
             <template #footer>
+                <el-button text @click="jumpToSeniorSearchByInsert">跳转到高级查询</el-button>
                 <el-button @click="addConfig.dialog = false">取消</el-button>
                 <el-button type="primary" @click="recordAddClick">新增</el-button>
             </template>
         </vxe-modal>
-        <vxe-modal v-model="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`" :show-footer="true" :resize="true"
+        <!-- 修改对话框 -->
+        <vxe-modal v-model="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`"
+                   :show-footer="true" :resize="true"
                    width="800px" height="520px" :draggable="true">
             <!-- @ts-ignore -->
             <codemirror
@@ -233,7 +239,8 @@
                 :extensions="extensions"
             />
             <template #footer>
-                <el-button @click="addConfig.dialog = false">取消</el-button>
+                <el-button text @click="jumpToSeniorSearchByUpdate">跳转到高级查询</el-button>
+                <el-button @click="editConfig.dialog = false">取消</el-button>
                 <el-button type="primary" @click="recordEditClick">修改</el-button>
             </template>
         </vxe-modal>
@@ -242,13 +249,12 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from 'pinia';
-import {ElMessage, ElMessageBox} from "element-plus";
+import {Action, ElMessage, ElMessageBox} from "element-plus";
 import JsonViewer from 'vue-json-viewer';
 import {Codemirror} from 'vue-codemirror';
-
+import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
-
 import {ArrowDown, ArrowUp, Check, CircleClose, Download, Operation, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
@@ -267,9 +273,10 @@ import ExportConfig from "./ExportConfig";
 import exportData from "./ExportData";
 import BrowserUtil from "@/utils/BrowserUtil";
 import DataBuild from "@/page/DataBrowse/DataBuild";
-import {json} from '@codemirror/lang-json';
 import mitt from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 export default defineComponent({
     name: 'data-browse',
@@ -281,6 +288,7 @@ export default defineComponent({
         size: useSettingStore().getPageSize,
         count: 1,
         index: undefined as IndexView | undefined,
+        isDark,
 
         // 下拉面板
         indexVisible: false,
@@ -608,8 +616,10 @@ export default defineComponent({
             }
             ElMessageBox.confirm("确定要删除这些索引，删除后将无法恢复！", "警告", {
                 confirmButtonText: '删除',
-                cancelButtonText: '取消',
-                type: 'warning'
+                cancelButtonText: '跳转到高级搜索',
+                type: 'warning',
+                draggable: true,
+                distinguishCancelAndClose: true
             }).then(() => {
                 let ids = new Array<string>();
                 this.deleteRowIndies.forEach(id => ids.push(id));
@@ -652,6 +662,32 @@ export default defineComponent({
                         message: '删除失败，' + e
                     })
                 });
+            }).catch((action: Action) => {
+                if (action === 'cancel') {
+                    // 跳转到高级查询
+                    let ids = new Array<string>();
+                    this.deleteRowIndies.forEach(id => ids.push(id));
+                    usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+                    useSeniorSearchEvent.emit({
+                        url: `/${this.index?.name}/_delete_by_query`,
+                        method: 'POST',
+                        param: JSON.stringify({
+                            query: {
+                                bool: {
+                                    must: [
+                                        {
+                                            ids: {
+                                                values: ids
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }, null, 4),
+                        execute: false
+                    });
+                    this.clearChoose();
+                }
             });
 
         },
@@ -700,13 +736,7 @@ export default defineComponent({
                     }, 1000);
                 });
                 // 当前选中重置
-                this.record = undefined as any | undefined;
-                this.recordRowIndex = 0;
-                this.recordColumnIndex = 0;
-                // 删除的行索引
-                this.deleteRowIndies = new Set<string>();
-                // 清除选中行
-                (this.$refs['vxeTable'] as any).clearCheckboxRow();
+                this.clearChoose();
             }).catch(e => {
                 ElMessage({
                     showClose: true,
@@ -726,6 +756,23 @@ export default defineComponent({
             this.should = '';
             this.mustNot = '';
             this.executeQuery();
+        },
+        jumpToSeniorSearch() {
+            if (!this.index) {
+                return;
+            }
+            // 跳转页面
+            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            // 填充数据
+            useSeniorSearchEvent.emit({
+                url: `/${this.index.name}/_search`,
+                method: 'POST',
+                param: JSON.stringify(
+                    conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size),
+                    null,
+                    4),
+                execute: true
+            })
         },
         openExportDialog() {
             // 选择了索引
@@ -787,6 +834,40 @@ export default defineComponent({
                 type: 'success',
                 message: '复制成功'
             })
+        },
+        jumpToSeniorSearchByInsert() {
+            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            useSeniorSearchEvent.emit({
+                url: `/${this.index?.name}/_doc`,
+                method: 'POST',
+                param: this.addConfig.data,
+                execute: false
+            });
+            this.addConfig.dialog = false;
+            // 清除当前选中
+            this.clearChoose();
+        },
+        jumpToSeniorSearchByUpdate() {
+            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            useSeniorSearchEvent.emit({
+                url: `/${this.index?.name}/_doc/${this.editConfig.id}`,
+                method: 'PUT',
+                param: this.editConfig.data,
+                execute: false
+            });
+            this.editConfig.dialog = false;
+            // 清除当前选中
+            this.clearChoose();
+        },
+        clearChoose() {
+            // 当前选中重置
+            this.record = undefined as any | undefined;
+            this.recordRowIndex = 0;
+            this.recordColumnIndex = 0;
+            // 删除的行索引
+            this.deleteRowIndies = new Set<string>();
+            // 清除选中行
+            (this.$refs['vxeTable'] as any).clearCheckboxRow();
         }
     }
 });
