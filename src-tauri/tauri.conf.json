@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "es-client",
-    "version": "0.1.0"
+    "version": "2.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -34,7 +34,8 @@
         "icons/logo.png",
         "icons/favicon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "xyz.esion.es-client",
+      "publisher": "esion",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -49,7 +50,10 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        }
       }
     },
     "security": {

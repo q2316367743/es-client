@@ -29,7 +29,7 @@ import JsonViewer from 'vue-json-viewer';
 import Chart from "@/entity/Chart";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
 
-import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import {httpStrategyContext} from "@/global/BeanFactory";
 
 // doT.templateSettings = {
 //     evaluate: /\{\{([\s\S]+?)\}\}/g,

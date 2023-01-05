@@ -90,7 +90,7 @@ import {json} from '@codemirror/lang-json';
 
 import mitt from '@/plugins/mitt';
 
-import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import {httpStrategyContext} from "@/global/BeanFactory";
 
 import {validateTip} from '@/utils/GlobalUtil';
 
