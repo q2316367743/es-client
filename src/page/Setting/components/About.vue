@@ -19,6 +19,7 @@
             <el-link :href="'mailto:' + data.email">{{ data.email }}</el-link>
             <span> 联系我。</span>
         </p>
+        <p>如果这个项目让你有所收获，记得 <b>Star</b> 关注哦，这对我是非常不错的鼓励与支持。</p>
         <p>
             <el-link type="primary" @click="licenseDialog = true">开源许可证</el-link>
         </p>
