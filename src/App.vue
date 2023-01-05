@@ -113,9 +113,11 @@
                    close-on-click-modal append-to-body draggable lock-scroll>
             <version-update/>
         </el-dialog>
-        <el-dialog v-model="newDialog"
+        <el-dialog v-model="newDialog" title="点击左下角版本可以查看关于、更新记录以及进行建议反馈" style="height: 90vh;"
                    close-on-click-modal append-to-body draggable lock-scroll top="5vh">
-            <setting-about />
+            <el-scrollbar height="calc(80vh - 54px)">
+                <setting-about/>
+            </el-scrollbar>
         </el-dialog>
         <el-dialog v-model="feedbackDialog" title="问题反馈" top="25vh"
                    :close-on-click-modal="false" append-to-body draggable lock-scroll>

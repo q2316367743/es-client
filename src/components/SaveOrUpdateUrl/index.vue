@@ -51,7 +51,7 @@ import Url from '@/entity/Url';
 
 import { urlService } from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
-import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import {httpStrategyContext} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
@@ -121,11 +121,7 @@ export default defineComponent({
         },
         source(newValue) {
             this.url = newValue
-            if (newValue && newValue?.id) {
-                this.isSave = false;
-            } else {
-                this.isSave = true;
-            }
+            this.isSave = !(newValue && newValue?.id);
         }
     },
     methods: {

@@ -23,6 +23,12 @@ function outDir() {
             return 'firefox/es-client';
         case 'build:server':
             return 'server/public';
+        case 'build:tauri:windows':
+            return 'dist';
+        case 'build:tauri:linux':
+            return 'dist';
+        case 'build:tauri:macos':
+            return 'dist';
         default:
             return 'dist';
     }

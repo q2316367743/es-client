@@ -1,5 +1,5 @@
-import { IndexInstance } from '@/entity/IndexInstance';
-import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import {IndexInstance} from '@/entity/IndexInstance';
+import {httpStrategyContext} from "@/global/BeanFactory";
 import IndexSaveBuild from '@/build/IndexSaveBuild';
 
 /**
@@ -17,7 +17,7 @@ export default {
         httpStrategyContext.getStrategy().all({
             method: 'POST',
             url: '_aliases',
-            data: { "actions": [{ "add": { "index": index, "alias": alias } }] }
+            data: {"actions": [{"add": {"index": index, "alias": alias}}]}
         }).then(response => {
             success(response);
         }).catch(e => {
@@ -39,7 +39,7 @@ export default {
         httpStrategyContext.getStrategy().all({
             method: 'POST',
             url: '_aliases',
-            data: { "actions": [{ "remove": { "index": index, "alias": alias } }] }
+            data: {"actions": [{"remove": {"index": index, "alias": alias}}]}
         }).then(response => {
             success(response);
         }).catch(e => {
@@ -153,7 +153,7 @@ export default {
     },
     /**
      * flush索引
-     * 
+     *
      * @param index 索引名称
      * @param success 成功回调
      * @param error 失败回调

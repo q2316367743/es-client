@@ -14,5 +14,18 @@ export default {
         document.execCommand('copy')
         // 删除创建元素
         document.body.removeChild(ele)
+    },
+
+    /**
+     * Uint8Array数组转字符串
+     * @param uint8Array Uint8Array数组
+     */
+    uint8ArrayToString(uint8Array: Uint8Array): string {
+        let dataString = "";
+        for (let i = 0; i < uint8Array.length; i++) {
+            dataString += String.fromCharCode(uint8Array[i]);
+        }
+        return dataString
+
     }
 }

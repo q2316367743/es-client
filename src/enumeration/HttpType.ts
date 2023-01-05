@@ -8,7 +8,12 @@ enum HttpType {
     /**
      * 服务器
      */
-    SERVER = 'server'
+    SERVER = 'server',
+
+    /**
+     * 桌面客户端
+     */
+    DESKTOP = 'desktop'
 
 }
 

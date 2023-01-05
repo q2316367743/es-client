@@ -16,16 +16,21 @@
     "scripts": {
         "dev": "vite --host",
         "dev:serve": "node --loader ts-node/esm -r tsconfig-paths/register server/main.ts --files && yarn dev --mode=server",
+        "dev:tauri": "vite --host --mode=desktop_windows",
         "build": "vue-tsc --noEmit && vite build",
         "build:edge": "vue-tsc --noEmit && vite build --mode=edge",
         "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
         "build:ts": "vue-tsc --noEmit && vite build --mode=tsbrowser",
         "build:server": "vue-tsc --noEmit && vite build --mode=server",
+        "build:tauri:windows": "vue-tsc --noEmit && vite build --mode=desktop_windows",
+        "build:tauri:linux": "vue-tsc --noEmit && vite build --mode=desktop_linux",
+        "build:tauri:macos": "vue-tsc --noEmit && vite build --mode=desktop_macos",
         "preview": "vite preview"
     },
     "dependencies": {
         "@codemirror/lang-json": "^6.0.1",
         "@element-plus/icons-vue": "^2.0.10",
+        "@tauri-apps/api": "^1.2.0",
         "@vueuse/core": "^9.9.0",
         "axios": "^1.2.2",
         "codemirror": "^6.0.1",
@@ -48,6 +53,7 @@
         "xe-utils": "^3.5.7"
     },
     "devDependencies": {
+        "@tauri-apps/cli": "^1.2.2",
         "@types/dot": "^1.1.5",
         "@types/echarts": "^4.9.16",
         "@types/express": "^4.17.15",

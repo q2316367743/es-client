@@ -1,4 +1,4 @@
-import httpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import {httpStrategyContext} from "@/global/BeanFactory";
 
 /**
  * 与集群相关的API
