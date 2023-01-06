@@ -76,7 +76,7 @@
                 </div>
                 <el-tooltip content="索引结构" placement="bottom" :effect="isDark ? 'dark' : 'light'">
                     <div class="item" :class="!index ? 'disable' : ''" @click="openMappingDrawer">
-                        <el-icon :size="16">
+                        <el-icon :size="16" style="margin-top: 4px;">
                             <structure-icon/>
                         </el-icon>
                     </div>
@@ -147,10 +147,9 @@
         <!-- 数据表格 -->
         <div class="content-table">
             <vxe-table border height="100%" class="es-scrollbar" :empty-text="index ? '什么也没有' : '请选择索引'"
-                       :data="records" ref="vxeTable"
-                       :loading="loading"
+                       :data="records" ref="vxeTable" :loading="loading"
                        :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
-                       :cell-class-name="cellClassName" :header-cell-class-name="() => ('rain-table-panel-header')"
+                       :header-cell-class-name="() => ('rain-table-panel-header')"
                        :sort-config="sortConfig" @sort-change="sortChange" @checkbox-all="checkboxAll"
                        @checkbox-change="checkboxChange">
                 <vxe-column type="seq" width="50" fixed="left"></vxe-column>
@@ -479,16 +478,6 @@ export default defineComponent({
                 return XEUtils.toDateString(column.cellValue, 'yyyy-MM-dd HH:ss:mm')
             }
             return column.cellValue;
-        },
-        cellClassName(data: any) {
-            // #36404f
-            if (this.recordRowIndex === data.rowIndex && this.recordColumnIndex === data.columnIndex) {
-                return 'rain-table-panel-active'
-            }
-            if (this.deleteRowIndies.has(data.rowIndex)) {
-                return 'rain-table-panel-delete';
-            }
-            return 'rain-table-panel-column';
         },
         currentChange(data: any) {
             this.record = data.row;

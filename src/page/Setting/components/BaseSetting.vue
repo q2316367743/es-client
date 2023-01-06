@@ -45,6 +45,20 @@
                 <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
             </el-select>
         </el-form-item>
+        <el-divider content-position="left">服务器模式</el-divider>
+        <el-form-item label="服务器">
+            <el-select v-model="server.mode">
+                <el-option :value="ServerModeEnum.DISABLE" label="禁用"/>
+                <el-option :value="ServerModeEnum.SERVER" label="服务器模式"/>
+                <el-option :value="ServerModeEnum.SYNC" label="仅同步"/>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="服务器地址">
+            <el-input style="width: 350px;" :disabled="server.mode === ServerModeEnum.DISABLE" v-model="server.url" placeholder="服务器模式不需要填写"/>
+        </el-form-item>
+        <el-form-item label="token">
+            <el-input style="width: 350px;" :disabled="server.mode === ServerModeEnum.DISABLE" v-model="server.token"/>
+        </el-form-item>
     </el-form>
 </template>
 <script lang="ts">
@@ -52,15 +66,21 @@ import {defineComponent} from "vue";
 import useSettingStore from "@/store/SettingStore";
 import {mapState} from "pinia";
 import {layoutMode} from "@/global/BeanFactory";
+import Constant from "@/global/Constant";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
+import ServerModeEnum from "@/enumeration/ServerModeEnum";
+import useServerStore from "@/store/ServerStore";
 
 export default defineComponent({
     computed: {
-        ...mapState(useSettingStore, ['instance'])
+        ...mapState(useSettingStore, ['instance']),
+        ...mapState(useServerStore, ['server'])
     },
     data: () => ({
         layoutMode,
-        LayoutModeEnum
+        Constant,
+        LayoutModeEnum,
+        ServerModeEnum
     }),
     created() {
         // 获取布局方式
