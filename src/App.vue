@@ -269,7 +269,7 @@ export default defineComponent({
         },
         selectMenu(index: string) {
             // 切换active
-            this.active = index;
+            this.active = index as PageNameEnum;
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
         languageCommand(command: string) {

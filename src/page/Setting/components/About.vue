@@ -46,7 +46,7 @@
         </p>
         <p>
             <span>用户手册：</span>
-            <el-link target="_blank" :href="data.docUrl">es-client</el-link>
+            <el-link target="_blank" :href="data.docUrl">语雀</el-link>
         </p>
         <div class="title-2">建议反馈</div>
         <ul>
