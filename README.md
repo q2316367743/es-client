@@ -24,6 +24,10 @@
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 - [想天浏览器独立应用](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)**（完整功能）**
 
+## 详细文档
+
+[语雀](https://www.yuque.com/baozhiyige-tewwf/ygxv4r)
+
 ## 开发
 
 ```bash
@@ -61,7 +65,3 @@ yarn dev
 - 索引管理功能
 - 语法提示与高亮
 - 。。。
-
-## 详细文档
-
-<https://www.yuque.com/baozhiyige-tewwf/ygxv4r>
