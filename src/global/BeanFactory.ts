@@ -4,7 +4,7 @@ import UrlService from "@/service/UrlService";
 import TipService from '@/service/TipService'
 
 import x2js from 'x2js';
-import {useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
+import {createGlobalState, useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
 import VersionManage from "@/plugins/VersionManage";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
@@ -41,3 +41,18 @@ export const usePageJumpEvent = useEventBus<string>('page-jump-event');
 
 // 数据存储
 export const layoutMode = useLocalStorage<string>('layoutMode', 'default');
+
+// es版本
+export const useEsVersion = createGlobalState(() => {
+    let version = '';
+
+    function setVersion(newValue: string) {
+        version = newValue;
+    }
+
+    function getVersion() {
+        return version;
+    }
+
+    return {version, setVersion, getVersion};
+})

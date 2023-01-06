@@ -1,9 +1,11 @@
 import IndexView from "@/view/index/IndexView";
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
-import { ElLoading } from 'element-plus'
+import {ElLoading} from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
+import {useEsVersion} from "@/global/BeanFactory";
+import Optional from "@/utils/Optional";
 
 const useIndexStore = defineStore('index', {
     state: () => {
@@ -51,6 +53,13 @@ const useIndexStore = defineStore('index', {
                 let unassigned_shards = health.unassigned_shards as number;
                 this.total_shards = this.active_shards + unassigned_shards;
                 this.status = health.status as string;
+                loading.setText('获取elasticsearch信息');
+                let info = await clusterApi.info();
+                //info ? info['version'] ? info['version']['number'] ? info['version']['number'] : '' : '' : ''
+                useEsVersion().setVersion(Optional.ofNullable(info)
+                    .map(e => e['version'])
+                    .map(e => e['number'])
+                    .orElse(''));
                 loading.close();
             } catch (e: any) {
                 useUrlStore().choose();
