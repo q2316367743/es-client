@@ -14,6 +14,9 @@ const logs = [
             label: LogItemEnum.ADD,
             content: '设置 - 新增布局方式切换'
         }, {
+            label: LogItemEnum.ADD,
+            content: '数据浏览 - 右侧弹框，显示索引设置和映射结构'
+        }, {
             label: LogItemEnum.UPDATE,
             content: '链接管理改版 - 表格组件改为vxe,支持链接查询、导出，筛选'
         }, {

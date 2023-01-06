@@ -6,7 +6,6 @@ import IndexFieldBuild from "./IndexFieldBuild";
 /**
  * 索引列表构造器
  * 
- * @param url 链接
  * @returns 索引数组
  */
 export default async function Builder(): Promise<Array<IndexView>> {
@@ -56,6 +55,7 @@ export default async function Builder(): Promise<Array<IndexView>> {
             state: state,
             shard,
             replica,
+            settings: indecis[key].settings,
             mapping: indecis[key].mappings,
             fields: IndexFieldBuild(indecis[key].mappings)
         });

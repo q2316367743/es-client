@@ -52,6 +52,11 @@ export default interface IndexView {
     mapping: Mapping;
 
     /**
+     * 设置
+     */
+    settings: any;
+
+    /**
      * 字段
      */
     fields: Array<Field>;

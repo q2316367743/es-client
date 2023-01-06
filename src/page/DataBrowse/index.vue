@@ -74,6 +74,13 @@
                 <div class="item" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
                 </div>
+                <el-tooltip content="索引结构" placement="bottom" :effect="isDark ? 'dark' : 'light'">
+                    <div class="item" :class="!index ? 'disable' : ''" @click="openMappingDrawer">
+                        <el-icon :size="16">
+                            <structure-icon/>
+                        </el-icon>
+                    </div>
+                </el-tooltip>
                 <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
                     <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
                         <i class="vxe-icon-eye-fill"/>
@@ -244,6 +251,24 @@
                 <el-button type="primary" @click="recordEditClick">修改</el-button>
             </template>
         </vxe-modal>
+        <!-- 索引结构展示 -->
+        <el-drawer v-model="mappingDrawer.drawer" direction="rtl" :title="index ? index.name : ''" size="50%"
+                   append-to-body>
+            <el-tabs v-model="mappingDrawer.active">
+                <el-tab-pane label="索引设置" name="settings" style="height: calc(100vh - 54px - 41px - 80px);">
+                    <el-scrollbar>
+                        <json-viewer :value="mappingDrawer.settings" :expand-depth="6" copyable sort :expanded="true"
+                                     :preview-mode="true"/>
+                    </el-scrollbar>
+                </el-tab-pane>
+                <el-tab-pane label="映射结构" name="mapping" style="height: calc(100vh - 54px - 41px - 80px);">
+                    <el-scrollbar>
+                        <json-viewer :value="mappingDrawer.mapping" :expand-depth="6" copyable sort :expanded="true"
+                                     :preview-mode="true"/>
+                    </el-scrollbar>
+                </el-tab-pane>
+            </el-tabs>
+        </el-drawer>
     </div>
 </template>
 <script lang="ts">
@@ -265,22 +290,25 @@ import Header from "@/view/Header";
 
 import IndexApi from "@/api/IndexApi";
 
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
 import conditionBuild from './ConditionBuild';
 import recordBuild from './RecordBuild';
-
 import './index.less';
 import ExportConfig from "./ExportConfig";
 import exportData from "./ExportData";
+
 import BrowserUtil from "@/utils/BrowserUtil";
 import DataBuild from "@/page/DataBrowse/DataBuild";
 import mitt from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
+import StructureIcon from "@/icon/StructureIcon.vue";
 
 export default defineComponent({
     name: 'data-browse',
     components: {
+        StructureIcon,
         ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, JsonViewer, Codemirror
     },
     data: () => ({
@@ -348,6 +376,12 @@ export default defineComponent({
             dialog: false,
             id: '',
             data: ''
+        },
+        mappingDrawer: {
+            drawer: false,
+            active: 'settings',
+            settings: {},
+            mapping: {}
         },
         extensions: [json()] as Array<any>
     }),
@@ -756,6 +790,17 @@ export default defineComponent({
             this.should = '';
             this.mustNot = '';
             this.executeQuery();
+        },
+        openMappingDrawer() {
+            if (!this.index) {
+                return;
+            }
+            this.mappingDrawer = {
+                drawer: true,
+                active: 'settings',
+                settings: this.index.settings,
+                mapping: this.index.mapping
+            }
         },
         jumpToSeniorSearch() {
             if (!this.index) {
