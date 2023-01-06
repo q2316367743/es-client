@@ -6,7 +6,7 @@ import ArrayUtil from "@/utils/ArrayUtil";
 
 const useSettingStore = defineStore('setting', {
     state: () => {
-        let setting = useLocalStorage('setting', {
+        let setting = useLocalStorage<Setting>('setting', {
             defaultViewer: 2,
             defaultReplica: 1,
             defaultShard: 5,

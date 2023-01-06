@@ -4,7 +4,7 @@ import UrlService from "@/service/UrlService";
 import TipService from '@/service/TipService'
 
 import x2js from 'x2js';
-import {useDark, useEventBus, useToggle} from "@vueuse/core";
+import {useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
 import VersionManage from "@/plugins/VersionManage";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
@@ -38,3 +38,6 @@ export const toggleDark = useToggle(isDark);
 export const useSeniorSearchEvent = useEventBus<SeniorSearchParam>("senior-search-event");
 // 页面跳转 - 事件总线
 export const usePageJumpEvent = useEventBus<string>('page-jump-event');
+
+// 数据存储
+export const layoutMode = useLocalStorage<string>('layoutMode', 'default');

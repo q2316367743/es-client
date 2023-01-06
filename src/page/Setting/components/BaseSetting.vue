@@ -2,8 +2,8 @@
     <el-form style="margin-top: 10px;" label-width="160px" label-position="top">
         <el-divider content-position="left">布局方式</el-divider>
         <el-select v-model="layoutMode">
-            <el-option value="default" label="默认" />
-            <el-option value="classic" label="经典" />
+            <el-option :value="LayoutModeEnum.DEFAULT" label="默认"/>
+            <el-option :value="LayoutModeEnum.CLASSIC" label="经典"/>
         </el-select>
         <el-divider content-position="left">新建索引</el-divider>
         <el-form-item :label="$t('setting.base.default_shard_number')">
@@ -51,21 +51,20 @@
 import {defineComponent} from "vue";
 import useSettingStore from "@/store/SettingStore";
 import {mapState} from "pinia";
+import {layoutMode} from "@/global/BeanFactory";
+import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 
 export default defineComponent({
     computed: {
         ...mapState(useSettingStore, ['instance'])
     },
     data: () => ({
-        layoutMode: 'default'
+        layoutMode,
+        LayoutModeEnum
     }),
     created() {
-        let attribute = document.body.getAttribute('layout-mode');
-        if (!attribute || attribute === '') {
-            document.body.setAttribute('layout-mode', this.layoutMode);
-        }else {
-            this.layoutMode = attribute;
-        }
+        // 获取布局方式
+        document.body.setAttribute('layout-mode', this.layoutMode);
     },
     watch: {
         layoutMode(newValue: string) {

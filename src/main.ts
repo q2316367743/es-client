@@ -5,6 +5,7 @@ import i18n from '@/i18n';
 
 // 引入样式
 import '@/less/theme.less';
+import '@/less/layout.less';
 import '@/less/main.less';
 import '@/less/post.css'
 import "element-plus/theme-chalk/el-message.css";
