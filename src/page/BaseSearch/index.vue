@@ -206,9 +206,12 @@ export default defineComponent({
             // 重置字段
             for (let index of this.indices) {
                 if (index.name === this.index) {
-                    return index.fields.sort((a, b) => {
+                    return [...index.fields.sort((a, b) => {
                         return a.name.localeCompare(b.name, "zh-CN");
-                    });
+                    }), {
+                        name: '_doc._id',
+                        type: 'text'
+                    }];
                 }
             }
             return new Array<Field>();
