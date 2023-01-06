@@ -147,11 +147,11 @@
         <!-- 数据表格 -->
         <div class="content-table">
             <vxe-table border height="100%" class="es-scrollbar" :empty-text="index ? '什么也没有' : '请选择索引'"
-                       :data="records" ref="vxeTable" :loading="loading"
+                       :data="records" ref="vxeTable" :loading="loading" :menu-config="menuConfig"
                        :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
-                       :header-cell-class-name="() => ('rain-table-panel-header')"
-                       :sort-config="sortConfig" @sort-change="sortChange" @checkbox-all="checkboxAll"
-                       @checkbox-change="checkboxChange">
+                       :header-cell-class-name="() => ('rain-table-panel-header')" :sort-config="sortConfig"
+                       @menu-click="menuClick" @sort-change="sortChange" @checkbox-all="checkboxAll"
+                       @checkbox-change="checkboxChange" @cell-menu="cellMenu">
                 <vxe-column type="seq" width="50" fixed="left"></vxe-column>
                 <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="expand" width="80">
@@ -303,6 +303,7 @@ import DataBuild from "@/page/DataBrowse/DataBuild";
 import mitt from "@/plugins/mitt";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
+import {CellMenuEventParams} from "vxe-table/types/table";
 
 export default defineComponent({
     name: 'data-browse',
@@ -341,6 +342,11 @@ export default defineComponent({
         // 删除的行索引
         deleteRowIndies: new Set<string>(),
 
+        menuRecord: undefined as {
+            field: string,
+            value: string
+        } | undefined,
+
         // vxe表格相关配置
         loading: false,
         tableTooltipConfig: {
@@ -351,7 +357,8 @@ export default defineComponent({
             }
         } as VxeTablePropTypes.TooltipConfig,
         columnConfig: {
-            resizable: true
+            resizable: true,
+            isCurrent: true
         },
         rowConfig: {
             isCurrent: true
@@ -367,6 +374,8 @@ export default defineComponent({
             config: 1,
             fields: new Array<string>()
         } as ExportConfig,
+
+        // 对话框
         addConfig: {
             dialog: false,
             data: ''
@@ -401,6 +410,87 @@ export default defineComponent({
                 indexMap.set(record['_id'], record);
             }
             return indexMap;
+        },
+        menuConfig(): VxeTablePropTypes.MenuConfig {
+            if (!this.index) {
+                return {
+                    body: {
+                        options: [[{
+                            code: 'null',
+                            name: '选择索引',
+                            disabled: true
+                        }]]
+                    }
+                };
+            }
+            let body = {
+                options: [[{
+                    code: 'copy',
+                    name: '复制',
+                    prefixIcon: 'vxe-icon-copy',
+                }], [{
+                    code: 'add',
+                    name: '新增',
+                    prefixIcon: 'vxe-icon-question-circle-fill color-red'
+                }, {
+                    code: 'update',
+                    name: '修改',
+                    prefixIcon: 'vxe-icon-add'
+                }, {
+                    code: 'delete',
+                    name: '删除',
+                    prefixIcon: 'vxe-icon-delete'
+                }]]
+            } as VxeTableDefines.MenuOptions;
+
+            let last = [] as VxeTableDefines.MenuFirstOption[];
+
+            // 确定筛选
+            for (let name of ['must', 'should', 'must not']) {
+                last.push({
+                    code: `null-${name}`,
+                    name: `筛选 - ${name}`,
+                    children: [{
+                        code: `query|${name}|=`,
+                        name: '等于'
+                    }, {
+                        code: `query|${name}|>`,
+                        name: '大于'
+                    }, {
+                        code: `query|${name}|<`,
+                        name: '小于'
+                    }, {
+                        code: `query|${name}|>=`,
+                        name: '大于等于'
+                    }, {
+                        code: `query|${name}|<=`,
+                        name: '小于等于'
+                    }]
+                });
+            }
+            // 排序
+            last.push({
+                code: 'sort',
+                name: '排序',
+                prefixIcon: 'vxe-icon-question-circle-fill color-blue',
+                children: [{
+                    code: 'clearSort',
+                    name: '清除排序'
+                }, {
+                    code: 'sortAsc',
+                    name: '升序',
+                    prefixIcon: 'vxe-icon-question-circle-fill color-orange'
+                }, {
+                    code: 'sortDesc',
+                    name: '倒序',
+                    prefixIcon: 'vxe-icon-question-circle-fill color-orange'
+                }]
+            });
+
+            body.options?.push(last)
+            return {
+                body
+            } as VxeTablePropTypes.MenuConfig
         }
     },
     watch: {
@@ -522,6 +612,43 @@ export default defineComponent({
         checkboxChange(param: VxeTableDefines.CheckboxChangeEventParams) {
             this.deleteRowIndies = new Set<string>();
             param.$table.getCheckboxRecords().map(e => e['_id']).forEach(id => this.deleteRowIndies.add(id));
+        },
+        menuClick(param: VxeTableDefines.MenuClickParams) {
+            let code = param.menu.code!;
+            if (code === 'copy') {
+                console.log('复制')
+            } else if (code === 'add') {
+                console.log('新增')
+            } else if (code === 'update') {
+                console.log('更新')
+            } else if (code === 'delete') {
+                console.log('删除')
+            } else if (code.startsWith('query')) {
+                // 查询
+                let codes = code.split('|');
+                let express = `${this.menuRecord?.field} ${codes[2]} '${this.menuRecord?.value}'`;
+                switch (codes[1]) {
+                    case 'must':
+                        this.must = express;
+                        break;
+                    case 'should':
+                        this.should = express;
+                        break;
+                    case 'must not':
+                        this.mustNot = express;
+                        break;
+                }
+                this.executeQuery(false);
+                console.log(`${codes[1]} - ${express}'`)
+            }else {
+                console.log(code)
+            }
+        },
+        cellMenu(param: VxeTableDefines.CellMenuEventParams) {
+            this.menuRecord = {
+                field: param.column.field,
+                value: param.cell.textContent as string
+            };
         },
         // <----------------------------------- 表格事件 ----------------------------------<
 

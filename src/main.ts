@@ -12,9 +12,11 @@ import "element-plus/theme-chalk/el-message.css";
 import "element-plus/theme-chalk/el-message-box.css";
 import "element-plus/theme-chalk/el-loading.css";
 
-import VXETable from 'vxe-table'
+// VXETable导入
+import VXETable from 'vxe-table';
 import 'vxe-table/lib/style.css'
 
+// 插件
 createApp(App)
     .use(createPinia())
     .use(i18n)
