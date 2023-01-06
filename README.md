@@ -2,7 +2,7 @@
 
 
 [![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client)
-[![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://gitee.com/qiaoshengda/es-client/)
+[![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
 [![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
 [![star](https://img.shields.io/badge/edge-v2.2.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 [![star](https://img.shields.io/badge/firefox-v2.2.0-%23ff3847)](https://addons.mozilla.org/addon/es-client/)
