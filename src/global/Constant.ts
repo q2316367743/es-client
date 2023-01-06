@@ -244,7 +244,7 @@ export default {
     // @ts-ignore
     mode: import.meta.env.VITE_MODE,
     homeUrl: 'https://blog.esion.xyz',
-    docUrl: 'https://docs.esion.xyz/project-1/doc-1/',
+    docUrl: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r',
     repositories: [{
         name: "Gitee",
         url: "https://gitee.com/qiaoshengda/es-client"

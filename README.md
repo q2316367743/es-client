@@ -64,4 +64,4 @@ yarn dev
 
 ## 详细文档
 
-<https://docs.esion.xyz/project-1/doc-1/>
+<https://www.yuque.com/baozhiyige-tewwf/ygxv4r>
