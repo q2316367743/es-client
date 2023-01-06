@@ -1,6 +1,32 @@
-import {Dependency, Log, Repository} from "@/view/Data";
+import {Log, LogItemEnum, Repository} from "@/view/Data";
 
 const logs = [
+    {
+        version: '2.2.0',
+        time: '2022-01-06',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '索引操作页面新增套转到高级查询'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '更新后自动展示更新提示，第一次安装会展示关于页面'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '链接管理改版 - 表格组件改为vxe,支持链接查询、导出，筛选'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '关于、更新、问题反馈页面改版'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '查询条件没有值不显示清空按钮'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '高级查询表格组件改为vxe，支持数据下载，字段筛选'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '高级查询表格视图无法下滑'
+        }]
+    },
     {
         version: "2.1.1",
         time: "2023-01-03",
@@ -206,12 +232,6 @@ const logs = [
     }
 ] as Log[];
 
-const dependencies = [{
-    name: '@codemirror/lang-json',
-    version: '^6.0.1',
-    home: '',
-    licence: ''
-}] as Dependency[];
 
 export default {
     name: "es-client",
@@ -234,6 +254,17 @@ export default {
     }, {
         name: 'GitLink',
         url: 'https://www.gitlink.org.cn/m17762618644/es-client'
+    }] as Repository[],
+    // 分发平台
+    distributes: [{
+        name: 'Edge',
+        url: 'https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo'
+    }, {
+        name: 'Firefox',
+        url: 'https://addons.mozilla.org/addon/es-client/'
+    }, {
+        name: '想天浏览器',
+        url: 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w'
     }] as Repository[],
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,

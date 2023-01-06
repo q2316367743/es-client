@@ -19,7 +19,20 @@
             <el-link :href="'mailto:' + data.email">{{ data.email }}</el-link>
             <span> 联系我。</span>
         </p>
-        <p>如果这个项目让你有所收获，记得 <b>Star</b> 关注哦，这对我是非常不错的鼓励与支持。</p>
+        <p><span>如果这个项目让你有所收获，记得 </span>
+            <b>Star</b>
+            <span>（</span>
+            <template v-for="(repository, index) in data.repositories">
+                <el-link target="_blank" :href="repository.url">{{ repository.name }}</el-link>
+                <span v-if="index < data.repositories.length - 1"> | </span>
+            </template>
+            <span>）关注哦，或者点个赞（</span>
+            <template v-for="(distribute, index) in data.distributes">
+                <el-link target="_blank" :href="distribute.url">{{ distribute.name }}</el-link>
+                <span v-if="index < data.distributes.length - 1"> | </span>
+            </template>
+            <span>），这对我是非常不错的鼓励与支持。</span>
+        </p>
         <p>
             <el-link type="primary" @click="licenseDialog = true">开源许可证</el-link>
         </p>
@@ -30,6 +43,10 @@
                 <el-link target="_blank" :href="repository.url">{{ repository.name }}</el-link>
                 <span v-if="index < data.repositories.length - 1"> | </span>
             </template>
+        </p>
+        <p>
+            <span>用户手册：</span>
+            <el-link target="_blank" :href="data.docUrl">es-client</el-link>
         </p>
         <div class="title-2">建议反馈</div>
         <ul>
