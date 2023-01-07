@@ -87,6 +87,7 @@
                 cursor: pointer;
                 display: none;
             }
+
             &:hover {
                 .clear {
                     display: block;
@@ -110,27 +111,48 @@
     }
 }
 
-.data-browse-list-item {
-    width: 374px;
-    display: flex;
-    justify-content: space-between;
-    height: 40px;
-    line-height: 40px;
-    border-bottom: 1px solid var(--hover-color);
-    cursor: pointer;
-    overflow: hidden;
-    padding-left: 16px;
-
-    &:hover {
-        background-color: var(--bg-color);
-    }
-}
 
 // 下拉列表
 .data-browse-pull-down {
     .vxe-pulldown--panel {
         left: -220px;
         box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    }
+}
+
+.data-browse-pull-down-panel {
+    width: 400px;
+    height: 400px;
+    background-color: var(--container-color);
+
+    .data-browse-pull-down-index {
+        width: 400px;
+        height: 400px;
+        .data-browse-pull-down-search {
+            width: 390px;
+            padding-left: 10px;
+        }
+        .data-browse-pull-down-data {
+            height: 358px;
+            width: 400px;
+            margin-top: 5px;
+        }
+    }
+
+    .data-browse-list-item {
+        width: 400px;
+        display: flex;
+        justify-content: space-between;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid var(--hover-color);
+        cursor: pointer;
+        overflow: hidden;
+        padding-left: 16px;
+
+        &:hover {
+            background-color: var(--hover-color);
+        }
     }
 }
 
@@ -168,6 +190,7 @@
 
 .data-browse-expand {
     position: relative;
+
     .copy {
         position: absolute;
         top: 6px;

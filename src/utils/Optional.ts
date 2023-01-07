@@ -15,7 +15,7 @@ export default class Optional<T> {
     }
 
     public orElse(value: T): T {
-        return this.value || value;
+        return this.value == undefined ? value : this.value;
     }
 
     public get(): T | undefined {

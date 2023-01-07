@@ -2,6 +2,7 @@
     <div id="data-browse">
         <!-- 顶部按钮 -->
         <div class="option">
+            <!-- 左侧条件 -->
             <div class="left">
                 <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
                     <i class="vxe-icon-arrow-double-left"/>
@@ -48,9 +49,11 @@
                     <i class="vxe-icon-edit"/>
                 </div>
             </div>
+            <!-- 右侧条件 -->
             <div class="right">
+                <!-- 选择索引 -->
                 <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browse-pull-down">
-                    <div class="item" style="display: flex;" @click="indexVisible = !indexVisible;">
+                    <div class="item" style="display: flex;" @click="showIndex">
                         <div v-if="!index">未选择索引</div>
                         <div v-else>{{ index.name }}</div>
                         <el-icon :size="20" style="margin: 2px;">
@@ -59,21 +62,28 @@
                         </el-icon>
                     </div>
                     <template #dropdown>
-                        <el-empty v-if="indicesShow.length === 0" description="请选择链接"/>
-                        <el-scrollbar v-else height="400px" style="width: 400px">
-                            <div v-for="index in indicesShow" class="data-browse-list-item"
-                                 @click="indexChange(index)">
-                                <span>{{ index.name }}</span>
-                                <span v-if="index.alias && index.alias.length > 0">
-                                    <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
-                                </span>
+                        <div class="data-browse-pull-down-panel">
+                            <el-empty v-if="indices.length === 0" description="请选择链接"/>
+                            <div class="data-browse-pull-down-index" v-else>
+                                <el-input v-model="indexFilter" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch" clearable/>
+                                <el-scrollbar height="358px" class="data-browse-pull-down-data">
+                                    <div v-for="index in indicesShow" class="data-browse-list-item"
+                                         @click="indexChange(index)">
+                                        <span>{{ index.name }}</span>
+                                        <span v-if="index.alias && index.alias.length > 0">
+                                            <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
+                                        </span>
+                                    </div>
+                                </el-scrollbar>
                             </div>
-                        </el-scrollbar>
+                        </div>
                     </template>
                 </vxe-pulldown>
+                <!-- 打印 -->
                 <div class="item" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
                 </div>
+                <!-- 索引结构 -->
                 <el-tooltip content="索引结构" placement="bottom" :effect="isDark ? 'dark' : 'light'">
                     <div class="item" :class="!index ? 'disable' : ''" @click="openMappingDrawer">
                         <el-icon :size="16" style="margin-top: 4px;">
@@ -81,11 +91,13 @@
                         </el-icon>
                     </div>
                 </el-tooltip>
+                <!-- 跳转到高级查询 -->
                 <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
                     <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
                         <i class="vxe-icon-eye-fill"/>
                     </div>
                 </el-tooltip>
+                <!-- 操作 -->
                 <el-dropdown trigger="click">
                     <div class="item">
                         <el-icon>
@@ -307,6 +319,7 @@ import StructureIcon from "@/icon/StructureIcon.vue";
 import Optional from "@/utils/Optional";
 import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
+import {stringContain} from "@/utils/SearchUtil";
 
 
 export default defineComponent({
@@ -320,6 +333,7 @@ export default defineComponent({
         size: useSettingStore().getPageSize,
         count: 1,
         index: undefined as IndexView | undefined,
+        indexFilter: '',
         isDark,
 
         // 下拉面板
@@ -405,15 +419,14 @@ export default defineComponent({
                 return new Array<IndexView>();
             }
             // 此处是索引排序
-            return this.indices.sort((e1, e2) => {
-                return e1.name.localeCompare(e2.name, 'zh');
-            })
+            return this.indices
+                .filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter))
+                .sort((e1, e2) => {
+                    return e1.name.localeCompare(e2.name, 'zh');
+                })
         },
         recordMap() {
             return ArrayUtil.map(this.records, '_id');
-        },
-        mappingMap() {
-            return Optional.ofNullable(this.headers).map(e => ArrayUtil.map(e, 'field')).get()
         },
         menuConfig(): VxeTablePropTypes.MenuConfig {
             if (!this.index) {
@@ -610,9 +623,9 @@ export default defineComponent({
                 // 排序
                 if (code === 'sort-clear') {
                     this.orderBy = '';
-                }else if (code === 'sort-asc') {
+                } else if (code === 'sort-asc') {
                     this.orderBy = `${this.menuRecord.field}`
-                }else if (code === 'sort-desc') {
+                } else if (code === 'sort-desc') {
                     this.orderBy = `${this.menuRecord.field} desc`
                 }
                 this.executeQuery(false);
@@ -937,6 +950,18 @@ export default defineComponent({
             this.deleteRowIndies = new Set<string>();
             // 清除选中行
             (this.$refs['vxeTable'] as any).clearCheckboxRow();
+        },
+        showIndex() {
+            this.indexVisible = !this.indexVisible;
+            if (this.indexVisible) {
+                // 聚焦
+                if (this.indices.length > 0) {
+                    this.$nextTick(() => {
+                        let input = this.$refs['dataBrowsePullDownSearch'] as HTMLInputElement;
+                        input.focus();
+                    })
+                }
+            }
         }
     }
 });
