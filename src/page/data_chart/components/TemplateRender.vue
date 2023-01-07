@@ -84,7 +84,7 @@ export default defineComponent({
         },
         search() {
             if (this.chart!.method === 'GET') {
-                httpStrategyContext.getStrategy().all({
+                httpStrategyContext.getStrategy().es<any>({
                     url: this.chart!.path,
                     method: this.chart!.method,
                     params: this.chart!.params
@@ -101,7 +101,7 @@ export default defineComponent({
                         ElMessage.error('JSON格式化错误');
                     }
                 }
-                httpStrategyContext.getStrategy().all({
+                httpStrategyContext.getStrategy().es<any>({
                     url: this.chart!.path,
                     method: this.chart!.method,
                     data

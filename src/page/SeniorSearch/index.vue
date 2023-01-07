@@ -165,7 +165,7 @@ export default defineComponent({
         async search() {
             if (await validateTip(this.method, this.link)) {
                 if (this.method === 'GET') {
-                    httpStrategyContext.getStrategy().all({
+                    httpStrategyContext.getStrategy().es<any>({
                         url: this.link,
                         method: this.method,
                         params: getParamBuild(this.get_params)
@@ -188,7 +188,7 @@ export default defineComponent({
                         this.result = {};
                         return;
                     }
-                    httpStrategyContext.getStrategy().all({
+                    httpStrategyContext.getStrategy().es<any>({
                         url: this.link,
                         method: this.method,
                         data: data

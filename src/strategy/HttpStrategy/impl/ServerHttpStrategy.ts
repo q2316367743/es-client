@@ -2,39 +2,62 @@ import HttpStrategy from "@/strategy/HttpStrategy/HttpStrategy";
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import HttpCommonHandle from "@/strategy/HttpStrategy/HttpCommonHandle";
+import {esHandle, serverHandle} from "@/strategy/HttpStrategy/HttpCommonHandle";
 
-interface Result {
+interface Result<T> {
 
     success: boolean;
 
-    data: any
+    data: T | string
 
 }
 
 export default class ServerHttpStrategy implements HttpStrategy {
 
-    all(config: HttpStrategyConfig): Promise<any> {
-        HttpCommonHandle(config);
-        return this.base(config);
+    es(config: HttpStrategyConfig): Promise<any> {
+        esHandle(config);
+        return this.fetch(config);
     }
 
-    base(config: HttpStrategyConfig): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    fetch<T>(config: HttpStrategyConfig): Promise<T> {
+        serverHandle(config);
+        return new Promise<T>((resolve, reject) => {
             axios({
-                url: 'http://localhost:3000/api/http',
+                url: '/api/fetch',
                 data: config,
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).then((data) => {
-                let result = data.data as Result;
+                let result = data.data as Result<T>;
                 if (result.success) {
-                    resolve(result.data);
+                    resolve(result.data as T);
                 }else {
                     ElMessage({
                         showClose: true,
-                        message: result.data,
+                        message: result.data as string,
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
+                    reject(result.data);
+                }
+            }).catch(e => {
+                reject(e);
+            })
+        });
+    }
+
+    server<T>(config: HttpStrategyConfig): Promise<T> {
+        serverHandle(config);
+        return new Promise<T>((resolve, reject) => {
+            axios(config).then((data) => {
+                let result = data.data as Result<T>;
+                if (result.success) {
+                    resolve(result.data as T);
+                }else {
+                    ElMessage({
+                        showClose: true,
+                        message: result.data as string,
                         type: 'error',
                         duration: 5 * 1000
                     });

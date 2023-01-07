@@ -14,7 +14,7 @@ export default {
      * @param error 失败回调
      */
     new_alias(index: string, alias: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'POST',
             url: '_aliases',
             data: {"actions": [{"add": {"index": index, "alias": alias}}]}
@@ -36,7 +36,7 @@ export default {
      * @param error 失败回调
      */
     remove_alias(index: string, alias: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'POST',
             url: '_aliases',
             data: {"actions": [{"remove": {"index": index, "alias": alias}}]}
@@ -57,7 +57,7 @@ export default {
      * @param error 失败回调
      */
     _refresh(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'POST',
             url: `${index}/_refresh`,
         }).then(response => {
@@ -77,7 +77,7 @@ export default {
      * @param error 失败回调
      */
     save(data: IndexInstance, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'PUT',
             url: data.name,
             data: IndexSaveBuild(data)
@@ -98,7 +98,7 @@ export default {
      * @param error 失败回调
      */
     remove(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'DELETE',
             url: index,
         }).then(response => {
@@ -118,7 +118,7 @@ export default {
      * @param error 失败回调
      */
     _close(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'POST',
             url: `${index}/_close`,
         }).then(response => {
@@ -138,7 +138,7 @@ export default {
      * @param error 失败回调
      */
     _open(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'POST',
             url: `${index}/_open`,
         }).then(response => {
@@ -159,7 +159,7 @@ export default {
      * @param error 失败回调
      */
     _flush(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().all({
+        httpStrategyContext.getStrategy().es<any>({
             method: 'POST',
             url: `${index}/_flush`,
         }).then(response => {
@@ -174,7 +174,7 @@ export default {
     },
 
     _search(index: string, data?: any): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             url: `/${index}/_search`,
             method: "POST",
             data: data || {}
@@ -182,7 +182,7 @@ export default {
     },
 
     _insert(index: string, data: string): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             url: `/${index}/_doc`,
             method: "POST",
             headers: {
@@ -192,7 +192,7 @@ export default {
         })
     },
     _delete_by_query(index: string, data: any): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             url: `/${index}/_delete_by_query`,
             method: "POST",
             headers: {
@@ -202,7 +202,7 @@ export default {
         })
     },
     _update(index: string, id: string, data: any): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             url: `/${index}/_doc/${id}`,
             method: "PUT",
             headers: {

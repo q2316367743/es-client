@@ -2,8 +2,9 @@ import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
+import useServerStore from "@/store/ServerSettingStore";
 
-export default function HttpCommonHandle(config: HttpStrategyConfig): HttpStrategyConfig {
+export function esHandle(config: HttpStrategyConfig): HttpStrategyConfig {
 // 基础链接每次动态取值
     config.baseURL = useUrlStore().current;
     if (!config.baseURL || config.baseURL === '') {
@@ -28,5 +29,14 @@ export default function HttpCommonHandle(config: HttpStrategyConfig): HttpStrate
     }
     // 设置超时时间
     config.timeout = useSettingStore().getTimeout
+    return config;
+}
+
+export function serverHandle(config: HttpStrategyConfig): HttpStrategyConfig {
+    let server = useServerStore().getServer;
+    config.baseURL = server.url;
+    config.headers = {
+        token: server.token
+    }
     return config;
 }

@@ -11,7 +11,7 @@ export default {
      * @param error 失败回调
      */
     info(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/'
         });
@@ -21,7 +21,7 @@ export default {
      * 
      */
     _cluster_state(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_cluster/state'
         })
@@ -31,37 +31,37 @@ export default {
      * 
      */
     _stats(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_stats'
         })
     },
     _nodes_stats(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_nodes/stats'
         })
     },
     _nodes(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_nodes'
         })
     },
     _nodes_plugins(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_nodes/plugins'
         })
     },
     _cluster_health(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_cluster/health'
         })
     },
     _template(): Promise<any> {
-        return httpStrategyContext.getStrategy().all({
+        return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_template'
         })

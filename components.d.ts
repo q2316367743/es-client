@@ -49,7 +49,7 @@ declare module '@vue/runtime-core' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
     Mit: typeof import('./src/components/License/Mit.vue')['default']
-    SaveOrUpdateUrl: typeof import('./src/components/SaveOrUpdateUrl/index.vue')['default']
+    SaveOrUpdateUrl: typeof import('./src/module/SaveOrUpdateUrl/index.vue')['default']
     TableViewer: typeof import('./src/components/TableViewer/index.vue')['default']
   }
   export interface ComponentCustomProperties {

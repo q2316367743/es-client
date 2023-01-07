@@ -48,7 +48,7 @@ import Url from "@/entity/Url";
 
 // 组件
 import JsonDialog from "@/components/JsonDialog.vue";
-import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
+import SaveOrUpdateUrl from '@/module/SaveOrUpdateUrl/index.vue';
 
 import {urlService} from "@/global/BeanFactory";
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -60,6 +60,7 @@ interface Params {
 }
 
 export default defineComponent({
+    name: 'setting-url',
     components: {JsonDialog, SaveOrUpdateUrl},
     data: () => ({
         condition: {

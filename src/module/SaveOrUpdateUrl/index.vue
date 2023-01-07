@@ -182,7 +182,7 @@ export default defineComponent({
             let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
             urlForm.validate((valid) => {
                 if (valid) {
-                    httpStrategyContext.getStrategy().base({
+                    httpStrategyContext.getStrategy().fetch<any>({
                         baseURL: this.url.value,
                         url: '/',
                         method: 'GET',

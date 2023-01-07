@@ -156,7 +156,7 @@ import en from 'element-plus/lib/locale/lang/en'
 // 引入页面组件
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/icon/Translate.vue";
-import SaveOrUpdateUrl from '@/components/SaveOrUpdateUrl/index.vue';
+import SaveOrUpdateUrl from '@/module/SaveOrUpdateUrl/index.vue';
 // 模块
 import Info from '@/module/info/index.vue';
 import VersionUpdate from "@/module/VersionUpdate/index.vue";

@@ -4,7 +4,7 @@ import HttpStrategy from "../HttpStrategy";
 import HttpStrategyConfig from "../HttpStrategyConfig";
 
 import {ElMessage} from 'element-plus'
-import HttpCommonHandle from "@/strategy/HttpStrategy/HttpCommonHandle";
+import {esHandle, serverHandle} from "@/strategy/HttpStrategy/HttpCommonHandle";
 
 export default class BrowserHttpStrategy implements HttpStrategy {
 
@@ -31,13 +31,18 @@ export default class BrowserHttpStrategy implements HttpStrategy {
         )
     }
 
-    all(config: HttpStrategyConfig): Promise<any> {
-        HttpCommonHandle(config);
-        return this.base(config);
+    es(config: HttpStrategyConfig): Promise<any> {
+        esHandle(config);
+        return this.fetch(config);
     }
 
-    base(config: HttpStrategyConfig): Promise<any> {
+    fetch<T>(config: HttpStrategyConfig): Promise<T> {
         return this.instance(config);
+    }
+
+    server<T>(config: HttpStrategyConfig): Promise<T> {
+        serverHandle(config);
+        return this.fetch(config);
     }
 
 }
