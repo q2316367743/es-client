@@ -3,6 +3,7 @@
         <!-- 上面的搜索条件 -->
         <div class="home-option">
             <div style="display: flex">
+                <!-- 输入框 -->
                 <el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')"
                           style="width: 300px;height: 32px;" @input="search" clearable></el-input>
                 <el-select v-model="condition.order" :placeholder="$t('home.order_placeholder')"
@@ -23,9 +24,18 @@
             </el-button>
         </div>
         <!-- 索引容器 -->
-        <index-container :indices="showIndices" v-loading="indexLoading" @open-dialog="index_open_dialog"/>
+        <div class="home-container">
+            <el-scrollbar>
+                <vxe-list :loading="indexLoading" :data="showIndices" :auto-resize="true" height="100%">
+                    <template #default="{ items }">
+                        <index-item v-for="item in items" :index="item" @open-dialog="index_open_dialog"/>
+                    </template>
+                </vxe-list>
+            </el-scrollbar>
+        </div>
         <!-- 返回顶部 -->
-        <el-backtop :right="40" :bottom="60" target=".index-container"/>
+        <el-backtop :right="40" :bottom="60" target=".home-container .el-scrollbar__wrap"
+                    v-show="showTop"/>
         <!-- 新增索引 -->
         <el-dialog :title="$t('home.new_index.self')" v-model="indexDialog" width="850px">
             <el-form>
@@ -100,7 +110,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, Ref, ref} from 'vue';
 import {mapState} from 'pinia';
 import {ElMessage} from 'element-plus';
 
@@ -113,7 +123,6 @@ import {IndexInstance, Property} from '@/entity/IndexInstance';
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
-import IndexContainer from './components/IndexContainer.vue';
 import JsonDialog from "@/components/JsonDialog.vue";
 
 import mitt from '@/plugins/mitt';
@@ -124,11 +133,12 @@ import {stringContain} from "@/utils/SearchUtil";
 import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import StrUtil from "@/utils/StrUtil";
+import {watchThrottled} from "@vueuse/core";
 
 
 export default defineComponent({
     name: 'Home',
-    components: {IndexItem, IndexContainer, JsonDialog},
+    components: {IndexItem, JsonDialog},
     data: () => {
         return {
             // 根据条件过滤后的索引
@@ -139,8 +149,9 @@ export default defineComponent({
                 name: "",
                 order: "NAME_ASC",
                 // 0不处理，1开启，2关闭
-                state: useSettingStore().getHomeSearchState
+                state: 0
             },
+            lastSearchTime: 0,
             // 定时器
             interval: {} as NodeJS.Timer | null,
             // 列表加载中
@@ -159,7 +170,8 @@ export default defineComponent({
             // 索引的详情对话框
             indexItemDialog: false,
             indexItemTitle: '',
-            indexItemData: {} as any
+            indexItemData: {} as any,
+            showTop: true
         };
     },
     computed: {
@@ -179,7 +191,7 @@ export default defineComponent({
                 dialog: false,
                 name: "",
                 order: "NAME_ASC",
-                state: useSettingStore().getHomeSearchState
+                state:0
             }
             // 充值页面
             this.indexItemDialog = false;
@@ -193,7 +205,7 @@ export default defineComponent({
                 dialog: false,
                 name: "",
                 order: "NAME_ASC",
-                state: useSettingStore().getHomeSearchState
+                state: 0
             }
             // 充值页面
             this.indexItemDialog = false;
@@ -207,48 +219,63 @@ export default defineComponent({
          * 基于当前索引数组进行过滤
          */
         search() {
+            let now = new Date().getTime();
+            if (now - this.lastSearchTime < 500) {
+                // 限流500ms
+                return;
+            }
+            this.lastSearchTime = now;
+            this.$nextTick(() => this.executeSearch());
+        },
+        executeSearch() {
+            console.log('执行')
             this.indexLoading = true;
-            this.showIndices = this.indices.filter((item) => {
-                return stringContain(item.name, this.condition.name);
-            }).filter(e => this.condition.state === 0 ||
-                (this.condition.state === 1 && e.state === 'open') ||
-                (this.condition.state === 2 && e.state === 'close'))
-                .filter(e => useSettingStore().getHomeExcludeIndices.length === 0 ||
-                    !StrUtil.matchAll(e.name, useSettingStore().getHomeExcludeIndices));
+            let showIndices = this.indices;
+            if (this.condition.name !== '') {
+                showIndices = showIndices.filter((item) => {
+                    return stringContain(item.name, this.condition.name);
+                });
+            }
+            if (this.condition.state > 0 ) {
+                showIndices = showIndices.filter(e =>
+                    (this.condition.state === 1 && e.state === 'open') ||
+                    (this.condition.state === 2 && e.state === 'close'));
+            }
             // 排序
             switch (this.condition.order) {
                 case "NAME_ASC":
-                    this.showIndices = this.showIndices.sort((a, b) => {
+                    showIndices = showIndices.sort((a, b) => {
                         return a.name.localeCompare(b.name, "zh-CN");
                     });
                     break;
                 case "NAME_DESC":
-                    this.showIndices = this.showIndices.sort((a, b) => {
+                    showIndices = showIndices.sort((a, b) => {
                         return b.name.localeCompare(a.name, "zh-CN");
                     });
                     break;
                 case "SIZE_ASC":
-                    this.showIndices = this.showIndices.sort((a, b) => {
+                    showIndices = showIndices.sort((a, b) => {
                         return a.original_size - b.original_size;
                     });
                     break;
                 case "SIZE_DESC":
-                    this.showIndices = this.showIndices.sort((a, b) => {
+                    showIndices = showIndices.sort((a, b) => {
                         return b.original_size - a.original_size;
                     });
                     break;
                 case "DOC_ASC":
-                    this.showIndices = this.showIndices.sort((a, b) => {
+                    showIndices = showIndices.sort((a, b) => {
                         return a.doc_count - b.doc_count;
                     });
                     break;
                 case "DOC_DESC":
-                    this.showIndices = this.showIndices.sort((a, b) => {
+                    showIndices = showIndices.sort((a, b) => {
                         return b.doc_count - a.doc_count;
                     });
                     break;
             }
             this.$nextTick(() => {
+                this.showIndices = showIndices;
                 this.indexLoading = false;
             })
         },
@@ -348,6 +375,14 @@ export default defineComponent({
         height: 40px;
         display: flex;
         justify-content: space-between;
+    }
+
+    .home-container {
+        position: absolute;
+        top: 45px;
+        left: 0;
+        right: 5px;
+        bottom: 5px;
     }
 }
 </style>

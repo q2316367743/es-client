@@ -15,13 +15,13 @@
             <el-input-number v-model="instance.defaultReplica"></el-input-number>
         </el-form-item>
 
-        <el-divider content-position="left">索引查询</el-divider>
-        <el-form-item label="默认查询条件-状态">
-            <el-select v-model="instance.homeSearchState">
-                <el-option :value="0" label="不设置"></el-option>
-                <el-option :value="1" label="打开"></el-option>
-                <el-option :value="2" label="关闭"></el-option>
-            </el-select>
+        <el-divider content-position="left">全局索引查询条件</el-divider>
+        <el-form-item label="状态">
+            <el-radio-group v-model="instance.homeSearchState">
+                <el-radio :label="0">不设置</el-radio>
+                <el-radio :label="1">打开</el-radio>
+                <el-radio :label="2">关闭</el-radio>
+            </el-radio-group>
         </el-form-item>
         <el-form-item>
             <template #label>

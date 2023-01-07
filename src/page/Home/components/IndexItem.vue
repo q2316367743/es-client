@@ -266,67 +266,65 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.index-container {
-    .card {
-        margin: 5px;
-        padding: 10px;
-        border: #e3e6ec solid 1px;
-        border-radius: 5px;
-        position: relative;
-        min-width: 700px;
+.card {
+    margin: 5px;
+    padding: 10px;
+    border: #e3e6ec solid 1px;
+    border-radius: 5px;
+    position: relative;
+    min-width: 700px;
 
-        .title {
-            font-size: 24px;
-            font-weight: bold;
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .detail {
+        margin-top: 10px;
+    }
+
+    .option {
+        position: absolute;
+        top: 28px;
+        right: 12px;
+    }
+
+    .alias {
+        position: absolute;
+        top: 28px;
+        right: 212px;
+    }
+
+    .expand-btn {
+        position: absolute;
+        top: 63px;
+        right: 12px;
+    }
+
+    .expand {
+        margin-top: 10px;
+        display: flex;
+
+        .shard {
+            border: #000000 solid 4px;
+            background-color: aquamarine;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            margin: 4px;
+            cursor: pointer;
         }
 
-        .detail {
-            margin-top: 10px;
-        }
-
-        .option {
-            position: absolute;
-            top: 28px;
-            right: 12px;
-        }
-
-        .alias {
-            position: absolute;
-            top: 28px;
-            right: 212px;
-        }
-
-        .expand-btn {
-            position: absolute;
-            top: 63px;
-            right: 12px;
-        }
-
-        .expand {
-            margin-top: 10px;
-            display: flex;
-
-            .shard {
-                border: #000000 solid 4px;
-                background-color: aquamarine;
-                width: 40px;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                margin: 4px;
-                cursor: pointer;
-            }
-
-            .replica {
-                border: #666666 solid 4px;
-                background-color: #f2f2f2;
-                width: 40px;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                margin: 4px;
-                cursor: pointer;
-            }
+        .replica {
+            border: #666666 solid 4px;
+            background-color: #f2f2f2;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            margin: 4px;
+            cursor: pointer;
         }
     }
 }

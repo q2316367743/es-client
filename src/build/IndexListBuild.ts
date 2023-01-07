@@ -2,10 +2,12 @@ import IndexView from "@/view/index/IndexView";
 import { prettyDataUnit } from "@/utils/FieldUtil";
 import clusterApi from "@/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
+import useSettingStore from "@/store/SettingStore";
+import StrUtil from "@/utils/StrUtil";
 
 /**
  * 索引列表构造器
- * 
+ *
  * @returns 索引数组
  */
 export default async function Builder(): Promise<Array<IndexView>> {
@@ -16,6 +18,11 @@ export default async function Builder(): Promise<Array<IndexView>> {
     let stats_indices = stats.indices as any;
     let cluster_indices = cluster_stats.routing_table.indices as any;
     for (let key in indecis) {
+        if (useSettingStore().getHomeExcludeIndices.length > 0) {
+            if (StrUtil.matchAll(key, useSettingStore().getHomeExcludeIndices)) {
+                continue;
+            }
+        }
         let index = stats_indices[key];
         let size = 0;
         let docs = 0;
