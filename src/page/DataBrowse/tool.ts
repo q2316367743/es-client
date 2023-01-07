@@ -43,19 +43,18 @@ export default {
         }
         // 排序
         last.push({
-            code: 'sort',
             name: '排序',
             prefixIcon: 'vxe-icon-sort',
             children: [{
-                code: 'clearSort',
+                code: 'sort-clear',
                 name: '清除排序',
                 prefixIcon: 'vxe-icon-delete-fill'
             }, {
-                code: 'sortAsc',
+                code: 'sort-asc',
                 name: 'asc',
                 prefixIcon: 'vxe-icon-caret-up'
             }, {
-                code: 'sortDesc',
+                code: 'sort-desc',
                 name: 'desc',
                 prefixIcon: 'vxe-icon-caret-down'
             }]

@@ -587,7 +587,7 @@ export default defineComponent({
             } else if (code === 'update') {
                 this.recordEdit(this.menuRecord.data['_id'])
             } else if (code === 'delete') {
-                this.recordReduce( new Set<string>([this.menuRecord.data['_id']]));
+                this.recordReduce(new Set<string>([this.menuRecord.data['_id']]));
                 console.log('删除')
             } else if (code.startsWith('query')) {
                 // 查询
@@ -606,6 +606,16 @@ export default defineComponent({
                 }
                 this.executeQuery(false);
                 console.log(`${codes[1]} - ${express}'`)
+            } else if (code.startsWith('sort')) {
+                // 排序
+                if (code === 'sort-clear') {
+                    this.orderBy = '';
+                }else if (code === 'sort-asc') {
+                    this.orderBy = `${this.menuRecord.field}`
+                }else if (code === 'sort-desc') {
+                    this.orderBy = `${this.menuRecord.field} desc`
+                }
+                this.executeQuery(false);
             } else {
                 console.log(code)
             }
@@ -749,10 +759,10 @@ export default defineComponent({
                     if (!record) {
                         return;
                     }
-                }else {
+                } else {
                     return;
                 }
-            }else {
+            } else {
                 record = this.recordMap.get(this.deleteRowIndies.keys().next().value);
             }
             this.editConfig = {
