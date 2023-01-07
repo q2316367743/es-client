@@ -41,10 +41,10 @@
                 <div class="item" :class="!index ? 'disable' : ''" @click="recordAdd">
                     <i class="vxe-icon-add"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReduce">
+                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReduce()">
                     <i class="vxe-icon-minus"/>
                 </div>
-                <div class="item" :class="deleteRowIndies.size === 1 ? '' : 'disable'" @click="recordEdit">
+                <div class="item" :class="deleteRowIndies.size === 1 ? '' : 'disable'" @click="recordEdit()">
                     <i class="vxe-icon-edit"/>
                 </div>
             </div>
@@ -273,7 +273,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from 'pinia';
-import {Action, ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage} from "element-plus";
 import JsonViewer from 'vue-json-viewer';
 import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
@@ -297,12 +297,17 @@ import recordBuild from './RecordBuild';
 import './index.less';
 import ExportConfig from "./ExportConfig";
 import exportData from "./ExportData";
+import tool from "./tool";
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import DataBuild from "@/page/DataBrowse/DataBuild";
 import mitt from "@/plugins/mitt";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
+import Optional from "@/utils/Optional";
+import StrUtil from "@/utils/StrUtil";
+import ArrayUtil from "@/utils/ArrayUtil";
+
 
 export default defineComponent({
     name: 'data-browse',
@@ -343,7 +348,8 @@ export default defineComponent({
 
         menuRecord: undefined as {
             field: string,
-            value: string
+            value: string,
+            data: any
         } | undefined,
 
         // vxe表格相关配置
@@ -393,7 +399,7 @@ export default defineComponent({
         extensions: [json()] as Array<any>
     }),
     computed: {
-        ...mapState(useIndexStore, ['indices']),
+        ...mapState(useIndexStore, ['indices', 'indicesMap']),
         indicesShow() {
             if (this.indices.length === 0) {
                 return new Array<IndexView>();
@@ -403,93 +409,30 @@ export default defineComponent({
                 return e1.name.localeCompare(e2.name, 'zh');
             })
         },
-        indexMap() {
-            let indexMap = new Map<string, any>();
-            for (let record of this.records) {
-                indexMap.set(record['_id'], record);
-            }
-            return indexMap;
+        recordMap() {
+            return ArrayUtil.map(this.records, '_id');
+        },
+        mappingMap() {
+            return Optional.ofNullable(this.headers).map(e => ArrayUtil.map(e, 'field')).get()
         },
         menuConfig(): VxeTablePropTypes.MenuConfig {
             if (!this.index) {
+                let indexItems = new Array<VxeTableDefines.MenuFirstOption>();
+                for (let index of this.indices) {
+                    if (!StrUtil.matchAll(index.name, useSettingStore().getHomeExcludeIndices)) {
+                        indexItems.push({
+                            code: `index-${index.name}`,
+                            name: index.name
+                        })
+                    }
+                }
                 return {
                     body: {
-                        options: [[{
-                            code: 'null',
-                            name: '选择索引',
-                            disabled: true
-                        }]]
+                        options: [indexItems]
                     }
-                };
+                } as VxeTablePropTypes.MenuConfig;
             }
-            let body = {
-                options: [[{
-                    code: 'copy',
-                    name: '复制',
-                    prefixIcon: 'vxe-icon-copy',
-                }], [{
-                    code: 'add',
-                    name: '新增',
-                    prefixIcon: 'vxe-icon-question-circle-fill color-red'
-                }, {
-                    code: 'update',
-                    name: '修改',
-                    prefixIcon: 'vxe-icon-add'
-                }, {
-                    code: 'delete',
-                    name: '删除',
-                    prefixIcon: 'vxe-icon-delete'
-                }]]
-            } as VxeTableDefines.MenuOptions;
-
-            let last = [] as VxeTableDefines.MenuFirstOption[];
-
-            // 确定筛选
-            for (let name of ['must', 'should', 'must not']) {
-                last.push({
-                    code: `null-${name}`,
-                    name: `筛选 - ${name}`,
-                    children: [{
-                        code: `query|${name}|=`,
-                        name: '等于'
-                    }, {
-                        code: `query|${name}|>`,
-                        name: '大于'
-                    }, {
-                        code: `query|${name}|<`,
-                        name: '小于'
-                    }, {
-                        code: `query|${name}|>=`,
-                        name: '大于等于'
-                    }, {
-                        code: `query|${name}|<=`,
-                        name: '小于等于'
-                    }]
-                });
-            }
-            // 排序
-            last.push({
-                code: 'sort',
-                name: '排序',
-                prefixIcon: 'vxe-icon-question-circle-fill color-blue',
-                children: [{
-                    code: 'clearSort',
-                    name: '清除排序'
-                }, {
-                    code: 'sortAsc',
-                    name: '升序',
-                    prefixIcon: 'vxe-icon-question-circle-fill color-orange'
-                }, {
-                    code: 'sortDesc',
-                    name: '倒序',
-                    prefixIcon: 'vxe-icon-question-circle-fill color-orange'
-                }]
-            });
-
-            body.options?.push(last)
-            return {
-                body
-            } as VxeTablePropTypes.MenuConfig
+            return tool.renderMenu();
         }
     },
     watch: {
@@ -614,18 +557,42 @@ export default defineComponent({
         },
         menuClick(param: VxeTableDefines.MenuClickParams) {
             let code = param.menu.code!;
+            // 索引特殊，先处理
+            if (code.startsWith('index')) {
+                // 跳转索引
+                let index = this.indicesMap.get(code.substring(6));
+                if (index) {
+                    this.indexChange(index);
+                }
+                return;
+            }
+            // 未选择不处理
+            if (!this.menuRecord) {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '错误，无法获取选中元素'
+                })
+                return;
+            }
             if (code === 'copy') {
-                console.log('复制')
+                BrowserUtil.copy(Optional.ofNullable(this.menuRecord).map(e => e['value']).orElse(""));
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: '复制成功'
+                })
             } else if (code === 'add') {
-                console.log('新增')
+                this.recordAdd();
             } else if (code === 'update') {
-                console.log('更新')
+                this.recordEdit(this.menuRecord.data['_id'])
             } else if (code === 'delete') {
+                this.recordReduce( new Set<string>([this.menuRecord.data['_id']]));
                 console.log('删除')
             } else if (code.startsWith('query')) {
                 // 查询
                 let codes = code.split('|');
-                let express = `${this.menuRecord?.field} ${codes[2]} '${this.menuRecord?.value}'`;
+                let express = `${this.menuRecord.field} ${codes[2]} '${this.menuRecord.value}'`;
                 switch (codes[1]) {
                     case 'must':
                         this.must = express;
@@ -639,14 +606,15 @@ export default defineComponent({
                 }
                 this.executeQuery(false);
                 console.log(`${codes[1]} - ${express}'`)
-            }else {
+            } else {
                 console.log(code)
             }
         },
         cellMenu(param: VxeTableDefines.CellMenuEventParams) {
             this.menuRecord = {
                 field: param.column.field,
-                value: param.cell.textContent as string
+                value: param.cell.textContent as string,
+                data: param.row
             };
         },
         // <----------------------------------- 表格事件 ----------------------------------<
@@ -668,48 +636,10 @@ export default defineComponent({
             this.executeQuery()
         },
         pageSizeChange(command: string) {
-            switch (command) {
-                case "1":
-                    this.size = 10;
-                    this.page = 1;
-                    this.executeQuery();
-                    break;
-                case "2":
-                    this.size = 100;
-                    this.page = 1;
-                    this.executeQuery();
-                    break;
-                case "3":
-                    this.size = 250;
-                    this.page = 1;
-                    this.executeQuery();
-                    break;
-                case "4":
-                    this.size = 500;
-                    this.page = 1;
-                    this.executeQuery();
-                    break;
-                case "5":
-                    this.size = 1000;
-                    this.page = 1;
-                    this.executeQuery();
-                    break;
-                case "6":
-                    ElMessageBox.prompt('请输入自定义分页大小', '自定义分页', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        inputPattern: /\d+/,
-                        inputErrorMessage: '请输入正确的数字',
-                    })
-                        .then(({value}) => {
-                            this.size = parseInt(value);
-                            this.page = 1;
-                            this.executeQuery();
-                        })
-                        .catch(() => {
-                        });
-                    break
-            }
+            tool.pageSizeChange(command, this.executeQuery, (page, size) => {
+                this.page = page;
+                this.size = size;
+            })
         },
         nextPage() {
             if (this.page * this.size > this.count) {
@@ -756,40 +686,12 @@ export default defineComponent({
                 });
             })
         },
-        recordReduce() {
-            if (!this.index) {
-                return;
-            }
-            if (this.deleteRowIndies.size === 0) {
-                return;
-            }
-            ElMessageBox.confirm("确定要删除这些索引，删除后将无法恢复！", "警告", {
-                confirmButtonText: '删除',
-                cancelButtonText: '跳转到高级搜索',
-                type: 'warning',
-                draggable: true,
-                distinguishCancelAndClose: true
-            }).then(() => {
-                let ids = new Array<string>();
-                this.deleteRowIndies.forEach(id => ids.push(id));
-                IndexApi._delete_by_query(this.index?.name!, {
-                    query: {
-                        bool: {
-                            must: [
-                                {
-                                    ids: {
-                                        values: ids
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }).then(() => {
-                    ElMessage({
-                        showClose: true,
-                        type: "success",
-                        message: '删除成功'
-                    });
+        recordReduce(deleteRowIndies?: Set<string>) {
+            let indices = Optional.ofNullable(deleteRowIndies)
+                .orElse(this.deleteRowIndies);
+            let result = tool.recordReduce(indices, this.index);
+            if (result) {
+                result.then(() => {
                     // 延迟100ms，
                     this.$nextTick(() => {
                         setTimeout(() => {
@@ -804,18 +706,10 @@ export default defineComponent({
                     this.deleteRowIndies = new Set<string>();
                     // 清除选中行
                     (this.$refs['vxeTable'] as any).clearCheckboxRow();
-                }).catch(e => {
-                    ElMessage({
-                        showClose: true,
-                        type: "error",
-                        message: '删除失败，' + e
-                    })
-                });
-            }).catch((action: Action) => {
-                if (action === 'cancel') {
+                }).catch(() => {
                     // 跳转到高级查询
                     let ids = new Array<string>();
-                    this.deleteRowIndies.forEach(id => ids.push(id));
+                    indices.forEach(id => ids.push(id));
                     usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
                     useSeniorSearchEvent.emit({
                         url: `/${this.index?.name}/_delete_by_query`,
@@ -836,11 +730,10 @@ export default defineComponent({
                         execute: false
                     });
                     this.clearChoose();
-                }
-            });
-
+                })
+            }
         },
-        recordEdit() {
+        recordEdit(_id?: string) {
             if (!this.index) {
                 ElMessage({
                     showClose: true,
@@ -849,10 +742,19 @@ export default defineComponent({
                 })
                 return;
             }
+            let record;
             if (this.deleteRowIndies.size !== 1) {
-                return;
+                if (_id) {
+                    record = this.recordMap.get(_id);
+                    if (!record) {
+                        return;
+                    }
+                }else {
+                    return;
+                }
+            }else {
+                record = this.recordMap.get(this.deleteRowIndies.keys().next().value);
             }
-            let record = this.indexMap.get(this.deleteRowIndies.keys().next().value);
             this.editConfig = {
                 dialog: true,
                 id: record['_id'],
@@ -866,9 +768,6 @@ export default defineComponent({
                     type: 'error',
                     message: '请选择索引'
                 })
-                return;
-            }
-            if (this.deleteRowIndies.size !== 1) {
                 return;
             }
             IndexApi._update(this.index.name, this.editConfig.id, this.editConfig.data).then(() => {

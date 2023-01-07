@@ -18,4 +18,8 @@ export default class Optional<T> {
         return this.value || value;
     }
 
+    public get(): T | undefined {
+        return this.value;
+    }
+
 }

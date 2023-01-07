@@ -1,17 +1,19 @@
 import IndexView from "@/view/index/IndexView";
 import {defineStore} from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
-import {ElLoading} from 'element-plus'
+import {ElLoading, ElNotification} from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
 import {useEsVersion} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
+import ArrayUtil from "@/utils/ArrayUtil";
 
 const useIndexStore = defineStore('index', {
     state: () => {
         return {
             // 全部的索引
             indices: new Array<IndexView>(),
+            indicesMap: new Map<string, IndexView>(),
             // 服务器名称
             name: '',
             active_shards: 0,
@@ -45,6 +47,17 @@ const useIndexStore = defineStore('index', {
                 loading.setText('开始构建索引信息');
                 // 获取索引信息
                 this.indices = await indexListBuild();
+                this.indicesMap = ArrayUtil.map(
+                    this.indices,
+                    'name',
+                    (e1, e2) => {
+                    ElNotification({
+                        title: '警告',
+                        type: "warning",
+                        message: '索引存在名称相同，程序可能出现错误',
+                    })
+                    return e1
+                });
                 // 获取基本信息
                 loading.setText('开始获取索引健康值');
                 let health = await clusterApi._cluster_health();
@@ -70,6 +83,7 @@ const useIndexStore = defineStore('index', {
         clear() {
             this.name = '';
             this.indices = new Array<IndexView>();
+            this.indicesMap = new Map<string, IndexView>();
         }
     }
 });

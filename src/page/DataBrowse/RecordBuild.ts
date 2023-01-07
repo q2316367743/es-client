@@ -1,5 +1,6 @@
 import Header from "@/view/Header";
 import IndexView from "@/view/index/IndexView";
+import Mapping from "@/view/index/Mapping";
 
 function verify(result: any, index: IndexView): boolean {
     if (!index) {
@@ -18,7 +19,24 @@ function renderKey(prefix: string, key: string): string {
     return prefix === '' ? key : prefix + '.' + key
 }
 
-function renderRecord(source: any, record: any, headers: Array<Header>, headersSet: Set<string>, prefix: string = '') {
+/**
+ * 渲染一条记录
+ *
+ * @param source 源数据
+ * @param record 记录
+ * @param headers 表头
+ * @param headersSet 表头集合
+ * @param mapping 映射
+ * @param prefix 前缀，默认为空
+ */
+function renderRecord(
+    source: any,
+    record: any,
+    headers: Array<Header>,
+    headersSet: Set<string>,
+    mapping: Mapping,
+    prefix: string = ''
+) {
     for (let key in source) {
         if (!headersSet.has(renderKey(prefix, key))) {
             headers.push({
@@ -41,6 +59,7 @@ function renderRecord(source: any, record: any, headers: Array<Header>, headersS
                     record,
                     headers,
                     headersSet,
+                    mapping,
                     renderKey(prefix, key));
             }
         }
@@ -66,13 +85,13 @@ export default function recordBuild(result: any, index: IndexView): { headers: A
         let _score = hit['_score'];
         let _source = hit['_source'];
         let record = { _id, _index, _score, _source };
-        renderRecord(_source, record, headers, headersSet);
+        renderRecord(_source, record, headers, headersSet, index.mapping);
         records.push(record);
 
     }
     return {
         headers,
         records,
-        count: result.hits.total.value ? result.hits.total.value : result.hits.total
+        count: result.hits.total.value !== undefined ? result.hits.total.value : result.hits.total
     };
 }

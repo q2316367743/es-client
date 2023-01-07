@@ -130,22 +130,29 @@ function templateBuild(template: string, condition: Array<any>): void {
                 condition.push({
                     term
                 });
-            }else {
+            } else if (model === 'match') {
+                // term
+                let match = {} as any;
+                match[models[0]] = models[2];
+                condition.push({
+                    match
+                });
+            } else {
                 // TODO: >，<，>=，<=
                 let range = {} as any;
                 if (model === '>') {
                     range[models[0]] = {
                         gt: models[2]
                     };
-                }else if (model === '<') {
+                } else if (model === '<') {
                     range[models[0]] = {
                         lt: models[2]
                     };
-                }else if (model === '>=') {
+                } else if (model === '>=') {
                     range[models[0]] = {
                         gte: models[2]
                     };
-                }else if (model === '<=') {
+                } else if (model === '<=') {
                     range[models[0]] = {
                         lte: models[2]
                     };
@@ -162,20 +169,20 @@ function templateBuild(template: string, condition: Array<any>): void {
             let model2 = models[5];
             if (model1 === '>') {
                 range[models[0]]['gt'] = models[2];
-            }else if (model1 === '<') {
+            } else if (model1 === '<') {
                 range[models[0]]['lt'] = models[2];
-            }else if (model1 === '>=') {
+            } else if (model1 === '>=') {
                 range[models[0]]['gte'] = models[2];
-            }else if (model1 === '<=') {
+            } else if (model1 === '<=') {
                 range[models[0]]['lte'] = models[2];
             }
             if (model2 === '>') {
                 range[models[0]]['gt'] = models[6];
-            }else if (model2 === '<') {
+            } else if (model2 === '<') {
                 range[models[0]]['lt'] = models[6];
-            }else if (model2 === '>=') {
+            } else if (model2 === '>=') {
                 range[models[0]]['gte'] = models[6];
-            }else if (model2 === '<=') {
+            } else if (model2 === '<=') {
                 range[models[0]]['lte'] = models[6];
             }
             condition.push({

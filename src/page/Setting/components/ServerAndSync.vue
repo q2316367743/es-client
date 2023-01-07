@@ -70,7 +70,7 @@ export default defineComponent({
             if (this.serverSetting.mode !== ServerModeEnum.SERVER) {
                 // 发送通知
                 ElNotification({
-                    title: 'Warning',
+                    title: '警告',
                     message: '服务器安装，只能使用服务器模式',
                     type: 'warning',
                 })
