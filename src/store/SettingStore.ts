@@ -3,6 +3,7 @@ import {getDefaultLanguage} from '@/utils/GlobalUtil';
 import {useLocalStorage} from "@vueuse/core";
 import Setting from "@/entity/Setting";
 import ArrayUtil from "@/utils/ArrayUtil";
+import Optional from "@/utils/Optional";
 
 const useSettingStore = defineStore('setting', {
     state: () => {
@@ -14,8 +15,9 @@ const useSettingStore = defineStore('setting', {
             pageSize: 20,
             pageStep: 10,
             timeout: 5000,
+            autoFullScreen: false,
             homeSearchState: 0,
-            autoFullScreen: false
+            homeExcludeIndices: new Array<string>()
         } as Setting);
         return {
             language: getDefaultLanguage(),
@@ -31,13 +33,27 @@ const useSettingStore = defineStore('setting', {
         getPageSize: (state) => state.instance.pageSize,
         getPageStep: (state) => state.instance.pageStep,
         getTimeout: (state): number => state.instance.timeout,
-        getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
         getAutoFullScreen: (state): boolean => state.instance.autoFullScreen,
+        getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
+        getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>())
     },
     actions: {
         setLanguage(language: string): void {
             this.language = language;
             localStorage.setItem('language', language);
+        },
+        addHomeExcludeIndex(index: string): void {
+            if (!this.instance.homeExcludeIndices) {
+                this.instance.homeExcludeIndices = new Array<string>();
+            }
+            this.instance.homeExcludeIndices.push(index);
+        },
+        removeHomeExcludeIndex(index: string): void {
+            if (!this.instance.homeExcludeIndices) {
+                this.instance.homeExcludeIndices = new Array<string>();
+                return;
+            }
+            this.instance.homeExcludeIndices.splice(this.instance.homeExcludeIndices.indexOf(index), 1);
         }
     }
 });

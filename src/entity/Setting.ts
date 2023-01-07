@@ -39,13 +39,18 @@ export default interface Setting {
     timeout: number;
 
     /**
+     * 自动全屏
+     */
+    autoFullScreen: boolean;
+
+    /**
      * 概览 => 搜索 => 状态
      */
     homeSearchState: number;
 
     /**
-     * 自动全屏
+     * 概览 => 搜索 => 排除的索引
      */
-    autoFullScreen: boolean;
+    homeExcludeIndices: Array<string>;
 
 }

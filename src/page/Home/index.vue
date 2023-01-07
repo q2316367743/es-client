@@ -123,6 +123,7 @@ import IndexSaveBuild from "@/build/IndexSaveBuild";
 import {stringContain} from "@/utils/SearchUtil";
 import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import StrUtil from "@/utils/StrUtil";
 
 
 export default defineComponent({
@@ -211,7 +212,9 @@ export default defineComponent({
                 return stringContain(item.name, this.condition.name);
             }).filter(e => this.condition.state === 0 ||
                 (this.condition.state === 1 && e.state === 'open') ||
-                (this.condition.state === 2 && e.state === 'close'));
+                (this.condition.state === 2 && e.state === 'close'))
+                .filter(e => useSettingStore().getHomeExcludeIndices.length === 0 ||
+                    !StrUtil.matchAll(e.name, useSettingStore().getHomeExcludeIndices));
             // 排序
             switch (this.condition.order) {
                 case "NAME_ASC":

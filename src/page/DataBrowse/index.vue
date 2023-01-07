@@ -303,7 +303,6 @@ import DataBuild from "@/page/DataBrowse/DataBuild";
 import mitt from "@/plugins/mitt";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
-import {CellMenuEventParams} from "vxe-table/types/table";
 
 export default defineComponent({
     name: 'data-browse',
