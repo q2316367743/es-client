@@ -33,7 +33,7 @@ const useIndexStore = defineStore('index', {
         /**
          * 重新获取链接
          */
-        async reset() {
+        async reset(success?: () => void ) {
             if (useUrlStore().current === '') {
                 return;
             }
@@ -74,6 +74,9 @@ const useIndexStore = defineStore('index', {
                     .map(e => e['number'])
                     .orElse(''));
                 loading.close();
+                if (success) {
+                    success();
+                }
             } catch (e: any) {
                 useUrlStore().choose();
                 loading.close();

@@ -34,11 +34,11 @@ export default class UrlService {
             name: url.name,
             value: url.value,
             sequence: url.sequence,
-            create_time: new Date(),
-            update_time: new Date(),
-            is_auth: url.is_auth,
-            auth_user: url.auth_user,
-            auth_password: url.auth_password
+            createTime: new Date(),
+            updateTime: new Date(),
+            isAuth: url.isAuth,
+            authUser: url.authUser,
+            authPassword: url.authPassword
         }).then(callback);
     }
 
@@ -55,11 +55,11 @@ export default class UrlService {
             name: url.name,
             value: url.value,
             sequence: url.sequence,
-            create_time: url.create_time,
-            update_time: new Date(),
-            is_auth: url.is_auth,
-            auth_user: url.auth_user,
-            auth_password: url.auth_password
+            createTime: url.createTime,
+            updateTime: new Date(),
+            isAuth: url.isAuth,
+            authUser: url.authUser,
+            authPassword: url.authPassword
         }).then(callback);
     }
 

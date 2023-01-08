@@ -109,6 +109,18 @@ export default {
             console.error(e);
             return 0;
         }
+    },
+
+    /**
+     * 反转数组
+     * @param arr
+     */
+    reverse<T>(arr: Array<T>): Array<T> {
+        let records = new Array<T>();
+        for (let i = arr.length - 1; i >= 0; i--) {
+            records.push(arr[i]);
+        }
+        return records;
     }
 
 }

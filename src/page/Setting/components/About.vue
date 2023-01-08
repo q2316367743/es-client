@@ -14,7 +14,7 @@
         </p>
         <p>
             <span>如果用户手册没有解决你的问题，或者对项目有什么建议，你可以发送 </span>
-            <el-link :href="data.feedback" target="_blank" type="primary">反馈</el-link>
+            <el-link :href="data.txc" target="_blank" type="primary">反馈</el-link>
             <span> 或者直接发送邮件到 </span>
             <el-link :href="'mailto:' + data.email">{{ data.email }}</el-link>
             <span> 联系我。</span>
@@ -27,9 +27,9 @@
                 <span v-if="index < data.repositories.length - 1"> | </span>
             </template>
             <span>）关注哦，或者点个赞（</span>
-            <template v-for="(distribute, index) in data.distributes">
-                <el-link target="_blank" :href="distribute.url">{{ distribute.name }}</el-link>
-                <span v-if="index < data.distributes.length - 1"> | </span>
+            <template v-for="(url, name, index) in data.distributes">
+                <el-link target="_blank" :href="url">{{ name }}</el-link>
+                <span v-if="index < Object.keys(data.distributes).length - 1"> | </span>
             </template>
             <span>），这对我是非常不错的鼓励与支持。</span>
         </p>
@@ -49,31 +49,7 @@
             <el-link target="_blank" :href="data.docUrl">语雀</el-link>
         </p>
         <div class="title-2">建议反馈</div>
-        <ul>
-            <li>
-                <span>金山文档❤️：</span>
-                <el-link :href="data.feedback" target="_blank" type="primary">es-client问题反馈</el-link>
-            </li>
-            <li>
-                <span>在</span>
-                <el-link href="https://gitee.com/qiaoshengda/es-client" target="_blank" type="primary">码云
-                </el-link>
-                <span>提交issue或评论</span>
-            </li>
-            <li>
-                <span>在</span>
-                <el-link
-                    href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
-                    target="_blank" type="primary">edge插件商店
-                </el-link>
-                <span>进行评论</span>
-            </li>
-            <li>如果有好的想法，可以提交
-                <el-link href="https://gitee.com/qiaoshengda/es-client/pulls" target="_blank" type="primary">Pull
-                    Requests
-                </el-link>
-            </li>
-        </ul>
+        <feedback-module/>
         <el-dialog title="Apache2.0" v-model="licenseDialog" append-to-body :close-on-click-modal="false" draggable
                    destroy-on-close style="height: 80vh" top="10vh">
             <div style="height: calc(80vh - 60px - 54px)">
@@ -90,13 +66,11 @@ import {defineComponent} from "vue"
 
 import Constant from "@/global/Constant";
 import LicenseApache2_0 from "@/components/License/Apache2_0.vue";
-
-// 许可证
-
+import FeedbackModule from '@/module/Feedback/index.vue';
 
 export default defineComponent({
     name: "setting-about",
-    components: {LicenseApache2_0},
+    components: {LicenseApache2_0, FeedbackModule},
     data: () => ({
         data: Constant,
         licenseDialog: false,

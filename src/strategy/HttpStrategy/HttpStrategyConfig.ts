@@ -26,5 +26,10 @@ export default interface HttpStrategyConfig extends AxiosRequestConfig{
     data?: any;
     timeout?: number;
     auth?: BasicCredentials;
+
+    /**
+     * 请求头
+     */
+    headers?: Record<string, any>;
     
 }

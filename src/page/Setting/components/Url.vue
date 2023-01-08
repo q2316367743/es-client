@@ -18,10 +18,10 @@
                 <div class="url-copy" @click="execCopy(row.value)">复制</div>
             </template>
         </vxe-column>
-        <vxe-column field="update_time" :title="$t('setting.link.update_time')" width="160" :formatter="prettyDate"/>
-        <vxe-column field="is_auth" :title="$t('setting.link.is_auth')" width="120" :formatter="prettyAuth"/>
-        <vxe-column field="auth_user" title="用户名" :visible="false"/>
-        <vxe-column field="auth_password" title="密码" :visible="false"/>
+        <vxe-column field="updateTime" :title="$t('setting.link.update_time')" width="160" :formatter="prettyDate"/>
+        <vxe-column field="isAuth" :title="$t('setting.link.is_auth')" width="120" :formatter="prettyAuth"/>
+        <vxe-column field="authUser" title="用户名" :visible="false"/>
+        <vxe-column field="authPassword" title="密码" :visible="false"/>
         <vxe-column :title="$t('setting.link.operation')" width="140">
             <template #default="{ row }">
                 <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
@@ -71,9 +71,9 @@ export default defineComponent({
             name: '',
             value: 'http://',
             sequence: 0,
-            is_auth: false,
-            auth_user: '',
-            auth_password: ''
+            isAuth: false,
+            authUser: '',
+            authPassword: ''
         } as Url,
         edit_dialog: false,
         columnConfig: {
@@ -87,11 +87,11 @@ export default defineComponent({
             }, {
                 field: 'value'
             }, {
-                field: 'is_auth'
+                field: 'isAuth'
             }, {
-                field: 'auth_user'
+                field: 'authUser'
             }, {
-                field: 'auth_password'
+                field: 'authPassword'
             }],
             // 自定义类型
             types: ['csv', 'html', 'xml', 'txt']
@@ -142,9 +142,9 @@ export default defineComponent({
                 name: '',
                 value: 'http://',
                 sequence: 0,
-                is_auth: false,
-                auth_user: '',
-                auth_password: ''
+                isAuth: false,
+                authUser: '',
+                authPassword: ''
             };
             this.edit_dialog = true;
         },
@@ -180,17 +180,6 @@ export default defineComponent({
             bottom: 20px;
             width: 32px;
         }
-    }
-
-    .url-copy {
-        display: inline;
-        line-height: 22px;
-        background-color: var(--hover-color);
-        border-radius: 11px;
-        padding: 1px 5px;
-        margin-left: 5px;
-        margin-top: 2px;
-        cursor: pointer;
     }
 }
 </style>

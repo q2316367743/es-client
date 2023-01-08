@@ -1,19 +1,18 @@
 import DexieInstance from "@/plugins/dexie";
-import ChartService from "@/service/ChartService";
 import UrlService from "@/service/UrlService";
-import TipService from '@/service/TipService'
 
 import x2js from 'x2js';
 import {createGlobalState, useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
 import VersionManage from "@/plugins/VersionManage";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
+import {HistoryService} from "@/service/HistoryService";
+import TableNameEnum from "@/enumeration/TableNameEnum";
 
 const dexieInstance = new DexieInstance();
 
-export const urlService = new UrlService(dexieInstance.getUrl());
-export const chartService = new ChartService(dexieInstance.getChart());
-export const tipService = new TipService(dexieInstance.getTip());
+export const urlService = new UrlService(dexieInstance.table(TableNameEnum.URL));
+export const historyService = new HistoryService(dexieInstance.table(TableNameEnum.HISTORY))
 
 export const versionManage = new VersionManage();
 

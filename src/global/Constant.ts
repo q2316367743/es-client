@@ -262,17 +262,13 @@ export default {
         url: 'https://www.gitlink.org.cn/m17762618644/es-client'
     }] as Repository[],
     // 分发平台
-    distributes: [{
-        name: 'Edge',
-        url: 'https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo'
-    }, {
-        name: 'Firefox',
-        url: 'https://addons.mozilla.org/addon/es-client/'
-    }, {
-        name: '想天浏览器',
-        url: 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w'
-    }] as Repository[],
+    distributes: {
+        'edge': 'https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo',
+        'firefox': 'https://addons.mozilla.org/addon/es-client',
+        '想天浏览器': 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w'
+    },
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,
+    txc: 'https://support.qq.com/products/489458',
     logs
 }

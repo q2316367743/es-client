@@ -85,6 +85,7 @@ body[theme-mode=dark] {
     .el-tabs__item.is-active {
         color: var(--active-color);
     }
+
     .el-tabs__active-bar {
         background-color: var(--active-color);
     }
@@ -120,17 +121,6 @@ body[theme-mode=dark] {
 
     // vxe
 
-    #data-browse {
-        .condition {
-            .condition-item {
-                .input {
-                    background-color: var(--container-color);
-                    color: var(--text-color);
-                }
-            }
-        }
-    }
-
     .vxe-table--render-default {
         color: var(--text-color);
 
@@ -149,6 +139,10 @@ body[theme-mode=dark] {
         .vxe-table--header-wrapper {
             color: var(--el-text-color-regular);
         }
+    }
+
+    .vxe-table--render-default .vxe-body--row.row--hover {
+        background-color: var(--hover-color);
     }
 
     .vxe-pulldown {
@@ -187,10 +181,12 @@ body[theme-mode=dark] {
     .vxe-toolbar {
         background-color: var(--container-color);
     }
+
     .vxe-header--column {
         background-color: var(--container-color);
         color: var(--text-color);
     }
+
     .vxe-button {
         background-color: var(--container-color);
         color: var(--text-color);
@@ -285,14 +281,29 @@ body[theme-mode=dark] {
                 color: #abb2bf;
             }
         }
+
         .ͼe {
             color: #98c379;
         }
+
         .ͼc {
             color: #d19a66;
         }
+
         .ͼd {
             color: #e5c07b;
+        }
+    }
+
+    //自定义
+    #data-browse {
+        .condition {
+            .condition-item {
+                .input {
+                    background-color: var(--container-color);
+                    color: var(--text-color);
+                }
+            }
         }
     }
 

@@ -22,7 +22,7 @@ const useUrlStore = defineStore('url', {
         /**
          * 返回全部的链接
          */
-        list: (state) => {
+        list: (state): Array<Url> => {
             return state.urls;
         },
         current: (state): string => {

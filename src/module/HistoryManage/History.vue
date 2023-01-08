@@ -1,0 +1,175 @@
+<template>
+    <div class="hm-history">
+        <vxe-toolbar ref="historyToolbar" custom export class="hm-history-toolbar">
+            <template #buttons>
+                <el-input v-model="name" :placeholder="$t('setting.link.name')"
+                          style="width: 200px;" @input="search"></el-input>
+                <el-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
+                           style="margin-left: 12px;"/>
+            </template>
+            <template #tools>
+                <el-button type="primary" style="margin-right: 12px;">新增</el-button>
+            </template>
+        </vxe-toolbar>
+        <div class="hm-history-body">
+            <el-scrollbar>
+                <vxe-table ref="historyTable" :data="histories" class="data" :column-config="columnConfig"
+                           :export-config="exportConfig">
+                    <vxe-column type="seq" width="50" :title="$t('setting.link.index')"></vxe-column>
+                    <vxe-column field="name" :title="$t('setting.link.name')" width="150"></vxe-column>
+                    <vxe-column field="link" title="链接" width="400">
+                        <template #default="{row}">
+                            <el-link :href="row.url + row.link" type="primary" target="_blank">{{
+                                    row.url + row.link
+                                }}
+                            </el-link>
+                            <div class="url-copy" @click="execCopy(row.url + row.link)">{{ $t('app.copy') }}</div>
+                        </template>
+                    </vxe-column>
+                    <vxe-column field="method" title="方法" width="100"></vxe-column>
+                    <vxe-column field="params" title="参数" width="280" :visible="false">
+                        <template #default="{row}">
+                            <div class="hm-history-params">
+                                <div class="hm-history-params-value" :title="row.params">{{ row.params }}</div>
+                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
+                            </div>
+                        </template>
+                    </vxe-column>
+                    <vxe-column :title="$t('app.operation')" width="200">
+                        <template #default="{ row }">
+                            <el-button type="success" size="small" @click="execute(row)">执行</el-button>
+                            <el-button type="primary" size="small">{{ $t('app.update') }}</el-button>
+                            <el-button type="danger" size="small">{{ $t('app.delete') }}</el-button>
+                        </template>
+                    </vxe-column>
+                </vxe-table>
+            </el-scrollbar>
+        </div>
+    </div>
+</template>
+<script lang="ts">
+import {defineComponent, markRaw} from "vue";
+import HistoryEntity from "@/entity/HistoryEntity";
+import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
+import {ElMessage} from "element-plus";
+import {toDateString} from "xe-utils";
+import {Search} from '@element-plus/icons-vue';
+
+import BrowserUtil from "@/utils/BrowserUtil";
+import {historyService} from "@/global/BeanFactory";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import useUrlStore from "@/store/UrlStore";
+import ArrayUtil from "@/utils/ArrayUtil";
+import Optional from "@/utils/Optional";
+
+interface Params {
+    cellValue: any
+    column: VxeTableDefines.ColumnInfo
+    row: any
+}
+
+interface HistoryEntityView extends HistoryEntity {
+
+    url: string;
+
+}
+
+export default defineComponent({
+    name: 'hm-history',
+    emits: ['execute'],
+    data: () => ({
+        searchIcon: markRaw(Search),
+        histories: new Array<HistoryEntityView>(),
+        columnConfig: {
+            resizable: true
+        },
+        exportConfig: {
+            filename: '查询历史',
+            sheetName: '查询历史',
+            // 自定义类型
+            types: ['csv', 'html', 'xml', 'txt']
+        } as VxeTablePropTypes.ExportConfig,
+        name: '',
+        onlyCurrent: true
+    }),
+    mounted() {
+        // 历史表格工具连接
+        let historyTable = this.$refs['historyTable'] as VxeTableInstance;
+        let historyToolbar = this.$refs['historyToolbar'] as VxeToolbarInstance;
+        this.$nextTick(() => {
+            historyTable.connect(historyToolbar);
+        });
+        // 数据查询
+        this.search();
+        emitter.on(MessageEventEnum.URL_UPDATE, () => {
+            // url更新，也要进行重新查询历史
+            this.search();
+        });
+        emitter.on(MessageEventEnum.HISTORY_UPDATE, () => {
+            // 历史记录变更，也要进行重新查询历史
+            this.search();
+        });
+    },
+    methods: {
+        search() {
+            if (!useUrlStore().id && this.onlyCurrent) {
+                this.histories = new Array<HistoryEntityView>();
+                return;
+            }
+            historyService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined).then(histories => {
+                this.histories = histories.map(item => {
+                    return {
+                        ...item,
+                        url: useUrlStore().current
+                    } as HistoryEntityView
+                })
+            });
+        },
+        prettyDate(params: Params) {
+            return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");
+        },
+        execCopy(url: string) {
+            BrowserUtil.copy(url);
+            ElMessage({
+                showClose: true,
+                type: 'success',
+                message: '已成功复制到剪切板'
+            })
+        },
+        execute(history: HistoryEntity) {
+            this.$emit('execute', history);
+        }
+    }
+});
+</script>
+<style lang="less">
+
+.hm-history {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .hm-history-body {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .hm-history-params {
+            display: flex;
+
+            .hm-history-params-value {
+                width: 200px;
+                overflow: hidden;
+                white-space: nowrap; //不折行
+                text-overflow: ellipsis; //溢出显示省略号
+            }
+        }
+    }
+}
+
+</style>

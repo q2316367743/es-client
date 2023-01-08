@@ -601,7 +601,6 @@ export default defineComponent({
                 this.recordEdit(this.menuRecord.data['_id'])
             } else if (code === 'delete') {
                 this.recordReduce(new Set<string>([this.menuRecord.data['_id']]));
-                console.log('删除')
             } else if (code.startsWith('query')) {
                 // 查询
                 let codes = code.split('|');
@@ -618,7 +617,6 @@ export default defineComponent({
                         break;
                 }
                 this.executeQuery(false);
-                console.log(`${codes[1]} - ${express}'`)
             } else if (code.startsWith('sort')) {
                 // 排序
                 if (code === 'sort-clear') {
@@ -630,7 +628,7 @@ export default defineComponent({
                 }
                 this.executeQuery(false);
             } else {
-                console.log(code)
+                console.error(code)
             }
         },
         cellMenu(param: VxeTableDefines.CellMenuEventParams) {

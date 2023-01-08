@@ -23,26 +23,26 @@ export default interface Url {
     /**
      * 创建时间
      */
-    create_time?: Date;
+    createTime?: Date;
 
     /**
      * 更新时间
      */
-    update_time?: Date;
+    updateTime?: Date;
 
     /**
      * 是否需要认证
      */
-    is_auth?: boolean;
+    isAuth?: boolean;
 
     /**
      * 用户名
      */
-    auth_user?: string;
+    authUser?: string;
 
     /**
      * 密码
      */
-    auth_password?: string;
+    authPassword?: string;
 
 }

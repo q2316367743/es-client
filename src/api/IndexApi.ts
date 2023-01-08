@@ -1,4 +1,4 @@
-import {IndexInstance} from '@/entity/IndexInstance';
+import {IndexInstance} from '@/domain/IndexInstance';
 import {httpStrategyContext} from "@/global/BeanFactory";
 import IndexSaveBuild from '@/build/IndexSaveBuild';
 

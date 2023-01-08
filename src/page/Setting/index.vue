@@ -2,7 +2,7 @@
     <div class="setting">
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
-            <el-tab-pane :label="$t('setting.link.title')" name="url_history"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.link.title')" name="url"></el-tab-pane>
             <el-tab-pane label="服务器&同步" name="server-sync"></el-tab-pane>
             <el-tab-pane label="更新记录" name="update"></el-tab-pane>
             <el-tab-pane label="关于" name="about"></el-tab-pane>
@@ -10,7 +10,7 @@
         <div class="setting-main">
             <el-scrollbar>
                 <setting-base v-if="active === 'base'"/>
-                <setting-url v-else-if="active === 'url_history'"/>
+                <setting-url v-else-if="active === 'url'"/>
                 <setting-server-sync v-else-if="active === 'server-sync'"/>
                 <setting-update v-else-if="active === 'update'"/>
                 <setting-about v-else-if="active === 'about'"/>

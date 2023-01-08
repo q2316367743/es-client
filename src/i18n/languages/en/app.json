@@ -9,6 +9,11 @@
         "data_browse": "data browse"
     },
     "add": "add",
+    "update": "update",
+    "delete": "delete",
+    "copy": "copy",
+    "operation": "operation",
+    "index": "index",
     "about": "about",
     "link_placeholder": "please select an index address",
     "refresh": "refresh",

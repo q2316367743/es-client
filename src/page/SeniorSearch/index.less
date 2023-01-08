@@ -1,0 +1,97 @@
+.senior-search {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+
+    .el-card {
+        height: 100%;
+
+        .el-card__body {
+            position: absolute;
+            top: 70px;
+            left: 10px;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+
+    .senior-main {
+        position: absolute;
+        top: 69px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .side {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            bottom: 0;
+            width: 500px;
+
+            .link {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 32px;
+                display: flex;
+            }
+
+            .param {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 10px;
+
+                .get {
+                    width: 466px;
+
+                    .item {
+                        display: grid;
+                        grid-template-rows: 1fr;
+                        grid-template-columns: 0.5fr 26px 1fr 12px auto;
+                        margin-top: 12px;
+                    }
+                }
+
+                .post {
+                    padding-top: 5px;
+                }
+            }
+        }
+
+        .senior-bar {
+            position: absolute;
+            top: 0;
+            left: 510px;
+            bottom: 0;
+            width: 9px;
+            border-left: var(--el-card-border-color) solid 1px;
+        }
+
+        .senior-button {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 13px;
+            line-height: 13px;
+            background-color: #ffffff;
+            font-size: 8px;
+            border-left: var(--el-card-border-color) solid 1px;
+            cursor: pointer;
+        }
+
+        .senior-content {
+            position: absolute;
+            top: 5px;
+            bottom: 5px;
+            right: 5px;
+            left: 515px;
+            overflow: auto;
+        }
+    }
+}

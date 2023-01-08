@@ -119,7 +119,7 @@ import useIndexStore from '@/store/IndexStore';
 import useSettingStore from '@/store/SettingStore';
 
 import IndexView from "@/view/index/IndexView";
-import {IndexInstance, Property} from '@/entity/IndexInstance';
+import {IndexInstance, Property} from '@/domain/IndexInstance';
 import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
@@ -228,7 +228,6 @@ export default defineComponent({
             this.$nextTick(() => this.executeSearch());
         },
         executeSearch() {
-            console.log('执行')
             this.indexLoading = true;
             let showIndices = this.indices;
             if (this.condition.name !== '') {

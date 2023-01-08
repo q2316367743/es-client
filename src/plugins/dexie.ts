@@ -1,38 +1,59 @@
 import Dexie from 'dexie';
-import Tip from '@/entity/Tip';
 import Url from '@/entity/Url';
-import Chart from '@/entity/Chart';
+import {ElMessageBox} from "element-plus";
+import BrowserUtil from "@/utils/BrowserUtil";
+import {usePageJumpEvent} from "@/global/BeanFactory";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default class DexieInstance extends Dexie {
 
-    private readonly tip: Dexie.Table<Tip, number>;
-    private readonly url: Dexie.Table<Url, number>;
-    private readonly chart: Dexie.Table<Chart, number>;
-
     constructor() {
         super('es-client');
-        this.version(4).stores({
-            url: '++id, &name, &value, sequence, create_time, update_time',
-            tip: '++id, method, link, mode, create_time, update_time',
-            chart: '++id, create_time, update_time, &name, index_id, description, method, path, params, data, template'
+        this.version(5).stores({
+            url: '++id, &name, &value, sequence',
+            history: '++id, urlId, &name'
         }).upgrade(trans => {
-            console.log(trans)
+            console.log(trans);
+            usePageJumpEvent.emit(PageNameEnum.SETTING);
+            emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'url')
+            trans.table('url').toArray().then(list => {
+                ElMessageBox.alert(`版本升级，历史url数据：${JSON.stringify(list)}，请注意数据丢失。`, {
+                    type: 'warning',
+                    confirmButtonText: '复制到剪切板'
+                }).then(() => {
+                    BrowserUtil.copy(JSON.stringify(list, null, 4));
+                }).catch(() => {});
+                // 处理url
+                // 删除全部
+                list.forEach(item => {
+                    trans.table('url').delete(item['id']);
+                });
+                // 查询新的
+                list.forEach(item => {
+                    trans.table('url').add({
+                        name: item.name,
+                        value: item.value,
+                        sequence: item.sequence,
+                        createTime: item['create_time'],
+                        updateTime: item['update_time'],
+                        isAuth: item['is_auth'],
+                        authUser: item['authUser'],
+                        authPassword: item['auth_password']
+                    } as Url)
+                })
+            });
+            // @ts-ignore
+            console.log(trans, trans.idbtrans.db);
+            // 删除旧的表 - tip
+            // @ts-ignore
+            (trans.idbtrans.db as IDBDatabase).deleteObjectStore('tip');
+            // 删除旧的表 - chart
+                // @ts-ignore
+            (trans.idbtrans.db as IDBDatabase).deleteObjectStore('chart');
         })
-        this.tip = this.table('tip');
-        this.url = this.table('url');
-        this.chart = this.table('chart');
     }
 
-    public getUrl(): Dexie.Table<Url, number> {
-        return this.url;
-    }
-
-    public getTip(): Dexie.Table<Tip, number> {
-        return this.tip;
-    }
-
-    public getChart(): Dexie.Table<Chart, number> {
-        return this.chart;
-    }
 
 }

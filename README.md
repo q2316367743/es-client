@@ -19,7 +19,7 @@
 - [website](https://project.esion.xyz/es-client/)**（基本用不了）**
 - [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)**（审核有些慢）**
 - [火狐插件](https://addons.mozilla.org/addon/es-client/)
-- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/tag/v1.3.0)**（完整功能）**
+- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/tag/v2.2.0)**（完整功能）**
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 - [想天浏览器独立应用](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)**（完整功能）**

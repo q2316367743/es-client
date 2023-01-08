@@ -25,6 +25,9 @@ export function match(arr: Array<string>, keyword: string): Array<string> {
  * @return 是否包含
  */
 export function stringContain(template: string, keyword: string, toLow: boolean = false): boolean {
+    if (!keyword || keyword == '') {
+        return true;
+    }
     for (let i = 0; i < keyword.length; i++) {
         let isContain = false;
         for (let j = 0; j < template.length; j++) {

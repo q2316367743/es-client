@@ -1,4 +1,4 @@
-import {IndexInstance, Setting} from '@/entity/IndexInstance'
+import {IndexInstance, Setting} from '@/domain/IndexInstance'
 
 function getDefaultBody(setting: Setting) {
     return {

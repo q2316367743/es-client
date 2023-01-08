@@ -244,12 +244,12 @@ export default defineComponent({
                 this.urlDialog = true;
                 return;
             }
-            emitter.emit(MessageEventEnum.URL_UPDATE);
-            // 先进性索引刷新
             // 选择索引
             await useUrlStore().choose(value as number);
             // 索引刷新
-            await useIndexStore().reset();
+            await useIndexStore().reset(() => {
+                emitter.emit(MessageEventEnum.URL_UPDATE);
+            });
 
             // 当刷新完成之后，在发送消息
             // 选择一个有效的链接

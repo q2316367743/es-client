@@ -26,6 +26,7 @@
                         }}
                     </el-button>
                     <el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
+                    <el-button @click="historyDrawer = true">历史</el-button>
                 </div>
                 <el-select v-model="view">
                     <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
@@ -39,22 +40,6 @@
                 <div class="side">
                     <!-- 请求参数 -->
                     <div class="param" :style="method === 'GET' ? 'overflow: auto;padding-left: 20px;' : ''">
-                        <div class="get" v-show="method === 'GET'">
-                            <el-button type="primary" @click="addGetParam">{{ $t('senior_search.add') }}</el-button>
-                            <el-button @click="truncateGetParam">{{ $t('senior_search.clear') }}</el-button>
-                            <div class="item" v-for="(param, index) in get_params" :key="index">
-                                <el-input v-model="param.key" :placeholder="$t('senior_search.please_enter_key')">
-                                </el-input>
-                                <div style="text-align: center;">=</div>
-                                <el-input v-model="param.value" :placeholder="$t('senior_search.please_enter_value')">
-                                </el-input>
-                                <div></div>
-                                <el-button type="danger" @click="removeGetParam(param.id)">{{
-                                        $t('senior_search.remove')
-                                    }}
-                                </el-button>
-                            </div>
-                        </div>
                         <codemirror
                             v-model="params"
                             placeholder="请在这里输入查询条件"
@@ -75,10 +60,13 @@
                         <data-view :view="view" :result="result"/>
                     </el-scrollbar>
                     <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
-                                v-show="show_top"/>
+                                v-show="showTop"/>
                 </div>
             </div>
         </div>
+        <el-drawer v-model="historyDrawer" size="1000px" title="历史记录" append-to-body>
+            <history-manage @execute="executeToCurrent"/>
+        </el-drawer>
     </div>
 </template>
 
@@ -86,24 +74,26 @@
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import {Codemirror} from 'vue-codemirror';
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {json} from '@codemirror/lang-json';
+import './index.less';
 
 import mitt from '@/plugins/mitt';
 
 import {httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
 
-import {validateTip} from '@/utils/GlobalUtil';
-
 import LinkProcessor from "./LinkProcessor";
-import Param from '@/view/Param'
-import getParamBuild from "@/build/GetParamBuild";
 import useSettingStore from "@/store/SettingStore";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DataView from "@/components/DataView/index.vue";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import HistoryManage from "@/module/HistoryManage/index.vue";
+import HistoryEntity from "@/entity/HistoryEntity";
+import useTempRecordStore from "@/store/TempRecordStore";
+import useUrlStore from "@/store/UrlStore";
+import emitter from "@/plugins/mitt";
 
 
 export default defineComponent({
@@ -115,14 +105,13 @@ export default defineComponent({
         result: {},
         // 语法提示
         suggestions: [],
-        // GET请求参数
-        get_params: new Array<Param>(),
         // 相关数据
         view: useSettingStore().getDefaultViewer,
-        show_top: true,
-        extensions: [json()] as Array<any>
+        showTop: true,
+        extensions: [json()] as Array<any>,
+        historyDrawer: false
     }),
-    components: {DataView, Codemirror},
+    components: {HistoryManage, DataView, Codemirror},
     computed: {
         ...mapState(useSettingStore, ['instance']),
     },
@@ -144,11 +133,9 @@ export default defineComponent({
             this.params = '{}';
             this.result = {};
             this.suggestions = [];
-            // GET请求参数
-            this.get_params = new Array<Param>();
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
-            this.show_top = (index === PageNameEnum.SENIOR_SEARCH)
+            this.showTop = (index === PageNameEnum.SENIOR_SEARCH)
         });
         useSeniorSearchEvent.on((param: SeniorSearchParam) => {
             this.result = {};
@@ -163,61 +150,53 @@ export default defineComponent({
     // 获取最大宽度
     methods: {
         async search() {
-            if (await validateTip(this.method, this.link)) {
-                if (this.method === 'GET') {
-                    httpStrategyContext.getStrategy().es<any>({
-                        url: this.link,
-                        method: this.method,
-                        params: getParamBuild(this.get_params)
-                    }).then((response) => {
-                        this.result = response;
-                    });
-                } else {
-                    let data = {} as any;
-                    if (this.params != '') {
-                        try {
-                            data = JSON.parse(this.params);
-                        } catch (e: any) {
-                            console.error(e);
-                            // 不必强行校验json格式
-                            data = this.params;
-                        }
-                    }
-                    if (this.link.indexOf('_doc') > -1 && this.params == '') {
-                        // 如果是新增文档，但是没有参数，不进行查询
-                        this.result = {};
-                        return;
-                    }
-                    httpStrategyContext.getStrategy().es<any>({
-                        url: this.link,
-                        method: this.method,
-                        data: data
-                    }).then((response) => {
-                        this.result = response;
-                    }).catch((e) => {
-                        this.result = e.response.data
-                    })
+            let data = {} as any;
+            if (this.params != '') {
+                try {
+                    data = JSON.parse(this.params);
+                } catch (e: any) {
+                    console.error(e);
+                    // 不必强行校验json格式
+                    data = this.params;
                 }
             }
+            if (this.method === 'POST' && this.link.indexOf('_doc') > -1 && this.params == '') {
+                // 如果是新增文档，但是没有参数，不进行查询
+                this.result = {};
+                ElNotification({
+                    title: '警告',
+                    type: 'warning',
+                    message: '新增文档，但没有参数'
+                })
+                return;
+            }
+            httpStrategyContext.getStrategy().es<any>({
+                url: this.link,
+                method: this.method,
+                data: data
+            }).then((response) => {
+                this.result = response;
+                // 正常响应，加入历史记录
+                let url = useUrlStore().url;
+                if (url) {
+                    useTempRecordStore().addTempRecord({
+                        id: new Date().getTime(),
+                        urlId: url.id!,
+                        link: this.link,
+                        method: this.method,
+                        params: this.params
+                    });
+                    emitter.emit(MessageEventEnum.TEMP_RECORD_UPDATE);
+                }
+            }).catch((e) => {
+                this.result = e.response.data
+            })
         },
         fetchSuggestions(queryString: string, cb: (links: string[]) => void) {
             cb(LinkProcessor(queryString, this.method));
         },
         handleSelect(item: any) {
             this.link = item;
-        },
-        addGetParam() {
-            this.get_params.push({
-                id: new Date().getTime(),
-                key: '',
-                value: ''
-            });
-        },
-        removeGetParam(id: number) {
-            this.get_params = this.get_params.filter(e => e.id !== id);
-        },
-        truncateGetParam() {
-            this.get_params = new Array<Param>();
         },
         formatDocument() {
             try {
@@ -231,106 +210,19 @@ export default defineComponent({
                 })
             }
         },
+        executeToCurrent(history: HistoryEntity) {
+            this.historyDrawer = false;
+            this.$nextTick(() => {
+                this.link = history.link;
+                this.method = history.method;
+                this.params = history.params;
+                this.search();
+            })
+        }
     },
 });
 </script>
 
 <style lang="less">
-.senior-search {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
 
-    .el-card {
-        height: 100%;
-
-        .el-card__body {
-            position: absolute;
-            top: 70px;
-            left: 10px;
-            bottom: 10px;
-            right: 10px;
-        }
-    }
-
-    .senior-main {
-        position: absolute;
-        top: 69px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-        .side {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            bottom: 0;
-            width: 500px;
-
-            .link {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 32px;
-                display: flex;
-            }
-
-            .param {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 10px;
-
-                .get {
-                    width: 466px;
-
-                    .item {
-                        display: grid;
-                        grid-template-rows: 1fr;
-                        grid-template-columns: 0.5fr 26px 1fr 12px auto;
-                        margin-top: 12px;
-                    }
-                }
-
-                .post {
-                    padding-top: 5px;
-                }
-            }
-        }
-
-        .senior-bar {
-            position: absolute;
-            top: 0;
-            left: 510px;
-            bottom: 0;
-            width: 9px;
-            border-left: var(--el-card-border-color) solid 1px;
-        }
-
-        .senior-button {
-            position: absolute;
-            width: 13px;
-            height: 13px;
-            border-radius: 13px;
-            line-height: 13px;
-            background-color: #ffffff;
-            font-size: 8px;
-            border-left: var(--el-card-border-color) solid 1px;
-            cursor: pointer;
-        }
-
-        .senior-content {
-            position: absolute;
-            top: 5px;
-            bottom: 5px;
-            right: 5px;
-            left: 515px;
-            overflow: auto;
-        }
-    }
-}
 </style>

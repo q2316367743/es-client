@@ -33,7 +33,17 @@ enum MessageEventEnum {
     /**
      * 主题变更
      */
-    SYSTEM_THEME = 'system:theme'
+    SYSTEM_THEME = 'system:theme',
+
+    /**
+     * 临时记录更新
+     */
+    TEMP_RECORD_UPDATE = 'temp:record:update',
+
+    /**
+     * 历史记录更新
+     */
+    HISTORY_UPDATE = 'history:update',
 
 }
 
