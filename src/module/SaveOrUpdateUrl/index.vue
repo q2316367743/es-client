@@ -12,14 +12,14 @@
             <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
                 <el-input-number v-model="url.sequence" controls-position="right" size="large" />
             </el-form-item>
-            <el-form-item :label="$t('setting.link.is_auth')" prop="is_auth">
-                <el-switch v-model="url.is_auth" size="large" active-text="true" inactive-text="false" />
+            <el-form-item :label="$t('setting.link.is_auth')" prop="isAuth">
+                <el-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false" />
             </el-form-item>
-            <el-form-item :label="$t('setting.link.auth_user')" prop="auth_user" v-if="url.is_auth">
-                <el-input v-model="url.auth_user" size="large" />
+            <el-form-item :label="$t('setting.link.auth_user')" prop="authUser" v-if="url.isAuth">
+                <el-input v-model="url.authUser" size="large" />
             </el-form-item>
-            <el-form-item :label="$t('setting.link.auth_password')" prop="auth_password" v-if="url.is_auth">
-                <el-input v-model="url.auth_password" size="large" />
+            <el-form-item :label="$t('setting.link.auth_password')" prop="authPassword" v-if="url.isAuth">
+                <el-input v-model="url.authPassword" size="large" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -65,9 +65,9 @@ export default defineComponent({
             name: '',
             value: 'http://',
             sequence: 0,
-            is_auth: false,
-            auth_user: '',
-            auth_password: ''
+            isAuth: false,
+            authUser: '',
+            authPassword: ''
         } as Url,
         dialog: false,
         isSave: true,
@@ -135,9 +135,9 @@ export default defineComponent({
                             name: this.url.name,
                             value: this.url.value,
                             sequence: this.url.sequence,
-                            is_auth: this.url.is_auth,
-                            auth_user: this.url.auth_user,
-                            auth_password: this.url.auth_password
+                            isAuth: this.url.isAuth,
+                            authUser: this.url.authUser,
+                            authPassword: this.url.authPassword
                         }, () => {
                             useUrlStore().reset();
                             ElMessage.success('新增成功');
@@ -148,10 +148,10 @@ export default defineComponent({
                             name: this.url.name,
                             value: this.url.value,
                             sequence: this.url.sequence,
-                            create_time: this.url.create_time || new Date(),
-                            is_auth: this.url.is_auth,
-                            auth_user: this.url.auth_user,
-                            auth_password: this.url.auth_password
+                            createTime: this.url.createTime || new Date(),
+                            isAuth: this.url.isAuth,
+                            authUser: this.url.authUser,
+                            authPassword: this.url.authPassword
                             // eslint-disable-next-line
                         }, this.url.id!, () => {
                             useUrlStore().reset();
@@ -162,9 +162,9 @@ export default defineComponent({
                         name: '',
                         value: 'http://',
                         sequence: 0,
-                        is_auth: false,
-                        auth_user: '',
-                        auth_password: ''
+                        isAuth: false,
+                        authUser: '',
+                        authPassword: ''
                     } as Url;
                     this.testDialog = false;
                     this.testData = {
@@ -186,9 +186,9 @@ export default defineComponent({
                         baseURL: this.url.value,
                         url: '/',
                         method: 'GET',
-                        auth: this.url.is_auth ? {
-                            username: this.url.auth_user!,
-                            password: this.url.auth_password!
+                        auth: this.url.isAuth ? {
+                            username: this.url.authUser!,
+                            password: this.url.authPassword!
                         } : undefined
                     }).then((response) => {
                         this.testDialog = true;

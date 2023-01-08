@@ -21,10 +21,10 @@ export function esHandle(config: HttpStrategyConfig): HttpStrategyConfig {
 
     // 如果有密码应该追加密码
     let url = useUrlStore().url;
-    if (url && url.is_auth && url.auth_user && url.auth_password) {
+    if (url && url.isAuth && url.authUser && url.authPassword) {
         config.auth = {
-            username: url.auth_user,
-            password: url.auth_password
+            username: url.authUser,
+            password: url.authPassword
         }
     }
     // 设置超时时间
