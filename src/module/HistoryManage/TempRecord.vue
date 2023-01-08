@@ -19,7 +19,7 @@
             </vxe-column>
             <vxe-column :title="$t('app.operation')" width="270">
                 <template #default="{ row }">
-                    <el-button type="success" size="small" @click="execute(row)">执行</el-button>
+                    <el-button type="success" size="small" @click="load(row)">载入</el-button>
                     <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录</el-button>
                     <el-button type="danger" size="small" @click="removeById(row.id)">{{ $t('app.delete') }}</el-button>
                 </template>
@@ -43,7 +43,7 @@ export default defineComponent({
     data: () => ({
         showTempRecords: new Array<HistoryEntity>(),
     }),
-    emits: ['execute'],
+    emits: ['load'],
     created() {
         // 设置数据
         this.showTempRecords = useTempRecordStore().getRecords.sort((e1, e2) => e2.id! - e1.id!);
@@ -62,8 +62,8 @@ export default defineComponent({
                 message: '已成功复制到剪切板'
             })
         },
-        execute(history: HistoryEntity) {
-            this.$emit('execute', history);
+        load(history: HistoryEntity) {
+            this.$emit('load', history);
         },
         removeById(id: number) {
             useTempRecordStore().removeById(id);

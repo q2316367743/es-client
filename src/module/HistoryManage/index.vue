@@ -6,10 +6,10 @@
         </el-tabs>
         <div class="history-manage-body">
             <!-- 临时记录 -->
-            <hm-temp-record @execute="execute" v-show="active === 'temp'"/>
+            <hm-temp-record @load="load" v-show="active === 'temp'"/>
             <!-- 历史记录 -->
             <el-scrollbar v-show="active === 'history'">
-                <hm-history @execute="execute"/>
+                <hm-history @load="load"/>
             </el-scrollbar>
         </div>
     </div>
@@ -24,13 +24,13 @@ import HmHistory from "@/module/HistoryManage/History.vue";
 export default defineComponent({
     name: 'history-manage',
     components: {HmHistory, HmTempRecord},
-    emits: ['execute'],
+    emits: ['load'],
     data: () => ({
         active: 'temp'
     }),
     methods: {
-        execute(history: HistoryEntity) {
-            this.$emit('execute', history);
+        load(history: HistoryEntity) {
+            this.$emit('load', history);
         }
     }
 });

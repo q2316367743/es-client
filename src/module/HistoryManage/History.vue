@@ -37,7 +37,7 @@
                     </vxe-column>
                     <vxe-column :title="$t('app.operation')" width="200">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="execute(row)">执行</el-button>
+                            <el-button type="success" size="small" @click="load(row)">载入</el-button>
                             <el-button type="primary" size="small">{{ $t('app.update') }}</el-button>
                             <el-button type="danger" size="small">{{ $t('app.delete') }}</el-button>
                         </template>
@@ -77,7 +77,7 @@ interface HistoryEntityView extends HistoryEntity {
 
 export default defineComponent({
     name: 'hm-history',
-    emits: ['execute'],
+    emits: ['load'],
     data: () => ({
         searchIcon: markRaw(Search),
         histories: new Array<HistoryEntityView>(),
@@ -137,8 +137,8 @@ export default defineComponent({
                 message: '已成功复制到剪切板'
             })
         },
-        execute(history: HistoryEntity) {
-            this.$emit('execute', history);
+        load(history: HistoryEntity) {
+            this.$emit('load', history);
         }
     }
 });

@@ -65,7 +65,7 @@
             </div>
         </div>
         <el-drawer v-model="historyDrawer" size="1000px" title="历史记录" append-to-body>
-            <history-manage @execute="executeToCurrent"/>
+            <history-manage @load="loadToCurrent"/>
         </el-drawer>
     </div>
 </template>
@@ -210,13 +210,12 @@ export default defineComponent({
                 })
             }
         },
-        executeToCurrent(history: HistoryEntity) {
+        loadToCurrent(history: HistoryEntity) {
             this.historyDrawer = false;
             this.$nextTick(() => {
                 this.link = history.link;
                 this.method = history.method;
                 this.params = history.params;
-                this.search();
             })
         }
     },
