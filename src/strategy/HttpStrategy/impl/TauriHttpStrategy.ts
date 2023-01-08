@@ -15,6 +15,16 @@ export default class TauriHttpStrategy implements HttpStrategy {
     fetch<T>(config: HttpStrategyConfig): Promise<T> {
         return new Promise((resolve, reject) => {
             const url = `${config.baseURL}/${config.url}`;
+            if (config.auth) {
+                let authorization = btoa(`${config.auth.username}:${config.auth.password}`);
+                if (config.headers) {
+                    config.headers['Authorization'] = authorization;
+                }else {
+                    config.headers = {
+                        Authorization: authorization
+                    }
+                }
+            }
             fetch<T>(url, {
                 method: config.method as HttpVerb,
                 headers: config.headers,
