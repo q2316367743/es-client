@@ -22,7 +22,7 @@
         <p>
             edge用户也可以在
             <el-link
-                href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo"
+                :href="data.distributes.edge"
                 target="_blank" type="primary">edge插件商店
             </el-link>
             进行评论与打分。
@@ -30,7 +30,7 @@
         <p>
             firefox用户也可以在
             <el-link
-                href="https://addons.mozilla.org/addon/es-client/"
+                :href="data.distributes.firefox"
                 target="_blank" type="primary">firefox附加组件
             </el-link>
             进行评论与打分。

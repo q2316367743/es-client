@@ -5,7 +5,7 @@
 [![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
 [![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
 [![star](https://img.shields.io/badge/edge-v2.2.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
-[![star](https://img.shields.io/badge/firefox-v2.2.0-%23ff3847)](https://addons.mozilla.org/addon/es-client/)
+[![star](https://img.shields.io/badge/firefox-v2.2.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 [![star](https://img.shields.io/badge/windows-v2.2.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 [![OSCS Status](https://www.oscs1024.com/platform/badge/es-client.svg?size=small)](https://www.murphysec.com/accept?code=9a8096e0fd00acdcdb1901030f42d5d6&type=1&from=2)
 
@@ -18,7 +18,7 @@
 
 - [website](https://project.esion.xyz/es-client/)**（基本用不了）**
 - [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)**（审核有些慢）**
-- [火狐插件](https://addons.mozilla.org/addon/es-client/)
+- [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/tag/v2.2.0)**（完整功能）**
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)

@@ -264,7 +264,7 @@ export default {
     // 分发平台
     distributes: {
         'edge': 'https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo',
-        'firefox': 'https://addons.mozilla.org/addon/es-client',
+        'firefox': 'https://addons.mozilla.org/zh-CN/firefox/addon/es-client/',
         '想天浏览器': 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w'
     },
     // @ts-ignore
