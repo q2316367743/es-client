@@ -1,6 +1,5 @@
 import HttpStrategy from "@/strategy/HttpStrategy/HttpStrategy";
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
-import {esHandle, serverHandle} from "@/strategy/HttpStrategy/HttpCommonHandle";
 
 // 引入tauri
 import {Body, fetch, HttpVerb, Response} from '@tauri-apps/api/http';
@@ -8,7 +7,6 @@ import BrowserUtil from "@/utils/BrowserUtil";
 
 export default class TauriHttpStrategy implements HttpStrategy {
     es(config: HttpStrategyConfig): Promise<any> {
-        esHandle(config);
         return this.fetch(config);
     }
 
@@ -50,8 +48,7 @@ export default class TauriHttpStrategy implements HttpStrategy {
     }
 
     server<T>(config: HttpStrategyConfig): Promise<T> {
-        serverHandle(config);
-        return this.fetch(config);
+        return this.fetch<T>(config);
     }
 
 }

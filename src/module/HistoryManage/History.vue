@@ -19,11 +19,8 @@
                     <vxe-column field="name" :title="$t('setting.link.name')" width="150"></vxe-column>
                     <vxe-column field="link" title="链接" width="400">
                         <template #default="{row}">
-                            <el-link :href="row.url + row.link" type="primary" target="_blank">{{
-                                    row.url + row.link
-                                }}
-                            </el-link>
-                            <div class="url-copy" @click="execCopy(row.url + row.link)">{{ $t('app.copy') }}</div>
+                            <el-link type="primary" target="_blank">{{ row.link }}</el-link>
+                            <div class="url-copy" @click="execCopy(current + row.link)">{{ $t('app.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column field="method" title="方法" width="100"></vxe-column>
@@ -60,8 +57,7 @@ import {historyService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
-import ArrayUtil from "@/utils/ArrayUtil";
-import Optional from "@/utils/Optional";
+import {mapState} from "pinia";
 
 interface Params {
     cellValue: any
@@ -69,18 +65,12 @@ interface Params {
     row: any
 }
 
-interface HistoryEntityView extends HistoryEntity {
-
-    url: string;
-
-}
-
 export default defineComponent({
     name: 'hm-history',
     emits: ['load'],
     data: () => ({
         searchIcon: markRaw(Search),
-        histories: new Array<HistoryEntityView>(),
+        histories: new Array<HistoryEntity>(),
         columnConfig: {
             resizable: true
         },
@@ -93,6 +83,9 @@ export default defineComponent({
         name: '',
         onlyCurrent: true
     }),
+    computed: {
+        ...mapState(useUrlStore, ['current'])
+    },
     mounted() {
         // 历史表格工具连接
         let historyTable = this.$refs['historyTable'] as VxeTableInstance;
@@ -114,17 +107,10 @@ export default defineComponent({
     methods: {
         search() {
             if (!useUrlStore().id && this.onlyCurrent) {
-                this.histories = new Array<HistoryEntityView>();
+                this.histories = new Array<HistoryEntity>();
                 return;
             }
-            historyService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined).then(histories => {
-                this.histories = histories.map(item => {
-                    return {
-                        ...item,
-                        url: useUrlStore().current
-                    } as HistoryEntityView
-                })
-            });
+            historyService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined).then(histories => this.histories = histories);
         },
         prettyDate(params: Params) {
             return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");

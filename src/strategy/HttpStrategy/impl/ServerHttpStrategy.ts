@@ -2,7 +2,7 @@ import HttpStrategy from "@/strategy/HttpStrategy/HttpStrategy";
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import {esHandle, serverHandle} from "@/strategy/HttpStrategy/HttpCommonHandle";
+import {serverHandle} from "@/strategy/HttpStrategy/HttpCommonHandle";
 
 interface Result<T> {
 
@@ -15,11 +15,11 @@ interface Result<T> {
 export default class ServerHttpStrategy implements HttpStrategy {
 
     es(config: HttpStrategyConfig): Promise<any> {
-        esHandle(config);
         return this.fetch(config);
     }
 
     fetch<T>(config: HttpStrategyConfig): Promise<T> {
+        // 服务器版本
         serverHandle(config);
         return new Promise<T>((resolve, reject) => {
             axios({
@@ -48,7 +48,6 @@ export default class ServerHttpStrategy implements HttpStrategy {
     }
 
     server<T>(config: HttpStrategyConfig): Promise<T> {
-        serverHandle(config);
         return new Promise<T>((resolve, reject) => {
             axios(config).then((data) => {
                 let result = data.data as Result<T>;

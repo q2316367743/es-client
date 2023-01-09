@@ -8,9 +8,7 @@
             <!-- 临时记录 -->
             <hm-temp-record @load="load" v-show="active === 'temp'"/>
             <!-- 历史记录 -->
-            <el-scrollbar v-show="active === 'history'">
-                <hm-history @load="load"/>
-            </el-scrollbar>
+            <hm-history @load="load" v-show="active === 'history'"/>
         </div>
     </div>
 </template>

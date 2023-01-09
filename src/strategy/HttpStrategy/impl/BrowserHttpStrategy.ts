@@ -4,7 +4,6 @@ import HttpStrategy from "../HttpStrategy";
 import HttpStrategyConfig from "../HttpStrategyConfig";
 
 import {ElMessage} from 'element-plus'
-import {esHandle, serverHandle} from "@/strategy/HttpStrategy/HttpCommonHandle";
 
 export default class BrowserHttpStrategy implements HttpStrategy {
 
@@ -32,7 +31,6 @@ export default class BrowserHttpStrategy implements HttpStrategy {
     }
 
     es(config: HttpStrategyConfig): Promise<any> {
-        esHandle(config);
         return this.fetch(config);
     }
 
@@ -41,7 +39,6 @@ export default class BrowserHttpStrategy implements HttpStrategy {
     }
 
     server<T>(config: HttpStrategyConfig): Promise<T> {
-        serverHandle(config);
         return this.fetch(config);
     }
 

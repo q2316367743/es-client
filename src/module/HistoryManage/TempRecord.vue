@@ -1,59 +1,99 @@
 <template>
-    <el-scrollbar>
-        <vxe-table :data="showTempRecords" :row-config="{isHover: true}" ref="tempRecordTable">
-            <vxe-column type="seq" width="50" :title="$t('app.index')"/>
-            <vxe-column field="method" title="请求方法" width="100"/>
-            <vxe-column field="link" title="链接" width="250">
-                <template #default="{row}">
-                    <el-link type="primary" target="_blank">{{ row.link }}</el-link>
-                    <div class="url-copy" @click="execCopy(row.link)">{{ $t('app.copy') }}</div>
-                </template>
-            </vxe-column>
-            <vxe-column field="params" title="请求参数" width="280">
-                <template #default="{row}">
-                    <div class="temp-record-params">
-                        <div class="temp-record-params-value" :title="row.params">{{ row.params }}</div>
-                        <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
-                    </div>
-                </template>
-            </vxe-column>
-            <vxe-column :title="$t('app.operation')" width="270">
-                <template #default="{ row }">
-                    <el-button type="success" size="small" @click="load(row)">载入</el-button>
-                    <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录</el-button>
-                    <el-button type="danger" size="small" @click="removeById(row.id)">{{ $t('app.delete') }}</el-button>
-                </template>
-            </vxe-column>
-        </vxe-table>
-    </el-scrollbar>
+    <div class="temp-record">
+        <div class="temp-record-head">
+            <div>
+                <el-input v-model="condition.link" style="width: 200px;" placeholder="链接" @input="loadData" clearable/>
+                <el-select v-model="condition.method" style="margin-left: 12px;" placeholder="请求方式" clearable @change="loadData">
+                    <el-option label="HEAD" value="HEAD" />
+                    <el-option label="GET" value="GET" />
+                    <el-option label="POST" value="POST" />
+                    <el-option label="PUT" value="PUT" />
+                    <el-option label="DELETE" value="DELETE" />
+                </el-select>
+            </div>
+            <div>
+                <el-button type="danger" :icon="deleteIcon" @click="reset">清空</el-button>
+            </div>
+        </div>
+        <div class="temp-record-body">
+            <el-scrollbar>
+                <vxe-table :data="tempRecords" :row-config="{isHover: true}" ref="tempRecordTable">
+                    <vxe-column type="seq" width="50" :title="$t('app.index')"/>
+                    <vxe-column field="method" title="请求方法" width="100"/>
+                    <vxe-column field="link" title="链接" width="250">
+                        <template #default="{row}">
+                            <el-link type="primary" target="_blank">{{ row.link }}</el-link>
+                            <div class="url-copy" @click="execCopy(row.link)">{{ $t('app.copy') }}</div>
+                        </template>
+                    </vxe-column>
+                    <vxe-column field="params" title="请求参数" width="280">
+                        <template #default="{row}">
+                            <div class="temp-record-params">
+                                <div class="temp-record-params-value" :title="row.params">{{ row.params }}</div>
+                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
+                            </div>
+                        </template>
+                    </vxe-column>
+                    <vxe-column :title="$t('app.operation')" width="270">
+                        <template #default="{ row }">
+                            <el-button type="success" size="small" @click="load(row)">载入</el-button>
+                            <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录</el-button>
+                            <el-button type="danger" size="small" @click="removeById(row.id)">{{ $t('app.delete') }}</el-button>
+                        </template>
+                    </vxe-column>
+                </vxe-table>
+            </el-scrollbar>
+        </div>
+    </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, markRaw} from "vue";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {Delete} from "@element-plus/icons-vue";
+import {VxeTableInstance} from "vxe-table";
+
 import HistoryEntity from "@/entity/HistoryEntity";
 import useTempRecordStore from "@/store/TempRecordStore";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {VxeTableInstance} from "vxe-table";
 import {historyService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import { stringContain } from "@/utils/SearchUtil";
 
 export default defineComponent({
     name: 'hm-temp-record',
-    data: () => ({
-        showTempRecords: new Array<HistoryEntity>(),
-    }),
     emits: ['load'],
+    data: () => ({
+        tempRecords: new Array<HistoryEntity>(),
+        condition: {
+            link: '',
+            method: ''
+        },
+        deleteIcon: markRaw(Delete)
+    }),
     created() {
         // 设置数据
-        this.showTempRecords = useTempRecordStore().getRecords.sort((e1, e2) => e2.id! - e1.id!);
+        this.tempRecords = this.renderRecord(useTempRecordStore().getRecords);
         emitter.on(MessageEventEnum.TEMP_RECORD_UPDATE, () => {
             // 重新加载数据
-            let tempRecordTable = this.$refs['tempRecordTable'] as VxeTableInstance;
-            tempRecordTable.reloadData(useTempRecordStore().getRecords.sort((e1, e2) => e2.id! - e1.id!));
+            this.loadData();
         })
     },
     methods: {
+        renderRecord(showTempRecords: Array<HistoryEntity>): Array<HistoryEntity> {
+            showTempRecords = showTempRecords.sort((e1, e2) => e2.id! - e1.id!);
+            if (this.condition.link !== '') {
+                showTempRecords = showTempRecords.filter(e => stringContain(e.link, this.condition.link));
+            }
+            if (this.condition.method !== '') {
+                showTempRecords = showTempRecords.filter(e => e.method === this.condition.method);
+            }
+            return showTempRecords;
+        },
+        loadData() {
+            let tempRecordTable = this.$refs['tempRecordTable'] as VxeTableInstance;
+            tempRecordTable.reloadData(this.renderRecord(useTempRecordStore().getRecords));
+        },
         execCopy(url: string) {
             BrowserUtil.copy(url);
             ElMessage({
@@ -69,8 +109,7 @@ export default defineComponent({
             useTempRecordStore().removeById(id);
             this.$nextTick(() => {
                 // 加载数据
-                let tempRecordTable = this.$refs['tempRecordTable'] as VxeTableInstance;
-                tempRecordTable.reloadData(useTempRecordStore().getRecords.sort((e1, e2) => e2.id! - e1.id!));
+                this.loadData();
             })
         },
         appendToHistory(history: HistoryEntity) {
@@ -101,19 +140,51 @@ export default defineComponent({
                         });
                     });
             })
+        },
+        reset() {
+            useTempRecordStore().reset();
+            this.$nextTick(() => {
+                // 加载数据
+                this.loadData();
+            });
         }
     }
 });
 </script>
 <style lang="less">
-.temp-record-params {
-    display: flex;
 
-    .temp-record-params-value {
-        width: 200px;
-        overflow: hidden;
-        white-space: nowrap; //不折行
-        text-overflow: ellipsis; //溢出显示省略号
+
+.temp-record {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .temp-record-head {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.55em 0;
+    }
+
+    .temp-record-body {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .temp-record-params {
+            display: flex;
+
+            .temp-record-params-value {
+                width: 200px;
+                overflow: hidden;
+                white-space: nowrap; //不折行
+                text-overflow: ellipsis; //溢出显示省略号
+            }
+        }
+
     }
 }
 </style>

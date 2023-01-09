@@ -15,7 +15,7 @@
             <el-input-number v-model="instance.defaultReplica"></el-input-number>
         </el-form-item>
 
-        <el-divider content-position="left">全局索引查询条件</el-divider>
+        <el-divider content-position="left">全局索引查询条件（修改后请刷新索引）</el-divider>
         <el-form-item label="状态">
             <el-radio-group v-model="instance.homeSearchState">
                 <el-radio :label="0">不设置</el-radio>

@@ -30,6 +30,7 @@ const useTempRecordStore = defineStore('temp-record', {
         },
         reset() {
             this.tempRecords = new Array<HistoryEntity>();
+            this.hashSet = new Set<string>()
         }
     }
 });
