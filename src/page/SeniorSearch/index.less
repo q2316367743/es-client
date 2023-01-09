@@ -5,8 +5,24 @@
     right: 10px;
     bottom: 10px;
 
+    .senior-search-tabs {
+        display: none;
+        height: 50px;
+        &.show-tabs {
+            display: block;
+        }
+    }
+
     .el-card {
-        height: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        &.show-tabs {
+            top: 50px;
+
+        }
 
         .el-card__body {
             position: absolute;
@@ -22,7 +38,7 @@
         top: 69px;
         left: 0;
         right: 0;
-        bottom: 0;
+        bottom: 10px;
 
         .side {
             position: absolute;

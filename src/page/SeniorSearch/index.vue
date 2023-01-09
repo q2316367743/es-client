@@ -1,7 +1,25 @@
 <template>
     <div class="senior-search">
+        <div class="senior-search-tabs" :class="showTabs ? 'show-tabs' : ''">
+            <el-tabs
+                v-model="searchId"
+                type="card"
+                editable
+                class="demo-tabs"
+                @edit="editTabs"
+            >
+                <el-tab-pane
+                    v-for="item in searchItemHeaders"
+                    :key="item.name"
+                    :label="item.name"
+                    :name="item.id"
+                >
+                    {{ item.name }}
+                </el-tab-pane>
+            </el-tabs>
+        </div>
         <!-- 左侧查询条件 -->
-        <div class="el-card is-never-shadow" style="min-height: 550px">
+        <div class="el-card is-never-shadow" style="min-height: 550px" :class="showTabs ? 'show-tabs' : ''">
             <!-- 上半部分 -->
             <div class="el-card__header" style="display: flex;justify-content: space-between;">
                 <div style="display: flex;">
@@ -29,18 +47,21 @@
                     <el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
                     <el-button @click="historyDrawer = true">历史</el-button>
                 </div>
-                <el-select v-model="view">
-                    <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
-                    <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                    <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
-                </el-select>
+                <div>
+                    <el-select v-model="view">
+                        <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
+                        <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
+                        <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                    </el-select>
+                    <el-button type="info" :icon="fullScreen" style="margin-left: 12px;" @click="showTabs = !showTabs"/>
+                </div>
             </div>
             <!-- 下半部分 -->
             <div class="senior-main">
                 <!-- 左面查询条件 -->
                 <div class="side">
                     <!-- 请求参数 -->
-                    <div class="param" :style="method === 'GET' ? 'overflow: auto;padding-left: 20px;' : ''">
+                    <div class="param">
                         <codemirror
                             v-model="params"
                             placeholder="请在这里输入查询条件"
@@ -72,49 +93,80 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
 import {Codemirror} from 'vue-codemirror';
 import {ElMessage, ElNotification} from "element-plus";
 import {json} from '@codemirror/lang-json';
+import {FullScreen} from '@element-plus/icons-vue'
+
 import './index.less';
+import LinkProcessor from "./LinkProcessor";
+import {SearchItem, SearchItemHeader} from './SearchItem';
 
 import mitt from '@/plugins/mitt';
+import emitter from '@/plugins/mitt';
+
+import useTempRecordStore from "@/store/TempRecordStore";
+import useUrlStore from "@/store/UrlStore";
+import useSettingStore from "@/store/SettingStore";
+
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import {httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
 
-import LinkProcessor from "./LinkProcessor";
-import useSettingStore from "@/store/SettingStore";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DataView from "@/components/DataView/index.vue";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 import HistoryManage from "@/module/HistoryManage/index.vue";
 import HistoryEntity from "@/entity/HistoryEntity";
-import useTempRecordStore from "@/store/TempRecordStore";
-import useUrlStore from "@/store/UrlStore";
-import emitter from "@/plugins/mitt";
-
 
 export default defineComponent({
     name: 'SeniorSearch',
-    data: () => ({
-        link: '',
-        method: 'POST' as Method,
-        params: '{}',
-        result: {},
-        // 语法提示
-        suggestions: [],
-        // 相关数据
-        view: useSettingStore().getDefaultViewer,
-        showTop: true,
-        extensions: [json()] as Array<any>,
-        historyDrawer: false
-    }),
+    data: () => {
+        let searchMap = new Map<number, SearchItem>();
+        let searchId = new Date().getTime();
+        searchMap.set(searchId, {
+            header: {
+                id: searchId,
+                name: '高级查询'
+            },
+            body: {
+                link: '',
+                method: 'POST',
+                params: '{}',
+                result: {}
+            }
+        });
+        return {
+            // 展示数据
+            link: '',
+            method: 'POST' as Method,
+            params: '',
+            result: {} as any,
+            // 图标
+            fullScreen: markRaw(FullScreen),
+            // 查询map
+            searchMap,
+            // 当前显示的ID
+            searchId,
+            showTabs: true,
+            // 语法提示
+            suggestions: [],
+            // 相关数据
+            view: useSettingStore().getDefaultViewer,
+            showTop: true,
+            extensions: [json()] as Array<any>,
+            historyDrawer: false
+        }
+    },
     components: {HistoryManage, DataView, Codemirror},
     computed: {
         ...mapState(useSettingStore, ['instance']),
+        searchItemHeaders(): Array<SearchItemHeader> {
+            return Array.from(this.searchMap.values()).map(e => e.header);
+        },
     },
     watch: {
         link(newValue) {
@@ -124,6 +176,29 @@ export default defineComponent({
         },
         default_viewer() {
             this.view = useSettingStore().getDefaultViewer
+        },
+        searchId(newValue: number) {
+            let searchItem = this.searchMap.get(newValue);
+            if (!searchItem) {
+                let searchId = new Date().getTime();
+                searchItem = {
+                    header: {
+                        id: searchId,
+                        name: '高级查询'
+                    },
+                    body: {
+                        link: '',
+                        method: 'POST',
+                        params: '{}',
+                        result: {}
+                    }
+                }
+                this.searchMap.set(searchId, searchItem);
+            }
+            this.link = searchItem.body.link;
+            this.method = searchItem.body.method;
+            this.params = searchItem.body.params;
+            this.result = searchItem.body.result;
         }
     },
     created() {
@@ -218,6 +293,43 @@ export default defineComponent({
                 this.method = history.method;
                 this.params = history.params;
             })
+        },
+        editTabs(targetName: number, action: 'remove' | 'add') {
+            if (action === 'add') {
+                let searchId = new Date().getTime();
+                let searchItem = {
+                    header: {
+                        id: searchId,
+                        name: '高级查询'
+                    },
+                    body: {
+                        link: '',
+                        method: 'POST',
+                        params: '{}',
+                        result: {}
+                    }
+                } as SearchItem;
+                this.searchMap.set(searchId, searchItem);
+                this.searchId = searchId;
+            } else if (action === 'remove') {
+                this.searchMap.delete(targetName);
+                if (this.searchMap.size === 0) {
+                    let searchId = new Date().getTime();
+                    let searchItem = {
+                        header: {
+                            id: searchId,
+                            name: '高级查询'
+                        },
+                        body: {
+                            link: '',
+                            method: 'POST',
+                            params: '{}',
+                            result: {}
+                        }
+                    } as SearchItem;
+                    this.searchMap.set(searchId, searchItem);
+                }
+            }
         }
     },
 });
