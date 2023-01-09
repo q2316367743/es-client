@@ -36,7 +36,13 @@
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">载入</el-button>
                             <el-button type="primary" size="small">{{ $t('app.update') }}</el-button>
-                            <el-button type="danger" size="small">{{ $t('app.delete') }}</el-button>
+                            <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
+                                           cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
+                                <template #reference>
+                                    <el-button type="danger" size="small">{{ $t('app.delete') }}
+                                    </el-button>
+                                </template>
+                            </el-popconfirm>
                         </template>
                     </vxe-column>
                 </vxe-table>
@@ -125,6 +131,22 @@ export default defineComponent({
         },
         load(history: HistoryEntity) {
             this.$emit('load', history);
+        },
+        removeById(id: number) {
+            historyService.removeById(id).then(() => {
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: '删除成功'
+                });
+                this.search();
+            }).catch(e => {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '删除失败，' + e
+                });
+            })
         }
     }
 });

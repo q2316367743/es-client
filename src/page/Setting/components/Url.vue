@@ -26,10 +26,12 @@
             <template #default="{ row }">
                 <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
                 </el-button>
-                <el-button type="danger" size="small" @click="remove(row.id, row.value)">{{
-                        $t('setting.link.delete')
-                    }}
-                </el-button>
+                <el-popconfirm title="此操作将永久删除该链接, 是否继续?" confirm-button-text="删除" cancel-button-text="取消"
+                               @confirm="remove(row.id, row.value)" width="200px">
+                    <template #reference>
+                        <el-button type="danger" size="small">{{ $t('setting.link.delete') }} </el-button>
+                    </template>
+                </el-popconfirm>
             </template>
         </vxe-column>
     </vxe-table>
@@ -118,23 +120,16 @@ export default defineComponent({
             return params.cellValue ? this.$t('setting.link.need_auth') : this.$t('setting.link.not_auth');
         },
         remove(id: number, value: string) {
-            ElMessageBox.confirm('此操作将永久删除该链接, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                closeOnClickModal: false
-            }).then(() => {
-                urlService.deleteById(id, () => {
-                    ElMessage({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    if (useUrlStore().current === value) {
-                        useUrlStore().choose();
-                    }
-                    useUrlStore().reset();
-                    useIndexStore().reset();
-                })
+            urlService.deleteById(id, () => {
+                ElMessage({
+                    message: '删除成功',
+                    type: 'success'
+                });
+                if (useUrlStore().current === value) {
+                    useUrlStore().choose();
+                }
+                useUrlStore().reset();
+                useIndexStore().reset();
             })
         },
         edit_open(url?: Url) {

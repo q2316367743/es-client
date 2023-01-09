@@ -67,4 +67,8 @@ export class HistoryService {
         });
     }
 
+    removeById(id: number): Promise<void> {
+        return this.historyDao.delete(id);
+    }
+
 }
