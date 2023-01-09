@@ -7,6 +7,7 @@
                 <div style="display: flex;">
                     <el-select v-model="method" :placeholder="$t('senior_search.please_select')"
                                style="min-width: 100px;">
+                        <el-option label="HEAD" value="HEAD"></el-option>
                         <el-option label="GET" value="GET"></el-option>
                         <el-option label="POST" value="POST"></el-option>
                         <el-option label="PUT" value="PUT"></el-option>

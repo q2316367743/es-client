@@ -77,7 +77,7 @@ export default defineComponent({
         emitter.on(MessageEventEnum.TEMP_RECORD_UPDATE, () => {
             // 重新加载数据
             this.loadData();
-        })
+        });
     },
     methods: {
         renderRecord(showTempRecords: Array<HistoryEntity>): Array<HistoryEntity> {
