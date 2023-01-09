@@ -59,6 +59,8 @@ import {historyService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import { stringContain } from "@/utils/SearchUtil";
+import useUrlStore from "@/store/UrlStore";
+import Optional from "@/utils/Optional";
 
 export default defineComponent({
     name: 'hm-temp-record',
@@ -116,11 +118,14 @@ export default defineComponent({
             // 输入名字
             ElMessageBox.prompt('请为此次查询命名', '新增历史记录', {
                 confirmButtonText: '新增',
-                cancelButtonText: '取消'
+                cancelButtonText: '取消',
+                inputPattern: /.+/,
+                inputErrorMessage: '名称为必填'
             }).then(({value}) => {
                 historyService.save({
                     ...history,
-                    name: value
+                    name: value,
+                    urlId: Optional.ofNullable(useUrlStore().id).orElse(0)
                 })
                     .then(() => {
                         ElMessage({

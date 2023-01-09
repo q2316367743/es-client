@@ -42,7 +42,6 @@ class HttpStrategyContext {
         if (!this.strategy) {
             this.strategy = new HttpStrategyProxy(new BrowserHttpStrategy());
         }
-        console.log(this.strategy)
         return this.strategy;
     }
 

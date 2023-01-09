@@ -8,7 +8,7 @@
                            style="margin-left: 12px;"/>
             </template>
             <template #tools>
-                <el-button type="primary" style="margin-right: 12px;">新增</el-button>
+                <el-button type="primary" style="margin-right: 12px;" @click="addOpen">新增</el-button>
             </template>
         </vxe-toolbar>
         <div class="hm-history-body">
@@ -35,7 +35,7 @@
                     <vxe-column :title="$t('app.operation')" width="200">
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">载入</el-button>
-                            <el-button type="primary" size="small">{{ $t('app.update') }}</el-button>
+                            <el-button type="primary" size="small" @click="updateOpen(row)">{{ $t('app.update') }}</el-button>
                             <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
@@ -48,6 +48,9 @@
                 </vxe-table>
             </el-scrollbar>
         </div>
+        <el-dialog v-model="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'" append-to-body>
+            <history-save-and-update v-model="dialog.data" @submit="submit"/>
+        </el-dialog>
     </div>
 </template>
 <script lang="ts">
@@ -64,6 +67,7 @@ import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
 import {mapState} from "pinia";
+import HistorySaveAndUpdate from "@/module/HistoryManage/HistorySaveAndUpdate.vue";
 
 interface Params {
     cellValue: any
@@ -73,6 +77,7 @@ interface Params {
 
 export default defineComponent({
     name: 'hm-history',
+    components: {HistorySaveAndUpdate},
     emits: ['load'],
     data: () => ({
         searchIcon: markRaw(Search),
@@ -87,7 +92,18 @@ export default defineComponent({
             types: ['csv', 'html', 'xml', 'txt']
         } as VxeTablePropTypes.ExportConfig,
         name: '',
-        onlyCurrent: true
+        onlyCurrent: true,
+        dialog: {
+            show: false,
+            data: {
+                id: 0,
+                name: '',
+                urlId: 0,
+                link: '',
+                method: 'POST',
+                params: ''
+            } as HistoryEntity
+        }
     }),
     computed: {
         ...mapState(useUrlStore, ['current'])
@@ -147,6 +163,62 @@ export default defineComponent({
                     message: '删除失败，' + e
                 });
             })
+        },
+        addOpen() {
+            this.dialog = {
+                show: true,
+                data: {
+                    id: 0,
+                    name: '',
+                    urlId: 0,
+                    link: '',
+                    method: 'POST',
+                    params: ''
+                } as HistoryEntity
+            }
+        },
+        updateOpen(historyEntity: HistoryEntity) {
+            this.dialog = {
+                show: true,
+                data: historyEntity
+            }
+        },
+        submit() {
+            if (this.dialog.data.id === 0) {
+                // 新增
+                historyService.save(this.dialog.data).then(() => {
+                    ElMessage({
+                        showClose: true,
+                        type: 'success',
+                        message: '新增成功'
+                    });
+                    this.search();
+                    this.dialog.show = false;
+                }).catch(e => {
+                    ElMessage({
+                        showClose: true,
+                        type: 'error',
+                        message: '新增失败，' + e
+                    });
+                });
+            }else {
+                // 修改
+                historyService.update(this.dialog.data).then(() => {
+                    ElMessage({
+                        showClose: true,
+                        type: 'success',
+                        message: '修改成功'
+                    });
+                    this.search();
+                    this.dialog.show = false;
+                }).catch(e => {
+                    ElMessage({
+                        showClose: true,
+                        type: 'error',
+                        message: '修改失败，' + e
+                    });
+                });
+            }
         }
     }
 });

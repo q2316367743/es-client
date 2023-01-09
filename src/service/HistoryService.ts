@@ -35,13 +35,9 @@ export class HistoryService {
     }
 
     save(record: HistoryEntity): Promise<number> {
-        let urlId = useUrlStore().id;
-        if (!urlId) {
-            return Promise.reject('请选择链接');
-        }
         return this.historyDao.add({
             id: undefined,
-            urlId,
+            urlId: record.urlId,
             createTime: new Date(),
             updateTime: new Date(),
             name: record.name,
