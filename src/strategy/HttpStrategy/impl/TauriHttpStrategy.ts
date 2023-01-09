@@ -3,7 +3,6 @@ import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
 // 引入tauri
 import {Body, fetch, HttpVerb, Response} from '@tauri-apps/api/http';
-import BrowserUtil from "@/utils/BrowserUtil";
 
 export default class TauriHttpStrategy implements HttpStrategy {
     es(config: HttpStrategyConfig): Promise<any> {

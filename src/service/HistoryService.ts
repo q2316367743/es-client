@@ -14,26 +14,40 @@ export class HistoryService {
         if (urlId) {
             return new Promise<Array<HistoryEntity>>(resolve => {
                 this.historyDao.where({urlId}).toArray().then(list => {
-                    if (!name || name === ''){
-                        resolve(list);
-                    }else {
-                        resolve(list.filter(e => stringContain(e.name!, name)));
+                    if (!name || name === '') {
+                        resolve(list.sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
+                    } else {
+                        resolve(list.filter(e => stringContain(e.name!, name))
+                            .sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
                     }
                 })
             });
         }
         return new Promise<Array<HistoryEntity>>(resolve => {
             this.historyDao.toArray().then(list => {
-                if (!name || name === ''){
-                    resolve(list);
-                }else {
-                    resolve(list.filter(e => stringContain(e.name!, name)));
+                if (!name || name === '') {
+                    resolve(list
+                        .sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
+                } else {
+                    resolve(list.filter(e => stringContain(e.name!, name))
+                        .sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
                 }
             })
         });
     }
 
-    save(record: HistoryEntity): Promise<number> {
+    async existByName(name: string): Promise<boolean> {
+        let count = await this.historyDao.where({name}).toArray();
+        return Promise.resolve(count.length > 0);
+    }
+
+    async save(record: HistoryEntity): Promise<number> {
+        if (!record.name || record.name === '') {
+            return Promise.reject('记录名称不能为空');
+        }
+        if (await this.existByName(record.name)) {
+            return Promise.reject('记录名称已存在');
+        }
         return this.historyDao.add({
             id: undefined,
             urlId: record.urlId,

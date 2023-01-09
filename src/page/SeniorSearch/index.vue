@@ -14,7 +14,22 @@
                     :label="item.name"
                     :name="item.id"
                 >
-                    {{ item.name }}
+                    <template #label>
+                        <el-dropdown trigger="contextmenu" @command="optionTab">
+                            <div>{{ item.name }}</div>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item :command="`close-one|${item.id}`">关闭此标签</el-dropdown-item>
+                                    <el-dropdown-item :command="`close-other|${item.id}`">关闭其他标签
+                                    </el-dropdown-item>
+                                    <el-dropdown-item :command="`close-all|${item.id}`">关闭全部标签</el-dropdown-item>
+                                    <el-dropdown-item :command="`rename|${item.id}|${item.name}`">重命名
+                                    </el-dropdown-item>
+                                    <el-dropdown-item :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </template>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -23,7 +38,7 @@
             <!-- 上半部分 -->
             <div class="el-card__header" style="display: flex;justify-content: space-between;">
                 <div style="display: flex;">
-                    <el-select v-model="method" :placeholder="$t('senior_search.please_select')"
+                    <el-select v-model="current.method" :placeholder="$t('senior_search.please_select')"
                                style="min-width: 100px;">
                         <el-option label="HEAD" value="HEAD"></el-option>
                         <el-option label="GET" value="GET"></el-option>
@@ -31,7 +46,7 @@
                         <el-option label="PUT" value="PUT"></el-option>
                         <el-option label="DELETE" value="DELETE"></el-option>
                     </el-select>
-                    <el-autocomplete v-model="link" style="min-width: 100px;width: 300px;margin: 0 6px;"
+                    <el-autocomplete v-model="current.link" style="min-width: 100px;width: 300px;margin: 0 6px;"
                                      :fetch-suggestions="fetchSuggestions" @keyup.enter.native="search"
                                      @select="handleSelect"
                                      :placeholder="$t('senior_search.please_enter_a_link')" clearable>
@@ -40,7 +55,7 @@
                         </template>
                     </el-autocomplete>
                     <el-button type="primary" @click="search">{{
-                            link.indexOf('search') > -1 ?
+                            current.link.indexOf('search') > -1 ?
                                 $t('senior_search.search') : $t('senior_search.execute')
                         }}
                     </el-button>
@@ -63,7 +78,7 @@
                     <!-- 请求参数 -->
                     <div class="param">
                         <codemirror
-                            v-model="params"
+                            v-model="current.params"
                             placeholder="请在这里输入查询条件"
                             :style="{ height: '100%' }"
                             :autofocus="true"
@@ -79,7 +94,7 @@
                 <!-- 右面展示内容 -->
                 <div class="senior-content">
                     <el-scrollbar>
-                        <data-view :view="view" :result="result"/>
+                        <data-view :view="view" :result="current.result"/>
                     </el-scrollbar>
                     <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
                                 v-show="showTop"/>
@@ -96,7 +111,7 @@
 import {defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
 import {Codemirror} from 'vue-codemirror';
-import {ElMessage, ElNotification} from "element-plus";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {json} from '@codemirror/lang-json';
 import {FullScreen} from '@element-plus/icons-vue'
 
@@ -114,13 +129,14 @@ import useSettingStore from "@/store/SettingStore";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
-import {httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {historyService, httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
 
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import DataView from "@/components/DataView/index.vue";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
 import HistoryManage from "@/module/HistoryManage/index.vue";
 import HistoryEntity from "@/entity/HistoryEntity";
+import Optional from "@/utils/Optional";
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -141,10 +157,12 @@ export default defineComponent({
         });
         return {
             // 展示数据
-            link: '',
-            method: 'POST' as Method,
-            params: '',
-            result: {} as any,
+            current: {
+                link: '',
+                method: 'POST' as Method,
+                params: '',
+                result: {} as any,
+            },
             // 图标
             fullScreen: markRaw(FullScreen),
             // 查询map
@@ -171,7 +189,7 @@ export default defineComponent({
     watch: {
         link(newValue) {
             if (newValue === '') {
-                this.result = {};
+                this.current.result = {};
             }
         },
         default_viewer() {
@@ -195,50 +213,84 @@ export default defineComponent({
                 }
                 this.searchMap.set(searchId, searchItem);
             }
-            this.link = searchItem.body.link;
-            this.method = searchItem.body.method;
-            this.params = searchItem.body.params;
-            this.result = searchItem.body.result;
+            this.current.link = searchItem.body.link;
+            this.current.method = searchItem.body.method;
+            this.current.params = searchItem.body.params;
+            this.current.result = searchItem.body.result;
+        },
+        current: {
+            handler() {
+                let searchItem = this.searchMap.get(this.searchId);
+                if (searchItem) {
+                    searchItem.body.link = this.current.link;
+                    searchItem.body.method = this.current.method;
+                    searchItem.body.params = this.current.params;
+                    searchItem.body.result = this.current.result;
+                }
+            },
+            deep: true
         }
     },
     created() {
         mitt.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置条件
-            this.link = '';
-            this.method = 'POST';
-            this.params = '{}';
-            this.result = {};
+            this.current.link = '';
+            this.current.method = 'POST';
+            this.current.params = '{}';
+            this.current.result = {};
             this.suggestions = [];
+            this.searchMap.clear();
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.showTop = (index === PageNameEnum.SENIOR_SEARCH)
         });
         useSeniorSearchEvent.on((param: SeniorSearchParam) => {
-            this.result = {};
-            this.link = param.url;
-            this.method = param.method as Method;
-            this.params = param.param;
-            if (param.execute) {
-                this.search();
-            }
+            let searchId = new Date().getTime();
+            let searchItem = {
+                header: {
+                    id: searchId,
+                    name: Optional.ofNullable(param.name).orElse(searchId.toString())
+                },
+                body: {
+                    link: param.url,
+                    method: param.method,
+                    params: param.param,
+                    result: {}
+                }
+            } as SearchItem;
+            this.searchMap.set(searchId, searchItem);
+            this.searchId = searchId;
+
+            // 只能预先赋值
+            this.current.link = searchItem.body.link;
+            this.current.method = searchItem.body.method;
+            this.current.params = searchItem.body.params;
+            this.current.result = searchItem.body.result;
+
+            // 搜索
+            this.$nextTick(() => {
+                if (param.execute) {
+                    this.search();
+                }
+            });
         })
     },
     // 获取最大宽度
     methods: {
         async search() {
             let data = {} as any;
-            if (this.params != '') {
+            if (this.current.params != '') {
                 try {
-                    data = JSON.parse(this.params);
+                    data = JSON.parse(this.current.params);
                 } catch (e: any) {
                     console.error(e);
                     // 不必强行校验json格式
-                    data = this.params;
+                    data = this.current.params;
                 }
             }
-            if (this.method === 'POST' && this.link.indexOf('_doc') > -1 && this.params == '') {
+            if (this.current.method === 'POST' && this.current.link.indexOf('_doc') > -1 && this.current.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
-                this.result = {};
+                this.current.result = {};
                 ElNotification({
                     title: '警告',
                     type: 'warning',
@@ -247,36 +299,36 @@ export default defineComponent({
                 return;
             }
             httpStrategyContext.getStrategy().es<any>({
-                url: this.link,
-                method: this.method,
+                url: this.current.link,
+                method: this.current.method,
                 data: data
             }).then((response) => {
-                this.result = response;
+                this.current.result = response;
                 // 正常响应，加入历史记录
                 let url = useUrlStore().url;
                 if (url) {
                     useTempRecordStore().addTempRecord({
                         id: new Date().getTime(),
                         urlId: url.id!,
-                        link: this.link,
-                        method: this.method,
-                        params: this.params
+                        link: this.current.link,
+                        method: this.current.method,
+                        params: this.current.params
                     });
                     emitter.emit(MessageEventEnum.TEMP_RECORD_UPDATE);
                 }
             }).catch((e) => {
-                this.result = e.response.data
+                this.current.result = e.response.data
             })
         },
         fetchSuggestions(queryString: string, cb: (links: string[]) => void) {
-            cb(LinkProcessor(queryString, this.method));
+            cb(LinkProcessor(queryString, this.current.method));
         },
         handleSelect(item: any) {
-            this.link = item;
+            this.current.link = item;
         },
         formatDocument() {
             try {
-                this.params = JSON.stringify(JSON.parse(this.params), null, 4);
+                this.current.params = JSON.stringify(JSON.parse(this.current.params), null, 4);
             } catch (e) {
                 console.error(e);
                 ElMessage({
@@ -289,47 +341,128 @@ export default defineComponent({
         loadToCurrent(history: HistoryEntity) {
             this.historyDrawer = false;
             this.$nextTick(() => {
-                this.link = history.link;
-                this.method = history.method;
-                this.params = history.params;
-            })
-        },
-        editTabs(targetName: number, action: 'remove' | 'add') {
-            if (action === 'add') {
                 let searchId = new Date().getTime();
                 let searchItem = {
                     header: {
                         id: searchId,
-                        name: '高级查询'
+                        name: Optional.ofNullable(history.name).orElse(searchId.toString())
                     },
                     body: {
-                        link: '',
-                        method: 'POST',
-                        params: '{}',
+                        link: history.link,
+                        method: history.method,
+                        params: history.params,
                         result: {}
                     }
                 } as SearchItem;
                 this.searchMap.set(searchId, searchItem);
                 this.searchId = searchId;
+            })
+        },
+        editTabs(targetName: number, action: 'remove' | 'add') {
+            if (action === 'add') {
+                this.clearAfter();
             } else if (action === 'remove') {
                 this.searchMap.delete(targetName);
                 if (this.searchMap.size === 0) {
-                    let searchId = new Date().getTime();
-                    let searchItem = {
-                        header: {
-                            id: searchId,
-                            name: '高级查询'
-                        },
-                        body: {
-                            link: '',
-                            method: 'POST',
-                            params: '{}',
-                            result: {}
-                        }
-                    } as SearchItem;
-                    this.searchMap.set(searchId, searchItem);
+                    this.clearAfter();
                 }
             }
+        },
+        optionTab(command: string) {
+            let strings = command.split('|');
+            let option = strings[0];
+            let id = parseInt(strings[1]);
+            switch (option) {
+                case 'close-one':
+                    this.searchMap.delete(id);
+                    if (this.searchId === id) {
+                        if (this.searchMap.size > 0) {
+                            this.searchId = this.searchMap.keys().next().value
+                        }
+                    }
+                    break;
+                case 'close-other':
+                    // 移除其他
+                    Array.from(this.searchMap.keys()).forEach(e => {
+                        if (e !== id) {
+                            this.searchMap.delete(e);
+                        }
+                    })
+                    this.searchId = id;
+                    break;
+                case 'close-all':
+                    this.searchMap.clear();
+                    break;
+                case 'rename':
+                    ElMessageBox.prompt("请输入新的标签名字", "修改标签名", {
+                        confirmButtonText: '修改',
+                        cancelButtonText: '取消',
+                        inputValue: strings[2],
+                        inputPattern: /.+/,
+                        inputErrorMessage: '必须输入标签名'
+                    }).then(({value}) => {
+                        let searchItem = this.searchMap.get(id);
+                        if (searchItem) {
+                            searchItem.header.name = value;
+                        }
+                    }).catch(() => {
+                    });
+                    break;
+                case 'save-history':
+                    let searchItem = this.searchMap.get(id);
+                    if (!searchItem) {
+                        ElMessage({
+                            showClose: true,
+                            type: 'error',
+                            message: '标签未找到'
+                        });
+                        return;
+                    }
+                    historyService.save({
+                        urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
+                        name: searchItem.header.name,
+                        link: searchItem.body.link,
+                        method: searchItem.body.method,
+                        params: searchItem.body.params,
+                    })
+                        .then(() => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '新增成功'
+                            });
+                            emitter.emit(MessageEventEnum.HISTORY_UPDATE);
+                        })
+                        .catch(e => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'error',
+                                message: '新增失败，' + e
+                            });
+                        });
+                    break;
+            }
+            // 全部关闭了
+            if (this.searchMap.size === 0) {
+                this.clearAfter();
+            }
+        },
+        clearAfter() {
+            let searchId = new Date().getTime();
+            let searchItem = {
+                header: {
+                    id: searchId,
+                    name: '高级查询'
+                },
+                body: {
+                    link: '',
+                    method: 'POST',
+                    params: '{}',
+                    result: {}
+                }
+            } as SearchItem;
+            this.searchMap.set(searchId, searchItem);
+            this.searchId = searchId;
         }
     },
 });

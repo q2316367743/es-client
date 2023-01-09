@@ -132,7 +132,8 @@ export default defineComponent({
                 this.histories = new Array<HistoryEntity>();
                 return;
             }
-            historyService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined).then(histories => this.histories = histories);
+            historyService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
+                .then(histories => this.histories = histories);
         },
         prettyDate(params: Params) {
             return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");

@@ -1,12 +1,18 @@
+import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
+
 /**
  * 复杂查询 - 参数
  */
 export default interface SeniorSearchParam {
 
     /**
+     * 名称
+     * */
+    name?: string;
+    /**
      * 请求方法
      */
-    method: string;
+    method: Method;
 
     /**
      * 请求链接
