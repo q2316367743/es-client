@@ -1,6 +1,5 @@
 import Dexie from "dexie";
 import HistoryEntity from "@/entity/HistoryEntity";
-import useUrlStore from "@/store/UrlStore";
 import {stringContain} from "@/utils/SearchUtil";
 
 export class HistoryService {
