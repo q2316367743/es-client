@@ -1,0 +1,71 @@
+<template>
+    <el-tabs
+        v-model="searchId"
+        type="card"
+        editable
+        class="demo-tabs"
+        @edit="editTabs"
+    >
+        <el-tab-pane
+            v-for="item in searchItemHeaders"
+            :key="item.name"
+            :label="item.name"
+            :name="item.id"
+        >
+            <template #label>
+                <el-dropdown trigger="contextmenu" @command="optionTab">
+                    <div>{{ item.name }}</div>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item :command="`close-one|${item.id}`">关闭此标签</el-dropdown-item>
+                            <el-dropdown-item :command="`close-other|${item.id}`">关闭其他标签
+                            </el-dropdown-item>
+                            <el-dropdown-item :command="`close-all|${item.id}`">关闭全部标签</el-dropdown-item>
+                            <el-dropdown-item :command="`rename|${item.id}|${item.name}`">重命名
+                            </el-dropdown-item>
+                            <el-dropdown-item :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </template>
+        </el-tab-pane>
+    </el-tabs>
+</template>
+<script lang="ts">
+import {defineComponent} from "vue";
+import TabMenuItem from "@/components/TabMenu/TabMenuItem";
+
+export default defineComponent({
+    name: 'tab-menu',
+    emits: ['update:modelValue', 'editTabs', 'optionTab'],
+    props: {
+        modelValue: Number,
+        searchItemHeaders: Array<TabMenuItem>
+    },
+    data: () => ({
+        searchId: 0
+    }),
+    watch: {
+        modelValue(newValue: number) {
+            this.searchId = newValue;
+        },
+        searchId(newValue: number) {
+            this.$emit('update:modelValue', newValue);
+        }
+    },
+    created() {
+        this.searchId = this.modelValue!;
+    },
+    methods: {
+        editTabs(targetName: number, action: 'remove' | 'add') {
+            this.$emit('editTabs', targetName, action);
+        },
+        optionTab(command: string) {
+            this.$emit('optionTab', command);
+        }
+    }
+});
+</script>
+<style scoped>
+
+</style>

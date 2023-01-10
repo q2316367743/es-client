@@ -55,19 +55,19 @@
 </template>
 <script lang="ts">
 import {defineComponent, markRaw} from "vue";
-import HistoryEntity from "@/entity/HistoryEntity";
+import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import {ElMessage} from "element-plus";
 import {toDateString} from "xe-utils";
 import {Search} from '@element-plus/icons-vue';
 
 import BrowserUtil from "@/utils/BrowserUtil";
-import {historyService} from "@/global/BeanFactory";
+import {seniorSearchHistoryService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
 import {mapState} from "pinia";
-import HistorySaveAndUpdate from "@/module/HistoryManage/HistorySaveAndUpdate.vue";
+import HistorySaveAndUpdate from "@/module/SeniroSearchHistoryManage/HistorySaveAndUpdate.vue";
 
 interface Params {
     cellValue: any
@@ -81,7 +81,7 @@ export default defineComponent({
     emits: ['load'],
     data: () => ({
         searchIcon: markRaw(Search),
-        histories: new Array<HistoryEntity>(),
+        histories: new Array<SeniorSearchHistory>(),
         columnConfig: {
             resizable: true
         },
@@ -102,7 +102,7 @@ export default defineComponent({
                 link: '',
                 method: 'POST',
                 params: ''
-            } as HistoryEntity
+            } as SeniorSearchHistory
         }
     }),
     computed: {
@@ -129,10 +129,10 @@ export default defineComponent({
     methods: {
         search() {
             if (!useUrlStore().id && this.onlyCurrent) {
-                this.histories = new Array<HistoryEntity>();
+                this.histories = new Array<SeniorSearchHistory>();
                 return;
             }
-            historyService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
+            seniorSearchHistoryService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
                 .then(histories => this.histories = histories);
         },
         prettyDate(params: Params) {
@@ -146,11 +146,11 @@ export default defineComponent({
                 message: '已成功复制到剪切板'
             })
         },
-        load(history: HistoryEntity) {
+        load(history: SeniorSearchHistory) {
             this.$emit('load', history);
         },
         removeById(id: number) {
-            historyService.removeById(id).then(() => {
+            seniorSearchHistoryService.removeById(id).then(() => {
                 ElMessage({
                     showClose: true,
                     type: 'success',
@@ -175,10 +175,10 @@ export default defineComponent({
                     link: '',
                     method: 'POST',
                     params: ''
-                } as HistoryEntity
+                } as SeniorSearchHistory
             }
         },
-        updateOpen(historyEntity: HistoryEntity) {
+        updateOpen(historyEntity: SeniorSearchHistory) {
             this.dialog = {
                 show: true,
                 data: historyEntity
@@ -187,7 +187,7 @@ export default defineComponent({
         submit() {
             if (this.dialog.data.id === 0) {
                 // 新增
-                historyService.save(this.dialog.data).then(() => {
+                seniorSearchHistoryService.save(this.dialog.data).then(() => {
                     ElMessage({
                         showClose: true,
                         type: 'success',
@@ -204,7 +204,7 @@ export default defineComponent({
                 });
             }else {
                 // 修改
-                historyService.update(this.dialog.data).then(() => {
+                seniorSearchHistoryService.update(this.dialog.data).then(() => {
                     ElMessage({
                         showClose: true,
                         type: 'success',

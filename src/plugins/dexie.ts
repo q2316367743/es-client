@@ -13,7 +13,8 @@ export default class DexieInstance extends Dexie {
         super('es-client');
         this.version(5).stores({
             url: '++id, &name, &value, sequence',
-            history: '++id, urlId, &name'
+            baseSearchHistory: '++id, urlId, &name',
+            seniorSearchHistory: '++id, urlId, &name'
         }).upgrade(trans => {
             console.log(trans);
             usePageJumpEvent.emit(PageNameEnum.SETTING);

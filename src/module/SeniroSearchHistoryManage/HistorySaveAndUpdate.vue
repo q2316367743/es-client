@@ -32,14 +32,14 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import HistoryEntity from "@/entity/HistoryEntity";
+import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
 
 export default defineComponent({
     name: 'history-save-and-update',
     props: {
-        modelValue: Object as PropType<HistoryEntity>,
+        modelValue: Object as PropType<SeniorSearchHistory>,
     },
     emits: ['update:modelValue', 'submit'],
     data: () => ({
@@ -50,7 +50,7 @@ export default defineComponent({
             link: '',
             method: 'POST',
             params: ''
-        } as HistoryEntity,
+        } as SeniorSearchHistory,
         old: {
             id: 0,
             name: '',
@@ -58,7 +58,7 @@ export default defineComponent({
             link: '',
             method: 'POST',
             params: ''
-        } as HistoryEntity
+        } as SeniorSearchHistory
     }),
     watch: {
         data() {

@@ -1,37 +1,7 @@
 <template>
     <div class="senior-search">
         <div class="senior-search-tabs" :class="showTabs ? 'show-tabs' : ''">
-            <el-tabs
-                v-model="searchId"
-                type="card"
-                editable
-                class="demo-tabs"
-                @edit="editTabs"
-            >
-                <el-tab-pane
-                    v-for="item in searchItemHeaders"
-                    :key="item.name"
-                    :label="item.name"
-                    :name="item.id"
-                >
-                    <template #label>
-                        <el-dropdown trigger="contextmenu" @command="optionTab">
-                            <div>{{ item.name }}</div>
-                            <template #dropdown>
-                                <el-dropdown-menu>
-                                    <el-dropdown-item :command="`close-one|${item.id}`">关闭此标签</el-dropdown-item>
-                                    <el-dropdown-item :command="`close-other|${item.id}`">关闭其他标签
-                                    </el-dropdown-item>
-                                    <el-dropdown-item :command="`close-all|${item.id}`">关闭全部标签</el-dropdown-item>
-                                    <el-dropdown-item :command="`rename|${item.id}|${item.name}`">重命名
-                                    </el-dropdown-item>
-                                    <el-dropdown-item :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </template>
-                        </el-dropdown>
-                    </template>
-                </el-tab-pane>
-            </el-tabs>
+            <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs" @option-tab="optionTab" />
         </div>
         <!-- 左侧查询条件 -->
         <div class="el-card is-never-shadow" style="min-height: 550px" :class="showTabs ? 'show-tabs' : ''">
@@ -101,9 +71,7 @@
                 </div>
             </div>
         </div>
-        <el-drawer v-model="historyDrawer" size="1000px" title="历史记录" append-to-body>
-            <history-manage @load="loadToCurrent"/>
-        </el-drawer>
+        <senior-search-history-manage v-model="historyDrawer"/>
     </div>
 </template>
 
@@ -117,7 +85,7 @@ import {FullScreen} from '@element-plus/icons-vue'
 
 import './index.less';
 import LinkProcessor from "./LinkProcessor";
-import {SearchItem, SearchItemHeader} from './SearchItem';
+import {SeniorSearchItem} from './SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
@@ -129,19 +97,20 @@ import useSettingStore from "@/store/SettingStore";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
-import {historyService, httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {seniorSearchHistoryService, httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
 
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import DataView from "@/components/DataView/index.vue";
 import SeniorSearchParam from "@/domain/SeniorSearchParam";
-import HistoryManage from "@/module/HistoryManage/index.vue";
-import HistoryEntity from "@/entity/HistoryEntity";
 import Optional from "@/utils/Optional";
+import SeniorSearchHistoryManage from "@/module/SeniroSearchHistoryManage/index.vue";
+import TabMenu from "@/components/TabMenu/index.vue";
+import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 
 export default defineComponent({
     name: 'SeniorSearch',
     data: () => {
-        let searchMap = new Map<number, SearchItem>();
+        let searchMap = new Map<number, SeniorSearchItem>();
         let searchId = new Date().getTime();
         searchMap.set(searchId, {
             header: {
@@ -179,10 +148,10 @@ export default defineComponent({
             historyDrawer: false
         }
     },
-    components: {HistoryManage, DataView, Codemirror},
+    components: {TabMenu, SeniorSearchHistoryManage, DataView, Codemirror},
     computed: {
         ...mapState(useSettingStore, ['instance']),
-        searchItemHeaders(): Array<SearchItemHeader> {
+        searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
     },
@@ -232,15 +201,6 @@ export default defineComponent({
         }
     },
     created() {
-        mitt.on(MessageEventEnum.URL_UPDATE, () => {
-            // 重置条件
-            this.current.link = '';
-            this.current.method = 'POST';
-            this.current.params = '{}';
-            this.current.result = {};
-            this.suggestions = [];
-            this.searchMap.clear();
-        });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.showTop = (index === PageNameEnum.SENIOR_SEARCH)
         });
@@ -257,7 +217,7 @@ export default defineComponent({
                     params: param.param,
                     result: {}
                 }
-            } as SearchItem;
+            } as SeniorSearchItem;
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
 
@@ -338,26 +298,6 @@ export default defineComponent({
                 })
             }
         },
-        loadToCurrent(history: HistoryEntity) {
-            this.historyDrawer = false;
-            this.$nextTick(() => {
-                let searchId = new Date().getTime();
-                let searchItem = {
-                    header: {
-                        id: searchId,
-                        name: Optional.ofNullable(history.name).orElse(searchId.toString())
-                    },
-                    body: {
-                        link: history.link,
-                        method: history.method,
-                        params: history.params,
-                        result: {}
-                    }
-                } as SearchItem;
-                this.searchMap.set(searchId, searchItem);
-                this.searchId = searchId;
-            })
-        },
         editTabs(targetName: number, action: 'remove' | 'add') {
             if (action === 'add') {
                 this.clearAfter();
@@ -365,6 +305,8 @@ export default defineComponent({
                 this.searchMap.delete(targetName);
                 if (this.searchMap.size === 0) {
                     this.clearAfter();
+                }else {
+                    this.searchId = this.searchMap.keys().next().value
                 }
             }
         },
@@ -418,7 +360,7 @@ export default defineComponent({
                         });
                         return;
                     }
-                    historyService.save({
+                    seniorSearchHistoryService.save({
                         urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
                         name: searchItem.header.name,
                         link: searchItem.body.link,
@@ -460,7 +402,7 @@ export default defineComponent({
                     params: '{}',
                     result: {}
                 }
-            } as SearchItem;
+            } as SeniorSearchItem;
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
         }

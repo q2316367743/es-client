@@ -42,6 +42,15 @@
             </el-select>
             <el-input v-model="condition.extra_right_value" style="width: 180px;margin-left: 10px;"></el-input>
         </div>
+        <!-- 操作 -->
+        <el-button type="primary" style="margin-left: 10px" @click="add">{{
+                $t('base_search.add')
+            }}
+        </el-button>
+        <el-button type="danger" @click="remove(condition.id)">{{
+                $t('base_search.remove')
+            }}
+        </el-button>
     </div>
 </template>
 <script lang="ts">
@@ -50,6 +59,7 @@ import Field from "@/view/Field";
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
+    name: 'field-condition-item',
     props: {
         modelValue: Object as PropType<BaseQuery>,
         fields: {
@@ -57,6 +67,7 @@ export default defineComponent({
             default: () => [] as Array<Field>
         }
     },
+    emits: ['add', 'remove', 'update:modelValue'],
     data: () => ({
         condition: {} as BaseQuery
     }),
@@ -75,6 +86,14 @@ export default defineComponent({
                 this.condition = this.modelValue!;
             },
             deep: true
+        }
+    },
+    methods: {
+        add() {
+            this.$emit('add');
+        },
+        remove(id: number) {
+            this.$emit('remove', id)
         }
     }
 });

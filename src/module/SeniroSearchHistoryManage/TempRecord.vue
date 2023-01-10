@@ -52,10 +52,10 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import {VxeTableInstance} from "vxe-table";
 
-import HistoryEntity from "@/entity/HistoryEntity";
+import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import useTempRecordStore from "@/store/TempRecordStore";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {historyService} from "@/global/BeanFactory";
+import {seniorSearchHistoryService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import { stringContain } from "@/utils/SearchUtil";
@@ -66,7 +66,7 @@ export default defineComponent({
     name: 'hm-temp-record',
     emits: ['load'],
     data: () => ({
-        tempRecords: new Array<HistoryEntity>(),
+        tempRecords: new Array<SeniorSearchHistory>(),
         condition: {
             link: '',
             method: ''
@@ -82,7 +82,7 @@ export default defineComponent({
         });
     },
     methods: {
-        renderRecord(showTempRecords: Array<HistoryEntity>): Array<HistoryEntity> {
+        renderRecord(showTempRecords: Array<SeniorSearchHistory>): Array<SeniorSearchHistory> {
             showTempRecords = showTempRecords.sort((e1, e2) => e2.id! - e1.id!);
             if (this.condition.link !== '') {
                 showTempRecords = showTempRecords.filter(e => stringContain(e.link, this.condition.link));
@@ -104,7 +104,7 @@ export default defineComponent({
                 message: '已成功复制到剪切板'
             })
         },
-        load(history: HistoryEntity) {
+        load(history: SeniorSearchHistory) {
             this.$emit('load', history);
         },
         removeById(id: number) {
@@ -114,7 +114,7 @@ export default defineComponent({
                 this.loadData();
             })
         },
-        appendToHistory(history: HistoryEntity) {
+        appendToHistory(history: SeniorSearchHistory) {
             // 输入名字
             ElMessageBox.prompt('请为此次查询命名', '新增历史记录', {
                 confirmButtonText: '新增',
@@ -122,7 +122,7 @@ export default defineComponent({
                 inputPattern: /.+/,
                 inputErrorMessage: '名称为必填'
             }).then(({value}) => {
-                historyService.save({
+                seniorSearchHistoryService.save({
                     ...history,
                     name: value,
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0)

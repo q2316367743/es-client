@@ -3,7 +3,7 @@ import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 /**
  * 历史记录
  * */
-export default interface HistoryEntity {
+export default interface SeniorSearchHistory {
 
     /**
      * 历史ID

@@ -1,16 +1,16 @@
 import {defineStore} from "pinia";
-import HistoryEntity from "@/entity/HistoryEntity";
+import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 
 const useTempRecordStore = defineStore('temp-record', {
     state: () => ({
-        tempRecords: new Array<HistoryEntity>(),
+        tempRecords: new Array<SeniorSearchHistory>(),
         hashSet: new Set<string>()
     }),
     getters: {
-        getRecords: (state): Array<HistoryEntity> => state.tempRecords
+        getRecords: (state): Array<SeniorSearchHistory> => state.tempRecords
     },
     actions: {
-        addTempRecord(record: HistoryEntity) {
+        addTempRecord(record: SeniorSearchHistory) {
             let hash = record.link + record.method + record.params;
             if (!this.hashSet.has(hash)) {
                 this.hashSet.add(hash);
@@ -29,7 +29,7 @@ const useTempRecordStore = defineStore('temp-record', {
             }
         },
         reset() {
-            this.tempRecords = new Array<HistoryEntity>();
+            this.tempRecords = new Array<SeniorSearchHistory>();
             this.hashSet = new Set<string>()
         }
     }

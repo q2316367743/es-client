@@ -51,5 +51,6 @@ declare module '@vue/runtime-core' {
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
     Mit: typeof import('./src/components/License/Mit.vue')['default']
     TableViewer: typeof import('./src/components/TableViewer/index.vue')['default']
+    TabMenu: typeof import('./src/components/TabMenu/index.vue')['default']
   }
 }

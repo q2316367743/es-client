@@ -1,9 +1,13 @@
 <template>
     <div class="base-search">
+        <div class="base-search-tab" :class="showTabs ? '' : 'full-screen'">
+            <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                      @option-tab="optionTab"/>
+        </div>
         <!-- 顶部菜单栏 -->
-        <div class="base-option el-card es-card">
+        <div class="base-option el-card es-card" :class="showTabs ? '' : 'full-screen'">
             <div class="left">
-                <el-select-v2 v-model="index" filterable :options="indices"
+                <el-select-v2 v-model="current.index" filterable :options="indices"
                               :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
                     <template #default="{ item }">
                         <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
@@ -15,10 +19,7 @@
                     }}
                 </el-button>
                 <!-- 清空 -->
-                <el-button style="margin-left: 10px" @click="clear(true)">{{
-                        $t('base_search.clear')
-                    }}
-                </el-button>
+                <el-button style="margin-left: 10px" @click="clear(true)">{{ $t('base_search.clear') }}</el-button>
             </div>
             <div class="right">
                 <el-select v-model="view">
@@ -26,79 +27,38 @@
                     <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                     <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
                 </el-select>
+                <el-button type="info" :icon="fullScreen" style="margin-left: 12px;" @click="showTabs = !showTabs"/>
             </div>
         </div>
         <!-- 核心查询区 -->
-        <div class="base-display">
+        <div class="base-display" :class="showTabs ? '' : 'full-screen'">
             <el-scrollbar style="height: 100%">
                 <!-- 查询条件 -->
                 <div class="base-condition el-card">
                     <el-form label-position="top" label-width="80px" style="overflow: auto">
                         <!-- 条件 -->
                         <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
-                            <div v-if="fieldConditions.length === 0">
-                                <el-button type="primary" @click="fieldConditionAdd">{{ $t('base_search.add') }}
-                                </el-button>
-                            </div>
-                            <div v-for="(item, idx) in fieldConditions" :key="idx"
-                                 style="margin-bottom: 10px;display: flex;">
-                                <field-condition-item v-model="fieldConditions[idx]" :fields="fields">
-                                </field-condition-item>
-                                <el-button type="primary" style="margin-left: 10px" @click="fieldConditionAdd">{{
-                                        $t('base_search.add')
-                                    }}
-                                </el-button>
-                                <el-button type="danger" @click="fieldConditionRemove(item.id)">{{
-                                        $t('base_search.remove')
-                                    }}
-                                </el-button>
-                            </div>
+                            <field-condition-container v-model="current.conditions" :fields="fields"/>
                         </el-form-item>
                         <!-- 排序 -->
                         <el-form-item :label="$t('base_search.order')">
-                            <div v-if="orders.length === 0">
-                                <el-button type="primary" @click="order_add">{{ $t('base_search.add') }}
-                                </el-button>
-                            </div>
-                            <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
-                                 :key="idx">
-                                <el-select v-model="orders[idx].field" filterable
-                                           :placeholder="$t('base_search.select_placeholder')"
-                                           style="margin-left: 10px">
-                                    <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
-                                               :value="field.name"></el-option>
-                                </el-select>
-                                <el-select v-model="orders[idx].type" filterable
-                                           :placeholder="$t('base_search.select_placeholder')"
-                                           style="margin-left: 10px">
-                                    <el-option label="asc" value="asc"></el-option>
-                                    <el-option label="desc" value="desc"></el-option>
-                                </el-select>
-                                <el-button type="primary" style="margin-left: 10px" @click="order_add">{{
-                                        $t('base_search.add')
-                                    }}
-                                </el-button>
-                                <el-button type="danger" @click="order_remove(order.id)">{{
-                                        $t('base_search.remove')
-                                    }}
-                                </el-button>
-                            </div>
+                            <field-order-container v-model="current.orders" :fields="fields"/>
                         </el-form-item>
                     </el-form>
                     <div class="base-search-condition-sentence">
                         <el-button link type="primary" @click="showBody">{{ $t('base_search.display_query_statement') }}
                         </el-button>
-                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到高级查询</el-button>
+                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到基础查询</el-button>
                     </div>
                 </div>
                 <!-- 查询结果 -->
                 <div class="base-content">
                     <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                                   v-model:current-page="page" v-model:page-size="size"></el-pagination>
-                    <data-view :view="view" :result="result" :mapping="mapping"/>
+                                   v-model:current-page="current.page" v-model:page-size="current.size"></el-pagination>
+                    <data-view :view="view" :result="current.result"/>
                 </div>
             </el-scrollbar>
-            <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="show_top"/>
+            <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="showTop"/>
         </div>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
                    class="es-dialog" :close-on-click-modal="false">
@@ -108,13 +68,17 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {ElMessageBox} from "element-plus";
+import {defineComponent, markRaw} from "vue";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {mapState} from "pinia";
-
+import {FullScreen} from "@element-plus/icons-vue";
 import JsonViewer from "vue-json-viewer";
+
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
+import DataView from "@/components/DataView/index.vue";
+import TabMenu from "@/components/TabMenu/index.vue";
+import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 
 import IndexApi from "@/api/IndexApi";
 
@@ -126,13 +90,20 @@ import useSettingStore from "@/store/SettingStore";
 import BaseQuery from '@/domain/BaseQuery';
 import BaseOrder from "@/domain/BaseOrder";
 
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
 import QueryConditionBuild from './build/QueryConditionBuild';
 import FieldConditionItem from "./components/FieldConditionItem.vue";
+import './index.less';
+
 import Field from "@/view/Field";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import DataView from "@/components/DataView/index.vue";
-import PageNameEnum from "@/enumeration/PageNameEnum";
+
 import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {BaseSearchItem} from "@/page/BaseSearch/BaseSearchItem";
+import FieldOrderContainer from "@/page/BaseSearch/components/FieldOrderContainer.vue";
+import FieldConditionContainer from "@/page/BaseSearch/components/FieldConditionContainer.vue";
+import Optional from "@/utils/Optional";
 
 interface Name {
     name: string;
@@ -145,6 +116,9 @@ interface Name {
 export default defineComponent({
     name: 'base-search',
     components: {
+        FieldConditionContainer,
+        FieldOrderContainer,
+        TabMenu,
         DataView,
         JsonViewer,
         BaseViewer,
@@ -152,29 +126,55 @@ export default defineComponent({
         FieldConditionItem
     },
     data: () => {
+        let searchMap = new Map<number, BaseSearchItem>();
+        let searchId = new Date().getTime();
+        searchMap.set(searchId, {
+            header: {
+                id: searchId,
+                name: '基础查询'
+            },
+            body: {
+                index: '',
+                conditions: new Array<BaseQuery>(),
+                orders: new Array<BaseOrder>(),
+                page: 1,
+                size: useSettingStore().getPageSize,
+                total: 0,
+                result: {}
+            }
+        });
         return {
-            // 选择的索引名称
-            index: '',
-            // 条件
-            fieldConditions: new Array<BaseQuery>(),
-            // 分页
-            page: 1,
-            size: useSettingStore().getPageSize,
-            total: 0,
+            searchMap,
+            searchId,
+
+            current: {
+                // 选择的索引名称
+                index: '',
+                // 条件
+                conditions: new Array<BaseQuery>(),
+                orders: new Array<BaseOrder>(),
+                // 分页
+                page: 1,
+                size: useSettingStore().getPageSize,
+                // 查询结果
+                total: 0,
+                result: {} as any,
+            },
+
+
             // 条件对话框
             condition_dialog: false,
             // 渲染后的数据
             condition_data: {},
-            // 查询结果
-            result: {} as any,
-            mapping: {} as any,
             // 视图
             view: useSettingStore().getDefaultViewer,
-            orders: new Array<BaseOrder>(),
-            show_top: true
+            showTop: true,
+            showTabs: false,
+            fullScreen: markRaw(FullScreen)
         };
     },
     computed: {
+        // 索引
         ...mapState(useIndexStore, {
             indices: (state) => {
                 let names = new Array<Name>();
@@ -198,14 +198,14 @@ export default defineComponent({
                 });
             }
         }),
-        ...mapState(useSettingStore, ["instance"]),
+        // 字段
         fields() {
-            if (this.index === '') {
+            if (this.current.index === '') {
                 return new Array<Field>();
             }
             // 重置字段
             for (let index of this.indices) {
-                if (index.name === this.index) {
+                if (index.name === this.current.index) {
                     return [...index.fields.sort((a, b) => {
                         return a.name.localeCompare(b.name, "zh-CN");
                     }), {
@@ -216,26 +216,60 @@ export default defineComponent({
             }
             return new Array<Field>();
         },
+        searchItemHeaders(): Array<TabMenuItem> {
+            return Array.from(this.searchMap.values()).map(e => e.header);
+        },
     },
     watch: {
         index() {
             // 索引变化，重置查询
             this.clear();
-            if (this.index !== '') {
+            if (this.current.index !== '') {
                 this.search();
             }
         },
-        instance() {
-            this.view = useSettingStore().getDefaultViewer
-        },
         size(newValue: number) {
-            this.size = newValue;
+            this.current.size = newValue;
             this.search();
         },
         page(newValue: number) {
-            this.page = newValue;
+            this.current.page = newValue;
             this.search();
         },
+        current: {
+            handler() {
+                this.searchMap.set(this.searchId, {
+                    header: {
+                        id: this.searchId,
+                        name: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.name).orElse("基础查询")
+                    },
+                    body: {
+                        index: this.current.index,
+                        conditions: this.current.conditions,
+                        orders: this.current.orders,
+                        page: this.current.page,
+                        size: this.current.size,
+                        total: this.current.total,
+                        result: this.current.result
+                    }
+                })
+            },
+            deep: true
+        },
+        searchId() {
+            let baseSearchItem = this.searchMap.get(this.searchId);
+            if (baseSearchItem) {
+                this.current = {
+                    ...baseSearchItem.body
+                }
+            } else {
+                if (this.searchMap.size > 0) {
+                    this.searchId = this.searchMap.keys().next().value;
+                } else {
+                    this.clearAfter();
+                }
+            }
+        }
     },
     created() {
         mitt.on(MessageEventEnum.URL_UPDATE, () => {
@@ -243,169 +277,156 @@ export default defineComponent({
             this.clear(true);
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
-            this.show_top = (index === PageNameEnum.BASE_SEARCH)
+            this.showTop = (index === PageNameEnum.BASE_SEARCH)
         });
     },
     methods: {
-        fieldConditionAdd(): void {
-            this.fieldConditions.push({
-                id: new Date().getTime(),
-                type: 'must',
-                field: '',
-                condition: 'term',
-                value: '',
-                extra_left_condition: '',
-                extra_left_value: '',
-                extra_right_condition: '',
-                extra_right_value: ''
-            });
-        },
-        fieldConditionRemove(id: number): void {
-            console.log(this.fieldConditions, id);
-            if (this.fieldConditions.length === 0) {
-                return;
-            }
-            this.fieldConditions = this.fieldConditions.filter((item) => {
-                return item.id !== id;
-            });
-            console.log(this.fieldConditions, id);
-        },
         showBody() {
-            this.condition_data = QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders);
+            this.condition_data = QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
             this.condition_dialog = true;
         },
         search() {
-            if (this.index.length === 0) {
+            if (this.current.index.length === 0) {
                 ElMessageBox.alert(this.$t('base_search.please_select_an_index'));
                 return;
             }
             IndexApi._search(
-                this.index,
-                QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders)
+                this.current.index,
+                QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
             ).then((response) => {
-                this.result = response;
-                if (this.result.hits) {
-                    if (parseInt(this.result.hits.total)) {
-                        this.total = parseInt(this.result.hits.total)
-                    } else if (parseInt(this.result.hits.total.value)) {
-                        this.total = parseInt(this.result.hits.total.value);
+                this.current.result = response;
+                if (this.current.result.hits) {
+                    if (parseInt(this.current.result.hits.total)) {
+                        this.current.total = parseInt(this.current.result.hits.total)
+                    } else if (parseInt(this.current.result.hits.total.value)) {
+                        this.current.total = parseInt(this.current.result.hits.total.value);
                     } else {
-                        this.total = 0;
+                        this.current.total = 0;
                     }
                 } else {
-                    this.total = 0;
+                    this.current.total = 0;
                 }
             }).catch((e) => {
-                this.result = e.response.data;
+                this.current.result = e.response.data;
             });
         },
         clear(clear_index: boolean = false) {
-            this.page = 1;
-            this.size = useSettingStore().getPageSize;
-            this.total = 0;
-            this.fieldConditions = new Array<BaseQuery>();
-            this.orders = new Array<BaseOrder>();
-            this.result = {};
+            this.current.page = 1;
+            this.current.size = useSettingStore().getPageSize;
+            this.current.total = 0;
+            this.current.conditions = new Array<BaseQuery>();
+            this.current.orders = new Array<BaseOrder>();
+            this.current.result = {};
             if (clear_index) {
-                this.index = '';
+                this.current.index = '';
             }
-        },
-        order_add() {
-            this.orders.push({
-                id: new Date().getTime(),
-                field: '',
-                type: 'asc'
-            });
-        },
-        order_remove(id: number) {
-            if (this.orders.length === 0) {
-                return;
-            }
-            this.orders = this.orders.filter((item) => {
-                return item.id !== id;
-            });
         },
         jumpToSeniorSearch() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             useSeniorSearchEvent.emit({
-                url: `/${this.index}/_search`,
+                url: `/${this.current.index}/_search`,
                 method: 'POST',
                 param: JSON.stringify(
-                    QueryConditionBuild(this.fieldConditions, this.page, this.size, this.orders),
+                    QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders),
                     null,
                     4),
                 execute: true
             })
+        },
+        editTabs(targetName: number, action: 'remove' | 'add') {
+            if (action === 'add') {
+                this.clearAfter();
+            } else if (action === 'remove') {
+                this.searchMap.delete(targetName);
+                if (this.searchMap.size === 0) {
+                    this.clearAfter();
+                } else {
+                    this.searchId = this.searchMap.keys().next().value
+                }
+            }
+        },
+        optionTab(command: string) {
+            let strings = command.split('|');
+            let option = strings[0];
+            let id = parseInt(strings[1]);
+            switch (option) {
+                case 'close-one':
+                    this.searchMap.delete(id);
+                    if (this.searchId === id) {
+                        if (this.searchMap.size > 0) {
+                            this.searchId = this.searchMap.keys().next().value
+                        }
+                    }
+                    break;
+                case 'close-other':
+                    // 移除其他
+                    Array.from(this.searchMap.keys()).forEach(e => {
+                        if (e !== id) {
+                            this.searchMap.delete(e);
+                        }
+                    })
+                    this.searchId = id;
+                    break;
+                case 'close-all':
+                    this.searchMap.clear();
+                    break;
+                case 'rename':
+                    ElMessageBox.prompt("请输入新的标签名字", "修改标签名", {
+                        confirmButtonText: '修改',
+                        cancelButtonText: '取消',
+                        inputValue: strings[2],
+                        inputPattern: /.+/,
+                        inputErrorMessage: '必须输入标签名'
+                    }).then(({value}) => {
+                        let searchItem = this.searchMap.get(id);
+                        if (searchItem) {
+                            searchItem.header.name = value;
+                        }
+                    }).catch(() => {
+                    });
+                    break;
+                case 'save-history':
+                    let searchItem = this.searchMap.get(id);
+                    if (!searchItem) {
+                        ElMessage({
+                            showClose: true,
+                            type: 'error',
+                            message: '标签未找到'
+                        });
+                        return;
+                    }
+                    // 保存到历史
+                    break;
+            }
+            // 全部关闭了
+            if (this.searchMap.size === 0) {
+                this.clearAfter();
+            }
+        },
+        clearAfter() {
+            let searchId = new Date().getTime();
+            let searchItem = {
+                header: {
+                    id: searchId,
+                    name: '基础查询'
+                },
+                body: {
+                    index: '',
+                    conditions: new Array<BaseQuery>(),
+                    orders: new Array<BaseOrder>(),
+                    page: 1,
+                    size: useSettingStore().getPageSize,
+                    total: 0,
+                    result: {}
+                }
+            };
+            this.searchMap.set(searchId, searchItem);
+            this.searchId = searchId;
         }
     },
 });
 </script>
 
 <style lang="less">
-.base-search {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
 
-    .base-option {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 9px 10px 0 10px;
-        display: flex;
-        justify-content: space-between;
-        height: 50px;
-
-        .left .right {
-            display: flex;
-        }
-    }
-
-    .base-display {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: auto;
-
-        .base-condition {
-            padding: 18px 20px;
-            margin-top: 12px;
-            position: relative;
-
-            .base-search-condition-sentence {
-                position: absolute;
-                top: 30px;
-                right: 20px;
-            }
-        }
-
-        .base-content {
-            margin-top: 20px;
-            position: relative;
-
-            .el-pagination {
-                padding: 2px 0;
-            }
-
-            .page {
-                width: 100%;
-                text-align: center;
-                margin-top: 10px;
-            }
-
-            .base-search-table-view {
-                position: absolute;
-            }
-
-            .editor-viewer {
-                margin-top: 10px;
-            }
-        }
-    }
-}
 </style>

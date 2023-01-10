@@ -1,18 +1,18 @@
 import Dexie from "dexie";
-import HistoryEntity from "@/entity/HistoryEntity";
+import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import {stringContain} from "@/utils/SearchUtil";
 
-export class HistoryService {
+export class BaseSearchHistoryService {
 
-    private readonly historyDao: Dexie.Table<HistoryEntity, number>
+    private readonly historyDao: Dexie.Table<BaseSearchHistory, number>
 
-    constructor(historyDao: Dexie.Table<HistoryEntity, number>) {
+    constructor(historyDao: Dexie.Table<BaseSearchHistory, number>) {
         this.historyDao = historyDao;
     }
 
-    list(name: string, urlId?: number): Promise<Array<HistoryEntity>> {
+    list(name: string, urlId?: number): Promise<Array<BaseSearchHistory>> {
         if (urlId) {
-            return new Promise<Array<HistoryEntity>>(resolve => {
+            return new Promise<Array<BaseSearchHistory>>(resolve => {
                 this.historyDao.where({urlId}).toArray().then(list => {
                     if (!name || name === '') {
                         resolve(list.sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
@@ -23,7 +23,7 @@ export class HistoryService {
                 })
             });
         }
-        return new Promise<Array<HistoryEntity>>(resolve => {
+        return new Promise<Array<BaseSearchHistory>>(resolve => {
             this.historyDao.toArray().then(list => {
                 if (!name || name === '') {
                     resolve(list
@@ -41,7 +41,7 @@ export class HistoryService {
         return Promise.resolve(count.length > 0);
     }
 
-    async save(record: HistoryEntity): Promise<number> {
+    async save(record: BaseSearchHistory): Promise<number> {
         if (!record.name || record.name === '') {
             return Promise.reject('记录名称不能为空');
         }
@@ -55,12 +55,12 @@ export class HistoryService {
             updateTime: new Date(),
             name: record.name,
             link: record.link,
-            method: record.method,
-            params: record.params
+            conditions: record.conditions,
+            orders: record.orders
         });
     }
 
-    update(record: HistoryEntity): Promise<number> {
+    update(record: BaseSearchHistory): Promise<number> {
         if (!record.id) {
             return Promise.reject('ID不存在，无法更新')
         }
@@ -71,8 +71,8 @@ export class HistoryService {
             updateTime: new Date(),
             name: record.name,
             link: record.link,
-            method: record.method,
-            params: record.params
+            conditions: record.conditions,
+            orders: record.orders
         });
     }
 
