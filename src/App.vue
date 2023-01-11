@@ -213,9 +213,9 @@ export default defineComponent({
         jsonTheme() {
             console.log(isDark.value)
             if (isDark.value) {
-                return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('github-dark');
+                return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('atom-one-dark');
             }else {
-                return Optional.ofNullable(this.instance.jsonThemeByLight).orElse('docco');
+                return Optional.ofNullable(this.instance.jsonThemeByLight).orElse('github');
             }
         }
     },

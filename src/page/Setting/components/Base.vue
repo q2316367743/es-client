@@ -90,13 +90,12 @@
         </el-form-item>
         <el-form-item label="JSON视图主题 - 白天">
             <el-select v-model="instance.jsonThemeByLight">
-                <el-option label="docco" value="docco" />
-                <el-option label="github" value="github" />
+                <el-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
             </el-select>
         </el-form-item>
         <el-form-item label="JSON视图主题 - 黑夜">
             <el-select v-model="instance.jsonThemeByDark">
-                <el-option label="github-dark" value="github-dark" />
+                <el-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
             </el-select>
         </el-form-item>
     </el-form>
@@ -109,6 +108,7 @@ import {layoutMode} from "@/global/BeanFactory";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import JsonTheme from "@/data/JsonTheme";
 
 export default defineComponent({
     name: 'setting-base',
@@ -118,6 +118,7 @@ export default defineComponent({
     data: () => ({
         layoutMode,
         LayoutModeEnum,
+        JsonTheme,
         homeExcludeIndicesConfig: {
             input: false,
             value: ''
