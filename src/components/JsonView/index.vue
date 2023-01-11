@@ -1,8 +1,11 @@
 <template>
-    <pre class="json-view">
-        <code class="language-json" ref="jsonView" v-html="value"></code>
+    <div class="json-view">
+        <pre>
+            <code class="language-json" ref="jsonView" v-html="value"></code>
+        </pre>
         <el-button type="primary" link class="json-view-copy" @click="copy">复制</el-button>
-    </pre>
+    </div>
+
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -49,6 +52,7 @@ export default defineComponent({
 <style scoped lang="less">
 .json-view {
     position: relative;
+
     .json-view-copy {
         position: absolute;
         top: 30px;

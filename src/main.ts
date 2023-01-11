@@ -11,6 +11,7 @@ import '@/less/post.css'
 import "element-plus/theme-chalk/el-message.css";
 import "element-plus/theme-chalk/el-message-box.css";
 import "element-plus/theme-chalk/el-loading.css";
+import "element-plus/theme-chalk/el-notification.css";
 
 // VXETable导入
 import VXETable from 'vxe-table';

@@ -181,6 +181,10 @@ import SunIcon from "@/icon/SunIcon.vue";
 import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import Optional from "@/utils/Optional";
+import {ElNotification} from "element-plus";
+
+let showHeightNotification = true;
+let showWidthNotification = true;
 
 export default defineComponent({
     components: {
@@ -211,7 +215,6 @@ export default defineComponent({
         ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status']),
         ...mapState(useSettingStore, ['instance']),
         jsonTheme() {
-            console.log(isDark.value)
             if (isDark.value) {
                 return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('atom-one-dark');
             }else {
@@ -246,6 +249,35 @@ export default defineComponent({
         usePageJumpEvent.on((page: PageNameEnum) => {
             this.selectMenu(page);
         });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 1200) {
+                console.log(window.innerWidth, showWidthNotification)
+                if (showWidthNotification) {
+                    ElNotification({
+                        title: '警告',
+                        type: 'warning',
+                        message: '检测到宽度小于1200px，可能造成显示异常。'
+                    });
+                    showWidthNotification = false;
+                }
+            }else {
+                showWidthNotification = true
+            }
+            if (window.innerHeight < 800) {
+                console.log(window.innerHeight, showHeightNotification)
+                if (showHeightNotification){
+                    console.log('检测到高度小于800px，可能造成显示异常。')
+                    ElNotification({
+                        title: '警告',
+                        type: 'warning',
+                        message: '检测到高度小于800px，可能造成显示异常。'
+                    });
+                    showHeightNotification = false;
+                }
+            }else {
+                showHeightNotification = true
+            }
+        })
     },
     methods: {
         async selectUrl(value: string | number) {

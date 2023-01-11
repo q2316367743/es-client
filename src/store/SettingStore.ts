@@ -34,7 +34,8 @@ const useSettingStore = defineStore('setting', {
         getTimeout: (state): number => Optional.ofNullable(state.instance.timeout).orElse(5000),
         getAutoFullScreen: (state): boolean => state.instance.autoFullScreen,
         getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
-        getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>())
+        getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>()),
+        getShowTab: (state): boolean => Optional.ofNullable(state.instance.showTab).orElse(true)
     },
     actions: {
         setLanguage(language: string): void {

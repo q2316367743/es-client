@@ -42,7 +42,7 @@
                 </div>
                 <!-- 核心查询区 -->
                 <div class="base-display">
-                    <el-scrollbar style="height: 100%">
+                    <el-scrollbar>
                         <!-- 查询条件 -->
                         <div class="base-condition el-card" ref="baseCondition">
                             <el-form label-position="top" label-width="80px" style="overflow: auto">
@@ -79,7 +79,7 @@
         </transition>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
                    class="es-dialog" :close-on-click-modal="false">
-            <json-view :data="condition_data" />
+            <json-view :data="condition_data"/>
         </el-dialog>
     </div>
 </template>
@@ -187,7 +187,7 @@ export default defineComponent({
             // 视图
             view: useSettingStore().getDefaultViewer,
             showTop: true,
-            showTabs: true,
+            showTabs: useSettingStore().getShowTab,
             fullScreen: markRaw(FullScreen)
         };
     },

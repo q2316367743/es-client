@@ -47,23 +47,16 @@
             <div class="senior-main">
                 <!-- 左面查询条件 -->
                 <div class="side">
-                    <!-- 请求参数 -->
-                    <div class="param">
-                        <codemirror
-                            v-model="current.params"
-                            placeholder="请在这里输入查询条件"
-                            :style="{ height: '100%' }"
-                            :autofocus="true"
-                            :indent-with-tab="true"
-                            :tabSize="4"
-                            :extensions="extensions"
-                        />
-                    </div>
+                    <codemirror
+                        v-model="current.params"
+                        placeholder="请在这里输入查询条件"
+                        :style="{ height: '100%' }"
+                        :autofocus="true"
+                        :indent-with-tab="true"
+                        :tabSize="4"
+                        :extensions="extensions"
+                    />
                 </div>
-                <!-- 中间分隔栏 -->
-                <div class="senior-bar">
-                </div>
-                <!-- 右面展示内容 -->
                 <div class="senior-content">
                     <el-scrollbar>
                         <data-view :view="view" :result="current.result"/>
@@ -140,7 +133,7 @@ export default defineComponent({
             searchMap,
             // 当前显示的ID
             searchId,
-            showTabs: true,
+            showTabs: useSettingStore().getShowTab,
             // 语法提示
             suggestions: [],
             // 相关数据

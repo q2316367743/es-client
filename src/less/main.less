@@ -5,24 +5,34 @@
     src: url('../assets/JetBrainsMono-Regular.woff2');
 }
 
-code {
-    font-family: JetBrainsMono consolas monospace sans-serif;
-    letter-spacing: 1px;
-}
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.es-dialog .el-dialog__body {
-    height: 70vh;
-    overflow: auto;
+::-webkit-scrollbar { /*滚动条整体样式*/
+    width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+    border-radius: 3px;
+    background-color: var(--el-scrollbar-bg-color,var(--el-text-color-secondary));
+}
+
+::-webkit-scrollbar-track { /*滚动条里面轨道*/
+    border-radius: 3px;
+    background: var(--container-color);
 }
 
 html, body {
     height: 100%;
+}
+
+code {
+    font-family: JetBrainsMono consolas monospace sans-serif;
+    letter-spacing: 1px;
 }
 
 #app {
@@ -195,3 +205,10 @@ html, body {
     margin-top: 2px;
     cursor: pointer;
 }
+
+
+.es-dialog .el-dialog__body {
+    height: 70vh;
+    overflow: auto;
+}
+
