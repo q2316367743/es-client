@@ -1,9 +1,14 @@
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
 /**
- * 复杂查询 - 参数
+ * 高级查询 - 页面跳转事件
  */
-export default interface SeniorSearchParam {
+export default interface SeniorSearchJumpEvent {
+
+    /**
+     * 关联历史ID，只有历史跳转有
+     */
+    id?: number;
 
     /**
      * 名称

@@ -17,8 +17,8 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import HmTempRecord from "@/module/SeniroSearchHistoryManage/TempRecord.vue";
-import HmHistory from "@/module/SeniroSearchHistoryManage/History.vue";
+import HmTempRecord from "@/page/SeniorSearch/component/TempRecord.vue";
+import HmHistory from "@/page/SeniorSearch/component/History.vue";
 import {useSeniorSearchEvent} from "@/global/BeanFactory";
 
 

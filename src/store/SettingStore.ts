@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {getDefaultLanguage} from '@/utils/GlobalUtil';
 import {useLocalStorage} from "@vueuse/core";
-import Setting from "@/domain/Setting";
+import Setting from "@/entity/Setting";
 import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
 

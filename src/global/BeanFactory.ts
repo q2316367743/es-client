@@ -5,11 +5,12 @@ import x2js from 'x2js';
 import {createGlobalState, useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
 import VersionManage from "@/plugins/VersionManage";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
-import SeniorSearchParam from "@/domain/SeniorSearchParam";
+import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 import {SeniorSearchHistoryService} from "@/service/SeniorSearchHistoryService";
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
+import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
 
 const dexieInstance = new DexieInstance();
 
@@ -36,9 +37,12 @@ export const isDark = useDark({
 });
 export const toggleDark = useToggle(isDark);
 
-// 高级查询 - 事件总线
-export const useSeniorSearchEvent = useEventBus<SeniorSearchParam>(EventBusEnum.SENIOR_SEARCH_EVENT);
-// 页面跳转 - 事件总线
+// 事件总线
+// 基础查询
+export const useBaseSearchEvent = useEventBus<BaseSearchJumpEvent>(EventBusEnum.BASE_SEARCH_EVENT)
+// 高级查询
+export const useSeniorSearchEvent = useEventBus<SeniorSearchJumpEvent>(EventBusEnum.SENIOR_SEARCH_EVENT);
+// 页面跳转
 export const usePageJumpEvent = useEventBus<string>(EventBusEnum.PAGE_JUMP_EVENT);
 
 // 数据存储

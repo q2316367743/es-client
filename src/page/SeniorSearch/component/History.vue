@@ -67,7 +67,7 @@ import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
 import {mapState} from "pinia";
-import HistorySaveAndUpdate from "@/module/SeniroSearchHistoryManage/HistorySaveAndUpdate.vue";
+import HistorySaveAndUpdate from "@/page/SeniorSearch/component/HistorySaveAndUpdate.vue";
 
 interface Params {
     cellValue: any

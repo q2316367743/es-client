@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {useLocalStorage} from "@vueuse/core";
-import ServerSetting from "@/domain/ServerSetting";
+import ServerSetting from "@/entity/ServerSetting";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
 
 const useServerStore = defineStore('server-setting', {

@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {useLocalStorage} from "@vueuse/core";
-import SyncSetting from "@/domain/SyncSetting";
+import SyncSetting from "@/entity/SyncSetting";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 const useSyncStore = defineStore('sync-setting', {

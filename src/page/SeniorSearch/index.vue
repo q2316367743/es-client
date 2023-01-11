@@ -101,9 +101,9 @@ import {seniorSearchHistoryService, httpStrategyContext, useSeniorSearchEvent} f
 
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import DataView from "@/components/DataView/index.vue";
-import SeniorSearchParam from "@/domain/SeniorSearchParam";
+import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 import Optional from "@/utils/Optional";
-import SeniorSearchHistoryManage from "@/module/SeniroSearchHistoryManage/index.vue";
+import SeniorSearchHistoryManage from "@/page/SeniorSearch/component/index.vue";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 
@@ -204,7 +204,7 @@ export default defineComponent({
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.showTop = (index === PageNameEnum.SENIOR_SEARCH)
         });
-        useSeniorSearchEvent.on((param: SeniorSearchParam) => {
+        useSeniorSearchEvent.on((param: SeniorSearchJumpEvent) => {
             let searchId = new Date().getTime();
             let searchItem = {
                 header: {

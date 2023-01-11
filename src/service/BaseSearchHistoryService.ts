@@ -1,6 +1,7 @@
 import Dexie from "dexie";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import {stringContain} from "@/utils/SearchUtil";
+import Optional from "@/utils/Optional";
 
 export class BaseSearchHistoryService {
 
@@ -10,30 +11,20 @@ export class BaseSearchHistoryService {
         this.historyDao = historyDao;
     }
 
-    list(name: string, urlId?: number): Promise<Array<BaseSearchHistory>> {
+    async list(name: string, urlId?: number): Promise<Array<BaseSearchHistory>> {
+        let array: BaseSearchHistory[];
         if (urlId) {
-            return new Promise<Array<BaseSearchHistory>>(resolve => {
-                this.historyDao.where({urlId}).toArray().then(list => {
-                    if (!name || name === '') {
-                        resolve(list.sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
-                    } else {
-                        resolve(list.filter(e => stringContain(e.name!, name))
-                            .sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
-                    }
-                })
-            });
+            array = await this.historyDao.where({urlId}).toArray();
+        } else {
+            array = await this.historyDao.toArray();
         }
-        return new Promise<Array<BaseSearchHistory>>(resolve => {
-            this.historyDao.toArray().then(list => {
-                if (!name || name === '') {
-                    resolve(list
-                        .sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
-                } else {
-                    resolve(list.filter(e => stringContain(e.name!, name))
-                        .sort((a, b) => b.updateTime?.getTime()! - a.updateTime?.getTime()!));
-                }
-            })
-        });
+        if (name && name !== '') {
+            array = array.filter(e => stringContain(e.name!, name));
+        }
+        // 排序
+        array = array.sort((a, b) =>
+            Optional.ofNullable(b.id).orElse(0) - Optional.ofNullable(a.id).orElse(0))
+        return Promise.resolve(array);
     }
 
     async existByName(name: string): Promise<boolean> {
@@ -54,7 +45,7 @@ export class BaseSearchHistoryService {
             createTime: new Date(),
             updateTime: new Date(),
             name: record.name,
-            link: record.link,
+            index: record.index,
             conditions: record.conditions,
             orders: record.orders
         });
@@ -70,7 +61,7 @@ export class BaseSearchHistoryService {
             createTime: record.createTime,
             updateTime: new Date(),
             name: record.name,
-            link: record.link,
+            index: record.index,
             conditions: record.conditions,
             orders: record.orders
         });
