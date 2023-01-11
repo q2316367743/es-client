@@ -1,8 +1,11 @@
 <template>
     <div class="senior-search">
-        <div class="senior-search-tabs" :class="showTabs ? 'show-tabs' : ''">
-            <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs" @option-tab="optionTab" />
-        </div>
+        <transition name="el-zoom-in-top">
+            <div class="senior-search-tabs" v-show="showTabs">
+                <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                          @option-tab="optionTab"/>
+            </div>
+        </transition>
         <!-- 左侧查询条件 -->
         <div class="el-card is-never-shadow" style="min-height: 550px" :class="showTabs ? 'show-tabs' : ''">
             <!-- 上半部分 -->
@@ -97,7 +100,7 @@ import useSettingStore from "@/store/SettingStore";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
-import {seniorSearchHistoryService, httpStrategyContext, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {httpStrategyContext, seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
 
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import DataView from "@/components/DataView/index.vue";
@@ -209,7 +212,8 @@ export default defineComponent({
             let searchItem = {
                 header: {
                     id: searchId,
-                    name: Optional.ofNullable(param.name).orElse(searchId.toString())
+                    name: Optional.ofNullable(param.name).orElse(searchId.toString()),
+                    relationId: Optional.ofNullable(param.id).orElse(0)
                 },
                 body: {
                     link: param.url,
@@ -268,7 +272,6 @@ export default defineComponent({
                 let url = useUrlStore().url;
                 if (url) {
                     useTempRecordStore().addTempRecord({
-                        id: new Date().getTime(),
                         urlId: url.id!,
                         link: this.current.link,
                         method: this.current.method,
@@ -305,7 +308,7 @@ export default defineComponent({
                 this.searchMap.delete(targetName);
                 if (this.searchMap.size === 0) {
                     this.clearAfter();
-                }else {
+                } else {
                     this.searchId = this.searchMap.keys().next().value
                 }
             }

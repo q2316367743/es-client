@@ -1,13 +1,13 @@
 <template>
     <el-dialog title="模板编辑" v-model="defaultDialog" fullscreen class="template-edit">
         <div class="source">
-            <json-viewer :expanded="true" :expand-depth="4" :value="data" class="data"></json-viewer>
+            <json-view :data="data" />
             <div class="template">
                 <monaco-editor v-model="template" height="100%" class="post"></monaco-editor>
             </div>
         </div>
         <div class="target">
-            <json-viewer :expanded="true" :expand-depth="4" :value="json"></json-viewer>
+            <json-view :data="json" />
         </div>
         <template #footer>
             <div>
@@ -25,11 +25,11 @@
 import { defineComponent, PropType } from "vue";
 import { ElMessage } from "element-plus";
 import doT from 'dot';
-import JsonViewer from 'vue-json-viewer';
 import Chart from "@/entity/Chart";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
 
 import {httpStrategyContext} from "@/global/BeanFactory";
+import JsonView from "@/components/JsonView/index.vue";
 
 // doT.templateSettings = {
 //     evaluate: /\{\{([\s\S]+?)\}\}/g,
@@ -46,7 +46,7 @@ import {httpStrategyContext} from "@/global/BeanFactory";
 // };
 
 export default defineComponent({
-    components: { JsonViewer, MonacoEditor },
+    components: {JsonView, MonacoEditor },
     props: {
         modelValue: Boolean,
         chart: Object as PropType<Chart>

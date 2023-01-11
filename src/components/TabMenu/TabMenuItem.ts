@@ -9,4 +9,10 @@ export default interface TabMenuItem {
      * 名称
      */
     name: string;
+
+    /**
+     * 关联ID
+     */
+    relationId?: number;
+
 }

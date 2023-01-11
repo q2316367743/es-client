@@ -13,84 +13,77 @@
             display: none;
         }
 
-        .el-tabs__nav {
-            .el-tabs__item {
-                &.is-active {
-                    .el-tooltip__trigger {
-                        color: var(--active-color);
-                    }
-                }
-
-                .el-tooltip__trigger {
-                    line-height: 40px;
-                }
-            }
-        }
     }
 
-    .base-option {
+    .base-search-main {
         position: absolute;
         top: 50px;
         left: 0;
         right: 0;
-        padding: 9px 10px 0 10px;
-        display: flex;
-        justify-content: space-between;
-        height: 50px;
+        bottom: 0;
+        transition: var(--el-transition-duration);
 
         &.full-screen {
             top: 0;
         }
 
-        .left .right {
+        .base-option {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 9px 10px 0 10px;
             display: flex;
+            justify-content: space-between;
+            height: 50px;
+
+            .left .right {
+                display: flex;
+            }
         }
-    }
 
-    .base-display {
-        position: absolute;
-        top: 100px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: auto;
-
-        &.full-screen {
+        .base-display {
+            position: absolute;
             top: 50px;
-        }
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: auto;
 
-        .base-condition {
-            padding: 18px 20px;
-            margin-top: 12px;
-            position: relative;
 
-            .base-search-condition-sentence {
-                position: absolute;
-                top: 30px;
-                right: 20px;
-            }
-        }
+            .base-condition {
+                padding: 18px 20px;
+                margin-top: 12px;
+                position: relative;
 
-        .base-content {
-            margin-top: 20px;
-            position: relative;
-
-            .el-pagination {
-                padding: 2px 0;
+                .base-search-condition-sentence {
+                    position: absolute;
+                    top: 30px;
+                    right: 20px;
+                }
             }
 
-            .page {
-                width: 100%;
-                text-align: center;
-                margin-top: 10px;
-            }
+            .base-content {
+                margin-top: 20px;
+                position: relative;
 
-            .base-search-table-view {
-                position: absolute;
-            }
+                .el-pagination {
+                    padding: 2px 0;
+                }
 
-            .editor-viewer {
-                margin-top: 10px;
+                .page {
+                    width: 100%;
+                    text-align: center;
+                    margin-top: 10px;
+                }
+
+                .base-search-table-view {
+                    position: absolute;
+                }
+
+                .editor-viewer {
+                    margin-top: 10px;
+                }
             }
         }
     }

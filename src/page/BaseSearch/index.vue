@@ -1,68 +1,86 @@
 <template>
     <div class="base-search">
-        <div class="base-search-tab" :class="showTabs ? '' : 'full-screen'">
-            <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                      @option-tab="optionTab"/>
-        </div>
-        <!-- 顶部菜单栏 -->
-        <div class="base-option el-card es-card" :class="showTabs ? '' : 'full-screen'">
-            <div class="left">
-                <el-select-v2 v-model="current.index" filterable :options="indices"
-                              :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
-                    <template #default="{ item }">
-                        <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
-                    </template>
-                </el-select-v2>
-                <!-- 搜索 -->
-                <el-button type="success" style="margin-left: 10px" @click="search">{{
-                        $t('base_search.search')
-                    }}
-                </el-button>
-                <!-- 清空 -->
-                <el-button style="margin-left: 10px" @click="clear(true)">{{ $t('base_search.clear') }}</el-button>
+        <!-- 标签页 -->
+        <transition name="el-zoom-in-top">
+            <div class="base-search-tab" v-show="showTabs">
+                <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                          @option-tab="optionTab"/>
             </div>
-            <div class="right">
-                <el-select v-model="view">
-                    <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
-                    <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                    <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
-                </el-select>
-                <el-button type="info" :icon="fullScreen" style="margin-left: 12px;" @click="showTabs = !showTabs"/>
-            </div>
-        </div>
-        <!-- 核心查询区 -->
-        <div class="base-display" :class="showTabs ? '' : 'full-screen'">
-            <el-scrollbar style="height: 100%">
-                <!-- 查询条件 -->
-                <div class="base-condition el-card">
-                    <el-form label-position="top" label-width="80px" style="overflow: auto">
-                        <!-- 条件 -->
-                        <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
-                            <field-condition-container v-model="current.conditions" :fields="fields"/>
-                        </el-form-item>
-                        <!-- 排序 -->
-                        <el-form-item :label="$t('base_search.order')">
-                            <field-order-container v-model="current.orders" :fields="fields"/>
-                        </el-form-item>
-                    </el-form>
-                    <div class="base-search-condition-sentence">
-                        <el-button link type="primary" @click="showBody">{{ $t('base_search.display_query_statement') }}
+        </transition>
+        <transition name="el-zoom-in-top">
+            <!-- 主要显示区域 -->
+            <div class="base-search-main" v-loading="loading" element-loading-text="查询中"
+                 :class="showTabs ? '' : 'full-screen'">
+                <!-- 顶部菜单栏 -->
+                <div class="base-option el-card es-card">
+                    <div class="left">
+                        <el-select-v2 v-model="current.index" filterable :options="indices"
+                                      :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
+                            <template #default="{ item }">
+                                <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
+                            </template>
+                        </el-select-v2>
+                        <!-- 搜索 -->
+                        <el-button type="success" style="margin-left: 12px" @click="search">{{
+                                $t('base_search.search')
+                            }}
                         </el-button>
-                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到基础查询</el-button>
+                        <!-- 清空 -->
+                        <el-button @click="clear(true)">{{
+                                $t('base_search.clear')
+                            }}
+                        </el-button>
+                    </div>
+                    <div class="right">
+                        <el-select v-model="view">
+                            <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
+                            <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
+                            <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                        </el-select>
+                        <el-button type="info" :icon="fullScreen" style="margin-left: 12px;"
+                                   @click="showTabs = !showTabs"/>
                     </div>
                 </div>
-                <!-- 查询结果 -->
-                <div class="base-content">
-                    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                                   v-model:current-page="current.page" v-model:page-size="current.size"></el-pagination>
-                    <data-view :view="view" :result="current.result"/>
+                <!-- 核心查询区 -->
+                <div class="base-display">
+                    <el-scrollbar style="height: 100%">
+                        <!-- 查询条件 -->
+                        <div class="base-condition el-card" ref="baseCondition">
+                            <el-form label-position="top" label-width="80px" style="overflow: auto">
+                                <!-- 条件 -->
+                                <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
+                                    <field-condition-container v-model="current.conditions" :fields="fields"/>
+                                </el-form-item>
+                                <!-- 排序 -->
+                                <el-form-item :label="$t('base_search.order')">
+                                    <field-order-container v-model="current.orders" :fields="fields"/>
+                                </el-form-item>
+                                <el-form-item label="分页">
+                                    <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                                   :total="current.total"
+                                                   v-model:current-page="page"
+                                                   v-model:page-size="size"></el-pagination>
+                                </el-form-item>
+                            </el-form>
+                            <div class="base-search-condition-sentence">
+                                <el-button link type="primary" @click="showBody">
+                                    {{ $t('base_search.display_query_statement') }}
+                                </el-button>
+                                <el-button link type="primary" @click="jumpToSeniorSearch">跳转到基础查询</el-button>
+                            </div>
+                        </div>
+                        <!-- 查询结果 -->
+                        <div class="base-content">
+                            <data-view :view="view" :result="current.result"/>
+                        </div>
+                    </el-scrollbar>
+                    <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="showTop"/>
                 </div>
-            </el-scrollbar>
-            <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="showTop"/>
-        </div>
+            </div>
+        </transition>
         <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
                    class="es-dialog" :close-on-click-modal="false">
-            <json-viewer :value="condition_data" :expand-depth="4" copyable sort expanded preview-mode></json-viewer>
+            <json-view :data="condition_data" />
         </el-dialog>
     </div>
 </template>
@@ -72,7 +90,6 @@ import {defineComponent, markRaw} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {mapState} from "pinia";
 import {FullScreen} from "@element-plus/icons-vue";
-import JsonViewer from "vue-json-viewer";
 
 import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
@@ -99,11 +116,13 @@ import './index.less';
 
 import Field from "@/view/Field";
 
-import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import {BaseSearchItem} from "@/page/BaseSearch/BaseSearchItem";
 import FieldOrderContainer from "@/page/BaseSearch/components/FieldOrderContainer.vue";
 import FieldConditionContainer from "@/page/BaseSearch/components/FieldConditionContainer.vue";
+
+import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
+import JsonView from "@/components/JsonView/index.vue";
 
 interface Name {
     name: string;
@@ -116,11 +135,11 @@ interface Name {
 export default defineComponent({
     name: 'base-search',
     components: {
+        JsonView,
         FieldConditionContainer,
         FieldOrderContainer,
         TabMenu,
         DataView,
-        JsonViewer,
         BaseViewer,
         TableViewer,
         FieldConditionItem
@@ -153,14 +172,16 @@ export default defineComponent({
                 // 条件
                 conditions: new Array<BaseQuery>(),
                 orders: new Array<BaseOrder>(),
-                // 分页
-                page: 1,
-                size: useSettingStore().getPageSize,
                 // 查询结果
                 total: 0,
                 result: {} as any,
             },
+            // 分页
+            page: 1,
+            size: useSettingStore().getPageSize,
 
+            loading: false,
+            visibility: true,
 
             // 条件对话框
             condition_dialog: false,
@@ -169,7 +190,7 @@ export default defineComponent({
             // 视图
             view: useSettingStore().getDefaultViewer,
             showTop: true,
-            showTabs: false,
+            showTabs: true,
             fullScreen: markRaw(FullScreen)
         };
     },
@@ -221,38 +242,17 @@ export default defineComponent({
         },
     },
     watch: {
-        index() {
-            // 索引变化，重置查询
-            this.clear();
-            if (this.current.index !== '') {
-                this.search();
-            }
-        },
-        size(newValue: number) {
-            this.current.size = newValue;
+        size() {
             this.search();
+            this.sync();
         },
-        page(newValue: number) {
-            this.current.page = newValue;
+        page() {
             this.search();
+            this.sync();
         },
         current: {
             handler() {
-                this.searchMap.set(this.searchId, {
-                    header: {
-                        id: this.searchId,
-                        name: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.name).orElse("基础查询")
-                    },
-                    body: {
-                        index: this.current.index,
-                        conditions: this.current.conditions,
-                        orders: this.current.orders,
-                        page: this.current.page,
-                        size: this.current.size,
-                        total: this.current.total,
-                        result: this.current.result
-                    }
-                })
+                this.sync();
             },
             deep: true
         },
@@ -282,17 +282,35 @@ export default defineComponent({
     },
     methods: {
         showBody() {
-            this.condition_data = QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
+            this.condition_data = QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders);
             this.condition_dialog = true;
+        },
+        sync() {
+            this.searchMap.set(this.searchId, {
+                header: {
+                    id: this.searchId,
+                    name: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.name).orElse("基础查询")
+                },
+                body: {
+                    index: this.current.index,
+                    conditions: this.current.conditions,
+                    orders: this.current.orders,
+                    page: this.page,
+                    size: this.size,
+                    total: this.current.total,
+                    result: this.current.result
+                }
+            });
         },
         search() {
             if (this.current.index.length === 0) {
                 ElMessageBox.alert(this.$t('base_search.please_select_an_index'));
                 return;
             }
+            this.loading = true;
             IndexApi._search(
                 this.current.index,
-                QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
+                QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
             ).then((response) => {
                 this.current.result = response;
                 if (this.current.result.hits) {
@@ -308,11 +326,13 @@ export default defineComponent({
                 }
             }).catch((e) => {
                 this.current.result = e.response.data;
+            }).finally(() => {
+                this.loading = false;
             });
         },
         clear(clear_index: boolean = false) {
-            this.current.page = 1;
-            this.current.size = useSettingStore().getPageSize;
+            this.page = 1;
+            this.size = useSettingStore().getPageSize;
             this.current.total = 0;
             this.current.conditions = new Array<BaseQuery>();
             this.current.orders = new Array<BaseOrder>();
@@ -327,7 +347,7 @@ export default defineComponent({
                 url: `/${this.current.index}/_search`,
                 method: 'POST',
                 param: JSON.stringify(
-                    QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders),
+                    QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
                     null,
                     4),
                 execute: true
@@ -422,7 +442,7 @@ export default defineComponent({
             };
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
-        }
+        },
     },
 });
 </script>

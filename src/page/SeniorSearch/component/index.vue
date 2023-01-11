@@ -49,6 +49,7 @@ export default defineComponent({
     methods: {
         load(history: SeniorSearchHistory) {
             useSeniorSearchEvent.emit({
+                id: history.id,
                 name: history.name,
                 url: history.link,
                 method: history.method,

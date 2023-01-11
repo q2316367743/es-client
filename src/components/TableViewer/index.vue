@@ -7,8 +7,7 @@
             <vxe-column type="expand" width="80">
                 <template #content="{ row, rowIndex }">
                     <div class="data-browse-expand">
-                        <json-viewer :value="row._source" :expand-depth="4" copyable sort :expanded="true"
-                                     :preview-mode="true"></json-viewer>
+                        <json-view :data="row._source" />
                         <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
                     </div>
                 </template>
@@ -33,10 +32,10 @@
 import {defineComponent, PropType} from "vue";
 import {ZoomIn} from "@element-plus/icons-vue";
 import {VxeColumnPropTypes, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
-import JsonViewer from 'vue-json-viewer';
 import XEUtils from "xe-utils";
 import BrowserUtil from "@/utils/BrowserUtil";
 import {ElMessage} from "element-plus";
+import JsonView from "@/components/JsonView/index.vue";
 
 interface Col {
 
@@ -49,10 +48,9 @@ interface Col {
 export default defineComponent({
     name: 'table-viewer',
     props: {
-        data: Object as PropType<any>,
-        mapping: Object as PropType<any>
+        data: Object as PropType<any>
     },
-    components: {ZoomIn, JsonViewer},
+    components: {JsonView, ZoomIn},
 
     data: () => {
         let now = new Date().getTime();

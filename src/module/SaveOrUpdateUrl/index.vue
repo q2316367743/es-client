@@ -44,7 +44,6 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import JsonViewer from 'vue-json-viewer';
 import { ElForm, ElMessage } from "element-plus";
 
 import Url from '@/entity/Url';
@@ -55,7 +54,6 @@ import {httpStrategyContext} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
-    components: { JsonViewer },
     props: {
         modelValue: Boolean,
         source: Object as PropType<Url>

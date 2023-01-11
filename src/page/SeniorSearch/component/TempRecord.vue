@@ -105,7 +105,13 @@ export default defineComponent({
             })
         },
         load(history: SeniorSearchHistory) {
-            this.$emit('load', history);
+            this.$emit('load', {
+                name: history.name,
+                url: history.link,
+                method: history.method,
+                param: history.params,
+                execute: true
+            });
         },
         removeById(id: number) {
             useTempRecordStore().removeById(id);

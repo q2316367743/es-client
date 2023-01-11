@@ -65,7 +65,8 @@
                         <div class="data-browse-pull-down-panel">
                             <el-empty v-if="indices.length === 0" description="请选择链接"/>
                             <div class="data-browse-pull-down-index" v-else>
-                                <el-input v-model="indexFilter" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch" clearable/>
+                                <el-input v-model="indexFilter" class="data-browse-pull-down-search"
+                                          ref="dataBrowsePullDownSearch" clearable/>
                                 <el-scrollbar height="358px" class="data-browse-pull-down-data">
                                     <div v-for="index in indicesShow" class="data-browse-list-item"
                                          @click="indexChange(index)">
@@ -169,8 +170,7 @@
                 <vxe-column type="expand" width="80">
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
-                            <json-viewer :value="row._source" :expand-depth="4" copyable sort :expanded="true"
-                                         :preview-mode="true"></json-viewer>
+                            <json-view :data="row._source"/>
                             <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
                         </div>
                     </template>
@@ -268,14 +268,12 @@
             <el-tabs v-model="mappingDrawer.active">
                 <el-tab-pane label="索引设置" name="settings" style="height: calc(100vh - 54px - 41px - 80px);">
                     <el-scrollbar>
-                        <json-viewer :value="mappingDrawer.settings" :expand-depth="6" copyable sort :expanded="true"
-                                     :preview-mode="true"/>
+                        <json-view :data="mappingDrawer.settings"/>
                     </el-scrollbar>
                 </el-tab-pane>
                 <el-tab-pane label="映射结构" name="mapping" style="height: calc(100vh - 54px - 41px - 80px);">
                     <el-scrollbar>
-                        <json-viewer :value="mappingDrawer.mapping" :expand-depth="6" copyable sort :expanded="true"
-                                     :preview-mode="true"/>
+                        <json-view :data="mappingDrawer.mapping"/>
                     </el-scrollbar>
                 </el-tab-pane>
             </el-tabs>
@@ -286,7 +284,6 @@
 import {defineComponent} from "vue";
 import {mapState} from 'pinia';
 import {ElMessage} from "element-plus";
-import JsonViewer from 'vue-json-viewer';
 import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
@@ -304,6 +301,11 @@ import IndexApi from "@/api/IndexApi";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
+import Optional from "@/utils/Optional";
+import StrUtil from "@/utils/StrUtil";
+import ArrayUtil from "@/utils/ArrayUtil";
+import {stringContain} from "@/utils/SearchUtil";
+
 import conditionBuild from './ConditionBuild';
 import recordBuild from './RecordBuild';
 import './index.less';
@@ -316,17 +318,15 @@ import DataBuild from "@/page/DataBrowse/DataBuild";
 import mitt from "@/plugins/mitt";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
-import Optional from "@/utils/Optional";
-import StrUtil from "@/utils/StrUtil";
-import ArrayUtil from "@/utils/ArrayUtil";
-import {stringContain} from "@/utils/SearchUtil";
+import JsonView from "@/components/JsonView/index.vue";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
+        JsonView,
         StructureIcon,
-        ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, JsonViewer, Codemirror
+        ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, Codemirror
     },
     data: () => ({
         page: 1,

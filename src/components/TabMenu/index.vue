@@ -3,7 +3,7 @@
         v-model="searchId"
         type="card"
         editable
-        class="demo-tabs"
+        class="tab-menu"
         @edit="editTabs"
     >
         <el-tab-pane
@@ -23,7 +23,10 @@
                             <el-dropdown-item :command="`close-all|${item.id}`">关闭全部标签</el-dropdown-item>
                             <el-dropdown-item :command="`rename|${item.id}|${item.name}`">重命名
                             </el-dropdown-item>
-                            <el-dropdown-item :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
+                            <el-dropdown-item v-if="item.relationId && item.relationId !== 0"
+                                              :command="`update-history|${item.relationId}`">更新到历史
+                            </el-dropdown-item>
+                            <el-dropdown-item v-else :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -66,6 +69,21 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
+<style lang="less">
+.tab-menu {
 
+    .el-tabs__nav {
+        .el-tabs__item {
+            &.is-active {
+                .el-tooltip__trigger {
+                    color: var(--active-color);
+                }
+            }
+
+            .el-tooltip__trigger {
+                line-height: 40px;
+            }
+        }
+    }
+}
 </style>

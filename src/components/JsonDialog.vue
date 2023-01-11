@@ -8,26 +8,17 @@
         :close-on-click-modal="false"
         top="10vh"
     >
+        <json-view :data="json"/>
         <el-scrollbar>
-            <json-viewer
-                :value="json"
-                :expand-depth="4"
-                copyable
-                sort
-                :expanded="open"
-                :preview-mode="previewMode"
-            ></json-viewer>
         </el-scrollbar>
     </el-dialog>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import JsonViewer from 'vue-json-viewer';
+import {defineComponent} from "vue";
+import JsonView from "@/components/JsonView/index.vue";
 
 export default defineComponent({
-    components: {
-        JsonViewer
-    },
+    components: {JsonView},
     props: {
         value: Boolean,
         title: String,
