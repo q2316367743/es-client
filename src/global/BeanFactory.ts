@@ -11,6 +11,7 @@ import TableNameEnum from "@/enumeration/TableNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
 import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 const dexieInstance = new DexieInstance();
 
@@ -43,7 +44,7 @@ export const useBaseSearchEvent = useEventBus<BaseSearchJumpEvent>(EventBusEnum.
 // 高级查询
 export const useSeniorSearchEvent = useEventBus<SeniorSearchJumpEvent>(EventBusEnum.SENIOR_SEARCH_EVENT);
 // 页面跳转
-export const usePageJumpEvent = useEventBus<string>(EventBusEnum.PAGE_JUMP_EVENT);
+export const usePageJumpEvent = useEventBus<PageNameEnum>(EventBusEnum.PAGE_JUMP_EVENT);
 
 // 数据存储
 export const layoutMode = useLocalStorage<string>('layoutMode', 'default');

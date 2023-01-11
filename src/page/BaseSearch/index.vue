@@ -33,7 +33,6 @@
                     </div>
                     <div class="right">
                         <el-select v-model="view">
-                            <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                             <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                             <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
                         </el-select>
@@ -91,7 +90,6 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {mapState} from "pinia";
 import {FullScreen} from "@element-plus/icons-vue";
 
-import BaseViewer from "@/components/BaseViewer.vue";
 import TableViewer from "@/components/TableViewer/index.vue"
 import DataView from "@/components/DataView/index.vue";
 import TabMenu from "@/components/TabMenu/index.vue";
@@ -140,7 +138,6 @@ export default defineComponent({
         FieldOrderContainer,
         TabMenu,
         DataView,
-        BaseViewer,
         TableViewer,
         FieldConditionItem
     },

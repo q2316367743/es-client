@@ -65,9 +65,6 @@
         <el-form-item :label="$t('setting.base.page_size')">
             <el-input-number v-model="instance.pageSize"></el-input-number>
         </el-form-item>
-        <el-form-item :label="$t('setting.base.page_step')">
-            <el-input-number v-model="instance.pageStep"></el-input-number>
-        </el-form-item>
 
         <el-divider content-position="left">http设置</el-divider>
         <el-form-item :label="$t('setting.base.timeout')">
@@ -83,9 +80,23 @@
         </el-form-item>
         <el-form-item :label="$t('setting.base.default_viewer')">
             <el-select v-model="instance.defaultViewer">
-                <el-option :label="$t('senior_search.base_view')" :value="1"></el-option>
                 <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                 <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="是否默认展示标签栏">
+            <el-switch v-model="instance.showTab" :active-value="true" :inactive-value="false" active-text="展示"
+                       inactive-text="隐藏"/>
+        </el-form-item>
+        <el-form-item label="JSON视图主题 - 白天">
+            <el-select v-model="instance.jsonThemeByLight">
+                <el-option label="docco" value="docco" />
+                <el-option label="github" value="github" />
+            </el-select>
+        </el-form-item>
+        <el-form-item label="JSON视图主题 - 黑夜">
+            <el-select v-model="instance.jsonThemeByDark">
+                <el-option label="github-dark" value="github-dark" />
             </el-select>
         </el-form-item>
     </el-form>

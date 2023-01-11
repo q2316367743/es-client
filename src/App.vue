@@ -1,4 +1,5 @@
 <template>
+    <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
     <el-config-provider :locale="locale">
         <!-- 左侧菜单 -->
         <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
@@ -179,6 +180,7 @@ import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
 import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import Optional from "@/utils/Optional";
 
 export default defineComponent({
     components: {
@@ -206,12 +208,21 @@ export default defineComponent({
     },
     computed: {
         ...mapState(useUrlStore, ['urls', 'url']),
-        ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status'])
+        ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status']),
+        ...mapState(useSettingStore, ['instance']),
+        jsonTheme() {
+            console.log(isDark.value)
+            if (isDark.value) {
+                return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('github-dark');
+            }else {
+                return Optional.ofNullable(this.instance.jsonThemeByLight).orElse('docco');
+            }
+        }
     },
     watch: {
         url() {
             this.urlId = this.url?.id!;
-        }
+        },
     },
     created() {
         useUrlStore().reset();
@@ -232,9 +243,9 @@ export default defineComponent({
             }
             versionManage.execUpdate();
         });
-        usePageJumpEvent.on((page: string) => {
+        usePageJumpEvent.on((page: PageNameEnum) => {
             this.selectMenu(page);
-        })
+        });
     },
     methods: {
         async selectUrl(value: string | number) {
@@ -269,9 +280,9 @@ export default defineComponent({
             await useIndexStore().reset();
             emitter.emit(MessageEventEnum.INDEX_REFRESH)
         },
-        selectMenu(index: string) {
+        selectMenu(index: PageNameEnum) {
             // 切换active
-            this.active = index as PageNameEnum;
+            this.active = index;
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
         languageCommand(command: string) {

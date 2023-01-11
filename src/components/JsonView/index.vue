@@ -7,7 +7,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import highlight from 'highlight.js';
-import 'highlight.js/styles/docco.css'
 import BrowserUtil from "@/utils/BrowserUtil";
 import {ElMessage} from "element-plus";
 

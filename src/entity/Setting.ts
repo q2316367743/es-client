@@ -3,6 +3,8 @@
  */
 export default interface Setting {
 
+    // 新建索引
+
     /**
      * 默认分片
      */
@@ -14,11 +16,6 @@ export default interface Setting {
     defaultReplica: number;
 
     /**
-     * 高级搜索的宽度（px）
-     */
-    seniorWidth: number;
-
-    /**
      * 默认视图
      */
     defaultViewer: number;
@@ -27,11 +24,6 @@ export default interface Setting {
      * 默认分页大小
      */
     pageSize: number;
-
-    /**
-     * 默认页码跨度
-     */
-    pageStep: number;
 
     /**
      * 超时时间
@@ -52,5 +44,20 @@ export default interface Setting {
      * 概览 => 搜索 => 排除的索引
      */
     homeExcludeIndices: Array<string>;
+
+    /**
+     * 展示标签栏
+     */
+    showTab: boolean;
+
+    /**
+     * JSON主题 - 白天
+     */
+    jsonThemeByLight: string;
+
+    /**
+     * JSON主题 - 黑夜
+     */
+    jsonThemeByDark: string;
 
 }

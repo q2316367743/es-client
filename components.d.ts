@@ -8,7 +8,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Apache2_0: typeof import('./src/components/License/Apache2_0.vue')['default']
-    BaseViewer: typeof import('./src/components/BaseViewer.vue')['default']
     Bsd: typeof import('./src/components/License/Bsd.vue')['default']
     DataView: typeof import('./src/components/DataView/index.vue')['default']
     ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
