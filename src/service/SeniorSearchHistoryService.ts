@@ -51,20 +51,17 @@ export class SeniorSearchHistoryService {
         });
     }
 
-    update(record: SeniorSearchHistory): Promise<number> {
+    async update(record: SeniorSearchHistory): Promise<number> {
         if (!record.id) {
-            return Promise.reject('ID不存在，无法更新')
+            return Promise.reject('ID不存在，无法更新');
         }
-        return this.historyDao.put({
-            id: record.id,
-            urlId: record.urlId,
-            createTime: record.createTime,
-            updateTime: new Date(),
-            name: record.name,
-            link: record.link,
-            method: record.method,
-            params: record.params
-        });
+        let history = await this.historyDao.get(record.id);
+        if (!history) {
+            return Promise.reject('未找到该历史，请选择新增到历史');
+        }
+        let item = Object.assign(history, record);
+        item.updateTime = new Date();
+        return this.historyDao.put(item);
     }
 
     removeById(id: number): Promise<void> {

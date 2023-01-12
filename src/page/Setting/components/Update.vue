@@ -6,20 +6,7 @@
                     <div style="font-size: 24px;font-weight: bold;">{{ log.version }}</div>
                 </template>
                 <div class="entry">
-                    <ol>
-                        <template v-for="item in log.items">
-                            <li v-if="typeof item === 'string'">{{ item }}</li>
-                            <ol v-else-if="item instanceof Array">
-                                <li v-for="i in item">
-                                    <span v-html="i"></span>
-                                </li>
-                            </ol>
-                            <li v-else>
-                                <el-tag :type="renderTag(item.label).type" style="margin-left:5px;">{{ renderTag(item.label).name }}</el-tag>
-                                <span style="margin-left:5px;">{{ item.content }}</span>
-                            </li>
-                        </template>
-                    </ol>
+                    <update-item :log="log"/>
                     <div v-if="log.remark">
                         <span v-if="typeof log.remark === 'string'" v-html="log.remark"></span>
                         <span v-else>
@@ -38,9 +25,11 @@
 import {defineComponent} from "vue";
 import Constant from "@/global/Constant";
 import {LogItemEnum} from "@/view/Data";
+import UpdateItem from "@/components/UpdateItem/index.vue";
 
 export default defineComponent({
     name: 'setting-update',
+    components: {UpdateItem},
     data: () => ({
         data: Constant,
     }),

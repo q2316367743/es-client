@@ -54,7 +54,7 @@ export default defineComponent({
                 url: history.link,
                 method: history.method,
                 param: history.params,
-                execute: true
+                execute: false
             });
             this.dialog = false;
         }

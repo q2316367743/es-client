@@ -378,6 +378,40 @@ export default defineComponent({
                             });
                         });
                     break;
+                case 'update-history':
+                    let searchItem2 = this.searchMap.get(id);
+                    if (!searchItem2) {
+                        ElMessage({
+                            showClose: true,
+                            type: 'error',
+                            message: '标签未找到'
+                        });
+                        return;
+                    }
+                    let relationId = parseInt(strings[2]);
+                    seniorSearchHistoryService.update({
+                        id: relationId,
+                        name: searchItem2.header.name,
+                        link: searchItem2.body.link,
+                        method: searchItem2.body.method,
+                        params: searchItem2.body.params,
+                    })
+                        .then(() => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '更新成功'
+                            });
+                            emitter.emit(MessageEventEnum.HISTORY_UPDATE);
+                        })
+                        .catch(e => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'error',
+                                message: '更新失败，' + e
+                            });
+                        });
+                    break;
             }
             // 全部关闭了
             if (this.searchMap.size === 0) {

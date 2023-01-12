@@ -33,7 +33,7 @@ const useIndexStore = defineStore('index', {
         /**
          * 重新获取链接
          */
-        async reset(success?: () => void ) {
+        async reset() {
             if (useUrlStore().current === '') {
                 return;
             }
@@ -69,14 +69,12 @@ const useIndexStore = defineStore('index', {
                 loading.setText('获取elasticsearch信息');
                 let info = await clusterApi.info();
                 //info ? info['version'] ? info['version']['number'] ? info['version']['number'] : '' : '' : ''
+                loading.setText('获取elasticsearch你妈呢么');
                 useEsVersion().setVersion(Optional.ofNullable(info)
                     .map(e => e['version'])
                     .map(e => e['number'])
                     .orElse(''));
                 loading.close();
-                if (success) {
-                    success();
-                }
             } catch (e: any) {
                 useUrlStore().choose();
                 loading.close();

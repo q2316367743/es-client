@@ -52,6 +52,7 @@ declare module '@vue/runtime-core' {
     Mit: typeof import('./src/components/License/Mit.vue')['default']
     TableViewer: typeof import('./src/components/TableViewer/index.vue')['default']
     TabMenu: typeof import('./src/components/TabMenu/index.vue')['default']
+    UpdateItem: typeof import('./src/components/UpdateItem/index.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

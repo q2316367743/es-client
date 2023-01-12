@@ -23,10 +23,10 @@
                             <el-dropdown-item :command="`close-all|${item.id}`">关闭全部标签</el-dropdown-item>
                             <el-dropdown-item :command="`rename|${item.id}|${item.name}`">重命名
                             </el-dropdown-item>
+                            <el-dropdown-item :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
                             <el-dropdown-item v-if="item.relationId && item.relationId !== 0"
-                                              :command="`update-history|${item.relationId}`">更新到历史
+                                              :command="`update-history|${item.id}|${item.relationId}`">更新到历史
                             </el-dropdown-item>
-                            <el-dropdown-item v-else :command="`save-history|${item.id}`">保存到历史</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>

@@ -200,6 +200,7 @@ export default defineComponent({
             this.search();
         });
         mitt.on(MessageEventEnum.INDEX_CLEAN, () => {
+            console.log('清空索引')
             // 重置查询条件
             this.condition = {
                 dialog: false,
@@ -211,7 +212,7 @@ export default defineComponent({
             this.indexItemDialog = false;
             this.indexItemTitle = '';
             this.indexItemData = {} as any;
-            this.search();
+            this.showIndices = new Array<IndexView>();
         });
     },
     methods: {

@@ -271,31 +271,33 @@ export default defineComponent({
     },
     methods: {
         async selectUrl(value: string | number) {
+            console.log(value)
             if (value === 'add') {
                 // 新增，打开新增面板
                 this.urlId = undefined;
                 this.urlDialog = true;
                 return;
             }
-            // 选择索引
+            emitter.emit(MessageEventEnum.URL_UPDATE);
+            if (value === '') {
+                // 清空链接选择
+                useUrlStore().clear();
+                // 清空索引信息
+                useIndexStore().clear();
+                // 发哦送清空事件
+                emitter.emit(MessageEventEnum.INDEX_CLEAN);
+                return
+            }
+            // 选择链接
             await useUrlStore().choose(value as number);
             // 索引刷新
-            await useIndexStore().reset(() => {
-                emitter.emit(MessageEventEnum.URL_UPDATE);
-                // 当刷新完成之后，在发送消息
-                // 选择一个有效的链接
-                if (typeof value === 'number') {
-                    emitter.emit(MessageEventEnum.INDEX_CONNECT);
-                    // 选择链接
-                    if (useSettingStore().getAutoFullScreen) {
-                        this.fullScreen = true;
-                    }
-                } else {
-                    emitter.emit(MessageEventEnum.INDEX_CLEAN);
-                }
-            }).catch(() => {
-                emitter.emit(MessageEventEnum.INDEX_CLEAN);
-            });
+            await useIndexStore().reset();
+            // 发送url连接事件
+            emitter.emit(MessageEventEnum.INDEX_CONNECT);
+            // 选择链接后判断自动全屏
+            if (useSettingStore().getAutoFullScreen) {
+                this.fullScreen = true;
+            }
 
         },
         async refresh() {

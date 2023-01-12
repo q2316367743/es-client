@@ -95,7 +95,9 @@
                 <!-- 跳转到高级查询 -->
                 <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
                     <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
-                        <i class="vxe-icon-eye-fill"/>
+                        <el-icon>
+                            <Filter/>
+                        </el-icon>
                     </div>
                 </el-tooltip>
                 <!-- 操作 -->
@@ -159,7 +161,7 @@
         </div>
         <!-- 数据表格 -->
         <div class="content-table">
-            <vxe-table border height="100%" class="es-scrollbar" :empty-text="index ? '什么也没有' : '请选择索引'"
+            <vxe-table border height="100%" class="es-scrollbar" :empty-text="emptyText"
                        :data="records" ref="vxeTable" :loading="loading" :menu-config="menuConfig"
                        :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
                        :header-cell-class-name="() => ('rain-table-panel-header')" :sort-config="sortConfig"
@@ -288,7 +290,7 @@ import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
-import {ArrowDown, ArrowUp, Check, CircleClose, Download, Operation, View} from "@element-plus/icons-vue";
+import {ArrowDown, ArrowUp, Check, CircleClose, Download, Filter, Operation, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -319,6 +321,7 @@ import mitt from "@/plugins/mitt";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
 import JsonView from "@/components/JsonView/index.vue";
+import useUrlStore from "@/store/UrlStore";
 
 
 export default defineComponent({
@@ -326,7 +329,7 @@ export default defineComponent({
     components: {
         JsonView,
         StructureIcon,
-        ArrowDown, ArrowUp, Operation, Download, View, Check, CircleClose, Codemirror
+        ArrowDown, ArrowUp, Filter, Operation, Download, View, Check, CircleClose, Codemirror
     },
     data: () => ({
         page: 1,
@@ -414,6 +417,7 @@ export default defineComponent({
     }),
     computed: {
         ...mapState(useIndexStore, ['indices', 'indicesMap']),
+        ...mapState(useUrlStore, ['url']),
         indicesShow() {
             if (this.indices.length === 0) {
                 return new Array<IndexView>();
@@ -446,6 +450,15 @@ export default defineComponent({
                 } as VxeTablePropTypes.MenuConfig;
             }
             return tool.renderMenu();
+        },
+        emptyText() {
+            if (!this.url) {
+                return '请先选择链接'
+            }
+            if (!this.index) {
+                return '请在右上角选择索引'
+            }
+            return '什么也没有';
         }
     },
     watch: {

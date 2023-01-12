@@ -61,11 +61,11 @@ const useUrlStore = defineStore('url', {
                 }
                 this.url = url;
                 title.value = url.name || 'es-client';
-            } else {
-                this.url = undefined;
-                title.value = 'es-client';
-                useIndexStore().clear();
             }
+        },
+        clear() {
+            this.url = undefined;
+            title.value = 'es-client';
         }
     }
 });
