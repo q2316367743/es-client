@@ -10,7 +10,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import FieldOrderItem from "@/page/BaseSearch/components/FieldOrderItem.vue";
+import FieldOrderItem from "@/page/BaseSearch/FiledOrder/FieldOrderItem.vue";
 import Field from "@/view/Field";
 import BaseOrder from "@/domain/BaseOrder";
 

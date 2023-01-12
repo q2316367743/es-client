@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 
-const useTempRecordStore = defineStore('temp-record', {
+const useSeniorTempRecordStore = defineStore('senior-temp-record', {
     state: () => ({
         tempRecords: new Array<SeniorSearchHistory>(),
         hashSet: new Set<string>()
@@ -35,4 +35,4 @@ const useTempRecordStore = defineStore('temp-record', {
     }
 });
 
-export default useTempRecordStore;
+export default useSeniorTempRecordStore;

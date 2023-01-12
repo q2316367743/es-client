@@ -85,7 +85,7 @@ import {SeniorSearchItem} from './SeniorSearchItem';
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
 
-import useTempRecordStore from "@/store/TempRecordStore";
+import useSeniorTempRecordStore from "@/store/SeniorTempRecordStore";
 import useUrlStore from "@/store/UrlStore";
 import useSettingStore from "@/store/SettingStore";
 
@@ -263,7 +263,7 @@ export default defineComponent({
                 // 正常响应，加入历史记录
                 let url = useUrlStore().url;
                 if (url) {
-                    useTempRecordStore().addTempRecord({
+                    useSeniorTempRecordStore().addTempRecord({
                         urlId: url.id!,
                         link: this.current.link,
                         method: this.current.method,

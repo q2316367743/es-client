@@ -7,6 +7,11 @@ import BaseOrder from "@/domain/BaseOrder";
 export default interface BaseSearchJumpEvent {
 
     /**
+     * 历史记录载入时存在
+     */
+    id?: number;
+
+    /**
      * 名字。唯一
      */
     name?: string;

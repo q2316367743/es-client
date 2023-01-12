@@ -2,14 +2,7 @@
     <div class="temp-record">
         <div class="temp-record-head">
             <div>
-                <el-input v-model="condition.link" style="width: 200px;" placeholder="链接" @input="loadData" clearable/>
-                <el-select v-model="condition.method" style="margin-left: 12px;" placeholder="请求方式" clearable @change="loadData">
-                    <el-option label="HEAD" value="HEAD" />
-                    <el-option label="GET" value="GET" />
-                    <el-option label="POST" value="POST" />
-                    <el-option label="PUT" value="PUT" />
-                    <el-option label="DELETE" value="DELETE" />
-                </el-select>
+                <el-input v-model="index" style="width: 200px;" placeholder="索引" @input="loadData" clearable/>
             </div>
             <div>
                 <el-button type="danger" :icon="deleteIcon" @click="reset">清空</el-button>
@@ -17,21 +10,17 @@
         </div>
         <div class="temp-record-body">
             <el-scrollbar>
-                <vxe-table :data="tempRecords" :row-config="{isHover: true}" ref="tempRecordTable">
+                <vxe-table :row-config="{isHover: true}" ref="tempRecordTable">
                     <vxe-column type="seq" width="50" :title="$t('app.index')"/>
-                    <vxe-column field="method" title="请求方法" width="100"/>
-                    <vxe-column field="link" title="链接" width="250">
+                    <vxe-column field="index" title="索引" width="250">
                         <template #default="{row}">
-                            <el-link type="primary" target="_blank">{{ row.link }}</el-link>
+                            <el-link type="primary" target="_blank">{{ row.index }}</el-link>
                             <div class="url-copy" @click="execCopy(row.link)">{{ $t('app.copy') }}</div>
                         </template>
                     </vxe-column>
-                    <vxe-column field="params" title="请求参数" width="280">
+                    <vxe-column field="id" title="时间" width="200">
                         <template #default="{row}">
-                            <div class="temp-record-params">
-                                <div class="temp-record-params-value" :title="row.params">{{ row.params }}</div>
-                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
-                            </div>
+                            {{ prettyDate(new Date(row.id))}}
                         </template>
                     </vxe-column>
                     <vxe-column :title="$t('app.operation')" width="270">
@@ -52,49 +41,58 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import {VxeTableInstance} from "vxe-table";
 
-import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import useSeniorTempRecordStore from "@/store/SeniorTempRecordStore";
+import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {seniorSearchHistoryService} from "@/global/BeanFactory";
+import {baseSearchHistoryService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import { stringContain } from "@/utils/SearchUtil";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
+import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
+import XEUtils from "xe-utils";
+import {mapState} from "pinia";
 
 export default defineComponent({
-    name: 'hm-temp-record',
+    name: 'bsh-temp-record',
     emits: ['load'],
     data: () => ({
-        tempRecords: new Array<SeniorSearchHistory>(),
-        condition: {
-            link: '',
-            method: ''
-        },
+        index: '',
         deleteIcon: markRaw(Delete)
     }),
-    created() {
-        // 设置数据
-        this.tempRecords = this.renderRecord(useSeniorTempRecordStore().getRecords);
-        emitter.on(MessageEventEnum.TEMP_RECORD_UPDATE, () => {
-            // 重新加载数据
-            this.loadData();
-        });
+    computed: {
+        ...mapState(useBaseTempRecordStore, ['tempRecords']),
+    },
+    watch: {
+        tempRecords: {
+            handler() {
+                this.loadData();
+            },
+            deep: true
+        }
+    },
+    mounted() {
+        this.loadData();
     },
     methods: {
-        renderRecord(showTempRecords: Array<SeniorSearchHistory>): Array<SeniorSearchHistory> {
+        prettyDate(date: Date) {
+            return XEUtils.toDateString(date)
+        },
+        renderRecord(showTempRecords: Array<BaseSearchHistory>): Array<BaseSearchHistory> {
             showTempRecords = showTempRecords.sort((e1, e2) => e2.id! - e1.id!);
-            if (this.condition.link !== '') {
-                showTempRecords = showTempRecords.filter(e => stringContain(e.link, this.condition.link));
-            }
-            if (this.condition.method !== '') {
-                showTempRecords = showTempRecords.filter(e => e.method === this.condition.method);
+            if (this.index !== '') {
+                showTempRecords = showTempRecords.filter(e => stringContain(e.index, this.index));
             }
             return showTempRecords;
         },
         loadData() {
+            let showTempRecords = this.tempRecords
+            if (this.index !== '') {
+                showTempRecords = showTempRecords.filter(e => stringContain(e.index, this.index));
+            }
+            showTempRecords = this.tempRecords.sort((e1, e2) => e2.id! - e1.id!);
             let tempRecordTable = this.$refs['tempRecordTable'] as VxeTableInstance;
-            tempRecordTable.reloadData(this.renderRecord(useSeniorTempRecordStore().getRecords));
+            tempRecordTable.reloadData(this.renderRecord(useBaseTempRecordStore().getRecords));
         },
         execCopy(url: string) {
             BrowserUtil.copy(url);
@@ -104,23 +102,18 @@ export default defineComponent({
                 message: '已成功复制到剪切板'
             })
         },
-        load(history: SeniorSearchHistory) {
+        load(history: BaseSearchHistory) {
             this.$emit('load', {
                 name: history.name,
-                url: history.link,
-                method: history.method,
-                param: history.params,
-                execute: true
+                index: history.index,
+                conditions: history.conditions,
+                orders: history.orders
             });
         },
         removeById(id: number) {
-            useSeniorTempRecordStore().removeById(id);
-            this.$nextTick(() => {
-                // 加载数据
-                this.loadData();
-            })
+            useBaseTempRecordStore().removeById(id);
         },
-        appendToHistory(history: SeniorSearchHistory) {
+        appendToHistory(history: BaseSearchHistory) {
             // 输入名字
             ElMessageBox.prompt('请为此次查询命名', '新增历史记录', {
                 confirmButtonText: '新增',
@@ -128,7 +121,7 @@ export default defineComponent({
                 inputPattern: /.+/,
                 inputErrorMessage: '名称为必填'
             }).then(({value}) => {
-                seniorSearchHistoryService.save({
+                baseSearchHistoryService.save({
                     ...history,
                     name: value,
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0)
@@ -153,11 +146,7 @@ export default defineComponent({
             })
         },
         reset() {
-            useSeniorTempRecordStore().reset();
-            this.$nextTick(() => {
-                // 加载数据
-                this.loadData();
-            });
+            useBaseTempRecordStore().reset();
         }
     }
 });

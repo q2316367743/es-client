@@ -271,7 +271,6 @@ export default defineComponent({
     },
     methods: {
         async selectUrl(value: string | number) {
-            console.log(value)
             if (value === 'add') {
                 // 新增，打开新增面板
                 this.urlId = undefined;
@@ -343,7 +342,6 @@ export default defineComponent({
         windowWarningNotification() {
             // 窗口警告通知
             if (window.innerWidth < 1200) {
-                console.log(window.innerWidth, showWidthNotification)
                 if (showWidthNotification) {
                     ElNotification({
                         title: '警告',
@@ -356,9 +354,7 @@ export default defineComponent({
                 showWidthNotification = true
             }
             if (window.innerHeight < 800) {
-                console.log(window.innerHeight, showHeightNotification)
                 if (showHeightNotification){
-                    console.log('检测到高度小于800px，可能造成显示异常。')
                     ElNotification({
                         title: '警告',
                         type: 'warning',

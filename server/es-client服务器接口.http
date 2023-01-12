@@ -1,5 +1,5 @@
 ### 代理请求
-POST /api/fetch
+POST {{url}}/api/fetch
 token: 123456
 
 {
@@ -17,12 +17,12 @@ token: 123456
 }
 
 
-### 获取同步信息
-GET /api/sync/{table}/list
+### 获取同步信息 - 链接
+GET {{url}}/api/sync/{{link}}/list
 token: 123456
 
-### 保存同步信息
-POST /api/sync/{table}/save
+### 保存同步信息 - 链接
+POST {{url}}/api/sync/{{link}}/save
 token: 123456
 
 [{

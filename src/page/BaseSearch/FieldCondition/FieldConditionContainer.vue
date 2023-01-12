@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import FieldConditionItem from "@/page/BaseSearch/components/FieldConditionItem.vue";
+import FieldConditionItem from "@/page/BaseSearch/FieldCondition/FieldConditionItem.vue";
 import BaseQuery from "@/domain/BaseQuery";
 import Field from "@/view/Field";
 

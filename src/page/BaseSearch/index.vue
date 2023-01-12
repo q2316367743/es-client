@@ -26,10 +26,11 @@
                             }}
                         </el-button>
                         <!-- 清空 -->
-                        <el-button @click="clear(true)">{{
+                        <el-button type="danger" @click="clear(true)">{{
                                 $t('base_search.clear')
                             }}
                         </el-button>
+                        <el-button @click="historyDialog = true">历史</el-button>
                     </div>
                     <div class="right">
                         <el-select v-model="view">
@@ -77,10 +78,11 @@
                 </div>
             </div>
         </transition>
-        <el-dialog :title="$t('base_search.query_criteria')" v-model="condition_dialog" width="70%" append-to-body
+        <el-dialog :title="$t('base_search.query_criteria')" v-model="condition.dialog" width="70%" append-to-body
                    class="es-dialog" :close-on-click-modal="false">
-            <json-view :data="condition_data"/>
+            <json-view :data="condition.data"/>
         </el-dialog>
+        <bsh-manage v-model="historyDialog"/>
     </div>
 </template>
 
@@ -109,18 +111,19 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import QueryConditionBuild from './build/QueryConditionBuild';
-import FieldConditionItem from "./components/FieldConditionItem.vue";
 import './index.less';
 
 import Field from "@/view/Field";
 
 import {BaseSearchItem} from "@/page/BaseSearch/BaseSearchItem";
-import FieldOrderContainer from "@/page/BaseSearch/components/FieldOrderContainer.vue";
-import FieldConditionContainer from "@/page/BaseSearch/components/FieldConditionContainer.vue";
+import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
+import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldConditionContainer.vue";
 
-import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import JsonView from "@/components/JsonView/index.vue";
+import BshManage from "@/page/BaseSearch/History/index.vue";
+import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 
 interface Name {
     name: string;
@@ -133,13 +136,13 @@ interface Name {
 export default defineComponent({
     name: 'base-search',
     components: {
+        BshManage,
         JsonView,
         FieldConditionContainer,
         FieldOrderContainer,
         TabMenu,
         DataView,
-        TableViewer,
-        FieldConditionItem
+        TableViewer
     },
     data: () => {
         let searchMap = new Map<number, BaseSearchItem>();
@@ -181,9 +184,12 @@ export default defineComponent({
             visibility: true,
 
             // 条件对话框
-            condition_dialog: false,
-            // 渲染后的数据
-            condition_data: {},
+            condition: {
+                dialog: false,
+                data: {}
+            },
+            historyDialog: false,
+
             // 视图
             view: useSettingStore().getDefaultViewer,
             showTop: true,
@@ -259,6 +265,8 @@ export default defineComponent({
                 this.current = {
                     ...baseSearchItem.body
                 }
+                this.page = baseSearchItem.body.page;
+                this.size = baseSearchItem.body.size;
             } else {
                 if (this.searchMap.size > 0) {
                     this.searchId = this.searchMap.keys().next().value;
@@ -276,11 +284,50 @@ export default defineComponent({
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.showTop = (index === PageNameEnum.BASE_SEARCH)
         });
+        useBaseSearchEvent.on(event => {
+            let searchId = new Date().getTime();
+            let searchItem = {
+                header: {
+                    id: searchId,
+                    name: searchId + '',
+                    relationId: event.id
+                },
+                body: {
+                    index: event.index,
+                    conditions: event.conditions,
+                    orders: event.orders,
+                    page: 1,
+                    size: useSettingStore().getPageSize,
+                    total: 0,
+                    result: {}
+                }
+            } as BaseSearchItem
+            this.searchMap.set(searchId, searchItem);
+            this.searchId = searchId;
+
+            // 因为延迟问题，预先设置值
+            this.current = {
+                // 选择的索引名称
+                index: searchItem.body.index,
+                // 条件
+                conditions: searchItem.body.conditions,
+                orders: searchItem.body.orders,
+                // 查询结果
+                total: searchItem.body.total,
+                result: searchItem.body.result,
+            };
+            this.page = searchItem.body.page;
+            this.size = searchItem.body.size;
+            this.$nextTick(() => {})
+            this.search();
+        })
     },
     methods: {
         showBody() {
-            this.condition_data = QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders);
-            this.condition_dialog = true;
+            this.condition = {
+                dialog: true,
+                data: QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
+            }
         },
         sync() {
             this.searchMap.set(this.searchId, {
@@ -309,7 +356,9 @@ export default defineComponent({
                 this.current.index,
                 QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
             ).then((response) => {
+                // 结果
                 this.current.result = response;
+                // 解析总数
                 if (this.current.result.hits) {
                     if (parseInt(this.current.result.hits.total)) {
                         this.current.total = parseInt(this.current.result.hits.total)
@@ -321,6 +370,13 @@ export default defineComponent({
                 } else {
                     this.current.total = 0;
                 }
+                // 增加到历史
+                useBaseTempRecordStore().addTempRecord({
+                    id: new Date().getTime(),
+                    index: this.current.index,
+                    conditions: this.current.conditions,
+                    orders: this.current.orders
+                })
             }).catch((e) => {
                 this.current.result = e.response.data;
             }).finally(() => {
@@ -334,6 +390,10 @@ export default defineComponent({
             this.current.conditions = new Array<BaseQuery>();
             this.current.orders = new Array<BaseOrder>();
             this.current.result = {};
+            this.condition = {
+                dialog: false,
+                data: {}
+            }
             if (clear_index) {
                 this.current.index = '';
             }
