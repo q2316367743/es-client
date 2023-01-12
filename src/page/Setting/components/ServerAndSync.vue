@@ -2,33 +2,35 @@
     <el-form style="margin-top: 10px;" label-width="160px" label-position="top">
         <el-divider content-position="left">服务器设置</el-divider>
         <el-form-item label="模式">
-            <el-select v-model="serverSetting.mode">
-                <el-option :value="ServerModeEnum.CLIENT" label="客户端模式" :disabled="Constant.mode === 'server'"/>
-                <el-option :value="ServerModeEnum.SERVER" label="服务器模式"/>
-            </el-select>
+            <el-radio-group v-model="serverSetting.mode">
+                <el-radio :label="ServerModeEnum.CLIENT" :disabled="Constant.mode === 'server'">客户端模式</el-radio>
+                <el-radio :label="ServerModeEnum.SERVER">服务器模式</el-radio>
+            </el-radio-group>
         </el-form-item>
         <el-form-item label="服务器地址">
-            <el-input style="width: 350px;" :disabled="serverSetting.mode === ServerModeEnum.CLIENT" v-model="serverSetting.url"
+            <el-input style="width: 350px;" :disabled="serverSetting.mode === ServerModeEnum.CLIENT"
+                      v-model="serverSetting.url"
                       placeholder="docker不需要填写"/>
         </el-form-item>
         <el-form-item label="token">
-            <el-input style="width: 350px;" :disabled="serverSetting.mode === ServerModeEnum.CLIENT" v-model="serverSetting.token"/>
+            <el-input style="width: 350px;" :disabled="serverSetting.mode === ServerModeEnum.CLIENT"
+                      v-model="serverSetting.token"/>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="saveServer">保存</el-button>
         </el-form-item>
         <el-divider content-position="left">同步设置</el-divider>
         <el-form-item label="模式">
-            <el-select v-model="syncSetting.mode">
-                <el-option :value="SyncModeEnum.DISABLE" label="禁用"/>
-                <el-option :value="SyncModeEnum.SERVER" label="服务器"/>
-            </el-select>
+            <el-radio-group v-model="syncSetting.mode">
+                <el-radio :label="SyncModeEnum.DISABLE">禁用</el-radio>
+                <el-radio :label="SyncModeEnum.SERVER">服务器</el-radio>
+            </el-radio-group>
         </el-form-item>
-        <el-form-item label="服务器地址" v-if="syncSetting.mode === SyncModeEnum.SERVER">
+        <el-form-item label="服务器地址" v-if="syncSetting.mode === SyncModeEnum.SERVER && serverSetting.mode !== ServerModeEnum.SERVER">
             <el-input style="width: 350px;" v-model="syncSetting.server.url"
                       placeholder="docker不需要填写"/>
         </el-form-item>
-        <el-form-item label="token" v-if="syncSetting.mode === SyncModeEnum.SERVER">
+        <el-form-item label="token" v-if="syncSetting.mode === SyncModeEnum.SERVER && serverSetting.mode !== ServerModeEnum.SERVER">
             <el-input style="width: 350px;" v-model="syncSetting.server.token"/>
         </el-form-item>
     </el-form>
