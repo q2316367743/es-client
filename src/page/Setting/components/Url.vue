@@ -1,45 +1,49 @@
 <template>
-    <vxe-toolbar ref="urlToolbar" custom export>
-        <template #buttons>
-            <el-button type="primary" @click="edit_open(undefined)">{{ $t('app.add') }}</el-button>
-        </template>
-        <template #tools>
-            <el-input v-model="condition.name" :placeholder="$t('setting.link.name')"
-                      style="margin-right: 10px;"></el-input>
-        </template>
-    </vxe-toolbar>
-    <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">
-        <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column type="seq" width="50" :title="$t('setting.link.index')"></vxe-column>
-        <vxe-column field="name" :title="$t('setting.link.name')" width="180"></vxe-column>
-        <vxe-column field="value" :title="$t('setting.link.url')" width="250">
-            <template #default="{row}">
-                <el-link :href="row.value" type="primary" target="_blank">{{ row.value }}</el-link>
-                <div class="url-copy" @click="execCopy(row.value)">复制</div>
+    <div class="setting-url">
+        <vxe-toolbar ref="urlToolbar" custom export>
+            <template #buttons>
+                <el-button type="primary" @click="edit_open(undefined)">{{ $t('app.add') }}</el-button>
             </template>
-        </vxe-column>
-        <vxe-column field="updateTime" :title="$t('setting.link.update_time')" width="160" :formatter="prettyDate"/>
-        <vxe-column field="isAuth" :title="$t('setting.link.is_auth')" width="120" :formatter="prettyAuth"/>
-        <vxe-column field="authUser" title="用户名" :visible="false"/>
-        <vxe-column field="authPassword" title="密码" :visible="false"/>
-        <vxe-column :title="$t('setting.link.operation')" width="140">
-            <template #default="{ row }">
-                <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
-                </el-button>
-                <el-popconfirm title="此操作将永久删除该链接, 是否继续?" confirm-button-text="删除" cancel-button-text="取消"
-                               @confirm="remove(row.id, row.value)" width="200px">
-                    <template #reference>
-                        <el-button type="danger" size="small">{{ $t('setting.link.delete') }} </el-button>
-                    </template>
-                </el-popconfirm>
+            <template #tools>
+                <el-input v-model="condition.name" :placeholder="$t('setting.link.name')"
+                          style="margin-right: 10px;"></el-input>
             </template>
-        </vxe-column>
-    </vxe-table>
-    <save-or-update-url v-model="edit_dialog" :source="url"/>
+        </vxe-toolbar>
+        <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig"
+                   :export-config="exportConfig">
+            <vxe-column type="checkbox" width="60"></vxe-column>
+            <vxe-column type="seq" width="50" :title="$t('setting.link.index')"></vxe-column>
+            <vxe-column field="name" :title="$t('setting.link.name')" width="180"></vxe-column>
+            <vxe-column field="value" :title="$t('setting.link.url')" width="250">
+                <template #default="{row}">
+                    <el-link :href="row.value" type="primary" target="_blank">{{ row.value }}</el-link>
+                    <div class="url-copy" @click="execCopy(row.value)">复制</div>
+                </template>
+            </vxe-column>
+            <vxe-column field="updateTime" :title="$t('setting.link.update_time')" width="160" :formatter="prettyDate"/>
+            <vxe-column field="isAuth" :title="$t('setting.link.is_auth')" width="120" :formatter="prettyAuth"/>
+            <vxe-column field="authUser" title="用户名" :visible="false"/>
+            <vxe-column field="authPassword" title="密码" :visible="false"/>
+            <vxe-column :title="$t('setting.link.operation')" width="140">
+                <template #default="{ row }">
+                    <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
+                    </el-button>
+                    <el-popconfirm title="此操作将永久删除该链接, 是否继续?" confirm-button-text="删除"
+                                   cancel-button-text="取消"
+                                   @confirm="remove(row.id, row.value)" width="200px">
+                        <template #reference>
+                            <el-button type="danger" size="small">{{ $t('setting.link.delete') }}</el-button>
+                        </template>
+                    </el-popconfirm>
+                </template>
+            </vxe-column>
+        </vxe-table>
+        <save-or-update-url v-model="edit_dialog" :source="url"/>
+    </div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {ElMessage, ElMessageBox} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";

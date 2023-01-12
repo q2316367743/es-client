@@ -18,9 +18,10 @@ export default interface HttpStrategy {
     fetch<T>(config: HttpStrategyConfig): Promise<T>;
 
     /**
-     * 针对服务器的封装
-     * @param config
+     * 原生模式
+     *
+     * @param config 配置项
      */
-    server<T>(config: HttpStrategyConfig): Promise<T>;
+    native<T>(config: HttpStrategyConfig): Promise<T>;
 
 }

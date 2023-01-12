@@ -1,48 +1,25 @@
-import Constant from "@/global/Constant";
 import HttpStrategy from "./HttpStrategy";
-import HttpType from "@/enumeration/HttpType";
 
 // 默认策略
-import BrowserHttpStrategy from "@/strategy/HttpStrategy/impl/BrowserHttpStrategy";
+import useServerStore from "@/store/ServerSettingStore";
+import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import HttpStrategyProxy from "@/strategy/HttpStrategy/HttpStrategyProxy";
 
 class HttpStrategyContext {
 
-    private strategy?: HttpStrategy;
+    private strategyMap: Map<ServerModeEnum, HttpStrategy> = new Map<ServerModeEnum, HttpStrategy>();
 
-    constructor() {
-        this.initStrategy();
+
+    register(serverMode: ServerModeEnum, httpStrategy: HttpStrategy) {
+        this.strategyMap.set(serverMode, new HttpStrategyProxy(httpStrategy));
     }
-
-    public initStrategy() {
-        switch (Constant.mode) {
-            case HttpType.BROWSER:
-                import('./impl/BrowserHttpStrategy').then((value) => {
-                    this.strategy = new HttpStrategyProxy(new value.default());
-                });
-                break;
-            case HttpType.SERVER:
-                import('./impl/ServerHttpStrategy').then((value) => {
-                    this.strategy = new HttpStrategyProxy(new value.default());
-                });
-                break;
-            case HttpType.DESKTOP:
-                import('./impl/TauriHttpStrategy').then((value) => {
-                    this.strategy = new HttpStrategyProxy(new value.default());
-                });
-                break;
-            default:
-                this.strategy = new HttpStrategyProxy(new BrowserHttpStrategy());
-        }
-        // 代理
-    }
-
 
     public getStrategy(): HttpStrategy {
-        if (!this.strategy) {
-            this.strategy = new HttpStrategyProxy(new BrowserHttpStrategy());
+        let httpStrategy = this.strategyMap.get(useServerStore().getServerMode);
+        if (!httpStrategy) {
+            throw new Error("服务器模式异常，请正确的设置服务器模式");
         }
-        return this.strategy;
+        return httpStrategy;
     }
 
 }

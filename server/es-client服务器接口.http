@@ -1,0 +1,37 @@
+### 代理请求
+POST /api/fetch
+token: 123456
+
+{
+    "url": "http://192.168.0.253:9200",
+    "method": "POST",
+    "headers": {
+        "token": "123456"
+    },
+    "timeout": 5000,
+    "data": {},
+    "auth": {
+        "username": "admin",
+        "password": "123456"
+    }
+}
+
+
+### 获取同步信息
+GET /api/sync/{table}/list
+token: 123456
+
+### 保存同步信息
+POST /api/sync/{table}/save
+token: 123456
+
+[{
+    "id": 1,
+    "name": "fat",
+    "link": "http://192.168.0.232:9200",
+    "createTime": "1972-01-01 00:00:00",
+    "updateTime": "1972-01-01 00:00:00",
+    "isAuth": true,
+    "authUser": "admin",
+    "authPassword": "123456"
+}]

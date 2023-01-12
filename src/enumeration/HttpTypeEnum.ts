@@ -1,4 +1,4 @@
-enum HttpType {
+enum HttpTypeEnum {
 
     /**
      * 浏览器
@@ -17,4 +17,4 @@ enum HttpType {
 
 }
 
-export default HttpType;
+export default HttpTypeEnum;

@@ -9,11 +9,11 @@
         </el-tabs>
         <div class="setting-main">
             <el-scrollbar>
-                <setting-base v-if="active === 'base'"/>
-                <setting-url v-else-if="active === 'url'"/>
-                <setting-server-sync v-else-if="active === 'server-sync'"/>
-                <setting-update v-else-if="active === 'update'"/>
-                <setting-about v-else-if="active === 'about'"/>
+                <setting-base v-show="active === 'base'"/>
+                <setting-url v-show="active === 'url'"/>
+                <setting-server-sync v-show="active === 'server-sync'"/>
+                <setting-update v-show="active === 'update'"/>
+                <setting-about v-show="active === 'about'"/>
             </el-scrollbar>
         </div>
     </div>

@@ -1,13 +1,10 @@
-import express from 'express';
+import express, {json} from 'express';
 import * as path from "path";
 import serveStatic from 'serve-static';
-import {fileURLToPath} from 'url';
-import {json} from 'express';
 import axios from 'axios';
 import HttpStrategyConfig from "./entity/HttpStrategyConfig";
 import Result from './entity/Result';
 
-const __filename = fileURLToPath(import.meta.url);
 
 const app = express();
 
@@ -15,37 +12,46 @@ const app = express();
 app.use(json());
 
 // 静态资源服务器
-const rootPath = path.join(__filename, 'public');
+const rootPath = path.join('public');
 app.use(serveStatic(rootPath));
 
-const instance = axios.create();
+// 跨域问题
+app.all("*", function (req, res, next) {
+    // 设置允许跨域的域名,*代表允许任意域名跨域
+    res.header('Access-Control-Allow-Origin', '*');
+    // 允许的header类型
+    res.header('Access-Control-Allow-Headers', '*');
+    // 跨域允许的请求方式
+    res.header('Access-Control-Allow-Methods', 'DELETE,PUT,POST,GET,OPTIONS');
+    if (req.method.toLowerCase() == 'options')
+        res.sendStatus(200); // 让options 尝试请求快速结束
+    else
+        next();
+});
+
+app.get("/api/ping", (req, rsp, next) => {
+    rsp.send('pong');
+    next();
+})
 
 
-// 响应拦截器
-instance.interceptors.response.use(
-    // 响应不作处理
-    response => {
-        return response.data;
-    },
-    error => {
-        console.error('err', error)
-        return Promise.reject(error)
-    }
-)
-
-app.post('/api/http', (req, rsp) => {
+app.post('/api/fetch', async (req, rsp, next) => {
     let body = req.body as HttpStrategyConfig;
-    instance(body).then((result) => {
-        rsp.write({
+    console.log('/api/fetch')
+    try {
+        let result = await axios(body);
+        rsp.send({
             success: true,
-            data: result
+            data: result.data
         } as Result);
-    }).then(e => {
-        rsp.write({
+    } catch (e) {
+        rsp.send({
             success: false,
             data: e
         } as Result);
-    });
-})
+    }
+});
+
+console.log('服务器运行在：http://localhost:3000')
 
 app.listen(3000);

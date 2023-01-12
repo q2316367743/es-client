@@ -1,0 +1,23 @@
+{
+  "name": "es-client-server",
+  "version": "2.2.0",
+  "description": "es-client服务器",
+  "main": "main.ts",
+  "repository": "https://gitee.com/qiaoshengda/es-client",
+  "author": "Esion",
+  "license": "Apache2.0",
+  "scripts": {
+    "serve": "node --loader ts-node/esm -r tsconfig-paths/register main.ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "serve-static": "^1.15.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.18",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.2",
+    "typescript": "^4.9.4"
+  }
+}

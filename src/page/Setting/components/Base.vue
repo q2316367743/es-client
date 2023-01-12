@@ -17,7 +17,7 @@
 
         <el-divider content-position="left">
             全局索引查询条件（修改后请
-            <el-link>刷新</el-link>
+            <span class="like-link" @click="executeRefresh">刷新</span>
             索引）
         </el-divider>
         <el-form-item label="状态">
@@ -155,6 +155,9 @@ export default defineComponent({
                 }
                 emitter.emit(MessageEventEnum.INDEX_REFRESH);
             }
+        },
+        executeRefresh() {
+            emitter.emit(MessageEventEnum.REFRESH_URL);
         }
     }
 });
@@ -170,5 +173,13 @@ export default defineComponent({
 
 .home-exclude-item {
     margin-left: 5px;
+}
+
+.like-link {
+    color: var(--active-color);
+    cursor: pointer;
+    &:hover {
+        border-bottom: 1px solid var(--active-color);
+    }
 }
 </style>

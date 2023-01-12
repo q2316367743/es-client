@@ -30,4 +30,5 @@ pnpm-debug.log*
 *.sw?
 
 stats.html
-server/public
+server/dist
+server/node_modules

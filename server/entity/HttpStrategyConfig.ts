@@ -17,11 +17,10 @@ interface BasicCredentials {
     password: string;
 }
 
-export default interface HttpStrategyConfig extends AxiosRequestConfig{
+export default interface HttpStrategyConfig{
 
     url: string;
     method: Method | undefined;
-    baseURL?: string;
     params?: any;
     data?: any;
     timeout?: number;

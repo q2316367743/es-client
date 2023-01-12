@@ -178,7 +178,7 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
-import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
+import {isDark, toggleDark, useAppExecute, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import Optional from "@/utils/Optional";
 import {ElNotification} from "element-plus";
@@ -229,12 +229,16 @@ export default defineComponent({
     },
     created() {
         useUrlStore().reset();
+
+        // 国际化
         let language = useSettingStore().getLanguage;
         if (language === 'zh') {
             this.locale = zhCn;
         } else if (language === 'en') {
             this.locale = en;
         }
+
+        // 版本更新处理
         this.$nextTick(() => {
             switch (versionManage.checkUpdate()) {
                 case 1:
@@ -246,38 +250,24 @@ export default defineComponent({
             }
             versionManage.execUpdate();
         });
+
+        // 执行页面跳转事件
         usePageJumpEvent.on((page: PageNameEnum) => {
             this.selectMenu(page);
         });
+
+        // 检测窗口大小
+        this.windowWarningNotification();
+        // 窗口调整大小事件
         window.addEventListener('resize', () => {
-            if (window.innerWidth < 1200) {
-                console.log(window.innerWidth, showWidthNotification)
-                if (showWidthNotification) {
-                    ElNotification({
-                        title: '警告',
-                        type: 'warning',
-                        message: '检测到宽度小于1200px，可能造成显示异常。'
-                    });
-                    showWidthNotification = false;
-                }
-            }else {
-                showWidthNotification = true
-            }
-            if (window.innerHeight < 800) {
-                console.log(window.innerHeight, showHeightNotification)
-                if (showHeightNotification){
-                    console.log('检测到高度小于800px，可能造成显示异常。')
-                    ElNotification({
-                        title: '警告',
-                        type: 'warning',
-                        message: '检测到高度小于800px，可能造成显示异常。'
-                    });
-                    showHeightNotification = false;
-                }
-            }else {
-                showHeightNotification = true
-            }
-        })
+            this.windowWarningNotification();
+        });
+
+        // 执行窗口刷新事件
+        emitter.on(MessageEventEnum.REFRESH_URL, () => {
+            this.refresh();
+        });
+
     },
     methods: {
         async selectUrl(value: string | number) {
@@ -346,6 +336,36 @@ export default defineComponent({
                 case 'feedback':
                     this.feedbackDialog = true;
                     break;
+            }
+        },
+        windowWarningNotification() {
+            // 窗口警告通知
+            if (window.innerWidth < 1200) {
+                console.log(window.innerWidth, showWidthNotification)
+                if (showWidthNotification) {
+                    ElNotification({
+                        title: '警告',
+                        type: 'warning',
+                        message: '检测到宽度小于1200px，可能造成显示异常。'
+                    });
+                    showWidthNotification = false;
+                }
+            }else {
+                showWidthNotification = true
+            }
+            if (window.innerHeight < 800) {
+                console.log(window.innerHeight, showHeightNotification)
+                if (showHeightNotification){
+                    console.log('检测到高度小于800px，可能造成显示异常。')
+                    ElNotification({
+                        title: '警告',
+                        type: 'warning',
+                        message: '检测到高度小于800px，可能造成显示异常。'
+                    });
+                    showHeightNotification = false;
+                }
+            }else {
+                showHeightNotification = true
             }
         }
     },

@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {useLocalStorage} from "@vueuse/core";
 import ServerSetting from "@/entity/ServerSetting";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
+import Optional from "@/utils/Optional";
 
 const useServerStore = defineStore('server-setting', {
     state: () => {
@@ -15,6 +16,7 @@ const useServerStore = defineStore('server-setting', {
     },
     getters: {
         getServer: (state): ServerSetting => state.serverSetting,
+        getServerMode: (state): ServerModeEnum => Optional.ofNullable(state.serverSetting).map(e => e.mode).orElse(ServerModeEnum.CLIENT)
     },
     actions: {
         setServer(serverSetting: ServerSetting): void {

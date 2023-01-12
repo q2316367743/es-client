@@ -1,17 +1,24 @@
-import DexieInstance from "@/plugins/dexie";
-import UrlService from "@/service/UrlService";
-
 import x2js from 'x2js';
 import {createGlobalState, useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
+
 import VersionManage from "@/plugins/VersionManage";
-import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import DexieInstance from "@/plugins/dexie";
+
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
+import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
+
+import UrlService from "@/service/UrlService";
 import {SeniorSearchHistoryService} from "@/service/SeniorSearchHistoryService";
+import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
+
+import PageNameEnum from "@/enumeration/PageNameEnum";
+import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
-import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
-import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
-import PageNameEnum from "@/enumeration/PageNameEnum";
+
+import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import ClientHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ClientHttpStrategyImpl";
+import ServerHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ServerHttpStrategyImpl";
 
 const dexieInstance = new DexieInstance();
 
@@ -21,7 +28,12 @@ export const seniorSearchHistoryService = new SeniorSearchHistoryService(dexieIn
 
 export const versionManage = new VersionManage();
 
+// 策略模式
+
+// HTTP策略
 export const httpStrategyContext = new HttpStrategyContext();
+httpStrategyContext.register(ServerModeEnum.CLIENT, new ClientHttpStrategyImpl());
+httpStrategyContext.register(ServerModeEnum.SERVER, new ServerHttpStrategyImpl());
 
 export const json2xml = new x2js({
     selfClosingElements: false,

@@ -14,6 +14,9 @@
         <el-form-item label="token">
             <el-input style="width: 350px;" :disabled="serverSetting.mode === ServerModeEnum.CLIENT" v-model="serverSetting.token"/>
         </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="saveServer">保存</el-button>
+        </el-form-item>
         <el-divider content-position="left">同步设置</el-divider>
         <el-form-item label="模式">
             <el-select v-model="syncSetting.mode">
@@ -79,6 +82,11 @@ export default defineComponent({
             }
         }
         this.syncSetting = useSyncStore().getSync;
+    },
+    methods: {
+        saveServer() {
+            useServerStore().setServer(this.serverSetting);
+        }
     }
 });
 </script>

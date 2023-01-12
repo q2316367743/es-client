@@ -13,7 +13,12 @@ enum EventBusEnum {
     /**
      * 页面跳转事件
      */
-    PAGE_JUMP_EVENT = 'page-jump-event'
+    PAGE_JUMP_EVENT = 'page-jump-event',
+
+    /**
+     * APP中发放执行
+     */
+    APP_EXECUTE = 'app-execute'
 
 }
 
