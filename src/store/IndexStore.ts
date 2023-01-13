@@ -76,7 +76,7 @@ const useIndexStore = defineStore('index', {
                     .orElse(''));
                 loading.close();
             } catch (e: any) {
-                useUrlStore().choose();
+                useUrlStore().clear();
                 loading.close();
                 console.error(e);
             }

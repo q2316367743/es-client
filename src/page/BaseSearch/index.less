@@ -44,22 +44,26 @@
 
         .base-display {
             position: absolute;
-            top: 50px;
+            top: 60px;
             left: 0;
             right: 0;
             bottom: 0;
             overflow: auto;
 
+            border-radius: 4px;
+            border-top: 1px solid var(--border-color);
+
 
             .base-condition {
                 padding: 18px 20px;
-                margin-top: 12px;
                 position: relative;
-
-                .base-search-condition-sentence {
-                    position: absolute;
-                    top: 20px;
-                    right: 20px;
+                transition: 0.3s;
+                border-radius: 4px;
+                border-left: 1px solid var(--border-color);
+                border-right: 1px solid var(--border-color);
+                border-bottom: 1px solid var(--border-color);
+                &.pagination-fixed-show {
+                    visibility: hidden;
                 }
             }
 
@@ -83,6 +87,40 @@
                 .editor-viewer {
                     margin-top: 10px;
                 }
+            }
+
+            .pagination-fixed-none {
+                display: none;
+                &.pagination-fixed-show {
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 32px;
+                    border-radius: 4px;
+                    padding: 34px 12px;
+                    background-color: var(--container-color);
+                    border-left: 1px solid var(--border-color);
+                    border-right: 1px solid var(--border-color);
+                    border-bottom: 1px solid var(--border-color);
+                    clear: both;
+                    z-index: 99;
+                    .el-pagination {
+                        position: absolute;
+                        top: 18px;
+                        left: 21px;
+                        right: 12px;
+                    }
+                }
+            }
+
+            .base-search-condition-sentence {
+                position: absolute;
+                top: 22px;
+                right: 20px;
+                z-index: 100;
             }
         }
     }

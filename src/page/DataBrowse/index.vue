@@ -265,21 +265,8 @@
             </template>
         </vxe-modal>
         <!-- 索引结构展示 -->
-        <el-drawer v-model="mappingDrawer.drawer" direction="rtl" :title="index ? index.name : ''" size="50%"
-                   append-to-body>
-            <el-tabs v-model="mappingDrawer.active">
-                <el-tab-pane label="索引设置" name="settings" style="height: calc(100vh - 54px - 41px - 80px);">
-                    <el-scrollbar>
-                        <json-view :data="mappingDrawer.settings"/>
-                    </el-scrollbar>
-                </el-tab-pane>
-                <el-tab-pane label="映射结构" name="mapping" style="height: calc(100vh - 54px - 41px - 80px);">
-                    <el-scrollbar>
-                        <json-view :data="mappingDrawer.mapping"/>
-                    </el-scrollbar>
-                </el-tab-pane>
-            </el-tabs>
-        </el-drawer>
+        <db-mapping v-model="mappingDrawer.drawer" :title="index ? index.name : ''" :settings="mappingDrawer.settings"
+                    :mapping="mappingDrawer.mapping"/>
     </div>
 </template>
 <script lang="ts">
@@ -308,25 +295,27 @@ import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
 import {stringContain} from "@/utils/SearchUtil";
 
-import conditionBuild from './ConditionBuild';
-import recordBuild from './RecordBuild';
+import conditionBuild from './build/ConditionBuild';
+import recordBuild from './build/RecordBuild';
 import './index.less';
-import ExportConfig from "./ExportConfig";
-import exportData from "./ExportData";
+import ExportConfig from "./domain/ExportConfig";
+import exportData from "./domain/ExportData";
 import tool from "./tool";
 
 import BrowserUtil from "@/utils/BrowserUtil";
-import DataBuild from "@/page/DataBrowse/DataBuild";
+import DataBuild from "@/page/DataBrowse/build/DataBuild";
 import mitt from "@/plugins/mitt";
 import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
 import JsonView from "@/components/JsonView/index.vue";
 import useUrlStore from "@/store/UrlStore";
+import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
+        DbMapping,
         JsonView,
         StructureIcon,
         ArrowDown, ArrowUp, Filter, Operation, Download, View, Check, CircleClose, Codemirror

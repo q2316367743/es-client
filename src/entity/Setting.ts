@@ -31,11 +31,6 @@ export default interface Setting {
     timeout: number;
 
     /**
-     * 自动全屏
-     */
-    autoFullScreen: boolean;
-
-    /**
      * 概览 => 搜索 => 状态
      */
     homeSearchState: number;
@@ -59,5 +54,10 @@ export default interface Setting {
      * JSON主题 - 黑夜
      */
     jsonThemeByDark: string;
+
+    /**
+     * 自动全屏
+     */
+    autoFullScreen: boolean;
 
 }

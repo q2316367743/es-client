@@ -18,82 +18,23 @@
                 <el-button style="margin-left: 5px" @click="condition.dialog = true">更多</el-button>
                 <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
             </div>
-            <el-button type="primary" style="margin-left: 10px" @click="indexDialog = true" :disabled="!url">{{
+            <el-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">{{
                     $t('home.new_index.self')
                 }}
             </el-button>
         </div>
         <!-- 索引容器 -->
-        <div class="home-container">
-            <el-scrollbar>
-                <vxe-list :loading="indexLoading" :data="showIndices" :auto-resize="true" height="100%">
-                    <template #default="{ items }">
-                        <index-item v-for="item in items" :index="item" @open-dialog="index_open_dialog"/>
-                    </template>
-                </vxe-list>
-            </el-scrollbar>
+        <div class="home-container" ref="homeContainer">
+            <vxe-list :loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height"
+                      v-if="showIndices.length > 0">
+                <template #default="{ items }">
+                    <index-item v-for="item in items" :index="item" @open-dialog="indexOpenDialog"/>
+                </template>
+            </vxe-list>
         </div>
-        <!-- 返回顶部 -->
-        <el-backtop :right="40" :bottom="60" target=".home-container .el-scrollbar__wrap"
-                    v-show="showTop"/>
         <!-- 新增索引 -->
-        <el-dialog :title="$t('home.new_index.self')" v-model="indexDialog" width="850px">
-            <el-form>
-                <el-form-item :label="$t('home.new_index.name')">
-                    <el-input v-model="index.name" style="width: 300px;"></el-input>
-                </el-form-item>
-            </el-form>
-            <el-collapse v-model="indexCollapse">
-                <el-collapse-item :title="$t('home.new_index.base_setting')" name="1">
-                    <el-form>
-                        <el-form-item :label="$t('home.new_index.shard_number')">
-                            <el-input-number v-model="index.settings.numberOfShards" controls-position="right">
-                            </el-input-number>
-                        </el-form-item>
-                        <el-form-item :label="$t('home.new_index.replica_number')">
-                            <el-input-number v-model="index.settings.numberOfReplicas" controls-position="right">
-                            </el-input-number>
-                        </el-form-item>
-                    </el-form>
-                </el-collapse-item>
-                <el-collapse-item :title="$t('home.new_index.field_setting')" name="2">
-                    <div v-if="index.mapping.length === 0">
-                        <el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
-                    </div>
-                    <el-form v-else>
-                        <div v-for="(property, idx) in index.mapping" :key="idx">
-                            <el-form :inline="true">
-                                <el-form-item :label="$t('home.new_index.field_name')">
-                                    <el-input v-model="property.field"></el-input>
-                                </el-form-item>
-                                <el-form-item :label="$t('home.new_index.field_type')">
-                                    <el-select v-model="property.type">
-                                        <el-option v-for="(type) in types" :key="type" :label="type" :value="type">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}
-                                    </el-button>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="danger" @click="removeProperty(property)">{{
-                                            $t('home.new_index.delete')
-                                        }}
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                    </el-form>
-                </el-collapse-item>
-            </el-collapse>
-            <template #footer>
-                <el-button type="info" text @click="jumpToSeniorSearch">跳转到高级查询</el-button>
-                <el-button type="info" text @click="copyIndex">复制到剪切板</el-button>
-                <el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
-            </template>
-        </el-dialog>
-        <json-dialog :title="indexItemTitle" :json="indexItemData" :open="true" v-model="indexItemDialog"/>
+        <home-index-add v-model="indexAddDialog"/>
+        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model="indexItem.dialog"/>
         <!-- 更多查询条件 -->
         <el-dialog v-model="condition.dialog" destroy-on-close append-to-body title="更多查询条件">
             <el-form v-model="condition" label-width="80px" label-position="left">
@@ -110,35 +51,28 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, Ref, ref} from 'vue';
+import {defineComponent} from 'vue';
 import {mapState} from 'pinia';
-import {ElMessage} from 'element-plus';
 
 import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
-import useSettingStore from '@/store/SettingStore';
 
 import IndexView from "@/view/index/IndexView";
-import {IndexInstance, Property} from '@/domain/IndexInstance';
-import indexApi from '@/api/IndexApi';
 
 import IndexItem from "./components/IndexItem.vue";
 import JsonDialog from "@/components/JsonDialog.vue";
 
 import mitt from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import BrowserUtil from "@/utils/BrowserUtil";
-import IndexSaveBuild from "@/build/IndexSaveBuild";
 import {stringContain} from "@/utils/SearchUtil";
-import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
-import StrUtil from "@/utils/StrUtil";
-import {watchThrottled} from "@vueuse/core";
+
+import HomeIndexAdd from "@/page/Home/components/IndexAdd.vue";
+import {useElementSize} from "@vueuse/core";
 
 
 export default defineComponent({
     name: 'Home',
-    components: {IndexItem, JsonDialog},
+    components: {HomeIndexAdd, IndexItem, JsonDialog},
     data: () => {
         return {
             // 根据条件过滤后的索引
@@ -156,22 +90,16 @@ export default defineComponent({
             interval: {} as NodeJS.Timer | null,
             // 列表加载中
             indexLoading: false,
-            index: {
-                name: '',
-                settings: {
-                    numberOfReplicas: useSettingStore().getDefaultReplica,
-                    numberOfShards: useSettingStore().getDefaultShard
-                },
-                mapping: [] as Array<Property>
-            } as IndexInstance,
-            indexDialog: false,
-            indexCollapse: '1',
-            types: ['string', 'text', 'keyword', 'integer', 'long', 'short', 'byte', 'double', 'float', 'boolean', 'date'],
             // 索引的详情对话框
-            indexItemDialog: false,
-            indexItemTitle: '',
-            indexItemData: {} as any,
-            showTop: true
+            indexItem: {
+                dialog: false,
+                title: '',
+                data: {} as any,
+            },
+            showTop: true,
+            indexAddDialog: false,
+            // 高度
+            height: undefined as any,
         };
     },
     computed: {
@@ -179,28 +107,15 @@ export default defineComponent({
         ...mapState(useIndexStore, ['indices']),
     },
     created() {
-        mitt.on(MessageEventEnum.INDEX_REFRESH, () => {
-            this.indexItemDialog = false;
-            this.indexItemTitle = '';
-            this.indexItemData = {} as any;
-            this.search();
-        });
-        mitt.on(MessageEventEnum.INDEX_CONNECT, () => {
-            // 重置查询条件
-            this.condition = {
+        mitt.on(MessageEventEnum.URL_REFRESH, () => {
+            this.indexItem = {
                 dialog: false,
-                name: "",
-                order: "NAME_ASC",
-                state:0
-            }
-            // 充值页面
-            this.indexItemDialog = false;
-            this.indexItemTitle = '';
-            this.indexItemData = {} as any;
+                title: '',
+                data: {} as any,
+            };
             this.search();
         });
-        mitt.on(MessageEventEnum.INDEX_CLEAN, () => {
-            console.log('清空索引')
+        mitt.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置查询条件
             this.condition = {
                 dialog: false,
@@ -208,12 +123,19 @@ export default defineComponent({
                 order: "NAME_ASC",
                 state: 0
             }
-            // 充值页面
-            this.indexItemDialog = false;
-            this.indexItemTitle = '';
-            this.indexItemData = {} as any;
-            this.showIndices = new Array<IndexView>();
+            // 重置页面
+            this.indexItem = {
+                dialog: false,
+                title: '',
+                data: {} as any,
+            };
+            this.search();
         });
+    },
+    mounted() {
+        let homeContainer = this.$refs['homeContainer'] as HTMLDivElement;
+        const {height} = useElementSize(homeContainer);
+        this.height = height;
     },
     methods: {
         /**
@@ -229,6 +151,7 @@ export default defineComponent({
             this.$nextTick(() => this.executeSearch());
         },
         executeSearch() {
+            console.log('start', new Date().getTime())
             this.indexLoading = true;
             let showIndices = this.indices;
             if (this.condition.name !== '') {
@@ -236,7 +159,7 @@ export default defineComponent({
                     return stringContain(item.name, this.condition.name);
                 });
             }
-            if (this.condition.state > 0 ) {
+            if (this.condition.state > 0) {
                 showIndices = showIndices.filter(e =>
                     (this.condition.state === 1 && e.state === 'open') ||
                     (this.condition.state === 2 && e.state === 'close'));
@@ -277,84 +200,18 @@ export default defineComponent({
             this.$nextTick(() => {
                 this.showIndices = showIndices;
                 this.indexLoading = false;
+                this.$nextTick(() => {
+                    console.log('end', new Date().getTime())
+                })
             })
         },
-        addProperty() {
-            this.index.mapping.push({id: new Date().getTime(), field: '', 'type': 'text'})
+        indexOpenDialog(title: string, content: any) {
+            this.indexItem = {
+                dialog: true,
+                title,
+                data: content,
+            }
         },
-        removeProperty(property: Property) {
-            this.index.mapping = this.index.mapping.filter((target: Property) => {
-                return property.id !== target.id;
-            });
-        },
-        addIndex() {
-            // 新增
-            indexApi.save(this.index, (data: any) => {
-                // 显示对话框
-                ElMessage.info(JSON.stringify(data));
-                // 刷新索引
-                useIndexStore().reset();
-            })
-            // 关闭弹框
-            this.indexDialog = false;
-            this.$nextTick(() => {
-                // 重置
-                this.index = {
-                    name: '',
-                    settings: {
-                        numberOfReplicas: useSettingStore().getDefaultReplica,
-                        numberOfShards: useSettingStore().getDefaultShard
-                    },
-                    mapping: [] as Array<Property>
-                } as IndexInstance;
-            })
-        },
-        copyIndex() {
-            BrowserUtil.copy(JSON.stringify(IndexSaveBuild(this.index), null, 4));
-            // 关闭弹框
-            this.indexDialog = false;
-            ElMessage({
-                showClose: true,
-                type: "success",
-                message: "成功复制到剪切板"
-            });
-            this.$nextTick(() => {
-                // 重置
-                this.index = {
-                    name: '',
-                    settings: {
-                        numberOfReplicas: useSettingStore().getDefaultReplica,
-                        numberOfShards: useSettingStore().getDefaultShard
-                    },
-                    mapping: [] as Array<Property>
-                } as IndexInstance;
-            });
-        },
-        index_open_dialog(title: string, content: any) {
-            this.indexItemDialog = true;
-            this.indexItemTitle = title;
-            this.indexItemData = content;
-        },
-        jumpToSeniorSearch() {
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            useSeniorSearchEvent.emit({
-                url: this.index.name,
-                method: 'PUT',
-                param: JSON.stringify(IndexSaveBuild(this.index), null, 4),
-                execute: false
-            });
-            // 关闭弹框
-            this.indexDialog = false;
-            // 重置
-            this.index = {
-                name: '',
-                settings: {
-                    numberOfReplicas: useSettingStore().getDefaultReplica,
-                    numberOfShards: useSettingStore().getDefaultShard
-                },
-                mapping: [] as Array<Property>
-            } as IndexInstance;
-        }
     },
 });
 </script>

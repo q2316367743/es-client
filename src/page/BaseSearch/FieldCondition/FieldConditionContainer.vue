@@ -67,9 +67,7 @@ export default defineComponent({
             if (this.conditions.length === 0) {
                 return;
             }
-            this.conditions = this.conditions.filter((item) => {
-                return item.id !== id;
-            });
+            this.conditions.splice(this.conditions.findIndex(item => item.id === id), 1);
         },
     }
 });

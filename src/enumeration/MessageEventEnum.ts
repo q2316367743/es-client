@@ -8,19 +8,9 @@ enum MessageEventEnum {
     URL_UPDATE = 'event:url:update',
 
     /**
-     * 索引连接 - 已更新
+     * 链接刷新
      */
-    INDEX_CONNECT = 'event:index:connect',
-
-    /**
-     * 索引清空
-     */
-    INDEX_CLEAN = 'event:index:clean',
-
-    /**
-     * 索引刷新，索引不变，索引列表刷新
-     */
-    INDEX_REFRESH = 'event:index:refresh',
+    URL_REFRESH = 'event:url:refresh',
 
     /**
      * 主题变更

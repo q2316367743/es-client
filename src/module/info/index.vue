@@ -1,7 +1,7 @@
 <!-- 此处是右上角详情 -->
 <template>
     <div class="info">
-        <el-dropdown @command="handleCommand">
+        <el-dropdown @command="handleCommand" :disabled="url === undefined">
             <el-icon :size="24">
                 <info-icon />
             </el-icon>
@@ -29,6 +29,8 @@ import { ArrowDown } from '@element-plus/icons-vue'
 
 import JsonDialog from "@/components/JsonDialog.vue";
 import InfoIcon from "@/icon/InfoIcon.vue";
+import {mapState} from "pinia";
+import useUrlStore from "@/store/UrlStore";
 
 export default defineComponent({
     components: {
@@ -42,6 +44,9 @@ export default defineComponent({
         data: {},
         previewMode: true
     }),
+    computed: {
+        ...mapState(useUrlStore, ['url'])
+    },
     methods: {
         handleCommand(command: string) {
             switch (command) {

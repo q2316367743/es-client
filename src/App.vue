@@ -154,6 +154,7 @@ import {
 } from '@element-plus/icons-vue';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
+import {ElNotification} from "element-plus";
 // 引入页面组件
 import JsonDialog from "@/components/JsonDialog.vue";
 import Translate from "@/icon/Translate.vue";
@@ -178,19 +179,19 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
-import {isDark, toggleDark, useAppExecute, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
+// 工具类
 import Optional from "@/utils/Optional";
-import {ElNotification} from "element-plus";
+import Assert from "@/utils/Assert";
+
+import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 let showHeightNotification = true;
 let showWidthNotification = true;
 
 export default defineComponent({
     components: {
-        SettingAbout,
-        SunIcon, VersionUpdate, FeedbackModule,
-        MoonIcon,
+        SettingAbout, SunIcon, VersionUpdate, FeedbackModule, MoonIcon,
         Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
         Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
@@ -271,28 +272,28 @@ export default defineComponent({
     },
     methods: {
         async selectUrl(value: string | number) {
+            // 新增，打开新增面板
             if (value === 'add') {
-                // 新增，打开新增面板
                 this.urlId = undefined;
                 this.urlDialog = true;
                 return;
             }
-            emitter.emit(MessageEventEnum.URL_UPDATE);
+            // 清空链接
             if (value === '') {
                 // 清空链接选择
                 useUrlStore().clear();
                 // 清空索引信息
                 useIndexStore().clear();
                 // 发哦送清空事件
-                emitter.emit(MessageEventEnum.INDEX_CLEAN);
+                emitter.emit(MessageEventEnum.URL_UPDATE);
                 return
             }
             // 选择链接
-            await useUrlStore().choose(value as number);
+            Assert.isTrue(useUrlStore().choose(value as number), "未找到指定链接，请刷新页面后重试");
             // 索引刷新
             await useIndexStore().reset();
             // 发送url连接事件
-            emitter.emit(MessageEventEnum.INDEX_CONNECT);
+            emitter.emit(MessageEventEnum.URL_UPDATE);
             // 选择链接后判断自动全屏
             if (useSettingStore().getAutoFullScreen) {
                 this.fullScreen = true;
@@ -301,7 +302,7 @@ export default defineComponent({
         },
         async refresh() {
             await useIndexStore().reset();
-            emitter.emit(MessageEventEnum.INDEX_REFRESH)
+            emitter.emit(MessageEventEnum.URL_REFRESH)
         },
         selectMenu(index: PageNameEnum) {
             // 切换active

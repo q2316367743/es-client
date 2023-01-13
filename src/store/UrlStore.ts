@@ -1,11 +1,10 @@
-import { defineStore } from "pinia";
-import { ElMessage } from "element-plus";
+import {defineStore} from "pinia";
+import {ElMessage} from "element-plus";
 import {useTitle} from "@vueuse/core";
 
 import Url from "@/entity/Url";
-import useIndexStore from "./IndexStore";
 
-import { urlService } from "@/global/BeanFactory";
+import {urlService} from "@/global/BeanFactory";
 
 const title = useTitle();
 
@@ -47,21 +46,15 @@ const useUrlStore = defineStore('url', {
         /**
          * 选择链接
          */
-        choose(id?: number) {
-            if (id) {
-                // 查询URL
-                let url = this.urls.find(e => e.id! === id);
-                if (!url) {
-                    ElMessage({
-                        showClose: true,
-                        type: 'error',
-                        message: '系统异常，未找到url'
-                    });
-                    return;
-                }
-                this.url = url;
-                title.value = url.name || 'es-client';
+        choose(id: number): boolean {
+            // 查询URL
+            let url = this.urls.find(e => e.id! === id);
+            if (!url) {
+                return false;
             }
+            this.url = url;
+            title.value = url.name || 'es-client';
+            return true;
         },
         clear() {
             this.url = undefined;

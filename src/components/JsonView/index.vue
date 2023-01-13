@@ -1,7 +1,7 @@
 <template>
     <div class="json-view">
         <pre>
-            <code class="language-json" ref="jsonView" v-html="value"></code>
+            <code class="language-json" ref="jsonView">{{value}}</code>
         </pre>
         <el-button type="primary" link class="json-view-copy" @click="copy">复制</el-button>
     </div>

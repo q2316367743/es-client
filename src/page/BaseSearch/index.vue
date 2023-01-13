@@ -31,21 +31,25 @@
                             }}
                         </el-button>
                         <el-button @click="historyDialog = true">历史</el-button>
+                        <transition name="el-fade-in-linear">
+                            <el-button type="info" :icon="bottomIcon" v-show="!paginationFixed" @click="scrollTo"/>
+                        </transition>
                     </div>
                     <div class="right">
                         <el-select v-model="view">
                             <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
                             <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
                         </el-select>
-                        <el-button type="info" :icon="fullScreen" style="margin-left: 12px;"
+                        <el-button type="info" :icon="fullScreenIcon" style="margin-left: 12px;"
                                    @click="showTabs = !showTabs"/>
                     </div>
                 </div>
                 <!-- 核心查询区 -->
                 <div class="base-display">
-                    <el-scrollbar>
+                    <el-scrollbar @scroll="onScroll" ref="baseDisplay">
                         <!-- 查询条件 -->
-                        <div class="base-condition el-card" ref="baseCondition">
+                        <div class="base-condition" ref="baseCondition"
+                             :class="paginationFixed ? 'pagination-fixed-show' : ''">
                             <el-form label-position="top" label-width="80px" style="overflow: auto">
                                 <!-- 条件 -->
                                 <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
@@ -55,26 +59,32 @@
                                 <el-form-item :label="$t('base_search.order')">
                                     <field-order-container v-model="current.orders" :fields="fields"/>
                                 </el-form-item>
-                                <el-form-item label="分页">
+                                <div ref="pagination">
                                     <el-pagination background layout="total, sizes, prev, pager, next, jumper"
                                                    :total="current.total"
                                                    v-model:current-page="page"
                                                    v-model:page-size="size"></el-pagination>
-                                </el-form-item>
+                                </div>
                             </el-form>
-                            <div class="base-search-condition-sentence">
-                                <el-button link type="primary" @click="showBody">
-                                    {{ $t('base_search.display_query_statement') }}
-                                </el-button>
-                                <el-button link type="primary" @click="jumpToSeniorSearch">跳转到基础查询</el-button>
-                            </div>
                         </div>
                         <!-- 查询结果 -->
-                        <div class="base-content">
+                        <div class="base-content" ref="baseContent">
                             <data-view :view="view" :result="current.result"/>
                         </div>
                     </el-scrollbar>
                     <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="showTop"/>
+                    <div class="pagination-fixed-none" :class="paginationFixed ? 'pagination-fixed-show' : ''">
+                        <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                       :total="current.total"
+                                       v-model:current-page="page"
+                                       v-model:page-size="size"></el-pagination>
+                    </div>
+                    <div class="base-search-condition-sentence">
+                        <el-button link type="primary" @click="showBody">
+                            {{ $t('base_search.display_query_statement') }}
+                        </el-button>
+                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到基础查询</el-button>
+                    </div>
                 </div>
             </div>
         </transition>
@@ -90,7 +100,7 @@
 import {defineComponent, markRaw} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {mapState} from "pinia";
-import {FullScreen} from "@element-plus/icons-vue";
+import {Bottom, FullScreen} from "@element-plus/icons-vue";
 
 import TableViewer from "@/components/TableViewer/index.vue"
 import DataView from "@/components/DataView/index.vue";
@@ -190,11 +200,15 @@ export default defineComponent({
             },
             historyDialog: false,
 
+            // 图标
+            fullScreenIcon: markRaw(FullScreen),
+            bottomIcon: markRaw(Bottom),
+
             // 视图
             view: useSettingStore().getDefaultViewer,
             showTop: true,
             showTabs: useSettingStore().getShowTab,
-            fullScreen: markRaw(FullScreen)
+            paginationFixed: false
         };
     },
     computed: {
@@ -318,7 +332,8 @@ export default defineComponent({
             };
             this.page = searchItem.body.page;
             this.size = searchItem.body.size;
-            this.$nextTick(() => {})
+            this.$nextTick(() => {
+            })
             this.search();
         })
     },
@@ -500,6 +515,18 @@ export default defineComponent({
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
         },
+        onScroll() {
+            let pagination = this.$refs['pagination'] as HTMLDivElement;
+            this.paginationFixed = pagination.getBoundingClientRect().top < 88.4375;
+        },
+        scrollTo() {
+            let baseCondition = this.$refs['baseCondition'] as HTMLDivElement;
+            let baseDisplay = this.$refs['baseDisplay'] as HTMLDivElement;
+            baseDisplay.scrollTo({
+                top: baseCondition.offsetHeight - 50,
+                behavior: 'smooth'
+            })
+        }
     },
 });
 </script>

@@ -150,7 +150,7 @@ export default defineComponent({
     methods: {
         removeHomeExcludeIndex(index: string) {
             useSettingStore().removeHomeExcludeIndex(index);
-            emitter.emit(MessageEventEnum.INDEX_REFRESH);
+            emitter.emit(MessageEventEnum.URL_REFRESH);
         },
         addHomeExcludeIndexClick() {
             this.homeExcludeIndicesConfig.input = true;
@@ -167,7 +167,7 @@ export default defineComponent({
                     input: false,
                     value: ''
                 }
-                emitter.emit(MessageEventEnum.INDEX_REFRESH);
+                emitter.emit(MessageEventEnum.URL_REFRESH);
             }
         },
         executeRefresh() {

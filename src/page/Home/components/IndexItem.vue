@@ -259,7 +259,7 @@ export default defineComponent({
         },
         reset() {
             useIndexStore().reset().then(() => {
-                emitter.emit(MessageEventEnum.INDEX_REFRESH);
+                emitter.emit(MessageEventEnum.URL_REFRESH);
             });
         }
     }
