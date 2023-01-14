@@ -16,22 +16,32 @@
             <el-input style="width: 350px;" :disabled="serverSetting.mode === ServerModeEnum.CLIENT"
                       v-model="serverSetting.token"/>
         </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="saveServer">保存</el-button>
-        </el-form-item>
         <el-divider content-position="left">同步设置</el-divider>
         <el-form-item label="模式">
             <el-radio-group v-model="syncSetting.mode">
                 <el-radio :label="SyncModeEnum.DISABLE">禁用</el-radio>
                 <el-radio :label="SyncModeEnum.SERVER">服务器</el-radio>
+                <el-radio :label="SyncModeEnum.FILE">文件</el-radio>
+                <el-radio :label="SyncModeEnum.WEBDAV" disabled>WebDav</el-radio>
+                <el-radio :label="SyncModeEnum.SFTP" disabled>sftp</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item label="服务器地址" v-if="syncSetting.mode === SyncModeEnum.SERVER && serverSetting.mode !== ServerModeEnum.SERVER">
+
+        <!-- 服务器同步 -->
+        <el-form-item label="服务器地址"
+                      v-if="syncSetting.mode === SyncModeEnum.SERVER && serverSetting.mode !== ServerModeEnum.SERVER">
             <el-input style="width: 350px;" v-model="syncSetting.server.url"
                       placeholder="docker不需要填写"/>
         </el-form-item>
-        <el-form-item label="token" v-if="syncSetting.mode === SyncModeEnum.SERVER && serverSetting.mode !== ServerModeEnum.SERVER">
+        <el-form-item label="token"
+                      v-if="syncSetting.mode === SyncModeEnum.SERVER && serverSetting.mode !== ServerModeEnum.SERVER">
             <el-input style="width: 350px;" v-model="syncSetting.server.token"/>
+        </el-form-item>
+
+        <!-- 文件同步 -->
+        <el-form-item label="操作" v-if="syncSetting.mode === SyncModeEnum.FILE">
+            <el-button type="success">上传</el-button>
+            <el-button type="primary">下载</el-button>
         </el-form-item>
     </el-form>
 </template>
