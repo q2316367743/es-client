@@ -342,6 +342,18 @@ export default defineComponent({
         },
         windowWarningNotification() {
             // 窗口警告通知
+            if (window.innerWidth < 1200 && window.innerHeight < 800) {
+                if (showWidthNotification && showHeightNotification) {
+                    ElNotification({
+                        title: '警告',
+                        type: 'warning',
+                        message: '检测到宽度小于1200px，高度小于800px，可能造成显示异常。'
+                    });
+                    showWidthNotification = false;
+                    showHeightNotification = false;
+                }
+            }
+
             if (window.innerWidth < 1200) {
                 if (showWidthNotification) {
                     ElNotification({

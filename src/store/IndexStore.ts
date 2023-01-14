@@ -51,13 +51,13 @@ const useIndexStore = defineStore('index', {
                     this.indices,
                     'name',
                     (e1, e2) => {
-                    ElNotification({
-                        title: '警告',
-                        type: "warning",
-                        message: '索引存在名称相同，程序可能出现错误',
-                    })
-                    return e1
-                });
+                        ElNotification({
+                            title: '警告',
+                            type: "warning",
+                            message: '索引存在名称相同，程序可能出现错误',
+                        })
+                        return e1
+                    });
                 // 获取基本信息
                 loading.setText('开始获取索引健康值');
                 let health = await clusterApi._cluster_health();
@@ -66,14 +66,23 @@ const useIndexStore = defineStore('index', {
                 let unassigned_shards = health.unassigned_shards as number;
                 this.total_shards = this.active_shards + unassigned_shards;
                 this.status = health.status as string;
-                loading.setText('获取elasticsearch信息');
-                let info = await clusterApi.info();
-                //info ? info['version'] ? info['version']['number'] ? info['version']['number'] : '' : '' : ''
-                loading.setText('获取elasticsearch你妈呢么');
-                useEsVersion().setVersion(Optional.ofNullable(info)
-                    .map(e => e['version'])
-                    .map(e => e['number'])
-                    .orElse(''));
+
+                clusterApi.info()
+                    .then(info => {
+                        // 异步执行就可以
+                        useEsVersion().setVersion(Optional.ofNullable(info)
+                            .map(e => e['version'])
+                            .map(e => e['number'])
+                            .orElse(''));
+                    })
+                    .catch(e => {
+                        ElNotification({
+                            title: '获取elasticsearch版本失败',
+                            type: "error",
+                            message: e,
+                        });
+                    });
+
                 loading.close();
             } catch (e: any) {
                 useUrlStore().clear();
