@@ -68,6 +68,8 @@ import BrowserUtil from "@/utils/BrowserUtil";
 import IndexSaveBuild from "@/build/IndexSaveBuild";
 import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'home-index-add',
@@ -129,6 +131,8 @@ export default defineComponent({
             })
             // 关闭弹框
             this.dialog = false;
+            // 发送刷新事件
+            emitter.emit(MessageEventEnum.REFRESH_URL);
         },
         copyIndex() {
             // 执行拷贝

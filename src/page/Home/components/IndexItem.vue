@@ -1,82 +1,28 @@
 <template>
-    <div class="card">
-        <div
-            class="title"
-            v-bind:style="{
-                color: index?.state === 'open' ? 'var(--text-color)' : 'var(--disable-color)',
-            }"
-        >{{ index?.name }}
+    <div class="home-index-card">
+        <!-- 标题 -->
+        <div class="title">
+            <el-link :type="indexStateTitle" @click="indexInfo">{{ index?.name }}</el-link>
+            <div class="url-copy" @click="execCopy(index?.name)">复制</div>
         </div>
+        <!-- 详细 -->
         <div class="detail">
-            <div>
-                size:
-                {{ index?.size }}
-            </div>
+            <div> size: {{ index?.size }}</div>
             <div>docs: {{ index?.doc_count }}</div>
         </div>
+        <!-- 操作 -->
         <div class="option">
-            <!-- 索引的详情 -->
-            <el-dropdown @command="info">
-                <el-button type="primary" size="small">
-                    {{ $t('home.index.info.self') }}
-                    <el-icon class="el-icon--right">
-                        <arrow-down/>
-                    </el-icon>
-                </el-button>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <!-- 索引状态 -->
-                        <el-dropdown-item command="state">{{ $t('home.index.info.index_status') }}</el-dropdown-item>
-                        <!-- 索引详情 -->
-                        <el-dropdown-item
-                            command="cluster_stats"
-                        >{{ $t('home.index.info.index_info') }}
-                        </el-dropdown-item>
-                        <!-- 数据预览 -->
-                        <el-dropdown-item command="data">{{ $t('home.index.info.data_preview') }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-            <!-- 索引操作 -->
-            <el-dropdown style="margin-left: 10px" @command="active">
-                <el-button type="primary" size="small">
-                    <span>{{ $t('home.index.active.self') }}</span>
-                    <el-icon class="el-icon--right">
-                        <arrow-down/>
-                    </el-icon>
-                </el-button>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <!-- 新建别名 -->
-                        <el-dropdown-item :command="1">{{ $t('home.index.active.new_alias') }}</el-dropdown-item>
-                        <!-- 刷新 -->
-                        <el-dropdown-item :command="2">{{ $t('home.index.active.refresh') }}</el-dropdown-item>
-                        <!-- flush 刷新 -->
-                        <el-dropdown-item :command="3">{{ $t('home.index.active.flush_refresh') }}</el-dropdown-item>
-                        <!-- ForceMerge -->
-                        <el-dropdown-item disabled>{{ $t('home.index.active.ForceMerge') }}</el-dropdown-item>
-                        <!-- 网关快照 -->
-                        <el-dropdown-item disabled>{{ $t('home.index.active.gateway_snapshot') }}</el-dropdown-item>
-                        <!-- 测试分析器 -->
-                        <el-dropdown-item disabled>{{ $t('home.index.active.test_profiler') }}</el-dropdown-item>
-                        <!-- 关闭 -->
-                        <el-dropdown-item
-                            :command="7"
-                            v-if="index?.state === 'open'"
-                        >{{ $t('home.index.active.close') }}
-                        </el-dropdown-item>
-                        <!-- 打开 -->
-                        <el-dropdown-item
-                            :command="8"
-                            v-if="index?.state === 'close'"
-                        >{{ $t('home.index.active.open') }}
-                        </el-dropdown-item>
-                        <!-- 删除 -->
-                        <el-dropdown-item :command="9">{{ $t('home.index.active.delete') }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+            <el-tooltip :effect="theme" content="状态" placement="bottom">
+                <el-button link type="primary" :icon="dataAnalysisIcon" @click="indexState"/>
+            </el-tooltip>
+            <el-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
+                <el-button link :type="indexStateBtn" :icon="switchButtonIcon" @click="indexOperation"/>
+            </el-tooltip>
+            <el-tooltip :effect="theme" content="删除索引" placement="bottom">
+                <el-button link type="danger" :icon="deleteIcon" @click="removeIndex"/>
+            </el-tooltip>
         </div>
+        <!-- 别名 -->
         <div class="alias">
             <el-tag
                 v-for="(item, idx) in index?.alias"
@@ -86,8 +32,9 @@
                 @close="removeAlias(item)"
             >{{ item }}
             </el-tag>
-            <el-button size="small" @click="active(1)">新增</el-button>
+            <el-button size="small" @click="newAlias">新增</el-button>
         </div>
+        <!-- 拓展面板按钮 -->
         <div class="expand-btn">
             <el-button link type="primary" @click="showExpand = !showExpand">
                 <el-icon v-if="showExpand">
@@ -98,6 +45,7 @@
                 </el-icon>
             </el-button>
         </div>
+        <!-- 拓展面板 -->
         <div class="expand" v-show="showExpand">
             <div v-for="(value, key) in index?.shard" :key="key">
                 <div
@@ -121,15 +69,16 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
-import {ArrowDown, ArrowUp} from '@element-plus/icons-vue';
+import {defineComponent, markRaw, PropType} from "vue";
+import {ArrowDown, ArrowUp, Delete, SwitchButton, DataAnalysis} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
-import useIndexStore from '@/store/IndexStore';
 import IndexView from "@/view/index/IndexView";
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import BrowserUtil from "@/utils/BrowserUtil";
+import {isDark} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -144,59 +93,72 @@ export default defineComponent({
         open: true,
         showDialog: false,
         dataDialog: false,
+        isDark,
+        deleteIcon: markRaw(Delete),
+        switchButtonIcon: markRaw(SwitchButton),
+        dataAnalysisIcon: markRaw(DataAnalysis)
     }),
+    computed: {
+        indexStateBtn(): 'danger' | 'success' | 'info' {
+            if (this.index?.state === 'open') {
+                return 'danger';
+            } else if (this.index?.state === 'close') {
+                return 'success';
+            } else {
+                return 'info'
+            }
+        },
+
+        indexStateTooltip(): string {
+            if (this.index?.state === 'open') {
+                return '关闭';
+            } else if (this.index?.state === 'close') {
+                return '打开';
+            } else {
+                return '未知状态'
+            }
+        },
+        indexStateTitle(): 'primary' | 'info' | 'warning' {
+            if (this.index?.state === 'open') {
+                return 'primary';
+            } else if (this.index?.state === 'close') {
+                return 'info';
+            } else {
+                return 'warning'
+            }
+        },
+        theme() {
+            return this.isDark ? 'dark' : 'light';
+        }
+    },
     methods: {
         showShardOrReplica(json: any, idx: number) {
             let title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
             this.$emit('openDialog', title, json);
         },
-        info(command: string) {
-            if (command === 'state') {
-                let title = this.index?.name!;
-                // 实时获取最新的
-                clusterApi._stats().then(state => {
-                    this.$emit('openDialog', title, state.indices[title]);
-                }).catch(() => {
-                    ElMessage.error('获取索引状态错误')
+        indexState() {
+            let title = this.index?.name!;
+            clusterApi._stats().then(state => {
+                this.$emit('openDialog', title, state.indices[title]);
+            }).catch(() => {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '获取索引状态错误'
                 })
-            } else if (command === 'cluster_stats') {
-                let title = this.index?.name!;
-                clusterApi._cluster_state().then(cluster_stats => {
-                    this.$emit('openDialog', title, cluster_stats.metadata.indices[title]);
-                }).catch(() => {
-                    ElMessage.error('获取索引信息错误')
-                })
-            } else if (command === 'data') {
-                indexApi._search(this.index!.name).then((result) => {
-                    this.$emit('openDialog', this.index?.name, result);
-                })
-            } else {
-                ElMessage.error('信息：命令不存在')
-            }
+            })
         },
-        active(command: number) {
-            switch (command) {
-                case 1:
-                    this.newAlias();
-                    break;
-                case 2:
-                    this.refreshIndex();
-                    break;
-                case 3:
-                    this.flushIndex();
-                    break;
-                case 7:
-                    this.closeIndex();
-                    break;
-                case 8:
-                    this.openIndex();
-                    break;
-                case 9:
-                    this.removeIndex();
-                    break;
-                default:
-                    ElMessage.error('动作错误，请刷新重试');
-            }
+        indexInfo() {
+            let title = this.index?.name!;
+            clusterApi._cluster_state().then(cluster_stats => {
+                this.$emit('openDialog', title, cluster_stats.metadata.indices[title]);
+            }).catch(() => {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '获取索引信息错误'
+                })
+            })
         },
         newAlias() {
             ElMessageBox.prompt("请输入新别名", "提示", {
@@ -204,7 +166,11 @@ export default defineComponent({
                 cancelButtonText: "取消",
             }).then(({value}) => {
                 indexApi.new_alias(this.index?.name!, value, (res: object) => {
-                    ElMessage.info(JSON.stringify(res));
+                    ElMessage({
+                        showClose: true,
+                        type: 'success',
+                        message: JSON.stringify(res)
+                    })
                     this.reset();
                 });
             });
@@ -216,7 +182,11 @@ export default defineComponent({
                 type: "warning",
             }).then(() => {
                 indexApi.remove_alias(this.index?.name!, alias, (res: object) => {
-                    ElMessage.info(JSON.stringify(res));
+                    ElMessage({
+                        showClose: true,
+                        type: 'success',
+                        message: JSON.stringify(res)
+                    })
                     this.reset();
                 });
             });
@@ -228,45 +198,64 @@ export default defineComponent({
                 type: "warning",
             }).then(() => {
                 indexApi.remove(this.index?.name!, (res: object) => {
-                    ElMessage.info(JSON.stringify(res));
+                    ElMessage({
+                        showClose: true,
+                        type: 'success',
+                        message: JSON.stringify(res)
+                    })
                     this.reset();
                 });
             });
         },
+        indexOperation() {
+            if (this.index?.state === 'open') {
+                this.closeIndex();
+            } else if (this.index?.state === 'close') {
+                this.openIndex();
+            } else {
+                ElMessage({
+                    showClose: true,
+                    type: 'warning',
+                    message: `未知索引状态【${this.index?.state}】，无法完成操作`
+                })
+            }
+        },
         openIndex() {
             indexApi._open(this.index?.name!, (res: any) => {
-                ElMessage.info(JSON.stringify(res));
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: JSON.stringify(res)
+                })
                 this.reset();
             })
         },
         closeIndex() {
             indexApi._close(this.index?.name!, (res: any) => {
-                ElMessage.info(JSON.stringify(res));
-                this.reset();
-            })
-        },
-        flushIndex() {
-            indexApi._flush(this.index?.name!, (res: any) => {
-                ElMessage.info(JSON.stringify(res));
-                this.reset();
-            })
-        },
-        refreshIndex() {
-            indexApi._refresh(this.index?.name!, (res: any) => {
-                ElMessage.info(JSON.stringify(res));
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: JSON.stringify(res)
+                })
                 this.reset();
             })
         },
         reset() {
-            useIndexStore().reset().then(() => {
-                emitter.emit(MessageEventEnum.URL_REFRESH);
-            });
+            emitter.emit(MessageEventEnum.REFRESH_URL);
+        },
+        execCopy(url: string) {
+            BrowserUtil.copy(url);
+            ElMessage({
+                showClose: true,
+                type: 'success',
+                message: '已成功复制到剪切板'
+            })
         }
     }
 });
 </script>
 <style lang="less">
-.card {
+.home-index-card {
     margin: 5px;
     padding: 10px;
     border: #e3e6ec solid 1px;
@@ -275,8 +264,16 @@ export default defineComponent({
     min-width: 700px;
 
     .title {
-        font-size: 24px;
-        font-weight: bold;
+        display: flex;
+
+        .el-link {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .url-copy {
+            margin-top: 4px;
+        }
     }
 
     .detail {
@@ -285,14 +282,14 @@ export default defineComponent({
 
     .option {
         position: absolute;
-        top: 28px;
+        top: 8px;
         right: 12px;
     }
 
     .alias {
         position: absolute;
-        top: 28px;
-        right: 212px;
+        top: 34px;
+        right: 12px;
     }
 
     .expand-btn {

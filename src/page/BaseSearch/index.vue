@@ -31,9 +31,6 @@
                             }}
                         </el-button>
                         <el-button @click="historyDialog = true">历史</el-button>
-                        <transition name="el-fade-in-linear">
-                            <el-button type="info" :icon="bottomIcon" v-show="!paginationFixed" @click="scrollTo"/>
-                        </transition>
                     </div>
                     <div class="right">
                         <el-select v-model="view">
@@ -519,14 +516,6 @@ export default defineComponent({
             let pagination = this.$refs['pagination'] as HTMLDivElement;
             this.paginationFixed = pagination.getBoundingClientRect().top < 88.4375;
         },
-        scrollTo() {
-            let baseCondition = this.$refs['baseCondition'] as HTMLDivElement;
-            let baseDisplay = this.$refs['baseDisplay'] as HTMLDivElement;
-            baseDisplay.scrollTo({
-                top: baseCondition.offsetHeight - 50,
-                behavior: 'smooth'
-            })
-        }
     },
 });
 </script>
