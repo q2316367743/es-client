@@ -19,7 +19,7 @@
             <el-collapse-item>
                 <template #title>
                     全局索引查询条件（修改后请
-                    <span class="like-link" @click="executeRefresh">刷新</span>
+                    <span class="like-link">刷新</span>
                     索引）
                 </template>
                 <el-form-item label="状态">
@@ -169,9 +169,6 @@ export default defineComponent({
                 }
                 emitter.emit(MessageEventEnum.URL_REFRESH);
             }
-        },
-        executeRefresh() {
-            emitter.emit(MessageEventEnum.REFRESH_URL);
         }
     }
 });

@@ -130,7 +130,9 @@ export default defineComponent({
                     type: 'success'
                 });
                 if (useUrlStore().current === value) {
-                    useUrlStore().choose();
+                    // 删除了当前索引
+                    useUrlStore().clear();
+                    useIndexStore().clear();
                 }
                 useUrlStore().reset();
                 useIndexStore().reset();
