@@ -80,7 +80,7 @@
                         <el-button link type="primary" @click="showBody">
                             {{ $t('base_search.display_query_statement') }}
                         </el-button>
-                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到基础查询</el-button>
+                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到高级查询</el-button>
                     </div>
                 </div>
             </div>

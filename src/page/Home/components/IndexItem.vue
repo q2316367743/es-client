@@ -47,23 +47,29 @@
         </div>
         <!-- 拓展面板 -->
         <div class="expand" v-show="showExpand">
-            <div v-for="(value, key) in index?.shard" :key="key">
-                <div
-                    class="shard"
-                    v-for="(item, idx) in value"
-                    :key="idx"
-                    @click="showShardOrReplica(item, idx)"
-                >{{ key }}
+            <div class="info">
+                <div v-for="(value, key) in index?.shard" :key="key">
+                    <div
+                        class="shard"
+                        v-for="(item, idx) in value"
+                        :key="idx"
+                        @click="showShardOrReplica(item, idx)"
+                    >{{ key }}
+                    </div>
+                </div>
+                <div v-for="(value, key) in index?.replica" :key="key">
+                    <div
+                        class="replica"
+                        v-for="(item, idx) in value"
+                        :key="idx"
+                        @click="showShardOrReplica(item, idx)"
+                    >{{ key }}
+                    </div>
                 </div>
             </div>
-            <div v-for="(value, key) in index?.replica" :key="key">
-                <div
-                    class="replica"
-                    v-for="(item, idx) in value"
-                    :key="idx"
-                    @click="showShardOrReplica(item, idx)"
-                >{{ key }}
-                </div>
+            <div class="btn">
+                <el-button type="primary" size="small" @click="refreshIndex">刷新</el-button>
+                <el-button type="primary" size="small" @click="flushIndex">flush刷新</el-button>
             </div>
         </div>
     </div>
@@ -240,6 +246,26 @@ export default defineComponent({
                 this.reset();
             })
         },
+        flushIndex() {
+            indexApi._flush(this.index?.name!, (res: any) => {
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: JSON.stringify(res)
+                })
+                this.reset();
+            })
+        },
+        refreshIndex() {
+            indexApi._refresh(this.index?.name!, (res: any) => {
+                ElMessage({
+                    showClose: true,
+                    type: 'success',
+                    message: JSON.stringify(res)
+                })
+                this.reset();
+            })
+        },
         reset() {
             emitter.emit(MessageEventEnum.REFRESH_URL);
         },
@@ -288,40 +314,53 @@ export default defineComponent({
 
     .alias {
         position: absolute;
-        top: 34px;
-        right: 12px;
+        top: 36px;
+        right: 102px;
     }
 
     .expand-btn {
         position: absolute;
-        top: 63px;
+        top: 75px;
         right: 12px;
     }
 
     .expand {
         margin-top: 10px;
         display: flex;
+        justify-content: space-between;
+        position: relative;
 
-        .shard {
-            border: #000000 solid 4px;
-            background-color: aquamarine;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 40px;
-            margin: 4px;
-            cursor: pointer;
+        .info {
+            display: flex;
+
+            .shard {
+                border: #000000 solid 4px;
+                background-color: aquamarine;
+                width: 40px;
+                height: 40px;
+                text-align: center;
+                line-height: 40px;
+                margin: 4px;
+                cursor: pointer;
+            }
+
+            .replica {
+                border: #666666 solid 4px;
+                background-color: #f2f2f2;
+                width: 40px;
+                height: 40px;
+                text-align: center;
+                line-height: 40px;
+                margin: 4px;
+                cursor: pointer;
+            }
+
         }
 
-        .replica {
-            border: #666666 solid 4px;
-            background-color: #f2f2f2;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 40px;
-            margin: 4px;
-            cursor: pointer;
+        .btn {
+            position: absolute;
+            right: 0;
+            bottom: 0;
         }
     }
 }

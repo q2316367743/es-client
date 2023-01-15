@@ -110,7 +110,7 @@
                     <template #dropdown>
                         <el-dropdown-menu>
                             <el-dropdown-item>
-                                <el-link href="https://docs.esion.xyz/project-1/doc-2/" target="_blank">帮助</el-link>
+                                <el-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助</el-link>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </template>

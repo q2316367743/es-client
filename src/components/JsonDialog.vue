@@ -7,10 +7,10 @@
         class="es-dialog"
         :close-on-click-modal="false"
         top="10vh"
+        draggable
+        destroy-on-close
     >
         <json-view :data="json"/>
-        <el-scrollbar>
-        </el-scrollbar>
     </el-dialog>
 </template>
 <script lang="ts">
