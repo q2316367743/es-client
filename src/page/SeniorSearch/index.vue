@@ -2,7 +2,7 @@
     <div class="senior-search">
         <transition name="el-zoom-in-top">
             <div class="senior-search-tabs" v-show="showTabs">
-                <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
                           @option-tab="optionTab"/>
             </div>
         </transition>

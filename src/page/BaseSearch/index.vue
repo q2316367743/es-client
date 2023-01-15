@@ -3,7 +3,7 @@
         <!-- 标签页 -->
         <transition name="el-zoom-in-top">
             <div class="base-search-tab" v-show="showTabs">
-                <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
                           @option-tab="optionTab"/>
             </div>
         </transition>

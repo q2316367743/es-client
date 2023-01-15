@@ -10,10 +10,10 @@
             </el-collapse-item>
             <el-collapse-item title="新建索引">
                 <el-form-item :label="$t('setting.base.default_shard_number')">
-                    <el-input-number v-model="instance.defaultShard"></el-input-number>
+                    <el-input-number controls-position="right" v-model="instance.defaultShard"></el-input-number>
                 </el-form-item>
                 <el-form-item :label="$t('setting.base.default_replica_number')">
-                    <el-input-number v-model="instance.defaultReplica"></el-input-number>
+                    <el-input-number controls-position="right" v-model="instance.defaultReplica"></el-input-number>
                 </el-form-item>
             </el-collapse-item>
             <el-collapse-item>
@@ -65,13 +65,13 @@
             </el-collapse-item>
             <el-collapse-item title="http设置">
                 <el-form-item :label="$t('setting.base.timeout')">
-                    <el-input-number v-model="instance.timeout" :min="0" :step="1000"
+                    <el-input-number controls-position="right" v-model="instance.timeout" :min="0" :step="1000"
                                      :placeholder="$t('setting.base.timeout_placeholder')"></el-input-number>
                 </el-form-item>
             </el-collapse-item>
             <el-collapse-item title="显示设置">
                 <el-form-item :label="$t('setting.base.page_size')">
-                    <el-input-number v-model="instance.pageSize"></el-input-number>
+                    <el-input-number controls-position="right" v-model="instance.pageSize"></el-input-number>
                 </el-form-item>
                 <el-form-item :label="$t('setting.base.default_viewer')">
                     <el-select v-model="instance.defaultViewer">
@@ -79,6 +79,18 @@
                         <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="JSON视图主题 - 白天">
+                    <el-select v-model="instance.jsonThemeByLight">
+                        <el-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="JSON视图主题 - 黑夜">
+                    <el-select v-model="instance.jsonThemeByDark">
+                        <el-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
+                    </el-select>
+                </el-form-item>
+            </el-collapse-item>
+            <el-collapse-item title="标签栏设置">
                 <el-form-item>
                     <template #label>
                         <span>是否默认展示标签栏</span>
@@ -92,18 +104,25 @@
                                active-text="展示"
                                inactive-text="隐藏"/>
                 </el-form-item>
-                <el-form-item label="JSON视图主题 - 白天">
-                    <el-select v-model="instance.jsonThemeByLight">
-                        <el-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
-                    </el-select>
+                <el-form-item>
+                    <template #label>
+                        <span>标签栏最大数量</span>
+                        <el-tooltip content="数量太多会导致性能变差" placement="top" effect="light">
+                            <el-icon style="margin-left: 5px;">
+                                <i class="vxe-icon-question-circle"/>
+                            </el-icon>
+                        </el-tooltip>
+                    </template>
+                    <el-input-number controls-position="right" v-model="instance.tabMaxCount" />
                 </el-form-item>
-                <el-form-item label="JSON视图主题 - 黑夜">
-                    <el-select v-model="instance.jsonThemeByDark">
-                        <el-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
-                    </el-select>
+                <el-form-item label="标签栏超过最大数量后的关闭模式">
+                    <el-radio-group v-model="instance.tabCloseMode">
+                        <el-radio :label="TabCloseModeEnum.ALERT">警告</el-radio>
+                        <el-radio :label="TabCloseModeEnum.FIRST">关闭第一个</el-radio>
+                    </el-radio-group>
                 </el-form-item>
             </el-collapse-item>
-            <el-collapse-item title="强迫症选项">
+            <el-collapse-item title="其他设置">
                 <el-form-item label="选择链接后自动全屏">
                     <el-switch v-model="instance.autoFullScreen" :active-value="true" :inactive-value="false"
                                active-text="开启"
@@ -122,6 +141,7 @@ import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import JsonTheme from "@/data/JsonTheme";
+import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 
 export default defineComponent({
     name: 'setting-base',
@@ -131,6 +151,7 @@ export default defineComponent({
     data: () => ({
         layoutMode,
         LayoutModeEnum,
+        TabCloseModeEnum,
         JsonTheme,
         homeExcludeIndicesConfig: {
             input: false,
@@ -141,6 +162,12 @@ export default defineComponent({
     created() {
         // 获取布局方式
         document.body.setAttribute('layout-mode', this.layoutMode);
+        if (!this.instance.tabMaxCount) {
+            this.instance.tabMaxCount = useSettingStore().getTabMaxCount;
+        }
+        if (!this.instance.tabCloseMode) {
+            this.instance.tabCloseMode = useSettingStore().getTabCloseMode;
+        }
     },
     watch: {
         layoutMode(newValue: string) {

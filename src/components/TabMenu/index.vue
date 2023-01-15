@@ -37,10 +37,14 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
+import useSettingStore from "@/store/SettingStore";
+import Optional from "@/utils/Optional";
+import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
+import {ElMessage} from "element-plus";
 
 export default defineComponent({
     name: 'tab-menu',
-    emits: ['update:modelValue', 'editTabs', 'optionTab'],
+    emits: ['update:modelValue', 'update:searchItemHeaders', 'editTabs', 'optionTab'],
     props: {
         modelValue: Number,
         searchItemHeaders: Array<TabMenuItem>
@@ -61,6 +65,23 @@ export default defineComponent({
     },
     methods: {
         editTabs(targetName: number, action: 'remove' | 'add') {
+            if (action === 'add') {
+                if (Optional.ofNullable(this.searchItemHeaders).map(e => e!.length).orElse(0) >=
+                    useSettingStore().getTabMaxCount) {
+                    // 标签数超过最大数
+                    if (useSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
+                        this.$emit('update:searchItemHeaders', this.searchItemHeaders!.splice(0, 1));
+                    }else {
+                        // 默认进行提示
+                        ElMessage({
+                            showClose: true,
+                            type: 'error',
+                            message: '标签数量超过最大限制，请关闭不需要的标签'
+                        });
+                        return
+                    }
+                }
+            }
             this.$emit('editTabs', targetName, action);
         },
         optionTab(command: string) {

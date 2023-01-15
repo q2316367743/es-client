@@ -1,9 +1,11 @@
+import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
+
 /**
  * 设置
  */
 export default interface Setting {
 
-    // 新建索引
+    /*--------------------------------- 新建索引 ---------------------------------*/
 
     /**
      * 默认分片
@@ -15,20 +17,14 @@ export default interface Setting {
      */
     defaultReplica: number;
 
-    /**
-     * 默认视图
-     */
-    defaultViewer: number;
-
-    /**
-     * 默认分页大小
-     */
-    pageSize: number;
+    /*--------------------------------- HTTP设置 ---------------------------------*/
 
     /**
      * 超时时间
      */
     timeout: number;
+
+    /*--------------------------------- 全局索引查询条件 ---------------------------------*/
 
     /**
      * 概览 => 搜索 => 状态
@@ -40,10 +36,34 @@ export default interface Setting {
      */
     homeExcludeIndices: Array<string>;
 
+    /*--------------------------------- 标签栏设置 ---------------------------------*/
+
     /**
      * 展示标签栏
      */
     showTab: boolean;
+
+    /**
+     * 标签栏最大数量
+     */
+    tabMaxCount: number,
+
+    /**
+     * 超过最大数量后的关闭模式
+     */
+    tabCloseMode: TabCloseModeEnum,
+
+    /*--------------------------------- 显示设置 ---------------------------------*/
+
+    /**
+     * 默认分页大小
+     */
+    pageSize: number;
+
+    /**
+     * 默认视图
+     */
+    defaultViewer: number;
 
     /**
      * JSON主题 - 白天
@@ -54,6 +74,8 @@ export default interface Setting {
      * JSON主题 - 黑夜
      */
     jsonThemeByDark: string;
+
+    /*--------------------------------- 其他设置 ---------------------------------*/
 
     /**
      * 自动全屏
