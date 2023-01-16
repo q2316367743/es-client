@@ -151,11 +151,6 @@ export default defineComponent({
         },
         execCopy(url: string) {
             BrowserUtil.copy(url);
-            ElMessage({
-                showClose: true,
-                type: 'success',
-                message: '已成功复制到剪切板'
-            })
         }
     }
 });

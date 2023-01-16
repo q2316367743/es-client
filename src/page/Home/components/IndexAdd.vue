@@ -139,11 +139,6 @@ export default defineComponent({
             BrowserUtil.copy(JSON.stringify(IndexSaveBuild(this.index), null, 4));
             // 关闭弹框
             this.dialog = false;
-            ElMessage({
-                showClose: true,
-                type: "success",
-                message: "成功复制到剪切板"
-            });
         },
         jumpToSeniorSearch() {
             // 页面跳转

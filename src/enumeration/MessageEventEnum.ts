@@ -23,9 +23,14 @@ enum MessageEventEnum {
     TEMP_RECORD_UPDATE = 'event:temp:record:update',
 
     /**
-     * 历史记录更新
+     * 普通查询 - 历史记录更新
      */
-    HISTORY_UPDATE = 'event:history:update',
+    BASE_HISTORY_UPDATE = 'event:history:base:update',
+
+    /**
+     * 高级查询 - 历史记录更新
+     */
+    SENIOR_HISTORY_UPDATE = 'event:history:senior:update',
 
     // 执行
 

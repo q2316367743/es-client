@@ -96,11 +96,6 @@ export default defineComponent({
         },
         execCopy(url: string) {
             BrowserUtil.copy(url);
-            ElMessage({
-                showClose: true,
-                type: 'success',
-                message: '已成功复制到剪切板'
-            })
         },
         load(history: BaseSearchHistory) {
             this.$emit('load', {
@@ -132,7 +127,7 @@ export default defineComponent({
                             type: 'success',
                             message: '新增成功'
                         });
-                        emitter.emit(MessageEventEnum.HISTORY_UPDATE);
+                        emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE);
                         // 删除此条记录
                         this.removeById(history.id!);
                     })

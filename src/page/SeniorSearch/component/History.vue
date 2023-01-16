@@ -117,11 +117,7 @@ export default defineComponent({
         });
         // 数据查询
         this.search();
-        emitter.on(MessageEventEnum.URL_UPDATE, () => {
-            // url更新，也要进行重新查询历史
-            this.search();
-        });
-        emitter.on(MessageEventEnum.HISTORY_UPDATE, () => {
+        emitter.on(MessageEventEnum.SENIOR_HISTORY_UPDATE, () => {
             // 历史记录变更，也要进行重新查询历史
             this.search();
         });
@@ -140,11 +136,6 @@ export default defineComponent({
         },
         execCopy(url: string) {
             BrowserUtil.copy(url);
-            ElMessage({
-                showClose: true,
-                type: 'success',
-                message: '已成功复制到剪切板'
-            })
         },
         load(history: SeniorSearchHistory) {
             this.$emit('load', history);

@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
+import {defineComponent, markRaw, toRaw} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {mapState} from "pinia";
 import {Bottom, FullScreen} from "@element-plus/icons-vue";
@@ -107,6 +107,7 @@ import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import IndexApi from "@/api/IndexApi";
 
 import mitt from '@/plugins/mitt';
+import emitter from '@/plugins/mitt';
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -126,11 +127,17 @@ import {BaseSearchItem} from "@/page/BaseSearch/BaseSearchItem";
 import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
 import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldConditionContainer.vue";
 
-import {useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {
+    baseSearchHistoryService,
+    useBaseSearchEvent,
+    usePageJumpEvent,
+    useSeniorSearchEvent
+} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import JsonView from "@/components/JsonView/index.vue";
 import BshManage from "@/page/BaseSearch/History/index.vue";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
+import useUrlStore from "@/store/UrlStore";
 
 interface Name {
     name: string;
@@ -138,6 +145,10 @@ interface Name {
     label: string;
     value: string;
 }
+
+// 最后一次执行时间
+let lastExecuteTime = 0
+let executorId = -1;
 
 // 公共方法
 export default defineComponent({
@@ -187,6 +198,8 @@ export default defineComponent({
             page: 1,
             size: useSettingStore().getPageSize,
 
+            fields: new Array<Field>(),
+
             loading: false,
             visibility: true,
 
@@ -233,24 +246,6 @@ export default defineComponent({
                 });
             }
         }),
-        // 字段
-        fields() {
-            if (this.current.index === '') {
-                return new Array<Field>();
-            }
-            // 重置字段
-            for (let index of this.indices) {
-                if (index.name === this.current.index) {
-                    return [...index.fields.sort((a, b) => {
-                        return a.name.localeCompare(b.name, "zh-CN");
-                    }), {
-                        name: '_doc._id',
-                        type: 'text'
-                    }];
-                }
-            }
-            return new Array<Field>();
-        },
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
@@ -266,7 +261,24 @@ export default defineComponent({
         },
         current: {
             handler() {
-                this.sync();
+                // 同步要有限度
+                let now = new Date().getTime();
+                if (now - lastExecuteTime < 500) {
+                    // 清除执行器
+                    clearTimeout(executorId);
+                    // 设置500ms延迟执行
+                    executorId = setTimeout(() => {
+                        this.sync();
+                    }, 500) as unknown as number;
+                }else {
+                    lastExecuteTime = now;
+                    // 设置500ms延迟执行
+                    executorId = setTimeout(() => {
+                        this.sync();
+                    }, 500) as unknown as number;
+                }
+                // 重置字段
+                this.fields = useIndexStore().field(this.current.index);
             },
             deep: true
         },
@@ -300,7 +312,7 @@ export default defineComponent({
             let searchItem = {
                 header: {
                     id: searchId,
-                    name: searchId + '',
+                    name: Optional.ofNullable(event.name).orElse(searchId + ''),
                     relationId: event.id
                 },
                 body: {
@@ -330,8 +342,8 @@ export default defineComponent({
             this.page = searchItem.body.page;
             this.size = searchItem.body.size;
             this.$nextTick(() => {
+                this.search();
             })
-            this.search();
         })
     },
     methods: {
@@ -345,7 +357,8 @@ export default defineComponent({
             this.searchMap.set(this.searchId, {
                 header: {
                     id: this.searchId,
-                    name: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.name).orElse("基础查询")
+                    name: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.name).orElse("基础查询"),
+                    relationId: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.relationId).get()
                 },
                 body: {
                     index: this.current.index,
@@ -485,7 +498,60 @@ export default defineComponent({
                         return;
                     }
                     // 保存到历史
+                    baseSearchHistoryService.save({
+                        urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
+                        index: searchItem.body.index,
+                        conditions: toRaw(searchItem.body.conditions),
+                        orders: toRaw(searchItem.body.orders)
+                    }).then(() => {
+                        ElMessage({
+                            showClose: true,
+                            type: 'success',
+                            message: '新增成功'
+                        });
+                    }).catch(e => {
+                        ElMessage({
+                            showClose: true,
+                            type: 'error',
+                            message: '新增失败，' + e
+                        });
+
+                    });
                     break;
+                case 'update-history':
+                    let searchItem2 = this.searchMap.get(id);
+                    if (!searchItem2) {
+                        ElMessage({
+                            showClose: true,
+                            type: 'error',
+                            message: '标签未找到'
+                        });
+                        return;
+                    }
+                    let relationId = parseInt(strings[2]);
+                    baseSearchHistoryService.update({
+                        id: relationId,
+                        name: searchItem2.header.name,
+                        index: searchItem2.body.index,
+                        conditions: toRaw(searchItem2.body.conditions),
+                        orders: toRaw(searchItem2.body.orders)
+                    })
+                        .then(() => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '更新成功'
+                            });
+                            emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE);
+                        })
+                        .catch(e => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'error',
+                                message: '更新失败，' + e
+                            });
+                        });
+
             }
             // 全部关闭了
             if (this.searchMap.size === 0) {

@@ -592,11 +592,6 @@ export default defineComponent({
             }
             if (code === 'copy') {
                 BrowserUtil.copy(Optional.ofNullable(this.menuRecord).map(e => e['value']).orElse(""));
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: '复制成功'
-                })
             } else if (code === 'add') {
                 this.recordAdd();
             } else if (code === 'update') {
@@ -911,11 +906,6 @@ export default defineComponent({
         // >----------------------------------------- 功能 ----------------------------------------->
         copy(value: any) {
             BrowserUtil.copy(JSON.stringify(value, null, 4));
-            ElMessage({
-                showClose: true,
-                type: 'success',
-                message: '复制成功'
-            })
         },
         jumpToSeniorSearchByInsert() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);

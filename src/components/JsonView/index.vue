@@ -40,11 +40,6 @@ export default defineComponent({
     methods: {
         copy() {
             BrowserUtil.copy(this.value);
-            ElMessage({
-                showClose: true,
-                type: "success",
-                message: '已复制到剪切板'
-            })
         }
     }
 });

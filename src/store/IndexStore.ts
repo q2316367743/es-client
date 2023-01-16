@@ -7,6 +7,18 @@ import useUrlStore from "@/store/UrlStore";
 import {useEsVersion} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import ArrayUtil from "@/utils/ArrayUtil";
+import Field from "@/view/Field";
+
+function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
+    let indicesMap = new Map<string, IndexView>();
+    for (let index of indices) {
+        let names = [index.name, ...index.alias];
+        for (let name of names) {
+            indicesMap.set(name, index);
+        }
+    }
+    return indicesMap;
+}
 
 const useIndexStore = defineStore('index', {
     state: () => {
@@ -18,7 +30,7 @@ const useIndexStore = defineStore('index', {
             name: '',
             active_shards: 0,
             total_shards: 0,
-            status: ''
+            status: '',
         }
     },
     getters: {
@@ -47,17 +59,8 @@ const useIndexStore = defineStore('index', {
                 loading.setText('开始构建索引信息');
                 // 获取索引信息
                 this.indices = await indexListBuild();
-                this.indicesMap = ArrayUtil.map(
-                    this.indices,
-                    'name',
-                    (e1, e2) => {
-                        ElNotification({
-                            title: '警告',
-                            type: "warning",
-                            message: '索引存在名称相同，程序可能出现错误',
-                        })
-                        return e1
-                    });
+                // 渲染map
+                this.indicesMap = renderMap(this.indices);
                 // 获取基本信息
                 loading.setText('开始获取索引健康值');
                 let health = await clusterApi._cluster_health();
@@ -94,6 +97,16 @@ const useIndexStore = defineStore('index', {
             this.name = '';
             this.indices = new Array<IndexView>();
             this.indicesMap = new Map<string, IndexView>();
+        },
+        field(indexName: string): Array<Field> {
+            let indexView = this.indicesMap.get(indexName);
+            if (indexView) {
+                return [...Array.from(indexView.fields), {
+                    name: '_doc._id',
+                    type: 'text'
+                }]
+            }
+            return new Array<Field>;
         }
     }
 });

@@ -368,7 +368,7 @@ export default defineComponent({
                                 type: 'success',
                                 message: '新增成功'
                             });
-                            emitter.emit(MessageEventEnum.HISTORY_UPDATE);
+                            emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
                         })
                         .catch(e => {
                             ElMessage({
@@ -402,7 +402,7 @@ export default defineComponent({
                                 type: 'success',
                                 message: '更新成功'
                             });
-                            emitter.emit(MessageEventEnum.HISTORY_UPDATE);
+                            emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
                         })
                         .catch(e => {
                             ElMessage({

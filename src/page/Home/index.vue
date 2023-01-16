@@ -151,7 +151,6 @@ export default defineComponent({
             this.$nextTick(() => this.executeSearch());
         },
         executeSearch() {
-            console.log('start', new Date().getTime())
             this.indexLoading = true;
             let showIndices = this.indices;
             if (this.condition.name !== '') {
@@ -200,9 +199,6 @@ export default defineComponent({
             this.$nextTick(() => {
                 this.showIndices = showIndices;
                 this.indexLoading = false;
-                this.$nextTick(() => {
-                    console.log('end', new Date().getTime())
-                })
             })
         },
         indexOpenDialog(title: string, content: any) {

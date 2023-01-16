@@ -135,11 +135,6 @@ export default defineComponent({
         },
         copy(value: any) {
             BrowserUtil.copy(JSON.stringify(value, null, 4));
-            ElMessage({
-                showClose: true,
-                type: 'success',
-                message: '复制成功'
-            })
         }
     }
 });
