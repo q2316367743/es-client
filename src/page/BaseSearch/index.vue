@@ -271,12 +271,12 @@ export default defineComponent({
                         this.sync();
                     }, 500) as unknown as number;
                 }else {
-                    lastExecuteTime = now;
                     // 设置500ms延迟执行
                     executorId = setTimeout(() => {
                         this.sync();
                     }, 500) as unknown as number;
                 }
+                lastExecuteTime = now;
                 // 重置字段
                 this.fields = useIndexStore().field(this.current.index);
             },

@@ -25,7 +25,7 @@
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
-            <vxe-list :loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height"
+            <vxe-list v-loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height"
                       v-if="showIndices.length > 0">
                 <template #default="{ items }">
                     <index-item v-for="item in items" :index="item" @open-dialog="indexOpenDialog"/>
@@ -69,6 +69,8 @@ import {stringContain} from "@/utils/SearchUtil";
 import HomeIndexAdd from "@/page/Home/components/IndexAdd.vue";
 import {useElementSize} from "@vueuse/core";
 
+let lastSearchTime = 0;
+let lastExecuteId = -1;
 
 export default defineComponent({
     name: 'Home',
@@ -85,9 +87,6 @@ export default defineComponent({
                 // 0不处理，1开启，2关闭
                 state: 0
             },
-            lastSearchTime: 0,
-            // 定时器
-            interval: {} as NodeJS.Timer | null,
             // 列表加载中
             indexLoading: false,
             // 索引的详情对话框
@@ -143,14 +142,18 @@ export default defineComponent({
          */
         search() {
             let now = new Date().getTime();
-            if (now - this.lastSearchTime < 500) {
+            console.log('search - ready');
+            if (now - lastSearchTime < 500) {
                 // 限流500ms
-                return;
+                clearTimeout(lastExecuteId);
+                lastExecuteId = setTimeout(() => this.executeSearch(), 500) as unknown as number;
+            } else {
+                lastExecuteId = setTimeout(() => this.executeSearch(), 500) as unknown as number;
             }
-            this.lastSearchTime = now;
-            this.$nextTick(() => this.executeSearch());
+            lastSearchTime = now;
         },
         executeSearch() {
+            console.log('search - execute');
             this.indexLoading = true;
             let showIndices = this.indices;
             if (this.condition.name !== '') {
@@ -196,9 +199,9 @@ export default defineComponent({
                     });
                     break;
             }
+            this.indexLoading = false;
             this.$nextTick(() => {
                 this.showIndices = showIndices;
-                this.indexLoading = false;
             })
         },
         indexOpenDialog(title: string, content: any) {
