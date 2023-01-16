@@ -299,6 +299,7 @@ export default defineComponent({
 
     .detail {
         margin-top: 10px;
+        color: var(--text-color);
     }
 
     .option {
