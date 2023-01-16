@@ -40,7 +40,7 @@ import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 
 export default defineComponent({
     name: 'tab-menu',
@@ -66,16 +66,28 @@ export default defineComponent({
     methods: {
         editTabs(targetName: number, action: 'remove' | 'add') {
             if (action === 'add') {
-                if (Optional.ofNullable(this.searchItemHeaders).map(e => e!.length).orElse(0) >=
-                    useSettingStore().getTabMaxCount) {
+                let count = Optional.ofNullable(this.searchItemHeaders).map(e => e!.length).orElse(0);
+                if (count === useSettingStore().getTabMaxCount - 1) {
+                    // 马上到达最大限制
+                    if (useSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
+                        ElNotification({
+                            title: '警告',
+                            type: 'warning',
+                            message: '标签页已达到最大限制，再次新增标签页会关闭第一个标签'
+                        })
+                    }
+                }
+                if (count >= useSettingStore().getTabMaxCount) {
                     // 标签数超过最大数
                     if (useSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
-                        this.$emit('update:searchItemHeaders', this.searchItemHeaders!.splice(0, 1));
+                        if (this.searchItemHeaders && this.searchItemHeaders.length > 0) {
+                            this.$emit('editTabs', this.searchItemHeaders[0].id, 'remove');
+                        }
                     }else {
                         // 默认进行提示
                         ElMessage({
                             showClose: true,
-                            type: 'error',
+                            type: 'warning',
                             message: '标签数量超过最大限制，请关闭不需要的标签'
                         });
                         return

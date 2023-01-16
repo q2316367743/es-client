@@ -443,7 +443,9 @@ export default defineComponent({
                 if (this.searchMap.size === 0) {
                     this.clearAfter();
                 } else {
-                    this.searchId = this.searchMap.keys().next().value
+                    if (this.searchId === targetName) {
+                        this.searchId = this.searchMap.keys().next().value
+                    }
                 }
             }
         },
