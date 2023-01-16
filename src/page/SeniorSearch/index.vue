@@ -124,7 +124,7 @@ export default defineComponent({
             current: {
                 link: '',
                 method: 'POST' as Method,
-                params: '',
+                params: '{}',
                 result: {} as any,
             },
             // 图标

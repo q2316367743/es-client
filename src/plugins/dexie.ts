@@ -17,6 +17,7 @@ export default class DexieInstance extends Dexie {
             seniorSearchHistory: '++id, urlId, &name'
         }).upgrade(trans => {
             console.log(trans);
+            // 4更新到5
             usePageJumpEvent.emit(PageNameEnum.SETTING);
             emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'url')
             trans.table('url').toArray().then(list => {
