@@ -23,11 +23,14 @@ export default defineComponent({
     }),
     watch: {
         data() {
-            this.value = JSON.stringify(this.data, null, 4);
-            this.$nextTick(() => {
-                let jsonView = this.$refs['jsonView'] as HTMLElement;
-                highlight.highlightElement(jsonView);
-            })
+            let value = JSON.stringify(this.data, null, 4);
+            if (this.value !== value) {
+                this.value = value;
+                this.$nextTick(() => {
+                    let jsonView = this.$refs['jsonView'] as HTMLElement;
+                    highlight.highlightElement(jsonView);
+                })
+            }
         }
     },
     created() {

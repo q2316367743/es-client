@@ -46,7 +46,7 @@
             </el-button>
         </div>
         <!-- 拓展面板 -->
-        <div class="expand" v-show="showExpand">
+        <div class="expand" v-if="showExpand">
             <div class="info">
                 <div v-for="(value, key) in index?.shard" :key="key">
                     <div
