@@ -142,7 +142,6 @@ export default defineComponent({
          */
         search() {
             let now = new Date().getTime();
-            console.log('search - ready');
             if (now - lastSearchTime < 500) {
                 // 限流500ms
                 clearTimeout(lastExecuteId);
@@ -153,7 +152,6 @@ export default defineComponent({
             lastSearchTime = now;
         },
         executeSearch() {
-            console.log('search - execute');
             this.indexLoading = true;
             let showIndices = this.indices;
             if (this.condition.name !== '') {

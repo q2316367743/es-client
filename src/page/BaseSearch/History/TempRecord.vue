@@ -43,7 +43,7 @@ import {VxeTableInstance} from "vxe-table";
 
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {baseSearchHistoryService} from "@/global/BeanFactory";
+import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import { stringContain } from "@/utils/SearchUtil";
@@ -98,11 +98,13 @@ export default defineComponent({
             BrowserUtil.copy(url);
         },
         load(history: BaseSearchHistory) {
-            this.$emit('load', {
+            this.$emit('load');
+            useBaseSearchEvent.emit({
                 name: history.name,
                 index: history.index,
                 conditions: history.conditions,
-                orders: history.orders
+                orders: history.orders,
+                execute: true
             });
         },
         removeById(id: number) {

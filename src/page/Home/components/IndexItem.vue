@@ -12,6 +12,9 @@
         </div>
         <!-- 操作 -->
         <div class="option">
+            <el-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
+                <el-button link type="primary" :icon="searchIcon" @click="jumpToBaseSearch"/>
+            </el-tooltip>
             <el-tooltip :effect="theme" content="状态" placement="bottom">
                 <el-button link type="primary" :icon="dataAnalysisIcon" @click="indexState"/>
             </el-tooltip>
@@ -76,7 +79,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, markRaw, PropType} from "vue";
-import {ArrowDown, ArrowUp, Delete, SwitchButton, DataAnalysis} from '@element-plus/icons-vue';
+import {ArrowDown, ArrowUp, DataAnalysis, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
 import IndexView from "@/view/index/IndexView";
 import indexApi from '@/api/IndexApi'
@@ -84,7 +87,11 @@ import clusterApi from "@/api/ClusterApi";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {isDark} from "@/global/BeanFactory";
+import {isDark, useBaseSearchEvent, usePageJumpEvent} from "@/global/BeanFactory";
+import BaseQuery from "@/domain/BaseQuery";
+import BaseOrder from "@/domain/BaseOrder";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+import Optional from "@/utils/Optional";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -102,7 +109,8 @@ export default defineComponent({
         isDark,
         deleteIcon: markRaw(Delete),
         switchButtonIcon: markRaw(SwitchButton),
-        dataAnalysisIcon: markRaw(DataAnalysis)
+        dataAnalysisIcon: markRaw(DataAnalysis),
+        searchIcon: markRaw(Search)
     }),
     computed: {
         indexStateBtn(): 'danger' | 'success' | 'info' {
@@ -269,8 +277,20 @@ export default defineComponent({
         reset() {
             emitter.emit(MessageEventEnum.REFRESH_URL);
         },
-        execCopy(url: string) {
-            BrowserUtil.copy(url);
+        execCopy(url?: string) {
+            BrowserUtil.copy(Optional.ofNullable(url).orElse(''));
+        },
+        jumpToBaseSearch() {
+            if (this.index) {
+                usePageJumpEvent.emit(PageNameEnum.BASE_SEARCH);
+                useBaseSearchEvent.emit({
+                    name: this.index.name,
+                    index: this.index.name,
+                    conditions: new Array<BaseQuery>(),
+                    orders: new Array<BaseOrder>(),
+                    execute: false
+                })
+            }
         }
     }
 });

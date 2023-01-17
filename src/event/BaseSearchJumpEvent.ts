@@ -31,4 +31,6 @@ export default interface BaseSearchJumpEvent {
      */
     orders: Array<BaseOrder>;
 
+    execute: boolean;
+
 }

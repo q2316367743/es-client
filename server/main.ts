@@ -37,7 +37,6 @@ app.get("/api/ping", (req, rsp, next) => {
 
 app.post('/api/fetch', async (req, rsp, next) => {
     let body = req.body as HttpStrategyConfig;
-    console.log('/api/fetch')
     try {
         let result = await axios(body);
         rsp.send({

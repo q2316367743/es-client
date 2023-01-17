@@ -19,6 +19,8 @@ import EventBusEnum from "@/enumeration/EventBusEnum";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import ClientHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ClientHttpStrategyImpl";
 import ServerHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ServerHttpStrategyImpl";
+import highlight from "highlight.js/lib/core";
+import highlightJson from "highlight.js/lib/languages/json";
 
 const dexieInstance = new DexieInstance();
 
@@ -74,4 +76,8 @@ export const useEsVersion = createGlobalState(() => {
     }
 
     return {version, setVersion, getVersion};
-})
+});
+
+// 代码高亮
+highlight.registerLanguage('json', highlightJson);
+export {highlight};

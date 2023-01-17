@@ -6,15 +6,6 @@
         </div>
         <div>本次更新如下</div>
         <update-item :log="log" />
-        <div v-if="log.remark">
-            <span v-if="typeof log.remark === 'string'" v-html="log.remark"></span>
-            <span v-else>
-                <span v-for="item in log.remark">
-                    <span v-if="item.type === 'string'">{{ item.value }}</span>
-                    <el-link v-else :href="item.addon" target="_blank">{{ item.value }}</el-link>
-                </span>
-            </span>
-        </div>
     </div>
 </template>
 <script lang="ts">

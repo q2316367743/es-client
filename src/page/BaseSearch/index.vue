@@ -342,7 +342,9 @@ export default defineComponent({
             this.page = searchItem.body.page;
             this.size = searchItem.body.size;
             this.$nextTick(() => {
-                this.search();
+                if (event.execute) {
+                    this.search();
+                }
             })
         })
     },
@@ -426,9 +428,9 @@ export default defineComponent({
         jumpToSeniorSearch() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             useSeniorSearchEvent.emit({
-                url: `/${this.current.index}/_search`,
+                link: `/${this.current.index}/_search`,
                 method: 'POST',
-                param: JSON.stringify(
+                params: JSON.stringify(
                     QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
                     null,
                     4),
@@ -502,6 +504,7 @@ export default defineComponent({
                     // 保存到历史
                     baseSearchHistoryService.save({
                         urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
+                        name: searchItem.header.name,
                         index: searchItem.body.index,
                         conditions: toRaw(searchItem.body.conditions),
                         orders: toRaw(searchItem.body.orders)

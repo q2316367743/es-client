@@ -47,14 +47,7 @@ export default defineComponent({
         }
     },
     methods: {
-        load(history: BaseSearchHistory) {
-            useBaseSearchEvent.emit({
-                id: history.id,
-                name: history.name,
-                index: history.index,
-                conditions: history.conditions,
-                orders: history.orders,
-            });
+        load() {
             this.dialog = false;
         }
     }

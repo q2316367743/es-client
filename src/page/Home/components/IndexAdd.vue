@@ -145,9 +145,9 @@ export default defineComponent({
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             // 高级查询数据填充
             useSeniorSearchEvent.emit({
-                url: this.index.name,
+                link: this.index.name,
                 method: 'PUT',
-                param: JSON.stringify(IndexSaveBuild(this.index), null, 4),
+                params: JSON.stringify(IndexSaveBuild(this.index), null, 4),
                 execute: false
             });
             // 关闭弹框

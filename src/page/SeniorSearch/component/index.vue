@@ -51,9 +51,9 @@ export default defineComponent({
             useSeniorSearchEvent.emit({
                 id: history.id,
                 name: history.name,
-                url: history.link,
+                link: history.link,
                 method: history.method,
-                param: history.params,
+                params: history.params,
                 execute: false
             });
             this.dialog = false;

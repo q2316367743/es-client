@@ -208,7 +208,8 @@ export default defineComponent({
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
-            PageNameEnum
+            PageNameEnum,
+            fontSize: '16px'
         };
     },
     computed: {
@@ -268,6 +269,11 @@ export default defineComponent({
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
             this.refresh();
         });
+
+        // 字体判断
+        if (Constant.platform === 'edge') {
+            this.fontSize = '20px';
+        }
 
     },
     methods: {
@@ -384,6 +390,9 @@ export default defineComponent({
 </script>
 
 <style lang="less">
+html {
+    font-size: v-bind(fontSize);
+}
 .app-feedback {
     width: calc(100vw - 40px);
     height: calc(100vh - 58px - 60px);

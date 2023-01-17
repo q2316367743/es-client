@@ -11,7 +11,7 @@
             <el-scrollbar>
                 <setting-base v-show="active === 'base'"/>
                 <setting-url v-show="active === 'url'"/>
-                <setting-server-sync v-show="active === 'server-sync'"/>
+<!--                <setting-server-sync v-show="active === 'server-sync'"/>-->
                 <setting-update v-show="active === 'update'"/>
                 <setting-about v-show="active === 'about'"/>
             </el-scrollbar>

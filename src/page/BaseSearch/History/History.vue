@@ -45,7 +45,7 @@ import {ElMessage} from "element-plus";
 import {VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import useUrlStore from "@/store/UrlStore";
-import {baseSearchHistoryService} from "@/global/BeanFactory";
+import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
@@ -85,7 +85,15 @@ export default defineComponent({
             BrowserUtil.copy(url);
         },
         load(history: BaseSearchHistory) {
-            this.$emit('load', history);
+            this.$emit('load');
+            useBaseSearchEvent.emit({
+                id: history.id,
+                name: history.name,
+                index: history.index,
+                conditions: history.conditions,
+                orders: history.orders,
+                execute: false
+            });
         },
         search() {
             if (!useUrlStore().id && this.onlyCurrent) {
@@ -110,6 +118,7 @@ export default defineComponent({
                     type: 'success',
                     message: '删除成功'
                 });
+                this.search();
             }).catch(e => {
                 ElMessage({
                     showClose: true,

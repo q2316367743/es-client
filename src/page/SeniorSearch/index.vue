@@ -27,10 +27,7 @@
                             <div class="value">{{ item }}</div>
                         </template>
                     </el-autocomplete>
-                    <el-button type="primary" @click="search">{{
-                            current.link.indexOf('search') > -1 ?
-                                $t('senior_search.search') : $t('senior_search.execute')
-                        }}
+                    <el-button type="primary" @click="search">{{ searchBtn }}
                     </el-button>
                     <el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
                     <el-button @click="historyDrawer = true">历史</el-button>
@@ -149,6 +146,12 @@ export default defineComponent({
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
+        searchBtn() {
+            if (this.current.link) {
+                return this.current.link.indexOf('search') > -1 ? this.$t('senior_search.search') : this.$t('senior_search.execute')
+            }
+            return this.$t('senior_search.search');
+        }
     },
     watch: {
         link(newValue) {
@@ -208,9 +211,9 @@ export default defineComponent({
                     relationId: Optional.ofNullable(param.id).orElse(0)
                 },
                 body: {
-                    link: param.url,
+                    link: param.link,
                     method: param.method,
-                    params: param.param,
+                    params: param.params,
                     result: {}
                 }
             } as SeniorSearchItem;
@@ -234,6 +237,14 @@ export default defineComponent({
     // 获取最大宽度
     methods: {
         async search() {
+            if (!this.current.link || this.current.link === '') {
+                ElMessage({
+                    showClose: true,
+                    type: 'warning',
+                    message: '请输入链接'
+                });
+                return;
+            }
             let data = {} as any;
             if (this.current.params != '') {
                 try {

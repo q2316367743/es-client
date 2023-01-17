@@ -6,7 +6,6 @@ import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
 import {useEsVersion} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
-import ArrayUtil from "@/utils/ArrayUtil";
 import Field from "@/view/Field";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {

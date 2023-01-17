@@ -102,9 +102,9 @@ export default defineComponent({
         load(history: SeniorSearchHistory) {
             this.$emit('load', {
                 name: history.name,
-                url: history.link,
+                link: history.link,
                 method: history.method,
-                param: history.params,
+                params: history.params,
                 execute: true
             });
         },

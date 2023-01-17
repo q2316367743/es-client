@@ -1,7 +1,7 @@
 <template>
     <div class="json-view">
         <pre>
-            <code class="language-json" ref="jsonView">{{value}}</code>
+            <code class="language-json hljs" v-html="value"></code>
         </pre>
         <el-button type="primary" link class="json-view-copy" @click="copy">复制</el-button>
     </div>
@@ -9,9 +9,8 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import highlight from 'highlight.js';
+import {highlight} from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
-import {ElMessage} from "element-plus";
 
 export default defineComponent({
     name: 'json-view',
@@ -24,21 +23,26 @@ export default defineComponent({
     watch: {
         data() {
             let value = JSON.stringify(this.data, null, 4);
-            if (this.value !== value) {
-                this.value = value;
+            if (value !== '') {
                 this.$nextTick(() => {
-                    let jsonView = this.$refs['jsonView'] as HTMLElement;
-                    highlight.highlightElement(jsonView);
+                    let highlightResult = highlight.highlight(value, {
+                        language: 'json'
+                    });
+                    this.value = highlightResult.value;
                 })
             }
         }
     },
     created() {
-        this.value = JSON.stringify(this.data, null, 4);
-        this.$nextTick(() => {
-            let jsonView = this.$refs['jsonView'] as HTMLElement;
-            highlight.highlightElement(jsonView);
-        })
+        let value = JSON.stringify(this.data, null, 4);
+        if (value !== '') {
+            this.$nextTick(() => {
+                let highlightResult = highlight.highlight(value, {
+                    language: 'json'
+                });
+                this.value = highlightResult.value;
+            })
+        }
     },
     methods: {
         copy() {

@@ -35,7 +35,7 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
                 reject(`请求【${url}】没有响应内容`)
             }
         }).catch((reason: any) => {
-            console.log(reason)
+            console.error(reason)
             reject(reason)
         });
     });

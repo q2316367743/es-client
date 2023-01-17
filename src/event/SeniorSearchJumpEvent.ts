@@ -22,12 +22,12 @@ export default interface SeniorSearchJumpEvent {
     /**
      * 请求链接
      */
-    url: string;
+    link: string;
 
     /**
      * 请求参数
      */
-    param: string;
+    params: string;
 
     /**
      * 是否执行

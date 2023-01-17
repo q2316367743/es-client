@@ -730,9 +730,9 @@ export default defineComponent({
                     indices.forEach(id => ids.push(id));
                     usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
                     useSeniorSearchEvent.emit({
-                        url: `/${this.index?.name}/_delete_by_query`,
+                        link: `/${this.index?.name}/_delete_by_query`,
                         method: 'POST',
-                        param: JSON.stringify({
+                        params: JSON.stringify({
                             query: {
                                 bool: {
                                     must: [
@@ -842,9 +842,9 @@ export default defineComponent({
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             // 填充数据
             useSeniorSearchEvent.emit({
-                url: `/${this.index.name}/_search`,
+                link: `/${this.index.name}/_search`,
                 method: 'POST',
-                param: JSON.stringify(
+                params: JSON.stringify(
                     conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size),
                     null,
                     4),
@@ -910,9 +910,9 @@ export default defineComponent({
         jumpToSeniorSearchByInsert() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             useSeniorSearchEvent.emit({
-                url: `/${this.index?.name}/_doc`,
+                link: `/${this.index?.name}/_doc`,
                 method: 'POST',
-                param: this.addConfig.data,
+                params: this.addConfig.data,
                 execute: false
             });
             this.addConfig.dialog = false;
@@ -922,9 +922,9 @@ export default defineComponent({
         jumpToSeniorSearchByUpdate() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             useSeniorSearchEvent.emit({
-                url: `/${this.index?.name}/_doc/${this.editConfig.id}`,
+                link: `/${this.index?.name}/_doc/${this.editConfig.id}`,
                 method: 'PUT',
-                param: this.editConfig.data,
+                params: this.editConfig.data,
                 execute: false
             });
             this.editConfig.dialog = false;
