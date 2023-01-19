@@ -1,0 +1,41 @@
+server:
+  port: 3000
+
+spring:
+  application:
+    name: yun-luo-blog
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite://./es-client.db?date_string_format=yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: is_delete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations:
+    - classpath*:/mapper/**/*.xml
+    - classpath*:com/gitee/sunchenbin/mybatis/actable/mapping/*/*.xml
+
+es-client:
+  token: 123456
+
+actable:
+  table:
+    auto: update
+  model:
+    pack: xyz.esion.esclient.entity
+  database:
+    type: sqlite
+
+logging:
+  level:
+    xyz.esion.esclient: debug
+    web: info
