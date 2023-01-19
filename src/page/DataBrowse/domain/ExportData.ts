@@ -4,6 +4,7 @@ import jsYaml from 'js-yaml';
 import { json2xml } from '@/global/BeanFactory';
 
 import ExportConfig from "./ExportConfig";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 function verifyExportConfig(exportConfig: ExportConfig) {
     if (exportConfig.name === '') {
@@ -92,7 +93,7 @@ function exportForHtml(exportConfig: ExportConfig, records: Array<any>, result: 
  * @param result 原始数据
  */
 function exportForXml(exportConfig: ExportConfig, records: Array<any>, result: any): string {
-    return formateXml(json2xml.js2xml(buildObj(exportConfig, records, result)));
+    return formatXml(json2xml.js2xml(buildObj(exportConfig, records, result)));
 }
 
 /**
@@ -126,7 +127,7 @@ export default function exportData(exportConfig: ExportConfig, records: Array<an
     }
     if (exportConfig.config === 1) {
         // 复制到剪切板
-        copy(content);
+        BrowserUtil.copy(content, false);
     } else if (exportConfig.config === 2) {
         // 打印
         VXETable.print({
@@ -136,52 +137,23 @@ export default function exportData(exportConfig: ExportConfig, records: Array<an
     } else if (exportConfig.config === 3) {
         // 下载
         if (exportConfig.type === 1) {
-            download(content, exportConfig.name, 'application/json');
+            BrowserUtil.download(content, exportConfig.name, 'application/json');
         } else if (exportConfig.type === 2) {
-            download(content, exportConfig.name, 'text/html');
+            BrowserUtil.download(content, exportConfig.name, 'text/html');
         } else if (exportConfig.type === 3) {
-            download(content, exportConfig.name, 'text/xml');
+            BrowserUtil.download(content, exportConfig.name, 'text/xml');
         } else if (exportConfig.type === 4) {
-            download(content, exportConfig.name, 'text/yaml');
+            BrowserUtil.download(content, exportConfig.name, 'text/yaml');
         }
     } else {
         throw new Error('导出方式未知')
     }
 }
 
-function copy(content: string) {
-    // content为要复制的内容
-    // 创建元素用于复制
-    const ele = document.createElement('textarea')
-    // 设置元素内容
-    ele.value = content;
-    // 将元素插入页面进行调用
-    document.body.appendChild(ele)
-    // 复制内容
-    ele.select()
-    // 将内容复制到剪贴板
-    document.execCommand('copy')
-    // 删除创建元素
-    document.body.removeChild(ele)
-}
-
-function download(data: string, fileName: string, mineType: string) {
-    // 创建 blob
-    let blob = new Blob([data], { type: mineType });
-    // 创建 href 超链接，点击进行下载
-    window.URL = window.URL || window.webkitURL;
-    let href = URL.createObjectURL(blob);
-    let downA = document.createElement("a");
-    downA.href = href;
-    downA.download = fileName;
-    downA.click();
-    // 销毁超连接
-    window.URL.revokeObjectURL(href);
-}
 
 
 //格式化xml代码
-function formateXml(xmlStr: string) {
+function formatXml(xmlStr: string) {
     let text = xmlStr;
     //使用replace去空格
     text = '\n' + text.replace(/(<\w+)(\s.*?>)/g, function ($0, name, props) {

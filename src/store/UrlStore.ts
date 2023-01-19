@@ -1,5 +1,4 @@
 import {defineStore} from "pinia";
-import {ElMessage} from "element-plus";
 import {useTitle} from "@vueuse/core";
 
 import Url from "@/entity/Url";
@@ -36,7 +35,7 @@ const useUrlStore = defineStore('url', {
          * 重新获取链接
          */
         reset(callback?: () => void) {
-            urlService.list(urls => {
+            urlService.list().then(urls => {
                 this.urls = urls;
                 if (callback) {
                     callback()

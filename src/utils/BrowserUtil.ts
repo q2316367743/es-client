@@ -2,7 +2,12 @@ import {ElMessage} from "element-plus";
 
 export default {
 
-    copy(content: string) {
+    /**
+     * 拷贝
+     * @param content 内容
+     * @param showMessage 显示消息，默认显示
+     */
+    copy(content: string, showMessage: boolean = true) {
         // content为要复制的内容
         // 创建元素用于复制
         const ele = document.createElement('textarea');
@@ -16,11 +21,33 @@ export default {
         document.execCommand('copy');
         // 删除创建元素
         document.body.removeChild(ele);
-        ElMessage({
-            showClose: true,
-            type: 'success',
-            message: '已成功复制到剪切板'
-        });
+        if (showMessage) {
+            ElMessage({
+                showClose: true,
+                type: 'success',
+                message: '已成功复制到剪切板'
+            });
+        }
+    },
+
+    /**
+     * 下载
+     * @param data 内容
+     * @param fileName 文件名
+     * @param mineType 文件类型
+     */
+    download(data: string, fileName: string, mineType: string) {
+        // 创建 blob
+        let blob = new Blob([data], {type: mineType});
+        // 创建 href 超链接，点击进行下载
+        window.URL = window.URL || window.webkitURL;
+        let href = URL.createObjectURL(blob);
+        let downA = document.createElement("a");
+        downA.href = href;
+        downA.download = fileName;
+        downA.click();
+        // 销毁超连接
+        window.URL.revokeObjectURL(href);
     },
 
     /**

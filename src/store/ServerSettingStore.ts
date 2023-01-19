@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {useLocalStorage} from "@vueuse/core";
-import ServerSetting from "@/entity/ServerSetting";
+import ServerSetting from "@/domain/ServerSetting";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import Optional from "@/utils/Optional";
 

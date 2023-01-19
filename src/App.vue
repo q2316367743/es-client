@@ -208,8 +208,7 @@ export default defineComponent({
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
-            PageNameEnum,
-            fontSize: '16px'
+            PageNameEnum
         };
     },
     computed: {
@@ -272,7 +271,8 @@ export default defineComponent({
 
         // 字体判断
         if (Constant.platform === 'edge') {
-            this.fontSize = '20px';
+            // 设置全局字体大小
+            document.body.style.fontSize = '20px';
         }
 
     },
@@ -390,9 +390,6 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-html {
-    font-size: v-bind(fontSize);
-}
 .app-feedback {
     width: calc(100vw - 40px);
     height: calc(100vh - 58px - 60px);

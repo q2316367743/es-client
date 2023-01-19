@@ -15,16 +15,20 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
+import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import ClientHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ClientHttpStrategyImpl";
 import ServerHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ServerHttpStrategyImpl";
+import SyncStrategyContext from "@/strategy/SyncStrategy/SyncStrategyContext";
+import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyImpl";
+
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
 
 const dexieInstance = new DexieInstance();
 
-export const urlService = new UrlService(dexieInstance.table(TableNameEnum.URL));
+export const urlService = new UrlService(dexieInstance, dexieInstance.table(TableNameEnum.URL));
 export const baseSearchHistoryService = new BaseSearchHistoryService(dexieInstance.table(TableNameEnum.BASE_SEARCH_HISTORY));
 export const seniorSearchHistoryService = new SeniorSearchHistoryService(dexieInstance.table(TableNameEnum.SENIOR_SEARCH_HISTORY))
 
@@ -36,6 +40,9 @@ export const versionManage = new VersionManage();
 export const httpStrategyContext = new HttpStrategyContext();
 httpStrategyContext.register(ServerModeEnum.CLIENT, new ClientHttpStrategyImpl());
 httpStrategyContext.register(ServerModeEnum.SERVER, new ServerHttpStrategyImpl());
+// 同步策略
+export const syncStrategyContext = SyncStrategyContext.getInstance();
+syncStrategyContext.register(SyncModeEnum.FILE, new FileSyncStrategyImpl());
 
 export const json2xml = new x2js({
     selfClosingElements: false,

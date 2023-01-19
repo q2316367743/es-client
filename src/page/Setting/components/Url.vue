@@ -2,7 +2,7 @@
     <div class="setting-url">
         <vxe-toolbar ref="urlToolbar" custom export>
             <template #buttons>
-                <el-button type="primary" @click="edit_open(undefined)">{{ $t('app.add') }}</el-button>
+                <el-button type="primary" @click="editOpen(undefined)">{{ $t('app.add') }}</el-button>
             </template>
             <template #tools>
                 <el-input v-model="condition.name" :placeholder="$t('setting.link.name')"
@@ -26,15 +26,11 @@
             <vxe-column field="authPassword" title="密码" :visible="false"/>
             <vxe-column :title="$t('setting.link.operation')" width="140">
                 <template #default="{ row }">
-                    <el-button type="primary" size="small" @click="edit_open(row)">{{ $t('setting.link.edit') }}
+                    <el-button type="primary" size="small" @click="editOpen(row)">{{ $t('setting.link.edit') }}
                     </el-button>
-                    <el-popconfirm title="此操作将永久删除该链接, 是否继续?" confirm-button-text="删除"
-                                   cancel-button-text="取消"
-                                   @confirm="remove(row.id, row.value)" width="200px">
-                        <template #reference>
-                            <el-button type="danger" size="small">{{ $t('setting.link.delete') }}</el-button>
-                        </template>
-                    </el-popconfirm>
+                    <el-button type="danger" size="small" @click="remove(row.id, row.value)">
+                        {{ $t('setting.link.delete') }}
+                    </el-button>
                 </template>
             </vxe-column>
         </vxe-table>
@@ -43,7 +39,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {ElMessage} from 'element-plus'
+import {Action, ElMessage, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
@@ -124,21 +120,59 @@ export default defineComponent({
             return params.cellValue ? this.$t('setting.link.need_auth') : this.$t('setting.link.not_auth');
         },
         remove(id: number, value: string) {
-            urlService.deleteById(id, () => {
-                ElMessage({
-                    message: '删除成功',
-                    type: 'success'
-                });
-                if (useUrlStore().current === value) {
-                    // 删除了当前索引
-                    useUrlStore().clear();
-                    useIndexStore().clear();
+            ElMessageBox.confirm('是否删除相关的搜索历史', '提示', {
+                type: 'info',
+                confirmButtonText: '删除全部',
+                cancelButtonText: '只删除链接',
+                distinguishCancelAndClose: true
+            }).then(() => {
+                this.execRemove(id, true)
+                    .then(() => this.removeAfter(value))
+                    .catch(e => {
+                        console.error(e);
+                        ElMessage({
+                            showClose: true,
+                            message: '删除失败，' + e,
+                            type: 'error'
+                        });
+                    });
+            }).catch((action: Action) => {
+                if (action === 'cancel') {
+                    this.execRemove(id, false)
+                        .then(() => this.removeAfter(value))
+                        .catch(e => {
+                            console.error(e);
+                            ElMessage({
+                                showClose: true,
+                                message: '删除失败，' + e,
+                                type: 'error'
+                            });
+                        });
                 }
-                useUrlStore().reset();
-                useIndexStore().reset();
             })
         },
-        edit_open(url?: Url) {
+        execRemove(id: number, removeAll: boolean): Promise<void> {
+            if (removeAll) {
+                return urlService.deleteAllById(id);
+            } else {
+                return urlService.deleteById(id);
+            }
+        },
+        removeAfter(value: string) {
+            ElMessage({
+                showClose: true,
+                message: '删除成功',
+                type: 'success'
+            });
+            if (useUrlStore().current === value) {
+                // 删除了当前索引
+                useUrlStore().clear();
+                useIndexStore().clear();
+            }
+            useUrlStore().reset();
+            useIndexStore().reset();
+        },
+        editOpen(url?: Url) {
             this.url = url ? url : {
                 name: '',
                 value: 'http://',
@@ -149,9 +183,7 @@ export default defineComponent({
             };
             this.edit_dialog = true;
         },
-        execCopy(url: string) {
-            BrowserUtil.copy(url);
-        }
+        execCopy: BrowserUtil.copy
     }
 });
 </script>

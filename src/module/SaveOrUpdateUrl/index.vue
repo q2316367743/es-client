@@ -1,6 +1,6 @@
 <template>
     <el-dialog :title="$t('setting.link.add') + $t('setting.link.url')" v-model="dialog" width="600px" draggable
-        :close-on-click-modal="false" destroy-on-close>
+               :close-on-click-modal="false" destroy-on-close>
         <el-form :model="url" label-width="100px" ref="urlForm" :rules="rules">
             <el-form-item :label="$t('setting.link.name')" prop="name">
                 <el-input v-model="url.name"></el-input>
@@ -10,16 +10,16 @@
                 </el-input>
             </el-form-item>
             <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
-                <el-input-number v-model="url.sequence" controls-position="right" size="large" />
+                <el-input-number v-model="url.sequence" controls-position="right" size="large"/>
             </el-form-item>
             <el-form-item :label="$t('setting.link.is_auth')" prop="isAuth">
-                <el-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false" />
+                <el-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false"/>
             </el-form-item>
             <el-form-item :label="$t('setting.link.auth_user')" prop="authUser" v-if="url.isAuth">
-                <el-input v-model="url.authUser" size="large" />
+                <el-input v-model="url.authUser" size="large"/>
             </el-form-item>
             <el-form-item :label="$t('setting.link.auth_password')" prop="authPassword" v-if="url.isAuth">
-                <el-input v-model="url.authPassword" size="large" />
+                <el-input v-model="url.authPassword" size="large"/>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -43,12 +43,12 @@
     </el-dialog>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { ElForm, ElMessage } from "element-plus";
+import {defineComponent, PropType} from "vue";
+import {ElForm, ElMessage} from "element-plus";
 
 import Url from '@/entity/Url';
 
-import { urlService } from '@/global/BeanFactory';
+import {urlService} from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import {httpStrategyContext} from "@/global/BeanFactory";
 
@@ -136,9 +136,19 @@ export default defineComponent({
                             isAuth: this.url.isAuth,
                             authUser: this.url.authUser,
                             authPassword: this.url.authPassword
-                        }, () => {
+                        }).then(() => {
                             useUrlStore().reset();
-                            ElMessage.success('新增成功');
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '新增成功'
+                            });
+                        }).catch(e => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '新增失败，' + e
+                            });
                         });
                     } else {
                         // 更新
@@ -151,9 +161,19 @@ export default defineComponent({
                             authUser: this.url.authUser,
                             authPassword: this.url.authPassword
                             // eslint-disable-next-line
-                        }, this.url.id!, () => {
+                        }, this.url.id!).then(() => {
                             useUrlStore().reset();
-                            ElMessage.success('更新成功');
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '修改成功'
+                            });
+                        }).catch(e => {
+                            ElMessage({
+                                showClose: true,
+                                type: 'success',
+                                message: '修改失败，' + e
+                            });
                         });
                     }
                     this.url = {

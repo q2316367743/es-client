@@ -32,3 +32,6 @@ pnpm-debug.log*
 stats.html
 server/dist
 server/node_modules
+
+src-java/target
+src-java/.vscode
