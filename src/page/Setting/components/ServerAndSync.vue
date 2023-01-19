@@ -40,8 +40,15 @@
 
         <!-- 文件同步 -->
         <el-form-item label="操作" v-if="syncSetting.mode === SyncModeEnum.FILE">
-            <el-button type="success">上传</el-button>
-            <el-button type="primary">下载</el-button>
+            <el-upload
+                class="upload"
+                accept="json"
+                action=""
+                :before-upload="fileSyncUpload"
+            >
+                <el-button type="primary">上传</el-button>
+            </el-upload>
+            <el-button type="primary" @click="fileSyncDownload">下载</el-button>
         </el-form-item>
     </el-form>
 </template>
@@ -50,14 +57,20 @@ import {defineComponent} from "vue";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import Constant from "@/global/Constant";
 import useServerStore from "@/store/ServerSettingStore";
-import ServerSetting from "@/entity/ServerSetting";
-import SyncSetting from "@/entity/SyncSetting";
+import ServerSetting from "@/domain/ServerSetting";
+import SyncSetting from "@/domain/SyncSetting";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
 import useSyncStore from "@/store/SyncSettingStore";
-import {ElNotification} from "element-plus";
+import {ElLoading, ElMessage, ElNotification, UploadRawFile} from "element-plus";
+import {UploadFilled} from "@element-plus/icons-vue";
+import {baseSearchHistoryService, seniorSearchHistoryService, urlService} from "@/global/BeanFactory";
+import BrowserUtil from "@/utils/BrowserUtil";
+import SyncAlgorithm from "@/algorithm/SyncAlgorithm";
+import Url from "@/entity/Url";
 
 export default defineComponent({
     name: 'setting-server-sync',
+    components: {UploadFilled},
     data: () => ({
         Constant,
         ServerModeEnum,
@@ -98,10 +111,88 @@ export default defineComponent({
     methods: {
         saveServer() {
             useServerStore().setServer(this.serverSetting);
+        },
+        // 文件同步上传文件
+        fileSyncUpload(rawFile: UploadRawFile) {
+            if (typeof FileReader !== 'undefined') {
+                let fileReader = new FileReader();
+                fileReader.readAsText(rawFile);
+                fileReader.onload = function (event: ProgressEvent<FileReader>) {
+                    if (event.target) {
+                        let content = event.target.result as string;
+                        let {url, baseSearchHistory, seniorSearchHistory} = JSON.parse(content);
+                        SyncAlgorithm(url, baseSearchHistory, seniorSearchHistory).then(() => {
+                            ElMessage({
+                                showClose: true,
+                                type: "success",
+                                message: '同步成功'
+                            });
+                        }).catch(e => {
+                            ElMessage({
+                                showClose: true,
+                                type: "error",
+                                message: '同步失败，' + e
+                            })
+                        });
+                    } else {
+                        ElMessage({
+                            showClose: true,
+                            type: "error",
+                            message: '文件读取失败'
+                        });
+                    }
+                };
+                fileReader.onerror = function (e) {
+                    console.error(e);
+                    ElMessage({
+                        showClose: true,
+                        type: 'error',
+                        message: '文件读取错误，' + e
+                    });
+                }
+            } else {
+                ElMessage({
+                    showClose: true,
+                    type: "error",
+                    message: '文件读取器未定义'
+                });
+            }
+            return false;
+        },
+        async fileSyncDownload() {
+            const loading = ElLoading.service({
+                lock: true,
+                text: '开始准备数据',
+                background: 'rgba(0, 0, 0, 0.7)',
+            });
+            try {
+                loading.setText('获取链接数据')
+                let url = await urlService.list();
+                loading.setText('获取基础搜索历史');
+                let baseSearchHistory = await baseSearchHistoryService.list('');
+                loading.setText('获取高级搜索历史');
+                let seniorSearchHistory = await seniorSearchHistoryService.list('');
+                loading.setText('开始下载');
+                console.log(url, baseSearchHistory, seniorSearchHistory)
+                BrowserUtil.download(JSON.stringify({
+                    url, baseSearchHistory, seniorSearchHistory
+                }, null, 4), '数据备份下载.json', 'application/json');
+            } catch (e) {
+                ElMessage({
+                    showClose: true,
+                    type: 'error',
+                    message: '下载失败，' + e
+                });
+            } finally {
+                loading.close();
+            }
         }
     }
 });
 </script>
 <style scoped>
-
+.upload {
+    margin-top: 8px;
+    margin-right: 12px;
+}
 </style>
