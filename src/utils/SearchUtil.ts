@@ -28,6 +28,8 @@ export function stringContain(template: string, keyword: string, toLow: boolean 
     if (!keyword || keyword == '') {
         return true;
     }
+
+    // 数据校验
     for (let i = 0; i < keyword.length; i++) {
         let isContain = false;
         for (let j = 0; j < template.length; j++) {
@@ -41,5 +43,51 @@ export function stringContain(template: string, keyword: string, toLow: boolean 
             return false;
         }
     }
+
     return true;
+}
+
+/**
+ * 字符串是否包含关键字，关键字高亮
+ *
+ * @param template 模板
+ * @param keyword 关键字
+ * @param prefix 前缀
+ * @param suffix 后缀
+ * @param toLow 是否大小写敏感，默认不敏感
+ */
+export function stringContainKeyword(
+    template: string,
+    keyword: string,
+    prefix: string,
+    suffix: string,
+    toLow: boolean = false): { contain: boolean, result: string } {
+
+    let isContain = stringContain(template, keyword, toLow);
+    if (!isContain) {
+        return {contain: isContain, result: template};
+    }
+
+    // 关键字渲染
+    let contain = true;
+    let result = '';
+    for (let item of template) {
+        if (toLow) {
+            if (keyword.includes(item)) {
+                // 存在关键字
+                result += `${prefix}${item}${suffix}`;
+            } else {
+                result += item;
+            }
+        } else {
+            if (keyword.toLowerCase().includes(item.toLowerCase())) {
+                // 存在关键字
+                result += `${prefix}${item}${suffix}`;
+            } else {
+                result += item;
+            }
+        }
+    }
+    return {contain, result};
+
 }

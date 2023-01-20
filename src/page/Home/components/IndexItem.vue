@@ -2,7 +2,7 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title">
-            <el-link :type="indexStateTitle" @click="indexInfo">{{ index?.name }}</el-link>
+            <el-link :type="indexStateTitle" @click="indexInfo">{{ index.name }}</el-link>
             <div class="url-copy" @click="execCopy(index?.name)">复制</div>
         </div>
         <!-- 详细 -->
@@ -81,23 +81,28 @@
 import {defineComponent, markRaw, PropType} from "vue";
 import {ArrowDown, ArrowUp, DataAnalysis, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
-import IndexView from "@/view/index/IndexView";
+
 import indexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
+
 import BrowserUtil from "@/utils/BrowserUtil";
-import {isDark, useBaseSearchEvent, usePageJumpEvent} from "@/global/BeanFactory";
-import BaseQuery from "@/domain/BaseQuery";
-import BaseOrder from "@/domain/BaseOrder";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 import Optional from "@/utils/Optional";
+
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
+import emitter from "@/plugins/mitt";
+import {isDark, useBaseSearchEvent, usePageJumpEvent} from "@/global/BeanFactory";
+import IndexItemView from "@/view/IndexItemView";
+
+import BaseOrder from "@/entity/BaseOrder";
+import BaseQuery from "@/entity/BaseQuery";
 
 export default defineComponent({
     name: 'IndexItem',
     components: {ArrowDown, ArrowUp},
     props: {
-        index: Object as PropType<IndexView>
+        index: Object as PropType<IndexItemView>
     },
     emits: ['openDialog'],
     data: () => ({
@@ -299,7 +304,7 @@ export default defineComponent({
 .home-index-card {
     margin: 5px;
     padding: 10px;
-    border: #e3e6ec solid 1px;
+    border: var(--border-color) solid 1px;
     border-radius: 5px;
     position: relative;
     min-width: 700px;

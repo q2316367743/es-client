@@ -47,7 +47,7 @@ async function url(remoteList: Array<Url>): Promise<void> {
             remoteAdd.push(localUrl);
         }
     }
-// 再遍历远程
+    // 再遍历远程
     for (let remoteUrl of remoteList) {
         if (localMap.has(remoteUrl.id)) {
             // 本地存在此url，已经处理过了，跳过
@@ -56,27 +56,27 @@ async function url(remoteList: Array<Url>): Promise<void> {
             localAdd.push(remoteUrl);
         }
     }
-// 新增本地
+    // 新增本地
     for (let url of localAdd) {
         await urlService.insert(url);
     }
-// 远程新增
+    // 远程新增
     for (let url of remoteAdd) {
         await strategy!.insert<Url>(TableNameEnum.URL, url);
     }
-// 本地更新，只会更新内容
+    // 本地更新，只会更新内容
     for (let url of localUpdate) {
         if (url.id) {
             await urlService.updateById(url, url.id);
         }
     }
-// 远程更新，更新包括ID
+    // 远程更新，更新包括ID
     for (let url of remoteUpdate) {
         if (url.id) {
             await strategy!.update(TableNameEnum.URL, url.id, url);
         }
     }
-// 更新链接存储
+    // 更新链接存储
     useUrlStore().reset();
 }
 

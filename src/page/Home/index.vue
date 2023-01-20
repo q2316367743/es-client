@@ -28,9 +28,14 @@
             <vxe-list v-loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height"
                       v-if="showIndices.length > 0">
                 <template #default="{ items }">
-                    <index-item v-for="item in items" :index="item" @open-dialog="indexOpenDialog"/>
+                    <index-item v-for="item in items" v-show="item.show" :index="item" @open-dialog="indexOpenDialog"/>
                 </template>
             </vxe-list>
+        </div>
+        <div class="home-statistics">
+            统计：共 {{ statistics.total }} 个索引，其中打开的索引 {{ statistics.totalOpen }} 个，关闭的索引
+            {{ statistics.totalClose }} 个；展示 {{ statistics.show }} 个，其中打开的索引 {{ statistics.showOpen }}
+            个，关闭的索引 {{ statistics.showClose }} 个
         </div>
         <!-- 新增索引 -->
         <home-index-add v-model="indexAddDialog"/>
@@ -53,11 +58,10 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {mapState} from 'pinia';
+import {useElementSize} from "@vueuse/core";
 
 import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
-
-import IndexView from "@/view/index/IndexView";
 
 import IndexItem from "./components/IndexItem.vue";
 import JsonDialog from "@/components/JsonDialog.vue";
@@ -67,7 +71,7 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import {stringContain} from "@/utils/SearchUtil";
 
 import HomeIndexAdd from "@/page/Home/components/IndexAdd.vue";
-import {useElementSize} from "@vueuse/core";
+import IndexItemView from '@/view/IndexItemView';
 
 let lastSearchTime = 0;
 let lastExecuteId = -1;
@@ -78,7 +82,7 @@ export default defineComponent({
     data: () => {
         return {
             // 根据条件过滤后的索引
-            showIndices: [] as Array<IndexView>,
+            showIndices: [] as Array<IndexItemView>,
             // 搜索条件
             condition: {
                 dialog: false,
@@ -86,6 +90,14 @@ export default defineComponent({
                 order: "NAME_ASC",
                 // 0不处理，1开启，2关闭
                 state: 0
+            },
+            statistics: {
+                total: 0,
+                totalOpen: 0,
+                totalClose: 0,
+                show: 0,
+                showOpen: 0,
+                showClose: 0
             },
             // 列表加载中
             indexLoading: false,
@@ -153,16 +165,31 @@ export default defineComponent({
         },
         executeSearch() {
             this.indexLoading = true;
-            let showIndices = this.indices;
-            if (this.condition.name !== '') {
-                showIndices = showIndices.filter((item) => {
-                    return stringContain(item.name, this.condition.name);
+            let showIndices = new Array<IndexItemView>();
+            for (let index of this.indices) {
+                let show = false;
+                if (stringContain(index.name, this.condition.name)) {
+                    show = true;
+                }
+                // 别名
+                if (index.alias && index.alias.length > 0) {
+                    for (let alias of index.alias) {
+                        if (stringContain(alias, this.condition.name)) {
+                            show = true;
+                            break;
+                        }
+                    }
+                }
+                showIndices.push({
+                    ...index,
+                    show
                 });
             }
             if (this.condition.state > 0) {
-                showIndices = showIndices.filter(e =>
-                    (this.condition.state === 1 && e.state === 'open') ||
-                    (this.condition.state === 2 && e.state === 'close'));
+                for (let showIndex of showIndices) {
+                    showIndex.show = ((this.condition.state === 1 && showIndex.state === 'open') ||
+                        (this.condition.state === 2 && showIndex.state === 'close')) && showIndex.show
+                }
             }
             // 排序
             switch (this.condition.order) {
@@ -200,7 +227,38 @@ export default defineComponent({
             this.indexLoading = false;
             this.$nextTick(() => {
                 this.showIndices = showIndices;
-            })
+            });
+            // 统计
+            let total = this.indices.length;
+            let totalOpen = 0;
+            let totalClose = 0;
+            let show = 0;
+            let showOpen = 0;
+            let showClose = 0;
+            for (let index of showIndices) {
+                if (index.state === 'open') {
+                    totalOpen += 1;
+                } else if (index.state === 'close') {
+                    totalClose += 1;
+                }
+                // 展示
+                if (index.show) {
+                    show += 1;
+                    if (index.state === 'open') {
+                        showOpen += 1;
+                    } else if (index.state === 'close') {
+                        showClose += 1;
+                    }
+                }
+            }
+            this.statistics = {
+                total,
+                totalOpen,
+                totalClose,
+                show,
+                showOpen,
+                showClose
+            };
         },
         indexOpenDialog(title: string, content: any) {
             this.indexItem = {
@@ -236,7 +294,17 @@ export default defineComponent({
         top: 45px;
         left: 0;
         right: 5px;
-        bottom: 5px;
+        bottom: 26px;
+    }
+
+    .home-statistics {
+        position: absolute;
+        left: 0;
+        right: 5px;
+        bottom: 0;
+        height: 25px;
+        line-height: 30px;
+        border-top: 1px solid var(--border-color);
     }
 }
 </style>
