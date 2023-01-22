@@ -1,6 +1,7 @@
 import {IndexInstance, Setting} from '@/domain/IndexInstance'
+import {IndexCreate} from "@/es/IndexCreate";
 
-function getDefaultBody(setting: Setting) {
+function getDefaultBody(setting: Setting): IndexCreate {
     return {
         "settings": {
             "number_of_shards": setting.numberOfShards,
@@ -18,7 +19,7 @@ function getDefaultBody(setting: Setting) {
  * 
  * @param index 索引信息
  */
-export default function IndexSaveBuild(index: IndexInstance): any {
+export default function IndexCreateBuild(index: IndexInstance): IndexCreate {
     let body = getDefaultBody(index.settings);
     let properties = {} as any;
     for (let property of index.mapping) {

@@ -12,7 +12,7 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import FieldConditionItem from "@/page/BaseSearch/FieldCondition/FieldConditionItem.vue";
-import BaseQuery from "@/domain/BaseQuery";
+import BaseQuery from "@/entity/BaseQuery";
 import Field from "@/view/Field";
 
 export default defineComponent({

@@ -104,16 +104,14 @@ import DataView from "@/components/DataView/index.vue";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 
-import IndexApi from "@/api/IndexApi";
-
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
 
-import BaseQuery from '@/domain/BaseQuery';
-import BaseOrder from "@/domain/BaseOrder";
+import BaseQuery from '@/entity/BaseQuery';
+import BaseOrder from "@/entity/BaseOrder";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
@@ -138,6 +136,7 @@ import JsonView from "@/components/JsonView/index.vue";
 import BshManage from "@/page/BaseSearch/History/index.vue";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import useUrlStore from "@/store/UrlStore";
+import DocumentApi from "@/api/DocumentApi";
 
 interface Name {
     name: string;
@@ -379,7 +378,7 @@ export default defineComponent({
                 return;
             }
             this.loading = true;
-            IndexApi._search(
+            DocumentApi._search(
                 this.current.index,
                 QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
             ).then((response) => {

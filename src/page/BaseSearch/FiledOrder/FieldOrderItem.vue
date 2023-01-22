@@ -22,7 +22,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import BaseOrder from "@/domain/BaseOrder";
+import BaseOrder from "@/entity/BaseOrder";
 import Field from "@/view/Field";
 
 export default defineComponent({

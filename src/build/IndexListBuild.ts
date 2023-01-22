@@ -4,6 +4,7 @@ import clusterApi from "@/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
 import useSettingStore from "@/store/SettingStore";
 import StrUtil from "@/utils/StrUtil";
+import Optional from "@/utils/Optional";
 
 /**
  * 索引列表构造器
@@ -14,24 +15,25 @@ export default async function Builder(): Promise<Array<IndexView>> {
     let indices = new Array<IndexView>();
     let cluster_stats = await clusterApi._cluster_state();
     let stats = await clusterApi._stats()
-    let indecis = cluster_stats.metadata.indices as any;
-    let stats_indices = stats.indices as any;
-    let cluster_indices = cluster_stats.routing_table.indices as any;
-    for (let key in indecis) {
+    let metaIndices = cluster_stats.metadata.indices as any;
+    let statsIndices = stats.indices;
+    let cluster_indices = cluster_stats.routing_table.indices;
+    for (let key in metaIndices) {
         if (useSettingStore().getHomeExcludeIndices.length > 0) {
             if (StrUtil.matchAll(key, useSettingStore().getHomeExcludeIndices)) {
                 continue;
             }
         }
-        let index = stats_indices[key];
+        let indexStats = statsIndices[key];
+        let indexInfo = metaIndices[key];
         let size = 0;
         let docs = 0;
-        if (index) {
-            let total = index.total;
+        if (indexStats) {
+            let total = indexStats.total;
             size = total.store.size_in_bytes;
             docs = total.docs.count;
         }
-        let state = indecis[key].state;
+        let state = metaIndices[key].state;
         let shard = {} as any;
         let replica = {} as any;
         if (cluster_indices[key]) {
@@ -55,16 +57,18 @@ export default async function Builder(): Promise<Array<IndexView>> {
         }
         indices.push({
             name: key,
-            alias: indecis[key].aliases ? indecis[key].aliases : new Array<string>(),
+            alias: Optional.ofNullable( indexInfo.aliases).orElse(new Array<string>()),
             original_size: size,
+            settings: indexInfo.settings,
+            mapping: indexInfo.mappings,
+            fields: IndexFieldBuild(indexInfo.mappings),
+            indexStats,
+            indexInfo,
             size: prettyDataUnit(size),
             doc_count: docs,
             state: state,
             shard,
             replica,
-            settings: indecis[key].settings,
-            mapping: indecis[key].mappings,
-            fields: IndexFieldBuild(indecis[key].mappings)
         });
     }
     return new Promise((resolve) => {

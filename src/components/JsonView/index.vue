@@ -60,5 +60,9 @@ export default defineComponent({
         top: 30px;
         right: 20px;
     }
+
+    .hljs {
+        padding: 0;
+    }
 }
 </style>

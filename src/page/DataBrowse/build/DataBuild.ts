@@ -1,6 +1,6 @@
-import Mapping from "@/view/index/Mapping";
-import Properties from "@/view/index/Properties";
 import ArrayUtil from "@/utils/ArrayUtil";
+import {Mapping} from "@/es/IndexInfo";
+import {Property} from "@/es/IndexBase";
 
 /**
  * 数据构造器
@@ -22,7 +22,7 @@ export default function DataBuild(mapping: Mapping): string {
     }
 }
 
-function buildItem(key: string, properties: Properties, data: any) {
+function buildItem(key: string, properties: Property, data: any) {
     // 对象类型
     if (properties.properties) {
         data[key] = {};

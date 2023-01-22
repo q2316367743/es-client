@@ -1,4 +1,8 @@
 import {httpStrategyContext} from "@/global/BeanFactory";
+import {NodeState} from "@/es/NodeState";
+import {Stats} from "@/es/Stats";
+import {ClusterState} from "@/es/ClusterState";
+import {Info} from "@/es/Info";
 
 /**
  * 与集群相关的API
@@ -10,7 +14,7 @@ export default {
      * @param success 成功回调
      * @param error 失败回调
      */
-    info(): Promise<any> {
+    info(): Promise<Info> {
         return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/'
@@ -20,8 +24,8 @@ export default {
      * _cluster_state
      * 
      */
-    _cluster_state(): Promise<any> {
-        return httpStrategyContext.getStrategy().es<any>({
+    _cluster_state(): Promise<ClusterState> {
+        return httpStrategyContext.getStrategy().es<ClusterState>({
             method: 'GET',
             url: '/_cluster/state'
         })
@@ -30,13 +34,13 @@ export default {
      * _stats
      * 
      */
-    _stats(): Promise<any> {
-        return httpStrategyContext.getStrategy().es<any>({
+    _stats(): Promise<Stats> {
+        return httpStrategyContext.getStrategy().es<Stats>({
             method: 'GET',
             url: '/_stats'
         })
     },
-    _nodes_stats(): Promise<any> {
+    _nodes_stats(): Promise<NodeState> {
         return httpStrategyContext.getStrategy().es<any>({
             method: 'GET',
             url: '/_nodes/stats'

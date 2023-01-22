@@ -1,214 +1,134 @@
-import {IndexInstance} from '@/domain/IndexInstance';
 import {httpStrategyContext} from "@/global/BeanFactory";
-import IndexSaveBuild from '@/build/IndexSaveBuild';
+import {IndexCreate} from "@/es/IndexCreate";
+import IndexHealth from "@/es/IndexHealth";
 
 /**
  * 与索引有关的API
+ *
+ * @param name 索引名称
  */
-export default {
-    /**
-     * 为索引新建别名
-     * @param index 索引名称
-     * @param alias 别名
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    new_alias(index: string, alias: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'POST',
-            url: '_aliases',
-            data: {"actions": [{"add": {"index": index, "alias": alias}}]}
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * 移除索引
-     * @param index 索引名称
-     * @param alias 别名
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    remove_alias(index: string, alias: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'POST',
-            url: '_aliases',
-            data: {"actions": [{"remove": {"index": index, "alias": alias}}]}
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * 刷新索引
-     * @param index 索引名称
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    _refresh(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'POST',
-            url: `${index}/_refresh`,
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * 新建索引
-     * @param data 索引信息
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    save(data: IndexInstance, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'PUT',
-            url: data.name,
-            data: IndexSaveBuild(data)
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * 移除索引
-     * @param index 索引名称
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    remove(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'DELETE',
-            url: index,
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * 关闭索引
-     * @param index 索引名称
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    _close(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'POST',
-            url: `${index}/_close`,
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * 打开索引
-     * @param index 索引名称
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    _open(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'POST',
-            url: `${index}/_open`,
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-    /**
-     * flush索引
-     *
-     * @param index 索引名称
-     * @param success 成功回调
-     * @param error 失败回调
-     */
-    _flush(index: string, success: (data: any) => void, error?: (e: Error) => void) {
-        httpStrategyContext.getStrategy().es<any>({
-            method: 'POST',
-            url: `${index}/_flush`,
-        }).then(response => {
-            success(response);
-        }).catch(e => {
-            if (error) {
-                error(e);
-            } else {
-                console.error(e, e.response)
-            }
-        })
-    },
-
-    _search(index: string, data?: any): Promise<any> {
-        return httpStrategyContext.getStrategy().es<any>({
-            url: `/${index}/_search`,
-            method: "POST",
-            data: data || {}
-        })
-    },
-
-    _insert(index: string, data: string): Promise<any> {
-        return httpStrategyContext.getStrategy().es<any>({
-            url: `/${index}/_doc`,
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: data
-        })
-    },
-    _delete_by_query(index: string, data: any): Promise<any> {
-        return httpStrategyContext.getStrategy().es<any>({
-            url: `/${index}/_delete_by_query`,
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: data
-        })
-    },
-    _update(index: string, id: string, data: any): Promise<any> {
-        return httpStrategyContext.getStrategy().es<any>({
-            url: `/${index}/_doc/${id}`,
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: data
-        })
+export default function (name: string) {
+    return {
+        /**
+         * 创建索引
+         *
+         * @param data 索引信息
+         */
+        create(data: IndexCreate): Promise<any> {
+            return httpStrategyContext.getStrategy().es<any>({
+                method: 'PUT',
+                url: name,
+                data
+            })
+        },
+        /**
+         * 删除索引
+         */
+        delete(): Promise<any> {
+            return httpStrategyContext.getStrategy().es<any>({
+                method: 'DELETE',
+                url: name,
+            })
+        },
+        /**
+         * 获取索引信息
+         */
+        info(): Promise<any> {
+            return Promise.resolve();
+        },
+        /**
+         * 获取索引状态
+         */
+        _stats(): Promise<any> {
+            return httpStrategyContext.getStrategy().es({
+                method: 'GET',
+                url: `/${name}/_stats`
+            });
+        },
+        /**
+         * 获取索引设置
+         */
+        _settings(): Promise<any> {
+            return httpStrategyContext.getStrategy().es({
+                method: 'GET',
+                url: `/${name}/_settings`
+            })
+        },
+        _mappings(): Promise<any> {
+            return httpStrategyContext.getStrategy().es({
+                method: 'GET',
+                url: `${name}/_mappings`
+            })
+        },
+        health(): Promise<IndexHealth> {
+            return httpStrategyContext.getStrategy().es({
+                method: 'GET',
+                url: `/_cluster/health/${name}`
+            })
+        },
+        _cacheClear(): Promise<any> {
+            return httpStrategyContext.getStrategy().es({
+                method: 'POST',
+                url: `${name}/_cache/clear`
+            });
+        },
+        /**
+         * 为索引新建别名
+         * @param alias 别名
+         */
+        newAlias(alias: string): Promise<any> {
+            return httpStrategyContext.getStrategy().es<any>({
+                method: 'POST',
+                url: '_aliases',
+                data: {"actions": [{"add": {"index": name, "alias": alias}}]}
+            });
+        },
+        /**
+         * 移除索引
+         * @param alias 别名
+         */
+        removeAlias(alias: string): Promise<any> {
+            return  httpStrategyContext.getStrategy().es<any>({
+                method: 'POST',
+                url: '_aliases',
+                data: {"actions": [{"remove": {"index": name, "alias": alias}}]}
+            });
+        },
+        /**
+         * 刷新索引
+         */
+        _refresh(): Promise<any> {
+            return  httpStrategyContext.getStrategy().es<any>({
+                method: 'POST',
+                url: `${name}/_refresh`,
+            })
+        },
+        /**
+         * 关闭索引
+         */
+        _close(): Promise<any> {
+            return httpStrategyContext.getStrategy().es<any>({
+                method: 'POST',
+                url: `${name}/_close`,
+            });
+        },
+        /**
+         * 打开索引
+         */
+        _open(): Promise<any> {
+            return httpStrategyContext.getStrategy().es<any>({
+                method: 'POST',
+                url: `${name}/_open`,
+            })
+        },
+        /**
+         * flush索引
+         */
+        _flush(): Promise<any> {
+            return httpStrategyContext.getStrategy().es<any>({
+                method: 'POST',
+                url: `${name}/_flush`,
+            })
+        },
     }
 }

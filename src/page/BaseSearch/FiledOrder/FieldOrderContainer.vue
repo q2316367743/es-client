@@ -12,7 +12,7 @@
 import {defineComponent, PropType} from "vue";
 import FieldOrderItem from "@/page/BaseSearch/FiledOrder/FieldOrderItem.vue";
 import Field from "@/view/Field";
-import BaseOrder from "@/domain/BaseOrder";
+import BaseOrder from "@/entity/BaseOrder";
 
 export default defineComponent({
     name: 'field-order-container',
