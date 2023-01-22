@@ -274,7 +274,6 @@ export default defineComponent({
     .expand {
         margin-top: 10px;
         display: flex;
-        justify-content: space-between;
         position: relative;
 
 
@@ -284,7 +283,7 @@ export default defineComponent({
             width: 40px;
             height: 40px;
             text-align: center;
-            line-height: 40px;
+            line-height: 34px;
             margin: 4px;
             cursor: pointer;
         }
@@ -295,7 +294,7 @@ export default defineComponent({
             width: 40px;
             height: 40px;
             text-align: center;
-            line-height: 40px;
+            line-height: 34px;
             margin: 4px;
             cursor: pointer;
         }
