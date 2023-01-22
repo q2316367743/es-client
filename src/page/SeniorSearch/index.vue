@@ -71,7 +71,7 @@
 import {defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
 import {Codemirror} from 'vue-codemirror';
-import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
+import {ElMessageBox, ElNotification} from "element-plus";
 import {json} from '@codemirror/lang-json';
 import {FullScreen} from '@element-plus/icons-vue'
 
@@ -98,6 +98,7 @@ import Optional from "@/utils/Optional";
 import SeniorSearchHistoryManage from "@/page/SeniorSearch/component/index.vue";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -238,11 +239,7 @@ export default defineComponent({
     methods: {
         async search() {
             if (!this.current.link || this.current.link === '') {
-                ElMessage({
-                    showClose: true,
-                    type: 'warning',
-                    message: '请输入链接'
-                });
+                MessageUtil.success('请输入链接');
                 return;
             }
             let data = {} as any;
@@ -295,13 +292,8 @@ export default defineComponent({
         formatDocument() {
             try {
                 this.current.params = JSON.stringify(JSON.parse(this.current.params), null, 4);
-            } catch (e) {
-                console.error(e);
-                ElMessage({
-                    showClose: true,
-                    type: 'warning',
-                    message: '格式化失败，' + e
-                })
+            } catch (e: any) {
+                MessageUtil.error('格式化失败', e);
             }
         },
         editTabs(targetName: number, action: 'remove' | 'add') {
@@ -359,11 +351,7 @@ export default defineComponent({
                 case 'save-history':
                     let searchItem = this.searchMap.get(id);
                     if (!searchItem) {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '标签未找到'
-                        });
+                        MessageUtil.error('标签未找到');
                         return;
                     }
                     seniorSearchHistoryService.save({
@@ -373,30 +361,13 @@ export default defineComponent({
                         method: searchItem.body.method,
                         params: searchItem.body.params,
                     })
-                        .then(() => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '新增成功'
-                            });
-                            emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
-                        })
-                        .catch(e => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'error',
-                                message: '新增失败，' + e
-                            });
-                        });
+                        .then(() => MessageUtil.success('新增成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
+                        .catch(e => MessageUtil.error('新增失败', e));
                     break;
                 case 'update-history':
                     let searchItem2 = this.searchMap.get(id);
                     if (!searchItem2) {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '标签未找到'
-                        });
+                        MessageUtil.error('标签未找到');
                         return;
                     }
                     let relationId = parseInt(strings[2]);
@@ -407,21 +378,8 @@ export default defineComponent({
                         method: searchItem2.body.method,
                         params: searchItem2.body.params,
                     })
-                        .then(() => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '更新成功'
-                            });
-                            emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
-                        })
-                        .catch(e => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'error',
-                                message: '更新失败，' + e
-                            });
-                        });
+                        .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
+                        .catch(e => MessageUtil.error('更新失败', e));
                     break;
             }
             // 全部关闭了

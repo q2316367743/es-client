@@ -23,13 +23,13 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { ElMessage } from "element-plus";
 import doT from 'dot';
 import Chart from "@/entity/Chart";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
 
 import {httpStrategyContext} from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";
+import MessageUtil from "@/utils/MessageUtil";
 
 // doT.templateSettings = {
 //     evaluate: /\{\{([\s\S]+?)\}\}/g,
@@ -97,8 +97,7 @@ export default defineComponent({
                     try {
                         data = JSON.parse(this.chart!.data);
                     } catch (e: any) {
-                        console.error(e);
-                        ElMessage.error('JSON格式化错误');
+                        MessageUtil.error('JSON格式化错误', e);
                     }
                 }
                 httpStrategyContext.getStrategy().es<any>({

@@ -2,7 +2,7 @@ import axios from "axios";
 
 import HttpStrategyConfig from "../HttpStrategyConfig";
 
-import {ElMessage} from 'element-plus'
+import MessageUtil from "@/utils/MessageUtil";
 
 
 const instance = axios.create();
@@ -15,13 +15,8 @@ instance.interceptors.response.use(
         return response.data;
     },
     error => {
-        console.error('err', error)
-        ElMessage({
-            showClose: true,
-            message: error.message,
-            type: 'error',
-            duration: 5 * 1000
-        });
+        console.error(error)
+        MessageUtil.error(error.message);
         return Promise.reject(error)
     }
 )

@@ -40,7 +40,8 @@ import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
-import {ElMessage, ElNotification} from "element-plus";
+import { ElNotification} from "element-plus";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'tab-menu',
@@ -85,11 +86,7 @@ export default defineComponent({
                         }
                     }else {
                         // 默认进行提示
-                        ElMessage({
-                            showClose: true,
-                            type: 'warning',
-                            message: '标签数量超过最大限制，请关闭不需要的标签'
-                        });
+                        MessageUtil.warning('标签数量超过最大限制，请关闭不需要的标签');
                         return
                     }
                 }

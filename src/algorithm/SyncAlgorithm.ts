@@ -5,9 +5,10 @@ import useSyncStore from "@/store/SyncSettingStore";
 import Assert from "@/utils/Assert";
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import useUrlStore from "@/store/UrlStore";
-import {ElLoading, ElMessage} from "element-plus";
+import {ElLoading} from "element-plus";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
+import MessageUtil from "@/utils/MessageUtil";
 
 /**
  * url同步算法
@@ -93,12 +94,8 @@ export default async function sync(
     try {
         loading.setText('开始同步链接');
         await url(remoteUrlList);
-    } catch (e) {
-        ElMessage({
-            showClose: true,
-            type: "error",
-            message: '同步失败，' + e
-        });
+    } catch (e: any) {
+        MessageUtil.error('同步失败', e);
     } finally {
         loading.close();
     }

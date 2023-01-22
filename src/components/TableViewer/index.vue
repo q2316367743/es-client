@@ -34,7 +34,6 @@ import {ZoomIn} from "@element-plus/icons-vue";
 import {VxeColumnPropTypes, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import XEUtils from "xe-utils";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {ElMessage} from "element-plus";
 import JsonView from "@/components/JsonView/index.vue";
 
 interface Col {

@@ -95,7 +95,7 @@
 
 <script lang="ts">
 import {defineComponent, markRaw, toRaw} from "vue";
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessageBox} from "element-plus";
 import {mapState} from "pinia";
 import {Bottom, FullScreen} from "@element-plus/icons-vue";
 
@@ -137,6 +137,7 @@ import BshManage from "@/page/BaseSearch/History/index.vue";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import useUrlStore from "@/store/UrlStore";
 import DocumentApi from "@/api/DocumentApi";
+import MessageUtil from "@/utils/MessageUtil";
 
 interface Name {
     name: string;
@@ -269,7 +270,7 @@ export default defineComponent({
                     executorId = setTimeout(() => {
                         this.sync();
                     }, 500) as unknown as number;
-                }else {
+                } else {
                     // 设置500ms延迟执行
                     executorId = setTimeout(() => {
                         this.sync();
@@ -493,11 +494,7 @@ export default defineComponent({
                 case 'save-history':
                     let searchItem = this.searchMap.get(id);
                     if (!searchItem) {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '标签未找到'
-                        });
+                        MessageUtil.error('标签未找到');
                         return;
                     }
                     // 保存到历史
@@ -507,29 +504,13 @@ export default defineComponent({
                         index: searchItem.body.index,
                         conditions: toRaw(searchItem.body.conditions),
                         orders: toRaw(searchItem.body.orders)
-                    }).then(() => {
-                        ElMessage({
-                            showClose: true,
-                            type: 'success',
-                            message: '新增成功'
-                        });
-                    }).catch(e => {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '新增失败，' + e
-                        });
-
-                    });
+                    }).then(() => MessageUtil.success('新增成功'))
+                        .catch(e => MessageUtil.error('新增失败', e));
                     break;
                 case 'update-history':
                     let searchItem2 = this.searchMap.get(id);
                     if (!searchItem2) {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '标签未找到'
-                        });
+                        MessageUtil.error('标签未找到');
                         return;
                     }
                     let relationId = parseInt(strings[2]);
@@ -540,21 +521,10 @@ export default defineComponent({
                         conditions: toRaw(searchItem2.body.conditions),
                         orders: toRaw(searchItem2.body.orders)
                     })
-                        .then(() => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '更新成功'
-                            });
-                            emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE);
-                        })
-                        .catch(e => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'error',
-                                message: '更新失败，' + e
-                            });
-                        });
+                        .then(() => MessageUtil.success(
+                            '更新失败',
+                            () => emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE)))
+                        .catch(e => MessageUtil.error('更新失败', e));
 
             }
             // 全部关闭了

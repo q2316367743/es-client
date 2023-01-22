@@ -39,7 +39,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {Action, ElMessage, ElMessageBox} from 'element-plus'
+import {Action, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
@@ -54,6 +54,7 @@ import SaveOrUpdateUrl from '@/module/SaveOrUpdateUrl/index.vue';
 
 import {urlService} from "@/global/BeanFactory";
 import BrowserUtil from "@/utils/BrowserUtil";
+import MessageUtil from "@/utils/MessageUtil";
 
 interface Params {
     cellValue: any
@@ -128,26 +129,12 @@ export default defineComponent({
             }).then(() => {
                 this.execRemove(id, true)
                     .then(() => this.removeAfter(value))
-                    .catch(e => {
-                        console.error(e);
-                        ElMessage({
-                            showClose: true,
-                            message: '删除失败，' + e,
-                            type: 'error'
-                        });
-                    });
+                    .catch(e => MessageUtil.error('删除失败', e));
             }).catch((action: Action) => {
                 if (action === 'cancel') {
                     this.execRemove(id, false)
                         .then(() => this.removeAfter(value))
-                        .catch(e => {
-                            console.error(e);
-                            ElMessage({
-                                showClose: true,
-                                message: '删除失败，' + e,
-                                type: 'error'
-                            });
-                        });
+                        .catch(e => MessageUtil.error('删除失败', e));
                 }
             })
         },
@@ -159,11 +146,7 @@ export default defineComponent({
             }
         },
         removeAfter(value: string) {
-            ElMessage({
-                showClose: true,
-                message: '删除成功',
-                type: 'success'
-            });
+            MessageUtil.success('删除成功');
             if (useUrlStore().current === value) {
                 // 删除了当前索引
                 useUrlStore().clear();

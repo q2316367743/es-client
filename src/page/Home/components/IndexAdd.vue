@@ -62,7 +62,6 @@ import Optional from "@/utils/Optional";
 import useSettingStore from "@/store/SettingStore";
 import {IndexInstance, Property} from "@/domain/IndexInstance";
 import indexApi from "@/api/IndexApi";
-import {ElMessage} from "element-plus";
 import useIndexStore from "@/store/IndexStore";
 import BrowserUtil from "@/utils/BrowserUtil";
 import IndexCreateBuild from "@/build/IndexCreateBuild";
@@ -70,6 +69,7 @@ import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'home-index-add',
@@ -123,22 +123,9 @@ export default defineComponent({
         },
         addIndex() {
             // 新增
-            indexApi(this.index.name).create(IndexCreateBuild(this.index)).then((data: any) => {
-                // 显示对话框
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: JSON.stringify(data)
-                });
-                // 刷新索引
-                useIndexStore().reset();
-            }).catch(e => {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '索引创建错误，' + e
-                })
-            });
+            indexApi(this.index.name).create(IndexCreateBuild(this.index))
+                .then(res => MessageUtil.success(res, useIndexStore().reset))
+                .catch(e => MessageUtil.error('索引创建错误', e));
             // 关闭弹框
             this.dialog = false;
             // 发送刷新事件

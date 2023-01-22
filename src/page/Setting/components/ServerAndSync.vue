@@ -54,19 +54,25 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
+import {UploadFilled} from "@element-plus/icons-vue";
+import {ElLoading, ElNotification, UploadRawFile} from "element-plus";
+
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
+import SyncModeEnum from "@/enumeration/SyncModeEnum";
+
 import Constant from "@/global/Constant";
+import {baseSearchHistoryService, seniorSearchHistoryService, urlService} from "@/global/BeanFactory";
+
 import useServerStore from "@/store/ServerSettingStore";
+import useSyncStore from "@/store/SyncSettingStore";
+
 import ServerSetting from "@/domain/ServerSetting";
 import SyncSetting from "@/domain/SyncSetting";
-import SyncModeEnum from "@/enumeration/SyncModeEnum";
-import useSyncStore from "@/store/SyncSettingStore";
-import {ElLoading, ElMessage, ElNotification, UploadRawFile} from "element-plus";
-import {UploadFilled} from "@element-plus/icons-vue";
-import {baseSearchHistoryService, seniorSearchHistoryService, urlService} from "@/global/BeanFactory";
+
 import BrowserUtil from "@/utils/BrowserUtil";
+import MessageUtil from "@/utils/MessageUtil";
+
 import SyncAlgorithm from "@/algorithm/SyncAlgorithm";
-import Url from "@/entity/Url";
 
 export default defineComponent({
     name: 'setting-server-sync',
@@ -109,9 +115,6 @@ export default defineComponent({
         this.syncSetting = useSyncStore().getSync;
     },
     methods: {
-        saveServer() {
-            useServerStore().setServer(this.serverSetting);
-        },
         // 文件同步上传文件
         fileSyncUpload(rawFile: UploadRawFile) {
             if (typeof FileReader !== 'undefined') {
@@ -122,40 +125,17 @@ export default defineComponent({
                         let content = event.target.result as string;
                         let {url, baseSearchHistory, seniorSearchHistory} = JSON.parse(content);
                         SyncAlgorithm(url, baseSearchHistory, seniorSearchHistory).then(() => {
-                            ElMessage({
-                                showClose: true,
-                                type: "success",
-                                message: '同步成功'
-                            });
-                        }).catch(e => {
-                            ElMessage({
-                                showClose: true,
-                                type: "error",
-                                message: '同步失败，' + e
-                            })
-                        });
+                            MessageUtil.success('同步成功');
+                        }).catch(e => MessageUtil.error('同步失败', e));
                     } else {
-                        ElMessage({
-                            showClose: true,
-                            type: "error",
-                            message: '文件读取失败'
-                        });
+                        MessageUtil.error('文件读取失败');
                     }
                 };
-                fileReader.onerror = function (e) {
-                    console.error(e);
-                    ElMessage({
-                        showClose: true,
-                        type: 'error',
-                        message: '文件读取错误，' + e
-                    });
+                fileReader.onerror = function (e: any) {
+                    MessageUtil.error('同步失败', e);
                 }
             } else {
-                ElMessage({
-                    showClose: true,
-                    type: "error",
-                    message: '文件读取器未定义'
-                });
+                MessageUtil.error('文件读取器未定义');
             }
             return false;
         },
@@ -177,12 +157,8 @@ export default defineComponent({
                 BrowserUtil.download(JSON.stringify({
                     url, baseSearchHistory, seniorSearchHistory
                 }, null, 4), '数据备份下载.json', 'application/json');
-            } catch (e) {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '下载失败，' + e
-                });
+            } catch (e: any) {
+                MessageUtil.error('下载失败', e);
             } finally {
                 loading.close();
             }

@@ -110,7 +110,9 @@
                     <template #dropdown>
                         <el-dropdown-menu>
                             <el-dropdown-item>
-                                <el-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助</el-link>
+                                <el-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz"
+                                         target="_blank">帮助
+                                </el-link>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
@@ -272,7 +274,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from 'pinia';
-import {ElMessage} from "element-plus";
 import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
@@ -310,6 +311,7 @@ import StructureIcon from "@/icon/StructureIcon.vue";
 import JsonView from "@/components/JsonView/index.vue";
 import useUrlStore from "@/store/UrlStore";
 import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
+import MessageUtil from "@/utils/MessageUtil";
 
 
 export default defineComponent({
@@ -509,15 +511,8 @@ export default defineComponent({
                 }
                 this.records = records;
                 this.count = count;
-            }).catch(e => {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '查询失败，' + e
-                })
-            }).finally(() => {
-                this.loading = false
-            })
+            }).catch(e => MessageUtil.error('查询失败', e))
+                .finally(() => this.loading = false);
         },
         // >----------------------------------- 表格事件 ---------------------------------->
         format(column: { cellValue: any }): VxeColumnPropTypes.Formatter {
@@ -583,11 +578,7 @@ export default defineComponent({
             }
             // 未选择不处理
             if (!this.menuRecord) {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '错误，无法获取选中元素'
-                })
+                MessageUtil.error('错误，无法获取选中元素')
                 return;
             }
             if (code === 'copy') {
@@ -683,26 +674,18 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            DocumentApi._insert(this.index.name, this.addConfig.data).then((result) => {
-                ElMessage({
-                    showClose: true,
-                    type: "success",
-                    message: `新增成功，新数据ID【${result._id || ''}】`
-                });
-                this.addConfig.dialog = false;
-                // 延迟100ms，
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.executeQuery(false);
-                    }, 1000);
-                })
-            }).catch((e) => {
-                ElMessage({
-                    showClose: true,
-                    type: "error",
-                    message: '新增失败，' + e
-                });
-            })
+            DocumentApi._insert(this.index.name, this.addConfig.data)
+                .then(result => MessageUtil.success(
+                    `新增成功，新数据ID【${result._id || ''}】`,
+                    () => {
+                    this.addConfig.dialog = false;
+                    // 延迟100ms，
+                    this.$nextTick(() => {
+                        setTimeout(() => {
+                            this.executeQuery(false);
+                        }, 1000);
+                    })
+                })).catch(e => MessageUtil.error('新增失败', e));
         },
         recordReduce(deleteRowIndies?: Set<string>) {
             let indices = Optional.ofNullable(deleteRowIndies)
@@ -753,11 +736,7 @@ export default defineComponent({
         },
         recordEdit(_id?: string) {
             if (!this.index) {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '请选择索引'
-                })
+                MessageUtil.error('请选择索引');
                 return;
             }
             let record;
@@ -781,19 +760,11 @@ export default defineComponent({
         },
         recordEditClick() {
             if (!this.index) {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '请选择索引'
-                })
+                MessageUtil.error('请选择索引');
                 return;
             }
             DocumentApi._update(this.index.name, this.editConfig.id, this.editConfig.data).then(() => {
-                ElMessage({
-                    showClose: true,
-                    type: "success",
-                    message: '修改成功'
-                });
+                MessageUtil.success('修改成功');
                 this.editConfig.dialog = false;
                 // 延迟100ms，
                 this.$nextTick(() => {
@@ -803,13 +774,7 @@ export default defineComponent({
                 });
                 // 当前选中重置
                 this.clearChoose();
-            }).catch(e => {
-                ElMessage({
-                    showClose: true,
-                    type: "error",
-                    message: '修改失败，' + e
-                })
-            });
+            }).catch(e => MessageUtil.error('修改失败', e));
         },
 
         // 右侧
@@ -854,20 +819,12 @@ export default defineComponent({
         openExportDialog() {
             // 选择了索引
             if (!this.index) {
-                ElMessage({
-                    showClose: true,
-                    type: "warning",
-                    message: "请选择索引"
-                });
+                MessageUtil.error('请选择索引');
                 return;
             }
             // 有记录
             if (this.records.length === 0) {
-                ElMessage({
-                    showClose: true,
-                    type: "warning",
-                    message: "数据为空"
-                });
+                MessageUtil.warning('数据为空');
                 return;
             }
             this.exportConfig = {
@@ -887,18 +844,9 @@ export default defineComponent({
                 exportData(this.exportConfig, this.records, this.result);
                 this.exportDialog = false;
                 // 提示
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: config === 1 ? '成功复制到剪切板' : config === 2 ? '成功打印' : config === 3 ? '成功导出' : '成功'
-                })
+                MessageUtil.success(config === 1 ? '成功复制到剪切板' : config === 2 ? '成功打印' : config === 3 ? '成功导出' : '成功');
             } catch (e) {
-                ElMessage({
-                    showClose: false,
-                    type: 'error',
-                    message: '导出失败，' + e
-                });
-                console.error(e)
+                MessageUtil.error('导出失败');
             }
         },
         // <----------------------------------------- 上面按钮 -----------------------------------------<

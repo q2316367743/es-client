@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
-import { ElMessage } from 'element-plus'
 import Chart from '@/entity/Chart';
+import MessageUtil from "@/utils/MessageUtil";
 
 
 export default class ChartService {
@@ -26,9 +26,8 @@ export default class ChartService {
     /**
      * 更新数据根据，
      * 
-     * @param url 链接
+     * @param chart 链接
      * @param id ID
-     * @param callback 回调函数
      */
     updateById(chart: Chart, id: number): Promise<number> {
         return this.chartResponse.put(chart);
@@ -37,10 +36,7 @@ export default class ChartService {
     async deleteById(id: number): Promise<void> {
         let chart = await this.chartResponse.get(id);
         if (!chart) {
-            ElMessage({
-                message: '删除失败，不存在',
-                type: 'error',
-            });
+            MessageUtil.error('删除失败，图表不存在')
             return new Promise<void>(resolve => {
                 resolve()
             });

@@ -1,25 +1,17 @@
 import Optional from "@/utils/Optional";
-import {ElMessage} from "element-plus";
+import MessageUtil from "@/utils/MessageUtil";
 
 function showMessage(error: string, message?: string | (() => void), callback?: () => void) {
     if (callback) {
         message = Optional.ofNullable(message).orElse(error);
-        ElMessage({
-            showClose: true,
-            type: 'error',
-            message: message as string
-        });
+        MessageUtil.error(message as string);
         // 异常抛出前进行回调
         callback();
         throw new Error(message as string);
     }
     if (typeof message === 'string') {
         message = Optional.ofNullable(message).orElse(error);
-        ElMessage({
-            showClose: true,
-            type: 'error',
-            message
-        })
+        MessageUtil.error(message);
         throw new Error(message);
     } else if (typeof message === 'function') {
         message();

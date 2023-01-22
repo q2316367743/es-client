@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
-import { ElMessage } from 'element-plus'
 import Tip from '@/entity/Tip';
+import MessageUtil from "@/utils/MessageUtil";
 
 export default class TipService {
 
@@ -44,10 +44,7 @@ export default class TipService {
     deleteById(id: number, callback: () => void): void {
         this.tips.get(id).then((tip?: Tip) => {
             if (!tip) {
-                ElMessage({
-                    message: '删除失败，提示不存在',
-                    type: 'error',
-                });
+                MessageUtil.error('删除失败，提示不存在')
                 return;
             }
             this.tips.delete(id).then(callback);

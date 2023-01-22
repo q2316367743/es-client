@@ -35,7 +35,10 @@
                     <vxe-column :title="$t('app.operation')" width="200">
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">载入</el-button>
-                            <el-button type="primary" size="small" @click="updateOpen(row)">{{ $t('app.update') }}</el-button>
+                            <el-button type="primary" size="small" @click="updateOpen(row)">{{
+                                    $t('app.update')
+                                }}
+                            </el-button>
                             <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
@@ -57,7 +60,6 @@
 import {defineComponent, markRaw} from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
-import {ElMessage} from "element-plus";
 import {toDateString} from "xe-utils";
 import {Search} from '@element-plus/icons-vue';
 
@@ -68,6 +70,7 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
 import {mapState} from "pinia";
 import HistorySaveAndUpdate from "@/page/SeniorSearch/component/HistorySaveAndUpdate.vue";
+import MessageUtil from "@/utils/MessageUtil";
 
 interface Params {
     cellValue: any
@@ -141,20 +144,9 @@ export default defineComponent({
             this.$emit('load', history);
         },
         removeById(id: number) {
-            seniorSearchHistoryService.removeById(id).then(() => {
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: '删除成功'
-                });
-                this.search();
-            }).catch(e => {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '删除失败，' + e
-                });
-            })
+            seniorSearchHistoryService.removeById(id)
+                .then(() => MessageUtil.success('删除成功', this.search))
+                .catch(e => MessageUtil.error('删除失败', e));
         },
         addOpen() {
             this.dialog = {
@@ -178,38 +170,20 @@ export default defineComponent({
         submit() {
             if (this.dialog.data.id === 0) {
                 // 新增
-                seniorSearchHistoryService.save(this.dialog.data).then(() => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'success',
-                        message: '新增成功'
-                    });
-                    this.search();
-                    this.dialog.show = false;
-                }).catch(e => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'error',
-                        message: '新增失败，' + e
-                    });
-                });
-            }else {
+                seniorSearchHistoryService.save(this.dialog.data)
+                    .then(() => MessageUtil.success('新增成功', () => {
+                        this.search();
+                        this.dialog.show = false;
+                    }))
+                    .catch(e => MessageUtil.error('新增失败', e));
+            } else {
                 // 修改
-                seniorSearchHistoryService.update(this.dialog.data).then(() => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'success',
-                        message: '修改成功'
-                    });
-                    this.search();
-                    this.dialog.show = false;
-                }).catch(e => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'error',
-                        message: '修改失败，' + e
-                    });
-                });
+                seniorSearchHistoryService.update(this.dialog.data)
+                    .then(() => MessageUtil.success('修改成功', () => {
+                        this.search();
+                        this.dialog.show = false;
+                    }))
+                    .catch(e => MessageUtil.error('修改失败', e));
             }
         }
     }

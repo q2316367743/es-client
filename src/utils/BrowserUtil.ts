@@ -1,4 +1,4 @@
-import {ElMessage} from "element-plus";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default {
 
@@ -22,11 +22,7 @@ export default {
         // 删除创建元素
         document.body.removeChild(ele);
         if (showMessage) {
-            ElMessage({
-                showClose: true,
-                type: 'success',
-                message: '已成功复制到剪切板'
-            });
+            MessageUtil.success('已成功复制到剪切板');
         }
     },
 

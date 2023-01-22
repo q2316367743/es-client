@@ -37,7 +37,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, markRaw} from "vue";
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import {VxeTableInstance} from "vxe-table";
 
@@ -52,6 +52,7 @@ import Optional from "@/utils/Optional";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import XEUtils from "xe-utils";
 import {mapState} from "pinia";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'bsh-temp-record',
@@ -122,25 +123,12 @@ export default defineComponent({
                     ...history,
                     name: value,
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0)
-                })
-                    .then(() => {
-                        ElMessage({
-                            showClose: true,
-                            type: 'success',
-                            message: '新增成功'
-                        });
-                        emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE);
-                        // 删除此条记录
-                        this.removeById(history.id!);
-                    })
-                    .catch(e => {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '新增失败，' + e
-                        });
-                    });
-            })
+                }).then(() => MessageUtil.success('新增成功', () => {
+                    emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE);
+                    // 删除此条记录
+                    this.removeById(history.id!);
+                })).catch(e => MessageUtil.error('新增失败', e));
+            });
         },
         reset() {
             useBaseTempRecordStore().reset();

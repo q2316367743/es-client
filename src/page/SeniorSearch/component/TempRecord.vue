@@ -2,13 +2,15 @@
     <div class="temp-record">
         <div class="temp-record-head">
             <div>
-                <el-input v-model="condition.link" style="width: 200px;" placeholder="链接" @input="loadData" clearable/>
-                <el-select v-model="condition.method" style="margin-left: 12px;" placeholder="请求方式" clearable @change="loadData">
-                    <el-option label="HEAD" value="HEAD" />
-                    <el-option label="GET" value="GET" />
-                    <el-option label="POST" value="POST" />
-                    <el-option label="PUT" value="PUT" />
-                    <el-option label="DELETE" value="DELETE" />
+                <el-input v-model="condition.link" style="width: 200px;" placeholder="链接" @input="loadData"
+                          clearable/>
+                <el-select v-model="condition.method" style="margin-left: 12px;" placeholder="请求方式" clearable
+                           @change="loadData">
+                    <el-option label="HEAD" value="HEAD"/>
+                    <el-option label="GET" value="GET"/>
+                    <el-option label="POST" value="POST"/>
+                    <el-option label="PUT" value="PUT"/>
+                    <el-option label="DELETE" value="DELETE"/>
                 </el-select>
             </div>
             <div>
@@ -37,8 +39,12 @@
                     <vxe-column :title="$t('app.operation')" width="270">
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">载入</el-button>
-                            <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录</el-button>
-                            <el-button type="danger" size="small" @click="removeById(row.id)">{{ $t('app.delete') }}</el-button>
+                            <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
+                            </el-button>
+                            <el-button type="danger" size="small" @click="removeById(row.id)">{{
+                                    $t('app.delete')
+                                }}
+                            </el-button>
                         </template>
                     </vxe-column>
                 </vxe-table>
@@ -48,7 +54,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, markRaw} from "vue";
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import {VxeTableInstance} from "vxe-table";
 
@@ -58,9 +64,10 @@ import BrowserUtil from "@/utils/BrowserUtil";
 import {seniorSearchHistoryService} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import { stringContain } from "@/utils/SearchUtil";
+import {stringContain} from "@/utils/SearchUtil";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'hm-temp-record',
@@ -129,22 +136,12 @@ export default defineComponent({
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0)
                 })
                     .then(() => {
-                        ElMessage({
-                            showClose: true,
-                            type: 'success',
-                            message: '新增成功'
-                        });
+                        MessageUtil.success('新增成功');
                         emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
                         // 删除此条记录
                         this.removeById(history.id!);
                     })
-                    .catch(e => {
-                        ElMessage({
-                            showClose: true,
-                            type: 'error',
-                            message: '新增失败，' + e
-                        });
-                    });
+                    .catch(e => MessageUtil.error('新增失败', e));
             })
         },
         reset() {

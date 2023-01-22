@@ -1,10 +1,10 @@
 import Dexie from 'dexie';
-import {ElMessage} from 'element-plus'
 import Url from '@/entity/Url';
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import Assert from "@/utils/Assert";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default class UrlService {
 
@@ -25,10 +25,7 @@ export default class UrlService {
             if (url) {
                 callback(url);
             } else {
-                ElMessage({
-                    message: '链接不存在，请重试',
-                    type: 'error',
-                });
+                MessageUtil.error('链接不存在，请重试');
             }
         })
     }

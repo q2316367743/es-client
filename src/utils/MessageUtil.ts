@@ -7,7 +7,7 @@ function success(message: string, callback?: () => void): void {
     ElMessage({
         showClose: true,
         type: "success",
-        message
+        message: message + ''
     });
     callback && callback();
 }
@@ -21,6 +21,7 @@ function error(message: string, e?: Error, callback?: () => void): void {
         type: "error",
         message: Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
     });
+    console.error(e);
     callback && callback();
 }
 

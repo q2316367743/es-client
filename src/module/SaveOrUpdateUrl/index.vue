@@ -44,13 +44,14 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import {ElForm, ElMessage} from "element-plus";
+import {ElForm} from "element-plus";
 
 import Url from '@/entity/Url';
 
 import {urlService} from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import {httpStrategyContext} from "@/global/BeanFactory";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
@@ -136,20 +137,8 @@ export default defineComponent({
                             isAuth: this.url.isAuth,
                             authUser: this.url.authUser,
                             authPassword: this.url.authPassword
-                        }).then(() => {
-                            useUrlStore().reset();
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '新增成功'
-                            });
-                        }).catch(e => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '新增失败，' + e
-                            });
-                        });
+                        }).then(() => MessageUtil.success('新增成功', useUrlStore().reset))
+                            .catch(e => MessageUtil.error('新增失败', e));
                     } else {
                         // 更新
                         urlService.updateById({
@@ -161,20 +150,9 @@ export default defineComponent({
                             authUser: this.url.authUser,
                             authPassword: this.url.authPassword
                             // eslint-disable-next-line
-                        }, this.url.id!).then(() => {
-                            useUrlStore().reset();
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '修改成功'
-                            });
-                        }).catch(e => {
-                            ElMessage({
-                                showClose: true,
-                                type: 'success',
-                                message: '修改失败，' + e
-                            });
-                        });
+                        }, this.url.id!)
+                            .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
+                            .catch(e => MessageUtil.error('修改失败', e));
                     }
                     this.url = {
                         name: '',

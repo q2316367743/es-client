@@ -40,14 +40,14 @@
 <script lang="ts">
 import {defineComponent, markRaw} from "vue";
 import {Search} from '@element-plus/icons-vue'
-import BrowserUtil from "@/utils/BrowserUtil";
-import {ElMessage} from "element-plus";
 import {VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import useUrlStore from "@/store/UrlStore";
 import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import MessageUtil from "@/utils/MessageUtil";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 export default defineComponent({
     name: 'bsh-history',
@@ -103,30 +103,12 @@ export default defineComponent({
             baseSearchHistoryService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
                 .then(records => {
                     this.histories = records;
-                }).catch(e => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'error',
-                        message: '历史查询失败，' + e
-                    })
-            })
+                }).catch(e => MessageUtil.error('历史查询失败', e));
         },
         removeById(id: number) {
-            baseSearchHistoryService.removeById(id).then(() => {
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: '删除成功'
-                });
-                this.search();
-            }).catch(e => {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '删除失败，' + e
-                });
-
-            });
+            baseSearchHistoryService.removeById(id)
+                .then(() => MessageUtil.success('删除成功', this.search))
+                .catch(e => MessageUtil.error('删除失败', e));
         },
     }
 });

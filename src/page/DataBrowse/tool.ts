@@ -1,7 +1,8 @@
 import {VxeTableDefines, VxeTablePropTypes} from "vxe-table";
-import {Action, ElMessage, ElMessageBox} from "element-plus";
+import {Action, ElMessageBox} from "element-plus";
 import IndexView from "@/view/index/IndexView";
 import DocumentApi from "@/api/DocumentApi";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default {
     renderMenu(): VxeTablePropTypes.MenuConfig {
@@ -94,20 +95,8 @@ export default {
                             ]
                         }
                     }
-                }).then(() => {
-                    ElMessage({
-                        showClose: true,
-                        type: "success",
-                        message: '删除成功'
-                    });
-                    resolve()
-                }).catch(e => {
-                    ElMessage({
-                        showClose: true,
-                        type: "error",
-                        message: '删除失败，' + e
-                    })
-                });
+                }).then(() => MessageUtil.success('删除成功', resolve))
+                    .catch(e => MessageUtil.error('删除失败', e));
             }).catch((action: Action) => {
                 if (action === 'cancel') {
                     // 跳转到高级查询
