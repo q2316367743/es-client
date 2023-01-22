@@ -2,7 +2,7 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title">
-            <el-link :type="indexStateTitle" @click="indexInfo">{{ index.name }}</el-link>
+            <el-link :type="indexStateTitle" @click="indexInfo">{{ index?.name }}</el-link>
             <div class="url-copy" @click="execCopy(index?.name)">复制</div>
         </div>
         <!-- 详细 -->
@@ -50,29 +50,23 @@
         </div>
         <!-- 拓展面板 -->
         <div class="expand" v-if="showExpand">
-            <div class="info">
-                <div v-for="(value, key) in index?.shard" :key="key">
-                    <div
-                        class="shard"
-                        v-for="(item, idx) in value"
-                        :key="idx"
-                        @click="showShardOrReplica(item, idx)"
-                    >{{ key }}
-                    </div>
-                </div>
-                <div v-for="(value, key) in index?.replica" :key="key">
-                    <div
-                        class="replica"
-                        v-for="(item, idx) in value"
-                        :key="idx"
-                        @click="showShardOrReplica(item, idx)"
-                    >{{ key }}
-                    </div>
+            <div v-for="(value, key) in index?.shard" :key="key">
+                <div
+                    class="shard"
+                    v-for="(item, idx) in value"
+                    :key="idx"
+                    @click="showShardOrReplica(item, idx)"
+                >{{ key }}
                 </div>
             </div>
-            <div class="btn">
-                <el-button type="primary" size="small" @click="refreshIndex">刷新</el-button>
-                <el-button type="primary" size="small" @click="flushIndex">flush刷新</el-button>
+            <div v-for="(value, key) in index?.replica" :key="key">
+                <div
+                    class="replica"
+                    v-for="(item, idx) in value"
+                    :key="idx"
+                    @click="showShardOrReplica(item, idx)"
+                >{{ key }}
+                </div>
             </div>
         </div>
     </div>
@@ -80,9 +74,9 @@
 <script lang="ts">
 import {defineComponent, markRaw, PropType} from "vue";
 import {ArrowDown, ArrowUp, DataAnalysis, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessageBox} from "element-plus";
 
-import indexApi from '@/api/IndexApi'
+import IndexApi from '@/api/IndexApi'
 import clusterApi from "@/api/ClusterApi";
 
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -97,6 +91,7 @@ import IndexItemView from "@/view/IndexItemView";
 
 import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -104,14 +99,13 @@ export default defineComponent({
     props: {
         index: Object as PropType<IndexItemView>
     },
-    emits: ['openDialog'],
+    emits: ['openDialog', 'openManage'],
     data: () => ({
         state: false,
         showExpand: false,
         open: true,
-        showDialog: false,
-        dataDialog: false,
         isDark,
+        // 图标
         deleteIcon: markRaw(Delete),
         switchButtonIcon: markRaw(SwitchButton),
         dataAnalysisIcon: markRaw(DataAnalysis),
@@ -159,72 +153,38 @@ export default defineComponent({
             let title = this.index?.name!;
             clusterApi._stats().then(state => {
                 this.$emit('openDialog', title, state.indices[title]);
-            }).catch(() => {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '获取索引状态错误'
-                })
+            }).catch(e => {
+                MessageUtil.error('获取索引状态错误', e);
             })
         },
         indexInfo() {
-            let title = this.index?.name!;
-            clusterApi._cluster_state().then(cluster_stats => {
-                this.$emit('openDialog', title, cluster_stats.metadata.indices[title]);
-            }).catch(() => {
-                ElMessage({
-                    showClose: true,
-                    type: 'error',
-                    message: '获取索引信息错误'
-                })
-            })
+            this.$emit('openManage', this.index?.name);
         },
         newAlias() {
             ElMessageBox.prompt("请输入新别名", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-            }).then(({value}) => {
-                indexApi.new_alias(this.index?.name!, value, (res: object) => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'success',
-                        message: JSON.stringify(res)
-                    })
-                    this.reset();
-                });
-            });
+            }).then(({value}) => IndexApi(this.index?.name!).newAlias(value)
+                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+                .catch(e => MessageUtil.error('新建别名错误', e)));
         },
         removeAlias(alias: string) {
             ElMessageBox.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
-            }).then(() => {
-                indexApi.remove_alias(this.index?.name!, alias, (res: object) => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'success',
-                        message: JSON.stringify(res)
-                    })
-                    this.reset();
-                });
-            });
+            }).then(() => IndexApi(this.index?.name!).removeAlias(alias)
+                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+                .catch(e => MessageUtil.error('删除别名错误', e)));
         },
         removeIndex() {
             ElMessageBox.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
-            }).then(() => {
-                indexApi.remove(this.index?.name!, (res: object) => {
-                    ElMessage({
-                        showClose: true,
-                        type: 'success',
-                        message: JSON.stringify(res)
-                    })
-                    this.reset();
-                });
-            });
+            }).then(() => IndexApi(this.index?.name!).delete()
+                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+                .catch(e => MessageUtil.error('索引删除错误', e)));
         },
         indexOperation() {
             if (this.index?.state === 'open') {
@@ -232,52 +192,18 @@ export default defineComponent({
             } else if (this.index?.state === 'close') {
                 this.openIndex();
             } else {
-                ElMessage({
-                    showClose: true,
-                    type: 'warning',
-                    message: `未知索引状态【${this.index?.state}】，无法完成操作`
-                })
+                MessageUtil.warning(`未知索引状态【${this.index?.state}】，无法完成操作`);
             }
         },
         openIndex() {
-            indexApi._open(this.index?.name!, (res: any) => {
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: JSON.stringify(res)
-                })
-                this.reset();
-            })
+            IndexApi(this.index?.name!)._open()
+                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+                .catch(e => MessageUtil.error('打开索引失败', e));
         },
         closeIndex() {
-            indexApi._close(this.index?.name!, (res: any) => {
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: JSON.stringify(res)
-                })
-                this.reset();
-            })
-        },
-        flushIndex() {
-            indexApi._flush(this.index?.name!, (res: any) => {
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: JSON.stringify(res)
-                })
-                this.reset();
-            })
-        },
-        refreshIndex() {
-            indexApi._refresh(this.index?.name!, (res: any) => {
-                ElMessage({
-                    showClose: true,
-                    type: 'success',
-                    message: JSON.stringify(res)
-                })
-                this.reset();
-            })
+            IndexApi(this.index?.name!)._close()
+                .then((res: any) => MessageUtil.success(JSON.stringify(res), this.reset))
+                .catch(e => MessageUtil.error('关闭索引失败', e));
         },
         reset() {
             emitter.emit(MessageEventEnum.REFRESH_URL);
@@ -293,7 +219,7 @@ export default defineComponent({
                     index: this.index.name,
                     conditions: new Array<BaseQuery>(),
                     orders: new Array<BaseOrder>(),
-                    execute: false
+                    execute: true
                 })
             }
         }
@@ -351,38 +277,29 @@ export default defineComponent({
         justify-content: space-between;
         position: relative;
 
-        .info {
-            display: flex;
 
-            .shard {
-                border: #000000 solid 4px;
-                background-color: aquamarine;
-                width: 40px;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                margin: 4px;
-                cursor: pointer;
-            }
-
-            .replica {
-                border: #666666 solid 4px;
-                background-color: #f2f2f2;
-                width: 40px;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                margin: 4px;
-                cursor: pointer;
-            }
-
+        .shard {
+            border: #000000 solid 4px;
+            background-color: aquamarine;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            margin: 4px;
+            cursor: pointer;
         }
 
-        .btn {
-            position: absolute;
-            right: 0;
-            bottom: 0;
+        .replica {
+            border: #666666 solid 4px;
+            background-color: #f2f2f2;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            margin: 4px;
+            cursor: pointer;
         }
+
     }
 }
 </style>

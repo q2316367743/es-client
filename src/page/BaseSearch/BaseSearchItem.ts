@@ -1,6 +1,6 @@
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
-import BaseQuery from "@/domain/BaseQuery";
-import BaseOrder from "@/domain/BaseOrder";
+import BaseQuery from "@/entity/BaseQuery";
+import BaseOrder from "@/entity/BaseOrder";
 
 export interface BaseSearchItem {
 

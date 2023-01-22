@@ -1,5 +1,7 @@
 import Field from "../Field";
-import Mapping from "@/view/index/Mapping";
+import {IndexInfo, Mapping} from "@/es/IndexInfo";
+import {Setting} from "@/es/IndexBase";
+import {Index} from "@/es/Stats";
 
 /**
  * 主页索引遍历
@@ -15,6 +17,33 @@ export default interface IndexView {
      * 别名
      */
     alias: Array<string>;
+
+    /**
+     * 映射
+     */
+    mapping: Mapping;
+
+    /**
+     * 设置
+     */
+    settings: Setting;
+
+    /**
+     * 字段
+     */
+    fields: Array<Field>;
+
+    /**
+     * 索引状态
+     */
+    indexStats: Index;
+
+    /**
+     * 索引元信息
+     */
+    indexInfo: IndexInfo;
+
+    // ------------------------------------------- 选然后 -------------------------------------------
 
     /**
      * 索引大小，美化后的
@@ -45,20 +74,5 @@ export default interface IndexView {
      * 副本
      */
     replica: any;
-
-    /**
-     * 映射
-     */
-    mapping: Mapping;
-
-    /**
-     * 设置
-     */
-    settings: any;
-
-    /**
-     * 字段
-     */
-    fields: Array<Field>;
 
 }

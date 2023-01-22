@@ -1,7 +1,7 @@
 import {VxeTableDefines, VxeTablePropTypes} from "vxe-table";
 import {Action, ElMessage, ElMessageBox} from "element-plus";
-import IndexApi from "@/api/IndexApi";
 import IndexView from "@/view/index/IndexView";
+import DocumentApi from "@/api/DocumentApi";
 
 export default {
     renderMenu(): VxeTablePropTypes.MenuConfig {
@@ -82,7 +82,7 @@ export default {
             }).then(() => {
                 let ids = new Array<string>();
                 deleteRowIndies.forEach(id => ids.push(id));
-                IndexApi._delete_by_query(index?.name!, {
+                DocumentApi._delete_by_query(index?.name!, {
                     query: {
                         bool: {
                             must: [

@@ -1,6 +1,6 @@
 import Header from "@/view/Header";
 import IndexView from "@/view/index/IndexView";
-import Mapping from "@/view/index/Mapping";
+import {Mapping} from "@/es/IndexInfo";
 
 function verify(result: any, index: IndexView): boolean {
     if (!index) {

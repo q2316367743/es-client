@@ -285,7 +285,7 @@ import useSettingStore from "@/store/SettingStore";
 import IndexView from "@/view/index/IndexView";
 import Header from "@/view/Header";
 
-import IndexApi from "@/api/IndexApi";
+import DocumentApi from "@/api/DocumentApi";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
@@ -498,7 +498,7 @@ export default defineComponent({
                 return;
             }
             this.loading = true;
-            IndexApi._search(
+            DocumentApi._search(
                 this.index?.name,
                 conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
             ).then(result => {
@@ -683,7 +683,7 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            IndexApi._insert(this.index.name, this.addConfig.data).then((result) => {
+            DocumentApi._insert(this.index.name, this.addConfig.data).then((result) => {
                 ElMessage({
                     showClose: true,
                     type: "success",
@@ -788,7 +788,7 @@ export default defineComponent({
                 })
                 return;
             }
-            IndexApi._update(this.index.name, this.editConfig.id, this.editConfig.data).then(() => {
+            DocumentApi._update(this.index.name, this.editConfig.id, this.editConfig.data).then(() => {
                 ElMessage({
                     showClose: true,
                     type: "success",

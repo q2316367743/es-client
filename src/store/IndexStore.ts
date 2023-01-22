@@ -73,8 +73,8 @@ const useIndexStore = defineStore('index', {
                     .then(info => {
                         // 异步执行就可以
                         useEsVersion().setVersion(Optional.ofNullable(info)
-                            .map(e => e['version'])
-                            .map(e => e['number'])
+                            .map(e => e.version)
+                            .map(e => e.number)
                             .orElse(''));
                     })
                     .catch(e => {
@@ -84,12 +84,11 @@ const useIndexStore = defineStore('index', {
                             message: e,
                         });
                     });
-
-                loading.close();
             } catch (e: any) {
                 useUrlStore().clear();
-                loading.close();
                 console.error(e);
+            }finally {
+                loading.close();
             }
         },
         clear() {
