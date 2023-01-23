@@ -11,7 +11,7 @@
             <!-- 上半部分 -->
             <div class="el-card__header" style="display: flex;justify-content: space-between;">
                 <div style="display: flex;">
-                    <el-select v-model="current.method" :placeholder="$t('senior_search.please_select')"
+                    <el-select v-model="current.method" :placeholder="$t('seniorSearch.placeholder.select')"
                                style="min-width: 100px;">
                         <el-option label="HEAD" value="HEAD"></el-option>
                         <el-option label="GET" value="GET"></el-option>
@@ -22,20 +22,20 @@
                     <el-autocomplete v-model="current.link" style="min-width: 100px;width: 300px;margin: 0 6px;"
                                      :fetch-suggestions="fetchSuggestions" @keyup.enter.native="search"
                                      @select="handleSelect"
-                                     :placeholder="$t('senior_search.please_enter_a_link')" clearable>
+                                     :placeholder="$t('seniorSearch.placeholder.link')" clearable>
                         <template #default="{ item }">
                             <div class="value">{{ item }}</div>
                         </template>
                     </el-autocomplete>
                     <el-button type="primary" @click="search">{{ searchBtn }}
                     </el-button>
-                    <el-button type="success" @click="formatDocument">{{ $t('senior_search.format') }}</el-button>
-                    <el-button @click="historyDrawer = true">历史</el-button>
+                    <el-button type="success" @click="formatDocument">{{ $t('common.operation.format') }}</el-button>
+                    <el-button @click="historyDrawer = true">{{$t('common.operation.history')}}</el-button>
                 </div>
                 <div>
                     <el-select v-model="view">
-                        <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                        <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                        <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
+                        <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
                     </el-select>
                     <el-button type="info" :icon="fullScreen" style="margin-left: 12px;" @click="showTabs = !showTabs"/>
                 </div>
@@ -149,9 +149,9 @@ export default defineComponent({
         },
         searchBtn() {
             if (this.current.link) {
-                return this.current.link.indexOf('search') > -1 ? this.$t('senior_search.search') : this.$t('senior_search.execute')
+                return this.current.link.indexOf('search') > -1 ? this.$t('common.operation.search') : this.$t('common.operation.execute')
             }
-            return this.$t('senior_search.search');
+            return this.$t('common.operation.search');
         }
     },
     watch: {
@@ -159,9 +159,6 @@ export default defineComponent({
             if (newValue === '') {
                 this.current.result = {};
             }
-        },
-        default_viewer() {
-            this.view = useSettingStore().getDefaultViewer
         },
         searchId(newValue: number) {
             let searchItem = this.searchMap.get(newValue);

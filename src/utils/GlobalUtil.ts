@@ -1,12 +1,12 @@
 import {ElMessageBox} from "element-plus";
+import ArrayUtil from "@/utils/ArrayUtil";
 
-let languages = ['zh', 'en'] as Array<string>;
 
 export function getDefaultLanguage(): string {
-    let language = 'zh';
+    let language = 'zhCn';
     if (localStorage.getItem('language')) {
         let local = localStorage.getItem('language') || "";
-        if (local in languages) {
+        if (ArrayUtil.contains(['zhCn', 'enUs'], local)) {
             language = local;
         }
     }

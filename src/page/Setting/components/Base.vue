@@ -2,17 +2,17 @@
 
     <el-form style="margin-top: 10px;" label-width="160px" label-position="top">
         <el-collapse v-model="actives">
-            <el-collapse-item title="布局方式">
+            <el-collapse-item :title="$t('setting.base.layout.title')">
                 <el-select v-model="layoutMode">
-                    <el-option :value="LayoutModeEnum.DEFAULT" label="默认"/>
-                    <el-option :value="LayoutModeEnum.CLASSIC" label="经典"/>
+                    <el-option :value="LayoutModeEnum.DEFAULT" :label="$t('setting.base.layout.mode.default')"/>
+                    <el-option :value="LayoutModeEnum.CLASSIC" :label="$t('setting.base.layout.mode.classic')"/>
                 </el-select>
             </el-collapse-item>
-            <el-collapse-item title="新建索引">
-                <el-form-item :label="$t('setting.base.default_shard_number')">
+            <el-collapse-item :title="$t('setting.base.newIndex.title')">
+                <el-form-item :label="$t('setting.base.newIndex.defaultShardNumber')">
                     <el-input-number controls-position="right" v-model="instance.defaultShard"></el-input-number>
                 </el-form-item>
-                <el-form-item :label="$t('setting.base.default_replica_number')">
+                <el-form-item :label="$t('setting.base.newIndex.defaultReplicaNumber')">
                     <el-input-number controls-position="right" v-model="instance.defaultReplica"></el-input-number>
                 </el-form-item>
             </el-collapse-item>
@@ -63,28 +63,28 @@
                     </el-button>
                 </el-form-item>
             </el-collapse-item>
-            <el-collapse-item title="http设置">
-                <el-form-item :label="$t('setting.base.timeout')">
+            <el-collapse-item :title="$t('setting.base.http.title')">
+                <el-form-item :label="$t('setting.base.http.timeout')">
                     <el-input-number controls-position="right" v-model="instance.timeout" :min="0" :step="1000"
-                                     :placeholder="$t('setting.base.timeout_placeholder')"></el-input-number>
+                                     :placeholder="$t('setting.base.http.timeoutPlaceholder')"></el-input-number>
                 </el-form-item>
             </el-collapse-item>
-            <el-collapse-item title="显示设置">
-                <el-form-item :label="$t('setting.base.page_size')">
+            <el-collapse-item :title="$t('setting.base.display.title')">
+                <el-form-item :label="$t('setting.base.display.pageSize')">
                     <el-input-number controls-position="right" v-model="instance.pageSize"></el-input-number>
                 </el-form-item>
-                <el-form-item :label="$t('setting.base.default_viewer')">
+                <el-form-item :label="$t('setting.base.display.defaultView.title')">
                     <el-select v-model="instance.defaultViewer">
-                        <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                        <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                        <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
+                        <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="JSON视图主题 - 白天">
+                <el-form-item :label="$t('setting.base.display.jsonViewThemeLight')">
                     <el-select v-model="instance.jsonThemeByLight">
                         <el-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="JSON视图主题 - 黑夜">
+                <el-form-item :label="$t('setting.base.display.jsonViewThemeDark')">
                     <el-select v-model="instance.jsonThemeByDark">
                         <el-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
                     </el-select>
@@ -113,7 +113,7 @@
                             </el-icon>
                         </el-tooltip>
                     </template>
-                    <el-input-number controls-position="right" v-model="instance.tabMaxCount" />
+                    <el-input-number controls-position="right" v-model="instance.tabMaxCount"/>
                 </el-form-item>
                 <el-form-item label="标签栏超过最大数量后的关闭模式">
                     <el-radio-group v-model="instance.tabCloseMode">
@@ -122,11 +122,11 @@
                     </el-radio-group>
                 </el-form-item>
             </el-collapse-item>
-            <el-collapse-item title="其他设置">
-                <el-form-item label="选择链接后自动全屏">
+            <el-collapse-item :title="$t('setting.base.other.title')">
+                <el-form-item :label="$t('setting.base.other.fullScreen.title')">
                     <el-switch v-model="instance.autoFullScreen" :active-value="true" :inactive-value="false"
-                               active-text="开启"
-                               inactive-text="关闭"/>
+                               :active-text="$t('common.operation.open')"
+                               :inactive-text="$t('common.operation.close')"/>
                 </el-form-item>
             </el-collapse-item>
         </el-collapse>

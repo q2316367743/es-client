@@ -1,24 +1,24 @@
 <template>
-    <el-dialog :title="$t('setting.link.add') + $t('setting.link.url')" v-model="dialog" width="600px" draggable
+    <el-dialog :title="$t('common.operation.add')" v-model="dialog" width="600px" draggable
                :close-on-click-modal="false" destroy-on-close>
         <el-form :model="url" label-width="100px" ref="urlForm" :rules="rules">
-            <el-form-item :label="$t('setting.link.name')" prop="name">
+            <el-form-item :label="$t('common.keyword.name')" prop="name">
                 <el-input v-model="url.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('setting.link.url')" prop="value">
-                <el-input v-model="url.value" :placeholder="$t('setting.link.url_placeholder')">
+            <el-form-item :label="$t('common.keyword.url')" prop="value">
+                <el-input v-model="url.value" :placeholder="$t('setting.link.placeholder.url')">
                 </el-input>
             </el-form-item>
-            <el-form-item :label="$t('setting.link.sequence')" prop="sequence">
+            <el-form-item :label="$t('setting.link.form.sequence')" prop="sequence">
                 <el-input-number v-model="url.sequence" controls-position="right" size="large"/>
             </el-form-item>
-            <el-form-item :label="$t('setting.link.is_auth')" prop="isAuth">
+            <el-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
                 <el-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false"/>
             </el-form-item>
-            <el-form-item :label="$t('setting.link.auth_user')" prop="authUser" v-if="url.isAuth">
+            <el-form-item :label="$t('setting.link.form.authUser')" prop="authUser" v-if="url.isAuth">
                 <el-input v-model="url.authUser" size="large"/>
             </el-form-item>
-            <el-form-item :label="$t('setting.link.auth_password')" prop="authPassword" v-if="url.isAuth">
+            <el-form-item :label="$t('setting.link.form.authPassword')" prop="authPassword" v-if="url.isAuth">
                 <el-input v-model="url.authPassword" size="large"/>
             </el-form-item>
         </el-form>
@@ -34,10 +34,10 @@
                     </template>
                 </el-result>
                 <template #reference>
-                    <el-button @click="test">{{ $t('setting.link.test') }}</el-button>
+                    <el-button @click="test">{{ $t('common.operation.test') }}</el-button>
                 </template>
             </el-popover>
-            <el-button type="primary" @click="submit">{{ isSave ? $t('setting.link.add') : $t('setting.link.update') }}
+            <el-button type="primary" @click="submit">{{ isSave ? $t('common.operation.add') : $t('common.operation.update') }}
             </el-button>
         </template>
     </el-dialog>

@@ -1,0 +1,182 @@
+{
+    "app": {
+        "about": "关于",
+        "clusterHealth": "集群健康值",
+        "feedback": "反馈",
+        "heightMin": "检测到高度小于800px，可能造成显示异常。",
+        "info": {
+            "clusterHealth": "集群健康值",
+            "clusterNodes": "集群节点",
+            "clusterStatus": "集群状态",
+            "info": "信息",
+            "nodeStatus": "节点状态",
+            "plugin": "插件",
+            "status": "状态",
+            "template": "模板"
+        },
+        "linkPlaceholder": "请选择链接",
+        "name": "ES-client",
+        "updateRecord": "更新记录",
+        "urlUnFind": "未找到指定链接，请刷新页面后重试。",
+        "versionUpdate": "版本更新",
+        "welcome": "点击左下角版本可以查看关于、更新记录以及进行建议反馈",
+        "widthAndHeightMin": "检测到宽度小于1200px，高度小于800px，可能造成显示异常。",
+        "widthMin": "检测到宽度小于1200px，可能造成显示异常。"
+    },
+    "baseSearch": {
+        "dialog": {
+            "statement": "查询语句"
+        },
+        "form": {
+            "condition": "条件",
+            "displayQueryStatement": "显示查询语句",
+            "order": "排序"
+        },
+        "placeholder": {
+            "condition": "请选择查询条件",
+            "order": "请选择排序条件",
+            "selectIndex": "请选择索引"
+        }
+    },
+    "common": {
+        "action": {
+            "copy": "复制到剪切板",
+            "jumpToSeniorSearch": "跳转到高级查询"
+        },
+        "keyword": {
+            "index": "索引",
+            "jsonView": "JSON视图",
+            "name": "名称",
+            "operation": "操作",
+            "tableView": "表格视图",
+            "url": "链接"
+        },
+        "loading": {
+            "search": "查询中"
+        },
+        "message": {
+            "error": "错误",
+            "info": "info",
+            "success": "成功",
+            "warning": "警告"
+        },
+        "operation": {
+            "add": "新增",
+            "clear": "清除",
+            "close": "关闭",
+            "copy": "复制",
+            "delete": "删除",
+            "edit": "编辑",
+            "execute": "执行",
+            "format": "格式化",
+            "history": "历史",
+            "more": "更多",
+            "new": "新建",
+            "open": "开启",
+            "refresh": "刷新",
+            "search": "搜索",
+            "test": "测试",
+            "update": "修改"
+        }
+    },
+    "home": {
+        "newIndex": {
+            "field": {
+                "name": "名字",
+                "type": "类型"
+            },
+            "fieldSetting": "字段设置",
+            "replicaNumber": "副本数",
+            "setting": "设置",
+            "shardNumber": "分片数"
+        },
+        "order": {
+            "docAsc": "文档正序",
+            "docDesc": "文档倒序",
+            "nameAsc": "名称正序（A-Z）",
+            "nameDesc": "名称倒序（Z-A）",
+            "sizeAsc": "大小正序",
+            "sizeDesc": "大小倒序"
+        },
+        "placeholder": {
+            "index": "请输入索引名称",
+            "order": "请选择排序方式"
+        },
+        "statistics": {
+            "a": "统计：总数：",
+            "b": "，打开：",
+            "c": "，关闭：",
+            "d": " | 展示："
+        }
+    },
+    "menu": {
+        "baseSearch": "基础搜索",
+        "dataBrowser": "数据浏览",
+        "home": "概览",
+        "seniorSearch": "高级搜索",
+        "setting": "设置"
+    },
+    "seniorSearch": {
+        "placeholder": {
+            "link": "请输入一个链接",
+            "select": "请选择"
+        }
+    },
+    "setting": {
+        "base": {
+            "display": {
+                "defaultView": {
+                    "title": "默认视图"
+                },
+                "jsonViewThemeDark": "JSON视图主题 - 黑夜",
+                "jsonViewThemeLight": "JSON视图主题 - 白天",
+                "pageSize": "默认分页大小",
+                "title": "显示设置"
+            },
+            "http": {
+                "timeout": "超时时间",
+                "timeoutPlaceholder": "请输入超时时间，单位（ms）",
+                "title": "HTTP设置"
+            },
+            "layout": {
+                "mode": {
+                    "classic": "经典",
+                    "default": "默认"
+                },
+                "title": "布局方式"
+            },
+            "newIndex": {
+                "defaultReplicaNumber": "默认副本数",
+                "defaultShardNumber": "默认分片数",
+                "title": "新建索引"
+            },
+            "other": {
+                "fullScreen": {
+                    "title": "选择链接后自动全屏"
+                },
+                "title": "其他设置"
+            }
+        },
+        "link": {
+            "form": {
+                "authPassword": "密码",
+                "authUser": "用户名",
+                "isAuth": "认证",
+                "needAuth": "需要认证",
+                "notAuth": "无需认真",
+                "sequence": "排序",
+                "updateTime": "更新时间"
+            },
+            "placeholder": {
+                "url": "请输入链接"
+            }
+        },
+        "title": {
+            "about": "关于",
+            "base": "基础设置",
+            "serverAndSync": "服务器&同步",
+            "update": "更新记录",
+            "url": "链接管理"
+        }
+    }
+}

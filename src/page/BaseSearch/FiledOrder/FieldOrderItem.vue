@@ -1,22 +1,22 @@
 <template>
     <el-select v-model="order.field" filterable
-               :placeholder="$t('base_search.select_placeholder')"
+               :placeholder="$t('baseSearch.placeholder.order')"
                style="margin-left: 10px">
         <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
                    :value="field.name"></el-option>
     </el-select>
     <el-select v-model="order.type" filterable
-               :placeholder="$t('base_search.select_placeholder')"
+               :placeholder="$t('baseSearch.placeholder.order')"
                style="margin-left: 10px">
         <el-option label="asc" value="asc"></el-option>
         <el-option label="desc" value="desc"></el-option>
     </el-select>
     <el-button type="primary" style="margin-left: 10px" @click="add">{{
-            $t('base_search.add')
+            $t('common.operation.add')
         }}
     </el-button>
     <el-button type="danger" @click="remove(order.id)">{{
-            $t('base_search.remove')
+            $t('common.operation.delete')
         }}
     </el-button>
 </template>

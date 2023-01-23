@@ -7,14 +7,14 @@
             </el-icon>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item command="info">{{ $t('app.info') }}</el-dropdown-item>
-                    <el-dropdown-item command="status">{{ $t('app.status') }}</el-dropdown-item>
-                    <el-dropdown-item command="node_status">{{ $t('app.node_status') }}</el-dropdown-item>
-                    <el-dropdown-item command="cluster_nodes">{{ $t('app.cluster_nodes') }}</el-dropdown-item>
-                    <el-dropdown-item command="plugin">{{ $t('app.plugin') }}</el-dropdown-item>
-                    <el-dropdown-item command="cluster_status">{{ $t('app.cluster_status') }}</el-dropdown-item>
-                    <el-dropdown-item command="cluster_health">{{ $t('app.cluster_health') }}</el-dropdown-item>
-                    <el-dropdown-item command="template">{{ $t('app.template') }}</el-dropdown-item>
+                    <el-dropdown-item command="info">{{ $t('app.info.info') }}</el-dropdown-item>
+                    <el-dropdown-item command="status">{{ $t('app.info.status') }}</el-dropdown-item>
+                    <el-dropdown-item command="node_status">{{ $t('app.info.nodeStatus') }}</el-dropdown-item>
+                    <el-dropdown-item command="cluster_nodes">{{ $t('app.info.clusterNodes') }}</el-dropdown-item>
+                    <el-dropdown-item command="plugin">{{ $t('app.info.plugin') }}</el-dropdown-item>
+                    <el-dropdown-item command="cluster_status">{{ $t('app.info.clusterStatus') }}</el-dropdown-item>
+                    <el-dropdown-item command="cluster_health">{{ $t('app.info.clusterHealth') }}</el-dropdown-item>
+                    <el-dropdown-item command="template">{{ $t('app.info.template') }}</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -89,13 +89,13 @@ export default defineComponent({
             this.previewMode = false;
         },
         async node_stats() {
-            this.title = this.$t('app.node_status')
+            this.title = this.$t('app.nodeStatus')
             this.data = await clusterApi._nodes_stats();
             this.dialog = true;
             this.previewMode = false;
         },
         async cluster_nodes() {
-            this.title = this.$t('app.cluster_nodes')
+            this.title = this.$t('app.clusterNodes')
             this.data = await clusterApi._nodes();
             this.dialog = true;
             this.previewMode = false;
@@ -107,13 +107,13 @@ export default defineComponent({
             this.previewMode = false;
         },
         async cluster_status() {
-            this.title = this.$t('app.cluster_status')
+            this.title = this.$t('app.clusterStatus')
             this.data = await clusterApi._cluster_state();
             this.dialog = true;
             this.previewMode = false;
         },
         async cluster_health() {
-            this.title = this.$t('app.cluster_health')
+            this.title = this.$t('app.clusterHealth')
             this.data = await clusterApi._cluster_health();
             this.dialog = true;
             this.previewMode = false;

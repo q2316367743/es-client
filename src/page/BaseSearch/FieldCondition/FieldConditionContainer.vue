@@ -1,6 +1,6 @@
 <template>
     <div v-if="conditions.length === 0">
-        <el-button type="primary" @click="init">{{ $t('base_search.add') }}
+        <el-button type="primary" @click="init">{{ $t('common.operation.add') }}
         </el-button>
     </div>
     <div v-for="(item, idx) in conditions" :key="idx"

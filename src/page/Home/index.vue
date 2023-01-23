@@ -4,24 +4,23 @@
         <div class="home-option">
             <div style="display: flex">
                 <!-- 输入框 -->
-                <el-input v-model="condition.name" :placeholder="$t('home.index_placeholder')"
+                <el-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
                           style="width: 300px;height: 32px;" @input="search" clearable></el-input>
-                <el-select v-model="condition.order" :placeholder="$t('home.order_placeholder')"
+                <el-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
                            style="margin-left: 5px" clearable @change="search">
-                    <el-option :label="$t('home.order_name_asc')" value="NAME_ASC"></el-option>
-                    <el-option :label="$t('home.order_name_desc')" value="NAME_DESC"></el-option>
-                    <el-option :label="$t('home.order_size_asc')" value="SIZE_ASC"></el-option>
-                    <el-option :label="$t('home.order_size_desc')" value="SIZE_DESC"></el-option>
-                    <el-option :label="$t('home.order_doc_asc')" value="DOC_ASC"></el-option>
-                    <el-option :label="$t('home.order_doc_desc')" value="DOC_DESC"></el-option>
+                    <el-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></el-option>
+                    <el-option :label="$t('home.order.nameDesc')" value="NAME_DESC"></el-option>
+                    <el-option :label="$t('home.order.sizeAsc')" value="SIZE_ASC"></el-option>
+                    <el-option :label="$t('home.order.sizeDesc')" value="SIZE_DESC"></el-option>
+                    <el-option :label="$t('home.order.docAsc')" value="DOC_ASC"></el-option>
+                    <el-option :label="$t('home.order.docDesc')" value="DOC_DESC"></el-option>
                 </el-select>
-                <el-button style="margin-left: 5px" @click="condition.dialog = true">更多</el-button>
-                <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('home.search') }}</el-button>
+                <el-button style="margin-left: 5px" @click="condition.dialog = true">{{$t('common.operation.more')}}</el-button>
+                <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('common.operation.search') }}</el-button>
             </div>
             <el-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">{{
-                    $t('home.new_index.self')
-                }}
-            </el-button>
+                    $t('common.operation.new')
+                }} </el-button>
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
@@ -34,9 +33,9 @@
             </vxe-list>
         </div>
         <div class="home-statistics">
-            统计：共 {{ statistics.total }} 个索引，其中打开的索引 {{ statistics.totalOpen }} 个，关闭的索引
-            {{ statistics.totalClose }} 个；展示 {{ statistics.show }} 个，其中打开的索引 {{ statistics.showOpen }}
-            个，关闭的索引 {{ statistics.showClose }} 个
+            {{$t('home.statistics.a')}} {{ statistics.total }} {{$t('home.statistics.b')}} {{ statistics.totalOpen }}
+            {{$t('home.statistics.c')}} {{ statistics.totalClose }} | {{$t('home.statistics.d')}} {{ statistics.show }}
+            {{$t('home.statistics.b')}} {{ statistics.showOpen }} {{$t('home.statistics.c')}} {{ statistics.showClose }}
         </div>
         <!-- 新增索引 -->
         <home-index-add v-model="indexAddDialog"/>

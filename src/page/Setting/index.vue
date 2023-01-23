@@ -1,11 +1,11 @@
 <template>
     <div class="setting">
         <el-tabs v-model="active">
-            <el-tab-pane :label="$t('setting.base.title')" name="base"></el-tab-pane>
-            <el-tab-pane :label="$t('setting.link.title')" name="url"></el-tab-pane>
-            <el-tab-pane label="服务器&同步" name="server-sync"></el-tab-pane>
-            <el-tab-pane label="更新记录" name="update"></el-tab-pane>
-            <el-tab-pane label="关于" name="about"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.title.base')" name="base"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.title.url')" name="url"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.title.serverAndSync')" name="server-sync"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.title.update')" name="update"></el-tab-pane>
+            <el-tab-pane :label="$t('setting.title.about')" name="about"></el-tab-pane>
         </el-tabs>
         <div class="setting-main">
             <el-scrollbar>

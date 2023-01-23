@@ -1,6 +1,6 @@
 <template>
     <div v-if="orders.length === 0">
-        <el-button type="primary" @click="orderInit">{{ $t('base_search.add') }}
+        <el-button type="primary" @click="orderInit">{{ $t('common.operation.add') }}
         </el-button>
     </div>
     <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"

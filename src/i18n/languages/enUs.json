@@ -1,0 +1,182 @@
+{
+    "app": {
+        "about": "about",
+        "clusterHealth": "Cluster health",
+        "feedback": "feedback",
+        "heightMin": "The detected height is less than 800px, which may cause abnormal display.",
+        "info": {
+            "clusterHealth": "cluster health",
+            "clusterNodes": "cluster nodes",
+            "clusterStatus": "cluster status",
+            "info": "info",
+            "nodeStatus": "node status",
+            "plugin": "plugin",
+            "status": "status",
+            "template": "template"
+        },
+        "linkPlaceholder": "Please select a link",
+        "name": "ES-client",
+        "updateRecord": "Update Records",
+        "urlUnFind": "The specified link was not found. Please refresh the page and try again.",
+        "versionUpdate": "Version update",
+        "welcome": "Click the version in the lower left corner to view the information, update records and make suggestions and feedback",
+        "widthAndHeightMin": "It is detected that the width is less than 1200px and the height is less than 800px, which may cause abnormal display.",
+        "widthMin": "The detected width is less than 1200px, which may cause abnormal display."
+    },
+    "baseSearch": {
+        "dialog": {
+            "statement": "search statement"
+        },
+        "form": {
+            "condition": "condition",
+            "displayQueryStatement": "query statement",
+            "order": "order"
+        },
+        "placeholder": {
+            "condition": "Please select query criteria",
+            "order": "Please select sorting criteria",
+            "selectIndex": "Please select index"
+        }
+    },
+    "common": {
+        "action": {
+            "copy": "Copy to clipboard",
+            "jumpToSeniorSearch": "Jump to senior search"
+        },
+        "keyword": {
+            "index": "index",
+            "jsonView": "JSON VIew",
+            "name": "name",
+            "operation": "operation",
+            "tableView": "Table View",
+            "url": "url"
+        },
+        "loading": {
+            "search": "Searching"
+        },
+        "message": {
+            "error": "error",
+            "info": "信息",
+            "success": "success",
+            "warning": "warning"
+        },
+        "operation": {
+            "add": "add",
+            "clear": "clear",
+            "close": "close",
+            "copy": "copy",
+            "delete": "delete",
+            "edit": "edit",
+            "execute": "execute",
+            "format": "format",
+            "history": "history",
+            "more": "more",
+            "new": "new",
+            "open": "open",
+            "refresh": "refresh",
+            "search": "search",
+            "test": "test",
+            "update": "update"
+        }
+    },
+    "home": {
+        "newIndex": {
+            "field": {
+                "name": "name",
+                "type": "type"
+            },
+            "fieldSetting": "field setting",
+            "replicaNumber": "replica number",
+            "setting": "setting",
+            "shardNumber": "shard number"
+        },
+        "order": {
+            "docAsc": "Doc Asc",
+            "docDesc": "Doc Desc",
+            "nameAsc": "Name Asc(A-Z)",
+            "nameDesc": "Name Desc(Z-A)",
+            "sizeAsc": "Size Asc",
+            "sizeDesc": "Size Desc"
+        },
+        "placeholder": {
+            "index": "Please enter index name",
+            "order": "Please select sorting method"
+        },
+        "statistics": {
+            "a": "Statistics: Total:",
+            "b": ",Open:",
+            "c": ",Close:",
+            "d": "Display:"
+        }
+    },
+    "menu": {
+        "baseSearch": "BASE SEARCH",
+        "dataBrowser": "DATA BROWSER",
+        "home": "HOME",
+        "seniorSearch": "SENIOR SEARCH",
+        "setting": "SETTING"
+    },
+    "seniorSearch": {
+        "placeholder": {
+            "link": "Please enter a link",
+            "select": "Please select"
+        }
+    },
+    "setting": {
+        "base": {
+            "display": {
+                "defaultView": {
+                    "title": "Default View"
+                },
+                "jsonViewThemeDark": "JSON View Theme - Dark",
+                "jsonViewThemeLight": "JSON View Theme - Light",
+                "pageSize": "Default Page Size",
+                "title": "Display Setting"
+            },
+            "http": {
+                "timeout": "Timeout",
+                "timeoutPlaceholder": "Please enter the timeout in ms",
+                "title": "HTTP Setting"
+            },
+            "layout": {
+                "mode": {
+                    "classic": "classic",
+                    "default": "default"
+                },
+                "title": "Layout"
+            },
+            "newIndex": {
+                "defaultReplicaNumber": "Default Number Of Replica",
+                "defaultShardNumber": "Default Number Of Shard",
+                "title": "New Index"
+            },
+            "other": {
+                "fullScreen": {
+                    "title": "Auto full screen after selecting link"
+                },
+                "title": "Other Setting"
+            }
+        },
+        "link": {
+            "form": {
+                "authPassword": "password",
+                "authUser": "username",
+                "isAuth": "auth",
+                "needAuth": "Certification required",
+                "notAuth": "No need to be serious",
+                "sequence": "sequence",
+                "updateTime": "update time"
+            },
+            "placeholder": {
+                "url": "Please enter a link"
+            }
+        },
+        "title": {
+            "about": "about",
+            "base": "Base Setting",
+            "serverAndSync": "Server&Sync",
+            "update": "Update Record",
+            "url": "Url management"
+        }
+    }
+}

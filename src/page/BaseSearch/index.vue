@@ -9,33 +9,33 @@
         </transition>
         <transition name="el-zoom-in-top">
             <!-- 主要显示区域 -->
-            <div class="base-search-main" v-loading="loading" element-loading-text="查询中"
+            <div class="base-search-main" v-loading="loading" :element-loading-text="$t('common.loading.search')"
                  :class="showTabs ? '' : 'full-screen'">
                 <!-- 顶部菜单栏 -->
                 <div class="base-option el-card es-card">
                     <div class="left">
                         <el-select-v2 v-model="current.index" filterable :options="indices"
-                                      :placeholder="$t('base_search.please_select')" clearable style="width: 360px;">
+                                      :placeholder="$t('baseSearch.placeholder.selectIndex')" clearable style="width: 360px;">
                             <template #default="{ item }">
                                 <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
                             </template>
                         </el-select-v2>
                         <!-- 搜索 -->
                         <el-button type="success" style="margin-left: 12px" @click="search">{{
-                                $t('base_search.search')
+                                $t('common.operation.search')
                             }}
                         </el-button>
                         <!-- 清空 -->
                         <el-button type="danger" @click="clear(true)">{{
-                                $t('base_search.clear')
+                                $t('common.operation.clear')
                             }}
                         </el-button>
-                        <el-button @click="historyDialog = true">历史</el-button>
+                        <el-button @click="historyDialog = true">{{$t('common.operation.history')}}</el-button>
                     </div>
                     <div class="right">
                         <el-select v-model="view">
-                            <el-option :label="$t('senior_search.json_view')" :value="2"></el-option>
-                            <el-option :label="$t('senior_search.table_view')" :value="3"></el-option>
+                            <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
+                            <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
                         </el-select>
                         <el-button type="info" :icon="fullScreenIcon" style="margin-left: 12px;"
                                    @click="showTabs = !showTabs"/>
@@ -49,11 +49,11 @@
                              :class="paginationFixed ? 'pagination-fixed-show' : ''">
                             <el-form label-position="top" label-width="80px" style="overflow: auto">
                                 <!-- 条件 -->
-                                <el-form-item :label="$t('base_search.condition')" style="min-width: 1100px">
+                                <el-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
                                     <field-condition-container v-model="current.conditions" :fields="fields"/>
                                 </el-form-item>
                                 <!-- 排序 -->
-                                <el-form-item :label="$t('base_search.order')">
+                                <el-form-item :label="$t('baseSearch.form.order')">
                                     <field-order-container v-model="current.orders" :fields="fields"/>
                                 </el-form-item>
                                 <div ref="pagination">
@@ -78,14 +78,14 @@
                     </div>
                     <div class="base-search-condition-sentence">
                         <el-button link type="primary" @click="showBody">
-                            {{ $t('base_search.display_query_statement') }}
+                            {{ $t('baseSearch.form.displayQueryStatement') }}
                         </el-button>
-                        <el-button link type="primary" @click="jumpToSeniorSearch">跳转到高级查询</el-button>
+                        <el-button link type="primary" @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch')}}</el-button>
                     </div>
                 </div>
             </div>
         </transition>
-        <el-dialog :title="$t('base_search.query_criteria')" v-model="condition.dialog" width="70%" append-to-body
+        <el-dialog :title="$t('baseSearch.dialog.statement')" v-model="condition.dialog" width="70%" append-to-body
                    class="es-dialog" :close-on-click-modal="false">
             <json-view :data="condition.data"/>
         </el-dialog>
@@ -375,7 +375,7 @@ export default defineComponent({
         },
         search() {
             if (this.current.index.length === 0) {
-                ElMessageBox.alert(this.$t('base_search.please_select_an_index'));
+                ElMessageBox.alert(this.$t('baseSearch.placeholder.selectIndex'));
                 return;
             }
             this.loading = true;

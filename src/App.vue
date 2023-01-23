@@ -4,7 +4,7 @@
         <!-- 左侧菜单 -->
         <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
             <div class="logo">
-                <div v-if="!fullScreen">ES-client</div>
+                <div v-if="!fullScreen">{{ $t('app.name') }}</div>
                 <div style="padding-top: 3px;cursor:pointer;" @click="fullScreenSwitch">
                     <el-icon :size="20">
                         <expand v-if="fullScreen"/>
@@ -15,32 +15,52 @@
             <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
                  @click="selectMenu(PageNameEnum.HOME)">
                 <span v-if="fullScreen"><el-icon><data-line/></el-icon></span>
-                <span v-else>{{ $t('app.menu.home') }}</span>
+                <span v-else>{{ $t('menu.home') }}</span>
             </div>
             <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
                  @click="selectMenu(PageNameEnum.DATA_BROWSER)">
                 <span v-if="fullScreen"><el-icon><Tickets/></el-icon></span>
-                <span v-else>{{ $t('app.menu.data_browse') }}</span>
+                <span v-else>{{ $t('menu.dataBrowser') }}</span>
             </div>
             <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
                  @click="selectMenu(PageNameEnum.BASE_SEARCH)">
                 <span v-if="fullScreen"><el-icon><search/></el-icon></span>
-                <span v-else>{{ $t('app.menu.base_search') }}</span>
+                <span v-else>{{ $t('menu.baseSearch') }}</span>
             </div>
             <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
                  @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
                 <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
-                <span v-else>{{ $t('app.menu.senior_search') }}</span>
+                <span v-else>{{ $t('menu.seniorSearch') }}</span>
             </div>
             <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
                  @click="selectMenu( PageNameEnum.SETTING)">
                 <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
-                <span v-else>{{ $t('app.menu.setting') }}</span>
+                <span v-else>{{ $t('menu.setting') }}</span>
             </div>
             <div class="dark" v-if="fullScreen">
+                <!-- 各种信息弹框 -->
+                <div class="nav-list" style="padding-top: 11px;">
+                    <info></info>
+                </div>
+                <!-- 多语言切换 -->
+                <el-dropdown @command="languageCommand" trigger="click">
+                    <div class="nav-list">
+                        <el-icon :size="24">
+                            <translate></translate>
+                        </el-icon>
+                    </div>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="zhCn">中文</el-dropdown-item>
+                            <el-dropdown-item command="enUs">English</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
                 <div class="nav-list" @click="darkChange">
-                    <i class="vxe-icon-moon" v-if="isDark"></i>
-                    <i class="vxe-icon-sunny" v-else></i>
+                    <el-icon :size="24">
+                        <i class="vxe-icon-moon" v-if="isDark"></i>
+                        <i class="vxe-icon-sunny" v-else></i>
+                    </el-icon>
                 </div>
             </div>
             <div class="version" v-else>
@@ -48,9 +68,9 @@
                     <el-link>v{{ Constant.version }}</el-link>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="feedback">意见反馈</el-dropdown-item>
-                            <el-dropdown-item command="log">更新日志</el-dropdown-item>
-                            <el-dropdown-item command="about">关于</el-dropdown-item>
+                            <el-dropdown-item command="feedback">{{ $t('app.feedback') }}</el-dropdown-item>
+                            <el-dropdown-item command="log">{{ $t('app.updateRecord') }}</el-dropdown-item>
+                            <el-dropdown-item command="about">{{ $t('app.about') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -59,21 +79,21 @@
         <!-- 顶部-->
         <div id="index" :class="fullScreen ? 'full-screen' : ''">
             <!-- 索引服务器选择 -->
-            <el-select v-model="urlId" :placeholder="$t('app.link_placeholder')" style="padding-top: 9px;"
+            <el-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" style="padding-top: 9px;"
                        clearable @change="selectUrl">
                 <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
                 </el-option>
-                <el-option :label="$t('app.add')" value="add"></el-option>
+                <el-option :label="$t('common.operation.add')" value="add"></el-option>
             </el-select>
             <!-- 刷新按钮 -->
-            <el-button @click="refresh">{{ $t('app.refresh') }}</el-button>
+            <el-button @click="refresh">{{ $t('common.operation.refresh') }}</el-button>
         </div>
         <!-- 索引标题 -->
         <div id="title" :class="fullScreen ? 'full-screen' : ''" v-if="name !== ''">
             <!-- 服务器名称 -->
             <div class="cluster-name">{{ name }}</div>
             <!-- 服务器状态 -->
-            <div class="server-status">{{ $t('app.cluster_health') }}: {{ status }}
+            <div class="server-status">{{ $t('app.clusterHealth') }}: {{ status }}
                 ({{ active_shards }} of {{ total_shards }})
             </div>
         </div>
@@ -94,8 +114,8 @@
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item command="zh">中文</el-dropdown-item>
-                        <el-dropdown-item command="en">English</el-dropdown-item>
+                        <el-dropdown-item command="zhCn">中文</el-dropdown-item>
+                        <el-dropdown-item command="enUs">English</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -114,17 +134,17 @@
         </div>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url v-model="urlDialog"></save-or-update-url>
-        <el-dialog v-model="updateDialog" title="版本更新"
+        <el-dialog v-model="updateDialog" :title="$t('app.versionUpdate')"
                    close-on-click-modal append-to-body draggable lock-scroll>
             <version-update/>
         </el-dialog>
-        <el-dialog v-model="newDialog" title="点击左下角版本可以查看关于、更新记录以及进行建议反馈" style="height: 90vh;"
+        <el-dialog v-model="newDialog" :title="$t('app.welcome')" style="height: 90vh;"
                    close-on-click-modal append-to-body draggable lock-scroll top="5vh">
             <el-scrollbar height="calc(80vh - 54px)">
                 <setting-about/>
             </el-scrollbar>
         </el-dialog>
-        <el-dialog v-model="feedbackDialog" title="问题反馈" top="25vh"
+        <el-dialog v-model="feedbackDialog" :title="$t('app.feedback')" top="25vh"
                    :close-on-click-modal="false" append-to-body draggable lock-scroll>
             <feedback-module/>
         </el-dialog>
@@ -218,7 +238,7 @@ export default defineComponent({
         jsonTheme() {
             if (isDark.value) {
                 return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('atom-one-dark');
-            }else {
+            } else {
                 return Optional.ofNullable(this.instance.jsonThemeByLight).orElse('github');
             }
         }
@@ -295,7 +315,7 @@ export default defineComponent({
                 return
             }
             // 选择链接
-            Assert.isTrue(useUrlStore().choose(value as number), "未找到指定链接，请刷新页面后重试");
+            Assert.isTrue(useUrlStore().choose(value as number), this.$t('app.urlUnFind'));
             // 索引刷新
             await useIndexStore().reset();
             // 发送url连接事件
@@ -351,9 +371,9 @@ export default defineComponent({
             if (window.innerWidth < 1200 && window.innerHeight < 800) {
                 if (showWidthNotification && showHeightNotification) {
                     ElNotification({
-                        title: '警告',
+                        title: this.$t('common.message.warning'),
                         type: 'warning',
-                        message: '检测到宽度小于1200px，高度小于800px，可能造成显示异常。'
+                        message: this.$t('app.widthAndHeightMin')
                     });
                     showWidthNotification = false;
                     showHeightNotification = false;
@@ -363,25 +383,25 @@ export default defineComponent({
             if (window.innerWidth < 1200) {
                 if (showWidthNotification) {
                     ElNotification({
-                        title: '警告',
+                        title: this.$t('common.message.warning'),
                         type: 'warning',
-                        message: '检测到宽度小于1200px，可能造成显示异常。'
+                        message: this.$t('app.widthMin')
                     });
                     showWidthNotification = false;
                 }
-            }else {
+            } else {
                 showWidthNotification = true
             }
             if (window.innerHeight < 800) {
-                if (showHeightNotification){
+                if (showHeightNotification) {
                     ElNotification({
-                        title: '警告',
+                        title: this.$t('common.message.warning'),
                         type: 'warning',
-                        message: '检测到高度小于800px，可能造成显示异常。'
+                        message: this.$t('app.heightMin')
                     });
                     showHeightNotification = false;
                 }
-            }else {
+            } else {
                 showHeightNotification = true
             }
         }

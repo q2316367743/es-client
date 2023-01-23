@@ -1,46 +1,46 @@
 <template>
-    <el-dialog :title="$t('home.new_index.self')" v-model="dialog" width="850px">
+    <el-dialog :title="$t('common.operation.add')" v-model="dialog" width="850px">
         <el-form>
-            <el-form-item :label="$t('home.new_index.name')">
+            <el-form-item :label="$t('common.keyword.name')">
                 <el-input v-model="index.name" style="width: 300px;"></el-input>
             </el-form-item>
         </el-form>
         <el-collapse v-model="indexCollapse">
-            <el-collapse-item :title="$t('home.new_index.base_setting')" name="1">
+            <el-collapse-item :title="$t('home.newIndex.setting')" name="1">
                 <el-form>
-                    <el-form-item :label="$t('home.new_index.shard_number')">
+                    <el-form-item :label="$t('home.newIndex.shardNumber')">
                         <el-input-number v-model="index.settings.numberOfShards" controls-position="right">
                         </el-input-number>
                     </el-form-item>
-                    <el-form-item :label="$t('home.new_index.replica_number')">
+                    <el-form-item :label="$t('home.newIndex.replicaNumber')">
                         <el-input-number v-model="index.settings.numberOfReplicas" controls-position="right">
                         </el-input-number>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
-            <el-collapse-item :title="$t('home.new_index.field_setting')" name="2">
+            <el-collapse-item :title="$t('home.newIndex.fieldSetting')" name="2">
                 <div v-if="index.mapping.length === 0">
-                    <el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}</el-button>
+                    <el-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}</el-button>
                 </div>
                 <el-form v-else>
                     <div v-for="(property, idx) in index.mapping" :key="idx">
                         <el-form :inline="true">
-                            <el-form-item :label="$t('home.new_index.field_name')">
+                            <el-form-item :label="$t('home.newIndex.field.name')">
                                 <el-input v-model="property.field"></el-input>
                             </el-form-item>
-                            <el-form-item :label="$t('home.new_index.field_type')">
+                            <el-form-item :label="$t('home.newIndex.field.type')">
                                 <el-select v-model="property.type">
                                     <el-option v-for="(type) in types" :key="type" :label="type" :value="type">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="addProperty">{{ $t('home.new_index.add') }}
+                                <el-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}
                                 </el-button>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="danger" @click="removeProperty(property)">{{
-                                        $t('home.new_index.delete')
+                                        $t('common.operation.delete')
                                     }}
                                 </el-button>
                             </el-form-item>
@@ -50,9 +50,9 @@
             </el-collapse-item>
         </el-collapse>
         <template #footer>
-            <el-button type="info" text @click="jumpToSeniorSearch">跳转到高级查询</el-button>
-            <el-button type="info" text @click="copyIndex">复制到剪切板</el-button>
-            <el-button type="primary" @click="addIndex">{{ $t('home.new_index.add') }}</el-button>
+            <el-button type="info" text @click="jumpToSeniorSearch">{{$t('common.action.jumpToSeniorSearch')}}</el-button>
+            <el-button type="info" text @click="copyIndex">{{ $t('common.action.copy')}}</el-button>
+            <el-button type="primary" @click="addIndex">{{ $t('common.operation.add') }}</el-button>
         </template>
     </el-dialog>
 </template>
