@@ -21,7 +21,7 @@ export interface Node {
     host: string;
     ip: string;
     roles: string[];
-    attributes: Attributes;
+    attributes: Record<string, string>;
     indices: Indices;
     os: OS;
     process: Process;
@@ -44,12 +44,6 @@ export interface AdaptiveSelection {
     avg_service_time_ns: number;
     avg_response_time_ns: number;
     rank: string;
-}
-
-export interface Attributes {
-    "ml.machine_memory": string;
-    "xpack.installed": string;
-    "ml.max_open_jobs": string;
 }
 
 export interface Breakers {

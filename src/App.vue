@@ -40,7 +40,7 @@
             <div class="dark" v-if="fullScreen">
                 <!-- 各种信息弹框 -->
                 <div class="nav-list" style="padding-top: 11px;">
-                    <info></info>
+                    <info @command="infoCommand" />
                 </div>
                 <!-- 多语言切换 -->
                 <el-dropdown @command="languageCommand" trigger="click">
@@ -81,9 +81,8 @@
             <!-- 索引服务器选择 -->
             <el-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" style="padding-top: 9px;"
                        clearable @change="selectUrl">
-                <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
-                </el-option>
-                <el-option :label="$t('common.operation.add')" value="add"></el-option>
+                <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id" />
+                <el-option :label="$t('common.operation.add')" value="add" />
             </el-select>
             <!-- 刷新按钮 -->
             <el-button @click="refresh">{{ $t('common.operation.refresh') }}</el-button>
@@ -121,7 +120,7 @@
             </el-dropdown>
             <!-- 各种信息弹框 -->
             <div class="menu-item">
-                <info></info>
+                <info @command="infoCommand" />
             </div>
         </div>
         <!-- 内容-->
@@ -148,6 +147,7 @@
                    :close-on-click-modal="false" append-to-body draggable lock-scroll>
             <feedback-module/>
         </el-dialog>
+        <node-stats v-if="nodeStatsDialog" @close="nodeStatsDialog = false;"/>
     </el-config-provider>
 </template>
 
@@ -157,7 +157,7 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
 // 引入框架
-import {defineComponent} from 'vue';
+import {defineAsyncComponent, defineComponent} from 'vue';
 import {mapState} from "pinia";
 import {
     Coin,
@@ -214,7 +214,8 @@ export default defineComponent({
         SettingAbout, SunIcon, VersionUpdate, FeedbackModule, MoonIcon,
         Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
-        Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
+        Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine,
+        NodeStats: defineAsyncComponent(() => import('@/module/info/NodeStats/index.vue'))
     },
     data: () => {
         return {
@@ -228,7 +229,8 @@ export default defineComponent({
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
-            PageNameEnum
+            PageNameEnum,
+            nodeStatsDialog: false
         };
     },
     computed: {
@@ -403,6 +405,13 @@ export default defineComponent({
                 }
             } else {
                 showHeightNotification = true
+            }
+        },
+        infoCommand(command: string) {
+            switch (command) {
+                case 'node_status':
+                    this.nodeStatsDialog = true;
+                    break;
             }
         }
     },

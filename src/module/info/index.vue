@@ -1,9 +1,9 @@
 <!-- 此处是右上角详情 -->
 <template>
     <div class="info">
-        <el-dropdown @command="handleCommand" :disabled="url === undefined">
+        <el-dropdown trigger="click" @command="handleCommand" :disabled="url === undefined">
             <el-icon :size="24">
-                <info-icon />
+                <info-icon/>
             </el-icon>
             <template #dropdown>
                 <el-dropdown-menu>
@@ -24,8 +24,8 @@
 <script lang="ts">
 import clusterApi from "@/api/ClusterApi";
 
-import { defineComponent } from "vue";
-import { ArrowDown } from '@element-plus/icons-vue'
+import {defineComponent} from "vue";
+import {ArrowDown} from '@element-plus/icons-vue'
 
 import JsonDialog from "@/components/JsonDialog.vue";
 import InfoIcon from "@/icon/InfoIcon.vue";
@@ -33,16 +33,19 @@ import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
 
 export default defineComponent({
+    name: 'home-info',
+    emits: ['command'],
     components: {
         InfoIcon,
         ArrowDown,
-        JsonDialog
+        JsonDialog,
     },
     data: () => ({
         title: '',
         dialog: false,
         data: {},
-        previewMode: true
+        previewMode: true,
+        nodeStatsDialog: false
     }),
     computed: {
         ...mapState(useUrlStore, ['url'])
@@ -57,7 +60,8 @@ export default defineComponent({
                     this.state();
                     break;
                 case 'node_status':
-                    this.node_stats();
+                    // this.node_stats();
+                    this.$emit('command', command);
                     break;
                 case 'cluster_nodes':
                     this.cluster_nodes();
