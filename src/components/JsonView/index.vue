@@ -62,7 +62,7 @@ export default defineComponent({
     }
 
     .hljs {
-        padding: 0;
+        padding-top: 0;
     }
 }
 </style>

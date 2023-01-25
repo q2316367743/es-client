@@ -54,8 +54,8 @@
                 <!-- 选择索引 -->
                 <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browse-pull-down">
                     <div class="item" style="display: flex;" @click="showIndex">
-                        <div v-if="!index">未选择索引</div>
-                        <div v-else>{{ index.name }}</div>
+                        <div v-if="!index" style="user-select: none;">未选择索引</div>
+                        <div v-else style="user-select: none;">{{ index.name }}</div>
                         <el-icon :size="20" style="margin: 2px;">
                             <arrow-up v-if="indexVisible"/>
                             <arrow-down v-else/>
@@ -678,14 +678,14 @@ export default defineComponent({
                 .then(result => MessageUtil.success(
                     `新增成功，新数据ID【${result._id || ''}】`,
                     () => {
-                    this.addConfig.dialog = false;
-                    // 延迟100ms，
-                    this.$nextTick(() => {
-                        setTimeout(() => {
-                            this.executeQuery(false);
-                        }, 1000);
-                    })
-                })).catch(e => MessageUtil.error('新增失败', e));
+                        this.addConfig.dialog = false;
+                        // 延迟100ms，
+                        this.$nextTick(() => {
+                            setTimeout(() => {
+                                this.executeQuery(false);
+                            }, 1000);
+                        })
+                    })).catch(e => MessageUtil.error('新增失败', e));
         },
         recordReduce(deleteRowIndies?: Set<string>) {
             let indices = Optional.ofNullable(deleteRowIndies)

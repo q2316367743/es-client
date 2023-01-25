@@ -15,27 +15,53 @@
                     <el-option :label="$t('home.order.docAsc')" value="DOC_ASC"></el-option>
                     <el-option :label="$t('home.order.docDesc')" value="DOC_DESC"></el-option>
                 </el-select>
-                <el-button style="margin-left: 5px" @click="condition.dialog = true">{{$t('common.operation.more')}}</el-button>
-                <el-button type="primary" style="margin-left: 5px" @click="search">{{ $t('common.operation.search') }}</el-button>
+                <el-button style="margin-left: 5px" @click="condition.dialog = true">{{ $t('common.operation.more') }}
+                </el-button>
+                <el-button type="primary" style="margin-left: 5px" @click="search">{{
+                        $t('common.operation.search')
+                    }}
+                </el-button>
             </div>
             <el-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">{{
                     $t('common.operation.new')
-                }} </el-button>
+                }}
+            </el-button>
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
-            <vxe-list v-loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height"
-                      v-if="showIndices.length > 0">
+            <vxe-list v-loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height">
                 <template #default="{ items }">
                     <index-item v-for="item in items" v-show="item.show" :index="item" @open-dialog="indexOpenDialog"
                                 @open-manage="indexOpenManage"/>
                 </template>
             </vxe-list>
+            <el-backtop :right="40" :bottom="60" target=".vxe-list--virtual-wrapper"/>
         </div>
         <div class="home-statistics">
-            {{$t('home.statistics.a')}} {{ statistics.total }} {{$t('home.statistics.b')}} {{ statistics.totalOpen }}
-            {{$t('home.statistics.c')}} {{ statistics.totalClose }} | {{$t('home.statistics.d')}} {{ statistics.show }}
-            {{$t('home.statistics.b')}} {{ statistics.showOpen }} {{$t('home.statistics.c')}} {{ statistics.showClose }}
+            <div class="bridge" type="primary">
+                <div class="label">{{ $t('home.statistics.total') }}</div>
+                <div class="value">{{ statistics.total }}</div>
+            </div>
+            <div class="bridge" type="warning">
+                <div class="label">{{ $t('home.statistics.open') }}</div>
+                <div class="value">{{ statistics.totalOpen }}</div>
+            </div>
+            <div class="bridge" type="error">
+                <div class="label">{{ $t('home.statistics.close') }}</div>
+                <div class="value">{{ statistics.totalClose }}</div>
+            </div>
+            <div class="bridge" type="success">
+                <div class="label">{{ $t('home.statistics.display') }}</div>
+                <div class="value">{{ statistics.show }}</div>
+            </div>
+            <div class="bridge" type="warning">
+                <div class="label">{{ $t('home.statistics.open') }}</div>
+                <div class="value">{{ statistics.showOpen }}</div>
+            </div>
+            <div class="bridge" type="error">
+                <div class="label">{{ $t('home.statistics.close') }}</div>
+                <div class="value">{{ statistics.showClose }}</div>
+            </div>
         </div>
         <!-- 新增索引 -->
         <home-index-add v-model="indexAddDialog"/>
@@ -319,6 +345,11 @@ export default defineComponent({
         height: 25px;
         line-height: 30px;
         border-top: 1px solid var(--border-color);
+        display: flex;
+
+        .bridge {
+            margin-top: 4px;
+        }
     }
 }
 </style>

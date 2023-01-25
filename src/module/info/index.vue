@@ -77,49 +77,49 @@ export default defineComponent({
             }
         },
         async info() {
-            this.title = this.$t('app.info')
+            this.title = this.$t('app.info.info')
             this.data = await clusterApi.info();
             this.dialog = true;
             this.previewMode = false;
         },
         async state() {
-            this.title = this.$t('app.status')
+            this.title = this.$t('app.info.status')
             this.data = await clusterApi._stats();
             this.dialog = true;
             this.previewMode = false;
         },
         async node_stats() {
-            this.title = this.$t('app.nodeStatus')
+            this.title = this.$t('app.info.nodeStatus')
             this.data = await clusterApi._nodes_stats();
             this.dialog = true;
             this.previewMode = false;
         },
         async cluster_nodes() {
-            this.title = this.$t('app.clusterNodes')
+            this.title = this.$t('app.info.clusterNodes')
             this.data = await clusterApi._nodes();
             this.dialog = true;
             this.previewMode = false;
         },
         async plugin() {
-            this.title = this.$t('app.plugin')
+            this.title = this.$t('app.info.plugin')
             this.data = await clusterApi._nodes_plugins();
             this.dialog = true;
             this.previewMode = false;
         },
         async cluster_status() {
-            this.title = this.$t('app.clusterStatus')
+            this.title = this.$t('app.info.clusterStatus')
             this.data = await clusterApi._cluster_state();
             this.dialog = true;
             this.previewMode = false;
         },
         async cluster_health() {
-            this.title = this.$t('app.clusterHealth')
+            this.title = this.$t('app.info.clusterHealth')
             this.data = await clusterApi._cluster_health();
             this.dialog = true;
             this.previewMode = false;
         },
         async template() {
-            this.title = this.$t('app.template')
+            this.title = this.$t('app.info.template')
             this.data = await clusterApi._template();
             this.dialog = true;
             this.previewMode = false;

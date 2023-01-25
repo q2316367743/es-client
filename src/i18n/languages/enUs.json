@@ -103,10 +103,10 @@
             "order": "Please select sorting method"
         },
         "statistics": {
-            "a": "Statistics: Total:",
-            "b": ",Open:",
-            "c": ",Close:",
-            "d": "Display:"
+            "close": "Close",
+            "display": "Display",
+            "open": "Open",
+            "total": "Total"
         }
     },
     "menu": {

@@ -90,10 +90,12 @@ code {
         left: 0;
         right: 0;
         bottom: 0;
+
         .nav-list {
             padding-left: 13px;
             width: 50px;
             padding-top: 6px;
+
             .info {
                 margin-top: 5px;
             }
@@ -219,5 +221,58 @@ code {
 .es-dialog .el-dialog__body {
     height: 70vh;
     overflow: auto;
+}
+
+.bridge {
+    display: flex;
+    width: 100px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 10%;
+    margin-left: 8px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &[type=primary] {
+        .label {
+            background-color: var(--active-color);
+        }
+    }
+
+    &[type=success] {
+        .label {
+            background-color: var(--el-color-success);
+        }
+    }
+
+    &[type=warning] {
+        .label {
+            background-color: var(--el-color-warning);
+        }
+    }
+
+    &[type=error] {
+        .label {
+            background-color: var(--el-color-error);
+        }
+    }
+
+    .label {
+        width: 50px;
+        text-align: center;
+
+    }
+
+    .value {
+        width: 50px;
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        border-left: 0 solid var(--border-color);
+    }
+
 }
 

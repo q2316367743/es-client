@@ -20,26 +20,20 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineAsyncComponent, defineComponent} from "vue";
 
 // 引入相关组件
-import SettingBase from "@/page/Setting/components/Base.vue";
-import SettingUrl from "@/page/Setting/components/Url.vue";
-import SettingServerSync from "@/page/Setting/components/ServerAndSync.vue";
-import SettingUpdate from "@/page/Setting/components/Update.vue";
-import SettingAbout from "@/page/Setting/components/About.vue";
-
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'setting',
     components: {
-        SettingServerSync,
-        SettingAbout,
-        SettingUpdate,
-        SettingUrl,
-        SettingBase
+        SettingServerSync: defineAsyncComponent(() => import("@/page/Setting/components/ServerAndSync.vue")),
+        SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),
+        SettingUpdate: defineAsyncComponent(() => import("@/page/Setting/components/Update.vue")),
+        SettingUrl: defineAsyncComponent(() => import("@/page/Setting/components/Url.vue")),
+        SettingBase: defineAsyncComponent(() => import("@/page/Setting/components/Base.vue"))
     },
     data: () => {
         return {
