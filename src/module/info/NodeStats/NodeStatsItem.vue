@@ -66,7 +66,23 @@ function pretty(value: number): { res: number, sum: number } {
 function getOption(value: number, title: string, max: number) {
     let item = pretty(value);
     let total = max / (1024 ** item.sum) * 100 / 100;
-    debugger
+    let unit;
+    switch (item.sum) {
+        case 1:
+            unit = 'Kb';
+            break;
+        case 2:
+            unit = 'Mb';
+            break;
+        case 3:
+            unit = 'Gb';
+            break;
+        case 4:
+            unit = 'T';
+            break;
+        default:
+            unit = 'b';
+    }
     return {
         tooltip: {
             formatter: '{a} <br/>{b} : {c}%'
@@ -86,13 +102,17 @@ function getOption(value: number, title: string, max: number) {
                 data: [
                     {
                         value: Math.round(item.res),
-                        name: title
+                        name: `${title}（单位：${unit}）`
                     }
                 ]
             }
         ]
     } as EChartsOption
 }
+
+// 初始化
+let memChart = undefined as echarts.ECharts | undefined;
+let swapChart = undefined as echarts.ECharts | undefined;
 
 export default defineComponent({
     name: 'node-stats-item',
@@ -103,43 +123,47 @@ export default defineComponent({
         Optional
     }),
     mounted() {
+        let memDom = document.getElementById('node-stats-item-mem')!;
+        memChart = echarts.init(memDom);
+        let swapDom = document.getElementById('node-stats-item-swap')!;
+        swapChart = echarts.init(swapDom);
         this.mem();
         this.swap();
     },
     methods: {
         copy: BrowserUtil.copy,
         mem() {
-            let osDom = document.getElementById('node-stats-item-mem')!;
-            let osChart = echarts.init(osDom);
-            osChart.setOption(getOption(
-                Optional.ofNullable(this.node)
-                    .map(e => e.os)
-                    .map(e => e.mem)
-                    .map(e => e.used_in_bytes)
-                    .orElse(0),
-                '内存',
-                Optional.ofNullable(this.node)
-                    .map(e => e.os)
-                    .map(e => e.mem)
-                    .map(e => e.total_in_bytes)
-                    .orElse(0)));
+            if (memChart) {
+                memChart.setOption(getOption(
+                    Optional.ofNullable(this.node)
+                        .map(e => e.os)
+                        .map(e => e.mem)
+                        .map(e => e.used_in_bytes)
+                        .orElse(0),
+                    '内存',
+                    Optional.ofNullable(this.node)
+                        .map(e => e.os)
+                        .map(e => e.mem)
+                        .map(e => e.total_in_bytes)
+                        .orElse(0)));
+            }
         },
         swap() {
-            let dom = document.getElementById('node-stats-item-swap')!;
-            let chart = echarts.init(dom);
-            chart.setOption(getOption(
-                Optional.ofNullable(this.node)
-                    .map(e => e.os)
-                    .map(e => e.swap)
-                    .map(e => e.used_in_bytes)
-                    .orElse(0),
-                '交换区',
-                Optional.ofNullable(this.node)
-                    .map(e => e.os)
-                    .map(e => e.swap)
-                    .map(e => e.total_in_bytes)
-                    .orElse(0)));
-        }
+            if (swapChart) {
+                swapChart.setOption(getOption(
+                    Optional.ofNullable(this.node)
+                        .map(e => e.os)
+                        .map(e => e.swap)
+                        .map(e => e.used_in_bytes)
+                        .orElse(0),
+                    '交换区',
+                    Optional.ofNullable(this.node)
+                        .map(e => e.os)
+                        .map(e => e.swap)
+                        .map(e => e.total_in_bytes)
+                        .orElse(0)));
+            }
+        },
     }
 });
 </script>

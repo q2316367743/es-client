@@ -9,14 +9,13 @@
                 <el-button text link :icon="closeIcon" @click="closeDialog"/>
             </div>
         </div>
-        <div class="tab">
-            <el-tabs v-model="active">
-                <el-tab-pane v-for="nodeName in nodeNames" :label="nodeName" :name="nodeName"/>
-            </el-tabs>
-        </div>
         <div class="content">
             <el-scrollbar>
-                <node-stats-item v-if="node" :node="node"/>
+                <el-tabs v-model="active">
+                    <el-tab-pane v-for="(node, key) in nodes" :label="key" :name="key">
+                        <node-stats-item :node="node"/>
+                    </el-tab-pane>
+                </el-tabs>
             </el-scrollbar>
         </div>
     </div>
@@ -38,33 +37,24 @@ export default defineComponent({
         loading: true,
         clusterName: '',
         active: '',
-        nodeNames: new Array<string>(),
-        nodeMap: new Map<string, Node>(),
         closeIcon: markRaw(Close),
-        refreshIcon: markRaw(Refresh)
+        refreshIcon: markRaw(Refresh),
+        nodes: {} as Record<string, Node>
     }),
-    computed: {
-        node(): Node | undefined {
-            return this.nodeMap.get(this.active);
-        }
-    },
     created() {
         this.init();
     },
     methods: {
         init() {
+            this.active = '';
             this.loading = true;
             ClusterApi._nodes_stats().then(res => {
                 this.clusterName = res.cluster_name;
-                this.nodeNames = Object.keys(res.nodes);
-                if (this.nodeNames.length > 0) {
-                    this.active = this.nodeNames[0];
+                this.nodes = Object.freeze(res.nodes);
+                let keys = Object.keys(this.nodes);
+                if (keys.length > 0) {
+                    this.active = keys[0];
                 }
-                let nodeMap = new Map<string, Node>();
-                for (let nodeName of this.nodeNames) {
-                    nodeMap.set(nodeName, res.nodes[nodeName]);
-                }
-                this.nodeMap = nodeMap;
             }).finally(() => {
                 this.loading = false;
             });

@@ -17,7 +17,6 @@ import MessageUtil from "@/utils/MessageUtil";
 async function url(remoteList: Array<Url>): Promise<void> {
     // 获取策略
     let strategy = syncStrategyContext.getStrategy(useSyncStore().getSyncMode);
-    debugger
     Assert.notNull(strategy, () => {
         throw new Error("同步策略没有获取到");
     });
