@@ -15,7 +15,7 @@ export default class HttpStrategyProxy implements HttpStrategy{
     es<T>(config: HttpStrategyConfig): Promise<T> {
         config.baseURL = useUrlStore().current;
         if (!config.baseURL || config.baseURL === '') {
-            throw new Error(i18n.global.locale.value == 'zh' ? '请选择链接' : 'please select a link')
+            throw new Error(i18n.global.locale.value == 'zhCn' ? '请选择链接' : 'please select a link')
         }
 
         // 处理链接

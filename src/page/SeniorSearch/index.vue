@@ -30,7 +30,7 @@
                     <el-button type="primary" @click="search">{{ searchBtn }}
                     </el-button>
                     <el-button type="success" @click="formatDocument">{{ $t('common.operation.format') }}</el-button>
-                    <el-button @click="historyDrawer = true">{{$t('common.operation.history')}}</el-button>
+                    <el-button @click="historyDrawer = true">{{ $t('common.operation.history') }}</el-button>
                 </div>
                 <div>
                     <el-select v-model="view">
@@ -44,15 +44,7 @@
             <div class="senior-main">
                 <!-- 左面查询条件 -->
                 <div class="side">
-                    <codemirror
-                        v-model="current.params"
-                        placeholder="请在这里输入查询条件"
-                        :style="{ height: '100%' }"
-                        :autofocus="true"
-                        :indent-with-tab="true"
-                        :tabSize="4"
-                        :extensions="extensions"
-                    />
+                    <rest-api-editor v-model="current.params"/>
                 </div>
                 <div class="senior-content">
                     <el-scrollbar>
@@ -70,9 +62,7 @@
 <script lang="ts">
 import {defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
-import {Codemirror} from 'vue-codemirror';
 import {ElMessageBox, ElNotification} from "element-plus";
-import {json} from '@codemirror/lang-json';
 import {FullScreen} from '@element-plus/icons-vue'
 
 import './index.less';
@@ -137,11 +127,11 @@ export default defineComponent({
             // 相关数据
             view: useSettingStore().getDefaultViewer,
             showTop: true,
-            extensions: [json()] as Array<any>,
             historyDrawer: false
         }
     },
-    components: {TabMenu, SeniorSearchHistoryManage, DataView, Codemirror},
+    components: {RestApiEditor: defineComponent(() => import('@/components/RestApiEditor/index.vue')),
+        TabMenu, SeniorSearchHistoryManage, DataView},
     computed: {
         ...mapState(useSettingStore, ['instance']),
         searchItemHeaders(): Array<TabMenuItem> {
