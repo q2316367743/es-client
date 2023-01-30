@@ -2,6 +2,10 @@ import * as monaco from 'monaco-editor';
 import ArrayUtil from "@/utils/ArrayUtil";
 import StrUtil from "@/utils/StrUtil";
 import methods from './SupportMethods';
+import useIndexStore from "@/store/IndexStore";
+// 附加操作
+const optionsForGet = ['', '_search', '_mapping'];
+const optionsForPost = ['_doc', '_search', '_setting', '_mapping'];
 
 const signs = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/shards?v', '/_cat/shards/', '/_cat/master?v',
     '/_cat/nodes?v', '/_cat/indices?v', '/_cat/indices/', '/_cat/segments?v', '/_cat/segments/', '/_cat/count',
@@ -53,6 +57,43 @@ function getBaseUrlSuggestions(position: monaco.Position): monaco.languages.Comp
     return suggestions;
 }
 
+function getMethodUrlSuggestions(position: monaco.Position): Map<string, Array<monaco.languages.CompletionItem>> {
+    let map = new Map<string, Array<monaco.languages.CompletionItem>>();
+    let getList = new Array<monaco.languages.CompletionItem>();
+    let postList = new Array<monaco.languages.CompletionItem>();
+    useIndexStore().list.forEach(index => {
+        optionsForGet.forEach(option => getList.push({
+            label: `/${index.name}/${option}`,
+            kind: monaco.languages.CompletionItemKind.Variable,
+            insertText: `/${index.name}/${option}`,
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            detail: `/${index.name}/${option}`,
+            range: {
+                startLineNumber: position.lineNumber,
+                startColumn: position.column - 1,
+                endLineNumber: position.lineNumber,
+                endColumn: -1
+            }
+        }));
+        optionsForPost.forEach(option => postList.push({
+            label: `/${index.name}/${option}`,
+            kind: monaco.languages.CompletionItemKind.Variable,
+            insertText: `/${index.name}/${option}`,
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            detail: `/${index.name}/${option}`,
+            range: {
+                startLineNumber: position.lineNumber,
+                startColumn: position.column - 1,
+                endLineNumber: position.lineNumber,
+                endColumn: -1
+            }
+        }));
+    });
+    map.set('get', getList);
+    map.set('post', postList);
+    return map;
+}
+
 /**
  * 语法提示
  */
@@ -76,8 +117,17 @@ const provider = {
             // 请求方法提示
             getMethodSuggestions(position).forEach(e => suggestions.push(e));
         }else if (StrUtil.startWithArr(token, methods)) {
-            // 请求路径提示
+            // 基础请求路径提示
             getBaseUrlSuggestions(position).forEach(e => suggestions.push(e));
+            let items = StrUtil.splitAll(token, ' ');
+            debugger
+            if (items.length > 0) {
+                let completionItems = getMethodUrlSuggestions(position).get(items[0].toLowerCase());
+                debugger
+                if (completionItems) {
+                    completionItems.forEach(e => suggestions.push(e));
+                }
+            }
         }
         return {suggestions}
     },

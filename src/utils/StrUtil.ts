@@ -12,6 +12,22 @@ export default {
         return false;
     },
 
+    splitAll(str: string, splitChar: string): Array<string> {
+        let items = new Array<string>();
+        let temp = '';
+        for (let item of str) {
+            if (item === splitChar) {
+                if (temp !== '') {
+                    items.push(temp);
+                    temp = '';
+                }
+            }else {
+                temp += item;
+            }
+        }
+        return items;
+    },
+
     /**
      * 是否以指定数组中任意一个字符串为开头
      * @param str 字符串
