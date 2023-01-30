@@ -1,8 +1,8 @@
 import * as monaco from 'monaco-editor';
 import ArrayUtil from "@/utils/ArrayUtil";
 import StrUtil from "@/utils/StrUtil";
+import methods from './SupportMethods';
 
-const methods = ['head', 'HEAD', 'get', 'GET', 'post', 'POST', 'put', 'PUT', 'delete', 'DELETE'];
 const signs = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/shards?v', '/_cat/shards/', '/_cat/master?v',
     '/_cat/nodes?v', '/_cat/indices?v', '/_cat/indices/', '/_cat/segments?v', '/_cat/segments/', '/_cat/count',
     '/_cat/count/', '/_cat/recovery?v', '/_cat/recovery/', '/_cat/health?v', '/_cat/pending_tasks?v', '/_cat/aliases?v',
@@ -38,7 +38,7 @@ function getBaseUrlSuggestions(position: monaco.Position): monaco.languages.Comp
     for (let sign of signs) {
         suggestions.push({
             label: sign,
-            kind: monaco.languages.CompletionItemKind.Constant,
+            kind: monaco.languages.CompletionItemKind.Variable,
             insertText: sign,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             detail: sign,
@@ -71,9 +71,12 @@ const provider = {
             endColumn: position.column + 1
         });
         console.log(token);
+        // 需要获取连续的代码块
         if (ArrayUtil.startWith(methods, token, true)) {
+            // 请求方法提示
             getMethodSuggestions(position).forEach(e => suggestions.push(e));
         }else if (StrUtil.startWithArr(token, methods)) {
+            // 请求路径提示
             getBaseUrlSuggestions(position).forEach(e => suggestions.push(e));
         }
         return {suggestions}
@@ -85,3 +88,21 @@ const provider = {
 } as monaco.languages.CompletionItemProvider;
 
 export default provider;
+
+/**
+ * 规定语法：
+ *
+ * POST /_cluster/settings
+ * {
+ *     "a": "b"
+ * }
+ *
+ * GET /_node/stats
+ *
+ * 方法 链接
+ * 请求体
+ *
+ * 方法 链接
+ *
+ * 每一个代码块之间都需要一个换行符
+ */

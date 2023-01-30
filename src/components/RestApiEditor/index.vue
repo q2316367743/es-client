@@ -7,6 +7,7 @@ import * as monaco from 'monaco-editor';
 import language from "./language";
 import configuration from "./configuration";
 import provider from "./provider";
+import {isDark} from "@/global/BeanFactory";
 
 let instance = {} as monaco.editor.IStandaloneCodeEditor;
 
@@ -14,14 +15,14 @@ export default defineComponent({
     name: 'rest-api-editor',
     props: {
         modelValue: String,
-        theme: String
     },
     data: () => ({
         content: '',
         style: {
             width: '100%',
-            height: 'calc(100%)',
-        }
+            height: 'calc(100%)'
+        },
+        isDark
     }),
     watch: {
         modelValue(newValue) {
@@ -31,10 +32,10 @@ export default defineComponent({
                 this.content = newValue;
             }
         },
-        theme(newValue) {
+        isDark(newValue: boolean) {
             if (instance) {
                 instance.updateOptions({
-                    theme: this.theme === 'dark' ? 'vs-dark' : 'vs'
+                    theme: newValue ? 'vs-dark' : 'vs'
                 })
             }
         }
@@ -52,7 +53,7 @@ export default defineComponent({
             value: this.modelValue,
             language: 'http',
             automaticLayout: true,
-            theme: this.theme === 'dark' ? 'vs-dark' : 'vs'
+            theme: this.isDark as boolean ? 'vs-dark' : 'vs'
         });
         instance.onDidChangeModelContent(() => {
             const value = instance.getValue();
