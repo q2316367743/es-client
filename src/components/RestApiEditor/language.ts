@@ -1,11 +1,11 @@
 import * as monaco from "monaco-editor";
-import methods from './SupportMethods';
+import {supportMethods} from '@/data/EsUrl';
 
 const language = {
     defaultToken: "",
     tokenPostfix: ".http",
-    keywords: methods,
-    keywordStr: methods.join('|'),
+    keywords: supportMethods,
+    keywordStr: supportMethods.join('|'),
     typeKeywords: ['true', 'false'],
     operators: ['{', '}', '[', ']'],
 

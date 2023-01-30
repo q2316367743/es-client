@@ -1,1 +1,0 @@
-export default ['head', 'HEAD', 'get', 'GET', 'post', 'POST', 'put', 'PUT', 'delete', 'DELETE'];

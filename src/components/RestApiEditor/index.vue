@@ -3,11 +3,12 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
+import {isDark} from "@/global/BeanFactory";
+
 import * as monaco from 'monaco-editor';
 import language from "./language";
 import configuration from "./configuration";
 import provider from "./provider";
-import {isDark} from "@/global/BeanFactory";
 
 let instance = {} as monaco.editor.IStandaloneCodeEditor;
 
