@@ -133,20 +133,20 @@
             <setting v-show="active === PageNameEnum.SETTING"></setting>
         </div>
         <!-- 保存或新增URL弹窗 -->
-        <save-or-update-url v-model="urlDialog"></save-or-update-url>
+        <save-or-update-url v-if="urlDialog" v-model="urlDialog"></save-or-update-url>
         <el-dialog v-model="updateDialog" :title="$t('app.versionUpdate')"
                    close-on-click-modal append-to-body draggable lock-scroll>
-            <version-update/>
+            <version-update v-if="updateDialog"/>
         </el-dialog>
         <el-dialog v-model="newDialog" :title="$t('app.welcome')" style="height: 90vh;"
                    close-on-click-modal append-to-body draggable lock-scroll top="5vh">
             <el-scrollbar height="calc(80vh - 54px)">
-                <setting-about/>
+                <setting-about v-if="newDialog"/>
             </el-scrollbar>
         </el-dialog>
         <el-dialog v-model="feedbackDialog" :title="$t('app.feedback')" top="25vh"
                    :close-on-click-modal="false" append-to-body draggable lock-scroll>
-            <feedback-module/>
+            <feedback-module v-if="feedbackDialog"/>
         </el-dialog>
     </el-config-provider>
 </template>
@@ -157,7 +157,7 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
 // 引入框架
-import {defineComponent} from 'vue';
+import {defineAsyncComponent, defineComponent} from 'vue';
 import {mapState} from "pinia";
 import {
     Coin,
@@ -175,21 +175,9 @@ import {
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
 import {ElNotification} from "element-plus";
-// 引入页面组件
-import JsonDialog from "@/components/JsonDialog.vue";
-import Translate from "@/icon/Translate.vue";
-import SaveOrUpdateUrl from '@/module/SaveOrUpdateUrl/index.vue';
 // 模块
 import Info from '@/module/info/index.vue';
-import VersionUpdate from "@/module/VersionUpdate/index.vue";
-import FeedbackModule from "@/module/Feedback/index.vue";
-// 页面
-import Home from "./page/Home/index.vue";
-import BaseSearch from "@/page/BaseSearch/index.vue";
-import SeniorSearch from '@/page/SeniorSearch/index.vue';
-import Setting from '@/page/Setting/index.vue'
-import DataBrowse from '@/page/DataBrowse/index.vue';
-import SettingAbout from "@/page/Setting/components/About.vue";
+import Home from '@/page/Home/index.vue';
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
@@ -199,6 +187,7 @@ import Constant from '@/global/Constant'
 // 引入自定义图标
 import MoonIcon from "@/icon/MoonIcon.vue";
 import SunIcon from "@/icon/SunIcon.vue";
+import Translate from "@/icon/Translate.vue";
 // 工具类
 import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
@@ -211,10 +200,23 @@ let showWidthNotification = true;
 
 export default defineComponent({
     components: {
-        SettingAbout, SunIcon, VersionUpdate, FeedbackModule, MoonIcon,
-        Info, Setting, Home, BaseSearch, SeniorSearch, Filter,
+        // 自定义图标
+        SunIcon, MoonIcon, Translate,
+        // element-plus图标
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
-        Coin, DataBoard, JsonDialog, Translate, DataBrowse, SaveOrUpdateUrl, SettingIcon, DataLine
+        Coin, DataBoard, Filter, SettingIcon, DataLine,
+        // 页面
+        Home,
+        DataBrowse: defineAsyncComponent(() => import("@/page/DataBrowse/index.vue")),
+        BaseSearch: defineAsyncComponent(() => import("@/page/BaseSearch/index.vue")),
+        SeniorSearch: defineAsyncComponent(() => import("@/page/SeniorSearch/index.vue")),
+        Setting: defineAsyncComponent(() => import("@/page/Setting/index.vue")),
+        // 组件
+        Info,
+        SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),
+        VersionUpdate: defineAsyncComponent(() => import("@/module/VersionUpdate/index.vue")),
+        FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
+        SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue"))
     },
     data: () => {
         return {
