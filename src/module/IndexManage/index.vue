@@ -1,7 +1,7 @@
 <template>
     <el-drawer :title="index" v-model="drawer" size="60%" class="index-manage" append-to-body destroy-on-close>
         <el-tabs v-model="active" class="tab">
-            <el-tab-pane label="总结" name="1"/>
+            <el-tab-pane label="总览" name="1"/>
             <el-tab-pane label="设置" name="2"/>
             <el-tab-pane label="映射" name="3"/>
             <el-tab-pane label="统计信息" name="4"/>

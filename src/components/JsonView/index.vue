@@ -1,9 +1,9 @@
 <template>
-    <div class="json-view">
+    <div class="json-view hljs">
         <pre>
             <code class="language-json hljs" v-html="value"></code>
         </pre>
-        <el-button type="primary" link class="json-view-copy" @click="copy">复制</el-button>
+        <el-button v-if="copy" type="primary" link class="json-view-copy" @click="execCopy">复制</el-button>
     </div>
 
 </template>
@@ -15,7 +15,12 @@ import BrowserUtil from "@/utils/BrowserUtil";
 export default defineComponent({
     name: 'json-view',
     props: {
-        data: Object
+        data: Object,
+        copy: {
+            type: Boolean,
+            required: false,
+            default: true
+        }
     },
     data: () => ({
         value: ''
@@ -45,7 +50,7 @@ export default defineComponent({
         }
     },
     methods: {
-        copy() {
+        execCopy() {
             BrowserUtil.copy(this.value);
         }
     }
@@ -57,7 +62,7 @@ export default defineComponent({
 
     .json-view-copy {
         position: absolute;
-        top: 30px;
+        top: 12px;
         right: 20px;
     }
 

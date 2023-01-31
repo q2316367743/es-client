@@ -15,9 +15,6 @@
             <el-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
                 <el-button link type="primary" :icon="searchIcon" @click="jumpToBaseSearch"/>
             </el-tooltip>
-            <el-tooltip :effect="theme" content="状态" placement="bottom">
-                <el-button link type="primary" :icon="dataAnalysisIcon" @click="indexState"/>
-            </el-tooltip>
             <el-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
                 <el-button link :type="indexStateBtn" :icon="switchButtonIcon" @click="indexOperation"/>
             </el-tooltip>
@@ -73,7 +70,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, markRaw, PropType} from "vue";
-import {ArrowDown, ArrowUp, DataAnalysis, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
+import {ArrowDown, ArrowUp, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
 import {ElMessageBox} from "element-plus";
 
 import IndexApi from '@/api/IndexApi'
@@ -108,7 +105,6 @@ export default defineComponent({
         // 图标
         deleteIcon: markRaw(Delete),
         switchButtonIcon: markRaw(SwitchButton),
-        dataAnalysisIcon: markRaw(DataAnalysis),
         searchIcon: markRaw(Search)
     }),
     computed: {
@@ -148,14 +144,6 @@ export default defineComponent({
         showShardOrReplica(json: any, idx: number) {
             let title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
             this.$emit('openDialog', title, json);
-        },
-        indexState() {
-            let title = this.index?.name!;
-            clusterApi._stats().then(state => {
-                this.$emit('openDialog', title, state.indices[title]);
-            }).catch(e => {
-                MessageUtil.error('获取索引状态错误', e);
-            })
         },
         indexInfo() {
             this.$emit('openManage', this.index?.name);

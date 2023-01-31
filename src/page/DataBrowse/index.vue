@@ -174,7 +174,7 @@
                 <vxe-column type="expand" width="80">
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
-                            <json-view :data="row._source"/>
+                            <json-view :data="row._source" :copy="false"/>
                             <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
                         </div>
                     </template>

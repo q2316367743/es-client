@@ -15,8 +15,8 @@
         <el-descriptions-item label="活动主要分片">{{ activePrimaryShards }}</el-descriptions-item>
         <el-descriptions-item label="活动分片">{{ activeShards }}</el-descriptions-item>
         <el-descriptions-item label="relocating分片">{{ relocatingShards }}</el-descriptions-item>
-        <el-descriptions-item label="初始化中分分片">{{ initializingShards }}</el-descriptions-item>
-        <el-descriptions-item label="未分配的分片">{{ unassignedShards }}</el-descriptions-item>
+        <el-descriptions-item label="initializing分片">{{ initializingShards }}</el-descriptions-item>
+        <el-descriptions-item label="unassigned分片">{{ unassignedShards }}</el-descriptions-item>
         <el-descriptions-item label="存储大小">{{ storageSize }}</el-descriptions-item>
         <el-descriptions-item label="别名">
             <el-tag v-for="alias in aliases" class="alias">{{ alias }}</el-tag>
