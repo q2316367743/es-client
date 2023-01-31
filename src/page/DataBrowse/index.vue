@@ -92,6 +92,14 @@
                         </el-icon>
                     </div>
                 </el-tooltip>
+                <!-- 跳转到基础查询 -->
+                <el-tooltip content="跳转到 基础查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
+                    <div class="item" :class="!index ? 'disable' : ''" @click="jumpToBaseSearch">
+                        <el-icon>
+                            <Search/>
+                        </el-icon>
+                    </div>
+                </el-tooltip>
                 <!-- 跳转到高级查询 -->
                 <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
                     <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
@@ -278,7 +286,17 @@ import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
-import {ArrowDown, ArrowUp, Check, CircleClose, Download, Filter, Operation, View} from "@element-plus/icons-vue";
+import {
+    ArrowDown,
+    ArrowUp,
+    Check,
+    CircleClose,
+    Download,
+    Filter,
+    Operation,
+    Search,
+    View
+} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -306,18 +324,19 @@ import tool from "./tool";
 import BrowserUtil from "@/utils/BrowserUtil";
 import DataBuild from "@/page/DataBrowse/build/DataBuild";
 import mitt from "@/plugins/mitt";
-import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {isDark, useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
 import JsonView from "@/components/JsonView/index.vue";
 import useUrlStore from "@/store/UrlStore";
 import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
 import MessageUtil from "@/utils/MessageUtil";
+import BaseOrder from "@/entity/BaseOrder";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
-        DbMapping,
+        DbMapping, Search,
         JsonView,
         StructureIcon,
         ArrowDown, ArrowUp, Filter, Operation, Download, View, Check, CircleClose, Codemirror
@@ -799,6 +818,33 @@ export default defineComponent({
                 mapping: this.index.mapping
             }
         },
+        jumpToBaseSearch() {
+            if (!this.index) {
+                return;
+            }
+            // 页面跳转
+            usePageJumpEvent.emit(PageNameEnum.BASE_SEARCH);
+            // 基础数据
+            let orders = new Array<BaseOrder>();
+            // 填充数据
+            let count = 1;
+            let condition = conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size);
+            // 排序
+            for (let key in condition.sort) {
+                orders.push({
+                    id: count++,
+                    field: `_doc.${key}`,
+                    type: condition.sort[key].order
+                });
+            }
+            useBaseSearchEvent.emit({
+                execute: true,
+                name: this.index.name,
+                index: this.index.name,
+                conditions: [],
+                orders
+            });
+        },
         jumpToSeniorSearch() {
             if (!this.index) {
                 return;
@@ -807,6 +853,7 @@ export default defineComponent({
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             // 填充数据
             useSeniorSearchEvent.emit({
+                name: this.index.name,
                 link: `/${this.index.name}/_search`,
                 method: 'POST',
                 params: JSON.stringify(
