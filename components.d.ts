@@ -48,7 +48,7 @@ declare module '@vue/runtime-core' {
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
     JsonView: typeof import('./src/components/JsonView/index.vue')['default']
     Mit: typeof import('./src/components/License/Mit.vue')['default']
-    RestApiEditor: typeof import('./src/components/RestApiEditor/index.vue')['default']
+    RestApiEditor: typeof import('./src/module/RestApiEditor/index.vue')['default']
     TableViewer: typeof import('./src/components/TableViewer/index.vue')['default']
     TabMenu: typeof import('./src/components/TabMenu/index.vue')['default']
     UpdateItem: typeof import('./src/components/UpdateItem/index.vue')['default']

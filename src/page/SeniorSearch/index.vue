@@ -130,7 +130,7 @@ export default defineComponent({
             historyDrawer: false
         }
     },
-    components: {RestApiEditor: defineComponent(() => import('@/components/RestApiEditor/index.vue')),
+    components: {RestApiEditor: defineComponent(() => import('@/module/RestApiEditor/index.vue')),
         TabMenu, SeniorSearchHistoryManage, DataView},
     computed: {
         ...mapState(useSettingStore, ['instance']),
