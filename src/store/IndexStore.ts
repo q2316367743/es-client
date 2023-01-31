@@ -44,9 +44,9 @@ const useIndexStore = defineStore('index', {
         /**
          * 重新获取链接
          */
-        async reset() {
+        async reset(): Promise<void> {
             if (useUrlStore().current === '') {
-                return;
+                return Promise.reject('链接不存在');
             }
             // 初始化时加载
             const loading = ElLoading.service({
@@ -60,14 +60,21 @@ const useIndexStore = defineStore('index', {
                 this.indices = await indexListBuild();
                 // 渲染map
                 this.indicesMap = renderMap(this.indices);
+
                 // 获取基本信息
-                loading.setText('开始获取索引健康值');
-                let health = await clusterApi._cluster_health();
-                this.name = health.cluster_name as string;
-                this.active_shards = health.active_shards as number;
-                let unassigned_shards = health.unassigned_shards as number;
-                this.total_shards = this.active_shards + unassigned_shards;
-                this.status = health.status as string;
+                clusterApi._cluster_health().then(health => {
+                    this.name = health.cluster_name;
+                    this.active_shards = health.active_shards;
+                    let unassigned_shards = health.unassigned_shards;
+                    this.total_shards = this.active_shards + unassigned_shards;
+                    this.status = health.status;
+                }).catch(e => {
+                    ElNotification({
+                        title: '获取索引健康值失败',
+                        type: "error",
+                        message: e,
+                    });
+                });
 
                 clusterApi.info()
                     .then(info => {
@@ -84,10 +91,12 @@ const useIndexStore = defineStore('index', {
                             message: e,
                         });
                     });
+                return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();
                 console.error(e);
-            }finally {
+                return Promise.reject(e);
+            } finally {
                 loading.close();
             }
         },

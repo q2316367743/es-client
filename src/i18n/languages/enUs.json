@@ -48,6 +48,7 @@
             "jsonView": "JSON VIew",
             "name": "name",
             "operation": "operation",
+            "seq": "seq",
             "tableView": "Table View",
             "url": "url"
         },
@@ -62,6 +63,7 @@
         },
         "operation": {
             "add": "add",
+            "cancel": "cancel",
             "clear": "clear",
             "close": "close",
             "copy": "copy",
@@ -70,6 +72,7 @@
             "execute": "execute",
             "format": "format",
             "history": "history",
+            "load": "load",
             "more": "more",
             "new": "new",
             "open": "open",
