@@ -23,34 +23,7 @@
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browse-pull-down">
-                    <div class="item" style="display: flex;" @click="showIndex">
-                        <div v-if="!index" style="user-select: none;">未选择索引</div>
-                        <div v-else style="user-select: none;">{{ index.name }}</div>
-                        <el-icon :size="20" style="margin: 2px;">
-                            <arrow-up v-if="indexVisible"/>
-                            <arrow-down v-else/>
-                        </el-icon>
-                    </div>
-                    <template #dropdown>
-                        <div class="data-browse-pull-down-panel">
-                            <el-empty v-if="indices.length === 0" description="请选择链接"/>
-                            <div class="data-browse-pull-down-index" v-else>
-                                <el-input v-model="indexFilter" class="data-browse-pull-down-search"
-                                          ref="dataBrowsePullDownSearch" clearable/>
-                                <el-scrollbar height="358px" class="data-browse-pull-down-data">
-                                    <div v-for="index in indicesShow" class="data-browse-list-item"
-                                         @click="indexChange(index)">
-                                        <span>{{ index.name }}</span>
-                                        <span v-if="index.alias && index.alias.length > 0">
-                                            <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
-                                        </span>
-                                    </div>
-                                </el-scrollbar>
-                            </div>
-                        </div>
-                    </template>
-                </vxe-pulldown>
+                <db-index-select @change="indexChange" />
                 <!-- 打印 -->
                 <div class="item" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
@@ -184,11 +157,7 @@ import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
 import {
-    ArrowDown,
-    ArrowUp,
     Check,
-    CircleClose,
-    Download,
     Filter,
     Operation,
     Search,
@@ -197,6 +166,7 @@ import {
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
+import useUrlStore from "@/store/UrlStore";
 
 import IndexView from "@/view/index/IndexView";
 import Header from "@/view/Header";
@@ -209,49 +179,47 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import Optional from "@/utils/Optional";
 import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
-import {stringContain} from "@/utils/SearchUtil";
-
-import conditionBuild from './build/ConditionBuild';
-import recordBuild from './build/RecordBuild';
-import './index.less';
-import tool from "./tool";
-
-import BrowserUtil from "@/utils/BrowserUtil";
-import DataBuild from "@/page/DataBrowse/build/DataBuild";
-import mitt from "@/plugins/mitt";
-import {isDark, useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
-import StructureIcon from "@/icon/StructureIcon.vue";
-import JsonView from "@/components/JsonView/index.vue";
-import useUrlStore from "@/store/UrlStore";
-import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
 import MessageUtil from "@/utils/MessageUtil";
-import BaseOrder from "@/entity/BaseOrder";
+
+import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
 import PageHelp from "@/page/DataBrowse/component/PageHelp.vue";
 import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
 import DbCondition from "@/page/DataBrowse/component/DbCondition.vue";
+
+import conditionBuild from '@/page/DataBrowse/build/ConditionBuild';
+import recordBuild from '@/page/DataBrowse/build/RecordBuild';
+import DataBuild from "@/page/DataBrowse/build/DataBuild";
+import '@/page/DataBrowse/index.less';
+import tool from "@/page/DataBrowse/tool";
+
+import BrowserUtil from "@/utils/BrowserUtil";
+import mitt from "@/plugins/mitt";
+import {isDark, useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import StructureIcon from "@/icon/StructureIcon.vue";
+import BaseOrder from "@/entity/BaseOrder";
+
+import JsonView from "@/components/JsonView/index.vue";
+import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
+        DbIndexSelect,
         DbCondition,
         ExportDialog,
         PageHelp,
         DbMapping, Search,
         JsonView,
         StructureIcon,
-        ArrowDown, ArrowUp, Filter, Operation, Download, View, Check, CircleClose, Codemirror
+        Filter, Operation, View, Check, Codemirror
     },
     data: () => ({
         page: 1,
         size: useSettingStore().getPageSize,
         count: 1,
         index: undefined as IndexView | undefined,
-        indexFilter: '',
         isDark,
-
-        // 下拉面板
-        indexVisible: false,
 
         // 弹窗
         exportDialog: false,
@@ -321,17 +289,6 @@ export default defineComponent({
     computed: {
         ...mapState(useIndexStore, ['indices', 'indicesMap']),
         ...mapState(useUrlStore, ['url']),
-        indicesShow() {
-            if (this.indices.length === 0) {
-                return new Array<IndexView>();
-            }
-            // 此处是索引排序
-            return this.indices
-                .filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter))
-                .sort((e1, e2) => {
-                    return e1.name.localeCompare(e2.name, 'zh');
-                })
-        },
         recordMap() {
             return ArrayUtil.map(this.records, '_id');
         },
@@ -374,7 +331,6 @@ export default defineComponent({
             this.orderBy = '';
             this.exportDialog = false;
             this.addConfig.dialog = false;
-            this.indexVisible = false;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
             this.count = 1;
@@ -648,7 +604,6 @@ export default defineComponent({
         // 右侧
         indexChange(index: IndexView) {
             this.index = index;
-            this.indexVisible = false;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
             this.must = '';
@@ -728,9 +683,7 @@ export default defineComponent({
         // <----------------------------------------- 上面按钮 -----------------------------------------<
 
         // >----------------------------------------- 功能 ----------------------------------------->
-        copy(value: any) {
-            BrowserUtil.copy(JSON.stringify(value, null, 4));
-        },
+        copy: (value: any) => BrowserUtil.copy(JSON.stringify(value, null, 4)),
         jumpToSeniorSearchByInsert() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             useSeniorSearchEvent.emit({
@@ -764,18 +717,6 @@ export default defineComponent({
             this.deleteRowIndies = new Set<string>();
             // 清除选中行
             (this.$refs['vxeTable'] as any).clearCheckboxRow();
-        },
-        showIndex() {
-            this.indexVisible = !this.indexVisible;
-            if (this.indexVisible) {
-                // 聚焦
-                if (this.indices.length > 0) {
-                    this.$nextTick(() => {
-                        let input = this.$refs['dataBrowsePullDownSearch'] as HTMLInputElement;
-                        input.focus();
-                    })
-                }
-            }
         }
     }
 });
