@@ -6,52 +6,46 @@
             <div class="left">
                 <page-help :total="count" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)"/>
                 <div class="sep"></div>
-                <div class="item" :class="!index ? 'disable' : ''" @click="executeQuery(false)">
+                <db-simple-item :disable="!index" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
                     <i class="vxe-icon-refresh"/>
-                </div>
+                </db-simple-item>
                 <div class="sep"></div>
-                <div class="item" :class="!index ? 'disable' : ''" @click="recordAdd">
+                <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
                     <i class="vxe-icon-add"/>
-                </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReduce()">
+                </db-simple-item>
+                <db-simple-item :disable="deleteRowIndies.size === 0" :tip="$t('common.operation.delete')" @click="recordReduce">
                     <i class="vxe-icon-minus"/>
-                </div>
-                <div class="item" :class="deleteRowIndies.size === 1 ? '' : 'disable'" @click="recordEdit()">
+                </db-simple-item>
+                <db-simple-item :disable="deleteRowIndies.size !== 1" :tip="$t('common.operation.update')" @click="recordEdit">
                     <i class="vxe-icon-edit"/>
-                </div>
+                </db-simple-item>
             </div>
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <db-index-select @change="indexChange" />
+                <db-index-select @change="indexChange"/>
                 <!-- 打印 -->
-                <div class="item" @click="openExportDialog">
+                <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
-                </div>
+                </db-simple-item>
                 <!-- 索引结构 -->
-                <el-tooltip content="索引结构" placement="bottom" :effect="isDark ? 'dark' : 'light'">
-                    <div class="item" :class="!index ? 'disable' : ''" @click="openMappingDrawer">
-                        <el-icon :size="16" style="margin-top: 4px;">
-                            <structure-icon/>
-                        </el-icon>
-                    </div>
-                </el-tooltip>
+                <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
+                    <el-icon :size="16" style="margin-top: 4px;">
+                        <structure-icon/>
+                    </el-icon>
+                </db-simple-item>
                 <!-- 跳转到基础查询 -->
-                <el-tooltip content="跳转到 基础查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
-                    <div class="item" :class="!index ? 'disable' : ''" @click="jumpToBaseSearch">
-                        <el-icon>
-                            <Search/>
-                        </el-icon>
-                    </div>
-                </el-tooltip>
+                <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
+                    <el-icon>
+                        <Search/>
+                    </el-icon>
+                </db-simple-item>
                 <!-- 跳转到高级查询 -->
-                <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
-                    <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
-                        <el-icon>
-                            <Filter/>
-                        </el-icon>
-                    </div>
-                </el-tooltip>
+                <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
+                    <el-icon>
+                        <Filter/>
+                    </el-icon>
+                </db-simple-item>
                 <!-- 操作 -->
                 <el-dropdown trigger="click">
                     <div class="item">
@@ -156,13 +150,7 @@ import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
-import {
-    Check,
-    Filter,
-    Operation,
-    Search,
-    View
-} from "@element-plus/icons-vue";
+import {Check, Filter, Operation, Search, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -200,11 +188,13 @@ import BaseOrder from "@/entity/BaseOrder";
 
 import JsonView from "@/components/JsonView/index.vue";
 import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
+import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
+        DbSimpleItem,
         DbIndexSelect,
         DbCondition,
         ExportDialog,
