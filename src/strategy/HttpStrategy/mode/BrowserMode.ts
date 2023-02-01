@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 
 import HttpStrategyConfig from "../HttpStrategyConfig";
 
@@ -14,7 +14,7 @@ instance.interceptors.response.use(
     response => {
         return response.data;
     },
-    error => {
+    (error: AxiosError) => {
         console.error(error)
         MessageUtil.error(error.message);
         return Promise.reject(error)

@@ -29,14 +29,26 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
                 if (response.ok) {
                     resolve(response.data);
                 } else {
-                    reject(response.data)
+                    reject({
+                        response: {
+                            data: response.data
+                        }
+                    })
                 }
             } else {
-                reject(`请求【${url}】没有响应内容`)
+                reject({
+                    response: {
+                        data: `请求【${url}】没有响应内容`
+                    }
+                });
             }
         }).catch((reason: any) => {
             console.error(reason)
-            reject(reason)
+            reject({
+                response: {
+                    data: reason
+                }
+            })
         });
     });
 }
