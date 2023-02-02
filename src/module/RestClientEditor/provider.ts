@@ -1,7 +1,7 @@
 import * as monaco from 'monaco-editor';
 import ArrayUtil from "@/utils/ArrayUtil";
 import StrUtil from "@/utils/StrUtil";
-import {supportMethods, optionsForGet, optionsForPost, signs} from '@/data/EsUrl';
+import {optionsForGet, optionsForPost, signs, supportMethods} from '@/data/EsUrl';
 import useIndexStore from "@/store/IndexStore";
 
 // 附加操作
@@ -51,34 +51,35 @@ function getMethodUrlSuggestions(position: monaco.Position): Map<string, Array<m
     let map = new Map<string, Array<monaco.languages.CompletionItem>>();
     let getList = new Array<monaco.languages.CompletionItem>();
     let postList = new Array<monaco.languages.CompletionItem>();
-    useIndexStore().list.forEach(index => {
-        optionsForGet.forEach(option => getList.push({
-            label: `/${index.name}/${option}`,
-            kind: monaco.languages.CompletionItemKind.Variable,
-            insertText: `/${index.name}/${option}`,
-            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            detail: `/${index.name}/${option}`,
-            range: {
-                startLineNumber: position.lineNumber,
-                startColumn: position.column - 1,
-                endLineNumber: position.lineNumber,
-                endColumn: -1
-            }
+    useIndexStore().list.forEach(index =>
+        [...index.alias, index.name].forEach(item => {
+            optionsForGet.forEach(option => getList.push({
+                label: `/${item}/${option}`,
+                kind: monaco.languages.CompletionItemKind.Variable,
+                insertText: `/${item}/${option}`,
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                detail: `/${item}/${option}`,
+                range: {
+                    startLineNumber: position.lineNumber,
+                    startColumn: position.column - 1,
+                    endLineNumber: position.lineNumber,
+                    endColumn: -1
+                }
+            }));
+            optionsForPost.forEach(option => postList.push({
+                label: `/${item}/${option}`,
+                kind: monaco.languages.CompletionItemKind.Variable,
+                insertText: `/${item}/${option}`,
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                detail: `/${item}/${option}`,
+                range: {
+                    startLineNumber: position.lineNumber,
+                    startColumn: position.column - 1,
+                    endLineNumber: position.lineNumber,
+                    endColumn: -1
+                }
+            }));
         }));
-        optionsForPost.forEach(option => postList.push({
-            label: `/${index.name}/${option}`,
-            kind: monaco.languages.CompletionItemKind.Variable,
-            insertText: `/${index.name}/${option}`,
-            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            detail: `/${index.name}/${option}`,
-            range: {
-                startLineNumber: position.lineNumber,
-                startColumn: position.column - 1,
-                endLineNumber: position.lineNumber,
-                endColumn: -1
-            }
-        }));
-    });
     map.set('get', getList);
     map.set('post', postList);
     return map;
@@ -90,8 +91,7 @@ function getMethodUrlSuggestions(position: monaco.Position): Map<string, Array<m
 const provider = {
     async provideCompletionItems(
         model: monaco.editor.ITextModel,
-        position: monaco.Position,
-        context: monaco.languages.CompletionContext,
+        position: monaco.Position
     ): Promise<monaco.languages.ProviderResult<monaco.languages.CompletionList>> {
         let suggestions = new Array<monaco.languages.CompletionItem>();
         console.log(position)

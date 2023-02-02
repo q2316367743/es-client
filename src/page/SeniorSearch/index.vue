@@ -44,7 +44,7 @@
             <div class="senior-main">
                 <!-- 左面查询条件 -->
                 <div class="side">
-                    <rest-api-editor v-model="current.params"/>
+                    <rest-client-editor v-model="current.params"/>
                 </div>
                 <div class="seq"/>
                 <div class="senior-content">
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
+import {defineAsyncComponent, defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
 import {ElMessageBox, ElNotification} from "element-plus";
 import {FullScreen} from '@element-plus/icons-vue'
@@ -131,7 +131,8 @@ export default defineComponent({
             historyDrawer: false
         }
     },
-    components: {RestApiEditor: defineComponent(() => import('@/module/RestApiEditor/index.vue')),
+    components: {
+        RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
         TabMenu, SeniorSearchHistoryManage, DataView},
     computed: {
         ...mapState(useSettingStore, ['instance']),

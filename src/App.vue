@@ -294,9 +294,6 @@ export default defineComponent({
             // 设置全局字体大小
             document.body.style.fontSize = '20px';
         }
-
-    },
-    mounted() {
         this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {

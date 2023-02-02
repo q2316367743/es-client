@@ -10,10 +10,10 @@ import language from "./language";
 import configuration from "./configuration";
 import provider from "./provider";
 
-let instance = {} as monaco.editor.IStandaloneCodeEditor;
+let instance: monaco.editor.IStandaloneCodeEditor;
 
 export default defineComponent({
-    name: 'rest-api-editor',
+    name: 'rest-client-editor',
     props: {
         modelValue: String,
     },
@@ -54,7 +54,10 @@ export default defineComponent({
             value: this.modelValue,
             language: 'http',
             automaticLayout: true,
-            theme: this.isDark as boolean ? 'vs-dark' : 'vs'
+            theme: this.isDark as boolean ? 'vs-dark' : 'vs',
+            minimap: {
+                enabled: false
+            }
         });
         instance.onDidChangeModelContent(() => {
             const value = instance.getValue();
