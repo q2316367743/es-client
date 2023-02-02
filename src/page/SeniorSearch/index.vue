@@ -7,9 +7,9 @@
             </div>
         </transition>
         <!-- 左侧查询条件 -->
-        <div class="el-card is-never-shadow" style="min-height: 550px" :class="showTabs ? 'show-tabs' : ''">
+        <div class="senior-search-card" :class="showTabs ? 'show-tabs' : ''">
             <!-- 上半部分 -->
-            <div class="el-card__header" style="display: flex;justify-content: space-between;">
+            <div class="senior-search-card__header">
                 <div style="display: flex;">
                     <el-select v-model="current.method" :placeholder="$t('seniorSearch.placeholder.select')"
                                style="min-width: 100px;">
@@ -30,7 +30,7 @@
                     <el-button type="primary" @click="search">{{ searchBtn }}
                     </el-button>
                     <el-button type="success" @click="formatDocument">{{ $t('common.operation.format') }}</el-button>
-                    <el-button @click="historyDrawer = true">{{$t('common.operation.history')}}</el-button>
+                    <el-button @click="historyDrawer = true">{{ $t('common.operation.history') }}</el-button>
                 </div>
                 <div>
                     <el-select v-model="view">
@@ -54,6 +54,7 @@
                         :extensions="extensions"
                     />
                 </div>
+                <div class="seq"/>
                 <div class="senior-content">
                     <el-scrollbar>
                         <data-view :view="view" :result="current.result"/>

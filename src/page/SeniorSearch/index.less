@@ -10,16 +10,23 @@
 
     }
 
-    .el-card {
+    .senior-search-card {
         position: absolute;
         left: 0;
         bottom: 0;
         right: 0;
         top: 0;
+        min-height: 550px;
 
         &.show-tabs {
             top: 50px;
+        }
 
+        .senior-search-card__header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--hover-color);
         }
 
         .senior-main {
@@ -34,11 +41,18 @@
                 width: 35%;
                 min-width: 300px;
                 height: 100%;
-                border-right: 1px solid var(--border-color);
+            }
+
+            .seq {
+                width: 1px;
+                height: 100%;
+                margin-left: 15px;
+                background-color: var(--border-color);
+                cursor: e-resize;
             }
 
             .senior-content {
-                width: calc(65% - 1px);
+                width: calc(65% - 16px);
                 height: 100%;
                 overflow: auto;
             }
