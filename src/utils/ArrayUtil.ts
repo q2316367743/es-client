@@ -121,6 +121,27 @@ export default {
             records.push(arr[i]);
         }
         return records;
+    },
+
+    /**
+     * 数组中是否有以关键字开头的字符
+     * @param arr 数组
+     * @param keyword 关键字
+     * @param ignoreCase 是否忽略大小写，默认不忽略
+     */
+    startWith(arr: Array<string>, keyword: string, ignoreCase: boolean = false): boolean {
+        for (let item of arr) {
+            if (ignoreCase) {
+                if (item.toUpperCase().startsWith(keyword.toUpperCase())) {
+                    return true;
+                }
+            }else {
+                if (item.startsWith(keyword)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

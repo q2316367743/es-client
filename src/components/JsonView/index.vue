@@ -23,11 +23,13 @@ export default defineComponent({
         }
     },
     data: () => ({
-        value: ''
+        value: '',
+        pretty: ''
     }),
     watch: {
         data() {
             let value = JSON.stringify(this.data, null, 4);
+            this.pretty = value;
             if (value !== '') {
                 this.$nextTick(() => {
                     let highlightResult = highlight.highlight(value, {
@@ -40,6 +42,7 @@ export default defineComponent({
     },
     created() {
         let value = JSON.stringify(this.data, null, 4);
+        this.pretty = value;
         if (value !== '') {
             this.$nextTick(() => {
                 let highlightResult = highlight.highlight(value, {
@@ -51,7 +54,7 @@ export default defineComponent({
     },
     methods: {
         execCopy() {
-            BrowserUtil.copy(this.value);
+            BrowserUtil.copy(this.pretty);
         }
     }
 });
