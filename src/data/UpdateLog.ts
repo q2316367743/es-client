@@ -2,6 +2,26 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.4.0',
+        time: '2023-02-03',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '概览点击索引可以进行索引管理与查看更加详细的数据'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '文件同步初步'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '默认页面设置'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '更新国际化'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '修复json视图复制错误'
+        }]
+    },
+    {
         version: '2.3.0',
         time: '2023-01-17',
         items: [{

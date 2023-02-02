@@ -289,15 +289,11 @@ export default defineComponent({
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
             this.refresh();
         });
-
         // 字体判断
         if (Constant.platform === 'edge') {
             // 设置全局字体大小
             document.body.style.fontSize = '20px';
         }
-
-    },
-    mounted() {
         this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {
