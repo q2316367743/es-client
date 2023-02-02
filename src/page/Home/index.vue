@@ -37,7 +37,7 @@
             </vxe-list>
             <el-backtop :right="40" :bottom="60" target=".vxe-list--virtual-wrapper"/>
         </div>
-        <div class="home-statistics">
+        <div class="home-statistics" v-if="url">
             <div class="bridge" type="primary">
                 <div class="label">{{ $t('home.statistics.total') }}</div>
                 <div class="value">{{ statistics.total }}</div>

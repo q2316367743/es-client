@@ -48,6 +48,7 @@
             "jsonView": "JSON视图",
             "name": "名称",
             "operation": "操作",
+            "seq": "序号",
             "tableView": "表格视图",
             "url": "链接"
         },
@@ -62,6 +63,7 @@
         },
         "operation": {
             "add": "新增",
+            "cancel": "取消",
             "clear": "清除",
             "close": "关闭",
             "copy": "复制",
@@ -70,6 +72,7 @@
             "execute": "执行",
             "format": "格式化",
             "history": "历史",
+            "load": "载入",
             "more": "更多",
             "new": "新建",
             "open": "开启",
@@ -140,10 +143,11 @@
             },
             "layout": {
                 "mode": {
+                    "title": "方式",
                     "classic": "经典",
                     "default": "默认"
                 },
-                "title": "布局方式"
+                "title": "布局"
             },
             "newIndex": {
                 "defaultReplicaNumber": "默认副本数",

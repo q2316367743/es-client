@@ -1,9 +1,17 @@
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 /**
  * 设置
  */
 export default interface Setting {
+
+    /*--------------------------------- 布局方式 ---------------------------------*/
+
+    /**
+     * 默认页面
+     */
+    defaultPage: PageNameEnum;
 
     /*--------------------------------- 新建索引 ---------------------------------*/
 

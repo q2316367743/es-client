@@ -1,28 +1,3 @@
-let a = {
-    "query": {
-        "bool": {
-            "must": [
-                {
-                    "term": {
-                        "customer_user_info.qq": "82169840"
-                    }
-                }
-            ],
-            "must_not": [],
-            "should": []
-        }
-    },
-    "from": 0,
-    "size": 30,
-    "sort": {
-        "id": {
-            "order": "asc"
-        }
-    },
-    "aggs": {}
-}
-
-
 /**
  * 构造查询条件
  *

@@ -4,102 +4,48 @@
         <div class="option">
             <!-- 左侧条件 -->
             <div class="left">
-                <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
-                    <i class="vxe-icon-arrow-double-left"/>
-                </div>
-                <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
-                    <i class="vxe-icon-arrow-left"/>
-                </div>
-                <el-dropdown trigger="click" @command="pageSizeChange">
-                    <div class="item" style="font-size: 12px;line-height: 20px;">
-                        {{ (page - 1) * size }} - {{ (Math.min(page * size, count)) }}
-                    </div>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item command="1">10</el-dropdown-item>
-                            <el-dropdown-item command="2">100</el-dropdown-item>
-                            <el-dropdown-item command="3">250</el-dropdown-item>
-                            <el-dropdown-item command="4">500</el-dropdown-item>
-                            <el-dropdown-item command="5">1,000</el-dropdown-item>
-                            <el-dropdown-item command="6">自定义</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-                <div class="item" style="font-size: 12px">
-                    / {{ count }}
-                </div>
-                <div class="item" :class="page * size > count ? 'disable' : ''" @click="nextPage">
-                    <i class="vxe-icon-arrow-right"/>
-                </div>
-                <div class="item" :class="page * size > count ? 'disable' : ''" @click="toLast">
-                    <i class="vxe-icon-arrow-double-right"/>
-                </div>
+                <page-help :total="count" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)"/>
                 <div class="sep"></div>
-                <div class="item" :class="!index ? 'disable' : ''" @click="executeQuery(false)">
+                <db-simple-item :disable="!index" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
                     <i class="vxe-icon-refresh"/>
-                </div>
+                </db-simple-item>
                 <div class="sep"></div>
-                <div class="item" :class="!index ? 'disable' : ''" @click="recordAdd">
+                <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
                     <i class="vxe-icon-add"/>
-                </div>
-                <div class="item" :class="deleteRowIndies.size === 0 ? 'disable' : ''" @click="recordReduce()">
+                </db-simple-item>
+                <db-simple-item :disable="deleteRowIndies.size === 0" :tip="$t('common.operation.delete')" @click="recordReduce">
                     <i class="vxe-icon-minus"/>
-                </div>
-                <div class="item" :class="deleteRowIndies.size === 1 ? '' : 'disable'" @click="recordEdit()">
+                </db-simple-item>
+                <db-simple-item :disable="deleteRowIndies.size !== 1" :tip="$t('common.operation.update')" @click="recordEdit">
                     <i class="vxe-icon-edit"/>
-                </div>
+                </db-simple-item>
             </div>
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <vxe-pulldown destroy-on-close v-model="indexVisible" class="data-browse-pull-down">
-                    <div class="item" style="display: flex;" @click="showIndex">
-                        <div v-if="!index" style="user-select: none;">未选择索引</div>
-                        <div v-else style="user-select: none;">{{ index.name }}</div>
-                        <el-icon :size="20" style="margin: 2px;">
-                            <arrow-up v-if="indexVisible"/>
-                            <arrow-down v-else/>
-                        </el-icon>
-                    </div>
-                    <template #dropdown>
-                        <div class="data-browse-pull-down-panel">
-                            <el-empty v-if="indices.length === 0" description="请选择链接"/>
-                            <div class="data-browse-pull-down-index" v-else>
-                                <el-input v-model="indexFilter" class="data-browse-pull-down-search"
-                                          ref="dataBrowsePullDownSearch" clearable/>
-                                <el-scrollbar height="358px" class="data-browse-pull-down-data">
-                                    <div v-for="index in indicesShow" class="data-browse-list-item"
-                                         @click="indexChange(index)">
-                                        <span>{{ index.name }}</span>
-                                        <span v-if="index.alias && index.alias.length > 0">
-                                            <el-tag v-for="alias in index.alias">{{ alias }}</el-tag>
-                                        </span>
-                                    </div>
-                                </el-scrollbar>
-                            </div>
-                        </div>
-                    </template>
-                </vxe-pulldown>
+                <db-index-select @change="indexChange"/>
                 <!-- 打印 -->
-                <div class="item" @click="openExportDialog">
+                <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
-                </div>
+                </db-simple-item>
                 <!-- 索引结构 -->
-                <el-tooltip content="索引结构" placement="bottom" :effect="isDark ? 'dark' : 'light'">
-                    <div class="item" :class="!index ? 'disable' : ''" @click="openMappingDrawer">
-                        <el-icon :size="16" style="margin-top: 4px;">
-                            <structure-icon/>
-                        </el-icon>
-                    </div>
-                </el-tooltip>
+                <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
+                    <el-icon :size="16" style="margin-top: 4px;">
+                        <structure-icon/>
+                    </el-icon>
+                </db-simple-item>
+                <!-- 跳转到基础查询 -->
+                <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
+                    <el-icon>
+                        <Search/>
+                    </el-icon>
+                </db-simple-item>
                 <!-- 跳转到高级查询 -->
-                <el-tooltip content="跳转到 高级查询" placement="bottom" :effect="isDark ? 'dark' : 'light'">
-                    <div class="item" :class="!index ? 'disable' : ''" @click="jumpToSeniorSearch">
-                        <el-icon>
-                            <Filter/>
-                        </el-icon>
-                    </div>
-                </el-tooltip>
+                <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
+                    <el-icon>
+                        <Filter/>
+                    </el-icon>
+                </db-simple-item>
                 <!-- 操作 -->
                 <el-dropdown trigger="click">
                     <div class="item">
@@ -120,47 +66,8 @@
             </div>
         </div>
         <!-- 输入条件 -->
-        <div class="condition">
-            <div class="condition-item">
-                <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
-                <input type="text" v-model="must" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" v-show="must !== ''" @click="must = '';executeQuery(false);">
-                    <el-icon>
-                        <circle-close/>
-                    </el-icon>
-                </div>
-            </div>
-            <div class="condition-sep"></div>
-            <div class="condition-item">
-                <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
-                <input type="text" v-model="should" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" v-show="should !== ''" @click="should = '';executeQuery(false);">
-                    <el-icon>
-                        <circle-close/>
-                    </el-icon>
-                </div>
-            </div>
-            <div class="condition-sep"></div>
-            <div class="condition-item">
-                <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
-                <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" v-show="mustNot !== ''" @click="mustNot = '';executeQuery(false);">
-                    <el-icon>
-                        <circle-close/>
-                    </el-icon>
-                </div>
-            </div>
-            <div class="condition-sep"></div>
-            <div class="condition-item">
-                <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
-                <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery(false)"/>
-                <div class="clear" v-show="orderBy !== ''" @click="orderBy = '';executeQuery(false);">
-                    <el-icon>
-                        <circle-close/>
-                    </el-icon>
-                </div>
-            </div>
-        </div>
+        <db-condition v-model:must-value="must" v-model:should-value="should" v-model:must-not-value="mustNot"
+                      v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)"/>
         <!-- 数据表格 -->
         <div class="content-table">
             <vxe-table border height="100%" class="es-scrollbar" :empty-text="emptyText"
@@ -174,7 +81,7 @@
                 <vxe-column type="expand" width="80">
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
-                            <json-view :data="row._source"/>
+                            <json-view :data="row._source" :copy="false"/>
                             <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
                         </div>
                     </template>
@@ -190,43 +97,8 @@
             </vxe-table>
         </div>
         <!-- 导出弹窗 -->
-        <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :resize="true"
-                   width="600px" height="400px" :draggable="true">
-            <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
-                <el-form :model="exportConfig" label-width="120px">
-                    <el-form-item label="文件名">
-                        <el-input v-model="exportConfig.name" style="width: 215px;"/>
-                    </el-form-item>
-                    <el-form-item label="保存类型">
-                        <el-select v-model="exportConfig.type">
-                            <el-option label="JSON数据（*.json）" :value="1"/>
-                            <el-option label="网页（*.html）" :value="2" disabled/>
-                            <el-option label="XML数据（*.xml）" :value="3"/>
-                            <el-option label="YAML数据（*.yaml）" :value="4"/>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="选择数据">
-                        <el-select v-model="exportConfig.data">
-                            <el-option label="当前数据（当前页的数据）" :value="1"/>
-                            <el-option label="选中数据（当前页选中的数据）" :value="2" disabled/>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="文件内容">
-                        <el-select v-model="exportConfig.result">
-                            <el-option label="表格数据" :value="1"/>
-                            <el-option label="原始数据" :value="2"/>
-                            <el-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2"/>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <template #footer>
-                <el-button @click="runExportDialog(1)" text>复制到剪切板</el-button>
-                <el-button @click="exportDialog = false">取消</el-button>
-                <el-button @click="runExportDialog(2)" type="success">打印</el-button>
-                <el-button @click="runExportDialog(3)" type="primary">导出</el-button>
-            </template>
-        </vxe-modal>
+        <export-dialog v-model="exportDialog" :index-name="index ? index.name : ''" :records="records"
+                       :result="result"/>
         <!-- 新增对话框 -->
         <vxe-modal v-model="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" :show-footer="true" :resize="true"
                    width="800px" height="520px" :draggable="true">
@@ -278,10 +150,11 @@ import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
-import {ArrowDown, ArrowUp, Check, CircleClose, Download, Filter, Operation, View} from "@element-plus/icons-vue";
+import {Check, Filter, Operation, Search, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
+import useUrlStore from "@/store/UrlStore";
 
 import IndexView from "@/view/index/IndexView";
 import Header from "@/view/Header";
@@ -294,44 +167,49 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import Optional from "@/utils/Optional";
 import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
-import {stringContain} from "@/utils/SearchUtil";
+import MessageUtil from "@/utils/MessageUtil";
 
-import conditionBuild from './build/ConditionBuild';
-import recordBuild from './build/RecordBuild';
-import './index.less';
-import ExportConfig from "./domain/ExportConfig";
-import exportData from "./domain/ExportData";
-import tool from "./tool";
+import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
+import PageHelp from "@/page/DataBrowse/component/PageHelp.vue";
+import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
+import DbCondition from "@/page/DataBrowse/component/DbCondition.vue";
+
+import conditionBuild from '@/page/DataBrowse/build/ConditionBuild';
+import recordBuild from '@/page/DataBrowse/build/RecordBuild';
+import DataBuild from "@/page/DataBrowse/build/DataBuild";
+import '@/page/DataBrowse/index.less';
+import tool from "@/page/DataBrowse/tool";
 
 import BrowserUtil from "@/utils/BrowserUtil";
-import DataBuild from "@/page/DataBrowse/build/DataBuild";
 import mitt from "@/plugins/mitt";
-import {isDark, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {isDark, useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
+import BaseOrder from "@/entity/BaseOrder";
+
 import JsonView from "@/components/JsonView/index.vue";
-import useUrlStore from "@/store/UrlStore";
-import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
-import MessageUtil from "@/utils/MessageUtil";
+import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
+import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
 
 
 export default defineComponent({
     name: 'data-browse',
     components: {
-        DbMapping,
+        DbSimpleItem,
+        DbIndexSelect,
+        DbCondition,
+        ExportDialog,
+        PageHelp,
+        DbMapping, Search,
         JsonView,
         StructureIcon,
-        ArrowDown, ArrowUp, Filter, Operation, Download, View, Check, CircleClose, Codemirror
+        Filter, Operation, View, Check, Codemirror
     },
     data: () => ({
         page: 1,
         size: useSettingStore().getPageSize,
         count: 1,
         index: undefined as IndexView | undefined,
-        indexFilter: '',
         isDark,
-
-        // 下拉面板
-        indexVisible: false,
 
         // 弹窗
         exportDialog: false,
@@ -379,14 +257,6 @@ export default defineComponent({
         sortConfig: {
             remote: true
         } as VxeTablePropTypes.SortConfig,
-        exportConfig: {
-            name: '',
-            type: 1,
-            data: 1,
-            result: 1,
-            config: 1,
-            fields: new Array<string>()
-        } as ExportConfig,
 
         // 对话框
         addConfig: {
@@ -409,17 +279,6 @@ export default defineComponent({
     computed: {
         ...mapState(useIndexStore, ['indices', 'indicesMap']),
         ...mapState(useUrlStore, ['url']),
-        indicesShow() {
-            if (this.indices.length === 0) {
-                return new Array<IndexView>();
-            }
-            // 此处是索引排序
-            return this.indices
-                .filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter))
-                .sort((e1, e2) => {
-                    return e1.name.localeCompare(e2.name, 'zh');
-                })
-        },
         recordMap() {
             return ArrayUtil.map(this.records, '_id');
         },
@@ -452,19 +311,6 @@ export default defineComponent({
             return '什么也没有';
         }
     },
-    watch: {
-        'exportConfig.type': {
-            handler(newValue) {
-                // 如果变为html，则不能导出全部数据
-                if (newValue === 2) {
-                    if (this.exportConfig.result === 3) {
-                        this.exportConfig.result = 1;
-                    }
-                }
-            },
-            immediate: true
-        }
-    },
     created() {
         mitt.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置条件
@@ -475,7 +321,6 @@ export default defineComponent({
             this.orderBy = '';
             this.exportDialog = false;
             this.addConfig.dialog = false;
-            this.indexVisible = false;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
             this.count = 1;
@@ -630,37 +475,6 @@ export default defineComponent({
 
         // >----------------------------------- 上面按钮 ---------------------------------->
         // 左侧
-        toFirst() {
-            if (this.page === 1) {
-                return;
-            }
-            this.page = 1;
-            this.executeQuery()
-        },
-        prePage() {
-            if (this.page === 1) {
-                return;
-            }
-            this.page -= 1;
-            this.executeQuery()
-        },
-        pageSizeChange(command: string) {
-            tool.pageSizeChange(command, this.executeQuery, (page, size) => {
-                this.page = page;
-                this.size = size;
-            })
-        },
-        nextPage() {
-            if (this.page * this.size > this.count) {
-                return;
-            }
-            this.page += 1;
-            this.executeQuery();
-        },
-        toLast() {
-            this.page = Math.ceil(this.count / this.size)
-            this.executeQuery();
-        },
         recordAdd() {
             if (!this.index) {
                 return;
@@ -780,7 +594,6 @@ export default defineComponent({
         // 右侧
         indexChange(index: IndexView) {
             this.index = index;
-            this.indexVisible = false;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
             this.must = '';
@@ -799,6 +612,33 @@ export default defineComponent({
                 mapping: this.index.mapping
             }
         },
+        jumpToBaseSearch() {
+            if (!this.index) {
+                return;
+            }
+            // 页面跳转
+            usePageJumpEvent.emit(PageNameEnum.BASE_SEARCH);
+            // 基础数据
+            let orders = new Array<BaseOrder>();
+            // 填充数据
+            let count = 1;
+            let condition = conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size);
+            // 排序
+            for (let key in condition.sort) {
+                orders.push({
+                    id: count++,
+                    field: `_doc.${key}`,
+                    type: condition.sort[key].order
+                });
+            }
+            useBaseSearchEvent.emit({
+                execute: true,
+                name: this.index.name,
+                index: this.index.name,
+                conditions: [],
+                orders
+            });
+        },
         jumpToSeniorSearch() {
             if (!this.index) {
                 return;
@@ -807,6 +647,7 @@ export default defineComponent({
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             // 填充数据
             useSeniorSearchEvent.emit({
+                name: this.index.name,
                 link: `/${this.index.name}/_search`,
                 method: 'POST',
                 params: JSON.stringify(
@@ -827,34 +668,12 @@ export default defineComponent({
                 MessageUtil.warning('数据为空');
                 return;
             }
-            this.exportConfig = {
-                name: this.index ? this.index!.name : '',
-                type: 1,
-                data: 1,
-                result: 1,
-                config: 1,
-                fields: new Array<string>()
-            }
             this.exportDialog = true;
-        },
-        runExportDialog(config: number) {
-            this.exportConfig.config = config;
-            // 根据类型判断结果
-            try {
-                exportData(this.exportConfig, this.records, this.result);
-                this.exportDialog = false;
-                // 提示
-                MessageUtil.success(config === 1 ? '成功复制到剪切板' : config === 2 ? '成功打印' : config === 3 ? '成功导出' : '成功');
-            } catch (e) {
-                MessageUtil.error('导出失败');
-            }
         },
         // <----------------------------------------- 上面按钮 -----------------------------------------<
 
         // >----------------------------------------- 功能 ----------------------------------------->
-        copy(value: any) {
-            BrowserUtil.copy(JSON.stringify(value, null, 4));
-        },
+        copy: (value: any) => BrowserUtil.copy(JSON.stringify(value, null, 4)),
         jumpToSeniorSearchByInsert() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             useSeniorSearchEvent.emit({
@@ -888,18 +707,6 @@ export default defineComponent({
             this.deleteRowIndies = new Set<string>();
             // 清除选中行
             (this.$refs['vxeTable'] as any).clearCheckboxRow();
-        },
-        showIndex() {
-            this.indexVisible = !this.indexVisible;
-            if (this.indexVisible) {
-                // 聚焦
-                if (this.indices.length > 0) {
-                    this.$nextTick(() => {
-                        let input = this.$refs['dataBrowsePullDownSearch'] as HTMLInputElement;
-                        input.focus();
-                    })
-                }
-            }
         }
     }
 });

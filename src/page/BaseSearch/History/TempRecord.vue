@@ -11,23 +11,29 @@
         <div class="temp-record-body">
             <el-scrollbar>
                 <vxe-table :row-config="{isHover: true}" ref="tempRecordTable">
-                    <vxe-column type="seq" width="50" :title="$t('app.index')"/>
-                    <vxe-column field="index" title="索引" width="250">
+                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"/>
+                    <vxe-column field="index" :title="$t('common.keyword.index')" width="250">
                         <template #default="{row}">
                             <el-link type="primary" target="_blank">{{ row.index }}</el-link>
-                            <div class="url-copy" @click="execCopy(row.link)">{{ $t('app.copy') }}</div>
+                            <div class="url-copy" @click="execCopy(row.link)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column field="id" title="时间" width="200">
                         <template #default="{row}">
-                            {{ prettyDate(new Date(row.id))}}
+                            {{ prettyDate(new Date(row.id)) }}
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('app.operation')" width="270">
+                    <vxe-column :title="$t('common.keyword.operation')" width="270">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">载入</el-button>
-                            <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录</el-button>
-                            <el-button type="danger" size="small" @click="removeById(row.id)">{{ $t('app.delete') }}</el-button>
+                            <el-button type="success" size="small" @click="load(row)">{{
+                                    $t('common.operation.load')
+                                }}
+                            </el-button>
+                            <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
+                            </el-button>
+                            <el-button type="danger" size="small" @click="removeById(row.id)">
+                                {{ $t('common.operation.delete') }}
+                            </el-button>
                         </template>
                     </vxe-column>
                 </vxe-table>
@@ -46,7 +52,7 @@ import BrowserUtil from "@/utils/BrowserUtil";
 import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import { stringContain } from "@/utils/SearchUtil";
+import {stringContain} from "@/utils/SearchUtil";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";

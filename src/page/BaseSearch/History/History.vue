@@ -2,7 +2,7 @@
     <div class="bs-history">
         <vxe-toolbar ref="bsHistoryToolbar" custom export class="bs-history-toolbar">
             <template #buttons>
-                <el-input v-model="name" :placeholder="$t('setting.link.name')"
+                <el-input v-model="name" :placeholder="$t('common.keyword.name')"
                           style="width: 200px;" @input="search"></el-input>
                 <el-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
                            style="margin-left: 12px;"/>
@@ -12,17 +12,19 @@
             <el-scrollbar>
                 <vxe-table ref="bsHistoryTable" :data="histories" class="data" :column-config="columnConfig"
                            :export-config="exportConfig">
-                    <vxe-column type="seq" width="50" :title="$t('setting.link.index')"></vxe-column>
-                    <vxe-column field="name" :title="$t('setting.link.name')" width="250"></vxe-column>
-                    <vxe-column field="index" title="索引" width="400">
+                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
+                    <vxe-column field="name" :title="$t('common.keyword.name')" width="250"></vxe-column>
+                    <vxe-column field="index" :title="$t('common.keyword.index')" width="400">
                         <template #default="{row}">
                             <el-link type="primary" target="_blank">{{ row.index }}</el-link>
-                            <div class="url-copy" @click="execCopy(row.index)">{{ $t('app.copy') }}</div>
+                            <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('app.operation')" width="200">
+                    <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">载入</el-button>
+                            <el-button type="success" size="small" @click="load(row)">
+                                {{ $t('common.operation.load') }}
+                            </el-button>
                             <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>

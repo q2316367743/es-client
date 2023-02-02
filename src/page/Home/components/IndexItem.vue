@@ -70,7 +70,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, markRaw, PropType} from "vue";
-import {ArrowDown, ArrowUp, DataAnalysis, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
+import {ArrowDown, ArrowUp, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
 import {ElMessageBox} from "element-plus";
 
 import IndexApi from '@/api/IndexApi'
@@ -104,7 +104,6 @@ export default defineComponent({
         // 图标
         deleteIcon: markRaw(Delete),
         switchButtonIcon: markRaw(SwitchButton),
-        dataAnalysisIcon: markRaw(DataAnalysis),
         searchIcon: markRaw(Search)
     }),
     computed: {

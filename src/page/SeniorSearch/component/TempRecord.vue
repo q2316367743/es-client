@@ -20,29 +20,29 @@
         <div class="temp-record-body">
             <el-scrollbar>
                 <vxe-table :data="tempRecords" :row-config="{isHover: true}" ref="tempRecordTable">
-                    <vxe-column type="seq" width="50" :title="$t('app.index')"/>
+                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"/>
                     <vxe-column field="method" title="请求方法" width="100"/>
                     <vxe-column field="link" title="链接" width="250">
                         <template #default="{row}">
                             <el-link type="primary" target="_blank">{{ row.link }}</el-link>
-                            <div class="url-copy" @click="execCopy(row.link)">{{ $t('app.copy') }}</div>
+                            <div class="url-copy" @click="execCopy(row.link)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column field="params" title="请求参数" width="280">
                         <template #default="{row}">
                             <div class="temp-record-params">
                                 <div class="temp-record-params-value" :title="row.params">{{ row.params }}</div>
-                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
+                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('common.operation.copy') }}</div>
                             </div>
                         </template>
                     </vxe-column>
                     <vxe-column :title="$t('app.operation')" width="270">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">载入</el-button>
+                            <el-button type="success" size="small" @click="load(row)">{{ $t('common.operation.load') }}</el-button>
                             <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
                             </el-button>
                             <el-button type="danger" size="small" @click="removeById(row.id)">{{
-                                    $t('app.delete')
+                                    $t('common.operation.delete')
                                 }}
                             </el-button>
                         </template>

@@ -2,21 +2,21 @@
     <div class="hm-history">
         <vxe-toolbar ref="historyToolbar" custom export class="hm-history-toolbar">
             <template #buttons>
-                <el-input v-model="name" :placeholder="$t('setting.link.name')"
+                <el-input v-model="name" :placeholder="$t('common.keyword.name')"
                           style="width: 200px;" @input="search"></el-input>
                 <el-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
                            style="margin-left: 12px;"/>
             </template>
             <template #tools>
-                <el-button type="primary" style="margin-right: 12px;" @click="addOpen">新增</el-button>
+                <el-button type="primary" style="margin-right: 12px;" @click="addOpen">{{ $t('common.operation.add')}}</el-button>
             </template>
         </vxe-toolbar>
         <div class="hm-history-body">
             <el-scrollbar>
                 <vxe-table ref="historyTable" :data="histories" class="data" :column-config="columnConfig"
                            :export-config="exportConfig">
-                    <vxe-column type="seq" width="50" :title="$t('setting.link.index')"></vxe-column>
-                    <vxe-column field="name" :title="$t('setting.link.name')" width="150"></vxe-column>
+                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
+                    <vxe-column field="name" :title="$t('common.keyword.name')" width="150"></vxe-column>
                     <vxe-column field="link" title="链接" width="400">
                         <template #default="{row}">
                             <el-link type="primary" target="_blank">{{ row.link }}</el-link>
@@ -32,17 +32,21 @@
                             </div>
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('app.operation')" width="200">
+                    <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">载入</el-button>
-                            <el-button type="primary" size="small" @click="updateOpen(row)">{{
-                                    $t('app.update')
+                            <el-button type="success" size="small" @click="load(row)">{{
+                                    $t('common.operation.load')
                                 }}
                             </el-button>
-                            <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
-                                           cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
+                            <el-button type="primary" size="small" @click="updateOpen(row)">{{
+                                    $t('common.operation.update')
+                                }}
+                            </el-button>
+                            <el-popconfirm title="确认删除此条记录？"
+                                           :confirm-button-text="$t('common.operation.delete')"
+                                           :cancel-button-text="$t('common.operation.cancel')" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <el-button type="danger" size="small">{{ $t('app.delete') }}
+                                    <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
                                     </el-button>
                                 </template>
                             </el-popconfirm>

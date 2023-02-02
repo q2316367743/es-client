@@ -17,9 +17,7 @@ import MessageUtil from "@/utils/MessageUtil";
 async function url(remoteList: Array<Url>): Promise<void> {
     // 获取策略
     let strategy = syncStrategyContext.getStrategy(useSyncStore().getSyncMode);
-    Assert.notNull(strategy, () => {
-        throw new Error("同步策略没有获取到");
-    });
+    Assert.notNull(strategy, "同步策略没有获取到");
     // 新增的数据
     let remoteAdd = new Array<Url>();
     let localAdd = new Array<Url>();

@@ -4,7 +4,7 @@
         <el-form-item label="模式">
             <el-radio-group v-model="serverSetting.mode">
                 <el-radio :label="ServerModeEnum.CLIENT" :disabled="Constant.mode === 'server'">客户端模式</el-radio>
-                <el-radio :label="ServerModeEnum.SERVER">服务器模式</el-radio>
+                <el-radio :label="ServerModeEnum.SERVER" disabled>服务器模式</el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item label="服务器地址">
@@ -20,8 +20,8 @@
         <el-form-item label="模式">
             <el-radio-group v-model="syncSetting.mode">
                 <el-radio :label="SyncModeEnum.DISABLE">禁用</el-radio>
-                <el-radio :label="SyncModeEnum.SERVER">服务器</el-radio>
                 <el-radio :label="SyncModeEnum.FILE">文件</el-radio>
+                <el-radio :label="SyncModeEnum.SERVER" disabled>服务器</el-radio>
                 <el-radio :label="SyncModeEnum.WEBDAV" disabled>WebDav</el-radio>
                 <el-radio :label="SyncModeEnum.SFTP" disabled>sftp</el-radio>
             </el-radio-group>
@@ -153,10 +153,9 @@ export default defineComponent({
                 loading.setText('获取高级搜索历史');
                 let seniorSearchHistory = await seniorSearchHistoryService.list('');
                 loading.setText('开始下载');
-                console.log(url, baseSearchHistory, seniorSearchHistory)
                 BrowserUtil.download(JSON.stringify({
                     url, baseSearchHistory, seniorSearchHistory
-                }, null, 4), '数据备份下载.json', 'application/json');
+                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');
             } catch (e: any) {
                 MessageUtil.error('下载失败', e);
             } finally {

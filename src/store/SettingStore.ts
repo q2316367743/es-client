@@ -5,10 +5,14 @@ import Setting from "@/domain/Setting";
 import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 const useSettingStore = defineStore('setting', {
     state: () => {
         let setting = useLocalStorage<Setting>('setting', {
+
+            // 布局设置
+            defaultPage: PageNameEnum.HOME,
 
             // 新建索引
             defaultReplica: 1,
@@ -41,6 +45,7 @@ const useSettingStore = defineStore('setting', {
         }
     },
     getters: {
+        getDefaultPage: (state) => Optional.ofNullable(state.instance.defaultPage).orElse(PageNameEnum.HOME),
         getLanguage: (state) => state.language,
         getDefaultShard: (state) => state.instance.defaultShard,
         getDefaultReplica: (state) => state.instance.defaultReplica,

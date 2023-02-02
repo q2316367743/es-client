@@ -196,7 +196,6 @@ export default defineComponent({
                             luceneVersion: response.version.lucene_version
                         }
                     }).catch((e) => {
-                        console.error(e);
                         this.testDialog = true;
                         this.testData = {
                             icon: 'error',
