@@ -36,7 +36,7 @@ const useUrlStore = defineStore('url', {
          */
         reset(callback?: () => void) {
             urlService.list().then(urls => {
-                this.urls = urls;
+                this.urls = urls.sort((a, b) => b.sequence - a.sequence);
                 if (callback) {
                     callback()
                 }

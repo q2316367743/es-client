@@ -12,6 +12,8 @@ export default {
     platform: import.meta.env.VITE_PLATFORM,
     // @ts-ignore
     mode: import.meta.env.VITE_MODE,
+    // @ts-ignore
+    storage: import.meta.env.VITE_STORAGE,
     homeUrl: 'https://blog.esion.xyz',
     docUrl: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r',
     repositories: [{

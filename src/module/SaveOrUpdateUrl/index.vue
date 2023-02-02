@@ -37,7 +37,8 @@
                     <el-button @click="test">{{ $t('common.operation.test') }}</el-button>
                 </template>
             </el-popover>
-            <el-button type="primary" @click="submit">{{ isSave ? $t('common.operation.add') : $t('common.operation.update') }}
+            <el-button type="primary" @click="submit">
+                {{ isSave ? $t('common.operation.add') : $t('common.operation.update') }}
             </el-button>
         </template>
     </el-dialog>
@@ -141,7 +142,7 @@ export default defineComponent({
                             .catch(e => MessageUtil.error('新增失败', e));
                     } else {
                         // 更新
-                        urlService.updateById({
+                        urlService.updateById(this.url.id!, {
                             name: this.url.name,
                             value: this.url.value,
                             sequence: this.url.sequence,
@@ -150,7 +151,7 @@ export default defineComponent({
                             authUser: this.url.authUser,
                             authPassword: this.url.authPassword
                             // eslint-disable-next-line
-                        }, this.url.id!)
+                        })
                             .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
                             .catch(e => MessageUtil.error('修改失败', e));
                     }

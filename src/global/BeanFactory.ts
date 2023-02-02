@@ -25,12 +25,13 @@ import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyI
 
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
+import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 
 const dexieInstance = new DexieInstance();
 
-export const urlService = new UrlService(dexieInstance, dexieInstance.table(TableNameEnum.URL));
-export const baseSearchHistoryService = new BaseSearchHistoryService(dexieInstance.table(TableNameEnum.BASE_SEARCH_HISTORY));
-export const seniorSearchHistoryService = new SeniorSearchHistoryService(dexieInstance.table(TableNameEnum.SENIOR_SEARCH_HISTORY))
+export const urlService = new UrlService(StorageStrategyContext.getStorageStrategy());
+export const baseSearchHistoryService = new BaseSearchHistoryService(StorageStrategyContext.getStorageStrategy());
+export const seniorSearchHistoryService = new SeniorSearchHistoryService(StorageStrategyContext.getStorageStrategy());
 
 export const versionManage = new VersionManage();
 

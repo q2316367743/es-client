@@ -8,7 +8,9 @@
                            style="margin-left: 12px;"/>
             </template>
             <template #tools>
-                <el-button type="primary" style="margin-right: 12px;" @click="addOpen">{{ $t('common.operation.add')}}</el-button>
+                <el-button type="primary" style="margin-right: 12px;" @click="addOpen">
+                    {{ $t('common.operation.add') }}
+                </el-button>
             </template>
         </vxe-toolbar>
         <div class="hm-history-body">
@@ -44,7 +46,8 @@
                             </el-button>
                             <el-popconfirm title="确认删除此条记录？"
                                            :confirm-button-text="$t('common.operation.delete')"
-                                           :cancel-button-text="$t('common.operation.cancel')" @confirm="removeById(row.id)" width="200px">
+                                           :cancel-button-text="$t('common.operation.cancel')"
+                                           @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
                                     <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
                                     </el-button>
@@ -75,6 +78,7 @@ import useUrlStore from "@/store/UrlStore";
 import {mapState} from "pinia";
 import HistorySaveAndUpdate from "@/page/SeniorSearch/component/HistorySaveAndUpdate.vue";
 import MessageUtil from "@/utils/MessageUtil";
+import {stringContain} from "@/utils/SearchUtil";
 
 interface Params {
     cellValue: any
@@ -135,8 +139,8 @@ export default defineComponent({
                 this.histories = new Array<SeniorSearchHistory>();
                 return;
             }
-            seniorSearchHistoryService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
-                .then(histories => this.histories = histories);
+            seniorSearchHistoryService.list(this.onlyCurrent ? useUrlStore().id : undefined)
+                .then(histories => this.histories = histories.filter(e => stringContain(e.name!, this.name)));
         },
         prettyDate(params: Params) {
             return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");

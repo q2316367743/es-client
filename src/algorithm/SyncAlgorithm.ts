@@ -65,7 +65,7 @@ async function url(remoteList: Array<Url>): Promise<void> {
     // 本地更新，只会更新内容
     for (let url of localUpdate) {
         if (url.id) {
-            await urlService.updateById(url, url.id);
+            await urlService.updateById(url.id, url);
         }
     }
     // 远程更新，更新包括ID
