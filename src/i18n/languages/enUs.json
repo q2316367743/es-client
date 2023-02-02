@@ -143,6 +143,7 @@
             },
             "layout": {
                 "mode": {
+                    "title": "mode",
                     "classic": "classic",
                     "default": "default"
                 },

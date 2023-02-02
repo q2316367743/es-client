@@ -143,10 +143,11 @@
             },
             "layout": {
                 "mode": {
+                    "title": "方式",
                     "classic": "经典",
                     "default": "默认"
                 },
-                "title": "布局方式"
+                "title": "布局"
             },
             "newIndex": {
                 "defaultReplicaNumber": "默认副本数",

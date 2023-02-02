@@ -177,7 +177,6 @@ import en from 'element-plus/lib/locale/lang/en'
 import {ElNotification} from "element-plus";
 // 模块
 import Info from '@/module/info/index.vue';
-import Home from '@/page/Home/index.vue';
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
@@ -206,7 +205,7 @@ export default defineComponent({
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
         Coin, DataBoard, Filter, SettingIcon, DataLine,
         // 页面
-        Home,
+        Home: defineAsyncComponent(() => import("@/page/Home/index.vue")),
         DataBrowse: defineAsyncComponent(() => import("@/page/DataBrowse/index.vue")),
         BaseSearch: defineAsyncComponent(() => import("@/page/BaseSearch/index.vue")),
         SeniorSearch: defineAsyncComponent(() => import("@/page/SeniorSearch/index.vue")),
@@ -297,6 +296,9 @@ export default defineComponent({
             document.body.style.fontSize = '20px';
         }
 
+    },
+    mounted() {
+        this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {
         async selectUrl(value: string | number) {

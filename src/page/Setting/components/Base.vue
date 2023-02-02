@@ -3,10 +3,20 @@
     <el-form style="margin-top: 10px;" label-width="160px" label-position="top">
         <el-collapse v-model="actives">
             <el-collapse-item :title="$t('setting.base.layout.title')">
-                <el-select v-model="layoutMode">
-                    <el-option :value="LayoutModeEnum.DEFAULT" :label="$t('setting.base.layout.mode.default')"/>
-                    <el-option :value="LayoutModeEnum.CLASSIC" :label="$t('setting.base.layout.mode.classic')"/>
-                </el-select>
+                <el-form-item :label="$t('setting.base.layout.mode.title')">
+                    <el-select v-model="layoutMode">
+                        <el-option :value="LayoutModeEnum.DEFAULT" :label="$t('setting.base.layout.mode.default')"/>
+                        <el-option :value="LayoutModeEnum.CLASSIC" :label="$t('setting.base.layout.mode.classic')"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="默认页面">
+                    <el-select v-model="instance.defaultPage">
+                        <el-option :value="PageNameEnum.HOME" label="概览"/>
+                        <el-option :value="PageNameEnum.DATA_BROWSER" label="数据浏览"/>
+                        <el-option :value="PageNameEnum.BASE_SEARCH" label="基础搜索"/>
+                        <el-option :value="PageNameEnum.SENIOR_SEARCH" label="高级搜索"/>
+                    </el-select>
+                </el-form-item>
             </el-collapse-item>
             <el-collapse-item :title="$t('setting.base.newIndex.title')">
                 <el-form-item :label="$t('setting.base.newIndex.defaultShardNumber')">
@@ -136,12 +146,15 @@
 import {defineComponent} from "vue";
 import useSettingStore from "@/store/SettingStore";
 import {mapState} from "pinia";
+
 import {layoutMode} from "@/global/BeanFactory";
-import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import JsonTheme from "@/data/JsonTheme";
+import emitter from "@/plugins/mitt";
+
+import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 export default defineComponent({
     name: 'setting-base',
@@ -152,6 +165,7 @@ export default defineComponent({
         layoutMode,
         LayoutModeEnum,
         TabCloseModeEnum,
+        PageNameEnum,
         JsonTheme,
         homeExcludeIndicesConfig: {
             input: false,
