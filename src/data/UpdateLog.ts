@@ -9,7 +9,7 @@ export default [
             content: '概览点击索引可以进行索引管理与查看更加详细的数据'
         }, {
             label: LogItemEnum.ADD,
-            content: '文件同步初步'
+            content: '文件同步初步 - 暂不建议使用，只有下载完成了，上传有点问题'
         }, {
             label: LogItemEnum.ADD,
             content: '默认页面设置'

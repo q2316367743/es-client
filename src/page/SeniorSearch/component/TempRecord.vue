@@ -36,7 +36,7 @@
                             </div>
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('app.operation')" width="270">
+                    <vxe-column :title="$t('common.keyword.operation')" width="270">
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">{{ $t('common.operation.load') }}</el-button>
                             <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录

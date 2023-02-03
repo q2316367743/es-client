@@ -28,7 +28,7 @@
                             <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <el-button type="danger" size="small">{{ $t('app.delete') }}
+                                    <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
                                     </el-button>
                                 </template>
                             </el-popconfirm>
