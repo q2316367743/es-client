@@ -1,4 +1,5 @@
 import TableNameEnum from "@/enumeration/TableNameEnum";
+import Base from "@/entity/Base";
 
 export default interface StorageStrategy {
 
@@ -8,7 +9,7 @@ export default interface StorageStrategy {
      * @param name 表名
      * @param id ID
      */
-    one<T>(name: TableNameEnum, id: number): Promise<T | undefined>;
+    one<T extends Base>(name: TableNameEnum, id: number): Promise<T | undefined>;
 
     /**
      * 列表查询
@@ -16,7 +17,7 @@ export default interface StorageStrategy {
      * @param name 表名
      * @param condition 条件
      */
-    list<T>(name: TableNameEnum, condition?: Partial<T>): Promise<Array<T>>;
+    list<T extends Base>(name: TableNameEnum, condition?: Partial<T>): Promise<Array<T>>;
 
     /**
      * 新增记录
@@ -24,7 +25,7 @@ export default interface StorageStrategy {
      * @param name 表名
      * @param record 记录
      */
-    insert<T>(name: TableNameEnum, record: T): Promise<number>;
+    insert<T extends Base>(name: TableNameEnum, record: T): Promise<number>;
 
     /**
      * 根据ID修改记录
@@ -33,7 +34,7 @@ export default interface StorageStrategy {
      * @param id ID
      * @param record 记录
      */
-    update<T>(name: TableNameEnum, id: number, record: T): Promise<void>;
+    update<T extends Base>(name: TableNameEnum, id: number, record: T): Promise<void>;
 
     /**
      * 根据ID删除记录
@@ -41,6 +42,6 @@ export default interface StorageStrategy {
      * @param name 表名
      * @param id ID
      */
-    delete<T>(name: TableNameEnum, id: number): Promise<void>;
+    delete<T extends Base>(name: TableNameEnum, id: number): Promise<void>;
 
 }

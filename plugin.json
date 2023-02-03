@@ -1,0 +1,31 @@
+{
+    "main": "index.html",
+    "logo": "public/logo.png",
+    "platform": [
+        "win32",
+        "darwin",
+        "linux"
+    ],
+    "development": {
+        "main": "http://localhost:5173/"
+    },
+    "pluginSetting": {
+        "single": true,
+        "height": 0
+    },
+    "features": [
+        {
+            "code": "application-name",
+            "explain": "es-client",
+            "icon": "public/logo.png",
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                "es-client"
+            ]
+        }
+    ]
+}

@@ -191,7 +191,14 @@ import Translate from "@/icon/Translate.vue";
 import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
 
-import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
+import {
+    applicationLaunch,
+    isDark,
+    toggleDark,
+    usePageJumpEvent,
+    useUrlSelectEvent,
+    versionManage
+} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 let showHeightNotification = true;
@@ -250,7 +257,11 @@ export default defineComponent({
         },
     },
     created() {
-        useUrlStore().reset();
+        applicationLaunch.register(() => {
+            // 刷新索引列表
+            useUrlStore().reset();
+            useUrlSelectEvent.on(urlId => this.selectUrl(urlId));
+        })
 
         // 国际化
         let language = useSettingStore().getLanguage;

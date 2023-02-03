@@ -19,7 +19,10 @@
             "@/*": [
                 "./src/*"
             ]
-        }
+        },
+        "types": [
+            "utools-api-types"
+        ]
     },
     "include": [
         "src/**/*.ts",

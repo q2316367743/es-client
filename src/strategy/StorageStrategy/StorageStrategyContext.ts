@@ -1,30 +1,24 @@
 import StorageStrategy from "@/strategy/StorageStrategy/StorageStrategy";
 import Constant from "@/global/Constant";
-import BrowserStorageStrategyImpl from "@/strategy/StorageStrategy/impl/BrowserStorageStrategyImpl";
-import UtoolsStorageStrategyImpl from "@/strategy/StorageStrategy/impl/UtoolsStorageStrategyImpl";
 
-class StorageStrategyContext {
+export default class StorageStrategyContext {
 
-    private readonly strategy: StorageStrategy;
+    private strategy?: StorageStrategy;
 
-    constructor() {
+    async init(): Promise<void> {
         if (Constant.storage === 'utools') {
-            this.strategy = new UtoolsStorageStrategyImpl();
+            let UtoolsStorageStrategyImpl = await import('@/strategy/StorageStrategy/impl/UtoolsStorageStrategyImpl')
+            this.strategy = new UtoolsStorageStrategyImpl.default();
+            return Promise.resolve();
         } else {
-            this.strategy = new BrowserStorageStrategyImpl();
+            let BrowserStorageStrategyImpl = await import('@/strategy/StorageStrategy/impl/BrowserStorageStrategyImpl')
+            this.strategy = new BrowserStorageStrategyImpl.default();
+            return Promise.resolve();
         }
     }
 
     getStrategy(): StorageStrategy {
-        return this.strategy;
+        return this.strategy!;
     }
 
-}
-
-const storageStrategyContext = new StorageStrategyContext();
-
-export default {
-    getStorageStrategy(): StorageStrategy {
-        return storageStrategyContext.getStrategy();
-    }
 }

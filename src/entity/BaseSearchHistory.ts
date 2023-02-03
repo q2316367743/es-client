@@ -1,15 +1,11 @@
 import BaseQuery from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
+import Base from "@/entity/Base";
 
 /**
  * 历史记录
  * */
-export default interface BaseSearchHistory {
-
-    /**
-     * 历史ID
-     */
-    id?: number;
+export default interface BaseSearchHistory extends Base{
 
     /**
      * URL的id
