@@ -8,7 +8,7 @@
             <el-option label="should" value="should"></el-option>
         </el-select>
         <!-- 选择查询字段 -->
-        <el-select v-model="condition.field" filterable :placeholder="$t('baseSearch.placeholder.condition')"
+        <el-select v-model="condition.field" filterable :placeholder="$t('baseSearch.placeholder.field')"
                    style="margin-left: 10px">
             <el-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name"></el-option>
         </el-select>
@@ -22,27 +22,13 @@
             <el-option label="term" value="term"></el-option>
             <!-- 通配符查询 -->
             <el-option label="wildcard" value="wildcard"></el-option>
-            <el-option label="prefix" value="prefix" disabled></el-option>
             <el-option label="range" value="range"></el-option>
-            <el-option label="fuzzy" value="fuzzy" disabled></el-option>
-            <el-option label="query_string" value="query_string" disabled></el-option>
-            <el-option label="missing" value="missing" disabled></el-option>
+            <el-option label="range lt" value="range_lt"></el-option>
+            <el-option label="range lte" value="range_lte"></el-option>
+            <el-option label="range gt" value="range_gt"></el-option>
+            <el-option label="range gte" value="range_gte"></el-option>
         </el-select>
-        <el-input v-model="condition.value" style="width: 180px; margin-left: 10px"
-                  v-if="condition.condition !== 'range'" />
-        <div style="display: inline-block;margin-left: 10px;" v-if="condition.condition === 'range'">
-            <el-select v-model="condition.extra_left_condition" :placeholder="$t('baseSearch.placeholder.condition')">
-                <el-option value="gt" label="gt"></el-option>
-                <el-option value="gte" label="gte"></el-option>
-            </el-select>
-            <el-input v-model="condition.extra_left_value" style="width: 180px;margin-left: 10px;"></el-input>
-            <el-select v-model="condition.extra_right_condition" style="margin-left: 10px;"
-                       :placeholder="$t('baseSearch.placeholder.condition')">
-                <el-option value="lt" label="lt"></el-option>
-                <el-option value="lte" label="lte"></el-option>
-            </el-select>
-            <el-input v-model="condition.extra_right_value" style="width: 180px;margin-left: 10px;" />
-        </div>
+        <el-input v-model="condition.value" style="width: 180px; margin-left: 10px"/>
         <!-- 操作 -->
         <el-button type="primary" style="margin-left: 10px" @click="add">{{
                 $t('common.operation.add')

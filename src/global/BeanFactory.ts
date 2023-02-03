@@ -1,5 +1,5 @@
 import x2js from 'x2js';
-import {createGlobalState, useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
+import {createGlobalState, useDark, useEventBus, useToggle} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
 
@@ -25,6 +25,7 @@ import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
+import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -44,6 +45,7 @@ export const syncStrategyContext = SyncStrategyContext.getInstance();
 syncStrategyContext.register(SyncModeEnum.FILE, new FileSyncStrategyImpl());
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
+export const lodisStrategyContext = new LodisStrategyContext();
 
 export const json2xml = new x2js({
     selfClosingElements: false,
@@ -69,9 +71,6 @@ export const useSeniorSearchEvent = useEventBus<SeniorSearchJumpEvent>(EventBusE
 export const usePageJumpEvent = useEventBus<PageNameEnum>(EventBusEnum.PAGE_JUMP_EVENT);
 // 链接选择
 export const useUrlSelectEvent = useEventBus<number>(EventBusEnum.URL_SELECT_EVENT);
-
-// 数据存储
-export const layoutMode = useLocalStorage<string>('layoutMode', 'default');
 
 // es版本
 export const useEsVersion = createGlobalState(() => {

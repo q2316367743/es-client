@@ -193,13 +193,14 @@ import Assert from "@/utils/Assert";
 
 import {
     applicationLaunch,
-    isDark,
+    isDark, lodisStrategyContext,
     toggleDark,
     usePageJumpEvent,
     useUrlSelectEvent,
     versionManage
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 let showHeightNotification = true;
 let showWidthNotification = true;
@@ -262,14 +263,32 @@ export default defineComponent({
             useUrlStore().reset(() => {
                 // utools第一次进入事件
                 let code = sessionStorage.getItem('action');
-                console.log('code', code)
                 if (code && code !== 'application') {
                     this.selectUrl(parseInt(code));
                 }
             });
             // 未完全退出事件
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
-        })
+
+            // 布局方式
+            let layoutMode = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE);
+            if (layoutMode) {
+                document.body.setAttribute('layout-mode', layoutMode);
+            }
+
+            // 版本更新处理
+            this.$nextTick(() => {
+                switch (versionManage.checkUpdate()) {
+                    case 1:
+                        this.newDialog = true;
+                        break;
+                    case 2:
+                        this.updateDialog = true;
+                        break;
+                }
+                versionManage.execUpdate();
+            });
+        });
 
         // 国际化
         let language = useSettingStore().getLanguage;
@@ -278,19 +297,6 @@ export default defineComponent({
         } else if (language === 'en') {
             this.locale = en;
         }
-
-        // 版本更新处理
-        this.$nextTick(() => {
-            switch (versionManage.checkUpdate()) {
-                case 1:
-                    this.newDialog = true;
-                    break;
-                case 2:
-                    this.updateDialog = true;
-                    break;
-            }
-            versionManage.execUpdate();
-        });
 
         // 执行页面跳转事件
         usePageJumpEvent.on((page: PageNameEnum) => {

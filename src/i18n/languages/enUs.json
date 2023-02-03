@@ -34,6 +34,7 @@
         },
         "placeholder": {
             "condition": "Please select query criteria",
+            "field": "Please select query field",
             "order": "Please select sorting criteria",
             "selectIndex": "Please select index"
         }

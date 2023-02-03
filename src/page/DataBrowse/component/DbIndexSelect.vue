@@ -39,7 +39,7 @@ import {stringContain} from "@/utils/SearchUtil";
 
 export default defineComponent({
     name: 'db-index-select',
-    emit: ['change'],
+    emit: ['indexChange'],
     components: {ArrowDown, ArrowUp},
     data: () => ({
         show: false,
@@ -82,7 +82,7 @@ export default defineComponent({
         indexChange(index: IndexView) {
             this.index = index;
             this.show = false;
-            this.$emit('change', index);
+            this.$emit('indexChange', index);
         }
     }
 });

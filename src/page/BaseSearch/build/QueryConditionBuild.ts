@@ -24,20 +24,36 @@ function getBaseBody(page: number, size: number): any {
 function buildQuery(query: BaseQuery, array: Array<any>): void {
     let condition = {} as any;
     let expression = {} as any;
+    let cod = query.condition;
     // 不同的条件，查询方式和表达式不同
     if (query.condition === 'match' ||
         query.condition === 'term' ||
         query.condition === 'wildcard') {
         expression[query.field.substring(5)] = query.value;
-    } else if (query.condition === 'range') {
+    } else if (query.condition === 'range_lt') {
         let value = {} as any;
-        value[query.extra_left_condition] = query.extra_left_value;
-        value[query.extra_right_condition] = query.extra_right_value;
+        value['lt'] = query.value;
         expression[query.field.substring(5)] = value;
+        cod = 'range';
+    } else if (query.condition === 'range_lte') {
+        let value = {} as any;
+        value['lte'] = query.value;
+        expression[query.field.substring(5)] = value;
+        cod = 'range';
+    } else if (query.condition === 'range_gt') {
+        let value = {} as any;
+        value['gt'] = query.value;
+        expression[query.field.substring(5)] = value;
+        cod = 'range';
+    } else if (query.condition === 'range_gte') {
+        let value = {} as any;
+        value['gte'] = query.value;
+        expression[query.field.substring(5)] = value;
+        cod = 'range';
     } else {
         throw new Error('查询条件不支持')
     }
-    condition[query.condition] = expression;
+    condition[cod] = expression;
     array.push(condition);
 }
 

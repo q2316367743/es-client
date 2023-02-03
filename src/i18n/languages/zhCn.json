@@ -34,6 +34,7 @@
         },
         "placeholder": {
             "condition": "请选择查询条件",
+            "field": "请选择查询字段",
             "order": "请选择排序条件",
             "selectIndex": "请选择索引"
         }

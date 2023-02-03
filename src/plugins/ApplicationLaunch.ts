@@ -1,7 +1,8 @@
 import MessageUtil from "@/utils/MessageUtil";
 import httpModeUtil from "@/strategy/HttpStrategy/HttpModeUtil";
 import {ElLoading} from "element-plus";
-import {storageStrategyContext} from "@/global/BeanFactory";
+import {lodisStrategyContext, storageStrategyContext, versionManage} from "@/global/BeanFactory";
+import useSettingStore from "@/store/SettingStore";
 
 /**
  * 应用启动器
@@ -23,6 +24,9 @@ export default class ApplicationLaunch {
         // 初始化http模式
         await httpModeUtil.getHttpModeManage().init();
         await storageStrategyContext.init();
+        await lodisStrategyContext.init();
+        versionManage.init();
+        useSettingStore().init();
     }
 
     private execute(): void {

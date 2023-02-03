@@ -23,7 +23,7 @@
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <db-index-select @change="indexChange"/>
+                <db-index-select @index-change="indexChange"/>
                 <!-- 打印 -->
                 <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
                     <i class="vxe-icon-print"/>
@@ -346,7 +346,7 @@ export default defineComponent({
             }
             this.loading = true;
             DocumentApi._search(
-                this.index?.name,
+                this.index.name,
                 conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
             ).then(result => {
                 this.result = result;
@@ -593,6 +593,7 @@ export default defineComponent({
 
         // 右侧
         indexChange(index: IndexView) {
+            console.log(index);
             this.index = index;
             this.page = 1;
             this.size = useSettingStore().getPageSize;
