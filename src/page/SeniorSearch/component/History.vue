@@ -22,7 +22,7 @@
                     <vxe-column field="link" title="链接" width="400">
                         <template #default="{row}">
                             <el-link type="primary" target="_blank">{{ row.link }}</el-link>
-                            <div class="url-copy" @click="execCopy(current + row.link)">{{ $t('app.copy') }}</div>
+                            <div class="url-copy" @click="execCopy(current + row.link)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column field="method" title="方法" width="100"></vxe-column>
@@ -30,7 +30,7 @@
                         <template #default="{row}">
                             <div class="hm-history-params">
                                 <div class="hm-history-params-value" :title="row.params">{{ row.params }}</div>
-                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
+                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('common.operation.copy') }}</div>
                             </div>
                         </template>
                     </vxe-column>
