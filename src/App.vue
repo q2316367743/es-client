@@ -259,8 +259,16 @@ export default defineComponent({
     created() {
         applicationLaunch.register(() => {
             // 刷新索引列表
-            useUrlStore().reset();
-            useUrlSelectEvent.on(urlId => this.selectUrl(urlId));
+            useUrlStore().reset(() => {
+                // utools第一次进入事件
+                let code = sessionStorage.getItem('action');
+                console.log('code', code)
+                if (code && code !== 'application') {
+                    this.selectUrl(parseInt(code));
+                }
+            });
+            // 未完全退出事件
+            useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
         })
 
         // 国际化
@@ -289,12 +297,14 @@ export default defineComponent({
             this.selectMenu(page);
         });
 
-        // 检测窗口大小
-        this.windowWarningNotification();
-        // 窗口调整大小事件
-        window.addEventListener('resize', () => {
+        if (Constant.storage !== 'utools') {
+            // 检测窗口大小
             this.windowWarningNotification();
-        });
+            // 窗口调整大小事件
+            window.addEventListener('resize', () => {
+                this.windowWarningNotification();
+            });
+        }
 
         // 执行窗口刷新事件
         emitter.on(MessageEventEnum.REFRESH_URL, () => {

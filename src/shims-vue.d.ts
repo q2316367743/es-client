@@ -4,8 +4,3 @@ declare module '*.vue' {
     const component: DefineComponent<{}, {}, any>
     export default component
 }
-
-declare module 'uTools' {
-    import Utools from 'utools-api-types';
-    export = Utools;
-}

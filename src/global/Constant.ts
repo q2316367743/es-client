@@ -14,6 +14,8 @@ export default {
     mode: import.meta.env.VITE_MODE,
     // @ts-ignore
     storage: import.meta.env.VITE_STORAGE,
+    // @ts-ignore
+    feedback: import.meta.env.VITE_FEEDBACK_URL,
     homeUrl: 'https://blog.esion.xyz',
     docUrl: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r',
     repositories: [{
@@ -32,8 +34,6 @@ export default {
         'firefox': 'https://addons.mozilla.org/zh-CN/firefox/addon/es-client/',
         '想天浏览器': 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w'
     },
-    // @ts-ignore
-    feedback: import.meta.env.VITE_FEEDBACK_URL,
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog
 }

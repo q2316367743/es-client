@@ -17,6 +17,12 @@ import "element-plus/theme-chalk/el-notification.css";
 import VXETable from 'vxe-table';
 import 'vxe-table/lib/style.css'
 
+if (utools) {
+    utools.onPluginEnter(action => {
+        sessionStorage.setItem('action', action.code);
+    });
+}
+
 // 插件
 createApp(App)
     .use(createPinia())

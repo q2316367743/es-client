@@ -12,7 +12,7 @@
             <div class="senior-search-card__header">
                 <div style="display: flex;">
                     <el-select v-model="current.method" :placeholder="$t('seniorSearch.placeholder.select')"
-                               style="min-width: 100px;">
+                               style="width: 100px;">
                         <el-option label="HEAD" value="HEAD"></el-option>
                         <el-option label="GET" value="GET"></el-option>
                         <el-option label="POST" value="POST"></el-option>

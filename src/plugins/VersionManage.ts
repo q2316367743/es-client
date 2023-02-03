@@ -1,4 +1,7 @@
 import Constant from "@/global/Constant";
+import useSettingStore from "@/store/SettingStore";
+import {layoutMode} from "@/global/BeanFactory";
+import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 
 export default class VersionManage {
 
@@ -22,8 +25,21 @@ export default class VersionManage {
     }
 
     public execUpdate(): void {
+        if (this.storageVersion === '') {
+            this.init();
+        }
         localStorage.setItem(this.KEY, this.currentVersion);
         this.storageVersion = this.currentVersion + '';
+    }
+
+    private init() {
+        // 第一次使用
+        if (Constant.platform === 'utools') {
+            // utools默认设置
+            useSettingStore().instance.autoFullScreen = true;
+            useSettingStore().instance.showTab = false;
+            layoutMode.value = LayoutModeEnum.CLASSIC;
+        }
     }
 
 }

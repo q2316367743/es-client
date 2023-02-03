@@ -67,11 +67,14 @@ export default class UtoolsStorageStrategyImpl implements StorageStrategy {
                 });
             }
         });
+        // 未完全退出事件
         utools.onPluginEnter(action => {
-            useUrlSelectEvent.emit(parseInt(action.code));
-            console.log(action);
+            if (action.code !== 'application') {
+                useUrlSelectEvent.emit(parseInt(action.code));
+            }else {
+                useUrlSelectEvent.emit(0);
+            }
         });
-
     }
 
     delete<T extends Base>(name: TableNameEnum, id: number): Promise<void> {
