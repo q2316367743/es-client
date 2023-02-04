@@ -69,8 +69,6 @@ const useSettingStore = defineStore('setting', {
             let setting = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
             if (setting && setting !== '') {
                 this.instance = JSON.parse(setting);
-            } else {
-                this.instance = getDefaultValue();
             }
         },
         setLanguage(language: string): void {

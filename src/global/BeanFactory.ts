@@ -32,7 +32,6 @@ export const baseSearchHistoryService = new BaseSearchHistoryService();
 export const seniorSearchHistoryService = new SeniorSearchHistoryService();
 
 export const versionManage = new VersionManage();
-export const applicationLaunch = new ApplicationLaunch();
 
 // 策略模式
 
@@ -46,6 +45,9 @@ syncStrategyContext.register(SyncModeEnum.FILE, new FileSyncStrategyImpl());
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
+
+// 应用启动器
+export const applicationLaunch = new ApplicationLaunch(lodisStrategyContext, storageStrategyContext);
 
 export const json2xml = new x2js({
     selfClosingElements: false,

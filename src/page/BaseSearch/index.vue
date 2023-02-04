@@ -12,7 +12,7 @@
             <div class="base-search-main" v-loading="loading" :element-loading-text="$t('common.loading.search')"
                  :class="showTabs ? '' : 'full-screen'">
                 <!-- 顶部菜单栏 -->
-                <div class="base-option el-card es-card">
+                <div class="base-option">
                     <div class="left">
                         <el-select-v2 v-model="current.index" filterable :options="indices"
                                       :placeholder="$t('baseSearch.placeholder.selectIndex')" clearable

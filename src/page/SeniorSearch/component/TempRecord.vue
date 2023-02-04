@@ -4,7 +4,7 @@
             <div>
                 <el-input v-model="condition.link" style="width: 200px;" placeholder="链接" @input="loadData"
                           clearable/>
-                <el-select v-model="condition.method" style="margin-left: 12px;" placeholder="请求方式" clearable
+                <el-select v-model="condition.method" style="margin-left: 12px;width: 100px;" placeholder="请求方式" clearable
                            @change="loadData">
                     <el-option label="HEAD" value="HEAD"/>
                     <el-option label="GET" value="GET"/>

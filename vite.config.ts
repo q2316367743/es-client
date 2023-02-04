@@ -17,6 +17,8 @@ function outDir() {
     switch (process.env.npm_lifecycle_event) {
         case 'build:ts':
             return 'dist';
+        case 'build:utools':
+            return 'utools';
         case 'build:edge':
             return 'chrome/es-client';
         case 'build:firefox':

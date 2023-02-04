@@ -14,6 +14,7 @@ export class BaseSearchHistoryService {
     }
 
     async save(record: BaseSearchHistory): Promise<number> {
+        console.log(record)
         if (!record.name || record.name === '') {
             return Promise.reject('记录名称不能为空');
         }

@@ -1,8 +1,12 @@
 import MessageUtil from "@/utils/MessageUtil";
 import httpModeUtil from "@/strategy/HttpStrategy/HttpModeUtil";
 import {ElLoading} from "element-plus";
-import {lodisStrategyContext, storageStrategyContext, versionManage} from "@/global/BeanFactory";
+import { versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
+import useSyncStore from "@/store/SyncSettingStore";
+import useServerStore from "@/store/ServerSettingStore";
+import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
+import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 
 /**
  * 应用启动器
@@ -11,8 +15,15 @@ export default class ApplicationLaunch {
 
     private ready: boolean = false;
     private readonly launchItems = new Array<() => void>();
+    private lodisStrategyContext: LodisStrategyContext;
+    private storageStrategyContext: StorageStrategyContext;
 
-    constructor() {
+    constructor(
+        lodisStrategyContext: LodisStrategyContext,
+        storageStrategyContext: StorageStrategyContext
+    ) {
+        this.lodisStrategyContext = lodisStrategyContext;
+        this.storageStrategyContext = storageStrategyContext;
         // 启动
         this.init().then(() => {
             this.execute();
@@ -21,12 +32,15 @@ export default class ApplicationLaunch {
     }
 
     private async init(): Promise<void> {
-        // 初始化http模式
-        await httpModeUtil.getHttpModeManage().init();
-        await storageStrategyContext.init();
-        await lodisStrategyContext.init();
+        // 本地存储
+        await this.lodisStrategyContext.init();
         versionManage.init();
         useSettingStore().init();
+        useSyncStore().init();
+        useServerStore().init();
+        // 初始化http模式
+        await httpModeUtil.getHttpModeManage().init();
+        await this.storageStrategyContext.init();
     }
 
     private execute(): void {

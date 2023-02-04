@@ -19,7 +19,7 @@
                         <el-option label="PUT" value="PUT"></el-option>
                         <el-option label="DELETE" value="DELETE"></el-option>
                     </el-select>
-                    <el-autocomplete v-model="current.link" style="min-width: 100px;width: 300px;margin: 0 6px;"
+                    <el-autocomplete v-model="current.link" class="senior-search-link"
                                      :fetch-suggestions="fetchSuggestions" @keyup.enter.native="search"
                                      @select="handleSelect"
                                      :placeholder="$t('seniorSearch.placeholder.link')" clearable>
@@ -27,17 +27,16 @@
                             <div class="value">{{ item }}</div>
                         </template>
                     </el-autocomplete>
-                    <el-button type="primary" @click="search">{{ searchBtn }}
-                    </el-button>
+                    <el-button type="primary" @click="search" style="margin-left: 0;">{{ searchBtn }}</el-button>
                     <el-button type="success" @click="formatDocument">{{ $t('common.operation.format') }}</el-button>
                     <el-button @click="historyDrawer = true">{{ $t('common.operation.history') }}</el-button>
                 </div>
                 <div>
-                    <el-select v-model="view">
+                    <el-select v-model="view" style="width: 110px;">
                         <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
                         <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
                     </el-select>
-                    <el-button type="info" :icon="fullScreen" style="margin-left: 12px;" @click="showTabs = !showTabs"/>
+                    <el-button type="info" :icon="fullScreen" style="margin-left: 8px;" @click="showTabs = !showTabs"/>
                 </div>
             </div>
             <!-- 下半部分 -->

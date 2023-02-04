@@ -266,6 +266,8 @@ export default defineComponent({
                 if (code && code !== 'application') {
                     this.selectUrl(parseInt(code));
                 }
+                // 删除sessionStorage
+                sessionStorage.removeItem('action');
             });
             // 未完全退出事件
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));

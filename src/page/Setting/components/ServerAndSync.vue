@@ -92,8 +92,12 @@ export default defineComponent({
         edit: false
     }),
     watch: {
-        serverSetting() {
+        serverSetting(newValue: ServerSetting) {
             this.edit = true
+            useServerStore().setServer(newValue);
+        },
+        syncSetting(newValue: SyncSetting) {
+            useSyncStore().setSync(newValue);
         }
     },
     created() {
