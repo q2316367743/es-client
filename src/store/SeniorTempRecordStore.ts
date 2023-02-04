@@ -11,7 +11,7 @@ const useSeniorTempRecordStore = defineStore('senior-temp-record', {
     },
     actions: {
         addTempRecord(record: SeniorSearchHistory) {
-            let hash = record.link + record.method + record.params;
+            let hash = record.body;
             if (!this.hashSet.has(hash)) {
                 this.hashSet.add(hash);
                 this.tempRecords.push(record);
@@ -22,7 +22,7 @@ const useSeniorTempRecordStore = defineStore('senior-temp-record', {
                 let tempRecord = this.tempRecords[i];
                 if (tempRecord.id === id) {
                     this.tempRecords.splice(i, 1);
-                    let hash = tempRecord.link + tempRecord.method + tempRecord.params;
+                    let hash = tempRecord.body;
                     this.hashSet.delete(hash);
                     return;
                 }

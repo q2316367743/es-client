@@ -9,9 +9,7 @@ export interface SeniorSearchItem {
 
 export interface SeniorSearchItemBody {
 
-    link: string,
-    method: Method,
-    params: string,
+    body: string,
     result: any,
 
 }

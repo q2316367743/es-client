@@ -13,6 +13,7 @@ const language = {
     symbols: /[=><!~?:&|+\-*\/\^%]+/,
     escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
 
+    // 十进制
     digits: /\d+(_+\d+)*/,
     // 八进制
     octalDigits: /[0-7]+(_+[0-7]+)*/,
@@ -41,26 +42,8 @@ const language = {
             // 空白
             {include: '@whitespace'},
 
-            // 定义\w*[\/]?\w*[?=&]*
-            [/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/, 'type.identifier'],  // to show class names nicely
-            // [/[A-Z][\w\$]*/, 'identifier'],
-
-            // regular expression: ensure it is terminated before beginning (otherwise it is an opeator)
-            [/\/(?=([^\\\/]|\\.)+\/([gimsuy]*)(\s*)(\.|;|\/|,|\)|\]|\}|$))/, {
-                token: 'regexp',
-                bracket: '@open',
-                next: '@regexp'
-            }],
-
-            // delimiters and operators
-            [/[()\[\]]/, '@brackets'],
-            [/[<>](?!@symbols)/, '@brackets'],
-            [/@symbols/, {
-                cases: {
-                    '@operators': 'delimiter',
-                    '@default': ''
-                }
-            }],
+            // 定义
+            [/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/, 'type.identifier'],  // t
 
             // 数字
             // 科学计数法
@@ -94,30 +77,6 @@ const language = {
         comment: [
             // ^///////
             [/[^\/*]+/, 'comment']
-        ],
-
-        // We match regular expression quite precisely
-        regexp: [
-            [/(\{)(\d+(?:,\d*)?)(\})/, ['regexp.escape.control', 'regexp.escape.control', 'regexp.escape.control']],
-            [/(\[)(\^?)(?=(?:[^\]\\\/]|\\.)+)/, ['regexp.escape.control', {
-                token: 'regexp.escape.control',
-                next: '@regex_range'
-            }]],
-            [/(\()(\?:|\?=|\?!)/, ['regexp.escape.control', 'regexp.escape.control']],
-            [/[()]/, 'regexp.escape.control'],
-            [/@regexpctl/, 'regexp.escape.control'],
-            [/[^\\\/]/, 'regexp'],
-            [/@regexpesc/, 'regexp.escape'],
-            [/\\\./, 'regexp.invalid'],
-            [/(\/)([gimsuy]*)/, [{token: 'regexp', bracket: '@close', next: '@pop'}, 'keyword.other']],
-        ],
-
-        regex_range: [
-            [/-/, 'regexp.escape.control'],
-            [/\^/, 'regexp.invalid'],
-            [/@regexpesc/, 'regexp.escape'],
-            [/[^\]]/, 'regexp'],
-            [/\]/, {token: 'regexp.escape.control', next: '@pop', bracket: '@close'}],
         ],
 
         string_double: [

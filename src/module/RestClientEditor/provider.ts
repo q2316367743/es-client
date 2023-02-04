@@ -94,14 +94,12 @@ const provider = {
         position: monaco.Position
     ): Promise<monaco.languages.ProviderResult<monaco.languages.CompletionList>> {
         let suggestions = new Array<monaco.languages.CompletionItem>();
-        console.log(position)
         let token = model.getValueInRange({
             startLineNumber: position.lineNumber,
             startColumn: 0,
             endLineNumber: position.lineNumber,
             endColumn: position.column + 1
         });
-        console.log(token);
         // 需要获取连续的代码块
         if (ArrayUtil.startWith(supportMethods, token, true)) {
             // 请求方法提示

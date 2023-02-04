@@ -21,11 +21,26 @@ export default {
                     items.push(temp);
                     temp = '';
                 }
-            }else {
+            } else {
                 temp += item;
             }
         }
+        if (temp !== '') {
+            items.push(temp);
+        }
         return items;
+    },
+
+    notBlank(str: string): boolean {
+        if (str === '') {
+            return false;
+        }
+        for (let char of str) {
+            if (char !== ' ' && char !== '\t' && char !== '\n') {
+                return true;
+            }
+        }
+        return false;
     },
 
     /**
@@ -40,7 +55,7 @@ export default {
                 if (str.toUpperCase().startsWith(item.toUpperCase())) {
                     return true;
                 }
-            }else {
+            } else {
                 if (str.startsWith(item)) {
                     return true;
                 }
