@@ -1,14 +1,10 @@
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
+import Base from "@/entity/Base";
 
 /**
  * 历史记录
  * */
-export default interface SeniorSearchHistory {
-
-    /**
-     * 历史ID
-     */
-    id?: number;
+export default interface SeniorSearchHistory extends Base{
 
     /**
      * URL的id

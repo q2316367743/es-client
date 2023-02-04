@@ -1,9 +1,6 @@
-export default interface Url {
+import Base from "@/entity/Base";
 
-    /**
-     * ID
-     */
-    id?: number;
+export default interface Url extends Base {
 
     /**
      * 链接名称
@@ -18,7 +15,7 @@ export default interface Url {
     /**
      * 排序
      */
-    sequence: number;
+    sequence?: number;
 
     /**
      * 创建时间

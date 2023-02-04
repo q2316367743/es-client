@@ -1,3 +1,15 @@
+@media (max-width: 1200px) {
+    .senior-search {
+        .senior-search-card {
+            .senior-search-card__header {
+                .senior-search-link {
+                    width: 200px !important;
+                }
+            }
+        }
+    }
+}
+
 .senior-search {
     position: absolute;
     top: 10px;
@@ -25,8 +37,19 @@
         .senior-search-card__header {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 10px 0;
             border-bottom: 1px solid var(--hover-color);
+
+            .senior-search-link {
+                min-width: 100px;
+                width: 300px;
+                margin: 0 6px;
+            }
+
+            .el-button {
+                margin-left: 8px;
+
+            }
         }
 
         .senior-main {

@@ -1,15 +1,19 @@
 # es-client
 
+
 [![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client)
 [![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
 [![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
-[![star](https://img.shields.io/badge/edge-v2.3.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
-[![star](https://img.shields.io/badge/firefox-v2.3.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
-[![star](https://img.shields.io/badge/windows-v2.3.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
+[![star](https://img.shields.io/badge/edge-v2.4.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+[![star](https://img.shields.io/badge/firefox-v2.4.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+[![star](https://img.shields.io/badge/windows-v2.4.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 [![OSCS Status](https://www.oscs1024.com/platform/badge/es-client.svg?size=small)](https://www.murphysec.com/accept?code=9a8096e0fd00acdcdb1901030f42d5d6&type=1&from=2)
 
-> 功能上仿照[elasticsearch head](https://github.com/mobz/elasticsearch-head)编写的elasticsearch查询客户端。
-> elasticsearch的客户端比较出名的就是elasticsearch head和Kibana了，但是elasticsearch head已经停止更新，且样式老旧，功能不全；而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+element-plus进行开发了一个elasticsearch的客户端。
+> elasticsearch查询客户端。
+> 
+> elasticsearch的客户端比较出名的就是[elasticsearch head](https://github.com/mobz/elasticsearch-head)和[Kibana](https://github.com/elastic/kibana)了，
+> 但是elasticsearch head已经停止更新，且样式老旧，功能不全；
+> 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+element-plus进行开发了一个elasticsearch的客户端。
 
 ## 安装 & 更新
 

@@ -190,8 +190,16 @@ import Translate from "@/icon/Translate.vue";
 import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
 
-import {isDark, toggleDark, usePageJumpEvent, versionManage} from "@/global/BeanFactory";
+import {
+    applicationLaunch,
+    isDark, lodisStrategyContext,
+    toggleDark,
+    usePageJumpEvent,
+    useUrlSelectEvent,
+    versionManage
+} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 let showHeightNotification = true;
 let showWidthNotification = true;
@@ -249,7 +257,39 @@ export default defineComponent({
         },
     },
     created() {
-        useUrlStore().reset();
+        applicationLaunch.register(() => {
+            // 刷新索引列表
+            useUrlStore().reset(() => {
+                // utools第一次进入事件
+                let code = sessionStorage.getItem('action');
+                if (code && code !== 'application') {
+                    this.selectUrl(parseInt(code));
+                }
+                // 删除sessionStorage
+                sessionStorage.removeItem('action');
+            });
+            // 未完全退出事件
+            useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
+
+            // 布局方式
+            let layoutMode = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE);
+            if (layoutMode) {
+                document.body.setAttribute('layout-mode', layoutMode);
+            }
+
+            // 版本更新处理
+            this.$nextTick(() => {
+                switch (versionManage.checkUpdate()) {
+                    case 1:
+                        this.newDialog = true;
+                        break;
+                    case 2:
+                        this.updateDialog = true;
+                        break;
+                }
+                versionManage.execUpdate();
+            });
+        });
 
         // 国际化
         let language = useSettingStore().getLanguage;
@@ -259,36 +299,24 @@ export default defineComponent({
             this.locale = en;
         }
 
-        // 版本更新处理
-        this.$nextTick(() => {
-            switch (versionManage.checkUpdate()) {
-                case 1:
-                    this.newDialog = true;
-                    break;
-                case 2:
-                    this.updateDialog = true;
-                    break;
-            }
-            versionManage.execUpdate();
-        });
-
         // 执行页面跳转事件
         usePageJumpEvent.on((page: PageNameEnum) => {
             this.selectMenu(page);
         });
 
-        // 检测窗口大小
-        this.windowWarningNotification();
-        // 窗口调整大小事件
-        window.addEventListener('resize', () => {
+        if (Constant.storage !== 'utools') {
+            // 检测窗口大小
             this.windowWarningNotification();
-        });
+            // 窗口调整大小事件
+            window.addEventListener('resize', () => {
+                this.windowWarningNotification();
+            });
+        }
 
         // 执行窗口刷新事件
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
             this.refresh();
         });
-
         // 字体判断
         if (Constant.platform === 'edge') {
             // 设置全局字体大小

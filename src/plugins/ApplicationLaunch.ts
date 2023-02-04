@@ -1,0 +1,76 @@
+import MessageUtil from "@/utils/MessageUtil";
+import httpModeUtil from "@/strategy/HttpStrategy/HttpModeUtil";
+import {ElLoading} from "element-plus";
+import { versionManage} from "@/global/BeanFactory";
+import useSettingStore from "@/store/SettingStore";
+import useSyncStore from "@/store/SyncSettingStore";
+import useServerStore from "@/store/ServerSettingStore";
+import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
+import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
+
+/**
+ * 应用启动器
+ */
+export default class ApplicationLaunch {
+
+    private ready: boolean = false;
+    private readonly launchItems = new Array<() => void>();
+    private lodisStrategyContext: LodisStrategyContext;
+    private storageStrategyContext: StorageStrategyContext;
+
+    constructor(
+        lodisStrategyContext: LodisStrategyContext,
+        storageStrategyContext: StorageStrategyContext
+    ) {
+        this.lodisStrategyContext = lodisStrategyContext;
+        this.storageStrategyContext = storageStrategyContext;
+        // 启动
+        this.init().then(() => {
+            this.execute();
+            this.ready = true;
+        });
+    }
+
+    private async init(): Promise<void> {
+        // 本地存储
+        await this.lodisStrategyContext.init();
+        versionManage.init();
+        useSettingStore().init();
+        useSyncStore().init();
+        useServerStore().init();
+        // 初始化http模式
+        await httpModeUtil.getHttpModeManage().init();
+        await this.storageStrategyContext.init();
+    }
+
+    private execute(): void {
+        const loading = ElLoading.service({
+            lock: true,
+            text: '初始化中',
+            background: 'rgba(0, 0, 0, 0.7)',
+        });
+        // 启动完成
+        this.launchItems.forEach(item => {
+            try {
+                item();
+            } catch (e) {
+                MessageUtil.error('启动项启动错误', e as Error);
+                console.error(e);
+            }
+        });
+        loading.close();
+    }
+
+    /**
+     * 注册启动项
+     * @param launchItem 启动项
+     */
+    register(launchItem: () => void): void {
+        this.launchItems.push(launchItem);
+        if (this.ready) {
+            // 已经启动了
+            launchItem();
+        }
+    }
+
+}

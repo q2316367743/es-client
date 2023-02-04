@@ -7,7 +7,7 @@
                 <el-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
                           style="width: 300px;height: 32px;" @input="search" clearable></el-input>
                 <el-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
-                           style="margin-left: 5px" clearable @change="search">
+                           style="margin-left: 5px;width: 150px;" clearable @change="search">
                     <el-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></el-option>
                     <el-option :label="$t('home.order.nameDesc')" value="NAME_DESC"></el-option>
                     <el-option :label="$t('home.order.sizeAsc')" value="SIZE_ASC"></el-option>
@@ -29,6 +29,7 @@
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
+            <el-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 15%;"/>
             <vxe-list v-loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height">
                 <template #default="{ items }">
                     <index-item v-for="item in items" v-show="item.show" :index="item" @open-dialog="indexOpenDialog"

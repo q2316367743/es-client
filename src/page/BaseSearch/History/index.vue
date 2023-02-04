@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="dialog" size="1000px" title="历史记录" append-to-body destroy-on-close>
+    <el-drawer v-model="dialog" size="60%" title="历史记录" append-to-body destroy-on-close>
         <div class="bsh-manage">
             <el-tabs v-model="active" class="history-manage-tabs">
                 <el-tab-pane label="临时" name="temp"></el-tab-pane>

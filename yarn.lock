@@ -1518,6 +1518,11 @@ unplugin@^1.0.1:
     webpack-sources "^3.2.3"
     webpack-virtual-modules "^0.5.0"
 
+utools-api-types@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/utools-api-types/-/utools-api-types-3.0.0.tgz#e30a2fd40e183d57a1cc04be7c4cf09fbfadd12d"
+  integrity sha512-KJYytaX/cnxRTm+fBKeDAV6PhE1Emrv4bZm/6pigVhxEM4StAy8UFGyo22bVARSRIUUxbEdtWIo6O7qmEGnv5A==
+
 vite@^4.0.3:
   version "4.0.3"
   resolved "https://r.cnpmjs.org/vite/-/vite-4.0.3.tgz#de27ad3f263a03ae9419cdc8bc07721eadcba8b9"

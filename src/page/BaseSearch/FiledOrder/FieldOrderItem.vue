@@ -7,7 +7,7 @@
     </el-select>
     <el-select v-model="order.type" filterable
                :placeholder="$t('baseSearch.placeholder.order')"
-               style="margin-left: 10px">
+               style="margin-left: 10px;width: 80px;">
         <el-option label="asc" value="asc"></el-option>
         <el-option label="desc" value="desc"></el-option>
     </el-select>

@@ -1,14 +1,16 @@
 import Constant from "@/global/Constant";
+import useSettingStore from "@/store/SettingStore";
+import {lodisStrategyContext} from "@/global/BeanFactory";
+import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 export default class VersionManage {
 
     private readonly currentVersion = Constant.version;
-    private storageVersion: string;
+    private storageVersion?: string;
 
-    private readonly KEY = 'es-client.version'
-
-    constructor() {
-        this.storageVersion = localStorage.getItem(this.KEY) || '';
+    init() {
+        this.storageVersion = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION) || '';
     }
 
     /**
@@ -22,8 +24,23 @@ export default class VersionManage {
     }
 
     public execUpdate(): void {
-        localStorage.setItem(this.KEY, this.currentVersion);
+        if (this.storageVersion === '') {
+            this._init();
+        }
+        lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
         this.storageVersion = this.currentVersion + '';
+    }
+
+    private _init() {
+        // 第一次使用
+        if (Constant.platform === 'utools') {
+            // utools默认设置
+            useSettingStore().instance.autoFullScreen = true;
+            useSettingStore().instance.showTab = false;
+            useSettingStore().sync();
+            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, LayoutModeEnum.CLASSIC);
+            document.body.setAttribute('layout-mode', LayoutModeEnum.CLASSIC);
+        }
     }
 
 }

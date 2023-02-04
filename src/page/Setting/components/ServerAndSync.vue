@@ -92,8 +92,18 @@ export default defineComponent({
         edit: false
     }),
     watch: {
-        serverSetting() {
-            this.edit = true
+        serverSetting: {
+            handler(newValue: ServerSetting) {
+                this.edit = true
+                useServerStore().setServer(newValue);
+            },
+            deep: true
+        },
+        syncSetting: {
+            handler(newValue: SyncSetting) {
+                useSyncStore().setSync(newValue);
+            },
+            deep: true
         }
     },
     created() {
@@ -149,9 +159,9 @@ export default defineComponent({
                 loading.setText('获取链接数据')
                 let url = await urlService.list();
                 loading.setText('获取基础搜索历史');
-                let baseSearchHistory = await baseSearchHistoryService.list('');
+                let baseSearchHistory = await baseSearchHistoryService.list();
                 loading.setText('获取高级搜索历史');
-                let seniorSearchHistory = await seniorSearchHistoryService.list('');
+                let seniorSearchHistory = await seniorSearchHistoryService.list();
                 loading.setText('开始下载');
                 BrowserUtil.download(JSON.stringify({
                     url, baseSearchHistory, seniorSearchHistory

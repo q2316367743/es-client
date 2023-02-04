@@ -145,9 +145,8 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import useSettingStore from "@/store/SettingStore";
-import {mapState} from "pinia";
 
-import {layoutMode} from "@/global/BeanFactory";
+import {applicationLaunch, lodisStrategyContext} from "@/global/BeanFactory";
 import JsonTheme from "@/data/JsonTheme";
 import emitter from "@/plugins/mitt";
 
@@ -155,14 +154,14 @@ import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+import Setting from "@/domain/Setting";
 
 export default defineComponent({
     name: 'setting-base',
-    computed: {
-        ...mapState(useSettingStore, ['instance']),
-    },
     data: () => ({
-        layoutMode,
+        instance: useSettingStore().getDefaultValue(),
+        layoutMode: '',
         LayoutModeEnum,
         TabCloseModeEnum,
         PageNameEnum,
@@ -176,16 +175,31 @@ export default defineComponent({
     created() {
         // 获取布局方式
         document.body.setAttribute('layout-mode', this.layoutMode);
+        let layoutMode = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE);
+        if (layoutMode) {
+            this.layoutMode = layoutMode
+        }
+        // 默认值
         if (!this.instance.tabMaxCount) {
             this.instance.tabMaxCount = useSettingStore().getTabMaxCount;
         }
         if (!this.instance.tabCloseMode) {
             this.instance.tabCloseMode = useSettingStore().getTabCloseMode;
         }
+        applicationLaunch.register(() => {
+            this.instance = useSettingStore().instance;
+        })
     },
     watch: {
         layoutMode(newValue: string) {
             document.body.setAttribute('layout-mode', newValue);
+            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.LAYOUT_MODE, newValue);
+        },
+        instance: {
+            handler(newValue: Setting) {
+                useSettingStore().setInstance(newValue);
+            },
+            deep: true
         }
     },
     methods: {

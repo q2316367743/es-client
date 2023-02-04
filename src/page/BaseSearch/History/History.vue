@@ -28,7 +28,7 @@
                             <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <el-button type="danger" size="small">{{ $t('app.delete') }}
+                                    <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
                                     </el-button>
                                 </template>
                             </el-popconfirm>
@@ -50,6 +50,8 @@ import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import MessageUtil from "@/utils/MessageUtil";
 import BrowserUtil from "@/utils/BrowserUtil";
+import Optional from "@/utils/Optional";
+import {stringContain} from "@/utils/SearchUtil";
 
 export default defineComponent({
     name: 'bsh-history',
@@ -102,9 +104,11 @@ export default defineComponent({
                 this.histories = new Array<BaseSearchHistory>();
                 return;
             }
-            baseSearchHistoryService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
+            baseSearchHistoryService.list(this.onlyCurrent ? useUrlStore().id : undefined)
                 .then(records => {
-                    this.histories = records;
+                    this.histories = records.filter(e => stringContain(e.name!, this.name))
+                        .sort((a, b) =>
+                            Optional.ofNullable(b.id).orElse(0) - Optional.ofNullable(a.id).orElse(0));
                 }).catch(e => MessageUtil.error('历史查询失败', e));
         },
         removeById(id: number) {

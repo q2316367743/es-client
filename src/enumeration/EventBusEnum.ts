@@ -18,7 +18,7 @@ enum EventBusEnum {
     /**
      * APP中发放执行
      */
-    APP_EXECUTE = 'app-execute'
+    URL_SELECT_EVENT = 'url-select'
 
 }
 

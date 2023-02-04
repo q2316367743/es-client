@@ -6,42 +6,47 @@ import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import {lodisStrategyContext} from "@/global/BeanFactory";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+
+function getDefaultValue(): Setting {
+    return {
+
+        // 布局设置
+        defaultPage: PageNameEnum.HOME,
+
+        // 新建索引
+        defaultReplica: 1,
+        defaultShard: 5,
+
+        // http设置
+        timeout: 5000,
+
+        // 全局索引查询条件
+        homeSearchState: 0,
+        homeExcludeIndices: new Array<string>(),
+
+        // 显示设置
+        pageSize: 20,
+        defaultViewer: 2,
+        jsonThemeByLight: 'github',
+        jsonThemeByDark: 'github-dark',
+
+        // 标签栏设置
+        showTab: true,
+        tabMaxCount: 10,
+        tabCloseMode: TabCloseModeEnum.ALERT,
+
+        // 其他设置
+        autoFullScreen: false,
+    };
+}
 
 const useSettingStore = defineStore('setting', {
     state: () => {
-        let setting = useLocalStorage<Setting>('setting', {
-
-            // 布局设置
-            defaultPage: PageNameEnum.HOME,
-
-            // 新建索引
-            defaultReplica: 1,
-            defaultShard: 5,
-
-            // http设置
-            timeout: 5000,
-
-            // 全局索引查询条件
-            homeSearchState: 0,
-            homeExcludeIndices: new Array<string>(),
-
-            // 显示设置
-            pageSize: 20,
-            defaultViewer: 2,
-            jsonThemeByLight: 'docco',
-            jsonThemeByDark: 'github-dark',
-
-            // 标签栏设置
-            showTab: true,
-            tabMaxCount: 10,
-            tabCloseMode: TabCloseModeEnum.ALERT,
-
-            // 其他设置
-            autoFullScreen: false,
-        } as Setting);
         return {
             language: getDefaultLanguage(),
-            instance: setting
+            instance: getDefaultValue()
         }
     },
     getters: {
@@ -60,6 +65,12 @@ const useSettingStore = defineStore('setting', {
         getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT)
     },
     actions: {
+        init() {
+            let setting = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
+            if (setting && setting !== '') {
+                this.instance = JSON.parse(setting);
+            }
+        },
         setLanguage(language: string): void {
             this.language = language;
             localStorage.setItem('language', language);
@@ -69,6 +80,7 @@ const useSettingStore = defineStore('setting', {
                 this.instance.homeExcludeIndices = new Array<string>();
             }
             this.instance.homeExcludeIndices.push(index);
+            this.sync();
         },
         removeHomeExcludeIndex(index: string): void {
             if (!this.instance.homeExcludeIndices) {
@@ -76,6 +88,15 @@ const useSettingStore = defineStore('setting', {
                 return;
             }
             this.instance.homeExcludeIndices.splice(this.instance.homeExcludeIndices.indexOf(index), 1);
+            this.sync();
+        },
+        getDefaultValue,
+        setInstance(setting: Setting) {
+            this.instance = setting;
+            this.sync();
+        },
+        sync() {
+            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SETTING, JSON.stringify(this.instance));
         }
     }
 });

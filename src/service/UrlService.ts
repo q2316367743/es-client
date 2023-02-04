@@ -1,37 +1,18 @@
-import Dexie from 'dexie';
 import Url from '@/entity/Url';
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import Assert from "@/utils/Assert";
-import MessageUtil from "@/utils/MessageUtil";
+import {storageStrategyContext} from "@/global/BeanFactory";
 
 export default class UrlService {
 
-    private readonly url: Dexie.Table<Url, number>;
-    private readonly instance: Dexie;
-
-    constructor(instance: Dexie, url: Dexie.Table<Url, number>) {
-        this.instance = instance;
-        this.url = url;
-    }
 
     async list(): Promise<Array<Url>> {
-        return this.url.orderBy('sequence').toArray();
-    }
-
-    getById(id: number, callback: (urls: Url) => void): void {
-        this.url.get(id).then((url?: Url) => {
-            if (url) {
-                callback(url);
-            } else {
-                MessageUtil.error('链接不存在，请重试');
-            }
-        })
+        return storageStrategyContext.getStrategy().list<Url>(TableNameEnum.URL);
     }
 
     insert(url: Url): Promise<number> {
-        return this.url.put({
+        return storageStrategyContext.getStrategy().insert<Url>(TableNameEnum.URL, {
             name: url.name,
             value: url.value,
             sequence: url.sequence,
@@ -49,8 +30,8 @@ export default class UrlService {
      * @param url 链接
      * @param id ID
      */
-    updateById(url: Url, id: number): Promise<number> {
-        return this.url.put({
+    updateById(id: number, url: Url): Promise<void> {
+        return storageStrategyContext.getStrategy().update<Url>(TableNameEnum.URL, id, {
             id: id,
             name: url.name,
             value: url.value,
@@ -64,39 +45,29 @@ export default class UrlService {
     }
 
     deleteById(id: number): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.url.get(id).then((url?: Url) => {
-                if (!url) {
-                    reject('链接不存在');
-                    return;
-                }
-                this.url.delete(id).then(resolve);
-            })
-        })
+        return storageStrategyContext.getStrategy().delete<Url>(TableNameEnum.URL, id);
     }
 
     deleteAllById(id: number): Promise<void> {
-        return this.instance.transaction("readwrite",
-            [TableNameEnum.URL, TableNameEnum.BASE_SEARCH_HISTORY, TableNameEnum.SENIOR_SEARCH_HISTORY],
-            async trans => {
-                let urlDao = trans.table(TableNameEnum.URL) as Dexie.Table<Url>;
-                let baseSearchHistoryDao = trans.table(TableNameEnum.BASE_SEARCH_HISTORY) as Dexie.Table<BaseSearchHistory>;
-                let seniorSearchHistoryDao = trans.table(TableNameEnum.SENIOR_SEARCH_HISTORY) as Dexie.Table<SeniorSearchHistory>;
-                let url = await urlDao.get(id);
-                Assert.notNull(url, "链接不存在，请刷新后重试");
-                // 删除链接
-                urlDao.delete(id);
-                // 查询基础搜索历史
-                let baseSearchHistories = await baseSearchHistoryDao.where('urlId').equals(id).toArray();
-                for (let baseSearchHistory of baseSearchHistories) {
-                    await baseSearchHistoryDao.delete(baseSearchHistory.id);
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                // 删除指定URL
+                await storageStrategyContext.getStrategy().delete(TableNameEnum.URL, id);
+                // 查询全部基础查询历史
+                let bshList = await storageStrategyContext.getStrategy().list<BaseSearchHistory>(TableNameEnum.BASE_SEARCH_HISTORY, {urlId: id});
+                for (let bsh of bshList) {
+                    await storageStrategyContext.getStrategy().delete<BaseSearchHistory>(TableNameEnum.BASE_SEARCH_HISTORY, bsh.id!);
                 }
-                // 查询高级搜索历史
-                let seniorSearchHistories = await seniorSearchHistoryDao.where('urlId').equals(id).toArray();
-                for (let seniorSearchHistory of seniorSearchHistories) {
-                    await seniorSearchHistoryDao.delete(seniorSearchHistory.id);
+                // 查询全部高级查询历史
+                let sshList = await storageStrategyContext.getStrategy().list<SeniorSearchHistory>(TableNameEnum.SENIOR_SEARCH_HISTORY, {urlId: id});
+                for (let ssh of sshList) {
+                    await storageStrategyContext.getStrategy().delete<SeniorSearchHistory>(TableNameEnum.SENIOR_SEARCH_HISTORY, ssh.id!);
                 }
-            });
+                resolve();
+            } catch (e) {
+                reject(e);
+            }
+        })
     }
 
 }

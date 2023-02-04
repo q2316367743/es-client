@@ -4,7 +4,7 @@
             <div>
                 <el-input v-model="condition.link" style="width: 200px;" placeholder="链接" @input="loadData"
                           clearable/>
-                <el-select v-model="condition.method" style="margin-left: 12px;" placeholder="请求方式" clearable
+                <el-select v-model="condition.method" style="margin-left: 12px;width: 100px;" placeholder="请求方式" clearable
                            @change="loadData">
                     <el-option label="HEAD" value="HEAD"/>
                     <el-option label="GET" value="GET"/>
@@ -36,7 +36,7 @@
                             </div>
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('app.operation')" width="270">
+                    <vxe-column :title="$t('common.keyword.operation')" width="270">
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">{{ $t('common.operation.load') }}</el-button>
                             <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录

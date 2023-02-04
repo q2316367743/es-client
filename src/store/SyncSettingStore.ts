@@ -2,17 +2,19 @@ import {defineStore} from "pinia";
 import {useLocalStorage} from "@vueuse/core";
 import SyncSetting from "@/domain/SyncSetting";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
+import {lodisStrategyContext} from "@/global/BeanFactory";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 const useSyncStore = defineStore('sync-setting', {
     state: () => {
         return {
-            syncSetting: useLocalStorage<SyncSetting>('setting-sync', {
+            syncSetting: {
                 mode: SyncModeEnum.DISABLE,
                 server: {
                     url: '',
                     token: ''
                 }
-            } as SyncSetting)
+            }
         }
     },
     getters: {
@@ -20,11 +22,21 @@ const useSyncStore = defineStore('sync-setting', {
         getSyncMode: (state): SyncModeEnum => state.syncSetting.mode,
     },
     actions: {
+        init() {
+            let syncSetting = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING_SYNC);
+            if (syncSetting && syncSetting !== '') {
+                this.syncSetting = JSON.parse(syncSetting);
+            }
+        },
         setSync(syncSetting: SyncSetting): void {
             this.syncSetting = syncSetting;
+            this.sync();
         },
-        setMode(mode: SyncModeEnum) {
-            this.syncSetting.mode = mode;
+        sync() {
+            lodisStrategyContext.getStrategy().set(
+                LocalStorageKeyEnum.SETTING_SYNC,
+                JSON.stringify(this.syncSetting)
+            );
         }
     }
 });

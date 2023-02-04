@@ -30,26 +30,4 @@ export default interface BaseQuery {
      */
     value: string;
 
-    /**
-     * 额外左条件<br />
-     * ['gt', 'gte']
-     */
-    extra_left_condition: string;
-
-    /**
-     * 额外左条件值
-     */
-    extra_left_value: string;
-
-    /**
-     * 额外右条件<br />
-     * ['lt', 'lte']
-     */
-    extra_right_condition: string;
-
-    /**
-     * 额外右条件值
-     */
-    extra_right_value: string;
-
 }

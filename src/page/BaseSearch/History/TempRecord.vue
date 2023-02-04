@@ -42,7 +42,7 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
+import {defineComponent, markRaw, toRaw} from "vue";
 import {ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import {VxeTableInstance} from "vxe-table";
@@ -126,8 +126,10 @@ export default defineComponent({
                 inputErrorMessage: '名称为必填'
             }).then(({value}) => {
                 baseSearchHistoryService.save({
-                    ...history,
                     name: value,
+                    index: history.index,
+                    conditions: toRaw(history.conditions),
+                    orders: toRaw(history.orders),
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0)
                 }).then(() => MessageUtil.success('新增成功', () => {
                     emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE);

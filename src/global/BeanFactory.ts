@@ -1,8 +1,7 @@
 import x2js from 'x2js';
-import {createGlobalState, useDark, useEventBus, useLocalStorage, useToggle} from "@vueuse/core";
+import {createGlobalState, useDark, useEventBus, useToggle} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
-import DexieInstance from "@/plugins/dexie";
 
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
@@ -13,7 +12,6 @@ import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
 
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
-import TableNameEnum from "@/enumeration/TableNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
@@ -25,12 +23,13 @@ import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyI
 
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
+import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
+import ApplicationLaunch from "@/plugins/ApplicationLaunch";
+import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 
-const dexieInstance = new DexieInstance();
-
-export const urlService = new UrlService(dexieInstance, dexieInstance.table(TableNameEnum.URL));
-export const baseSearchHistoryService = new BaseSearchHistoryService(dexieInstance.table(TableNameEnum.BASE_SEARCH_HISTORY));
-export const seniorSearchHistoryService = new SeniorSearchHistoryService(dexieInstance.table(TableNameEnum.SENIOR_SEARCH_HISTORY))
+export const urlService = new UrlService();
+export const baseSearchHistoryService = new BaseSearchHistoryService();
+export const seniorSearchHistoryService = new SeniorSearchHistoryService();
 
 export const versionManage = new VersionManage();
 
@@ -43,6 +42,12 @@ httpStrategyContext.register(ServerModeEnum.SERVER, new ServerHttpStrategyImpl()
 // 同步策略
 export const syncStrategyContext = SyncStrategyContext.getInstance();
 syncStrategyContext.register(SyncModeEnum.FILE, new FileSyncStrategyImpl());
+// 存储策略
+export const storageStrategyContext = new StorageStrategyContext();
+export const lodisStrategyContext = new LodisStrategyContext();
+
+// 应用启动器
+export const applicationLaunch = new ApplicationLaunch(lodisStrategyContext, storageStrategyContext);
 
 export const json2xml = new x2js({
     selfClosingElements: false,
@@ -66,9 +71,8 @@ export const useBaseSearchEvent = useEventBus<BaseSearchJumpEvent>(EventBusEnum.
 export const useSeniorSearchEvent = useEventBus<SeniorSearchJumpEvent>(EventBusEnum.SENIOR_SEARCH_EVENT);
 // 页面跳转
 export const usePageJumpEvent = useEventBus<PageNameEnum>(EventBusEnum.PAGE_JUMP_EVENT);
-
-// 数据存储
-export const layoutMode = useLocalStorage<string>('layoutMode', 'default');
+// 链接选择
+export const useUrlSelectEvent = useEventBus<number>(EventBusEnum.URL_SELECT_EVENT);
 
 // es版本
 export const useEsVersion = createGlobalState(() => {

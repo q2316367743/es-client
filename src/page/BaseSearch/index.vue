@@ -12,10 +12,11 @@
             <div class="base-search-main" v-loading="loading" :element-loading-text="$t('common.loading.search')"
                  :class="showTabs ? '' : 'full-screen'">
                 <!-- 顶部菜单栏 -->
-                <div class="base-option el-card es-card">
+                <div class="base-option">
                     <div class="left">
                         <el-select-v2 v-model="current.index" filterable :options="indices"
-                                      :placeholder="$t('baseSearch.placeholder.selectIndex')" clearable style="width: 360px;">
+                                      :placeholder="$t('baseSearch.placeholder.selectIndex')" clearable
+                                      style="width: 260px;">
                             <template #default="{ item }">
                                 <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
                             </template>
@@ -30,10 +31,10 @@
                                 $t('common.operation.clear')
                             }}
                         </el-button>
-                        <el-button @click="historyDialog = true">{{$t('common.operation.history')}}</el-button>
+                        <el-button @click="historyDialog = true">{{ $t('common.operation.history') }}</el-button>
                     </div>
                     <div class="right">
-                        <el-select v-model="view">
+                        <el-select v-model="view" style="width: 120px;">
                             <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
                             <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
                         </el-select>
@@ -71,16 +72,18 @@
                     </el-scrollbar>
                     <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="showTop"/>
                     <div class="pagination-fixed-none" :class="paginationFixed ? 'pagination-fixed-show' : ''">
-                        <el-pagination background layout="total, sizes, prev, pager, next, jumper"
-                                       :total="current.total"
-                                       v-model:current-page="page"
-                                       v-model:page-size="size"></el-pagination>
+                            <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                           :total="current.total"
+                                           v-model:current-page="page"
+                                           v-model:page-size="size"/>
                     </div>
                     <div class="base-search-condition-sentence">
                         <el-button link type="primary" @click="showBody">
                             {{ $t('baseSearch.form.displayQueryStatement') }}
                         </el-button>
-                        <el-button link type="primary" @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch')}}</el-button>
+                        <el-button link type="primary" @click="jumpToSeniorSearch">
+                            {{ $t('common.action.jumpToSeniorSearch') }}
+                        </el-button>
                     </div>
                 </div>
             </div>

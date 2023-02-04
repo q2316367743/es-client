@@ -1,7 +1,7 @@
 <template>
     <div class="table-viewer-show">
         <vxe-toolbar ref="tableViewerToolbar" custom export/>
-        <vxe-table class="es-scrollbar" :empty-text="$t('app.component.data_is_empty')"
+        <vxe-table class="es-scrollbar" empty-text="数据为空"
                    :data="records" ref="tableViewerTable"
                    :column-config="columnConfig" :export-config="exportConfig">
             <vxe-column type="expand" width="80">

@@ -2,13 +2,13 @@
     <div class="hm-history">
         <vxe-toolbar ref="historyToolbar" custom export class="hm-history-toolbar">
             <template #buttons>
-                <el-input v-model="name" :placeholder="$t('common.keyword.name')"
-                          style="width: 200px;" @input="search"></el-input>
+                <el-input v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
+                          @input="search"></el-input>
                 <el-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
                            style="margin-left: 12px;"/>
             </template>
             <template #tools>
-                <el-button type="primary" style="margin-right: 12px;" @click="addOpen">{{ $t('common.operation.add')}}</el-button>
+                <el-button type="primary" style="margin-right: 12px;" @click="addOpen" :icon="plusIcon"/>
             </template>
         </vxe-toolbar>
         <div class="hm-history-body">
@@ -20,7 +20,10 @@
                     <vxe-column field="link" title="链接" width="400">
                         <template #default="{row}">
                             <el-link type="primary" target="_blank">{{ row.link }}</el-link>
-                            <div class="url-copy" @click="execCopy(current + row.link)">{{ $t('app.copy') }}</div>
+                            <div class="url-copy" @click="execCopy(current + row.link)">{{
+                                    $t('common.operation.copy')
+                                }}
+                            </div>
                         </template>
                     </vxe-column>
                     <vxe-column field="method" title="方法" width="100"></vxe-column>
@@ -28,7 +31,10 @@
                         <template #default="{row}">
                             <div class="hm-history-params">
                                 <div class="hm-history-params-value" :title="row.params">{{ row.params }}</div>
-                                <div class="url-copy" @click="execCopy(row.params)">{{ $t('app.copy') }}</div>
+                                <div class="url-copy" @click="execCopy(row.params)">{{
+                                        $t('common.operation.copy')
+                                    }}
+                                </div>
                             </div>
                         </template>
                     </vxe-column>
@@ -44,7 +50,8 @@
                             </el-button>
                             <el-popconfirm title="确认删除此条记录？"
                                            :confirm-button-text="$t('common.operation.delete')"
-                                           :cancel-button-text="$t('common.operation.cancel')" @confirm="removeById(row.id)" width="200px">
+                                           :cancel-button-text="$t('common.operation.cancel')"
+                                           @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
                                     <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
                                     </el-button>
@@ -65,7 +72,7 @@ import {defineComponent, markRaw} from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import {toDateString} from "xe-utils";
-import {Search} from '@element-plus/icons-vue';
+import {Search, Plus} from '@element-plus/icons-vue';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import {seniorSearchHistoryService} from "@/global/BeanFactory";
@@ -75,6 +82,7 @@ import useUrlStore from "@/store/UrlStore";
 import {mapState} from "pinia";
 import HistorySaveAndUpdate from "@/page/SeniorSearch/component/HistorySaveAndUpdate.vue";
 import MessageUtil from "@/utils/MessageUtil";
+import {stringContain} from "@/utils/SearchUtil";
 
 interface Params {
     cellValue: any
@@ -88,6 +96,7 @@ export default defineComponent({
     emits: ['load'],
     data: () => ({
         searchIcon: markRaw(Search),
+        plusIcon: markRaw(Plus),
         histories: new Array<SeniorSearchHistory>(),
         columnConfig: {
             resizable: true
@@ -135,8 +144,8 @@ export default defineComponent({
                 this.histories = new Array<SeniorSearchHistory>();
                 return;
             }
-            seniorSearchHistoryService.list(this.name, this.onlyCurrent ? useUrlStore().id : undefined)
-                .then(histories => this.histories = histories);
+            seniorSearchHistoryService.list(this.onlyCurrent ? useUrlStore().id : undefined)
+                .then(histories => this.histories = histories.filter(e => stringContain(e.name!, this.name)));
         },
         prettyDate(params: Params) {
             return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");
@@ -195,12 +204,27 @@ export default defineComponent({
 </script>
 <style lang="less">
 
+@media (max-width: 1200px) {
+    .hm-history {
+        .hm-history-toolbar {
+            .hm-history-toolbar-name {
+                width: 100px !important;
+            }
+        }
+    }
+}
+
 .hm-history {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    .hm-history-toolbar {
+        .hm-history-toolbar-name {
+            width: 200px;
+        }
+    }
 
     .hm-history-body {
         position: absolute;

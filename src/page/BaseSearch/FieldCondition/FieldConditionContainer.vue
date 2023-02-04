@@ -43,11 +43,7 @@ export default defineComponent({
                 type: 'must',
                 field: '',
                 condition: 'term',
-                value: '',
-                extra_left_condition: '',
-                extra_left_value: '',
-                extra_right_condition: '',
-                extra_right_value: ''
+                value: ''
             });
         },
         add() {
@@ -56,11 +52,7 @@ export default defineComponent({
                 type: 'must',
                 field: '',
                 condition: 'term',
-                value: '',
-                extra_left_condition: '',
-                extra_left_value: '',
-                extra_right_condition: '',
-                extra_right_value: ''
+                value: ''
             });
         },
         remove(id: number) {
