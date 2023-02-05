@@ -4,12 +4,12 @@ import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
 
-export default class HttpStrategyProxy implements HttpStrategy{
+export default class HttpStrategyProxy {
 
-    private instance: HttpStrategy;
+    private readonly fetchSelf: (config: HttpStrategyConfig) => Promise<any>;
 
-    constructor(instance: HttpStrategy) {
-        this.instance = instance;
+    constructor(fetchSelf: (config: HttpStrategyConfig) => Promise<any>) {
+        this.fetchSelf = fetchSelf;
     }
 
     es<T>(config: HttpStrategyConfig): Promise<T> {
@@ -36,15 +36,15 @@ export default class HttpStrategyProxy implements HttpStrategy{
         }
         // 设置超时时间
         config.timeout = useSettingStore().getTimeout
-        return this.instance.es<T>(config);
+        return this.fetchSelf(config);
     }
 
     fetch<T>(config: HttpStrategyConfig): Promise<T> {
-        return this.instance.fetch<T>(config);
+        return this.fetchSelf(config);
     }
 
     native<T>(config: HttpStrategyConfig): Promise<T> {
-        return this.instance.native<T>(config);
+        return this.fetchSelf(config);
     }
 
 }

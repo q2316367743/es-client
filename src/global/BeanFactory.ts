@@ -11,13 +11,10 @@ import {SeniorSearchHistoryService} from "@/service/SeniorSearchHistoryService";
 import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
 
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
-import ClientHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ClientHttpStrategyImpl";
-import ServerHttpStrategyImpl from "@/strategy/HttpStrategy/impl/ServerHttpStrategyImpl";
 import SyncStrategyContext from "@/strategy/SyncStrategy/SyncStrategyContext";
 import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyImpl";
 
@@ -37,8 +34,6 @@ export const versionManage = new VersionManage();
 
 // HTTP策略
 export const httpStrategyContext = new HttpStrategyContext();
-httpStrategyContext.register(ServerModeEnum.CLIENT, new ClientHttpStrategyImpl());
-httpStrategyContext.register(ServerModeEnum.SERVER, new ServerHttpStrategyImpl());
 // 同步策略
 export const syncStrategyContext = SyncStrategyContext.getInstance();
 syncStrategyContext.register(SyncModeEnum.FILE, new FileSyncStrategyImpl());
@@ -47,7 +42,8 @@ export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
 
 // 应用启动器
-export const applicationLaunch = new ApplicationLaunch(lodisStrategyContext, storageStrategyContext);
+export const applicationLaunch = new ApplicationLaunch(
+    lodisStrategyContext, storageStrategyContext, httpStrategyContext);
 
 export const json2xml = new x2js({
     selfClosingElements: false,
