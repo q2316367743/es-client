@@ -20,7 +20,13 @@ POST http://localhost:8080/api/fetch
 GET http://localhost:8080/api/db/{tableName}/list
 
 ### 获取一个数据
-GET http://localhost:8080/api/db/{tableName}/one
+POST http://localhost:8080/api/db/{tableName}/one
+Content-Type: application/json
+
+{
+    "_id": ""
+}
+
 
 ### 保存数据
 POST http://localhost:8080/api/db/{tableName}/save
@@ -41,7 +47,13 @@ Content-Type: application/json
 }
 
 ### 删除一个数据
-DELETE http://localhost:8080/api/db/{tableName}/delete/{_id}
+DELETE http://localhost:8080/api/db/{tableName}/delete
+Content-Type: application/json
+
+{
+    "_id": ""
+}
+
 
 ### 获取键值对
 POST http://localhost:8080/api/lodis/get
