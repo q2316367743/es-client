@@ -1,12 +1,13 @@
 import MessageUtil from "@/utils/MessageUtil";
 import httpModeUtil from "@/strategy/HttpStrategy/HttpModeUtil";
 import {ElLoading} from "element-plus";
-import { versionManage} from "@/global/BeanFactory";
+import {versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
 import useSyncStore from "@/store/SyncSettingStore";
 import useServerStore from "@/store/ServerSettingStore";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
+import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 
 /**
  * 应用启动器
@@ -17,13 +18,16 @@ export default class ApplicationLaunch {
     private readonly launchItems = new Array<() => void>();
     private lodisStrategyContext: LodisStrategyContext;
     private storageStrategyContext: StorageStrategyContext;
+    private httpStrategyContext: HttpStrategyContext;
 
     constructor(
         lodisStrategyContext: LodisStrategyContext,
-        storageStrategyContext: StorageStrategyContext
+        storageStrategyContext: StorageStrategyContext,
+        httpStrategyContext: HttpStrategyContext
     ) {
         this.lodisStrategyContext = lodisStrategyContext;
         this.storageStrategyContext = storageStrategyContext;
+        this.httpStrategyContext = httpStrategyContext;
         // 启动
         this.init().then(() => {
             this.execute();
@@ -39,7 +43,7 @@ export default class ApplicationLaunch {
         useSyncStore().init();
         useServerStore().init();
         // 初始化http模式
-        await httpModeUtil.getHttpModeManage().init();
+        await this.httpStrategyContext.init();
         await this.storageStrategyContext.init();
     }
 

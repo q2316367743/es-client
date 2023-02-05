@@ -1,9 +1,7 @@
 import express, {json} from 'express';
 import * as path from "path";
 import serveStatic from 'serve-static';
-import axios from 'axios';
-import HttpStrategyConfig from "./entity/HttpStrategyConfig";
-import Result from './entity/Result';
+import FetchRouter from "./router/FetchRouter";
 
 
 const app = express();
@@ -29,27 +27,8 @@ app.all("*", function (req, res, next) {
         next();
 });
 
-app.get("/api/ping", (req, rsp, next) => {
-    rsp.send('pong');
-    next();
-})
-
-
-app.post('/api/fetch', async (req, rsp, next) => {
-    let body = req.body as HttpStrategyConfig;
-    try {
-        let result = await axios(body);
-        rsp.send({
-            success: true,
-            data: result.data
-        } as Result);
-    } catch (e) {
-        rsp.send({
-            success: false,
-            data: e
-        } as Result);
-    }
-});
+// 跨域问题
+app.use('/api/fetch', FetchRouter);
 
 console.log('服务器运行在：http://localhost:3000')
 

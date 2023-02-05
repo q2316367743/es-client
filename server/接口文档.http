@@ -1,0 +1,69 @@
+### 代理请求
+POST http://localhost:8080/api/fetch
+
+{
+    "url": "http://192.168.0.253:9200",
+    "method": "POST",
+    "headers": {
+        "token": "123456"
+    },
+    "timeout": 5000,
+    "data": {},
+    "auth": {
+        "username": "admin",
+        "password": "123456"
+    }
+}
+
+
+### 获取全部数据
+GET http://localhost:8080/api/db/{tableName}/list
+
+### 获取一个数据
+GET http://localhost:8080/api/db/{tableName}/one
+
+### 保存数据
+POST http://localhost:8080/api/db/{tableName}/save
+Content-Type: application/json
+
+{
+    "_id": "",
+    "value": ""
+}
+
+### 修改一个数据
+PUT http://localhost:8080/api/db/{tableName}/update
+Content-Type: application/json
+
+{
+    "_id": "",
+    "value": ""
+}
+
+### 删除一个数据
+DELETE http://localhost:8080/api/db/{tableName}/delete/{_id}
+
+### 获取键值对
+POST http://localhost:8080/api/lodis/get
+Content-Type: application/json
+
+{
+    "key": ""
+}
+
+### 设置键值对
+POST http://localhost:8080/api/lodis/set
+Content-Type: application/json
+
+{
+    "key": "",
+    "value": ""
+}
+
+### 移除键值对
+DELETE http://localhost:8080/api/lodis/remove
+Content-Type: application/json
+
+{
+    "key": ""
+}

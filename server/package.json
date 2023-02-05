@@ -5,7 +5,7 @@
   "main": "main.ts",
   "repository": "https://gitee.com/qiaoshengda/es-client",
   "author": "Esion",
-  "license": "Apache2.0",
+  "license": "Apache-2.0",
   "scripts": {
     "serve": "node --loader ts-node/esm -r tsconfig-paths/register main.ts"
   },

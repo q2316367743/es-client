@@ -4,24 +4,32 @@ import HttpStrategy from "./HttpStrategy";
 import useServerStore from "@/store/ServerSettingStore";
 import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import HttpStrategyProxy from "@/strategy/HttpStrategy/HttpStrategyProxy";
+import Constant from "@/global/Constant";
+import HttpTypeEnum from "@/enumeration/HttpTypeEnum";
+import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
-class HttpStrategyContext {
+export default class HttpStrategyContext {
 
-    private strategyMap: Map<ServerModeEnum, HttpStrategy> = new Map<ServerModeEnum, HttpStrategy>();
+    private strategy?: HttpStrategy;
 
-
-    register(serverMode: ServerModeEnum, httpStrategy: HttpStrategy) {
-        this.strategyMap.set(serverMode, new HttpStrategyProxy(httpStrategy));
+    async init() {
+        if (Constant.mode === HttpTypeEnum.BROWSER) {
+            let fetchPacking = await import('./mode/BrowserMode');
+            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+        } else if (Constant.mode === HttpTypeEnum.DESKTOP) {
+            let fetchPacking = await import('./mode/TauriMode');
+            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+        } else if (Constant.mode === HttpTypeEnum.SERVER) {
+            let fetchPacking = await import('./mode/ServerMode');
+            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+        } else {
+            let fetchPacking = await import('./mode/BrowserMode');
+            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+        }
     }
 
-    public getStrategy(): HttpStrategy {
-        let httpStrategy = this.strategyMap.get(useServerStore().getServerMode);
-        if (!httpStrategy) {
-            throw new Error("服务器模式异常，请正确的设置服务器模式");
-        }
-        return httpStrategy;
+    getStrategy(): HttpStrategy {
+        return this.strategy!;
     }
 
 }
-
-export default HttpStrategyContext;
