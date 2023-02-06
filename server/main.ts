@@ -2,6 +2,8 @@ import express, {json} from 'express';
 import * as path from "path";
 import serveStatic from 'serve-static';
 import FetchRouter from "./router/FetchRouter";
+import LodisRouter from "./router/LodisRouter";
+import DbRouter from "./router/DbRouter";
 
 
 const app = express();
@@ -29,6 +31,8 @@ app.all("*", function (req, res, next) {
 
 // 跨域问题
 app.use('/api/fetch', FetchRouter);
+app.use('/api/lodis', LodisRouter);
+app.use('/api/db', DbRouter);
 
 console.log('服务器运行在：http://localhost:3000')
 

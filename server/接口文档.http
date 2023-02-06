@@ -1,5 +1,5 @@
 ### 代理请求
-POST http://localhost:8080/api/fetch
+POST http://localhost:3000/api/fetch
 
 {
     "url": "http://192.168.0.253:9200",
@@ -17,10 +17,10 @@ POST http://localhost:8080/api/fetch
 
 
 ### 获取全部数据
-GET http://localhost:8080/api/db/{tableName}/list
+GET http://localhost:3000/api/db/{tableName}/list
 
 ### 获取一个数据
-POST http://localhost:8080/api/db/{tableName}/one
+POST http://localhost:3000/api/db/{tableName}/one
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 
 ### 保存数据
-POST http://localhost:8080/api/db/{tableName}/save
+POST http://localhost:3000/api/db/{tableName}/save
 Content-Type: application/json
 
 {
@@ -38,7 +38,7 @@ Content-Type: application/json
 }
 
 ### 修改一个数据
-PUT http://localhost:8080/api/db/{tableName}/update
+PUT http://localhost:3000/api/db/{tableName}/update
 Content-Type: application/json
 
 {
@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### 删除一个数据
-DELETE http://localhost:8080/api/db/{tableName}/delete
+DELETE http://localhost:3000/api/db/{tableName}/delete
 Content-Type: application/json
 
 {
@@ -56,7 +56,7 @@ Content-Type: application/json
 
 
 ### 获取键值对
-POST http://localhost:8080/api/lodis/get
+POST http://localhost:3000/api/lodis/get
 Content-Type: application/json
 
 {
@@ -64,7 +64,7 @@ Content-Type: application/json
 }
 
 ### 设置键值对
-POST http://localhost:8080/api/lodis/set
+POST http://localhost:3000/api/lodis/set
 Content-Type: application/json
 
 {
@@ -73,7 +73,7 @@ Content-Type: application/json
 }
 
 ### 移除键值对
-DELETE http://localhost:8080/api/lodis/remove
+DELETE http://localhost:3000/api/lodis/remove
 Content-Type: application/json
 
 {
