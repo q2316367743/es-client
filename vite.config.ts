@@ -24,7 +24,7 @@ function outDir() {
         case 'build:firefox':
             return 'firefox/es-client';
         case 'build:server':
-            return 'server/dist/public';
+            return 'server/public';
         case 'build:tauri:windows':
             return 'dist';
         case 'build:tauri:linux':

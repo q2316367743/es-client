@@ -6,11 +6,23 @@ import {defineComponent} from "vue";
 import {isDark} from "@/global/BeanFactory";
 
 import * as monaco from 'monaco-editor';
+// @ts-ignore
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
 import language from "./language";
 import configuration from "./configuration";
 import provider from "./provider";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
+
+// @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
+self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
+    getWorker(_: any, label: string) {
+        return new EditorWorker(); // 基础功能文件， 提供了所有语言通用功能 无论使用什么语言，monaco都会去加载他。
+    }
+};
+
+monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 
 export default defineComponent({
     name: 'rest-client-editor',

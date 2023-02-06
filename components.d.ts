@@ -10,7 +10,6 @@ declare module '@vue/runtime-core' {
     Apache2_0: typeof import('./src/components/License/Apache2_0.vue')['default']
     Bsd: typeof import('./src/components/License/Bsd.vue')['default']
     DataView: typeof import('./src/components/DataView/index.vue')['default']
-    ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
