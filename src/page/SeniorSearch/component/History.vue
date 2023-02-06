@@ -17,27 +17,6 @@
                            :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
                     <vxe-column field="name" :title="$t('common.keyword.name')" width="150"></vxe-column>
-                    <vxe-column field="link" title="链接" width="400">
-                        <template #default="{row}">
-                            <el-link type="primary" target="_blank">{{ row.link }}</el-link>
-                            <div class="url-copy" @click="execCopy(current + row.link)">{{
-                                    $t('common.operation.copy')
-                                }}
-                            </div>
-                        </template>
-                    </vxe-column>
-                    <vxe-column field="method" title="方法" width="100"></vxe-column>
-                    <vxe-column field="params" title="参数" width="280" :visible="false">
-                        <template #default="{row}">
-                            <div class="hm-history-params">
-                                <div class="hm-history-params-value" :title="row.params">{{ row.params }}</div>
-                                <div class="url-copy" @click="execCopy(row.params)">{{
-                                        $t('common.operation.copy')
-                                    }}
-                                </div>
-                            </div>
-                        </template>
-                    </vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
                             <el-button type="success" size="small" @click="load(row)">{{
@@ -115,9 +94,7 @@ export default defineComponent({
                 id: 0,
                 name: '',
                 urlId: 0,
-                link: '',
-                method: 'POST',
-                params: ''
+                body: ''
             } as SeniorSearchHistory
         }
     }),
@@ -168,9 +145,7 @@ export default defineComponent({
                     id: 0,
                     name: '',
                     urlId: 0,
-                    link: '',
-                    method: 'POST',
-                    params: ''
+                    body: ''
                 } as SeniorSearchHistory
             }
         },
@@ -220,6 +195,7 @@ export default defineComponent({
     left: 0;
     right: 0;
     bottom: 0;
+
     .hm-history-toolbar {
         .hm-history-toolbar-name {
             width: 200px;

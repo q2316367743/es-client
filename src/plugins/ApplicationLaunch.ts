@@ -1,5 +1,4 @@
 import MessageUtil from "@/utils/MessageUtil";
-import httpModeUtil from "@/strategy/HttpStrategy/HttpModeUtil";
 import {ElLoading} from "element-plus";
 import {versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
@@ -15,7 +14,7 @@ import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 export default class ApplicationLaunch {
 
     private ready: boolean = false;
-    private readonly launchItems = new Array<() => void>();
+    private readonly launchItems = new Array<(setText?: (text: string) => void) => void>();
     private lodisStrategyContext: LodisStrategyContext;
     private storageStrategyContext: StorageStrategyContext;
     private httpStrategyContext: HttpStrategyContext;
@@ -54,14 +53,14 @@ export default class ApplicationLaunch {
             background: 'rgba(0, 0, 0, 0.7)',
         });
         // 启动完成
-        this.launchItems.forEach(item => {
+        for (let launchItem of this.launchItems) {
             try {
-                item();
+                launchItem(loading.setText);
             } catch (e) {
                 MessageUtil.error('启动项启动错误', e as Error);
                 console.error(e);
             }
-        });
+        }
         loading.close();
     }
 
@@ -69,7 +68,7 @@ export default class ApplicationLaunch {
      * 注册启动项
      * @param launchItem 启动项
      */
-    register(launchItem: () => void): void {
+    register(launchItem: (setText?: (text: string) => void) => void): void {
         this.launchItems.push(launchItem);
         if (this.ready) {
             // 已经启动了

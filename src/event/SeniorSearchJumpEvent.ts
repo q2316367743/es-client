@@ -17,17 +17,22 @@ export default interface SeniorSearchJumpEvent {
     /**
      * 请求方法
      */
-    method: Method;
+    method?: Method;
 
     /**
      * 请求链接
      */
-    link: string;
+    link?: string;
 
     /**
      * 请求参数
      */
-    params: string;
+    params?: string;
+
+    /**
+     * 请求体，存在会替代上面参数
+     */
+    body?: string;
 
     /**
      * 是否执行

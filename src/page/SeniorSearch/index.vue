@@ -55,7 +55,6 @@ import {SeniorSearchItem, SeniorSearchItemBody} from './domain/SeniorSearchItem'
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
 
-import useSeniorTempRecordStore from "@/store/SeniorTempRecordStore";
 import useUrlStore from "@/store/UrlStore";
 import useSettingStore from "@/store/SettingStore";
 
@@ -169,7 +168,7 @@ export default defineComponent({
                     relationId: Optional.ofNullable(param.id).orElse(0)
                 },
                 body: {
-                    body: `${param.method} ${param.link}\r\n${param.params}`,
+                    body: param.body ? param.body : `${param.method} ${param.link}\r\n${param.params}`,
                     result: {}
                 }
             } as SeniorSearchItem;
@@ -227,15 +226,6 @@ export default defineComponent({
                 data: data
             }).then((response) => {
                 this.current.result = response;
-                // 正常响应，加入历史记录
-                let url = useUrlStore().url;
-                if (url) {
-                    useSeniorTempRecordStore().addTempRecord({
-                        urlId: url.id!,
-                        body: this.current.body
-                    });
-                    emitter.emit(MessageEventEnum.TEMP_RECORD_UPDATE);
-                }
             }).catch((e) => {
                 this.current.result = e.response.data
             })

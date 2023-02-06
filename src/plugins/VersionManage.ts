@@ -1,6 +1,6 @@
 import Constant from "@/global/Constant";
 import useSettingStore from "@/store/SettingStore";
-import {lodisStrategyContext} from "@/global/BeanFactory";
+import {lodisStrategyContext, seniorSearchHistoryService} from "@/global/BeanFactory";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
@@ -8,9 +8,15 @@ export default class VersionManage {
 
     private readonly currentVersion = Constant.version;
     private storageVersion?: string;
+    private status: number = 2;
 
     init() {
         this.storageVersion = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION) || '';
+        if (this.storageVersion === '') {
+            this.status = 1;
+        } else if (this.currentVersion === this.storageVersion) {
+            this.status = 3;
+        }
     }
 
     /**
@@ -20,18 +26,27 @@ export default class VersionManage {
      * 3：不需要更新
      */
     public checkUpdate(): number {
-        return this.storageVersion === '' ? 1 :  this.currentVersion !== this.storageVersion ? 2 : 3;
+        return this.status;
     }
 
-    public execUpdate(): void {
-        if (this.storageVersion === '') {
-            this._init();
+    public async execUpdate(setText?: (text: string) => void): Promise<void> {
+        if (this.status === 3) {
+            console.log("已是最新版")
+            return Promise.resolve();
         }
+        if (this.storageVersion === '') {
+            this.first();
+        } else if (this.storageVersion === '2.4.0') {
+            await this.update240(setText);
+        }
+        // 更新数据
         lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
         this.storageVersion = this.currentVersion + '';
+        this.status = 2;
+        return Promise.resolve();
     }
 
-    private _init() {
+    private first() {
         // 第一次使用
         if (Constant.platform === 'utools') {
             // utools默认设置
@@ -41,6 +56,21 @@ export default class VersionManage {
             lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, LayoutModeEnum.CLASSIC);
             document.body.setAttribute('layout-mode', LayoutModeEnum.CLASSIC);
         }
+    }
+
+    private async update240(setText?: (text: string) => void) {
+        if (setText) {
+            setText("2.4.0版本更新 - 高级查询历史记录迁移");
+        }
+        let records = await seniorSearchHistoryService.list()
+        for (let record of records) {
+            if (!record.body) {
+                // @ts-ignore
+                record.body = `${record.method} ${record.link}\n${record.params}`;
+                await seniorSearchHistoryService.update(record);
+            }
+        }
+
     }
 
 }

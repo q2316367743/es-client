@@ -259,7 +259,7 @@ export default defineComponent({
         },
     },
     created() {
-        applicationLaunch.register(() => {
+        applicationLaunch.register(async (setText) => {
             // 刷新索引列表
             useUrlStore().reset(() => {
                 // utools第一次进入事件
@@ -280,17 +280,15 @@ export default defineComponent({
             }
 
             // 版本更新处理
-            this.$nextTick(() => {
-                switch (versionManage.checkUpdate()) {
-                    case 1:
-                        this.newDialog = true;
-                        break;
-                    case 2:
-                        this.updateDialog = true;
-                        break;
-                }
-                versionManage.execUpdate();
-            });
+            switch (versionManage.checkUpdate()) {
+                case 1:
+                    this.newDialog = true;
+                    break;
+                case 2:
+                    this.updateDialog = true;
+                    break;
+            }
+            await versionManage.execUpdate(setText);
         });
 
         // 国际化

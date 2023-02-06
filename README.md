@@ -1,6 +1,5 @@
 # es-client
 
-
 [![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client)
 [![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
 [![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
@@ -10,8 +9,9 @@
 [![OSCS Status](https://www.oscs1024.com/platform/badge/es-client.svg?size=small)](https://www.murphysec.com/accept?code=9a8096e0fd00acdcdb1901030f42d5d6&type=1&from=2)
 
 > elasticsearch查询客户端。
-> 
-> elasticsearch的客户端比较出名的就是[elasticsearch head](https://github.com/mobz/elasticsearch-head)和[Kibana](https://github.com/elastic/kibana)了，
+>
+> elasticsearch的客户端比较出名的就是[elasticsearch head](https://github.com/mobz/elasticsearch-head)
+> 和[Kibana](https://github.com/elastic/kibana)了，
 > 但是elasticsearch head已经停止更新，且样式老旧，功能不全；
 > 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+element-plus进行开发了一个elasticsearch的客户端。
 
@@ -25,6 +25,7 @@
 - [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 - [想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
+- [utools](https://www.u.tools/)
 
 ### 存储
 
@@ -62,15 +63,15 @@ yarn dev
 ## 项目预览
 
 - 首页
-![图片](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87.png)
+  ![图片](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87.png)
 - 数据浏览
-![图片-1653033250795](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033250795.png)
+  ![图片-1653033250795](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033250795.png)
 - 基础查询
-![图片-1653033209166](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033209166.png)
+  ![图片-1653033209166](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033209166.png)
 - 高级查询
-![图片-1653033316089](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033316089.png)
+  ![图片-1653033316089](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033316089.png)
 - 设置
-![图片-1653033335849](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033335849.png)
+  ![图片-1653033335849](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033335849.png)
 
 ## 项目功能
 

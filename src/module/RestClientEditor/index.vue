@@ -1,5 +1,5 @@
 <template>
-    <div ref="container" :style="style"></div>
+    <div ref="container" :id="id" :style="style"></div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -35,7 +35,8 @@ export default defineComponent({
             width: '100%',
             height: 'calc(100%)'
         },
-        isDark
+        isDark,
+        id: `rest-client-${new Date().getTime()}`
     }),
     watch: {
         modelValue(newValue) {

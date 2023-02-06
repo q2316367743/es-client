@@ -19,7 +19,7 @@ function error(message: string, e?: Error, callback?: () => void): void {
     ElMessage({
         showClose: true,
         type: "error",
-        message: Optional.ofNullable(e).map(e => `${message}，${e.message}`).orElse(message)
+        message: Optional.ofNullable(e).map(e => `${message}，${e.message || e}`).orElse(message)
     });
     console.error(e);
     callback && callback();
