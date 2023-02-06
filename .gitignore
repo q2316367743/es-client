@@ -30,9 +30,7 @@ pnpm-debug.log*
 *.sw?
 
 stats.html
-server/dist
-server/node_modules
+server/public
+server/.fleet
 
-src-java/target
-src-java/.vscode
 /utools
