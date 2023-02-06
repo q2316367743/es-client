@@ -74,7 +74,6 @@ import {ArrowDown, ArrowUp, Delete, Search, SwitchButton} from '@element-plus/ic
 import {ElMessageBox} from "element-plus";
 
 import IndexApi from '@/api/IndexApi'
-import clusterApi from "@/api/ClusterApi";
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";

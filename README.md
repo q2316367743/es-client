@@ -19,13 +19,19 @@
 
 本项目已经推送到Firefox拓展和Edge外接程序中，但由于Edge审核比较慢，所以Firefox的更新速度会比Edge快一些，谷歌插件商店上架比较麻烦，所以并未上架。
 
-- [website](https://project.esion.xyz/es-client/)**（基本用不了）**
-- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)**（审核有些慢）**
+### 发行版
+
+- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 - [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
-- [想天浏览器独立应用](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)**（完整功能）**
-- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases/tag/v2.4.0)**（完整功能）**
+- [想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
+- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
+
+### 存储
+
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
+- [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
+- [可道云](http://kodcloud.esion.xyz/#s/89HBcbIw)
 - [Cloudreve](https://explorer.esion.xyz/s/e8up)
 
 ## 详细文档

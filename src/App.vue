@@ -81,9 +81,8 @@
             <!-- 索引服务器选择 -->
             <el-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" style="padding-top: 9px;"
                        clearable @change="selectUrl">
-                <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id">
-                </el-option>
-                <el-option :label="$t('common.operation.add')" value="add"></el-option>
+                <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                <el-option :label="$t('common.operation.add')" value="add"/>
             </el-select>
             <!-- 刷新按钮 -->
             <el-button @click="refresh">{{ $t('common.operation.refresh') }}</el-button>
@@ -177,6 +176,12 @@ import en from 'element-plus/lib/locale/lang/en'
 import {ElNotification} from "element-plus";
 // 模块
 import Info from '@/module/info/index.vue';
+// 页面
+import Home from '@/page/Home/index.vue';
+import DataBrowse from '@/page/DataBrowse/index.vue';
+import BaseSearch from '@/page/BaseSearch/index.vue';
+import SeniorSearch from '@/page/SeniorSearch/index.vue';
+import Setting from '@/page/Setting/index.vue';
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
@@ -213,11 +218,7 @@ export default defineComponent({
         Fold, Expand, HomeFilled, Search, Operation, Tickets,
         Coin, DataBoard, Filter, SettingIcon, DataLine,
         // 页面
-        Home: defineAsyncComponent(() => import("@/page/Home/index.vue")),
-        DataBrowse: defineAsyncComponent(() => import("@/page/DataBrowse/index.vue")),
-        BaseSearch: defineAsyncComponent(() => import("@/page/BaseSearch/index.vue")),
-        SeniorSearch: defineAsyncComponent(() => import("@/page/SeniorSearch/index.vue")),
-        Setting: defineAsyncComponent(() => import("@/page/Setting/index.vue")),
+        Home, DataBrowse, BaseSearch, SeniorSearch, Setting,
         // 组件
         Info,
         SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),

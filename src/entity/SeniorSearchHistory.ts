@@ -27,18 +27,8 @@ export default interface SeniorSearchHistory extends Base{
     name?: string;
 
     /**
-     * 链接
-     */
-    link: string;
-
-    /**
-     * 请求方式
-     */
-    method: Method;
-
-    /**
      * 参数
      */
-    params: string;
+    body: string;
 
 }

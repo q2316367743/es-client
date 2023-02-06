@@ -11,23 +11,7 @@
             <!-- 上半部分 -->
             <div class="senior-search-card__header">
                 <div style="display: flex;">
-                    <el-select v-model="current.method" :placeholder="$t('seniorSearch.placeholder.select')"
-                               style="width: 100px;">
-                        <el-option label="HEAD" value="HEAD"></el-option>
-                        <el-option label="GET" value="GET"></el-option>
-                        <el-option label="POST" value="POST"></el-option>
-                        <el-option label="PUT" value="PUT"></el-option>
-                        <el-option label="DELETE" value="DELETE"></el-option>
-                    </el-select>
-                    <el-autocomplete v-model="current.link" class="senior-search-link"
-                                     :fetch-suggestions="fetchSuggestions" @keyup.enter.native="search"
-                                     @select="handleSelect"
-                                     :placeholder="$t('seniorSearch.placeholder.link')" clearable>
-                        <template #default="{ item }">
-                            <div class="value">{{ item }}</div>
-                        </template>
-                    </el-autocomplete>
-                    <el-button type="primary" @click="search" style="margin-left: 0;">{{ searchBtn }}</el-button>
+                    <el-button type="primary" @click="search" style="margin-left: 0;">执行</el-button>
                     <el-button type="success" @click="formatDocument">{{ $t('common.operation.format') }}</el-button>
                     <el-button @click="historyDrawer = true">{{ $t('common.operation.history') }}</el-button>
                 </div>
@@ -43,15 +27,7 @@
             <div class="senior-main">
                 <!-- 左面查询条件 -->
                 <div class="side">
-                    <codemirror
-                        v-model="current.params"
-                        placeholder="请在这里输入查询条件"
-                        :style="{ height: '100%' }"
-                        :autofocus="true"
-                        :indent-with-tab="true"
-                        :tabSize="4"
-                        :extensions="extensions"
-                    />
+                    <rest-client-editor ref="restClientEditor" v-model="current.body"/>
                 </div>
                 <div class="seq"/>
                 <div class="senior-content">
@@ -68,16 +44,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
+import {defineAsyncComponent, defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
-import {Codemirror} from 'vue-codemirror';
 import {ElMessageBox, ElNotification} from "element-plus";
-import {json} from '@codemirror/lang-json';
 import {FullScreen} from '@element-plus/icons-vue'
 
 import './index.less';
-import LinkProcessor from "./LinkProcessor";
-import {SeniorSearchItem} from './SeniorSearchItem';
+import {SeniorSearchItem, SeniorSearchItemBody} from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
@@ -91,14 +64,14 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import {httpStrategyContext, seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
 
-import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import DataView from "@/components/DataView/index.vue";
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 import Optional from "@/utils/Optional";
-import SeniorSearchHistoryManage from "@/page/SeniorSearch/component/index.vue";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import MessageUtil from "@/utils/MessageUtil";
+import {requestBuild} from "@/page/SeniorSearch/build/RequestBuild";
+import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -111,20 +84,16 @@ export default defineComponent({
                 name: '高级查询'
             },
             body: {
-                link: '',
-                method: 'POST',
-                params: '{}',
+                body: '',
                 result: {}
             }
         });
         return {
             // 展示数据
             current: {
-                link: '',
-                method: 'POST' as Method,
-                params: '{}',
+                body: '',
                 result: {} as any,
-            },
+            } as SeniorSearchItemBody,
             // 图标
             fullScreen: markRaw(FullScreen),
             // 查询map
@@ -137,22 +106,19 @@ export default defineComponent({
             // 相关数据
             view: useSettingStore().getDefaultViewer,
             showTop: true,
-            extensions: [json()] as Array<any>,
             historyDrawer: false
         }
     },
-    components: {TabMenu, SeniorSearchHistoryManage, DataView, Codemirror},
+    components: {
+        RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
+        SeniorSearchHistoryManage: defineAsyncComponent(() => import('@/page/SeniorSearch/component/index.vue')),
+        TabMenu, DataView
+    },
     computed: {
         ...mapState(useSettingStore, ['instance']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
-        searchBtn() {
-            if (this.current.link) {
-                return this.current.link.indexOf('search') > -1 ? this.$t('common.operation.search') : this.$t('common.operation.execute')
-            }
-            return this.$t('common.operation.search');
-        }
     },
     watch: {
         link(newValue) {
@@ -170,26 +136,20 @@ export default defineComponent({
                         name: '高级查询'
                     },
                     body: {
-                        link: '',
-                        method: 'POST',
-                        params: '{}',
+                        body: '',
                         result: {}
-                    }
+                    } as SeniorSearchItemBody
                 }
                 this.searchMap.set(searchId, searchItem);
             }
-            this.current.link = searchItem.body.link;
-            this.current.method = searchItem.body.method;
-            this.current.params = searchItem.body.params;
+            this.current.body = searchItem.body.body;
             this.current.result = searchItem.body.result;
         },
         current: {
             handler() {
                 let searchItem = this.searchMap.get(this.searchId);
                 if (searchItem) {
-                    searchItem.body.link = this.current.link;
-                    searchItem.body.method = this.current.method;
-                    searchItem.body.params = this.current.params;
+                    searchItem.body.body = this.current.body;
                     searchItem.body.result = this.current.result;
                 }
             },
@@ -209,9 +169,7 @@ export default defineComponent({
                     relationId: Optional.ofNullable(param.id).orElse(0)
                 },
                 body: {
-                    link: param.link,
-                    method: param.method,
-                    params: param.params,
+                    body: `${param.method} ${param.link}\r\n${param.params}`,
                     result: {}
                 }
             } as SeniorSearchItem;
@@ -219,9 +177,7 @@ export default defineComponent({
             this.searchId = searchId;
 
             // 只能预先赋值
-            this.current.link = searchItem.body.link;
-            this.current.method = searchItem.body.method;
-            this.current.params = searchItem.body.params;
+            this.current.body = searchItem.body.body;
             this.current.result = searchItem.body.result;
 
             // 搜索
@@ -235,21 +191,27 @@ export default defineComponent({
     // 获取最大宽度
     methods: {
         async search() {
-            if (!this.current.link || this.current.link === '') {
-                MessageUtil.success('请输入链接');
+            let restClientEditor = this.$refs.restClientEditor as any;
+            let request = requestBuild(restClientEditor.getInstance());
+            if (!request) {
+                MessageUtil.success('请求块无法识别');
+                return;
+            }
+            if (request.link === '') {
+                MessageUtil.success('链接未识别到');
                 return;
             }
             let data = {} as any;
-            if (this.current.params != '') {
+            if (request.params != '') {
                 try {
-                    data = JSON.parse(this.current.params);
+                    data = JSON.parse(request.params);
                 } catch (e: any) {
                     console.error(e);
                     // 不必强行校验json格式
-                    data = this.current.params;
+                    data = request.params;
                 }
             }
-            if (this.current.method === 'POST' && this.current.link.indexOf('_doc') > -1 && this.current.params == '') {
+            if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
                 this.current.result = {};
                 ElNotification({
@@ -260,8 +222,8 @@ export default defineComponent({
                 return;
             }
             httpStrategyContext.getStrategy().es<any>({
-                url: this.current.link,
-                method: this.current.method,
+                url: request.link,
+                method: request.method,
                 data: data
             }).then((response) => {
                 this.current.result = response;
@@ -270,9 +232,7 @@ export default defineComponent({
                 if (url) {
                     useSeniorTempRecordStore().addTempRecord({
                         urlId: url.id!,
-                        link: this.current.link,
-                        method: this.current.method,
-                        params: this.current.params
+                        body: this.current.body
                     });
                     emitter.emit(MessageEventEnum.TEMP_RECORD_UPDATE);
                 }
@@ -280,15 +240,10 @@ export default defineComponent({
                 this.current.result = e.response.data
             })
         },
-        fetchSuggestions(queryString: string, cb: (links: string[]) => void) {
-            cb(LinkProcessor(queryString, this.current.method));
-        },
-        handleSelect(item: any) {
-            this.current.link = item;
-        },
         formatDocument() {
             try {
-                this.current.params = JSON.stringify(JSON.parse(this.current.params), null, 4);
+                let restClientEditor = this.$refs.restClientEditor as any;
+                this.current.body = formatBuild(restClientEditor.getInstance());
             } catch (e: any) {
                 MessageUtil.error('格式化失败', e);
             }
@@ -354,9 +309,7 @@ export default defineComponent({
                     seniorSearchHistoryService.save({
                         urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
                         name: searchItem.header.name,
-                        link: searchItem.body.link,
-                        method: searchItem.body.method,
-                        params: searchItem.body.params,
+                        body: searchItem.body.body,
                     })
                         .then(() => MessageUtil.success('新增成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
                         .catch(e => MessageUtil.error('新增失败', e));
@@ -371,9 +324,7 @@ export default defineComponent({
                     seniorSearchHistoryService.update({
                         id: relationId,
                         name: searchItem2.header.name,
-                        link: searchItem2.body.link,
-                        method: searchItem2.body.method,
-                        params: searchItem2.body.params,
+                        body: searchItem2.body.body,
                     })
                         .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
                         .catch(e => MessageUtil.error('更新失败', e));
@@ -392,9 +343,7 @@ export default defineComponent({
                     name: '高级查询'
                 },
                 body: {
-                    link: '',
-                    method: 'POST',
-                    params: '{}',
+                    body: '',
                     result: {}
                 }
             } as SeniorSearchItem;

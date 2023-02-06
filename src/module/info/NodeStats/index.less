@@ -1,0 +1,41 @@
+.node-stats {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--container-color);
+    color: var(--text-color);
+    z-index: 999;
+
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        line-height: 50px;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+
+        .title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .option {
+            cursor: pointer;
+        }
+    }
+    .content {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 20px 20px;
+    }
+}

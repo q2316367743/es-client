@@ -11,7 +11,7 @@ export default class Optional<T> {
     }
 
     public map<S>(mapper: (value: T) => S): Optional<S> {
-        return new Optional<S>(this.value !== undefined ? mapper(this.value) : undefined);
+        return new Optional<S>(this.value !== undefined ? mapper(this.value!) : undefined);
     }
 
     public peek(peek: (value: T) => T): Optional<T> {
