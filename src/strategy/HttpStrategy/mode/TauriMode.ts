@@ -18,7 +18,7 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
             }
         }
         fetch<T>(url, {
-            method: config.method as HttpVerb,
+            method: config.method?.toUpperCase() as HttpVerb,
             headers: config.headers,
             body: config.data ? Body.json(config.data) : undefined,
             timeout: config.timeout || 5000,

@@ -38,7 +38,7 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, toRaw} from "vue";
 import {Action, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
@@ -154,7 +154,7 @@ export default defineComponent({
             useIndexStore().reset();
         },
         editOpen(url?: Url) {
-            useUrlEditEvent.emit(url);
+            useUrlEditEvent.emit(JSON.parse(JSON.stringify(toRaw(url))));
         },
         execCopy: BrowserUtil.copy
     }

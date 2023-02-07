@@ -1,4 +1,4 @@
-export const supportMethods = ['head', 'HEAD', 'get', 'GET', 'post', 'POST', 'put', 'PUT', 'delete', 'DELETE'];
+export const supportMethods = ['HEAD', 'head', 'GET', 'get', 'POST', 'post', 'PUT', 'put', 'DELETE', 'delete'];
 
 export const optionsForGet = ['', '_search', '_mapping'];
 export const optionsForPost = ['_doc', '_search', '_setting', '_mapping'];

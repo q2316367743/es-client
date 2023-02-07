@@ -3,7 +3,6 @@ import useSettingStore from "@/store/SettingStore";
 import {lodisStrategyContext, seniorSearchHistoryService} from "@/global/BeanFactory";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
-import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 export default class VersionManage {
 
@@ -81,15 +80,6 @@ export default class VersionManage {
 
         if (setText) {
             setText("2.4.0版本更新 - 服务器模式升级");
-        }
-
-        // 服务器模式升级
-        let sync = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING_SYNC);
-        if (sync) {
-            let temp = JSON.parse(sync);
-            temp.type = temp.mode
-            temp.mode = SyncModeEnum.COVER;
-            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SETTING_SYNC, JSON.stringify(temp));
         }
 
     }

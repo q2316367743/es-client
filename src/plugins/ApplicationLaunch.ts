@@ -2,7 +2,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import {ElLoading} from "element-plus";
 import {versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
-import useSyncStore from "@/store/SyncSettingStore";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
@@ -45,7 +44,6 @@ export default class ApplicationLaunch {
         await this.lodisStrategyContext.init();
         versionManage.init();
         useSettingStore().init();
-        useSyncStore().init();
         // 初始化http模式
         await this.httpStrategyContext.init();
         await this.storageStrategyContext.init();

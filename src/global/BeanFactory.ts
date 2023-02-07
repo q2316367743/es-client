@@ -14,15 +14,14 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
+import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
-import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
+
+
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
-import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
-import SyncStrategyContext from "@/strategy/SyncStrategy/SyncStrategyContext";
-import SyncTypeEnum from "@/enumeration/SyncTypeEnum";
-import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyImpl";
 import Url from "@/entity/Url";
 
 export const urlService = new UrlService();
@@ -38,9 +37,6 @@ export const httpStrategyContext = new HttpStrategyContext();
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
-// 同步策略
-export const syncStrategyContext = new SyncStrategyContext();
-syncStrategyContext.register(SyncTypeEnum.FILE, new FileSyncStrategyImpl());
 
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(

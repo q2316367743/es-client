@@ -16,7 +16,10 @@ export interface Log {
 
     title?: string;
 
-    remark?: string | Array<Item>
+    /**
+     * 文档地址
+     */
+    doc?: string;
 
 }
 

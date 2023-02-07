@@ -3,7 +3,6 @@
         <el-tabs v-model="active">
             <el-tab-pane :label="$t('setting.title.base')" name="base"></el-tab-pane>
             <el-tab-pane :label="$t('setting.title.url')" name="url"></el-tab-pane>
-            <el-tab-pane :label="$t('setting.title.sync')" name="sync"></el-tab-pane>
             <el-tab-pane :label="$t('setting.title.update')" name="update"></el-tab-pane>
             <el-tab-pane :label="$t('setting.title.about')" name="about"></el-tab-pane>
         </el-tabs>
@@ -11,7 +10,6 @@
             <el-scrollbar>
                 <setting-base v-show="active === 'base'"/>
                 <setting-url v-show="active === 'url'"/>
-                <setting-sync v-show="active === 'sync'"/>
                 <setting-update v-show="active === 'update'"/>
                 <setting-about v-show="active === 'about'"/>
             </el-scrollbar>
@@ -29,7 +27,6 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 export default defineComponent({
     name: 'setting',
     components: {
-        SettingSync: defineAsyncComponent(() => import("@/page/Setting/components/Sync.vue")),
         SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),
         SettingUpdate: defineAsyncComponent(() => import("@/page/Setting/components/Update.vue")),
         SettingUrl: defineAsyncComponent(() => import("@/page/Setting/components/Url.vue")),

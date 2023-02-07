@@ -71,7 +71,7 @@ export default defineComponent({
             minimap: {
                 enabled: false
             },
-            fontFamily: "JetBrainsMono"
+            fontFamily: "consoles"
         });
         instance.onDidChangeModelContent(() => {
             const value = instance.getValue();

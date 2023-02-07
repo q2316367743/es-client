@@ -8,8 +8,11 @@ export default [
             label: LogItemEnum.OPTIMIZATION,
             content: '高级查询勉强实现rest client功能'
         }, {
-            label: LogItemEnum.ADD,
-            content: '增加文件同步模式'
+            label: LogItemEnum.UPDATE,
+            content: '删除同步功能，在设置 => 其他设置中可以下载备份数据'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '链接更新异常'
         }]
     },
     {
@@ -45,17 +48,7 @@ export default [
             label: LogItemEnum.ADD,
             content: '高级查询增加历史和标签页'
         }],
-        remark: [{
-            type: 'string',
-            value: '更多详细的更新信息与功能变化，请在'
-        }, {
-            type: 'link',
-            value: '语雀',
-            addon: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ebl4u2ghgwv5gw2z'
-        }, {
-            type: 'string',
-            value: '中查看'
-        }]
+        doc: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ebl4u2ghgwv5gw2z'
     },
     {
         version: '2.2.0',

@@ -138,6 +138,9 @@
                                :active-text="$t('common.operation.open')"
                                :inactive-text="$t('common.operation.close')"/>
                 </el-form-item>
+                <el-form-item label="备份">
+                    <el-button type="primary" @click="backup">下载</el-button>
+                </el-form-item>
             </el-collapse-item>
         </el-collapse>
     </el-form>
@@ -146,7 +149,13 @@
 import {defineComponent} from "vue";
 import useSettingStore from "@/store/SettingStore";
 
-import {applicationLaunch, lodisStrategyContext} from "@/global/BeanFactory";
+import {
+    applicationLaunch,
+    baseSearchHistoryService,
+    lodisStrategyContext,
+    seniorSearchHistoryService,
+    urlService
+} from "@/global/BeanFactory";
 import JsonTheme from "@/data/JsonTheme";
 import emitter from "@/plugins/mitt";
 
@@ -156,6 +165,9 @@ import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import Setting from "@/domain/Setting";
+import {ElLoading} from "element-plus";
+import BrowserUtil from "@/utils/BrowserUtil";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'setting-base',
@@ -225,6 +237,30 @@ export default defineComponent({
                 }
                 emitter.emit(MessageEventEnum.URL_REFRESH);
             }
+        },
+        async backup(): Promise<void> {
+            const loading = ElLoading.service({
+                lock: true,
+                text: '开始准备数据',
+                background: 'rgba(0, 0, 0, 0.7)',
+            });
+            try {
+                loading.setText('获取链接数据')
+                let url = await urlService.list();
+                loading.setText('获取基础搜索历史');
+                let baseSearchHistory = await baseSearchHistoryService.list();
+                loading.setText('获取高级搜索历史');
+                let seniorSearchHistory = await seniorSearchHistoryService.list();
+                loading.setText('开始下载');
+                BrowserUtil.download(JSON.stringify({
+                    url, baseSearchHistory, seniorSearchHistory
+                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');
+            } catch (e: any) {
+                MessageUtil.error('下载失败', e);
+            } finally {
+                loading.close();
+            }
+            return Promise.resolve();
         }
     }
 });
