@@ -61,7 +61,12 @@ import useSettingStore from "@/store/SettingStore";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
-import {httpStrategyContext, seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {
+    applicationLaunch,
+    httpStrategyContext,
+    seniorSearchHistoryService,
+    useSeniorSearchEvent
+} from "@/global/BeanFactory";
 
 import DataView from "@/components/DataView/index.vue";
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
@@ -99,11 +104,11 @@ export default defineComponent({
             searchMap,
             // 当前显示的ID
             searchId,
-            showTabs: useSettingStore().getShowTab,
+            showTabs: true,
             // 语法提示
             suggestions: [],
             // 相关数据
-            view: useSettingStore().getDefaultViewer,
+            view: 1,
             showTop: true,
             historyDrawer: false
         }
@@ -185,7 +190,12 @@ export default defineComponent({
                     this.search();
                 }
             });
-        })
+        });
+        applicationLaunch.register(setText => {
+            this.showTabs = useSettingStore().getShowTab
+            this.view = useSettingStore().getDefaultViewer;
+            return Promise.resolve();
+        });
     },
     // 获取最大宽度
     methods: {

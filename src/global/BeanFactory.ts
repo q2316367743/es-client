@@ -20,6 +20,9 @@ import highlightJson from "highlight.js/lib/languages/json";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
+import SyncStrategyContext from "@/strategy/SyncStrategy/SyncStrategyContext";
+import SyncTypeEnum from "@/enumeration/SyncTypeEnum";
+import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyImpl";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -34,6 +37,9 @@ export const httpStrategyContext = new HttpStrategyContext();
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
+// 同步策略
+export const syncStrategyContext = new SyncStrategyContext();
+syncStrategyContext.register(SyncTypeEnum.FILE, new FileSyncStrategyImpl());
 
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(

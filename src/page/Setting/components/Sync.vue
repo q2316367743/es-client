@@ -26,31 +26,28 @@
                 action=""
                 :before-upload="fileSyncUpload"
             >
-                <el-button type="primary">上传</el-button>
+                <el-button type="primary">同步</el-button>
             </el-upload>
-            <el-button type="primary" @click="fileSyncDownload">下载</el-button>
+            <el-button type="primary" @click="backup">备份</el-button>
         </el-form-item>
     </el-form>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
 import {UploadFilled} from "@element-plus/icons-vue";
-import {ElLoading, UploadRawFile} from "element-plus";
+import {UploadRawFile} from "element-plus";
 
 import SyncTypeEnum from "@/enumeration/SyncTypeEnum";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 import Constant from "@/global/Constant";
-import {baseSearchHistoryService, seniorSearchHistoryService, urlService} from "@/global/BeanFactory";
+import {syncStrategyContext,} from "@/global/BeanFactory";
 
 import useSyncStore from "@/store/SyncSettingStore";
 
 import SyncSetting from "@/domain/SyncSetting";
 
-import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
-
-import SyncAlgorithm from "@/algorithm/SyncAlgorithm";
 
 export default defineComponent({
     name: 'setting-sync',
@@ -81,11 +78,10 @@ export default defineComponent({
             if (typeof FileReader !== 'undefined') {
                 let fileReader = new FileReader();
                 fileReader.readAsText(rawFile);
-                fileReader.onload = function (event: ProgressEvent<FileReader>) {
+                fileReader.onload = (event: ProgressEvent<FileReader>) => {
                     if (event.target) {
                         let content = event.target.result as string;
-                        let {url, baseSearchHistory, seniorSearchHistory} = JSON.parse(content);
-                        SyncAlgorithm(url, baseSearchHistory, seniorSearchHistory).then(() => {
+                        syncStrategyContext.getStrategy(this.syncSetting.type).sync(JSON.parse(content)).then(() => {
                             MessageUtil.success('同步成功');
                         }).catch(e => MessageUtil.error('同步失败', e));
                     } else {
@@ -100,28 +96,10 @@ export default defineComponent({
             }
             return false;
         },
-        async fileSyncDownload() {
-            const loading = ElLoading.service({
-                lock: true,
-                text: '开始准备数据',
-                background: 'rgba(0, 0, 0, 0.7)',
-            });
-            try {
-                loading.setText('获取链接数据')
-                let url = await urlService.list();
-                loading.setText('获取基础搜索历史');
-                let baseSearchHistory = await baseSearchHistoryService.list();
-                loading.setText('获取高级搜索历史');
-                let seniorSearchHistory = await seniorSearchHistoryService.list();
-                loading.setText('开始下载');
-                BrowserUtil.download(JSON.stringify({
-                    url, baseSearchHistory, seniorSearchHistory
-                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');
-            } catch (e: any) {
-                MessageUtil.error('下载失败', e);
-            } finally {
-                loading.close();
-            }
+        async backup() {
+            syncStrategyContext.getStrategy(this.syncSetting.type).backup()
+                .then(() => MessageUtil.success("备份成功"))
+                .catch(e => MessageUtil.error("备份失败", e));
         }
     }
 });

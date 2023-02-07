@@ -70,7 +70,8 @@ export default defineComponent({
             theme: this.isDark as boolean ? 'vs-dark' : 'vs',
             minimap: {
                 enabled: false
-            }
+            },
+            fontFamily: "JetBrainsMono"
         });
         instance.onDidChangeModelContent(() => {
             const value = instance.getValue();
@@ -81,9 +82,6 @@ export default defineComponent({
         });
     },
     methods: {
-        format() {
-            instance.getAction('editor.action.formatDocument').run();
-        },
         getInstance(): monaco.editor.IStandaloneCodeEditor {
             return instance;
         }

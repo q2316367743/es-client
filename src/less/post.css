@@ -296,7 +296,7 @@
 }
 
 .entry code {
-    font-family: monospace;
+    font-family: JetBrainsMono, monospace;
     font-size: inherit;
     color: #424b50;
     background-color: transparent
@@ -305,7 +305,7 @@
 .entry pre code {
     padding: 0;
     margin: 0;
-    font-family: consolas, monaco, monospace;
+    font-family: JetBrainsMono, consolas, monaco, monospace;
     font-size: 14px;
     color: #424b50;
     background: none;
