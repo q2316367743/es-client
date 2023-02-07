@@ -12,11 +12,8 @@ import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
 
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
-import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
-import SyncStrategyContext from "@/strategy/SyncStrategy/SyncStrategyContext";
-import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyImpl";
 
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
@@ -34,9 +31,6 @@ export const versionManage = new VersionManage();
 
 // HTTP策略
 export const httpStrategyContext = new HttpStrategyContext();
-// 同步策略
-export const syncStrategyContext = SyncStrategyContext.getInstance();
-syncStrategyContext.register(SyncModeEnum.FILE, new FileSyncStrategyImpl());
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();

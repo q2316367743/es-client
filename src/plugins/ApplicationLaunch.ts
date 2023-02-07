@@ -3,7 +3,6 @@ import {ElLoading} from "element-plus";
 import {versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
 import useSyncStore from "@/store/SyncSettingStore";
-import useServerStore from "@/store/ServerSettingStore";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
@@ -14,7 +13,7 @@ import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 export default class ApplicationLaunch {
 
     private ready: boolean = false;
-    private readonly launchItems = new Array<(setText?: (text: string) => void) => void>();
+    private readonly launchItems = new Array<(setText?: (text: string) => void) => Promise<void>>();
     private lodisStrategyContext: LodisStrategyContext;
     private storageStrategyContext: StorageStrategyContext;
     private httpStrategyContext: HttpStrategyContext;
@@ -27,10 +26,17 @@ export default class ApplicationLaunch {
         this.lodisStrategyContext = lodisStrategyContext;
         this.storageStrategyContext = storageStrategyContext;
         this.httpStrategyContext = httpStrategyContext;
+        const loading = ElLoading.service({
+            lock: true,
+            text: '初始化组件中',
+            background: 'rgba(0, 0, 0, 0.7)',
+        });
         // 启动
         this.init().then(() => {
-            this.execute();
             this.ready = true;
+            this.execute(loading.setText)
+                .then(() => console.log("初始化任务执行完成"))
+                .finally(() => loading.close());
         });
     }
 
@@ -40,39 +46,34 @@ export default class ApplicationLaunch {
         versionManage.init();
         useSettingStore().init();
         useSyncStore().init();
-        useServerStore().init();
         // 初始化http模式
         await this.httpStrategyContext.init();
         await this.storageStrategyContext.init();
     }
 
-    private execute(): void {
-        const loading = ElLoading.service({
-            lock: true,
-            text: '初始化中',
-            background: 'rgba(0, 0, 0, 0.7)',
-        });
+    private async execute(setText: (text: string) => void): Promise<void> {
+        setText("初始化任务执行中")
         // 启动完成
         for (let launchItem of this.launchItems) {
             try {
-                launchItem(loading.setText);
+                await launchItem(setText);
             } catch (e) {
                 MessageUtil.error('启动项启动错误', e as Error);
                 console.error(e);
             }
         }
-        loading.close();
+        return Promise.resolve();
     }
 
     /**
      * 注册启动项
      * @param launchItem 启动项
      */
-    register(launchItem: (setText?: (text: string) => void) => void): void {
+    register(launchItem: (setText?: (text: string) => void) => Promise<void>): void {
         this.launchItems.push(launchItem);
         if (this.ready) {
             // 已经启动了
-            launchItem();
+            launchItem().then(() => console.log("应用已启动，任务执行成功"));
         }
     }
 

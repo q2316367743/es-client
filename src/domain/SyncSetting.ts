@@ -1,3 +1,4 @@
+import SyncTypeEnum from "@/enumeration/SyncTypeEnum";
 import SyncModeEnum from "@/enumeration/SyncModeEnum";
 
 /**
@@ -8,20 +9,12 @@ export default interface SyncSetting {
     /**
      * 同步模式
      */
-    mode: SyncModeEnum;
+    type: SyncTypeEnum;
 
     /**
-     * server设置
+     * 同步模式
      */
-    server: SyncByServer;
+    mode: SyncModeEnum;
 
 }
 
-
-interface SyncByServer {
-
-    url: string;
-
-    token: string;
-
-}

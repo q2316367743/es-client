@@ -179,7 +179,7 @@
         "title": {
             "about": "about",
             "base": "Base Setting",
-            "serverAndSync": "Server&Sync",
+            "sync": "sync",
             "update": "Update Record",
             "url": "Url management"
         }

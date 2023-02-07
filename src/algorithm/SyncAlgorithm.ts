@@ -1,9 +1,6 @@
 import Url from "@/entity/Url";
-import {syncStrategyContext, urlService} from "@/global/BeanFactory";
+import {urlService} from "@/global/BeanFactory";
 import ArrayUtil from "@/utils/ArrayUtil";
-import useSyncStore from "@/store/SyncSettingStore";
-import Assert from "@/utils/Assert";
-import TableNameEnum from "@/enumeration/TableNameEnum";
 import useUrlStore from "@/store/UrlStore";
 import {ElLoading} from "element-plus";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
@@ -16,8 +13,6 @@ import MessageUtil from "@/utils/MessageUtil";
  */
 async function url(remoteList: Array<Url>): Promise<void> {
     // 获取策略
-    let strategy = syncStrategyContext.getStrategy(useSyncStore().getSyncMode);
-    Assert.notNull(strategy, "同步策略没有获取到");
     // 新增的数据
     let remoteAdd = new Array<Url>();
     let localAdd = new Array<Url>();
@@ -58,20 +53,10 @@ async function url(remoteList: Array<Url>): Promise<void> {
     for (let url of localAdd) {
         await urlService.insert(url);
     }
-    // 远程新增
-    for (let url of remoteAdd) {
-        await strategy!.insert<Url>(TableNameEnum.URL, url);
-    }
     // 本地更新，只会更新内容
     for (let url of localUpdate) {
         if (url.id) {
             await urlService.updateById(url.id, url);
-        }
-    }
-    // 远程更新，更新包括ID
-    for (let url of remoteUpdate) {
-        if (url.id) {
-            await strategy!.update(TableNameEnum.URL, url.id, url);
         }
     }
     // 更新链接存储

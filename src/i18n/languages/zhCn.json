@@ -179,7 +179,7 @@
         "title": {
             "about": "关于",
             "base": "基础设置",
-            "serverAndSync": "服务器&同步",
+            "sync": "同步",
             "update": "更新记录",
             "url": "链接管理"
         }

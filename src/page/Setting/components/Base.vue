@@ -188,6 +188,7 @@ export default defineComponent({
         }
         applicationLaunch.register(() => {
             this.instance = useSettingStore().instance;
+            return Promise.resolve();
         })
     },
     watch: {

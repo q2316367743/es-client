@@ -1,12 +1,9 @@
 import HttpStrategy from "./HttpStrategy";
 
 // 默认策略
-import useServerStore from "@/store/ServerSettingStore";
-import ServerModeEnum from "@/enumeration/ServerModeEnum";
 import HttpStrategyProxy from "@/strategy/HttpStrategy/HttpStrategyProxy";
 import Constant from "@/global/Constant";
 import HttpTypeEnum from "@/enumeration/HttpTypeEnum";
-import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
 export default class HttpStrategyContext {
 

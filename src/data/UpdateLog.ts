@@ -2,6 +2,17 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.5.0',
+        time: '2023-02-07',
+        items: [{
+            label: LogItemEnum.OPTIMIZATION,
+            content: '高级查询勉强实现rest client功能'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '增加文件同步模式'
+        }]
+    },
+    {
         version: '2.4.0',
         time: '2023-02-03',
         items: [{

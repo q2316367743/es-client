@@ -1,5 +1,5 @@
 import useSyncStore from "@/store/SyncSettingStore";
-import SyncModeEnum from "@/enumeration/SyncModeEnum";
+import SyncTypeEnum from "@/enumeration/SyncTypeEnum";
 
 /**
  * 同步管理器
@@ -24,12 +24,12 @@ export default class SyncManage {
 
     private verification(): boolean {
         switch (useSyncStore().getSyncMode) {
-            case SyncModeEnum.DISABLE:
-            case SyncModeEnum.FILE:
+            case SyncTypeEnum.DISABLE:
+            case SyncTypeEnum.FILE:
                 return false;
-            case SyncModeEnum.SERVER:
-            case SyncModeEnum.SFTP:
-            case SyncModeEnum.WEBDAV:
+            case SyncTypeEnum.SERVER:
+            case SyncTypeEnum.SFTP:
+            case SyncTypeEnum.WEBDAV:
                 return true;
             default:
                 return false;
