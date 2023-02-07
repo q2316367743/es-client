@@ -35,7 +35,6 @@
                 </template>
             </vxe-column>
         </vxe-table>
-        <save-or-update-url v-model="edit_dialog" :source="url"/>
     </div>
 </template>
 <script lang="ts">
@@ -51,9 +50,8 @@ import Url from "@/entity/Url";
 
 // 组件
 import JsonDialog from "@/components/JsonDialog.vue";
-import SaveOrUpdateUrl from '@/module/SaveOrUpdateUrl/index.vue';
 
-import {urlService} from "@/global/BeanFactory";
+import {urlService, useUrlEditEvent} from "@/global/BeanFactory";
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 
@@ -65,7 +63,7 @@ interface Params {
 
 export default defineComponent({
     name: 'setting-url',
-    components: {JsonDialog, SaveOrUpdateUrl},
+    components: {JsonDialog},
     data: () => ({
         condition: {
             name: '',
@@ -79,7 +77,6 @@ export default defineComponent({
             authUser: '',
             authPassword: ''
         } as Url,
-        edit_dialog: false,
         columnConfig: {
             resizable: true
         },
@@ -157,15 +154,7 @@ export default defineComponent({
             useIndexStore().reset();
         },
         editOpen(url?: Url) {
-            this.url = url ? url : {
-                name: '',
-                value: 'http://',
-                sequence: 0,
-                isAuth: false,
-                authUser: '',
-                authPassword: ''
-            };
-            this.edit_dialog = true;
+            useUrlEditEvent.emit(url);
         },
         execCopy: BrowserUtil.copy
     }

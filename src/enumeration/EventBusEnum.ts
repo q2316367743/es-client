@@ -18,7 +18,12 @@ enum EventBusEnum {
     /**
      * APP中发放执行
      */
-    URL_SELECT_EVENT = 'url-select'
+    URL_SELECT_EVENT = 'url-select',
+
+    /**
+     * 链接编辑
+     */
+    URL_EDIT = 'url-edit'
 
 }
 

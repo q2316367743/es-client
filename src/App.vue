@@ -132,7 +132,7 @@
             <setting v-show="active === PageNameEnum.SETTING"></setting>
         </div>
         <!-- 保存或新增URL弹窗 -->
-        <save-or-update-url v-if="urlDialog" v-model="urlDialog"></save-or-update-url>
+        <save-or-update-url/>
         <el-dialog v-model="updateDialog" :title="$t('app.versionUpdate')"
                    close-on-click-modal append-to-body draggable lock-scroll>
             <version-update v-if="updateDialog"/>
@@ -198,7 +198,8 @@ import Assert from "@/utils/Assert";
 
 import {
     applicationLaunch,
-    isDark, lodisStrategyContext,
+    isDark,
+    lodisStrategyContext,
     toggleDark,
     usePageJumpEvent,
     useUrlSelectEvent,
@@ -230,7 +231,6 @@ export default defineComponent({
         return {
             active: PageNameEnum.HOME,
             urlId: undefined as number | undefined,
-            urlDialog: false,
             locale: zhCn,
             isDark,
             Constant,
@@ -329,7 +329,6 @@ export default defineComponent({
             // 新增，打开新增面板
             if (value === 'add') {
                 this.urlId = undefined;
-                this.urlDialog = true;
                 return;
             }
             // 清空链接

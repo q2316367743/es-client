@@ -168,7 +168,7 @@
                 "authUser": "用户名",
                 "isAuth": "认证",
                 "needAuth": "需要认证",
-                "notAuth": "无需认真",
+                "notAuth": "无需认证",
                 "sequence": "排序",
                 "updateTime": "更新时间"
             },

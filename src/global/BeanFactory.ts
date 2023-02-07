@@ -23,6 +23,7 @@ import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext"
 import SyncStrategyContext from "@/strategy/SyncStrategy/SyncStrategyContext";
 import SyncTypeEnum from "@/enumeration/SyncTypeEnum";
 import FileSyncStrategyImpl from "@/strategy/SyncStrategy/impl/FileSyncStrategyImpl";
+import Url from "@/entity/Url";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -69,6 +70,7 @@ export const useSeniorSearchEvent = useEventBus<SeniorSearchJumpEvent>(EventBusE
 export const usePageJumpEvent = useEventBus<PageNameEnum>(EventBusEnum.PAGE_JUMP_EVENT);
 // 链接选择
 export const useUrlSelectEvent = useEventBus<number>(EventBusEnum.URL_SELECT_EVENT);
+export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
 
 // es版本
 export const useEsVersion = createGlobalState(() => {

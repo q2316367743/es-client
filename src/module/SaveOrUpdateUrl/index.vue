@@ -49,17 +49,12 @@ import {ElForm} from "element-plus";
 
 import Url from '@/entity/Url';
 
-import {urlService} from '@/global/BeanFactory';
+import {httpStrategyContext, urlService, useUrlEditEvent} from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
-import {httpStrategyContext} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
-    props: {
-        modelValue: Boolean,
-        source: Object as PropType<Url>
-    },
     data: () => ({
         url: {
             name: '',
@@ -104,25 +99,23 @@ export default defineComponent({
         }
     }),
     created() {
-        this.dialog = this.modelValue;
-        if (this.source && this.source?.id) {
-            this.isSave = false;
-            this.url = this.source;
-        } else {
-            this.isSave = true;
-        }
-    },
-    watch: {
-        dialog(newValue) {
-            this.$emit('update:modelValue', newValue);
-        },
-        modelValue(newValue) {
-            this.dialog = newValue;
-        },
-        source(newValue) {
-            this.url = newValue
-            this.isSave = !(newValue && newValue?.id);
-        }
+        useUrlEditEvent.on(url => {
+            this.dialog = true;
+            if (url) {
+                this.isSave = false;
+                this.url = url;
+            } else {
+                this.isSave = true;
+                this.url = {
+                    name: '',
+                    value: 'http://',
+                    sequence: 0,
+                    isAuth: false,
+                    authUser: '',
+                    authPassword: ''
+                } as Url;
+            }
+        })
     },
     methods: {
         submit() {
