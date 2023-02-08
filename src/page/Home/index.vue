@@ -66,8 +66,6 @@
         </div>
         <!-- 新增索引 -->
         <home-index-add v-model="indexAddDialog"/>
-        <!-- 索引管理 -->
-        <index-manage v-model="manage.show" :index="manage.index"/>
         <!-- 数据展示 -->
         <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model="indexItem.dialog"/>
         <!-- 更多查询条件 -->
@@ -102,14 +100,14 @@ import {stringContain} from "@/utils/SearchUtil";
 
 import HomeIndexAdd from "@/page/Home/components/IndexAdd.vue";
 import IndexItemView from '@/view/IndexItemView';
-import IndexManage from "@/module/IndexManage/index.vue";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 
 let lastSearchTime = 0;
 let lastExecuteId = -1;
 
 export default defineComponent({
     name: 'Home',
-    components: {IndexManage, HomeIndexAdd, IndexItem, JsonDialog},
+    components: {HomeIndexAdd, IndexItem, JsonDialog},
     data: () => {
         return {
             // 根据条件过滤后的索引
@@ -142,10 +140,6 @@ export default defineComponent({
             indexAddDialog: false,
             // 高度
             height: undefined as any,
-            manage: {
-                show: false,
-                index: '',
-            }
         };
     },
     computed: {
@@ -303,10 +297,7 @@ export default defineComponent({
             }
         },
         indexOpenManage(name: string) {
-            this.manage = {
-                show: true,
-                index: name
-            };
+            useIndexManageEvent.emit(name);
         }
     },
 });

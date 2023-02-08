@@ -67,6 +67,7 @@ export const usePageJumpEvent = useEventBus<PageNameEnum>(EventBusEnum.PAGE_JUMP
 // 链接选择
 export const useUrlSelectEvent = useEventBus<number>(EventBusEnum.URL_SELECT_EVENT);
 export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
+export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE);
 
 // es版本
 export const useEsVersion = createGlobalState(() => {

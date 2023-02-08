@@ -108,7 +108,7 @@
             <el-dropdown @command="languageCommand" trigger="click">
                 <div class="menu-item">
                     <el-icon :size="24">
-                        <translate></translate>
+                        <translate/>
                     </el-icon>
                 </div>
                 <template #dropdown>
@@ -133,6 +133,7 @@
         </div>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url/>
+        <index-manage/>
         <el-dialog v-model="updateDialog" :title="$t('app.versionUpdate')"
                    close-on-click-modal append-to-body draggable lock-scroll>
             <version-update v-if="updateDialog"/>
@@ -201,7 +202,7 @@ import {
     isDark,
     lodisStrategyContext,
     toggleDark,
-    usePageJumpEvent,
+    usePageJumpEvent, useUrlEditEvent,
     useUrlSelectEvent,
     versionManage
 } from "@/global/BeanFactory";
@@ -225,7 +226,8 @@ export default defineComponent({
         SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),
         VersionUpdate: defineAsyncComponent(() => import("@/module/VersionUpdate/index.vue")),
         FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
-        SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue"))
+        SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue")),
+        IndexManage: defineAsyncComponent(() => import('@/module/IndexManage/index.vue')),
     },
     data: () => {
         return {
@@ -329,6 +331,7 @@ export default defineComponent({
             // 新增，打开新增面板
             if (value === 'add') {
                 this.urlId = undefined;
+                useUrlEditEvent.emit();
                 return;
             }
             // 清空链接

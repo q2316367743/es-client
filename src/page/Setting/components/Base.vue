@@ -253,7 +253,12 @@ export default defineComponent({
                 let seniorSearchHistory = await seniorSearchHistoryService.list();
                 loading.setText('开始下载');
                 BrowserUtil.download(JSON.stringify({
-                    url, baseSearchHistory, seniorSearchHistory
+                    url, baseSearchHistory, seniorSearchHistory,
+                    lodis: {
+                        version: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION),
+                        layout_mode: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE),
+                        setting: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING)
+                    }
                 }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');
             } catch (e: any) {
                 MessageUtil.error('下载失败', e);

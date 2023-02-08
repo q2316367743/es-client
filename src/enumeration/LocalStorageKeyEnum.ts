@@ -1,12 +1,12 @@
 enum LocalStorageKeyEnum {
 
-    SETTING_SYNC = 'setting-sync',
-
     SETTING = 'setting',
 
     LAYOUT_MODE = 'layoutMode',
 
-    VERSION = 'es-client.version'
+    VERSION = 'es-client.version',
+
+    SENIOR_SEARCH_WIDTH = 'senior-search-width'
 
 }
 

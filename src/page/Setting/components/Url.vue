@@ -154,7 +154,11 @@ export default defineComponent({
             useIndexStore().reset();
         },
         editOpen(url?: Url) {
-            useUrlEditEvent.emit(JSON.parse(JSON.stringify(toRaw(url))));
+            if (url) {
+                useUrlEditEvent.emit(JSON.parse(JSON.stringify(toRaw(url))));
+            } else {
+                useUrlEditEvent.emit();
+            }
         },
         execCopy: BrowserUtil.copy
     }

@@ -104,15 +104,6 @@ export default defineComponent({
 
     .health {
         display: flex;
-
-        .dot {
-            margin-top: 7px;
-            margin-right: 7px;
-            width: 8px;
-            height: 8px;
-            border-radius: 100%;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2);
-        }
     }
 
 

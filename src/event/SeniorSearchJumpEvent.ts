@@ -39,4 +39,9 @@ export default interface SeniorSearchJumpEvent {
      */
     execute: boolean;
 
+    /**
+     * 是否载入到当前标签，默认否
+     */
+    current?: boolean;
+
 }

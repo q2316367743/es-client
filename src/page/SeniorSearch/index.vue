@@ -3,13 +3,11 @@
         <!-- 下半部分 -->
         <div class="senior-main">
             <!-- 左面查询条件 -->
-            <div class="side">
+            <div class="side" :style="{width: `${width}px`}">
                 <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
                           v-show="showTabs"
                           @option-tab="optionTab"/>
-                <div class="editor" :class="showTabs ? 'show-tabs' : ''">
-                    <rest-client-editor ref="restClientEditor" v-model="current.body"
-                                        :height-offset="showTabs ? '55px' : '0px'"/>
+                <div class="controller" :class="showTabs ? 'show-tabs' : ''">
                     <div class="option">
                         <el-tooltip :content="$t('common.operation.run')" placement="right"
                                     :effect="isDark ? 'dark' : 'light'">
@@ -43,11 +41,19 @@
                                 <tag-icon/>
                             </el-icon>
                         </el-tooltip>
+                        <el-tooltip content="帮助" placement="right"
+                                    :effect="isDark ? 'dark' : 'light'">
+                            <el-icon :size="16" class="help" @click="openHelp">
+                                <i class="vxe-icon-question-circle"/>
+                            </el-icon>
+                        </el-tooltip>
                     </div>
+                    <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
+                                        :style="{width: `calc(100% - 24px)`, height: '100%'}"/>
                 </div>
             </div>
-            <div class="seq"/>
-            <div class="senior-content">
+            <div class="sep" ref="seniorSearchSep" :style="{left: `${width + 5}px`}"/>
+            <div class="senior-content" :style="{left: `${width + 15}px`}">
                 <el-tabs v-model="displayActive" class="senior-display-tabs">
                     <el-tab-pane label="结果" name="result"/>
                     <el-tab-pane label="请求记录" name="search"/>
@@ -90,7 +96,7 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import {
     applicationLaunch,
     httpStrategyContext,
-    isDark,
+    isDark, lodisStrategyContext,
     seniorSearchHistoryService,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
@@ -117,6 +123,15 @@ import ViewIcon from "@/icon/ViewIcon.vue";
 import TagIcon from "@/icon/TagIcon.vue";
 import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
+import {useWindowSize} from "@vueuse/core";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+
+// 记录点击开始位置
+let startX = 0;
+let startWidth = 0;
+
+let minWidth = 120;
+let maxWidth = 0;
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -159,7 +174,9 @@ export default defineComponent({
             view: 2,
             showTop: true,
             isDark,
-            displayActive: 'result'
+            displayActive: 'result',
+            width: 500,
+            windowSize: useWindowSize()
         }
     },
     computed: {
@@ -212,9 +229,20 @@ export default defineComponent({
                 }
             },
             deep: true
+        },
+        windowSize: {
+            handler(newValue) {
+                let windowWidth = newValue.width;
+                let defaultWidth = Math.round(windowWidth * 0.3);
+                maxWidth = windowWidth - 550;
+                if (this.width < minWidth || this.width > maxWidth) {
+                    this.width = defaultWidth;
+                }
+            },
+            deep: true
         }
     },
-    created() {
+    mounted() {
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.showTop = (index === PageNameEnum.SENIOR_SEARCH)
         });
@@ -231,12 +259,24 @@ export default defineComponent({
                     result: {}
                 }
             } as SeniorSearchItem;
-            this.searchMap.set(searchId, searchItem);
-            this.searchId = searchId;
 
             // 只能预先赋值
-            this.current.body = searchItem.body.body;
+            this.current.body += '\n\n' + searchItem.body.body;
             this.current.result = searchItem.body.result;
+
+            // 判断是否当前标签页
+            if (typeof param.current === 'undefined' || !param.current) {
+                this.searchMap.set(searchId, searchItem);
+                this.searchId = searchId;
+            } else {
+                // 当前标签页
+                let restClientEditor = this.$refs.restClientEditor as any;
+                let instance = restClientEditor.getInstance();
+                instance.setPosition({
+                    lineNumber: this.current.body.split('\n').length - 1,
+                    column: 1
+                });
+            }
 
             // 搜索
             this.$nextTick(() => {
@@ -250,6 +290,43 @@ export default defineComponent({
             this.view = useSettingStore().getDefaultViewer;
             return Promise.resolve();
         });
+
+        // 初始化大小
+        let windowWidth = this.windowSize.width;
+        this.width = Math.round(windowWidth * 0.3);
+        maxWidth = windowWidth - 550;
+
+
+        applicationLaunch.register(() => {
+            let width = Optional.ofNullable(lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SENIOR_SEARCH_WIDTH))
+                .map(e => parseInt(e!))
+                .orElse(0);
+            if (width > minWidth && width < maxWidth) {
+                this.width = width;
+            }
+            return Promise.resolve();
+        });
+
+
+        let seniorSearchSep = this.$refs.seniorSearchSep as HTMLDivElement;
+        seniorSearchSep.addEventListener('mousedown', (e: MouseEvent) => {
+            startX = e.clientX
+            startWidth = this.width;
+        });
+        window.addEventListener('mousemove', (e: MouseEvent) => {
+            if (startX > 0) {
+                let width = startWidth + e.clientX - startX;
+                if (width > minWidth && width < maxWidth) {
+                    this.width = width;
+                    lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SENIOR_SEARCH_WIDTH, width + '');
+                }
+            }
+        });
+        window.addEventListener('mouseup', () => {
+            startX = 0;
+            startWidth = 0;
+        })
+
     },
     // 获取最大宽度
     methods: {
@@ -373,11 +450,12 @@ export default defineComponent({
                         MessageUtil.error('标签未找到');
                         return;
                     }
-                    ElMessageBox.confirm('请输入记录名字', {
+                    ElMessageBox.prompt('请输入记录名字', {
                         confirmButtonText: '新增',
                         cancelButtonText: '取消',
-                        inputValue: isNaN(parseInt(searchItem.header.name)) ? '' : searchItem.header.name,
-                        inputPattern: /\s*.+/
+                        inputValue: isNaN(parseInt(searchItem.header.name)) ? searchItem.header.name : '',
+                        inputPattern: /\S+/,
+                        inputErrorMessage: '请输入有效字符'
                     })
                         .then(({value}) => {
                             if (!searchItem) {
@@ -438,6 +516,9 @@ export default defineComponent({
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
         },
+        openHelp() {
+            window.open('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/sbycouc0q47lu9mz');
+        }
     },
 });
 </script>

@@ -13,10 +13,12 @@
                 <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
                     <i class="vxe-icon-add"/>
                 </db-simple-item>
-                <db-simple-item :disable="deleteRowIndies.size === 0" :tip="$t('common.operation.delete')" @click="recordReduce">
+                <db-simple-item :disable="deleteRowIndies.size === 0" :tip="$t('common.operation.delete')"
+                                @click="recordReduce">
                     <i class="vxe-icon-minus"/>
                 </db-simple-item>
-                <db-simple-item :disable="deleteRowIndies.size !== 1" :tip="$t('common.operation.update')" @click="recordEdit">
+                <db-simple-item :disable="deleteRowIndies.size !== 1" :tip="$t('common.operation.update')"
+                                @click="recordEdit">
                     <i class="vxe-icon-edit"/>
                 </db-simple-item>
             </div>
@@ -138,9 +140,6 @@
                 <el-button type="primary" @click="recordEditClick">修改</el-button>
             </template>
         </vxe-modal>
-        <!-- 索引结构展示 -->
-        <db-mapping v-model="mappingDrawer.drawer" :title="index ? index.name : ''" :settings="mappingDrawer.settings"
-                    :mapping="mappingDrawer.mapping"/>
     </div>
 </template>
 <script lang="ts">
@@ -169,7 +168,6 @@ import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
 
-import DbMapping from "@/page/DataBrowse/component/DbMapping.vue";
 import PageHelp from "@/page/DataBrowse/component/PageHelp.vue";
 import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
 import DbCondition from "@/page/DataBrowse/component/DbCondition.vue";
@@ -182,14 +180,19 @@ import tool from "@/page/DataBrowse/tool";
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import mitt from "@/plugins/mitt";
-import {isDark, useBaseSearchEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {
+    isDark,
+    useBaseSearchEvent,
+    useIndexManageEvent,
+    usePageJumpEvent,
+    useSeniorSearchEvent
+} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
 import BaseOrder from "@/entity/BaseOrder";
 
 import JsonView from "@/components/JsonView/index.vue";
 import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
 import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
-
 
 export default defineComponent({
     name: 'data-browse',
@@ -199,7 +202,7 @@ export default defineComponent({
         DbCondition,
         ExportDialog,
         PageHelp,
-        DbMapping, Search,
+        Search,
         JsonView,
         StructureIcon,
         Filter, Operation, View, Check, Codemirror
@@ -267,12 +270,6 @@ export default defineComponent({
             dialog: false,
             id: '',
             data: ''
-        },
-        mappingDrawer: {
-            drawer: false,
-            active: 'settings',
-            settings: {},
-            mapping: {}
         },
         extensions: [json()] as Array<any>
     }),
@@ -606,12 +603,7 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            this.mappingDrawer = {
-                drawer: true,
-                active: 'settings',
-                settings: this.index.settings,
-                mapping: this.index.mapping
-            }
+            useIndexManageEvent.emit(this.index.name);
         },
         jumpToBaseSearch() {
             if (!this.index) {

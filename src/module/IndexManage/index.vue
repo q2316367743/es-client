@@ -54,28 +54,20 @@ import useIndexStore from "@/store/IndexStore";
 import Optional from "@/utils/Optional";
 import {mapState} from "pinia";
 import {ElMessageBox} from "element-plus";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'index-manage',
     emits: ['update:modelValue'],
     components: {IndexManageSummary, JsonView, ArrowUp},
-    props: {
-        modelValue: Boolean,
-        index: String
-    },
     data: () => ({
         drawer: false,
         active: '1',
         data: {},
         loading: false,
+        index: ''
     }),
     watch: {
-        modelValue(newValue: boolean) {
-            this.drawer = newValue;
-        },
-        drawer(newValue: boolean) {
-            this.$emit('update:modelValue', newValue);
-        },
         active(newValue: string) {
             this.assignJson(newValue);
         }
@@ -86,9 +78,15 @@ export default defineComponent({
         },
         ...mapState(useIndexStore, ['indicesMap']),
         state() {
-            let indexView = useIndexStore().indicesMap.get(this.index!);
-            return Optional.ofNullable(indexView).map(e => e.state!).orElse('');
+            let indexView = useIndexStore().indicesMap.get(this.index);
+            return Optional.ofNullable(indexView).map(e => e.state).orElse('');
         }
+    },
+    created() {
+        useIndexManageEvent.on(index => {
+            this.drawer = true;
+            this.index = index;
+        })
     },
     methods: {
         assignJson(newValue: string) {
@@ -107,8 +105,8 @@ export default defineComponent({
         setting() {
             Assert.notNull(this.index, "索引名称不存在");
             this.loading = true;
-            IndexApi(this.index!)._settings().then(result => {
-                this.data = result[this.index!];
+            IndexApi(this.index)._settings().then(result => {
+                this.data = result[this.index];
             }).catch(e => {
                 MessageUtil.error('索引设置查询错误', e);
                 this.data = {};
@@ -119,7 +117,7 @@ export default defineComponent({
         mapping() {
             Assert.notNull(this.index, "索引名称不存在");
             this.loading = true;
-            IndexApi(this.index!)._mappings().then(result => {
+            IndexApi(this.index)._mappings().then(result => {
                 this.data = result[this.index!];
             }).catch(e => {
                 MessageUtil.error('索引映射查询错误', e);
@@ -131,7 +129,7 @@ export default defineComponent({
         stats() {
             Assert.notNull(this.index, "索引名称不存在");
             this.loading = true;
-            IndexApi(this.index!)._stats().then(result => {
+            IndexApi(this.index)._stats().then(result => {
                 this.data = result;
             }).catch(e => {
                 MessageUtil.error('索引状态查询错误', e);
@@ -154,29 +152,29 @@ export default defineComponent({
             return new Promise<void>((resolve, reject) => {
                 switch (command) {
                     case 'open':
-                        IndexApi(this.index!)._open()
+                        IndexApi(this.index)._open()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('打开索引错误', e, () => reject(e)));
                         break;
                     case 'close':
-                        IndexApi(this.index!)._close()
+                        IndexApi(this.index)._close()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('关闭索引错误', e, () => reject(e)));
                         break;
                     case 'merge':
                         break;
                     case 'refresh':
-                        IndexApi(this.index!)._refresh()
+                        IndexApi(this.index)._refresh()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('刷新索引失败', e, () => reject(e)));
                         break;
                     case 'clear':
-                        IndexApi(this.index!)._cacheClear()
+                        IndexApi(this.index)._cacheClear()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('清理缓存失败', e, () => reject(e)));
                         break;
                     case 'flush':
-                        IndexApi(this.index!)._flush()
+                        IndexApi(this.index)._flush()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('flush刷新失败', e, () => reject(e)));
                         break;
@@ -187,7 +185,7 @@ export default defineComponent({
                             confirmButtonText: "确定",
                             cancelButtonText: "取消",
                             type: "warning",
-                        }).then(() => IndexApi(this.index!).delete()
+                        }).then(() => IndexApi(this.index).delete()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('索引删除错误', e, () => reject(e))));
                         break;

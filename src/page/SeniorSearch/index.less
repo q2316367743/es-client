@@ -31,18 +31,19 @@
         display: flex;
 
         .side {
-            width: 35%;
-            min-width: 300px;
-            height: 100%;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
 
 
-            .editor {
+            .controller {
                 position: absolute;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
+                display: flex;
 
                 &.show-tabs {
                     top: 55px;
@@ -50,11 +51,7 @@
 
                 .option {
                     width: 30px;
-                    position: absolute;
-                    top: 3px;
-                    left: 4px;
-                    right: 0;
-                    bottom: 0;
+                    height: 100%;
 
                     .el-icon {
                         cursor: pointer;
@@ -91,24 +88,35 @@
                         margin-top: 10px;
                         color: var(--el-color-primary);
                     }
+
+                    .help {
+                        margin-top: 10px;
+                    }
+                }
+
+                .editor {
+                    width: calc(100% - 30px);
+                    height: 100%;
                 }
             }
 
         }
 
 
-        .seq {
-            width: 1px;
-            padding: 0 3px;
-            height: 100%;
-            margin-left: 15px;
+        .sep {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 5px;
             background-color: var(--border-color);
             cursor: e-resize;
         }
 
         .senior-content {
-            width: calc(65% - 22px);
-            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
             overflow: auto;
 
             .senior-display-tabs {

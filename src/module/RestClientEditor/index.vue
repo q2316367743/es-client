@@ -1,5 +1,5 @@
 <template>
-    <div ref="container" :id="id" :style="style"></div>
+    <div ref="container" :id="id"></div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -27,14 +27,10 @@ monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 export default defineComponent({
     name: 'rest-client-editor',
     props: {
-        modelValue: String,
+        modelValue: String
     },
     data: () => ({
         content: '',
-        style: {
-            width: '100%',
-            height: 'calc(100%)'
-        },
         isDark,
         id: `rest-client-${new Date().getTime()}`
     }),

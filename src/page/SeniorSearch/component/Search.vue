@@ -5,7 +5,10 @@
         <vxe-column field="date" width="150" title="查询时间" :formatter="formatter"></vxe-column>
         <vxe-column field="success" width="100" title="查询状态">
             <template #default="{ row }">
-                {{ row.success ? '成功' : '失败' }}
+                <div style="display: flex;">
+                    <div class="dot" :style="{backgroundColor: row.success ? 'green':'red'}"/>
+                    <div>{{ row.success ? '成功' : '失败' }}</div>
+                </div>
             </template>
         </vxe-column>
         <vxe-column field="time" width="100" title="执行时间">
@@ -14,11 +17,11 @@
             </template>
         </vxe-column>
         <vxe-column field="method" width="100" title="请求方式"></vxe-column>
-        <vxe-column field="link" width="150" title="请求连接"></vxe-column>
+        <vxe-column field="link" width="150" title="请求连接" show-overflow="ellipsis"></vxe-column>
         <vxe-column width="250" title="操作">
-            <el-button type="primary">载入</el-button>
-            <el-button type="success">查看</el-button>
-            <el-button type="danger">删除</el-button>
+            <template #default="{ row }">
+                <el-button type="primary" @click="load(row)">载入</el-button>
+            </template>
         </vxe-column>
     </vxe-table>
 </template>
@@ -29,6 +32,7 @@ import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 import {VxeTablePropTypes} from "vxe-table";
 import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
 import XEUtils from "xe-utils";
+import {useSeniorSearchEvent} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'senior-search-record',
@@ -58,7 +62,16 @@ export default defineComponent({
     },
     methods: {
         formatter(column: any) {
-            return  XEUtils.toDateString(column.cellValue, 'yyyy-MM-dd HH:ss:mm')
+            return XEUtils.toDateString(column.cellValue, 'yyyy-MM-dd HH:ss:mm')
+        },
+        load(record: SeniorSearchRecord) {
+            useSeniorSearchEvent.emit({
+                current: true,
+                params: record.params,
+                link: record.link,
+                method: record.method,
+                execute: false
+            })
         }
     }
 });
