@@ -32,12 +32,14 @@
                         <el-tooltip :content="viewTip" placement="right"
                                     :effect="isDark ? 'dark' : 'light'">
                             <el-icon :size="16" class="view" @click="view = (view === 2) ? 3 : 2">
-                                <view-icon/>
+                                <json-icon v-if="view === 2"/>
+                                <table-icon v-else-if="view === 3"/>
+                                <view-icon v-else/>
                             </el-icon>
                         </el-tooltip>
                         <el-tooltip content="标签栏" placement="right"
                                     :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="view" @click="showTabs = !showTabs">
+                            <el-icon :size="16" class="tab" @click="showTabs = !showTabs">
                                 <tag-icon/>
                             </el-icon>
                         </el-tooltip>
@@ -80,6 +82,7 @@ import emitter from '@/plugins/mitt';
 
 import useUrlStore from "@/store/UrlStore";
 import useSettingStore from "@/store/SettingStore";
+import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
@@ -112,12 +115,13 @@ import SaveIcon from "@/icon/SaveIcon.vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewIcon from "@/icon/ViewIcon.vue";
 import TagIcon from "@/icon/TagIcon.vue";
-import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
+import JsonIcon from "@/icon/JsonIcon.vue";
+import TableIcon from "@/icon/TableIcon.vue";
 
 export default defineComponent({
     name: 'SeniorSearch',
     components: {
-        TagIcon, ViewIcon, FormatIcon, SaveIcon, RunIcon,
+        TableIcon, JsonIcon, TagIcon, ViewIcon, FormatIcon, SaveIcon, RunIcon,
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
         SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
         SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/component/History.vue')),
