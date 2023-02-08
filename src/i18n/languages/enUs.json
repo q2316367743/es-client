@@ -77,7 +77,9 @@
             "more": "more",
             "new": "new",
             "open": "open",
+            "run": "run",
             "refresh": "refresh",
+            "save": "save",
             "search": "search",
             "test": "test",
             "update": "update"

@@ -51,10 +51,10 @@ import {defineComponent, markRaw} from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import {toDateString} from "xe-utils";
-import {Search, Plus} from '@element-plus/icons-vue';
+import {Plus, Search} from '@element-plus/icons-vue';
 
 import BrowserUtil from "@/utils/BrowserUtil";
-import {seniorSearchHistoryService} from "@/global/BeanFactory";
+import {seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
@@ -70,7 +70,7 @@ interface Params {
 }
 
 export default defineComponent({
-    name: 'hm-history',
+    name: 'senior-search-history',
     components: {HistorySaveAndUpdate},
     emits: ['load'],
     data: () => ({
@@ -109,11 +109,8 @@ export default defineComponent({
             historyTable.connect(historyToolbar);
         });
         // 数据查询
-        this.search();
-        emitter.on(MessageEventEnum.SENIOR_HISTORY_UPDATE, () => {
-            // 历史记录变更，也要进行重新查询历史
-            this.search();
-        });
+        emitter.on(MessageEventEnum.SENIOR_HISTORY_UPDATE, this.search);
+        emitter.on(MessageEventEnum.URL_UPDATE, this.search);
     },
     methods: {
         search() {
@@ -131,7 +128,12 @@ export default defineComponent({
             BrowserUtil.copy(url);
         },
         load(history: SeniorSearchHistory) {
-            this.$emit('load', history);
+            useSeniorSearchEvent.emit({
+                id: history.id,
+                name: history.name,
+                body: history.body,
+                execute: false
+            });
         },
         removeById(id: number) {
             seniorSearchHistoryService.removeById(id)

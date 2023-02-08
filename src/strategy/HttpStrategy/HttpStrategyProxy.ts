@@ -1,4 +1,3 @@
-import HttpStrategy from "@/strategy/HttpStrategy/HttpStrategy";
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
@@ -36,6 +35,13 @@ export default class HttpStrategyProxy {
         }
         // 设置超时时间
         config.timeout = useSettingStore().getTimeout
+        if (config.headers) {
+            config.headers['Content-Type'] = 'application/json';
+        } else {
+            config.headers = {
+                "Content-Type": "application/json"
+            }
+        }
         return this.fetchSelf(config);
     }
 

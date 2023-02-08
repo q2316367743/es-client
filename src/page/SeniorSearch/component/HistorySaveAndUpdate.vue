@@ -9,20 +9,8 @@
                 <el-option v-for="item in urls" :value="item.id" :label="item.name"/>
             </el-select>
         </el-form-item>
-        <el-form-item label="链接">
-            <el-input v-model="data.link" style="width: 450px"/>
-        </el-form-item>
-        <el-form-item label="请求方式">
-            <el-select v-model="data.method">
-                <el-option label="HEAD" value="HEAD"/>
-                <el-option label="GET" value="GET"/>
-                <el-option label="POST" value="POST"/>
-                <el-option label="PUT" value="PUT"/>
-                <el-option label="DELETE" value="DELETE"/>
-            </el-select>
-        </el-form-item>
         <el-form-item label="参数">
-            <el-input v-model="data.params" type="textarea" :rows="8"/>
+            <el-input v-model="data.body" type="textarea" :rows="12"/>
         </el-form-item>
         <el-form-item>
             <el-button @click="reset">重置</el-button>
@@ -47,17 +35,13 @@ export default defineComponent({
             id: 0,
             name: '',
             urlId: 0,
-            link: '',
-            method: 'POST',
-            params: ''
+            body: ''
         } as SeniorSearchHistory,
         old: {
             id: 0,
             name: '',
             urlId: 0,
-            link: '',
-            method: 'POST',
-            params: ''
+            body: ''
         } as SeniorSearchHistory
     }),
     watch: {

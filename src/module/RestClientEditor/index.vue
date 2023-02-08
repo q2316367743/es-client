@@ -71,7 +71,8 @@ export default defineComponent({
             minimap: {
                 enabled: false
             },
-            fontFamily: "consoles"
+            fontFamily: "consoles",
+            wordWrap: 'on'
         });
         instance.onDidChangeModelContent(() => {
             const value = instance.getValue();

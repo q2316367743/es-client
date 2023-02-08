@@ -1,45 +1,68 @@
 <template>
     <div class="senior-search">
-        <transition name="el-zoom-in-top">
-            <div class="senior-search-tabs" v-show="showTabs">
+        <!-- 下半部分 -->
+        <div class="senior-main">
+            <!-- 左面查询条件 -->
+            <div class="side">
                 <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                          v-show="showTabs"
                           @option-tab="optionTab"/>
+                <div class="editor" :class="showTabs ? 'show-tabs' : ''">
+                    <rest-client-editor ref="restClientEditor" v-model="current.body"
+                                        :height-offset="showTabs ? '55px' : '0px'"/>
+                    <div class="option">
+                        <el-tooltip :content="$t('common.operation.run')" placement="right"
+                                    :effect="isDark ? 'dark' : 'light'">
+                            <el-icon :size="16" class="run" @click="search">
+                                <run-icon/>
+                            </el-icon>
+                        </el-tooltip>
+                        <el-tooltip :content="$t('common.operation.save')" placement="right"
+                                    :effect="isDark ? 'dark' : 'light'">
+                            <el-icon :size="16" class="save" @click="optionTab(`save-history|${searchId}`)">
+                                <save-icon/>
+                            </el-icon>
+                        </el-tooltip>
+                        <el-tooltip :content="$t('common.operation.format')" placement="right"
+                                    :effect="isDark ? 'dark' : 'light'">
+                            <el-icon :size="16" class="format" @click="formatDocument">
+                                <format-icon/>
+                            </el-icon>
+                        </el-tooltip>
+                        <el-tooltip :content="viewTip" placement="right"
+                                    :effect="isDark ? 'dark' : 'light'">
+                            <el-icon :size="16" class="view" @click="view = (view === 2) ? 3 : 2">
+                                <view-icon/>
+                            </el-icon>
+                        </el-tooltip>
+                        <el-tooltip content="标签栏" placement="right"
+                                    :effect="isDark ? 'dark' : 'light'">
+                            <el-icon :size="16" class="view" @click="showTabs = !showTabs">
+                                <tag-icon/>
+                            </el-icon>
+                        </el-tooltip>
+                    </div>
+                </div>
             </div>
-        </transition>
-        <!-- 左侧查询条件 -->
-        <div class="senior-search-card" :class="showTabs ? 'show-tabs' : ''">
-            <!-- 上半部分 -->
-            <div class="senior-search-card__header">
-                <div style="display: flex;">
-                    <el-button type="primary" @click="search" style="margin-left: 0;">执行</el-button>
-                    <el-button type="success" @click="formatDocument">{{ $t('common.operation.format') }}</el-button>
-                    <el-button @click="historyDrawer = true">{{ $t('common.operation.history') }}</el-button>
-                </div>
-                <div>
-                    <el-select v-model="view" style="width: 110px;">
-                        <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
-                        <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
-                    </el-select>
-                    <el-button type="info" :icon="fullScreen" style="margin-left: 8px;" @click="showTabs = !showTabs"/>
-                </div>
-            </div>
-            <!-- 下半部分 -->
-            <div class="senior-main">
-                <!-- 左面查询条件 -->
-                <div class="side">
-                    <rest-client-editor ref="restClientEditor" v-model="current.body"/>
-                </div>
-                <div class="seq"/>
-                <div class="senior-content">
-                    <el-scrollbar>
-                        <data-view :view="view" :result="current.result"/>
-                    </el-scrollbar>
-                    <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
-                                v-show="showTop"/>
-                </div>
+            <div class="seq"/>
+            <div class="senior-content">
+                <el-tabs v-model="displayActive" class="senior-display-tabs">
+                    <el-tab-pane label="结果" name="result"/>
+                    <el-tab-pane label="请求记录" name="search"/>
+                    <el-tab-pane label="历史记录" name="history"/>
+                </el-tabs>
+                <el-scrollbar class="senior-display-scroll">
+                    <!-- 结果集渲染 -->
+                    <data-view v-show="displayActive === 'result'" :view="view" :result="current.result"/>
+                    <!-- 请求记录 -->
+                    <senior-search-record v-show="displayActive === 'search'"/>
+                    <!-- 历史记录 -->
+                    <senior-search-history v-show="displayActive === 'history'"/>
+                </el-scrollbar>
+                <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
+                            v-show="showTop"/>
             </div>
         </div>
-        <senior-search-history-manage v-model="historyDrawer"/>
     </div>
 </template>
 
@@ -64,21 +87,42 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import {
     applicationLaunch,
     httpStrategyContext,
+    isDark,
     seniorSearchHistoryService,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
-import DataView from "@/components/DataView/index.vue";
+// 事件
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
-import Optional from "@/utils/Optional";
+
+// 组件
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
+import DataView from "@/components/DataView/index.vue";
+
 import MessageUtil from "@/utils/MessageUtil";
+import Optional from "@/utils/Optional";
+
 import {requestBuild} from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
 
+// 图标
+import RunIcon from "@/icon/RunIcon.vue";
+import SaveIcon from "@/icon/SaveIcon.vue";
+import FormatIcon from "@/icon/FormatIcon.vue";
+import ViewIcon from "@/icon/ViewIcon.vue";
+import TagIcon from "@/icon/TagIcon.vue";
+import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
+
 export default defineComponent({
     name: 'SeniorSearch',
+    components: {
+        TagIcon, ViewIcon, FormatIcon, SaveIcon, RunIcon,
+        RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
+        SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
+        SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/component/History.vue')),
+        TabMenu, DataView,
+    },
     data: () => {
         let searchMap = new Map<number, SeniorSearchItem>();
         let searchId = new Date().getTime();
@@ -108,21 +152,27 @@ export default defineComponent({
             // 语法提示
             suggestions: [],
             // 相关数据
-            view: 1,
+            view: 2,
             showTop: true,
-            historyDrawer: false
+            isDark,
+            displayActive: 'result'
         }
-    },
-    components: {
-        RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
-        SeniorSearchHistoryManage: defineAsyncComponent(() => import('@/page/SeniorSearch/component/index.vue')),
-        TabMenu, DataView
     },
     computed: {
         ...mapState(useSettingStore, ['instance']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
+        viewTip() {
+            switch (this.view) {
+                case 2:
+                    return '切换至表格视图';
+                case 3:
+                    return '切换至JSON视图';
+                default:
+                    return '视图切换';
+            }
+        }
     },
     watch: {
         link(newValue) {
@@ -191,7 +241,7 @@ export default defineComponent({
                 }
             });
         });
-        applicationLaunch.register(setText => {
+        applicationLaunch.register(() => {
             this.showTabs = useSettingStore().getShowTab
             this.view = useSettingStore().getDefaultViewer;
             return Promise.resolve();
@@ -203,13 +253,15 @@ export default defineComponent({
             let restClientEditor = this.$refs.restClientEditor as any;
             let request = requestBuild(restClientEditor.getInstance());
             if (!request) {
-                MessageUtil.success('请求块无法识别');
+                MessageUtil.error('请求块无法识别');
                 return;
             }
             if (request.link === '') {
                 MessageUtil.success('链接未识别到');
                 return;
             }
+            let now = new Date();
+            let success = true;
             let data = {} as any;
             if (request.params != '') {
                 try {
@@ -238,6 +290,17 @@ export default defineComponent({
                 this.current.result = response;
             }).catch((e) => {
                 this.current.result = e.response.data
+                success = false
+            }).finally(() => {
+                this.displayActive = 'result';
+                useSeniorSearchRecordStore().push({
+                    method: request!.method,
+                    link: request!.link!,
+                    params: request!.params!,
+                    success,
+                    time: new Date().getTime() - now.getTime(),
+                    date: now
+                })
             })
         },
         formatDocument() {
@@ -306,13 +369,34 @@ export default defineComponent({
                         MessageUtil.error('标签未找到');
                         return;
                     }
-                    seniorSearchHistoryService.save({
-                        urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
-                        name: searchItem.header.name,
-                        body: searchItem.body.body,
+                    ElMessageBox.confirm('请输入记录名字', {
+                        confirmButtonText: '新增',
+                        cancelButtonText: '取消',
+                        inputValue: isNaN(parseInt(searchItem.header.name)) ? '' : searchItem.header.name,
+                        inputPattern: /\s*.+/
                     })
-                        .then(() => MessageUtil.success('新增成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
-                        .catch(e => MessageUtil.error('新增失败', e));
+                        .then(({value}) => {
+                            if (!searchItem) {
+                                MessageUtil.error('标签未找到');
+                                return;
+                            }
+                            seniorSearchHistoryService.save({
+                                urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
+                                name: value,
+                                body: searchItem.body.body,
+                            })
+                                .then(id => {
+                                    // 发送消息
+                                    MessageUtil.success('新增成功');
+                                    // 发送事件
+                                    emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
+                                    // 修改标签
+                                    if (searchItem) {
+                                        searchItem.header.relationId = id;
+                                    }
+                                })
+                                .catch(e => MessageUtil.error('新增失败', e));
+                        }).catch(() => console.log('取消新增'));
                     break;
                 case 'update-history':
                     let searchItem2 = this.searchMap.get(id);
@@ -349,7 +433,7 @@ export default defineComponent({
             } as SeniorSearchItem;
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
-        }
+        },
     },
 });
 </script>

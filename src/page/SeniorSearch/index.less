@@ -22,64 +22,95 @@
 
     }
 
-    .senior-search-card {
+    .senior-main {
         position: absolute;
+        top: 8px;
         left: 0;
-        bottom: 0;
         right: 0;
-        top: 0;
-        min-height: 550px;
+        bottom: 0;
+        display: flex;
 
-        &.show-tabs {
-            top: 50px;
+        .side {
+            width: 35%;
+            min-width: 300px;
+            height: 100%;
+            position: relative;
+
+
+            .editor {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+                &.show-tabs {
+                    top: 55px;
+                }
+
+                .option {
+                    width: 30px;
+                    position: absolute;
+                    top: 3px;
+                    left: 4px;
+                    right: 0;
+                    bottom: 0;
+
+                    .el-icon {
+                        cursor: pointer;
+                        padding: 3px;
+                        height: 24px;
+                        width: 24px;
+                        border-radius: 3px;
+                        &:hover{
+                            background-color: var(--hover-color);
+                        }
+                    }
+
+                    .run {
+                        color: var(--active-color);
+                    }
+
+                    .save {
+                        margin-top: 10px;
+                    }
+
+                    .format {
+                        margin-top: 10px;
+                    }
+
+                    .view {
+                        margin-top: 10px;
+                    }
+                }
+            }
+
         }
 
-        .senior-search-card__header {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--hover-color);
 
-            .senior-search-link {
-                min-width: 100px;
-                width: 300px;
-                margin: 0 6px;
-            }
-
-            .el-button {
-                margin-left: 8px;
-
-            }
+        .seq {
+            width: 1px;
+            padding: 0 3px;
+            height: 100%;
+            margin-left: 15px;
+            background-color: var(--border-color);
+            cursor: e-resize;
         }
 
-        .senior-main {
-            position: absolute;
-            top: 69px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
+        .senior-content {
+            width: calc(65% - 22px);
+            height: 100%;
+            overflow: auto;
 
-            .side {
-                width: 35%;
-                min-width: 300px;
-                height: 100%;
+            .senior-display-tabs {
+                padding: 0 15px;
             }
 
-            .seq {
-                width: 1px;
-                padding: 0 3px;
-                height: 100%;
-                margin-left: 15px;
-                background-color: var(--border-color);
-                cursor: e-resize;
+            .senior-display-scroll {
+                height: calc(100% - 54px);
+                margin: 0 15px;
             }
 
-            .senior-content {
-                width: calc(65% - 22px);
-                height: 100%;
-                overflow: auto;
-            }
         }
     }
 

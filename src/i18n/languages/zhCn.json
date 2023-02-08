@@ -78,6 +78,8 @@
             "new": "新建",
             "open": "开启",
             "refresh": "刷新",
+            "run": "运行",
+            "save": "保存",
             "search": "搜索",
             "test": "测试",
             "update": "修改"
