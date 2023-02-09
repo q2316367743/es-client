@@ -9,7 +9,8 @@
                           @option-tab="optionTab"/>
                 <div class="controller" :class="showTabs ? 'show-tabs' : ''">
                     <div class="option">
-                        <ss-option-btn :tooltip="$t('common.operation.run')" class-name="run" @click="search">
+                        <ss-option-btn :tooltip="$t('common.operation.run')" :class-name="url ? 'run' : 'run disable'"
+                                       @click="search">
                             <run-icon/>
                         </ss-option-btn>
                         <ss-option-btn :tooltip="$t('common.operation.save')" class-name="save"
@@ -169,6 +170,7 @@ export default defineComponent({
     },
     computed: {
         ...mapState(useSettingStore, ['instance']),
+        ...mapState(useUrlStore, ['url']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
@@ -302,6 +304,9 @@ export default defineComponent({
     // 获取最大宽度
     methods: {
         async search() {
+            if (!this.url) {
+                return;
+            }
             let restClientEditor = this.$refs.restClientEditor as any;
             let request = requestBuild(restClientEditor.getInstance());
             if (!request) {

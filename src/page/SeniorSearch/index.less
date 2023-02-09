@@ -67,6 +67,15 @@
 
                     .run {
                         color: var(--active-color);
+
+                        &.disable {
+                            color: var(--el-text-color-disabled);
+                            cursor: not-allowed;
+
+                            &:hover {
+                                background-color: var(--container-color);
+                            }
+                        }
                     }
 
                     .save {
@@ -110,6 +119,7 @@
             width: 5px;
             background-color: var(--border-color);
             cursor: e-resize;
+
             &:hover {
                 background-color: var(--active-color);
             }
