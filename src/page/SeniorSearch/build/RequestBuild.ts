@@ -4,6 +4,11 @@ import StrUtil from "@/utils/StrUtil";
 import {supportMethods} from "@/data/EsUrl";
 
 /**
+ * 第一排匹配，匹配请求方法和请求连接
+ */
+let firstRegex = /\s*(HEAD|head|GET|get|POST|post|PUT|put|DELETE|delete)\s*([-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])/;
+let jsonRegex = /^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/;
+/**
  * 请求
  */
 export interface Request {

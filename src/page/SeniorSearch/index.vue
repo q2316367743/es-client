@@ -1,5 +1,5 @@
 <template>
-    <div class="senior-search">
+    <div class="senior-search" v-loading="loading" element-loading-text="数据查询中">
         <!-- 下半部分 -->
         <div class="senior-main">
             <!-- 左面查询条件 -->
@@ -96,7 +96,8 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import {
     applicationLaunch,
     httpStrategyContext,
-    isDark, lodisStrategyContext,
+    isDark,
+    lodisStrategyContext,
     seniorSearchHistoryService,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
@@ -176,7 +177,8 @@ export default defineComponent({
             isDark,
             displayActive: 'result',
             width: 500,
-            windowSize: useWindowSize()
+            windowSize: useWindowSize(),
+            loading: false
         }
     },
     computed: {
@@ -261,21 +263,16 @@ export default defineComponent({
             } as SeniorSearchItem;
 
             // 只能预先赋值
-            this.current.body += '\n\n' + searchItem.body.body;
             this.current.result = searchItem.body.result;
 
             // 判断是否当前标签页
             if (typeof param.current === 'undefined' || !param.current) {
+                this.current.body = searchItem.body.body;
                 this.searchMap.set(searchId, searchItem);
                 this.searchId = searchId;
             } else {
                 // 当前标签页
-                let restClientEditor = this.$refs.restClientEditor as any;
-                let instance = restClientEditor.getInstance();
-                instance.setPosition({
-                    lineNumber: this.current.body.split('\n').length - 1,
-                    column: 1
-                });
+                this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
             }
 
             // 搜索
@@ -341,6 +338,7 @@ export default defineComponent({
                 MessageUtil.success('链接未识别到');
                 return;
             }
+            this.loading = true;
             let now = new Date();
             let success = true;
             let data = {} as any;
@@ -381,7 +379,8 @@ export default defineComponent({
                     success,
                     time: new Date().getTime() - now.getTime(),
                     date: now
-                })
+                });
+                this.loading = false;
             })
         },
         formatDocument() {

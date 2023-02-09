@@ -1,7 +1,14 @@
 <template>
-    <vxe-table :data="showRecords" empty-text="没有记录" ref="seniorSearchRecordRef"
+    <vxe-table :data="records" empty-text="没有记录" ref="seniorSearchRecordRef"
                :column-config="columnConfig" :export-config="exportConfig">
         <vxe-column type="seq" width="50" fixed="left" title="序号"></vxe-column>
+        <vxe-column type="expand" width="80" title="请求体">
+            <template #content="{ row, rowIndex }">
+                <div class="data-browse-expand">
+                    <json-view :data="JSON.parse(row.params)"/>
+                </div>
+            </template>
+        </vxe-column>
         <vxe-column field="date" width="150" title="查询时间" :formatter="formatter"></vxe-column>
         <vxe-column field="success" width="100" title="查询状态">
             <template #default="{ row }">
@@ -33,11 +40,12 @@ import {VxeTablePropTypes} from "vxe-table";
 import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
 import XEUtils from "xe-utils";
 import {useSeniorSearchEvent} from "@/global/BeanFactory";
+import JsonView from "@/components/JsonView/index.vue";
 
 export default defineComponent({
     name: 'senior-search-record',
+    components: {JsonView},
     data: () => ({
-        showRecords: new Array<SeniorSearchRecord>(),
         columnConfig: {
             resizable: true
         },
@@ -54,8 +62,8 @@ export default defineComponent({
     watch: {
         records: {
             handler(newValue: Array<SeniorSearchRecord>) {
-                console.log(newValue);
-                this.showRecords = newValue;
+                let seniorSearchRecordRef = this.$refs.seniorSearchRecordRef as any;
+                seniorSearchRecordRef.loadData(newValue.sort((a, b) => b.date.getTime() - a.date.getTime()));
             },
             deep: true
         }
