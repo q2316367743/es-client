@@ -168,6 +168,8 @@ import Setting from "@/domain/Setting";
 import {ElLoading} from "element-plus";
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
+import Constant from "@/global/Constant";
+import XEUtils from "xe-utils";
 
 export default defineComponent({
     name: 'setting-base',
@@ -249,6 +251,8 @@ export default defineComponent({
                 let seniorSearchHistory = await seniorSearchHistoryService.list();
                 loadingManager.setText('开始下载');
                 BrowserUtil.download(JSON.stringify({
+                    version: Constant.version,
+                    time: XEUtils.toDateString(new Date(), 'yyyy-MM-dd HH:ss:mm'),
                     url, baseSearchHistory, seniorSearchHistory,
                     lodis: {
                         version: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION),
