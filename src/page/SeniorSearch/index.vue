@@ -216,7 +216,6 @@ export default defineComponent({
             maxWidth = seniorSearchWidth - rightWidth;
             let defaultWidth = Math.round(seniorSearchWidth * 0.3);
             // 重新定义当前宽度
-            console.log(this.width, minWidth, maxWidth, seniorSearchWidth, rightWidth)
             if (this.width < minWidth || this.width > maxWidth) {
                 this.width = defaultWidth;
             }
@@ -268,7 +267,6 @@ export default defineComponent({
         let seniorSearch = document.getElementById('main')! as HTMLDivElement;
         // 初始化大小
         let windowWidth = seniorSearch.offsetWidth;
-        console.log(windowWidth)
         this.width = Math.round(windowWidth * 0.3);
         maxWidth = windowWidth - rightWidth;
 

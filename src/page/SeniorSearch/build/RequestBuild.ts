@@ -1,13 +1,14 @@
 import * as monaco from "monaco-editor";
 import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
-import StrUtil from "@/utils/StrUtil";
-import {supportMethods} from "@/data/EsUrl";
 
 /**
  * 第一排匹配，匹配请求方法和请求连接
  */
-let firstRegex = /\s*(HEAD|head|GET|get|POST|post|PUT|put|DELETE|delete)\s*([-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])/;
-let jsonRegex = /^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/;
+const FIRST_REGEX = /\s*(HEAD|head|GET|get|POST|post|PUT|put|DELETE|delete)\s*([-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])/;
+const JSON_REGEX = /^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/;
+const COMMENT_REGEX = /^\s*\/\/.*/;
+const BLANK_REGEX = /^\s*$/;
+
 /**
  * 请求
  */
@@ -61,6 +62,8 @@ interface Grammatical extends Request {
 
     number: number;
 
+    paramList: Array<string>;
+
 }
 
 /**
@@ -70,40 +73,39 @@ interface Grammatical extends Request {
 function grammaticalAnalysis(value: string): Array<Grammatical> {
     let list = new Array<Grammatical>();
     let request: Grammatical | undefined;
-    let params = new Array<string>();
-    let lineNumber = 0;
-    for (let line of value.split('\n')) {
-        lineNumber++;
+    let lines = value.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
         line = line.replaceAll('\r', '');
-        if (StrUtil.startWithArr(line, supportMethods)) {
-            // 新的请求
+        if (COMMENT_REGEX.test(line) || BLANK_REGEX.test(line)) {
+            // 注释、空白，跳过
+            continue;
+        }
+        let firstListTest = line.match(FIRST_REGEX);
+        if (firstListTest && firstListTest.length > 0) {
             if (request) {
-                request.params = params.length === 0 ? '{}' : params.join('\n');
+                // 存在请求，先新增
+                request.params = request.paramList.join('\n');
                 list.push(request);
-                request = undefined;
-                params = new Array<string>();
             }
-            let items = StrUtil.splitAll(line, ' ');
             request = {
-                number: lineNumber,
-                method: items[0] as Method,
-                link: '',
-                params: '{}'
+                method: firstListTest[1] as Method,
+                link: firstListTest[2] as string,
+                params: '',
+                number: i + 1,
+                paramList: new Array<string>()
+            };
+        } else {
+            if (request) {
+                request.paramList.push(line);
             }
-            if (items.length > 1) {
-                request.link = items[1];
-            }
-        } else if (StrUtil.notBlank(line)) {
-            if (line.startsWith("//")) {
-                continue;
-            }
-            // 空白的，跳过
-            params.push(line);
         }
     }
     if (request) {
-        request.params = params.length === 0 ? '{}' : params.join('\n');
+        // 存在请求，新增
+        request.params = request.paramList.join('\n');
         list.push(request);
     }
+    console.log(list)
     return list;
 }
