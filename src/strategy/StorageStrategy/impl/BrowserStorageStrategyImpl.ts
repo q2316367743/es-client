@@ -42,7 +42,7 @@ export default class BrowserStorageStrategyImpl implements StorageStrategy {
         return new Promise<void>(resolve => {
             this.instance.table<T, number>(name)
                 .put(record)
-                .then(() => resolve)
+                .then(() => resolve());
         });
     }
 

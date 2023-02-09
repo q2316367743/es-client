@@ -4,49 +4,33 @@
         <div class="senior-main">
             <!-- 左面查询条件 -->
             <div class="side" :style="{width: `${width}px`}">
-                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
                           v-show="showTabs"
                           @option-tab="optionTab"/>
                 <div class="controller" :class="showTabs ? 'show-tabs' : ''">
                     <div class="option">
-                        <el-tooltip :content="$t('common.operation.run')" placement="right"
-                                    :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="run" @click="search">
-                                <run-icon/>
-                            </el-icon>
-                        </el-tooltip>
-                        <el-tooltip :content="$t('common.operation.save')" placement="right"
-                                    :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="save" @click="optionTab(`save-history|${searchId}`)">
-                                <save-icon/>
-                            </el-icon>
-                        </el-tooltip>
-                        <el-tooltip :content="$t('common.operation.format')" placement="right"
-                                    :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="format" @click="formatDocument">
-                                <format-icon/>
-                            </el-icon>
-                        </el-tooltip>
-                        <el-tooltip :content="viewTip" placement="right"
-                                    :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="view" @click="view = (view === 2) ? 3 : 2">
-                                <json-icon v-if="view === 2"/>
-                                <table-icon v-else-if="view === 3"/>
-                                <view-icon v-else/>
-                            </el-icon>
-                        </el-tooltip>
-                        <el-tooltip content="标签栏" placement="right"
-                                    :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="tab" @click="showTabs = !showTabs">
-                                <tag-icon/>
-                            </el-icon>
-                        </el-tooltip>
-                        <el-tooltip content="帮助" placement="right"
-                                    :effect="isDark ? 'dark' : 'light'">
-                            <el-icon :size="16" class="help" @click="openHelp">
-                                <i class="vxe-icon-question-circle"/>
-                            </el-icon>
-                        </el-tooltip>
+                        <ss-option-btn :tooltip="$t('common.operation.run')" class-name="run" @click="search">
+                            <run-icon/>
+                        </ss-option-btn>
+                        <ss-option-btn :tooltip="$t('common.operation.save')" class-name="save"
+                                       @click="save">
+                            <save-icon/>
+                        </ss-option-btn>
+                        <ss-option-btn :tooltip="$t('common.operation.format')" class-name="format"
+                                       @click="formatDocument">
+                            <format-icon/>
+                        </ss-option-btn>
+                        <ss-option-btn :tooltip="viewTip" class-name="view" @click="view = (view === 2) ? 3 : 2">
+                            <json-icon v-if="view === 2"/>
+                            <table-icon v-else-if="view === 3"/>
+                            <view-icon v-else/>
+                        </ss-option-btn>
+                        <ss-option-btn tooltip="标签栏" class-name="tab" @click="showTabs = !showTabs">
+                            <tag-icon/>
+                        </ss-option-btn>
+                        <ss-option-btn tooltip="帮助" class-name="help" @click="openHelp">
+                            <i class="vxe-icon-question-circle"/>
+                        </ss-option-btn>
                     </div>
                     <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
                                         :style="{width: `calc(100% - 24px)`, height: '100%'}"/>
@@ -79,6 +63,7 @@ import {defineAsyncComponent, defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
 import {ElMessageBox, ElNotification} from "element-plus";
 import {FullScreen} from '@element-plus/icons-vue'
+import {useWindowSize} from "@vueuse/core";
 
 import './index.less';
 import {SeniorSearchItem, SeniorSearchItemBody} from './domain/SeniorSearchItem';
@@ -92,6 +77,7 @@ import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 import {
     applicationLaunch,
@@ -115,6 +101,7 @@ import Optional from "@/utils/Optional";
 
 import {requestBuild} from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
+import SsOptionBtn from "@/page/SeniorSearch/component/OptionBtn.vue";
 
 // 图标
 import RunIcon from "@/icon/RunIcon.vue";
@@ -124,8 +111,6 @@ import ViewIcon from "@/icon/ViewIcon.vue";
 import TagIcon from "@/icon/TagIcon.vue";
 import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
-import {useWindowSize} from "@vueuse/core";
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 // 记录点击开始位置
 let startX = 0;
@@ -137,6 +122,7 @@ let maxWidth = 0;
 export default defineComponent({
     name: 'SeniorSearch',
     components: {
+        SsOptionBtn,
         TableIcon, JsonIcon, TagIcon, ViewIcon, FormatIcon, SaveIcon, RunIcon,
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
         SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
@@ -219,18 +205,7 @@ export default defineComponent({
                 }
                 this.searchMap.set(searchId, searchItem);
             }
-            this.current.body = searchItem.body.body;
-            this.current.result = searchItem.body.result;
-        },
-        current: {
-            handler() {
-                let searchItem = this.searchMap.get(this.searchId);
-                if (searchItem) {
-                    searchItem.body.body = this.current.body;
-                    searchItem.body.result = this.current.result;
-                }
-            },
-            deep: true
+            this.current = searchItem.body;
         },
         windowSize: {
             handler(newValue) {
@@ -262,12 +237,11 @@ export default defineComponent({
                 }
             } as SeniorSearchItem;
 
-            // 只能预先赋值
-            this.current.result = searchItem.body.result;
 
             // 判断是否当前标签页
             if (typeof param.current === 'undefined' || !param.current) {
-                this.current.body = searchItem.body.body;
+                // 新标签页
+                this.current = searchItem.body;
                 this.searchMap.set(searchId, searchItem);
                 this.searchId = searchId;
             } else {
@@ -498,6 +472,20 @@ export default defineComponent({
             // 全部关闭了
             if (this.searchMap.size === 0) {
                 this.clearAfter();
+            }
+        },
+        save() {
+            let searchItem = this.searchMap.get(this.searchId);
+            if (!searchItem) {
+                MessageUtil.error('系统异常，标签获取错误');
+                return;
+            }
+            if (searchItem.header.relationId) {
+                // 更新
+                this.optionTab(`update-history|${searchItem.header.id}|${searchItem.header.relationId}`);
+            } else {
+                // 新增
+                this.optionTab(`save-history|${searchItem.header.id}`);
             }
         },
         clearAfter() {

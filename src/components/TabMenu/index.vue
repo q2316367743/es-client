@@ -40,12 +40,12 @@ import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
-import { ElNotification} from "element-plus";
+import {ElNotification} from "element-plus";
 import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'tab-menu',
-    emits: ['update:modelValue', 'update:searchItemHeaders', 'editTabs', 'optionTab'],
+    emits: ['update:modelValue', 'editTabs', 'optionTab'],
     props: {
         modelValue: Number,
         searchItemHeaders: Array<TabMenuItem>
@@ -84,7 +84,7 @@ export default defineComponent({
                         if (this.searchItemHeaders && this.searchItemHeaders.length > 0) {
                             this.$emit('editTabs', this.searchItemHeaders[0].id, 'remove');
                         }
-                    }else {
+                    } else {
                         // 默认进行提示
                         MessageUtil.warning('标签数量超过最大限制，请关闭不需要的标签');
                         return
