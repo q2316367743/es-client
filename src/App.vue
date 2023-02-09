@@ -5,7 +5,7 @@
         <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
             <div class="logo">
                 <div v-if="!fullScreen">{{ $t('app.name') }}</div>
-                <div style="padding-top: 3px;cursor:pointer;" @click="fullScreenSwitch">
+                <div style="padding-top: 3px;cursor:pointer;" @click="toggleFullScreen">
                     <el-icon :size="20">
                         <expand v-if="fullScreen"/>
                         <fold v-else/>
@@ -202,7 +202,9 @@ import {
     isDark,
     lodisStrategyContext,
     toggleDark,
-    usePageJumpEvent, useUrlEditEvent,
+    useFullScreen,
+    usePageJumpEvent,
+    useUrlEditEvent,
     useUrlSelectEvent,
     versionManage
 } from "@/global/BeanFactory";
@@ -236,7 +238,7 @@ export default defineComponent({
             locale: zhCn,
             isDark,
             Constant,
-            fullScreen: false,
+            fullScreen: useFullScreen.fullScreen,
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
@@ -327,6 +329,7 @@ export default defineComponent({
         this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {
+        toggleFullScreen: useFullScreen.toggle,
         async selectUrl(value: string | number) {
             // 新增，打开新增面板
             if (value === 'add') {
@@ -352,7 +355,7 @@ export default defineComponent({
             emitter.emit(MessageEventEnum.URL_UPDATE);
             // 选择链接后判断自动全屏
             if (useSettingStore().getAutoFullScreen) {
-                this.fullScreen = true;
+                useFullScreen.setFullScreen(true);
             }
 
         },
@@ -377,9 +380,6 @@ export default defineComponent({
         darkChange() {
             toggleDark();
             emitter.emit(MessageEventEnum.SYSTEM_THEME);
-        },
-        fullScreenSwitch() {
-            this.fullScreen = !this.fullScreen;
         },
         versionCommand(command: string) {
             switch (command) {

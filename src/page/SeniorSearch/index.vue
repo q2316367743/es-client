@@ -64,7 +64,6 @@ import {defineAsyncComponent, defineComponent, markRaw} from "vue";
 import {mapState} from "pinia";
 import {ElMessageBox, ElNotification} from "element-plus";
 import {FullScreen} from '@element-plus/icons-vue'
-import {useWindowSize} from "@vueuse/core";
 
 import './index.less';
 import {SeniorSearchItem, SeniorSearchItemBody} from './domain/SeniorSearchItem';
@@ -86,6 +85,7 @@ import {
     isDark,
     lodisStrategyContext,
     seniorSearchHistoryService,
+    useFullScreen,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
@@ -117,6 +117,7 @@ import TableIcon from "@/icon/TableIcon.vue";
 let startX = 0;
 let startWidth = 0;
 
+const rightWidth = 570;
 let minWidth = 120;
 let maxWidth = 0;
 
@@ -164,8 +165,8 @@ export default defineComponent({
             isDark,
             displayActive: 'result',
             width: 500,
-            windowSize: useWindowSize(),
-            loading: false
+            loading: false,
+            fullScreenStore: useFullScreen.fullScreen
         }
     },
     computed: {
@@ -209,16 +210,16 @@ export default defineComponent({
             }
             this.current = searchItem.body;
         },
-        windowSize: {
-            handler(newValue) {
-                let windowWidth = newValue.width;
-                let defaultWidth = Math.round(windowWidth * 0.3);
-                maxWidth = windowWidth - 550;
-                if (this.width < minWidth || this.width > maxWidth) {
-                    this.width = defaultWidth;
-                }
-            },
-            deep: true
+        fullScreenStore(newValue: boolean) {
+            let seniorSearchWidth = window.innerWidth - (newValue ? 66 : 200);
+            // 重新定义最大宽度
+            maxWidth = seniorSearchWidth - rightWidth;
+            let defaultWidth = Math.round(seniorSearchWidth * 0.3);
+            // 重新定义当前宽度
+            console.log(this.width, minWidth, maxWidth, seniorSearchWidth, rightWidth)
+            if (this.width < minWidth || this.width > maxWidth) {
+                this.width = defaultWidth;
+            }
         }
     },
     mounted() {
@@ -264,10 +265,23 @@ export default defineComponent({
             return Promise.resolve();
         });
 
+        let seniorSearch = document.getElementById('main')! as HTMLDivElement;
         // 初始化大小
-        let windowWidth = this.windowSize.width;
+        let windowWidth = seniorSearch.offsetWidth;
+        console.log(windowWidth)
         this.width = Math.round(windowWidth * 0.3);
-        maxWidth = windowWidth - 550;
+        maxWidth = windowWidth - rightWidth;
+
+        window.addEventListener('resize', () => {
+            let offsetWidth = seniorSearch.offsetWidth;
+            // 重新定义最大宽度
+            maxWidth = offsetWidth - rightWidth;
+            let defaultWidth = Math.round(offsetWidth * 0.3);
+            // 重新定义当前宽度
+            if (this.width < minWidth || this.width > maxWidth) {
+                this.width = defaultWidth;
+            }
+        })
 
 
         applicationLaunch.register(() => {

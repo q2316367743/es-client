@@ -23,6 +23,7 @@ import highlightJson from "highlight.js/lib/languages/json";
 
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
+import {ref} from "vue";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -69,6 +70,8 @@ export const useUrlSelectEvent = useEventBus<number>(EventBusEnum.URL_SELECT_EVE
 export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
 export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE);
 
+// 全局状态
+
 // es版本
 export const useEsVersion = createGlobalState(() => {
     let version = '';
@@ -83,6 +86,19 @@ export const useEsVersion = createGlobalState(() => {
 
     return {version, setVersion, getVersion};
 });
+export const useFullScreen = createGlobalState(() => {
+    let fullScreen = ref(false);
+
+    function toggle() {
+        fullScreen.value = !fullScreen.value;
+    }
+
+    function setFullScreen(value: boolean) {
+        fullScreen.value = value;
+    }
+
+    return {fullScreen, toggle, setFullScreen}
+})();
 
 // 代码高亮
 highlight.registerLanguage('json', highlightJson);
