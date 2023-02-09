@@ -24,6 +24,7 @@ import highlightJson from "highlight.js/lib/languages/json";
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
 import {ref} from "vue";
+import LoadingManager from "@/plugins/LoadingManager";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -39,6 +40,8 @@ export const httpStrategyContext = new HttpStrategyContext();
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
 
+// 加载管理器
+export const loadingManager = new LoadingManager();
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(
     lodisStrategyContext, storageStrategyContext, httpStrategyContext);

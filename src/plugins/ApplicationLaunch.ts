@@ -1,6 +1,5 @@
 import MessageUtil from "@/utils/MessageUtil";
-import {ElLoading} from "element-plus";
-import {versionManage} from "@/global/BeanFactory";
+import {loadingManager, versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
@@ -25,17 +24,15 @@ export default class ApplicationLaunch {
         this.lodisStrategyContext = lodisStrategyContext;
         this.storageStrategyContext = storageStrategyContext;
         this.httpStrategyContext = httpStrategyContext;
-        const loading = ElLoading.service({
-            lock: true,
-            text: '初始化组件中',
-            background: 'rgba(0, 0, 0, 0.7)',
-        });
+        loadingManager.start('初始化组件中')
         // 启动
         this.init().then(() => {
             this.ready = true;
-            this.execute(loading.setText)
+            this.execute((text) => {
+                loadingManager.setText(text);
+            })
                 .then(() => console.log("初始化任务执行完成"))
-                .finally(() => loading.close());
+                .finally(() => loadingManager.close());
         });
     }
 

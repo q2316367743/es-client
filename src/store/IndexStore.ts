@@ -1,10 +1,10 @@
 import IndexView from "@/view/index/IndexView";
 import {defineStore} from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
-import {ElLoading, ElNotification} from 'element-plus'
+import {ElNotification} from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
-import {useEsVersion} from "@/global/BeanFactory";
+import {loadingManager, useEsVersion} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import Field from "@/view/Field";
 
@@ -49,13 +49,9 @@ const useIndexStore = defineStore('index', {
                 return Promise.reject('链接不存在');
             }
             // 初始化时加载
-            const loading = ElLoading.service({
-                lock: true,
-                text: '准备索引信息中',
-                background: 'rgba(0, 0, 0, 0.7)',
-            });
+            loadingManager.start('准备索引信息中');
             try {
-                loading.setText('开始构建索引信息');
+                loadingManager.setText('开始构建索引信息');
                 // 获取索引信息
                 this.indices = await indexListBuild();
                 // 渲染map
@@ -97,7 +93,7 @@ const useIndexStore = defineStore('index', {
                 console.error(e);
                 return Promise.reject(e);
             } finally {
-                loading.close();
+                loadingManager.close();
             }
         },
         clear() {

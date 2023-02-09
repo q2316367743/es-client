@@ -151,7 +151,7 @@ import useSettingStore from "@/store/SettingStore";
 
 import {
     applicationLaunch,
-    baseSearchHistoryService,
+    baseSearchHistoryService, loadingManager,
     lodisStrategyContext,
     seniorSearchHistoryService,
     urlService
@@ -239,19 +239,15 @@ export default defineComponent({
             }
         },
         async backup(): Promise<void> {
-            const loading = ElLoading.service({
-                lock: true,
-                text: '开始准备数据',
-                background: 'rgba(0, 0, 0, 0.7)',
-            });
+            loadingManager.start('开始准备数据');
             try {
-                loading.setText('获取链接数据')
+                loadingManager.setText('获取链接数据')
                 let url = await urlService.list();
-                loading.setText('获取基础搜索历史');
+                loadingManager.setText('获取基础搜索历史');
                 let baseSearchHistory = await baseSearchHistoryService.list();
-                loading.setText('获取高级搜索历史');
+                loadingManager.setText('获取高级搜索历史');
                 let seniorSearchHistory = await seniorSearchHistoryService.list();
-                loading.setText('开始下载');
+                loadingManager.setText('开始下载');
                 BrowserUtil.download(JSON.stringify({
                     url, baseSearchHistory, seniorSearchHistory,
                     lodis: {
@@ -263,7 +259,7 @@ export default defineComponent({
             } catch (e: any) {
                 MessageUtil.error('下载失败', e);
             } finally {
-                loading.close();
+                loadingManager.close();
             }
             return Promise.resolve();
         }
