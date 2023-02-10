@@ -46,11 +46,11 @@
                     </template>
                 </el-dropdown>
                 <!-- 最小化 -->
-                <el-button class="menu-item" text link :icon="minusIcon"/>
+                <el-button class="menu-item" text link :icon="minusIcon" @click="toMin"/>
                 <!-- 最大化 -->
-                <el-button class="menu-item" text link :icon="fullScreenIcon"/>
+                <el-button class="menu-item" text link :icon="fullScreenIcon" @click="toMax"/>
                 <!-- 关闭 -->
-                <el-button class="menu-item" text link :icon="closeIcon"/>
+                <el-button class="menu-item" text link :icon="closeIcon" @click="toClose"/>
             </div>
         </header>
         <!-- 左侧菜单 -->
@@ -180,12 +180,15 @@ import {
     usePageJumpEvent,
     useUrlEditEvent,
     useUrlSelectEvent,
-    versionManage
+    versionManage, windowStrategyContext
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 let showHeightNotification = true;
 let showWidthNotification = true;
+
+const MIN_WIDTH = 1000;
+const MIN_HEIGHT = 800;
 
 export default defineComponent({
     components: {
@@ -370,7 +373,7 @@ export default defineComponent({
         },
         windowWarningNotification() {
             // 窗口警告通知
-            if (window.innerWidth < 1200 && window.innerHeight < 800) {
+            if (window.innerWidth < MIN_WIDTH && window.innerHeight < MIN_HEIGHT) {
                 if (showWidthNotification && showHeightNotification) {
                     ElNotification({
                         title: this.$t('common.message.warning'),
@@ -382,7 +385,7 @@ export default defineComponent({
                 }
             }
 
-            if (window.innerWidth < 1200) {
+            if (window.innerWidth < MIN_WIDTH) {
                 if (showWidthNotification) {
                     ElNotification({
                         title: this.$t('common.message.warning'),
@@ -394,7 +397,7 @@ export default defineComponent({
             } else {
                 showWidthNotification = true
             }
-            if (window.innerHeight < 800) {
+            if (window.innerHeight < MIN_HEIGHT) {
                 if (showHeightNotification) {
                     ElNotification({
                         title: this.$t('common.message.warning'),
@@ -406,7 +409,10 @@ export default defineComponent({
             } else {
                 showHeightNotification = true
             }
-        }
+        },
+        toMin: () => windowStrategyContext.getStrategy().min(),
+        toMax: () => windowStrategyContext.getStrategy().max(),
+        toClose: () => windowStrategyContext.getStrategy().close()
     },
 });
 </script>

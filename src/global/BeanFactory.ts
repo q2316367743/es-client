@@ -25,6 +25,7 @@ import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
 import {ref} from "vue";
 import LoadingManager from "@/plugins/LoadingManager";
+import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -39,6 +40,7 @@ export const httpStrategyContext = new HttpStrategyContext();
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
+export const windowStrategyContext = new WindowStrategyContext();
 
 // 加载管理器
 export const loadingManager = new LoadingManager();
