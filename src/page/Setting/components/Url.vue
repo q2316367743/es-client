@@ -16,7 +16,7 @@
             <vxe-column field="name" :title="$t('common.keyword.name')" width="180"></vxe-column>
             <vxe-column field="value" :title="$t('common.keyword.url')" width="250">
                 <template #default="{row}">
-                    <el-link :href="row.value" type="primary" target="_blank">{{ row.value }}</el-link>
+                    <el-link @click="open(row.value)" type="primary" target="_blank">{{ row.value }}</el-link>
                     <div class="url-copy" @click="execCopy(row.value)">{{ $t('common.operation.copy') }}</div>
                 </template>
             </vxe-column>
@@ -51,7 +51,7 @@ import Url from "@/entity/Url";
 // 组件
 import JsonDialog from "@/components/JsonDialog.vue";
 
-import {urlService, useUrlEditEvent} from "@/global/BeanFactory";
+import {nativeStrategyContext, urlService, useUrlEditEvent} from "@/global/BeanFactory";
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 
@@ -160,7 +160,10 @@ export default defineComponent({
                 useUrlEditEvent.emit();
             }
         },
-        execCopy: BrowserUtil.copy
+        execCopy: BrowserUtil.copy,
+        open(url: string) {
+            nativeStrategyContext.getStrategy().openLink(url);
+        }
     }
 });
 </script>

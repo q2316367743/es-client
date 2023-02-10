@@ -386,18 +386,6 @@
     "@tauri-apps/cli-win32-ia32-msvc" "1.2.2"
     "@tauri-apps/cli-win32-x64-msvc" "1.2.2"
 
-"@types/dot@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@types/dot/-/dot-1.1.5.tgz#f2ee97be41a9876fa70187457c506d7bdce5ee30"
-  integrity sha512-fguu7IaFdubwG18Y6GbjVM9yItNeQezVCvsXn/QFPe/+Vsbjpz+Rddi3Fg/YX11+xqeaB0sPSfP3ebLI4NNGGw==
-
-"@types/echarts@^4.9.16":
-  version "4.9.16"
-  resolved "https://r.cnpmjs.org/@types/echarts/-/echarts-4.9.16.tgz#7156aea4623f3543b083200f6c65e04d3693bcc8"
-  integrity sha512-bfiagfPw3dWauAIJ9fgoJQoL4hLWlGcltqwbE6LGye0NIY5xnbZau+mDmadCzGojic3MWuFDCUiO25kl4sRGeA==
-  dependencies:
-    "@types/zrender" "*"
-
 "@types/estree@^1.0.0":
   version "1.0.0"
   resolved "https://r.cnpmjs.org/@types/estree/-/estree-1.0.0.tgz#5fb2e536c1ae9bf35366eed879e827fa59ca41c2"
@@ -436,11 +424,6 @@
   integrity sha512-AWxcyKIXjJD/JXqrYwS6rOg30gTUpXEu98vr1MHEzAp4gLP6bYuhwVNoY+4d/z+wNYsGd4spX6DnjQCPCSwfJA==
   dependencies:
     x2js "*"
-
-"@types/zrender@*":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/zrender/-/zrender-4.0.2.tgz#da360c7ddb32311f11f38706c82fd88bcafdf661"
-  integrity sha512-Y/3hGzYeFdJUD4yWV0a+jkk3kIjtrbjzxwqkAWRjXLGm6lpL2tckg3vgopkn9KKPK1QyzwGH+JSDvzbKJO59+Q==
 
 "@vitejs/plugin-vue@^4.0.0":
   version "4.0.0"
@@ -797,19 +780,6 @@ dexie@^3.2.2:
   version "3.2.2"
   resolved "https://r.cnpmjs.org/dexie/-/dexie-3.2.2.tgz#fa6f2a3c0d6ed0766f8d97a03720056f88fe0e01"
   integrity sha512-q5dC3HPmir2DERlX+toCBbHQXW5MsyrFqPFcovkH9N2S/UW/H3H5AWAB6iEOExeraAu+j+zRDG+zg/D7YhH0qg==
-
-dot@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/dot/-/dot-1.1.3.tgz#351360e00a748bce9a1f8f27c00c394a7e4e1e9f"
-  integrity sha512-/nt74Rm+PcfnirXGEdhZleTwGC2LMnuKTeeTIlI82xb5loBBoXNYzr2ezCroPSMtilK8EZIfcNZwOcHN+ib1Lg==
-
-echarts@^5.4.1:
-  version "5.4.1"
-  resolved "https://r.cnpmjs.org/echarts/-/echarts-5.4.1.tgz#d7f65a584d78beff62568d878b16151b3381811c"
-  integrity sha512-9ltS3M2JB0w2EhcYjCdmtrJ+6haZcW6acBolMGIuf01Hql1yrIV01L1aRj7jsaaIULJslEP9Z3vKlEmnJaWJVQ==
-  dependencies:
-    tslib "2.3.0"
-    zrender "5.4.1"
 
 element-plus@^2.2.28:
   version "2.2.28"
@@ -1443,11 +1413,6 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-tslib@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
-  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
-
 tslib@^2.3.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
@@ -1650,10 +1615,3 @@ yargs@^17.5.1:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
-
-zrender@5.4.1:
-  version "5.4.1"
-  resolved "https://r.cnpmjs.org/zrender/-/zrender-5.4.1.tgz#892f864b885c71e1dc25dcb3c7a4ba42678d3f11"
-  integrity sha512-M4Z05BHWtajY2241EmMPHglDQAJ1UyHQcYsxDNzD9XLSkPDqMq4bB28v9Pb4mvHnVQ0GxyTklZ/69xCFP6RXBA==
-  dependencies:
-    tslib "2.3.0"

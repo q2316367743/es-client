@@ -2,12 +2,12 @@
     <div class="entry">
         <p>
             建议使用
-            <el-link target="_blank" :href="data.txc">兔小巢</el-link>
+            <el-link target="_blank" @click="open(data.txc)">兔小巢</el-link>
             进行建议反馈，无须登录即可留言。
         </p>
         <p>
             也可以使用
-            <el-link :href="data.feedback" target="_blank" type="primary">金山文档</el-link>
+            <el-link @click="open(data.feedback)" target="_blank" type="primary">金山文档</el-link>
             进行建议反馈，但需要登录WPS账号才能提交建议。
         </p>
         <p>
@@ -22,7 +22,7 @@
         <p>
             edge用户也可以在
             <el-link
-                :href="data.distributes.edge"
+                @click="open(data.distributes.edge)"
                 target="_blank" type="primary">edge插件商店
             </el-link>
             进行评论与打分。
@@ -30,7 +30,7 @@
         <p>
             firefox用户也可以在
             <el-link
-                :href="data.distributes.firefox"
+                @click="open(data.distributes.firefox)"
                 target="_blank" type="primary">firefox附加组件
             </el-link>
             进行评论与打分。
@@ -40,12 +40,18 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Constant from "@/global/Constant";
+import {nativeStrategyContext} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'feedback-module',
     data: () => ({
         data: Constant
-    })
+    }),
+    methods: {
+        open(url: string) {
+            nativeStrategyContext.getStrategy().openLink(url);
+        }
+    }
 });
 </script>
 <style scoped>

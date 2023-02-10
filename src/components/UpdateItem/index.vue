@@ -62,8 +62,10 @@ export default defineComponent({
                     };
             }
         },
-        open(url: string) {
-            nativeStrategyContext.getStrategy().openLink(url);
+        open(url?: string) {
+            if (url) {
+                nativeStrategyContext.getStrategy().openLink(url);
+            }
         }
     }
 });

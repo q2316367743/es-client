@@ -259,14 +259,13 @@ export default defineComponent({
             // 重新定义最大宽度
             let defaultWidth = Math.round(offsetWidth * 0.3);
             // 重新定义当前宽度
-            console.log(seniorSearch, this.width, windowWidth - 20)
             if (this.width < minWidth || window.innerWidth - 40 < seniorSearchSep.offsetLeft) {
                 this.width = defaultWidth;
             }
         });
 
         mitt.on(MessageEventEnum.URL_UPDATE, () => {
-            this.width = Math.round(windowWidth * 0.3);
+            this.width = Math.round(seniorSearch.offsetWidth * 0.3);
         });
 
 
@@ -278,7 +277,6 @@ export default defineComponent({
             if (startX > 0) {
                 let width = startWidth + e.clientX - startX;
                 let windowWidth = seniorSearchSep.offsetLeft;
-                console.log(width, minWidth, windowWidth, seniorSearch.offsetWidth)
                 if (width > minWidth && windowWidth <= seniorSearch.offsetWidth) {
                     this.width = width;
                 }
@@ -498,7 +496,7 @@ export default defineComponent({
             this.searchId = searchId;
         },
         openHelp() {
-            nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/sbycouc0q47lu9mz');
+            nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
         }
     },
 });

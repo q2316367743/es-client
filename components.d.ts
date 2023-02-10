@@ -47,7 +47,6 @@ declare module '@vue/runtime-core' {
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    ElUpload: typeof import('element-plus/es')['ElUpload']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
     JsonView: typeof import('./src/components/JsonView/index.vue')['default']
     Mit: typeof import('./src/components/License/Mit.vue')['default']
