@@ -9,26 +9,26 @@
         </p>
         <p>
             <span>使用中遇到任何问题，你可以先访问 </span>
-            <el-link target="_blank" :href="data.docUrl">用户手册</el-link>
+            <el-link target="_blank" @click="open(data.docUrl)">用户手册</el-link>
             <span> ，在用户手册里可以查看与功能或产品相关的使用说明以及一些常见问题。</span>
         </p>
         <p>
             <span>如果用户手册没有解决你的问题，或者对项目有什么建议，你可以发送 </span>
-            <el-link :href="data.txc" target="_blank" type="primary">反馈</el-link>
+            <el-link @click="open(data.txc)" target="_blank" type="primary">反馈</el-link>
             <span> 或者直接发送邮件到 </span>
-            <el-link :href="'mailto:' + data.email">{{ data.email }}</el-link>
+            <el-link @click="open('mailto:' + data.email)">{{ data.email }}</el-link>
             <span> 联系我。</span>
         </p>
         <p><span>如果这个项目让你有所收获，记得 </span>
             <b>Star</b>
             <span>（</span>
             <template v-for="(repository, index) in data.repositories">
-                <el-link target="_blank" :href="repository.url">{{ repository.name }}</el-link>
+                <el-link target="_blank" @click="open(repository.url)">{{ repository.name }}</el-link>
                 <span v-if="index < data.repositories.length - 1"> | </span>
             </template>
             <span>）关注哦，或者点个赞（</span>
             <template v-for="(url, name, index) in data.distributes">
-                <el-link target="_blank" :href="url">{{ name }}</el-link>
+                <el-link target="_blank" @click="open(url)">{{ name }}</el-link>
                 <span v-if="index < Object.keys(data.distributes).length - 1"> | </span>
             </template>
             <span>），这对我是非常不错的鼓励与支持。</span>
@@ -40,13 +40,13 @@
         <p>
             <span>仓库：</span>
             <template v-for="(repository, index) in data.repositories">
-                <el-link target="_blank" :href="repository.url">{{ repository.name }}</el-link>
+                <el-link target="_blank" @click="open(repository.url)">{{ repository.name }}</el-link>
                 <span v-if="index < data.repositories.length - 1"> | </span>
             </template>
         </p>
         <p>
             <span>用户手册：</span>
-            <el-link target="_blank" :href="data.docUrl">语雀</el-link>
+            <el-link target="_blank" @click="open(data.docUrl)">语雀</el-link>
         </p>
         <div class="title-2">建议反馈</div>
         <feedback-module/>
@@ -67,6 +67,7 @@ import {defineComponent} from "vue"
 import Constant from "@/global/Constant";
 import LicenseApache2_0 from "@/components/License/Apache2_0.vue";
 import FeedbackModule from '@/module/Feedback/index.vue';
+import {nativeStrategyContext} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: "setting-about",
@@ -74,7 +75,12 @@ export default defineComponent({
     data: () => ({
         data: Constant,
         licenseDialog: false,
-    })
+    }),
+    methods: {
+        open(url: string) {
+            nativeStrategyContext.getStrategy().openLink(url);
+        }
+    }
 });
 </script>
 

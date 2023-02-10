@@ -16,6 +16,9 @@ export default [
         }, {
             label: LogItemEnum.REPAIR,
             content: '链接更新异常'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: 'utools中链接点击无效'
         }]
     },
     {

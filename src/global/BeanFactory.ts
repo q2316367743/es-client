@@ -26,6 +26,7 @@ import Url from "@/entity/Url";
 import {ref} from "vue";
 import LoadingManager from "@/plugins/LoadingManager";
 import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
+import NativeStrategyContext from "@/strategy/NativeStrategy/NativeStrategyContext";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -41,6 +42,7 @@ export const httpStrategyContext = new HttpStrategyContext();
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
 export const windowStrategyContext = new WindowStrategyContext();
+export const nativeStrategyContext = new NativeStrategyContext();
 
 // 加载管理器
 export const loadingManager = new LoadingManager();

@@ -81,7 +81,7 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import {
     applicationLaunch,
     httpStrategyContext,
-    isDark,
+    isDark, nativeStrategyContext,
     seniorSearchHistoryService,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
@@ -498,7 +498,7 @@ export default defineComponent({
             this.searchId = searchId;
         },
         openHelp() {
-            window.open('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/sbycouc0q47lu9mz');
+            nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/sbycouc0q47lu9mz');
         }
     },
 });

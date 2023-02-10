@@ -8,18 +8,24 @@
                 </li>
             </ol>
             <li v-else>
-                <el-tag :type="renderTag(item.label).type" style="margin-left:5px;">{{ renderTag(item.label).name }}</el-tag>
+                <el-tag :type="renderTag(item.label).type" style="margin-left:5px;">{{
+                        renderTag(item.label).name
+                    }}
+                </el-tag>
                 <span style="margin-left:5px;">{{ item.content }}</span>
             </li>
         </template>
     </ol>
     <div v-if="log?.doc">
-        更多详细的更新信息与功能变化，请在<el-link target="_blank" :href="log?.doc">语雀</el-link>中查看
+        更多详细的更新信息与功能变化，请在
+        <el-link target="_blank" @click="open(log?.doc)">语雀</el-link>
+        中查看
     </div>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {Log, LogItemEnum} from "@/view/Data";
+import {nativeStrategyContext} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'update-item',
@@ -55,6 +61,9 @@ export default defineComponent({
                         type: ''
                     };
             }
+        },
+        open(url: string) {
+            nativeStrategyContext.getStrategy().openLink(url);
         }
     }
 });
