@@ -5,6 +5,9 @@ export default [
         version: '2.5.0',
         time: '2023-02-07',
         items: [{
+            label: LogItemEnum.UPDATE,
+            content: '界面改版，布局更加紧凑'
+        },{
             label: LogItemEnum.OPTIMIZATION,
             content: '高级查询勉强实现rest client功能'
         }, {

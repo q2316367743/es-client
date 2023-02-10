@@ -2,9 +2,7 @@ enum LocalStorageKeyEnum {
 
     SETTING = 'setting',
 
-    VERSION = 'es-client.version',
-
-    SENIOR_SEARCH_WIDTH = 'senior-search-width'
+    VERSION = 'es-client.version'
 
 }
 

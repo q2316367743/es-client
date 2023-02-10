@@ -1,5 +1,6 @@
 import WindowStrategy from "@/strategy/WindowStrategy/WindowStrategy";
 import MessageUtil from "@/utils/MessageUtil";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 export default class BrowserWindowStrategyImpl implements WindowStrategy {
 
@@ -8,29 +9,15 @@ export default class BrowserWindowStrategyImpl implements WindowStrategy {
     }
 
     max(): void {
-        if (this.isFullscreen()) {
-            this.exitFullscreen();
+        if (BrowserUtil.isFullscreen()) {
+            BrowserUtil.exitFullscreen();
         } else {
-            this.fullScreen();
+            BrowserUtil.fullScreen();
         }
     }
 
     min(): void {
         MessageUtil.warning('浏览器模式下无法隐藏');
-    }
-
-    private isFullscreen() {
-        const screen = window.screen
-        const body = document.body.getBoundingClientRect()
-        return screen.height === body.height && screen.width === body.width
-    }
-
-    private fullScreen() {
-        document.documentElement.requestFullscreen().then(() => console.log('进入全屏'));
-    }
-
-    private exitFullscreen() {
-        document.exitFullscreen().then(() => console.log('退出全屏'));
     }
 
     show(): { min: boolean; max: boolean; close: boolean } {

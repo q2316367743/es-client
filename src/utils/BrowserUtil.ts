@@ -57,5 +57,20 @@ export default {
         }
         return dataString
 
+    },
+
+
+    isFullscreen() {
+        const screen = window.screen
+        const body = document.body.getBoundingClientRect()
+        return screen.height === body.height && screen.width === body.width
+    },
+
+    fullScreen() {
+        document.documentElement.requestFullscreen().then(() => console.log('进入全屏'));
+    },
+
+    exitFullscreen() {
+        document.exitFullscreen().then(() => console.log('退出全屏'));
     }
 }

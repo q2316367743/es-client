@@ -77,15 +77,12 @@ import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 import {
     applicationLaunch,
     httpStrategyContext,
     isDark,
-    lodisStrategyContext,
     seniorSearchHistoryService,
-    useFullScreen,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
@@ -117,9 +114,7 @@ import TableIcon from "@/icon/TableIcon.vue";
 let startX = 0;
 let startWidth = 0;
 
-const rightWidth = 570;
 let minWidth = 120;
-let maxWidth = 0;
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -166,7 +161,6 @@ export default defineComponent({
             displayActive: 'result',
             width: 500,
             loading: false,
-            fullScreenStore: useFullScreen.fullScreen
         }
     },
     computed: {
@@ -210,16 +204,6 @@ export default defineComponent({
             }
             this.current = searchItem.body;
         },
-        fullScreenStore(newValue: boolean) {
-            let seniorSearchWidth = window.innerWidth - (newValue ? 66 : 200);
-            // 重新定义最大宽度
-            maxWidth = seniorSearchWidth - rightWidth;
-            let defaultWidth = Math.round(seniorSearchWidth * 0.3);
-            // 重新定义当前宽度
-            if (this.width < minWidth || this.width > maxWidth) {
-                this.width = defaultWidth;
-            }
-        }
     },
     mounted() {
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
@@ -258,42 +242,34 @@ export default defineComponent({
                 }
             });
         });
+
+        let seniorSearch = document.getElementById('container')! as HTMLDivElement;
+        let seniorSearchSep = this.$refs['seniorSearchSep'] as HTMLDivElement;
         applicationLaunch.register(() => {
             this.showTabs = useSettingStore().getShowTab
             this.view = useSettingStore().getDefaultViewer;
             return Promise.resolve();
         });
-
-        let seniorSearch = document.getElementById('main')! as HTMLDivElement;
         // 初始化大小
         let windowWidth = seniorSearch.offsetWidth;
         this.width = Math.round(windowWidth * 0.3);
-        maxWidth = windowWidth - rightWidth;
 
         window.addEventListener('resize', () => {
             let offsetWidth = seniorSearch.offsetWidth;
             // 重新定义最大宽度
-            maxWidth = offsetWidth - rightWidth;
             let defaultWidth = Math.round(offsetWidth * 0.3);
             // 重新定义当前宽度
-            if (this.width < minWidth || this.width > maxWidth) {
+            console.log(seniorSearch, this.width, windowWidth - 20)
+            if (this.width < minWidth || window.innerWidth - 40 < seniorSearchSep.offsetLeft) {
                 this.width = defaultWidth;
             }
-        })
+        });
 
-
-        applicationLaunch.register(() => {
-            let width = Optional.ofNullable(lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SENIOR_SEARCH_WIDTH))
-                .map(e => parseInt(e!))
-                .orElse(0);
-            if (width > minWidth && width < maxWidth) {
-                this.width = width;
-            }
-            return Promise.resolve();
+        mitt.on(MessageEventEnum.URL_UPDATE, () => {
+            this.width = Math.round(windowWidth * 0.3);
         });
 
 
-        let seniorSearchSep = this.$refs.seniorSearchSep as HTMLDivElement;
         seniorSearchSep.addEventListener('mousedown', (e: MouseEvent) => {
             startX = e.clientX
             startWidth = this.width;
@@ -301,9 +277,10 @@ export default defineComponent({
         window.addEventListener('mousemove', (e: MouseEvent) => {
             if (startX > 0) {
                 let width = startWidth + e.clientX - startX;
-                if (width > minWidth && width < maxWidth) {
+                let windowWidth = seniorSearchSep.offsetLeft;
+                console.log(width, minWidth, windowWidth, seniorSearch.offsetWidth)
+                if (width > minWidth && windowWidth <= seniorSearch.offsetWidth) {
                     this.width = width;
-                    lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SENIOR_SEARCH_WIDTH, width + '');
                 }
             }
         });
