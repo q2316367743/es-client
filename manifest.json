@@ -1,15 +1,32 @@
 {
 	"name": "es-client",
-	"package": "xyz.esion.xyz",
+	"options": null,
 	"author": "esion",
+	"open_source": 1,
+	"csv_url": "https://gitee.com/qiaoshengda/es-client",
+	"os_summary": "Apache-2.0",
 	"site": "https://blog.esion.xyz",
+	"package": "xyz.esion.xyz",
+	"preload": "",
+	"debug_url": "http://localhost:5173",
+	"url": "http://project.esion.xyz/es-client/index.html",
+	"logo": "file://D:\\Documents\\workspace\\es-client\\logo.png?t=1676020502680",
 	"summary": "功能上仿照elasticsearch head编写的elasticsearch查询客户端。 elasticsearch的客户端比较出名的就是elasticsearch head和Kibana了，但是elasticsearch head已经停止更新，且样式老旧，功能不全；而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+element-plus进行开发了一个elasticsearch的客户端。",
 	"type": "web",
-	"file_assign": [],
-	"url": "http://localhost:5173",
-	"preload": "",
-	"logo": "file://D:\\Documents\\workspace\\es-client\\public\\logo.png?t=1676003703026",
-	"theme_color": "#409EFF",
+	"auth": {
+		"base": {
+			"webSecure": true
+		},
+		"api": {
+			"enable": true,
+			"window": true,
+			"notification": true,
+			"cloudArchiving": true,
+			"deskWidget": true,
+			"widget": true
+		},
+		"ability": {}
+	},
 	"window": {
 		"defaultType": "window",
 		"frameWindow": {
@@ -36,18 +53,6 @@
 		},
 		"attach": {}
 	},
-	"auth": {
-		"base": {
-			"webSecure": true
-		},
-		"api": {
-			"enable": true,
-			"window": true,
-			"notification": true,
-			"cloudArchiving": true,
-			"deskWidget": true,
-			"widget": true
-		},
-		"ability": {}
-	}
+	"theme_color": "#409EFF",
+	"file_assign": ""
 }
