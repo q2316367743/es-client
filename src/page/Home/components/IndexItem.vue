@@ -2,7 +2,7 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title">
-            <el-link :type="indexStateTitle" @click="indexInfo">{{ index?.name }}</el-link>
+            <a-link :type="indexStateTitle" @click="indexInfo">{{ index?.name }}</a-link>
             <div class="url-copy" @click="execCopy(index?.name)">复制</div>
         </div>
         <!-- 详细 -->
@@ -12,38 +12,47 @@
         </div>
         <!-- 操作 -->
         <div class="option">
-            <el-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
-                <el-button link type="primary" :icon="searchIcon" @click="jumpToBaseSearch"/>
-            </el-tooltip>
-            <el-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
-                <el-button link :type="indexStateBtn" :icon="switchButtonIcon" @click="indexOperation"/>
-            </el-tooltip>
-            <el-tooltip :effect="theme" content="删除索引" placement="bottom">
-                <el-button link type="danger" :icon="deleteIcon" @click="removeIndex"/>
-            </el-tooltip>
+            <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
+                <a-button link type="text" @click="jumpToBaseSearch">
+                    <template #icon>
+                        <icon-search/>
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
+                <a-button link type="text" :status="indexStateBtn" @click="indexOperation">
+                    <template #icon>
+                        <icon-pause v-if="indexStateBtn === 'danger'"/>
+                        <icon-play-arrow v-else/>
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip :effect="theme" content="删除索引" placement="bottom">
+                <a-button link type="text" @click="removeIndex">
+                    <template #icon>
+                        <icon-delete/>
+                    </template>
+                </a-button>
+            </a-tooltip>
         </div>
         <!-- 别名 -->
         <div class="alias">
-            <el-tag
+            <a-tag
                 v-for="(item, idx) in index?.alias"
                 :key="idx"
                 closable
                 style="margin-right: 5px"
                 @close="removeAlias(item)"
             >{{ item }}
-            </el-tag>
-            <el-button size="small" @click="newAlias">新增</el-button>
+            </a-tag>
+            <a-button size="small" @click="newAlias">新增</a-button>
         </div>
         <!-- 拓展面板按钮 -->
         <div class="expand-btn">
-            <el-button link type="primary" @click="showExpand = !showExpand">
-                <el-icon v-if="showExpand">
-                    <arrow-up></arrow-up>
-                </el-icon>
-                <el-icon v-else>
-                    <ArrowDown></ArrowDown>
-                </el-icon>
-            </el-button>
+            <a-button type="text" @click="showExpand = !showExpand">
+                <icon-up v-if="showExpand"/>
+                <icon-down v-else/>
+            </a-button>
         </div>
         <!-- 拓展面板 -->
         <div class="expand" v-if="showExpand">
@@ -69,9 +78,7 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw, PropType} from "vue";
-import {ArrowDown, ArrowUp, Delete, Search, SwitchButton} from '@element-plus/icons-vue';
-import {ElMessageBox} from "element-plus";
+import {defineComponent, PropType} from "vue";
 
 import IndexApi from '@/api/IndexApi'
 
@@ -88,10 +95,10 @@ import IndexItemView from "@/view/IndexItemView";
 import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
 import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default defineComponent({
     name: 'IndexItem',
-    components: {ArrowDown, ArrowUp},
     props: {
         index: Object as PropType<IndexItemView>
     },
@@ -101,19 +108,15 @@ export default defineComponent({
         showExpand: false,
         open: true,
         isDark,
-        // 图标
-        deleteIcon: markRaw(Delete),
-        switchButtonIcon: markRaw(SwitchButton),
-        searchIcon: markRaw(Search)
     }),
     computed: {
-        indexStateBtn(): 'danger' | 'success' | 'info' {
+        indexStateBtn(): 'danger' | 'success' | 'normal' {
             if (this.index?.state === 'open') {
                 return 'danger';
             } else if (this.index?.state === 'close') {
                 return 'success';
             } else {
-                return 'info'
+                return 'normal'
             }
         },
 
@@ -148,27 +151,25 @@ export default defineComponent({
             this.$emit('openManage', this.index?.name);
         },
         newAlias() {
-            ElMessageBox.prompt("请输入新别名", "提示", {
+            MessageBoxUtil.prompt("请输入新别名", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-            }).then(({value}) => IndexApi(this.index?.name!).newAlias(value)
+            }).then((value) => IndexApi(this.index?.name!).newAlias(value)
                 .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('新建别名错误', e)));
         },
         removeAlias(alias: string) {
-            ElMessageBox.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
+            MessageBoxUtil.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-                type: "warning",
             }).then(() => IndexApi(this.index?.name!).removeAlias(alias)
                 .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('删除别名错误', e)));
         },
         removeIndex() {
-            ElMessageBox.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
+            MessageBoxUtil.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
                 confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
+                cancelButtonText: "取消"
             }).then(() => IndexApi(this.index?.name!).delete()
                 .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('索引删除错误', e)));
@@ -225,7 +226,7 @@ export default defineComponent({
     .title {
         display: flex;
 
-        .el-link {
+        .arco-link {
             font-size: 24px;
             font-weight: bold;
         }

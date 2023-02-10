@@ -9,98 +9,96 @@
         </transition>
         <transition name="el-zoom-in-top">
             <!-- 主要显示区域 -->
-            <div class="base-search-main" v-loading="loading" :element-loading-text="$t('common.loading.search')"
-                 :class="showTabs ? '' : 'full-screen'">
-                <!-- 顶部菜单栏 -->
-                <div class="base-option">
-                    <div class="left">
-                        <el-select-v2 v-model="current.index" filterable :options="indices"
-                                      :placeholder="$t('baseSearch.placeholder.selectIndex')" clearable
-                                      style="width: 260px;">
-                            <template #default="{ item }">
-                                <div style="font-size: var(--el-font-size-base);">{{ item.name }}</div>
-                            </template>
-                        </el-select-v2>
-                        <!-- 搜索 -->
-                        <el-button type="success" style="margin-left: 12px" @click="search">{{
-                                $t('common.operation.search')
-                            }}
-                        </el-button>
-                        <!-- 清空 -->
-                        <el-button type="danger" @click="clear(true)">{{
-                                $t('common.operation.clear')
-                            }}
-                        </el-button>
-                        <el-button @click="historyDialog = true">{{ $t('common.operation.history') }}</el-button>
+            <a-spin :loading="loading" :tip="$t('common.loading.search')">
+                <div class="base-search-main" :class="showTabs ? '' : 'full-screen'">
+                    <!-- 顶部菜单栏 -->
+                    <div class="base-option">
+                        <div class="left">
+                            <a-auto-complete filterable :data="indices" v-model="current.index" style="width: 260px;"
+                                             clearable :placeholder="$t('baseSearch.placeholder.selectIndex')">
+                                <template #default="{ item }">
+                                    <div>{{ item.name }}</div>
+                                </template>
+                            </a-auto-complete>
+                            <!-- 搜索 -->
+                            <a-button type="primary" status="success" style="margin-left: 12px" @click="search">{{
+                                    $t('common.operation.search')
+                                }}
+                            </a-button>
+                            <!-- 清空 -->
+                            <a-button type="primary" status="danger" @click="clear(true)">{{
+                                    $t('common.operation.clear')
+                                }}
+                            </a-button>
+                            <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
+                        </div>
+                        <div class="right">
+                            <a-select v-model="view" style="width: 120px;">
+                                <a-option :label="$t('common.keyword.jsonView')" :value="2"></a-option>
+                                <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
+                            </a-select>
+                            <a-button type="secondary" style="margin-left: 12px;" @click="showTabs = !showTabs">
+                                <template #icon>
+                                    <icon-fullscreen/>
+                                </template>
+                            </a-button>
+                        </div>
                     </div>
-                    <div class="right">
-                        <el-select v-model="view" style="width: 120px;">
-                            <el-option :label="$t('common.keyword.jsonView')" :value="2"></el-option>
-                            <el-option :label="$t('common.keyword.tableView')" :value="3"></el-option>
-                        </el-select>
-                        <el-button type="info" :icon="fullScreenIcon" style="margin-left: 12px;"
-                                   @click="showTabs = !showTabs"/>
+                    <!-- 核心查询区 -->
+                    <div class="base-display">
+                        <a-scrollbar @scroll="onScroll" ref="baseDisplay">
+                            <!-- 查询条件 -->
+                            <div class="base-condition" ref="baseCondition"
+                                 :class="paginationFixed ? 'pagination-fixed-show' : ''">
+                                <a-form :model="current" layout="vertical" label-width="80px" style="overflow: auto">
+                                    <!-- 条件 -->
+                                    <a-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
+                                        <field-condition-container v-model="current.conditions" :fields="fields"/>
+                                    </a-form-item>
+                                    <!-- 排序 -->
+                                    <a-form-item :label="$t('baseSearch.form.order')">
+                                        <field-order-container v-model="current.orders" :fields="fields"/>
+                                    </a-form-item>
+                                    <div ref="pagination">
+                                        <a-pagination :total="current.total" :page-size="size" show-total show-jumper
+                                                      show-page-size/>
+                                    </div>
+                                </a-form>
+                            </div>
+                            <!-- 查询结果 -->
+                            <div class="base-content" ref="baseContent">
+                                <data-view :view="view" :result="current.result"/>
+                            </div>
+                        </a-scrollbar>
+                        <a-back-top target-container=".base-display .el-scrollbar__wrap" v-show="showTop"/>
+                        <div class="pagination-fixed-none" :class="paginationFixed ? 'pagination-fixed-show' : ''">
+                            <a-pagination :total="current.total" :page-size="size" show-total show-jumper
+                                          show-page-size/>
+                        </div>
+                        <div class="base-search-condition-sentence">
+                            <a-button type="text" @click="showBody">
+                                {{ $t('baseSearch.form.displayQueryStatement') }}
+                            </a-button>
+                            <a-button type="text" @click="jumpToSeniorSearch">
+                                {{ $t('common.action.jumpToSeniorSearch') }}
+                            </a-button>
+                        </div>
                     </div>
                 </div>
-                <!-- 核心查询区 -->
-                <div class="base-display">
-                    <el-scrollbar @scroll="onScroll" ref="baseDisplay">
-                        <!-- 查询条件 -->
-                        <div class="base-condition" ref="baseCondition"
-                             :class="paginationFixed ? 'pagination-fixed-show' : ''">
-                            <el-form label-position="top" label-width="80px" style="overflow: auto">
-                                <!-- 条件 -->
-                                <el-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
-                                    <field-condition-container v-model="current.conditions" :fields="fields"/>
-                                </el-form-item>
-                                <!-- 排序 -->
-                                <el-form-item :label="$t('baseSearch.form.order')">
-                                    <field-order-container v-model="current.orders" :fields="fields"/>
-                                </el-form-item>
-                                <div ref="pagination">
-                                    <el-pagination background layout="total, sizes, prev, pager, next, jumper"
-                                                   :total="current.total"
-                                                   v-model:current-page="page"
-                                                   v-model:page-size="size"></el-pagination>
-                                </div>
-                            </el-form>
-                        </div>
-                        <!-- 查询结果 -->
-                        <div class="base-content" ref="baseContent">
-                            <data-view :view="view" :result="current.result"/>
-                        </div>
-                    </el-scrollbar>
-                    <el-backtop :right="40" :bottom="60" target=".base-display .el-scrollbar__wrap" v-show="showTop"/>
-                    <div class="pagination-fixed-none" :class="paginationFixed ? 'pagination-fixed-show' : ''">
-                            <el-pagination background layout="total, sizes, prev, pager, next, jumper"
-                                           :total="current.total"
-                                           v-model:current-page="page"
-                                           v-model:page-size="size"/>
-                    </div>
-                    <div class="base-search-condition-sentence">
-                        <el-button link type="primary" @click="showBody">
-                            {{ $t('baseSearch.form.displayQueryStatement') }}
-                        </el-button>
-                        <el-button link type="primary" @click="jumpToSeniorSearch">
-                            {{ $t('common.action.jumpToSeniorSearch') }}
-                        </el-button>
-                    </div>
-                </div>
-            </div>
+            </a-spin>
         </transition>
-        <el-dialog :title="$t('baseSearch.dialog.statement')" v-model="condition.dialog" width="70%" append-to-body
-                   class="es-dialog" :close-on-click-modal="false">
+        <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
+                 append-to-body
+                 class="es-dialog" :close-on-click-modal="false">
             <json-view :data="condition.data"/>
-        </el-dialog>
+        </a-modal>
         <bsh-manage v-model="historyDialog"/>
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, markRaw, toRaw} from "vue";
-import {ElMessageBox} from "element-plus";
+import {defineComponent, toRaw} from "vue";
 import {mapState} from "pinia";
-import {Bottom, FullScreen} from "@element-plus/icons-vue";
 
 import TableViewer from "@/components/TableViewer/index.vue"
 import DataView from "@/components/DataView/index.vue";
@@ -141,6 +139,7 @@ import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import useUrlStore from "@/store/UrlStore";
 import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 interface Name {
     name: string;
@@ -212,10 +211,6 @@ export default defineComponent({
                 data: {}
             },
             historyDialog: false,
-
-            // 图标
-            fullScreenIcon: markRaw(FullScreen),
-            bottomIcon: markRaw(Bottom),
 
             // 视图
             view: useSettingStore().getDefaultViewer,
@@ -378,7 +373,7 @@ export default defineComponent({
         },
         search() {
             if (this.current.index.length === 0) {
-                ElMessageBox.alert(this.$t('baseSearch.placeholder.selectIndex'));
+                MessageBoxUtil.alert(this.$t('baseSearch.placeholder.selectIndex'));
                 return;
             }
             this.loading = true;
@@ -480,13 +475,13 @@ export default defineComponent({
                     this.searchMap.clear();
                     break;
                 case 'rename':
-                    ElMessageBox.prompt("请输入新的标签名字", "修改标签名", {
+                    MessageBoxUtil.prompt("请输入新的标签名字", "修改标签名", {
                         confirmButtonText: '修改',
                         cancelButtonText: '取消',
                         inputValue: strings[2],
                         inputPattern: /.+/,
                         inputErrorMessage: '必须输入标签名'
-                    }).then(({value}) => {
+                    }).then((value) => {
                         let searchItem = this.searchMap.get(id);
                         if (searchItem) {
                             searchItem.header.name = value;

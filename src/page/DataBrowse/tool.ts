@@ -1,8 +1,8 @@
 import {VxeTableDefines, VxeTablePropTypes} from "vxe-table";
-import {Action, ElMessageBox} from "element-plus";
 import IndexView from "@/view/index/IndexView";
 import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default {
     renderMenu(): VxeTablePropTypes.MenuConfig {
@@ -74,12 +74,9 @@ export default {
             return;
         }
         return new Promise<void>((resolve, reject) => {
-            ElMessageBox.confirm("确定要删除这些索引，删除后将无法恢复！", "警告", {
+            MessageBoxUtil.confirm("确定要删除这些索引，删除后将无法恢复！", "警告", {
                 confirmButtonText: '删除',
-                cancelButtonText: '跳转到高级搜索',
-                type: 'warning',
-                draggable: true,
-                distinguishCancelAndClose: true
+                cancelButtonText: '跳转到高级搜索'
             }).then(() => {
                 let ids = new Array<string>();
                 deleteRowIndies.forEach(id => ids.push(id));
@@ -97,7 +94,7 @@ export default {
                     }
                 }).then(() => MessageUtil.success('删除成功', resolve))
                     .catch(e => MessageUtil.error('删除失败', e));
-            }).catch((action: Action) => {
+            }).catch((action) => {
                 if (action === 'cancel') {
                     // 跳转到高级查询
                     reject();
@@ -128,13 +125,13 @@ export default {
                 executeQuery();
                 break;
             case "6":
-                ElMessageBox.prompt('请输入自定义分页大小', '自定义分页', {
+                MessageBoxUtil.prompt('请输入自定义分页大小', '自定义分页', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputPattern: /\d+/,
                     inputErrorMessage: '请输入正确的数字',
                 })
-                    .then(({value}) => {
+                    .then((value) => {
                         callback(1, parseInt(value));
                         executeQuery();
                     })

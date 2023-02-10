@@ -2,19 +2,24 @@
     <div class="temp-record">
         <div class="temp-record-head">
             <div>
-                <el-input v-model="index" style="width: 200px;" placeholder="索引" @input="loadData" clearable/>
+                <a-input v-model="index" style="width: 200px;" placeholder="索引" @input="loadData" clearable/>
             </div>
             <div>
-                <el-button type="danger" :icon="deleteIcon" @click="reset">清空</el-button>
+                <a-button type="danger" @click="reset">
+                    <template #icon>
+                        <icon-delete/>
+                    </template>
+                    清空
+                </a-button>
             </div>
         </div>
         <div class="temp-record-body">
-            <el-scrollbar>
+            <a-scrollbar>
                 <vxe-table :row-config="{isHover: true}" ref="tempRecordTable">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"/>
                     <vxe-column field="index" :title="$t('common.keyword.index')" width="250">
                         <template #default="{row}">
-                            <el-link type="primary" target="_blank">{{ row.index }}</el-link>
+                            <a-link type="primary" target="_blank">{{ row.index }}</a-link>
                             <div class="url-copy" @click="execCopy(row.link)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
@@ -25,26 +30,24 @@
                     </vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="270">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">{{
+                            <a-button type="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
                                 }}
-                            </el-button>
-                            <el-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
-                            </el-button>
-                            <el-button type="danger" size="small" @click="removeById(row.id)">
+                            </a-button>
+                            <a-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
+                            </a-button>
+                            <a-button type="danger" size="small" @click="removeById(row.id)">
                                 {{ $t('common.operation.delete') }}
-                            </el-button>
+                            </a-button>
                         </template>
                     </vxe-column>
                 </vxe-table>
-            </el-scrollbar>
+            </a-scrollbar>
         </div>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw, toRaw} from "vue";
-import {ElMessageBox} from "element-plus";
-import {Delete} from "@element-plus/icons-vue";
+import {defineComponent, toRaw} from "vue";
 import {VxeTableInstance} from "vxe-table";
 
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
@@ -59,13 +62,13 @@ import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import XEUtils from "xe-utils";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default defineComponent({
     name: 'bsh-temp-record',
     emits: ['load'],
     data: () => ({
-        index: '',
-        deleteIcon: markRaw(Delete)
+        index: ''
     }),
     computed: {
         ...mapState(useBaseTempRecordStore, ['tempRecords']),
@@ -119,12 +122,12 @@ export default defineComponent({
         },
         appendToHistory(history: BaseSearchHistory) {
             // 输入名字
-            ElMessageBox.prompt('请为此次查询命名', '新增历史记录', {
+            MessageBoxUtil.prompt('请为此次查询命名', '新增历史记录', {
                 confirmButtonText: '新增',
                 cancelButtonText: '取消',
                 inputPattern: /.+/,
                 inputErrorMessage: '名称为必填'
-            }).then(({value}) => {
+            }).then((value) => {
                 baseSearchHistoryService.save({
                     name: value,
                     index: history.index,

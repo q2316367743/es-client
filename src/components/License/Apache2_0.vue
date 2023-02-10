@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar>
+    <a-scrollbar>
             <pre>
                 <code>
                                  Apache License
@@ -206,7 +206,7 @@
 
                 </code>
             </pre>
-    </el-scrollbar>
+    </a-scrollbar>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";

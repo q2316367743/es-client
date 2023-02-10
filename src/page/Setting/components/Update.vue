@@ -1,16 +1,13 @@
 <template>
-    <el-timeline style="margin-top: 10px;">
-        <el-timeline-item :timestamp="log.time" placement="top" v-for="log in data.logs">
-            <el-card shadow="hover">
-                <template #header>
-                    <div style="font-size: 24px;font-weight: bold;">{{ log.version }}</div>
-                </template>
+    <a-timeline style="margin-top: 10px;" label-position="relative">
+        <a-timeline-item :label="log.time" placement="top" v-for="log in data.logs">
+            <a-card shadow="hover" :title="log.version">
                 <div class="entry">
                     <update-item :log="log"/>
                 </div>
-            </el-card>
-        </el-timeline-item>
-    </el-timeline>
+            </a-card>
+        </a-timeline-item>
+    </a-timeline>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

@@ -1,10 +1,10 @@
 <template>
-    <el-tooltip :content="tooltip" placement="right"
+    <a-tooltip :content="tooltip" placement="right"
                 :effect="isDark ? 'dark' : 'light'">
-        <el-icon :size="16" :class="className" @click="click">
+        <a-icon :size="16" :class="className" @click="click">
             <slot/>
-        </el-icon>
-    </el-tooltip>
+        </a-icon>
+    </a-tooltip>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

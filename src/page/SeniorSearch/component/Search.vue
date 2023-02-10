@@ -27,7 +27,7 @@
         <vxe-column field="link" width="150" title="请求连接" show-overflow="ellipsis"></vxe-column>
         <vxe-column width="250" title="操作">
             <template #default="{ row }">
-                <el-button type="primary" @click="load(row)">载入</el-button>
+                <a-button type="primary" @click="load(row)">载入</a-button>
             </template>
         </vxe-column>
     </vxe-table>

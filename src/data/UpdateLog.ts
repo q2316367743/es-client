@@ -3,13 +3,13 @@ import {Log, LogItemEnum} from "@/view/Data";
 export default [
     {
         version: '2.5.0',
-        time: '2023-02-07',
+        time: '2023-02-10',
         items: [{
-            label: LogItemEnum.UPDATE,
-            content: '界面改版，布局更加紧凑'
-        },{
             label: LogItemEnum.OPTIMIZATION,
             content: '高级查询勉强实现rest client功能'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '界面改版，布局更加紧凑'
         }, {
             label: LogItemEnum.UPDATE,
             content: '删除同步功能，在设置 => 其他设置中可以下载备份数据'

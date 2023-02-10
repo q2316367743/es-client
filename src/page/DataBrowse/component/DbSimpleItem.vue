@@ -1,9 +1,9 @@
 <template>
-    <el-tooltip :content="tip" placement="bottom" :effect="isDark ? 'dark' : 'light'">
+    <a-tooltip :content="tip" placement="bottom" :effect="isDark ? 'dark' : 'light'">
         <div class="item" :class="disable ? 'disable' : ''" @click="click">
             <slot/>
         </div>
-    </el-tooltip>
+    </a-tooltip>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

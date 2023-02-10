@@ -7,8 +7,8 @@
             <vxe-column type="expand" width="80">
                 <template #content="{ row, rowIndex }">
                     <div class="data-browse-expand">
-                        <json-view :data="row._source" />
-                        <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
+                        <json-view :data="row._source"/>
+                        <a-button type="primary" text link class="copy" @click="copy(row._source)">复制</a-button>
                     </div>
                 </template>
             </vxe-column>
@@ -30,7 +30,6 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import {ZoomIn} from "@element-plus/icons-vue";
 import {VxeColumnPropTypes, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import XEUtils from "xe-utils";
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -49,7 +48,7 @@ export default defineComponent({
     props: {
         data: Object as PropType<any>
     },
-    components: {JsonView, ZoomIn},
+    components: {JsonView},
 
     data: () => {
         let now = new Date().getTime();

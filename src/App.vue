@@ -1,128 +1,135 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <el-config-provider :locale="locale">
-        <header id="header">
-            <div class="left">
-                <div class="logo">{{ $t('app.name') }}</div>
-                <div class="full-screen" @click="toggleFullScreen">
-                    <el-icon :size="20">
-                        <expand v-if="fullScreen"/>
-                        <fold v-else/>
-                    </el-icon>
+    <a-spin :loading="loading" :tip="text">
+        <a-config-provider :locale="locale" size="medium">
+            <header id="header">
+                <div class="left">
+                    <div class="logo">{{ $t('app.name') }}</div>
+                    <div class="full-screen" @click="toggleFullScreen">
+                        <icon-menu-unfold v-if="fullScreen"/>
+                        <icon-menu-fold v-else/>
+                    </div>
+                    <!-- 索引服务器选择 -->
+                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small"
+                              allow-clear @change="selectUrl" class="url-select">
+                        <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                        <a-option :label="$t('common.operation.add')" value="add"/>
+                    </a-select>
+                    <!-- 刷新按钮 -->
+                    <a-button class="refresh" @click="refresh">{{ $t('common.operation.refresh') }}</a-button>
                 </div>
-                <!-- 索引服务器选择 -->
-                <el-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')"
-                           clearable @change="selectUrl" class="url-select">
-                    <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
-                    <el-option :label="$t('common.operation.add')" value="add"/>
-                </el-select>
-                <!-- 刷新按钮 -->
-                <el-button class="refresh" @click="refresh">{{ $t('common.operation.refresh') }}</el-button>
-            </div>
-            <div class="right">
-                <!-- 各种信息弹框 -->
-                <div class="menu-item">
-                    <info/>
-                </div>
-                <!-- 主题切换 -->
-                <el-button class="menu-item" text link @click="darkChange">
-                    <el-icon :size="24">
-                        <moon-icon v-if="isDark"/>
-                        <sun-icon v-else/>
-                    </el-icon>
-                </el-button>
-                <!-- 多语言切换 -->
-                <el-dropdown @command="languageCommand" trigger="click">
-                    <el-button class="menu-item" text link>
-                        <el-icon :size="20">
-                            <translate/>
-                        </el-icon>
-                    </el-button>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item command="zhCn">中文</el-dropdown-item>
-                            <el-dropdown-item command="enUs">English</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-                <!-- 最小化 -->
-                <el-button class="menu-item" text link :disabled="!optionShow.min" :icon="minusIcon" @click="toMin"/>
-                <!-- 最大化 -->
-                <el-button class="menu-item" text link :disabled="!optionShow.max" :icon="fullScreenIcon"
-                           @click="toMax"/>
-                <!-- 关闭 -->
-                <el-button class="menu-item" text link :disabled="!optionShow.close" :icon="closeIcon"
-                           @click="toClose"/>
-            </div>
-        </header>
-        <!-- 左侧菜单 -->
-        <div id="main">
-            <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
-                <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
-                     @click="selectMenu(PageNameEnum.HOME)">
-                    <span v-if="fullScreen"><el-icon><data-line/></el-icon></span>
-                    <span v-else>{{ $t('menu.home') }}</span>
-                </div>
-                <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
-                     @click="selectMenu(PageNameEnum.DATA_BROWSER)">
-                    <span v-if="fullScreen"><el-icon><Tickets/></el-icon></span>
-                    <span v-else>{{ $t('menu.dataBrowser') }}</span>
-                </div>
-                <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
-                     @click="selectMenu(PageNameEnum.BASE_SEARCH)">
-                    <span v-if="fullScreen"><el-icon><search/></el-icon></span>
-                    <span v-else>{{ $t('menu.baseSearch') }}</span>
-                </div>
-                <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
-                     @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
-                    <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
-                    <span v-else>{{ $t('menu.seniorSearch') }}</span>
-                </div>
-                <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
-                     @click="selectMenu( PageNameEnum.SETTING)">
-                    <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
-                    <span v-else>{{ $t('menu.setting') }}</span>
-                </div>
-                <div class="version">
-                    <el-dropdown @command="versionCommand">
-                        <el-link>v{{ Constant.version }}</el-link>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item command="feedback">{{ $t('app.feedback') }}</el-dropdown-item>
-                                <el-dropdown-item command="log">{{ $t('app.updateRecord') }}</el-dropdown-item>
-                                <el-dropdown-item command="about">{{ $t('app.about') }}</el-dropdown-item>
-                            </el-dropdown-menu>
+                <div class="right">
+                    <!-- 各种信息弹框 -->
+                    <div class="menu-item">
+                        <info/>
+                    </div>
+                    <!-- 主题切换 -->
+                    <a-button class="menu-item" text link @click="darkChange">
+                        <icon-moon v-if="isDark"/>
+                        <icon-sun v-else/>
+                    </a-button>
+                    <!-- 多语言切换 -->
+                    <a-dropdown @select="languageCommand" trigger="click">
+                        <a-button class="menu-item" text link>
+                            <icon-language/>
+                        </a-button>
+                        <template #content>
+                            <a-doption value="zhCn">中文</a-doption>
+                            <a-doption value="enUs">English</a-doption>
                         </template>
-                    </el-dropdown>
+                    </a-dropdown>
+                    <!-- 最小化 -->
+                    <a-button class="menu-item" text link :disabled="!optionShow.min"
+                              @click="toMin">
+                        <template #icon>
+                            <icon-minus/>
+                        </template>
+                    </a-button>
+                    <!-- 最大化 -->
+                    <a-button class="menu-item" text link :disabled="!optionShow.max"
+                              @click="toMax">
+                        <template #icon>
+                            <icon-copy/>
+                        </template>
+                    </a-button>
+                    <!-- 关闭 -->
+                    <a-button class="menu-item" text link :disabled="!optionShow.close"
+                              @click="toClose">
+                        <template #icon>
+                            <icon-close/>
+                        </template>
+                    </a-button>
+                </div>
+            </header>
+            <!-- 左侧菜单 -->
+            <div id="main">
+                <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
+                    <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
+                         @click="selectMenu(PageNameEnum.HOME)">
+                        <span v-if="fullScreen"><icon-dashboard/></span>
+                        <span v-else>{{ $t('menu.home') }}</span>
+                    </div>
+                    <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
+                         @click="selectMenu(PageNameEnum.DATA_BROWSER)">
+                        <span v-if="fullScreen"><icon-apps/></span>
+                        <span v-else>{{ $t('menu.dataBrowser') }}</span>
+                    </div>
+                    <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
+                         @click="selectMenu(PageNameEnum.BASE_SEARCH)">
+                        <span v-if="fullScreen"><icon-search/></span>
+                        <span v-else>{{ $t('menu.baseSearch') }}</span>
+                    </div>
+                    <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
+                         @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
+                        <span v-if="fullScreen"><icon-filter/></span>
+                        <span v-else>{{ $t('menu.seniorSearch') }}</span>
+                    </div>
+                    <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
+                         @click="selectMenu( PageNameEnum.SETTING)">
+                        <span v-if="fullScreen"><icon-settings/></span>
+                        <span v-else>{{ $t('menu.setting') }}</span>
+                    </div>
+                    <div class="version">
+                        <a-dropdown @command="versionCommand">
+                            <a-link>v{{ Constant.version }}</a-link>
+                            <template #dropdown>
+                                <a-doption>
+                                    <a-doption command="feedback">{{ $t('app.feedback') }}</a-doption>
+                                    <a-doption command="log">{{ $t('app.updateRecord') }}</a-doption>
+                                    <a-doption command="about">{{ $t('app.about') }}</a-doption>
+                                </a-doption>
+                            </template>
+                        </a-dropdown>
+                    </div>
+                </div>
+                <!-- 内容-->
+                <div id="container" :class="fullScreen ? 'full-screen' : ''">
+                    <home v-show="active === PageNameEnum.HOME"></home>
+                    <data-browse v-show="active === PageNameEnum.DATA_BROWSER"></data-browse>
+                    <base-search v-show="active === PageNameEnum.BASE_SEARCH"></base-search>
+                    <senior-search v-show="active === PageNameEnum.SENIOR_SEARCH"></senior-search>
+                    <setting v-show="active === PageNameEnum.SETTING"></setting>
                 </div>
             </div>
-            <!-- 内容-->
-            <div id="container" :class="fullScreen ? 'full-screen' : ''">
-                <home v-show="active === PageNameEnum.HOME"></home>
-                <data-browse v-show="active === PageNameEnum.DATA_BROWSER"></data-browse>
-                <base-search v-show="active === PageNameEnum.BASE_SEARCH"></base-search>
-                <senior-search v-show="active === PageNameEnum.SENIOR_SEARCH"></senior-search>
-                <setting v-show="active === PageNameEnum.SETTING"></setting>
-            </div>
-        </div>
-        <!-- 保存或新增URL弹窗 -->
-        <save-or-update-url/>
-        <index-manage/>
-        <el-dialog v-model="updateDialog" :title="$t('app.versionUpdate')"
-                   close-on-click-modal append-to-body draggable lock-scroll>
-            <version-update v-if="updateDialog"/>
-        </el-dialog>
-        <el-dialog v-model="newDialog" :title="$t('app.welcome')" style="height: 90vh;"
-                   close-on-click-modal append-to-body draggable lock-scroll top="5vh">
-            <el-scrollbar height="calc(80vh - 54px)">
-                <setting-about v-if="newDialog"/>
-            </el-scrollbar>
-        </el-dialog>
-        <el-dialog v-model="feedbackDialog" :title="$t('app.feedback')" top="25vh"
-                   :close-on-click-modal="false" append-to-body draggable lock-scroll>
-            <feedback-module v-if="feedbackDialog"/>
-        </el-dialog>
-    </el-config-provider>
+            <!-- 保存或新增URL弹窗 -->
+            <save-or-update-url/>
+            <index-manage/>
+            <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')"
+                     close-on-click-modal append-to-body draggable lock-scroll>
+                <version-update v-if="updateDialog"/>
+            </a-modal>
+            <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" style="height: 90vh;"
+                     close-on-click-modal append-to-body draggable lock-scroll top="5vh">
+                <a-scrollbar height="calc(80vh - 54px)">
+                    <setting-about v-if="newDialog"/>
+                </a-scrollbar>
+            </a-modal>
+            <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh"
+                     :close-on-click-modal="false" append-to-body draggable lock-scroll>
+                <feedback-module v-if="feedbackDialog"/>
+            </a-modal>
+        </a-config-provider>
+    </a-spin>
 </template>
 
 <script lang="ts">
@@ -131,27 +138,10 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
 // 引入框架
-import {defineAsyncComponent, defineComponent, markRaw} from 'vue';
+import {defineAsyncComponent, defineComponent} from 'vue';
 import {mapState} from "pinia";
-import {
-    Close,
-    Coin,
-    DataBoard,
-    DataLine,
-    Expand,
-    Filter,
-    Fold,
-    FullScreen,
-    HomeFilled,
-    Minus,
-    Operation,
-    Search,
-    Setting as SettingIcon,
-    Tickets
-} from '@element-plus/icons-vue';
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import en from 'element-plus/lib/locale/lang/en'
-import {ElNotification} from "element-plus";
+import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
+import zhCn from '@arco-design/web-vue/es/locale/lang/zh-cn';
 // 模块
 import Info from '@/module/info/index.vue';
 // 页面
@@ -166,10 +156,6 @@ import emitter from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 // 常量
 import Constant from '@/global/Constant'
-// 引入自定义图标
-import MoonIcon from "@/icon/MoonIcon.vue";
-import SunIcon from "@/icon/SunIcon.vue";
-import Translate from "@/icon/Translate.vue";
 // 工具类
 import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
@@ -186,6 +172,8 @@ import {
     windowStrategyContext
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import useLoadingStore from "@/store/LoadingStore";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 let showHeightNotification = true;
 let showWidthNotification = true;
@@ -195,11 +183,6 @@ const MIN_HEIGHT = 800;
 
 export default defineComponent({
     components: {
-        // 自定义图标
-        SunIcon, MoonIcon, Translate,
-        // element-plus图标
-        Fold, Expand, HomeFilled, Search, Operation, Tickets,
-        Coin, DataBoard, Filter, SettingIcon, DataLine,
         // 页面
         Home, DataBrowse, BaseSearch, SeniorSearch, Setting,
         // 组件
@@ -228,16 +211,13 @@ export default defineComponent({
             },
             PageNameEnum,
             // 图标
-            minusIcon: markRaw(Minus),
-            fullScreenIcon: markRaw(FullScreen),
-            closeIcon: markRaw(Close),
-            translateIcon: markRaw(Translate)
         };
     },
     computed: {
         ...mapState(useUrlStore, ['urls', 'url']),
         ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status']),
         ...mapState(useSettingStore, ['instance']),
+        ...mapState(useLoadingStore, ['loading', 'text']),
         jsonTheme() {
             if (isDark.value) {
                 return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('atom-one-dark');
@@ -286,7 +266,7 @@ export default defineComponent({
         if (language === 'zh') {
             this.locale = zhCn;
         } else if (language === 'en') {
-            this.locale = en;
+            this.locale = enUS;
         }
 
         // 执行页面跳转事件
@@ -360,7 +340,7 @@ export default defineComponent({
             if (command === 'zh') {
                 this.locale = zhCn;
             } else if (command === 'en') {
-                this.locale = en;
+                this.locale = enUS;
             }
         },
         darkChange() {
@@ -386,11 +366,7 @@ export default defineComponent({
             // 窗口警告通知
             if (window.innerWidth < MIN_WIDTH && window.innerHeight < MIN_HEIGHT) {
                 if (showWidthNotification && showHeightNotification) {
-                    ElNotification({
-                        title: this.$t('common.message.warning'),
-                        type: 'warning',
-                        message: this.$t('app.widthAndHeightMin')
-                    });
+                    NotificationUtil.warning(this.$t('app.widthAndHeightMin'), this.$t('common.message.warning'));
                     showWidthNotification = false;
                     showHeightNotification = false;
                 }
@@ -398,11 +374,7 @@ export default defineComponent({
 
             if (window.innerWidth < MIN_WIDTH) {
                 if (showWidthNotification) {
-                    ElNotification({
-                        title: this.$t('common.message.warning'),
-                        type: 'warning',
-                        message: this.$t('app.widthMin')
-                    });
+                    NotificationUtil.warning(this.$t('app.widthMin'), this.$t('common.message.warning'));
                     showWidthNotification = false;
                 }
             } else {
@@ -410,11 +382,7 @@ export default defineComponent({
             }
             if (window.innerHeight < MIN_HEIGHT) {
                 if (showHeightNotification) {
-                    ElNotification({
-                        title: this.$t('common.message.warning'),
-                        type: 'warning',
-                        message: this.$t('app.heightMin')
-                    });
+                    NotificationUtil.warning(this.$t('app.heightMin'), this.$t('common.message.warning'));
                     showHeightNotification = false;
                 }
             } else {

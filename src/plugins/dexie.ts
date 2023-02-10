@@ -1,11 +1,11 @@
 import Dexie from 'dexie';
 import Url from '@/entity/Url';
-import {ElMessageBox} from "element-plus";
 import BrowserUtil from "@/utils/BrowserUtil";
 import {usePageJumpEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default class DexieInstance extends Dexie {
 
@@ -21,8 +21,7 @@ export default class DexieInstance extends Dexie {
             usePageJumpEvent.emit(PageNameEnum.SETTING);
             emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'url')
             trans.table('url').toArray().then(list => {
-                ElMessageBox.alert(`版本升级，历史url数据：${JSON.stringify(list)}，请注意数据丢失。`, {
-                    type: 'warning',
+                MessageBoxUtil.alert(`版本升级，历史url数据：${JSON.stringify(list)}，请注意数据丢失。`, {
                     confirmButtonText: '复制到剪切板'
                 }).then(() => {
                     BrowserUtil.copy(JSON.stringify(list, null, 4));

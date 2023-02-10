@@ -32,39 +32,29 @@
                 </db-simple-item>
                 <!-- 索引结构 -->
                 <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
-                    <el-icon :size="16" style="margin-top: 4px;">
-                        <structure-icon/>
-                    </el-icon>
+                    <structure-icon style="margin-top: 4px;font-size: 16px;"/>
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
-                    <el-icon>
-                        <Search/>
-                    </el-icon>
+                    <icon-search/>
                 </db-simple-item>
                 <!-- 跳转到高级查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
-                    <el-icon>
-                        <Filter/>
-                    </el-icon>
+                    <icon-filter/>
                 </db-simple-item>
                 <!-- 操作 -->
-                <el-dropdown trigger="click">
+                <a-dropdown trigger="click">
                     <div class="item">
-                        <el-icon>
-                            <Operation/>
-                        </el-icon>
+                        <icon-more-vertical/>
                     </div>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item>
-                                <el-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz"
-                                         target="_blank">帮助
-                                </el-link>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
+                    <template #content>
+                        <a-doption>
+                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz"
+                                    target="_blank">帮助
+                            </a-link>
+                        </a-doption>
                     </template>
-                </el-dropdown>
+                </a-dropdown>
             </div>
         </div>
         <!-- 输入条件 -->
@@ -84,7 +74,7 @@
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
                             <json-view :data="row._source" :copy="false"/>
-                            <el-button type="primary" text link class="copy" @click="copy(row._source)">复制</el-button>
+                            <a-button type="primary" text link class="copy" @click="copy(row._source)">复制</a-button>
                         </div>
                     </template>
                 </vxe-column>
@@ -115,9 +105,9 @@
                 :extensions="extensions"
             />
             <template #footer>
-                <el-button text @click="jumpToSeniorSearchByInsert">跳转到高级查询</el-button>
-                <el-button @click="addConfig.dialog = false">取消</el-button>
-                <el-button type="primary" @click="recordAddClick">新增</el-button>
+                <a-button text @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
+                <a-button @click="addConfig.dialog = false">取消</a-button>
+                <a-button type="primary" @click="recordAddClick">新增</a-button>
             </template>
         </vxe-modal>
         <!-- 修改对话框 -->
@@ -135,9 +125,9 @@
                 :extensions="extensions"
             />
             <template #footer>
-                <el-button text @click="jumpToSeniorSearchByUpdate">跳转到高级查询</el-button>
-                <el-button @click="editConfig.dialog = false">取消</el-button>
-                <el-button type="primary" @click="recordEditClick">修改</el-button>
+                <a-button text @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
+                <a-button @click="editConfig.dialog = false">取消</a-button>
+                <a-button type="primary" @click="recordEditClick">修改</a-button>
             </template>
         </vxe-modal>
     </div>
@@ -149,7 +139,6 @@ import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
 import XEUtils from 'xe-utils';
-import {Check, Filter, Operation, Search, View} from "@element-plus/icons-vue";
 
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
@@ -202,10 +191,9 @@ export default defineComponent({
         DbCondition,
         ExportDialog,
         PageHelp,
-        Search,
         JsonView,
         StructureIcon,
-        Filter, Operation, View, Check, Codemirror
+        Codemirror
     },
     data: () => ({
         page: 1,

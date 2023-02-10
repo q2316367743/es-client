@@ -2,7 +2,7 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import {ElementPlusResolver} from "unplugin-vue-components/resolvers";
+import {ArcoResolver} from 'unplugin-vue-components/resolvers';
 
 import path from 'path'
 
@@ -20,11 +20,11 @@ function outDir() {
         case 'build:utools':
             return 'utools';
         case 'build:edge':
-            return 'chrome/es-client';
+            return 'src-edge/es-client';
         case 'build:firefox':
-            return 'firefox/es-client';
+            return 'src-firefox/es-client';
         case 'build:server':
-            return 'server/public';
+            return 'src-server/public';
         case 'build:tauri:windows':
             return 'dist';
         case 'build:tauri:linux':
@@ -46,10 +46,12 @@ export default defineConfig({
     },
     plugins: [vue(), visualizer({open: true}),
         AutoImport({
-            resolvers: [ElementPlusResolver()],
+            resolvers: [ArcoResolver()],
         }),
         Components({
-            resolvers: [ElementPlusResolver()],
+            resolvers: [ArcoResolver({
+                sideEffect: true
+            })],
         }),
     ],
     base: './',

@@ -1,60 +1,61 @@
 <template>
-    <el-dialog :title="$t('common.operation.add')" v-model="dialog" width="850px">
-        <el-form>
-            <el-form-item :label="$t('common.keyword.name')">
-                <el-input v-model="index.name" style="width: 300px;"></el-input>
-            </el-form-item>
-        </el-form>
-        <el-collapse v-model="indexCollapse">
-            <el-collapse-item :title="$t('home.newIndex.setting')" name="1">
-                <el-form>
-                    <el-form-item :label="$t('home.newIndex.shardNumber')">
-                        <el-input-number v-model="index.settings.numberOfShards" controls-position="right">
-                        </el-input-number>
-                    </el-form-item>
-                    <el-form-item :label="$t('home.newIndex.replicaNumber')">
-                        <el-input-number v-model="index.settings.numberOfReplicas" controls-position="right">
-                        </el-input-number>
-                    </el-form-item>
-                </el-form>
-            </el-collapse-item>
-            <el-collapse-item :title="$t('home.newIndex.fieldSetting')" name="2">
+    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="850px">
+        <a-form :model="index">
+            <a-form-item :label="$t('common.keyword.name')">
+                <a-input v-model="index.name" style="width: 300px;"></a-input>
+            </a-form-item>
+        </a-form>
+        <a-collapse v-model="indexCollapse">
+            <a-collapse-item :header="$t('home.newIndex.setting')" name="1">
+                <a-form :model="index.settings">
+                    <a-form-item :label="$t('home.newIndex.shardNumber')">
+                        <a-input-number v-model="index.settings.numberOfShards" controls-position="right">
+                        </a-input-number>
+                    </a-form-item>
+                    <a-form-item :label="$t('home.newIndex.replicaNumber')">
+                        <a-input-number v-model="index.settings.numberOfReplicas" controls-position="right">
+                        </a-input-number>
+                    </a-form-item>
+                </a-form>
+            </a-collapse-item>
+            <a-collapse-item :header="$t('home.newIndex.fieldSetting')" name="2">
                 <div v-if="index.mapping.length === 0">
-                    <el-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}</el-button>
+                    <a-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}</a-button>
                 </div>
-                <el-form v-else>
+                <a-form :model="index.mapping" v-else>
                     <div v-for="(property, idx) in index.mapping" :key="idx">
-                        <el-form :inline="true">
-                            <el-form-item :label="$t('home.newIndex.field.name')">
-                                <el-input v-model="property.field"></el-input>
-                            </el-form-item>
-                            <el-form-item :label="$t('home.newIndex.field.type')">
-                                <el-select v-model="property.type">
-                                    <el-option v-for="(type) in types" :key="type" :label="type" :value="type">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}
-                                </el-button>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="danger" @click="removeProperty(property)">{{
+                        <a-form :model="property" :inline="true">
+                            <a-form-item :label="$t('home.newIndex.field.name')">
+                                <a-input v-model="property.field"></a-input>
+                            </a-form-item>
+                            <a-form-item :label="$t('home.newIndex.field.type')">
+                                <a-select v-model="property.type">
+                                    <a-option v-for="(type) in types" :key="type" :label="type" :value="type">
+                                    </a-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item>
+                                <a-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}
+                                </a-button>
+                            </a-form-item>
+                            <a-form-item>
+                                <a-button type="danger" @click="removeProperty(property)">{{
                                         $t('common.operation.delete')
                                     }}
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
+                                </a-button>
+                            </a-form-item>
+                        </a-form>
                     </div>
-                </el-form>
-            </el-collapse-item>
-        </el-collapse>
+                </a-form>
+            </a-collapse-item>
+        </a-collapse>
         <template #footer>
-            <el-button type="info" text @click="jumpToSeniorSearch">{{$t('common.action.jumpToSeniorSearch')}}</el-button>
-            <el-button type="info" text @click="copyIndex">{{ $t('common.action.copy')}}</el-button>
-            <el-button type="primary" @click="addIndex">{{ $t('common.operation.add') }}</el-button>
+            <a-button type="info" text @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch') }}
+            </a-button>
+            <a-button type="info" text @click="copyIndex">{{ $t('common.action.copy') }}</a-button>
+            <a-button type="primary" @click="addIndex">{{ $t('common.operation.add') }}</a-button>
         </template>
-    </el-dialog>
+    </a-modal>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

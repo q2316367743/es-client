@@ -2,11 +2,11 @@
     <div class="setting-url">
         <vxe-toolbar ref="urlToolbar" custom export>
             <template #buttons>
-                <el-button type="primary" @click="editOpen(undefined)">{{ $t('common.operation.add') }}</el-button>
+                <a-button type="primary" @click="editOpen(undefined)">{{ $t('common.operation.add') }}</a-button>
             </template>
             <template #tools>
-                <el-input v-model="condition.name" :placeholder="$t('common.keyword.name')"
-                          style="margin-right: 10px;"></el-input>
+                <a-input v-model="condition.name" :placeholder="$t('common.keyword.name')"
+                         style="margin-right: 10px;"></a-input>
             </template>
         </vxe-toolbar>
         <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig"
@@ -16,7 +16,7 @@
             <vxe-column field="name" :title="$t('common.keyword.name')" width="180"></vxe-column>
             <vxe-column field="value" :title="$t('common.keyword.url')" width="250">
                 <template #default="{row}">
-                    <el-link @click="open(row.value)" type="primary" target="_blank">{{ row.value }}</el-link>
+                    <a-link @click="open(row.value)" type="primary" target="_blank">{{ row.value }}</a-link>
                     <div class="url-copy" @click="execCopy(row.value)">{{ $t('common.operation.copy') }}</div>
                 </template>
             </vxe-column>
@@ -25,13 +25,14 @@
             <vxe-column field="isAuth" :title="$t('setting.link.form.isAuth')" width="120" :formatter="prettyAuth"/>
             <vxe-column field="authUser" :title="$t('setting.link.form.authUser')" :visible="false"/>
             <vxe-column field="authPassword" :title="$t('setting.link.form.authPassword')" :visible="false"/>
-            <vxe-column :title="$t('common.keyword.operation')" width="140">
+            <vxe-column :title="$t('common.keyword.operation')" width="150">
                 <template #default="{ row }">
-                    <el-button type="primary" size="small" @click="editOpen(row)">{{ $t('common.operation.edit') }}
-                    </el-button>
-                    <el-button type="danger" size="small" @click="remove(row.id, row.value)">
+                    <a-button type="primary" size="small" @click="editOpen(row)">{{ $t('common.operation.edit') }}
+                    </a-button>
+                    <a-button type="primary" status="danger" size="small" @click="remove(row.id, row.value)"
+                              style="margin-left: 8px;">
                         {{ $t('common.operation.delete') }}
-                    </el-button>
+                    </a-button>
                 </template>
             </vxe-column>
         </vxe-table>
@@ -39,7 +40,6 @@
 </template>
 <script lang="ts">
 import {defineComponent, toRaw} from "vue";
-import {Action, ElMessageBox} from 'element-plus'
 import {mapState} from "pinia";
 import {toDateString} from "xe-utils";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
@@ -54,6 +54,7 @@ import JsonDialog from "@/components/JsonDialog.vue";
 import {nativeStrategyContext, urlService, useUrlEditEvent} from "@/global/BeanFactory";
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 interface Params {
     cellValue: any
@@ -119,16 +120,14 @@ export default defineComponent({
             return params.cellValue ? this.$t('setting.link.form.needAuth') : this.$t('setting.link.form.notAuth');
         },
         remove(id: number, value: string) {
-            ElMessageBox.confirm('是否删除相关的搜索历史', '提示', {
-                type: 'info',
+            MessageBoxUtil.confirm('是否删除相关的搜索历史', '提示', {
                 confirmButtonText: '删除全部',
-                cancelButtonText: '只删除链接',
-                distinguishCancelAndClose: true
+                cancelButtonText: '只删除链接'
             }).then(() => {
                 this.execRemove(id, true)
                     .then(() => this.removeAfter(value))
                     .catch(e => MessageUtil.error('删除失败', e));
-            }).catch((action: Action) => {
+            }).catch((action) => {
                 if (action === 'cancel') {
                     this.execRemove(id, false)
                         .then(() => this.removeAfter(value))

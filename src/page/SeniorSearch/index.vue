@@ -1,69 +1,69 @@
 <template>
-    <div class="senior-search" v-loading="loading" element-loading-text="数据查询中">
-        <!-- 下半部分 -->
-        <div class="senior-main">
-            <!-- 左面查询条件 -->
-            <div class="side" :style="{width: `${width}px`}">
-                <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                          v-show="showTabs"
-                          @option-tab="optionTab"/>
-                <div class="controller" :class="showTabs ? 'show-tabs' : ''">
-                    <div class="option">
-                        <ss-option-btn :tooltip="$t('common.operation.run')" :class-name="url ? 'run' : 'run disable'"
-                                       @click="search">
-                            <run-icon/>
-                        </ss-option-btn>
-                        <ss-option-btn :tooltip="$t('common.operation.save')" class-name="save"
-                                       @click="save">
-                            <save-icon/>
-                        </ss-option-btn>
-                        <ss-option-btn :tooltip="$t('common.operation.format')" class-name="format"
-                                       @click="formatDocument">
-                            <format-icon/>
-                        </ss-option-btn>
-                        <ss-option-btn :tooltip="viewTip" class-name="view" @click="view = (view === 2) ? 3 : 2">
-                            <json-icon v-if="view === 2"/>
-                            <table-icon v-else-if="view === 3"/>
-                            <view-icon v-else/>
-                        </ss-option-btn>
-                        <ss-option-btn tooltip="标签栏" class-name="tab" @click="showTabs = !showTabs">
-                            <tag-icon/>
-                        </ss-option-btn>
-                        <ss-option-btn tooltip="帮助" class-name="help" @click="openHelp">
-                            <i class="vxe-icon-question-circle"/>
-                        </ss-option-btn>
+    <a-spin :loading="loading" tip="数据查询中">
+        <div class="senior-search">
+            <!-- 下半部分 -->
+            <div class="senior-main">
+                <!-- 左面查询条件 -->
+                <div class="side" :style="{width: `${width}px`}">
+                    <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                              v-show="showTabs"
+                              @option-tab="optionTab"/>
+                    <div class="controller" :class="showTabs ? 'show-tabs' : ''">
+                        <div class="option">
+                            <ss-option-btn :tooltip="$t('common.operation.run')"
+                                           :class-name="url ? 'run' : 'run disable'"
+                                           @click="search">
+                                <run-icon/>
+                            </ss-option-btn>
+                            <ss-option-btn :tooltip="$t('common.operation.save')" class-name="save"
+                                           @click="save">
+                                <save-icon/>
+                            </ss-option-btn>
+                            <ss-option-btn :tooltip="$t('common.operation.format')" class-name="format"
+                                           @click="formatDocument">
+                                <format-icon/>
+                            </ss-option-btn>
+                            <ss-option-btn :tooltip="viewTip" class-name="view" @click="view = (view === 2) ? 3 : 2">
+                                <json-icon v-if="view === 2"/>
+                                <table-icon v-else-if="view === 3"/>
+                                <view-icon v-else/>
+                            </ss-option-btn>
+                            <ss-option-btn tooltip="标签栏" class-name="tab" @click="showTabs = !showTabs">
+                                <tag-icon/>
+                            </ss-option-btn>
+                            <ss-option-btn tooltip="帮助" class-name="help" @click="openHelp">
+                                <i class="vxe-icon-question-circle"/>
+                            </ss-option-btn>
+                        </div>
+                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
+                                            :style="{width: `calc(100% - 24px)`, height: '100%'}"/>
                     </div>
-                    <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
-                                        :style="{width: `calc(100% - 24px)`, height: '100%'}"/>
+                </div>
+                <div class="sep" ref="seniorSearchSep" :style="{left: `${width + 5}px`}"/>
+                <div class="senior-content" :style="{left: `${width + 15}px`}">
+                    <a-tabs v-model="displayActive" class="senior-display-tabs">
+                        <a-tab-pane label="结果" name="result"/>
+                        <a-tab-pane label="请求记录" name="search"/>
+                        <a-tab-pane label="历史记录" name="history"/>
+                    </a-tabs>
+                    <a-scrollbar class="senior-display-scroll">
+                        <!-- 结果集渲染 -->
+                        <data-view v-show="displayActive === 'result'" :view="view" :result="current.result"/>
+                        <!-- 请求记录 -->
+                        <senior-search-record v-show="displayActive === 'search'"/>
+                        <!-- 历史记录 -->
+                        <senior-search-history v-show="displayActive === 'history'"/>
+                    </a-scrollbar>
+                    <a-back-top target-container=".senior-content .el-scrollbar__wrap" v-show="showTop"/>
                 </div>
             </div>
-            <div class="sep" ref="seniorSearchSep" :style="{left: `${width + 5}px`}"/>
-            <div class="senior-content" :style="{left: `${width + 15}px`}">
-                <el-tabs v-model="displayActive" class="senior-display-tabs">
-                    <el-tab-pane label="结果" name="result"/>
-                    <el-tab-pane label="请求记录" name="search"/>
-                    <el-tab-pane label="历史记录" name="history"/>
-                </el-tabs>
-                <el-scrollbar class="senior-display-scroll">
-                    <!-- 结果集渲染 -->
-                    <data-view v-show="displayActive === 'result'" :view="view" :result="current.result"/>
-                    <!-- 请求记录 -->
-                    <senior-search-record v-show="displayActive === 'search'"/>
-                    <!-- 历史记录 -->
-                    <senior-search-history v-show="displayActive === 'history'"/>
-                </el-scrollbar>
-                <el-backtop :right="40" :bottom="60" target=".senior-content .el-scrollbar__wrap"
-                            v-show="showTop"/>
-            </div>
         </div>
-    </div>
+    </a-spin>
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, defineComponent, markRaw} from "vue";
+import {defineAsyncComponent, defineComponent} from "vue";
 import {mapState} from "pinia";
-import {ElMessageBox, ElNotification} from "element-plus";
-import {FullScreen} from '@element-plus/icons-vue'
 
 import './index.less';
 import {SeniorSearchItem, SeniorSearchItemBody} from './domain/SeniorSearchItem';
@@ -109,6 +109,8 @@ import ViewIcon from "@/icon/ViewIcon.vue";
 import TagIcon from "@/icon/TagIcon.vue";
 import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
+import NotificationUtil from "@/utils/NotificationUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 // 记录点击开始位置
 let startX = 0;
@@ -145,8 +147,6 @@ export default defineComponent({
                 body: '',
                 result: {} as any,
             } as SeniorSearchItemBody,
-            // 图标
-            fullScreen: markRaw(FullScreen),
             // 查询map
             searchMap,
             // 当前显示的ID
@@ -320,11 +320,7 @@ export default defineComponent({
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
                 this.current.result = {};
-                ElNotification({
-                    title: '警告',
-                    type: 'warning',
-                    message: '新增文档，但没有参数'
-                })
+                NotificationUtil.warning('新增文档，但没有参数', '警告');
                 return;
             }
             httpStrategyContext.getStrategy().es<any>({
@@ -395,13 +391,13 @@ export default defineComponent({
                     this.searchMap.clear();
                     break;
                 case 'rename':
-                    ElMessageBox.prompt("请输入新的标签名字", "修改标签名", {
+                    MessageBoxUtil.prompt("请输入新的标签名字", "修改标签名", {
                         confirmButtonText: '修改',
                         cancelButtonText: '取消',
                         inputValue: strings[2],
                         inputPattern: /.+/,
                         inputErrorMessage: '必须输入标签名'
-                    }).then(({value}) => {
+                    }).then((value) => {
                         let searchItem = this.searchMap.get(id);
                         if (searchItem) {
                             searchItem.header.name = value;
@@ -415,14 +411,14 @@ export default defineComponent({
                         MessageUtil.error('标签未找到');
                         return;
                     }
-                    ElMessageBox.prompt('请输入记录名字', {
+                    MessageBoxUtil.prompt('请输入记录名字', '新增记录', {
                         confirmButtonText: '新增',
                         cancelButtonText: '取消',
                         inputValue: isNaN(parseInt(searchItem.header.name)) ? searchItem.header.name : '',
                         inputPattern: /\S+/,
                         inputErrorMessage: '请输入有效字符'
                     })
-                        .then(({value}) => {
+                        .then((value) => {
                             if (!searchItem) {
                                 MessageUtil.error('标签未找到');
                                 return;

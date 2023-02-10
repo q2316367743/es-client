@@ -4,10 +4,10 @@ node_modules
 electron/node_modules
 electron/html
 electron/out
-chrome/es-client
+src-edge/es-client
 chrome.crx
 chrome.pem
-firefox/es-client
+src-firefox/es-client
 
 
 # local env files
@@ -30,9 +30,9 @@ pnpm-debug.log*
 *.sw?
 
 stats.html
-server/dist
-/server/public
-server/node_modules
+src-server/dist
+/src-server/public
+src-server/node_modules
 
 /utools
-/server/es-client.db
+/src-server/es-client.db

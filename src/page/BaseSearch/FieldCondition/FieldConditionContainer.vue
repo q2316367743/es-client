@@ -1,7 +1,7 @@
 <template>
     <div v-if="conditions.length === 0">
-        <el-button type="primary" @click="init">{{ $t('common.operation.add') }}
-        </el-button>
+        <a-button type="primary" @click="init">{{ $t('common.operation.add') }}
+        </a-button>
     </div>
     <div v-for="(item, idx) in conditions" :key="idx"
          style="margin-bottom: 10px;display: flex;">

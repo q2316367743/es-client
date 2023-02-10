@@ -4,9 +4,7 @@
             <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
             <input type="text" v-model="must" class="input" @keydown.enter="executeQuery()"/>
             <div class="clear" v-show="must !== ''" @click="clear('mustValue')">
-                <el-icon>
-                    <circle-close/>
-                </el-icon>
+                <icon-close-circle/>
             </div>
         </div>
         <div class="condition-sep"></div>
@@ -14,9 +12,7 @@
             <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
             <input type="text" v-model="should" class="input" @keydown.enter="executeQuery()"/>
             <div class="clear" v-show="should !== ''" @click="clear('shouldValue')">
-                <el-icon>
-                    <circle-close/>
-                </el-icon>
+                <icon-close-circle/>
             </div>
         </div>
         <div class="condition-sep"></div>
@@ -24,9 +20,7 @@
             <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
             <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery()"/>
             <div class="clear" v-show="mustNot !== ''" @click="clear('mustNotValue')">
-                <el-icon>
-                    <circle-close/>
-                </el-icon>
+                <icon-close-circle/>
             </div>
         </div>
         <div class="condition-sep"></div>
@@ -34,20 +28,16 @@
             <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
             <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery"/>
             <div class="clear" v-show="orderBy !== ''" @click="clear('orderByValue')">
-                <el-icon>
-                    <circle-close/>
-                </el-icon>
+                <icon-close-circle/>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {CircleClose} from "@element-plus/icons-vue";
 
 export default defineComponent({
     name: 'db-condition',
-    components: {CircleClose},
     emit: ['executeQuery', 'update:mustValue', 'update:shouldValue', 'update:mustNotValue', 'update:orderByValue'],
     props: {
         mustValue: String,

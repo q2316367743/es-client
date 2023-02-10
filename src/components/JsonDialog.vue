@@ -1,7 +1,7 @@
 <template>
-    <el-dialog
+    <a-modal
         :title="title"
-        v-model="visible"
+        v-model:visible="visible"
         width="70%"
         append-to-body
         class="es-dialog"
@@ -11,7 +11,7 @@
         destroy-on-close
     >
         <json-view :data="json"/>
-    </el-dialog>
+    </a-modal>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

@@ -1,5 +1,5 @@
-import {ElMessageBox} from "element-plus";
 import ArrayUtil from "@/utils/ArrayUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 
 export function getDefaultLanguage(): string {
@@ -15,10 +15,9 @@ export function getDefaultLanguage(): string {
 
 async function showTip(): Promise<boolean> {
     try {
-        await ElMessageBox.confirm('此操作为危险操作，是否继续？', '危险操作提示', {
+        await MessageBoxUtil.confirm('此操作为危险操作，是否继续？', '危险操作提示', {
             confirmButtonText: '继续',
             cancelButtonText: '取消',
-            type: 'warning',
         });
         return Promise.resolve(true);
     } catch (e) {

@@ -1,16 +1,18 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
+import {createApp} from 'vue';
+import store from "@/store";
 import App from './App.vue';
 import i18n from '@/i18n';
+import {applicationLaunch} from "@/global/BeanFactory";
+
+// 额外引入图标库
+import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 
 // 引入样式
 import '@/less/theme.less';
 import '@/less/main.less';
 import '@/less/post.css'
-import "element-plus/theme-chalk/el-message.css";
-import "element-plus/theme-chalk/el-message-box.css";
-import "element-plus/theme-chalk/el-loading.css";
-import "element-plus/theme-chalk/el-notification.css";
+
+import '@arco-design/web-vue/es/spin/style/css.js'
 
 // VXETable导入
 import VXETable from 'vxe-table';
@@ -25,7 +27,10 @@ if (window.utools) {
 
 // 插件
 createApp(App)
-    .use(createPinia())
+    .use(store)
     .use(i18n)
+    .use(ArcoVueIcon)
     .use(VXETable)
     .mount('#app');
+
+applicationLaunch.executeInit();

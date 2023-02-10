@@ -1,27 +1,28 @@
 <template>
-    <el-descriptions title="概览" :column="2" class="index-manage-summary" border v-loading="loading"
-                     element-loading-text="数据查询中">
-        <el-descriptions-item width="70px" label="健康">
-            <div class="health">
-                <div class="dot" :style="{backgroundColor: health}"/>
-                <div>{{ health }}</div>
-            </div>
-        </el-descriptions-item>
-        <el-descriptions-item width="70px" label="状态">{{ state }}</el-descriptions-item>
-        <el-descriptions-item label="节点数">{{ numberOfNodes }}</el-descriptions-item>
-        <el-descriptions-item label="数据节点数">{{ numberOfDataNodes }}</el-descriptions-item>
-        <el-descriptions-item label="文档数">{{ docsCount }}</el-descriptions-item>
-        <el-descriptions-item label="文档删除">{{ docsDeleted }}</el-descriptions-item>
-        <el-descriptions-item label="活动主要分片">{{ activePrimaryShards }}</el-descriptions-item>
-        <el-descriptions-item label="活动分片">{{ activeShards }}</el-descriptions-item>
-        <el-descriptions-item label="relocating分片">{{ relocatingShards }}</el-descriptions-item>
-        <el-descriptions-item label="initializing分片">{{ initializingShards }}</el-descriptions-item>
-        <el-descriptions-item label="unassigned分片">{{ unassignedShards }}</el-descriptions-item>
-        <el-descriptions-item label="存储大小">{{ storageSize }}</el-descriptions-item>
-        <el-descriptions-item label="别名">
-            <el-tag v-for="alias in aliases" class="alias">{{ alias }}</el-tag>
-        </el-descriptions-item>
-    </el-descriptions>
+    <a-spin :loading="loading" tip="数据查询中">
+        <a-descriptions title="概览" :column="2" class="index-manage-summary" border>
+            <a-descriptions-item label="健康">
+                <div class="health">
+                    <div class="dot" :style="{backgroundColor: health}"/>
+                    <div>{{ health }}</div>
+                </div>
+            </a-descriptions-item>
+            <a-descriptions-item label="状态">{{ state }}</a-descriptions-item>
+            <a-descriptions-item label="节点数">{{ numberOfNodes }}</a-descriptions-item>
+            <a-descriptions-item label="数据节点数">{{ numberOfDataNodes }}</a-descriptions-item>
+            <a-descriptions-item label="文档数">{{ docsCount }}</a-descriptions-item>
+            <a-descriptions-item label="文档删除">{{ docsDeleted }}</a-descriptions-item>
+            <a-descriptions-item label="活动主要分片">{{ activePrimaryShards }}</a-descriptions-item>
+            <a-descriptions-item label="活动分片">{{ activeShards }}</a-descriptions-item>
+            <a-descriptions-item label="relocating分片">{{ relocatingShards }}</a-descriptions-item>
+            <a-descriptions-item label="initializing分片">{{ initializingShards }}</a-descriptions-item>
+            <a-descriptions-item label="unassigned分片">{{ unassignedShards }}</a-descriptions-item>
+            <a-descriptions-item label="存储大小">{{ storageSize }}</a-descriptions-item>
+            <a-descriptions-item label="别名">
+                <a-tag v-for="alias in aliases" class="alias">{{ alias }}</a-tag>
+            </a-descriptions-item>
+        </a-descriptions>
+    </a-spin>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

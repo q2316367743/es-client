@@ -8,17 +8,17 @@
                 </li>
             </ol>
             <li v-else>
-                <el-tag :type="renderTag(item.label).type" style="margin-left:5px;">{{
+                <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">{{
                         renderTag(item.label).name
                     }}
-                </el-tag>
+                </a-tag>
                 <span style="margin-left:5px;">{{ item.content }}</span>
             </li>
         </template>
     </ol>
     <div v-if="log?.doc">
         更多详细的更新信息与功能变化，请在
-        <el-link target="_blank" @click="open(log?.doc)">语雀</el-link>
+        <a-link target="_blank" @click="open(log?.doc)">语雀</a-link>
         中查看
     </div>
 </template>
@@ -33,32 +33,32 @@ export default defineComponent({
         log: Object as PropType<Log>
     },
     methods: {
-        renderTag(value: number): { name: string, type: string } {
+        renderTag(value: number): { name: string, color: string } {
             switch (value) {
                 case LogItemEnum.ADD:
                     return {
                         name: '新增',
-                        type: ''
+                        color: 'blue'
                     };
                 case LogItemEnum.UPDATE:
                     return {
                         name: '更新',
-                        type: 'success'
+                        color: 'green'
                     };
                 case LogItemEnum.REPAIR:
                     return {
                         name: '修复',
-                        type: 'danger'
+                        color: 'red'
                     };
                 case LogItemEnum.OPTIMIZATION:
                     return {
                         name: '优化',
-                        type: 'warning'
+                        color: 'orange'
                     };
                 default:
                     return {
                         name: '',
-                        type: ''
+                        color: ''
                     };
             }
         },

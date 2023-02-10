@@ -13,7 +13,7 @@
 > elasticsearch的客户端比较出名的就是[elasticsearch head](https://github.com/mobz/elasticsearch-head)
 > 和[Kibana](https://github.com/elastic/kibana)了，
 > 但是elasticsearch head已经停止更新，且样式老旧，功能不全；
-> 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+element-plus进行开发了一个elasticsearch的客户端。
+> 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+arco-design进行开发了一个elasticsearch的客户端。
 
 ## 安装 & 更新
 

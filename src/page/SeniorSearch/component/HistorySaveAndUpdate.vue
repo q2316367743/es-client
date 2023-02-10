@@ -1,22 +1,22 @@
 <template>
-    <el-form v-model="data" label-position="left" label-width="100px">
-        <el-form-item label="名称">
-            <el-input v-model="data.name" style="width: 350px"/>
-        </el-form-item>
-        <el-form-item label="所属链接">
-            <el-select v-model="data.urlId">
-                <el-option :value="0" label="忽略"/>
-                <el-option v-for="item in urls" :value="item.id" :label="item.name"/>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="参数">
-            <el-input v-model="data.body" type="textarea" :rows="12"/>
-        </el-form-item>
-        <el-form-item>
-            <el-button @click="reset">重置</el-button>
-            <el-button type="primary" @click="submit">{{ data.id === 0 ? '新增' : '修改' }}</el-button>
-        </el-form-item>
-    </el-form>
+    <a-form :model="data" label-position="left" label-width="100px">
+        <a-form-item label="名称">
+            <a-input v-model="data.name" style="width: 350px"/>
+        </a-form-item>
+        <a-form-item label="所属链接">
+            <a-select v-model="data.urlId">
+                <a-option :value="0" label="忽略"/>
+                <a-option v-for="item in urls" :value="item.id" :label="item.name"/>
+            </a-select>
+        </a-form-item>
+        <a-form-item label="参数">
+            <a-input v-model="data.body" type="textarea" :rows="12"/>
+        </a-form-item>
+        <a-form-item>
+            <a-button @click="reset">重置</a-button>
+            <a-button type="primary" @click="submit">{{ data.id === 0 ? '新增' : '修改' }}</a-button>
+        </a-form-item>
+    </a-form>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";

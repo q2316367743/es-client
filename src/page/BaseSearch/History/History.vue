@@ -2,46 +2,45 @@
     <div class="bs-history">
         <vxe-toolbar ref="bsHistoryToolbar" custom export class="bs-history-toolbar">
             <template #buttons>
-                <el-input v-model="name" :placeholder="$t('common.keyword.name')"
-                          style="width: 200px;" @input="search"></el-input>
-                <el-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
+                <a-input v-model="name" :placeholder="$t('common.keyword.name')"
+                          style="width: 200px;" @input="search"></a-input>
+                <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
                            style="margin-left: 12px;"/>
             </template>
         </vxe-toolbar>
         <div class="bs-history-body">
-            <el-scrollbar>
+            <a-scrollbar>
                 <vxe-table ref="bsHistoryTable" :data="histories" class="data" :column-config="columnConfig"
                            :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
                     <vxe-column field="name" :title="$t('common.keyword.name')" width="250"></vxe-column>
                     <vxe-column field="index" :title="$t('common.keyword.index')" width="400">
                         <template #default="{row}">
-                            <el-link type="primary" target="_blank">{{ row.index }}</el-link>
+                            <a-link type="primary" target="_blank">{{ row.index }}</a-link>
                             <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">
+                            <a-button type="success" size="small" @click="load(row)">
                                 {{ $t('common.operation.load') }}
-                            </el-button>
-                            <el-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
+                            </a-button>
+                            <a-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
-                                    </el-button>
+                                    <a-button type="danger" size="small">{{ $t('common.operation.delete') }}
+                                    </a-button>
                                 </template>
-                            </el-popconfirm>
+                            </a-popconfirm>
                         </template>
                     </vxe-column>
                 </vxe-table>
-            </el-scrollbar>
+            </a-scrollbar>
         </div>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
-import {Search} from '@element-plus/icons-vue'
+import {defineComponent} from "vue";
 import {VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import useUrlStore from "@/store/UrlStore";
@@ -57,7 +56,6 @@ export default defineComponent({
     name: 'bsh-history',
     emits: ['load'],
     data: () => ({
-        searchIcon: markRaw(Search),
         histories: new Array<BaseSearchHistory>(),
         columnConfig: {
             resizable: true

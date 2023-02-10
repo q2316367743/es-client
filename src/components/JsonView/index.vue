@@ -3,7 +3,7 @@
         <pre>
             <code class="language-json hljs" v-html="value"></code>
         </pre>
-        <el-button v-if="copy" type="primary" link class="json-view-copy" @click="execCopy">复制</el-button>
+        <a-button v-if="copy" type="text" link class="json-view-copy" @click="execCopy">复制</a-button>
     </div>
 
 </template>

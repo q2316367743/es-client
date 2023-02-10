@@ -4,39 +4,42 @@
         <div class="home-option">
             <div style="display: flex">
                 <!-- 输入框 -->
-                <el-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
-                          style="width: 300px;height: 32px;" @input="search" clearable></el-input>
-                <el-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
-                           style="margin-left: 5px;width: 150px;" clearable @change="search">
-                    <el-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></el-option>
-                    <el-option :label="$t('home.order.nameDesc')" value="NAME_DESC"></el-option>
-                    <el-option :label="$t('home.order.sizeAsc')" value="SIZE_ASC"></el-option>
-                    <el-option :label="$t('home.order.sizeDesc')" value="SIZE_DESC"></el-option>
-                    <el-option :label="$t('home.order.docAsc')" value="DOC_ASC"></el-option>
-                    <el-option :label="$t('home.order.docDesc')" value="DOC_DESC"></el-option>
-                </el-select>
-                <el-button style="margin-left: 5px" @click="condition.dialog = true">{{ $t('common.operation.more') }}
-                </el-button>
-                <el-button type="primary" style="margin-left: 5px" @click="search">{{
+                <a-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
+                         style="width: 300px;height: 32px;" @input="search" clearable></a-input>
+                <a-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
+                          style="margin-left: 5px;width: 150px;" clearable @change="search">
+                    <a-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></a-option>
+                    <a-option :label="$t('home.order.nameDesc')" value="NAME_DESC"></a-option>
+                    <a-option :label="$t('home.order.sizeAsc')" value="SIZE_ASC"></a-option>
+                    <a-option :label="$t('home.order.sizeDesc')" value="SIZE_DESC"></a-option>
+                    <a-option :label="$t('home.order.docAsc')" value="DOC_ASC"></a-option>
+                    <a-option :label="$t('home.order.docDesc')" value="DOC_DESC"></a-option>
+                </a-select>
+                <a-button style="margin-left: 5px" @click="condition.dialog = true">{{ $t('common.operation.more') }}
+                </a-button>
+                <a-button type="primary" style="margin-left: 5px" @click="search">{{
                         $t('common.operation.search')
                     }}
-                </el-button>
+                </a-button>
             </div>
-            <el-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">{{
+            <a-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">{{
                     $t('common.operation.new')
                 }}
-            </el-button>
+            </a-button>
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
-            <el-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 15%;"/>
-            <vxe-list v-loading="indexLoading" :data="showIndices" :auto-resize="true" :height="height">
-                <template #default="{ items }">
-                    <index-item v-for="item in items" v-show="item.show" :index="item" @open-dialog="indexOpenDialog"
-                                @open-manage="indexOpenManage"/>
-                </template>
-            </vxe-list>
-            <el-backtop :right="40" :bottom="60" target=".vxe-list--virtual-wrapper"/>
+            <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 15%;"/>
+            <a-spin :loading="indexLoading" style="width: 100%;">
+                <vxe-list :data="showIndices" :auto-resize="true" :height="height">
+                    <template #default="{ items }">
+                        <index-item v-for="item in items" v-show="item.show" :index="item"
+                                    @open-dialog="indexOpenDialog"
+                                    @open-manage="indexOpenManage"/>
+                    </template>
+                </vxe-list>
+            </a-spin>
+            <a-back-top target-container=".vxe-list--virtual-wrapper"/>
         </div>
         <div class="home-statistics" v-if="url">
             <div class="bridge" type="primary">
@@ -69,17 +72,17 @@
         <!-- 数据展示 -->
         <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model="indexItem.dialog"/>
         <!-- 更多查询条件 -->
-        <el-dialog v-model="condition.dialog" destroy-on-close append-to-body title="更多查询条件">
-            <el-form v-model="condition" label-width="80px" label-position="left">
-                <el-form-item label="状态">
-                    <el-radio-group v-model="condition.state">
-                        <el-radio :label="0">忽略</el-radio>
-                        <el-radio :label="1">开启</el-radio>
-                        <el-radio :label="2">关闭</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
+        <a-modal v-model:visible="condition.dialog" destroy-on-close append-to-body title="更多查询条件">
+            <a-form :model="condition" label-width="80px" label-position="left">
+                <a-form-item label="状态">
+                    <a-radio-group v-model="condition.state">
+                        <a-radio :label="0">忽略</a-radio>
+                        <a-radio :label="1">开启</a-radio>
+                        <a-radio :label="2">关闭</a-radio>
+                    </a-radio-group>
+                </a-form-item>
+            </a-form>
+        </a-modal>
     </div>
 </template>
 

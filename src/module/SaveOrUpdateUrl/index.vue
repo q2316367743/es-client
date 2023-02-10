@@ -1,51 +1,50 @@
 <template>
-    <el-dialog :title="$t('common.operation.add')" v-model="dialog" width="600px" draggable
-               :close-on-click-modal="false" destroy-on-close>
-        <el-form :model="url" label-width="100px" ref="urlForm" :rules="rules">
-            <el-form-item :label="$t('common.keyword.name')" prop="name">
-                <el-input v-model="url.name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.keyword.url')" prop="value">
-                <el-input v-model="url.value" :placeholder="$t('setting.link.placeholder.url')">
-                </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('setting.link.form.sequence')" prop="sequence">
-                <el-input-number v-model="url.sequence" controls-position="right" size="large"/>
-            </el-form-item>
-            <el-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
-                <el-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false"/>
-            </el-form-item>
-            <el-form-item :label="$t('setting.link.form.authUser')" prop="authUser" v-if="url.isAuth">
-                <el-input v-model="url.authUser" size="large"/>
-            </el-form-item>
-            <el-form-item :label="$t('setting.link.form.authPassword')" prop="authPassword" v-if="url.isAuth">
-                <el-input v-model="url.authPassword" size="large"/>
-            </el-form-item>
-        </el-form>
+    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="600px" draggable
+             :close-on-click-modal="false" destroy-on-close>
+        <a-form :model="url" label-width="100px" ref="urlForm" :rules="rules">
+            <a-form-item :label="$t('common.keyword.name')" prop="name">
+                <a-input v-model="url.name"></a-input>
+            </a-form-item>
+            <a-form-item :label="$t('common.keyword.url')" prop="value">
+                <a-input v-model="url.value" :placeholder="$t('setting.link.placeholder.url')">
+                </a-input>
+            </a-form-item>
+            <a-form-item :label="$t('setting.link.form.sequence')" prop="sequence">
+                <a-input-number v-model="url.sequence" controls-position="right" size="large"/>
+            </a-form-item>
+            <a-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
+                <a-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false"/>
+            </a-form-item>
+            <a-form-item :label="$t('setting.link.form.authUser')" prop="authUser" v-if="url.isAuth">
+                <a-input v-model="url.authUser" size="large"/>
+            </a-form-item>
+            <a-form-item :label="$t('setting.link.form.authPassword')" prop="authPassword" v-if="url.isAuth">
+                <a-input v-model="url.authPassword" size="large"/>
+            </a-form-item>
+        </a-form>
         <template #footer>
-            <el-popover :visible="testDialog" placement="top" :width="300" trigger="click">
-                <el-result :icon="testData.icon" :title="testData.title" :sub-title="testData.name">
+            <a-popover :visible="testDialog" placement="top" :width="300" trigger="click">
+                <a-result :icon="testData.icon" :title="testData.title" :sub-title="testData.name">
                     <template #extra>
                         <div v-if="testData.icon === 'success'">elasticsearch版本：{{ testData.version }}</div>
                         <div v-if="testData.icon === 'success'">lucene版本：{{ testData.luceneVersion }}</div>
                         <div>
-                            <el-button @click="testDialog = false">关闭</el-button>
+                            <a-button @click="testDialog = false">关闭</a-button>
                         </div>
                     </template>
-                </el-result>
+                </a-result>
                 <template #reference>
-                    <el-button @click="test">{{ $t('common.operation.test') }}</el-button>
+                    <a-button @click="test">{{ $t('common.operation.test') }}</a-button>
                 </template>
-            </el-popover>
-            <el-button type="primary" @click="submit">
+            </a-popover>
+            <a-button type="primary" @click="submit">
                 {{ isSave ? $t('common.operation.add') : $t('common.operation.update') }}
-            </el-button>
+            </a-button>
         </template>
-    </el-dialog>
+    </a-modal>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
-import {ElForm} from "element-plus";
+import {defineComponent} from "vue";
 
 import Url from '@/entity/Url';
 
@@ -119,88 +118,78 @@ export default defineComponent({
     },
     methods: {
         submit() {
-            let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
-            urlForm.validate((valid) => {
-                if (valid) {
-                    if (this.isSave) {
-                        // 新增
-                        urlService.insert({
-                            name: this.url.name,
-                            value: this.url.value,
-                            sequence: this.url.sequence,
-                            isAuth: this.url.isAuth,
-                            authUser: this.url.authUser,
-                            authPassword: this.url.authPassword
-                        }).then(() => MessageUtil.success('新增成功', useUrlStore().reset))
-                            .catch(e => MessageUtil.error('新增失败', e));
-                    } else {
-                        // 更新
-                        urlService.updateById(this.url.id!, {
-                            name: this.url.name,
-                            value: this.url.value,
-                            sequence: this.url.sequence,
-                            createTime: this.url.createTime || new Date(),
-                            isAuth: this.url.isAuth,
-                            authUser: this.url.authUser,
-                            authPassword: this.url.authPassword
-                            // eslint-disable-next-line
-                        })
-                            .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
-                            .catch(e => MessageUtil.error('修改失败', e));
-                    }
-                    this.url = {
-                        name: '',
-                        value: 'http://',
-                        sequence: 0,
-                        isAuth: false,
-                        authUser: '',
-                        authPassword: ''
-                    } as Url;
-                    this.testDialog = false;
-                    this.testData = {
-                        icon: 'success',
-                        title: '',
-                        name: '',
-                        version: '',
-                        luceneVersion: ''
-                    }
-                    this.dialog = false;
-                }
-            });
+            if (this.isSave) {
+                // 新增
+                urlService.insert({
+                    name: this.url.name,
+                    value: this.url.value,
+                    sequence: this.url.sequence,
+                    isAuth: this.url.isAuth,
+                    authUser: this.url.authUser,
+                    authPassword: this.url.authPassword
+                }).then(() => MessageUtil.success('新增成功', useUrlStore().reset))
+                    .catch(e => MessageUtil.error('新增失败', e));
+            } else {
+                // 更新
+                urlService.updateById(this.url.id!, {
+                    name: this.url.name,
+                    value: this.url.value,
+                    sequence: this.url.sequence,
+                    createTime: this.url.createTime || new Date(),
+                    isAuth: this.url.isAuth,
+                    authUser: this.url.authUser,
+                    authPassword: this.url.authPassword
+                    // eslint-disable-next-line
+                })
+                    .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
+                    .catch(e => MessageUtil.error('修改失败', e));
+            }
+            this.url = {
+                name: '',
+                value: 'http://',
+                sequence: 0,
+                isAuth: false,
+                authUser: '',
+                authPassword: ''
+            } as Url;
+            this.testDialog = false;
+            this.testData = {
+                icon: 'success',
+                title: '',
+                name: '',
+                version: '',
+                luceneVersion: ''
+            }
+            this.dialog = false;
         },
         test() {
-            let urlForm = this.$refs.urlForm as InstanceType<typeof ElForm>;
-            urlForm.validate((valid) => {
-                if (valid) {
-                    httpStrategyContext.getStrategy().fetch<any>({
-                        baseURL: this.url.value,
-                        url: '/',
-                        method: 'GET',
-                        auth: this.url.isAuth ? {
-                            username: this.url.authUser!,
-                            password: this.url.authPassword!
-                        } : undefined
-                    }).then((response) => {
-                        this.testDialog = true;
-                        this.testData = {
-                            icon: 'success',
-                            title: '链接成功',
-                            name: response.name,
-                            version: response.version.number,
-                            luceneVersion: response.version.lucene_version
-                        }
-                    }).catch((e) => {
-                        this.testDialog = true;
-                        this.testData = {
-                            icon: 'error',
-                            title: '链接不可用',
-                            name: '',
-                            version: '',
-                            luceneVersion: ''
-                        }
-                    });
+            httpStrategyContext.getStrategy().fetch<any>({
+                baseURL: this.url.value,
+                url: '/',
+                method: 'GET',
+                auth: this.url.isAuth ? {
+                    username: this.url.authUser!,
+                    password: this.url.authPassword!
+                } : undefined
+            }).then((response) => {
+                this.testDialog = true;
+                this.testData = {
+                    icon: 'success',
+                    title: '链接成功',
+                    name: response.name,
+                    version: response.version.number,
+                    luceneVersion: response.version.lucene_version
                 }
-            })
+            }).catch(() => {
+                this.testDialog = true;
+                this.testData = {
+                    icon: 'error',
+                    title: '链接不可用',
+                    name: '',
+                    version: '',
+                    luceneVersion: ''
+                }
+            });
         },
     }
 });

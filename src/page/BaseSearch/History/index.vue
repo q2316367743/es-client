@@ -1,18 +1,18 @@
 <template>
-    <el-drawer v-model="dialog" size="60%" title="历史记录" append-to-body destroy-on-close>
+    <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close>
         <div class="bsh-manage">
-            <el-tabs v-model="active" class="history-manage-tabs">
-                <el-tab-pane label="临时" name="temp"></el-tab-pane>
-                <el-tab-pane label="历史" name="history"></el-tab-pane>
-            </el-tabs>
+            <a-tabs v-model="active" class="history-manage-tabs">
+                <a-tab-pane label="临时" name="temp"></a-tab-pane>
+                <a-tab-pane label="历史" name="history"></a-tab-pane>
+            </a-tabs>
             <div class="bsh-manage-body">
                 <!-- 临时记录 -->
-                <bsh-temp-record @load="load" v-show="active === 'temp'" />
+                <bsh-temp-record @load="load" v-show="active === 'temp'"/>
                 <!-- 历史记录 -->
                 <bsh-history @load="load" v-show="active === 'history'"/>
             </div>
         </div>
-    </el-drawer>
+    </a-drawer>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";

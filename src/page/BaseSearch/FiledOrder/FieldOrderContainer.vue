@@ -1,7 +1,7 @@
 <template>
     <div v-if="orders.length === 0">
-        <el-button type="primary" @click="add">{{ $t('common.operation.add') }}
-        </el-button>
+        <a-button type="primary" @click="add">{{ $t('common.operation.add') }}
+        </a-button>
     </div>
     <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
          :key="idx">

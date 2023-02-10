@@ -24,7 +24,6 @@ import highlightJson from "highlight.js/lib/languages/json";
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
 import {ref} from "vue";
-import LoadingManager from "@/plugins/LoadingManager";
 import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 import NativeStrategyContext from "@/strategy/NativeStrategy/NativeStrategyContext";
 
@@ -44,8 +43,6 @@ export const lodisStrategyContext = new LodisStrategyContext();
 export const windowStrategyContext = new WindowStrategyContext();
 export const nativeStrategyContext = new NativeStrategyContext();
 
-// 加载管理器
-export const loadingManager = new LoadingManager();
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(
     lodisStrategyContext, storageStrategyContext, httpStrategyContext, windowStrategyContext);
@@ -59,7 +56,7 @@ export const json2xml = new x2js({
 export const isDark = useDark({
     initialValue: "light",
     selector: 'body',
-    attribute: 'theme-mode',
+    attribute: 'arco-theme',
     valueDark: 'dark',
     valueLight: 'light',
 });

@@ -4,60 +4,60 @@
         <!-- 版本 -->
         <p>
             <span>版本：</span>
-            <el-tag>{{ data.version }}</el-tag>
-            <el-tag type="success" style="margin-left: 10px;">build {{ data.build }}</el-tag>
+            <a-tag color="blue">{{ data.version }}</a-tag>
+            <a-tag color="green" style="margin-left: 10px;">build {{ data.build }}</a-tag>
         </p>
         <p>
             <span>使用中遇到任何问题，你可以先访问 </span>
-            <el-link target="_blank" @click="open(data.docUrl)">用户手册</el-link>
+            <a-link target="_blank" @click="open(data.docUrl)">用户手册</a-link>
             <span> ，在用户手册里可以查看与功能或产品相关的使用说明以及一些常见问题。</span>
         </p>
         <p>
             <span>如果用户手册没有解决你的问题，或者对项目有什么建议，你可以发送 </span>
-            <el-link @click="open(data.txc)" target="_blank" type="primary">反馈</el-link>
+            <a-link @click="open(data.txc)" target="_blank" type="primary">反馈</a-link>
             <span> 或者直接发送邮件到 </span>
-            <el-link @click="open('mailto:' + data.email)">{{ data.email }}</el-link>
+            <a-link @click="open('mailto:' + data.email)">{{ data.email }}</a-link>
             <span> 联系我。</span>
         </p>
         <p><span>如果这个项目让你有所收获，记得 </span>
             <b>Star</b>
             <span>（</span>
             <template v-for="(repository, index) in data.repositories">
-                <el-link target="_blank" @click="open(repository.url)">{{ repository.name }}</el-link>
+                <a-link target="_blank" @click="open(repository.url)">{{ repository.name }}</a-link>
                 <span v-if="index < data.repositories.length - 1"> | </span>
             </template>
             <span>）关注哦，或者点个赞（</span>
             <template v-for="(url, name, index) in data.distributes">
-                <el-link target="_blank" @click="open(url)">{{ name }}</el-link>
+                <a-link target="_blank" @click="open(url)">{{ name }}</a-link>
                 <span v-if="index < Object.keys(data.distributes).length - 1"> | </span>
             </template>
             <span>），这对我是非常不错的鼓励与支持。</span>
         </p>
         <p>
-            <el-link type="primary" @click="licenseDialog = true">开源许可证</el-link>
+            <a-link type="primary" @click="licenseDialog = true">开源许可证</a-link>
         </p>
         <div class="title-2">相关资源</div>
         <p>
             <span>仓库：</span>
             <template v-for="(repository, index) in data.repositories">
-                <el-link target="_blank" @click="open(repository.url)">{{ repository.name }}</el-link>
+                <a-link target="_blank" @click="open(repository.url)">{{ repository.name }}</a-link>
                 <span v-if="index < data.repositories.length - 1"> | </span>
             </template>
         </p>
         <p>
             <span>用户手册：</span>
-            <el-link target="_blank" @click="open(data.docUrl)">语雀</el-link>
+            <a-link target="_blank" @click="open(data.docUrl)">语雀</a-link>
         </p>
         <div class="title-2">建议反馈</div>
         <feedback-module/>
-        <el-dialog title="Apache2.0" v-model="licenseDialog" append-to-body :close-on-click-modal="false" draggable
+        <a-modal title="Apache2.0" v-model:visible="licenseDialog" append-to-body :close-on-click-modal="false" draggable
                    destroy-on-close style="height: 80vh" top="10vh">
             <div style="height: calc(80vh - 60px - 54px)">
-                <el-scrollbar>
+                <a-scrollbar>
                     <license-apache2_0/>
-                </el-scrollbar>
+                </a-scrollbar>
             </div>
-        </el-dialog>
+        </a-modal>
     </div>
 </template>
 

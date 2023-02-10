@@ -1,12 +1,13 @@
 import IndexView from "@/view/index/IndexView";
 import {defineStore} from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
-import {ElNotification} from 'element-plus'
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
-import {loadingManager, useEsVersion} from "@/global/BeanFactory";
+import {useEsVersion} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import Field from "@/view/Field";
+import useLoadingStore from "@/store/LoadingStore";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
     let indicesMap = new Map<string, IndexView>();
@@ -49,9 +50,9 @@ const useIndexStore = defineStore('index', {
                 return Promise.reject('链接不存在');
             }
             // 初始化时加载
-            loadingManager.start('准备索引信息中');
+            useLoadingStore().start('准备索引信息中');
             try {
-                loadingManager.setText('开始构建索引信息');
+                useLoadingStore().setText('开始构建索引信息');
                 // 获取索引信息
                 this.indices = await indexListBuild();
                 // 渲染map
@@ -64,13 +65,7 @@ const useIndexStore = defineStore('index', {
                     let unassigned_shards = health.unassigned_shards;
                     this.total_shards = this.active_shards + unassigned_shards;
                     this.status = health.status;
-                }).catch(e => {
-                    ElNotification({
-                        title: '获取索引健康值失败',
-                        type: "error",
-                        message: e,
-                    });
-                });
+                }).catch(e => NotificationUtil.error(e, '获取索引健康值失败'));
 
                 clusterApi.info()
                     .then(info => {
@@ -80,20 +75,14 @@ const useIndexStore = defineStore('index', {
                             .map(e => e.number)
                             .orElse(''));
                     })
-                    .catch(e => {
-                        ElNotification({
-                            title: '获取elasticsearch版本失败',
-                            type: "error",
-                            message: e,
-                        });
-                    });
+                    .catch(e => NotificationUtil.error(e, '获取elasticsearch版本失败'));
                 return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();
                 console.error(e);
                 return Promise.reject(e);
             } finally {
-                loadingManager.close();
+                useLoadingStore().close();
             }
         },
         clear() {

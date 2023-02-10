@@ -2,56 +2,60 @@
     <div class="hm-history">
         <vxe-toolbar ref="historyToolbar" custom export class="hm-history-toolbar">
             <template #buttons>
-                <el-input v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
-                          @input="search"></el-input>
-                <el-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
-                           style="margin-left: 12px;"/>
+                <a-input v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
+                         @input="search"></a-input>
+                <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
+                          style="margin-left: 12px;"/>
             </template>
             <template #tools>
-                <el-button type="primary" style="margin-right: 12px;" @click="addOpen" :icon="plusIcon"/>
+                <a-button type="primary" style="margin-right: 12px;" @click="addOpen">
+                    <template #icon>
+                        <icon-plus/>
+                    </template>
+                </a-button>
             </template>
         </vxe-toolbar>
         <div class="hm-history-body">
-            <el-scrollbar>
+            <a-scrollbar>
                 <vxe-table ref="historyTable" :data="histories" class="data" :column-config="columnConfig"
                            :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
                     <vxe-column field="name" :title="$t('common.keyword.name')" width="150"></vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
-                            <el-button type="success" size="small" @click="load(row)">{{
+                            <a-button type="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
                                 }}
-                            </el-button>
-                            <el-button type="primary" size="small" @click="updateOpen(row)">{{
+                            </a-button>
+                            <a-button type="primary" size="small" @click="updateOpen(row)">{{
                                     $t('common.operation.update')
                                 }}
-                            </el-button>
-                            <el-popconfirm title="确认删除此条记录？"
-                                           :confirm-button-text="$t('common.operation.delete')"
-                                           :cancel-button-text="$t('common.operation.cancel')"
-                                           @confirm="removeById(row.id)" width="200px">
+                            </a-button>
+                            <a-popconfirm title="确认删除此条记录？"
+                                          :confirm-button-text="$t('common.operation.delete')"
+                                          :cancel-button-text="$t('common.operation.cancel')"
+                                          @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <el-button type="danger" size="small">{{ $t('common.operation.delete') }}
-                                    </el-button>
+                                    <a-button type="danger" size="small">{{ $t('common.operation.delete') }}
+                                    </a-button>
                                 </template>
-                            </el-popconfirm>
+                            </a-popconfirm>
                         </template>
                     </vxe-column>
                 </vxe-table>
-            </el-scrollbar>
+            </a-scrollbar>
         </div>
-        <el-dialog v-model="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'" append-to-body>
+        <a-modal v-model:visible="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'"
+                 append-to-body>
             <history-save-and-update v-model="dialog.data" @submit="submit"/>
-        </el-dialog>
+        </a-modal>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
+import {defineComponent} from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
 import {toDateString} from "xe-utils";
-import {Plus, Search} from '@element-plus/icons-vue';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import {seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
@@ -74,8 +78,6 @@ export default defineComponent({
     components: {HistorySaveAndUpdate},
     emits: ['load'],
     data: () => ({
-        searchIcon: markRaw(Search),
-        plusIcon: markRaw(Plus),
         histories: new Array<SeniorSearchHistory>(),
         columnConfig: {
             resizable: true

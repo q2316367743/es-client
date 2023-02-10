@@ -1,10 +1,11 @@
 import MessageUtil from "@/utils/MessageUtil";
-import {loadingManager, versionManage} from "@/global/BeanFactory";
+import {versionManage} from "@/global/BeanFactory";
 import useSettingStore from "@/store/SettingStore";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
+import useLoadingStore from "@/store/LoadingStore";
 
 /**
  * 应用启动器
@@ -28,19 +29,21 @@ export default class ApplicationLaunch {
         this.storageStrategyContext = storageStrategyContext;
         this.httpStrategyContext = httpStrategyContext;
         this.windowStrategyContext = windowStrategyContext;
-        loadingManager.start('初始化组件中')
-        // 启动
+    }
+
+    executeInit(): void {
         this.init().then(() => {
             this.ready = true;
             this.execute((text) => {
-                loadingManager.setText(text);
+                useLoadingStore().setText(text);
             })
                 .then(() => console.log("初始化任务执行完成"))
-                .finally(() => loadingManager.close());
+                .finally(() => useLoadingStore().close());
         });
     }
 
     private async init(): Promise<void> {
+        useLoadingStore().start('初始化组件中')
         // 本地存储
         await this.lodisStrategyContext.init();
         versionManage.init();

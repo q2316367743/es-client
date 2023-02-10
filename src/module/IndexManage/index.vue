@@ -1,47 +1,43 @@
 <template>
-    <el-drawer :title="index" v-model="drawer" size="60%" class="index-manage" append-to-body destroy-on-close>
-        <el-tabs v-model="active" class="tab">
-            <el-tab-pane label="总览" name="1"/>
-            <el-tab-pane label="设置" name="2"/>
-            <el-tab-pane label="映射" name="3"/>
-            <el-tab-pane label="统计信息" name="4"/>
-        </el-tabs>
-        <div class="content" v-loading="loading">
-            <el-scrollbar>
-                <json-view v-if="jsonViewShow" :data="data"/>
-                <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
-            </el-scrollbar>
-        </div>
+    <a-drawer :title="index" v-model:visible="drawer" width="60%" class="index-manage" render-to-body unmount-on-close
+              :footer="false">
+        <a-tabs v-model:active-key="active" class="tab">
+            <a-tab-pane title="总览" key="1"/>
+            <a-tab-pane title="设置" key="2"/>
+            <a-tab-pane title="映射" key="3"/>
+            <a-tab-pane title="统计信息" key="4"/>
+        </a-tabs>
+        <a-spin :loading="loading" tip="加载中">
+            <div class="content">
+                <a-scrollbar>
+                    <json-view v-if="jsonViewShow" :data="data"/>
+                    <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
+                </a-scrollbar>
+            </div>
+        </a-spin>
         <div class="footer">
-            <el-dropdown trigger="click" @command="indexManage">
-                <el-button type="primary">
+            <a-dropdown trigger="click" @command="indexManage">
+                <a-button type="primary">
                     管理
-                    <el-icon class="el-icon--right">
-                        <arrow-up/>
-                    </el-icon>
-                </el-button>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="open" v-if="state === 'close'">打开索引
-                        </el-dropdown-item>
-                        <el-dropdown-item command="close" v-else-if="state === 'open'">关闭索引
-                        </el-dropdown-item>
-                        <el-dropdown-item disabled command="merge">强制合并索引</el-dropdown-item>
-                        <el-dropdown-item command="refresh">刷新索引</el-dropdown-item>
-                        <el-dropdown-item command="clear">清除索引缓存</el-dropdown-item>
-                        <el-dropdown-item command="flush">flush索引</el-dropdown-item>
-                        <el-dropdown-item disabled command="freeze">冻结索引</el-dropdown-item>
-                        <el-dropdown-item command="remove">删除索引</el-dropdown-item>
-                        <el-dropdown-item disabled command="lifecycle">增加生命周期</el-dropdown-item>
-                    </el-dropdown-menu>
+                    <icon-up/>
+                </a-button>
+                <template #content>
+                    <a-doption value="open" v-if="state === 'close'">打开索引</a-doption>
+                    <a-doption value="close" v-else-if="state === 'open'">关闭索引</a-doption>
+                    <a-doption disabled value="merge">强制合并索引</a-doption>
+                    <a-doption value="refresh">刷新索引</a-doption>
+                    <a-doption value="clear">清除索引缓存</a-doption>
+                    <a-doption value="flush">flush索引</a-doption>
+                    <a-doption disabled value="freeze">冻结索引</a-doption>
+                    <a-doption value="remove">删除索引</a-doption>
+                    <a-doption disabled value="lifecycle">增加生命周期</a-doption>
                 </template>
-            </el-dropdown>
+            </a-dropdown>
         </div>
-    </el-drawer>
+    </a-drawer>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {ArrowUp} from "@element-plus/icons-vue";
 import JsonView from "@/components/JsonView/index.vue";
 import ArrayUtil from "@/utils/ArrayUtil";
 import IndexApi from "@/api/IndexApi";
@@ -53,13 +49,13 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useIndexStore from "@/store/IndexStore";
 import Optional from "@/utils/Optional";
 import {mapState} from "pinia";
-import {ElMessageBox} from "element-plus";
 import {useIndexManageEvent} from "@/global/BeanFactory";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default defineComponent({
     name: 'index-manage',
     emits: ['update:modelValue'],
-    components: {IndexManageSummary, JsonView, ArrowUp},
+    components: {IndexManageSummary, JsonView},
     data: () => ({
         drawer: false,
         active: '1',
@@ -181,10 +177,9 @@ export default defineComponent({
                     case 'freeze':
                         break;
                     case 'remove':
-                        ElMessageBox.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
+                        MessageBoxUtil.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
                             confirmButtonText: "确定",
-                            cancelButtonText: "取消",
-                            type: "warning",
+                            cancelButtonText: "取消"
                         }).then(() => IndexApi(this.index).delete()
                             .then(res => MessageUtil.success(res, resolve))
                             .catch(e => MessageUtil.error('索引删除错误', e, () => reject(e))));
@@ -201,14 +196,14 @@ export default defineComponent({
 .index-manage {
     .tab {
         position: absolute;
-        top: 50px;
+        top: 10px;
         left: 20px;
         right: 20px;
     }
 
     .content {
         position: absolute;
-        top: 90px;
+        top: 40px;
         left: 20px;
         right: 20px;
         bottom: 52px;

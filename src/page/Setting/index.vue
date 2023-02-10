@@ -1,18 +1,20 @@
 <template>
     <div class="setting">
-        <el-tabs v-model="active">
-            <el-tab-pane :label="$t('setting.title.base')" name="base"></el-tab-pane>
-            <el-tab-pane :label="$t('setting.title.url')" name="url"></el-tab-pane>
-            <el-tab-pane :label="$t('setting.title.update')" name="update"></el-tab-pane>
-            <el-tab-pane :label="$t('setting.title.about')" name="about"></el-tab-pane>
-        </el-tabs>
+        <a-tabs v-model:active-key="active">
+            <a-tab-pane :title="$t('setting.title.base')" key="base"></a-tab-pane>
+            <a-tab-pane :title="$t('setting.title.url')" key="url"></a-tab-pane>
+            <a-tab-pane :title="$t('setting.title.update')" key="update"></a-tab-pane>
+            <a-tab-pane :title="$t('setting.title.about')" key="about"></a-tab-pane>
+        </a-tabs>
         <div class="setting-main">
-            <el-scrollbar>
-                <setting-base v-show="active === 'base'"/>
-                <setting-url v-show="active === 'url'"/>
-                <setting-update v-show="active === 'update'"/>
-                <setting-about v-show="active === 'about'"/>
-            </el-scrollbar>
+            <a-scrollbar style="overflow: auto;height: calc(100vh - 108px);">
+                <div>
+                    <setting-base v-show="active === 'base'"/>
+                    <setting-url v-show="active === 'url'"/>
+                    <setting-update v-show="active === 'update'"/>
+                    <setting-about v-show="active === 'about'"/>
+                </div>
+            </a-scrollbar>
         </div>
     </div>
 </template>

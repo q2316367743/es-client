@@ -1,24 +1,24 @@
 <template>
-    <el-select v-model="order.field" filterable
+    <a-select v-model="order.field" filterable
                :placeholder="$t('baseSearch.placeholder.order')"
                style="margin-left: 10px">
-        <el-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
-                   :value="field.name"></el-option>
-    </el-select>
-    <el-select v-model="order.type" filterable
+        <a-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
+                   :value="field.name"></a-option>
+    </a-select>
+    <a-select v-model="order.type" filterable
                :placeholder="$t('baseSearch.placeholder.order')"
                style="margin-left: 10px;width: 80px;">
-        <el-option label="asc" value="asc"></el-option>
-        <el-option label="desc" value="desc"></el-option>
-    </el-select>
-    <el-button type="primary" style="margin-left: 10px" @click="add">{{
+        <a-option label="asc" value="asc"></a-option>
+        <a-option label="desc" value="desc"></a-option>
+    </a-select>
+    <a-button type="primary" style="margin-left: 10px" @click="add">{{
             $t('common.operation.add')
         }}
-    </el-button>
-    <el-button type="danger" @click="remove(order.id)">{{
+    </a-button>
+    <a-button type="danger" @click="remove(order.id)">{{
             $t('common.operation.delete')
         }}
-    </el-button>
+    </a-button>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";

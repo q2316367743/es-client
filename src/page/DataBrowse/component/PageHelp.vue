@@ -6,21 +6,19 @@
         <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
             <i class="vxe-icon-arrow-left"/>
         </div>
-        <el-dropdown trigger="click" @command="pageSizeChange">
+        <a-dropdown trigger="click" @command="pageSizeChange">
             <div class="item" style="font-size: 12px;line-height: 20px;">
-                {{ (page - 1) * size }} - {{ (Math.min(page * size, total)) }}
+                {{ (page - 1) * size }} - {{ Math.min(page * size, total) }}
             </div>
             <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item command="1">10</el-dropdown-item>
-                    <el-dropdown-item command="2">100</el-dropdown-item>
-                    <el-dropdown-item command="3">250</el-dropdown-item>
-                    <el-dropdown-item command="4">500</el-dropdown-item>
-                    <el-dropdown-item command="5">1,000</el-dropdown-item>
-                    <el-dropdown-item command="6">自定义</el-dropdown-item>
-                </el-dropdown-menu>
+                    <a-doption value="1">10</a-doption>
+                    <a-doption value="2">100</a-doption>
+                    <a-doption value="3">250</a-doption>
+                    <a-doption value="4">500</a-doption>
+                    <a-doption value="5">1,000</a-doption>
+                    <a-doption value="6">自定义</a-doption>
             </template>
-        </el-dropdown>
+        </a-dropdown>
         <div class="item" style="font-size: 12px">
             / {{ total }}
         </div>
@@ -34,7 +32,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {ElMessageBox} from "element-plus";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default defineComponent({
     name: 'page-help',
@@ -120,13 +118,13 @@ export default defineComponent({
                     executeQuery();
                     break;
                 case "6":
-                    ElMessageBox.prompt('请输入自定义分页大小', '自定义分页', {
+                    MessageBoxUtil.prompt('请输入自定义分页大小', '自定义分页', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         inputPattern: /\d+/,
                         inputErrorMessage: '请输入正确的数字',
                     })
-                        .then(({value}) => {
+                        .then((value) => {
                             callback(1, parseInt(value));
                             executeQuery();
                         })
