@@ -12,4 +12,8 @@ export default class UtoolsWindowStrategyImpl implements WindowStrategy {
         utools.outPlugin();
     }
 
+    show(): { min: boolean; max: boolean; close: boolean } {
+        return {close: false, max: false, min: true};
+    }
+
 }

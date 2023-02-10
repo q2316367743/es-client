@@ -6,4 +6,13 @@ export default interface WindowStrategy {
 
     close(): void;
 
+    show(): {
+        min: boolean;
+
+        max: boolean;
+
+        close: boolean;
+
+    };
+
 }

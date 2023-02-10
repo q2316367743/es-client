@@ -17,4 +17,8 @@ export default class TsbWindowStrategyImpl implements WindowStrategy {
         window.tsbApi.window.hide();
     }
 
+    show(): { min: boolean; max: boolean; close: boolean } {
+        return {close: true, max: true, min: true};
+    }
+
 }

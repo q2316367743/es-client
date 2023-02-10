@@ -4,9 +4,7 @@ import MessageUtil from "@/utils/MessageUtil";
 export default class BrowserWindowStrategyImpl implements WindowStrategy {
 
     close(): void {
-        window.opener = null;
-        window.open('', '_self');
-        window.close();
+        MessageUtil.warning('浏览器模式下不支持关闭');
     }
 
     max(): void {
@@ -33,6 +31,10 @@ export default class BrowserWindowStrategyImpl implements WindowStrategy {
 
     private exitFullscreen() {
         document.exitFullscreen().then(() => console.log('退出全屏'));
+    }
+
+    show(): { min: boolean; max: boolean; close: boolean } {
+        return {close: false, max: true, min: false};
     }
 
 

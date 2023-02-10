@@ -46,7 +46,7 @@ export const windowStrategyContext = new WindowStrategyContext();
 export const loadingManager = new LoadingManager();
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(
-    lodisStrategyContext, storageStrategyContext, httpStrategyContext);
+    lodisStrategyContext, storageStrategyContext, httpStrategyContext, windowStrategyContext);
 
 export const json2xml = new x2js({
     selfClosingElements: false,

@@ -88,18 +88,23 @@ code {
 
     .right {
         display: flex;
+        padding-right: 8px;
 
         .menu-item {
-            padding: 8px;
+            padding: 4px 9px;
+            margin: 4px;
             cursor: pointer;
             -webkit-app-region: no-drag;
 
             .el-icon {
                 color: var(--text-color);
             }
-            &:last-child {
-                padding-right: 16px;
+
+            &:hover {
+                background-color: var(--bg-color);
+                border-radius: 4px;
             }
+
         }
     }
 }

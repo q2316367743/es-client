@@ -4,6 +4,7 @@ import useSettingStore from "@/store/SettingStore";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
+import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 
 /**
  * 应用启动器
@@ -15,15 +16,18 @@ export default class ApplicationLaunch {
     private lodisStrategyContext: LodisStrategyContext;
     private storageStrategyContext: StorageStrategyContext;
     private httpStrategyContext: HttpStrategyContext;
+    private windowStrategyContext: WindowStrategyContext;
 
     constructor(
         lodisStrategyContext: LodisStrategyContext,
         storageStrategyContext: StorageStrategyContext,
-        httpStrategyContext: HttpStrategyContext
+        httpStrategyContext: HttpStrategyContext,
+        windowStrategyContext: WindowStrategyContext
     ) {
         this.lodisStrategyContext = lodisStrategyContext;
         this.storageStrategyContext = storageStrategyContext;
         this.httpStrategyContext = httpStrategyContext;
+        this.windowStrategyContext = windowStrategyContext;
         loadingManager.start('初始化组件中')
         // 启动
         this.init().then(() => {
@@ -44,6 +48,7 @@ export default class ApplicationLaunch {
         // 初始化http模式
         await this.httpStrategyContext.init();
         await this.storageStrategyContext.init();
+        await this.windowStrategyContext.init();
     }
 
     private async execute(setText: (text: string) => void): Promise<void> {

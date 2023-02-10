@@ -39,6 +39,11 @@ export default defineComponent({
             type: ''
         } as BaseOrder
     }),
+    created() {
+        if (this.modelValue) {
+            this.order = this.modelValue;
+        }
+    },
     watch: {
         modelValue(newValue: BaseOrder) {
             this.order = newValue;

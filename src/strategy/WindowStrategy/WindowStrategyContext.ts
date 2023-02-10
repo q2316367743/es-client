@@ -6,11 +6,7 @@ export default class WindowStrategyContext {
 
     private strategy?: WindowStrategy;
 
-    constructor() {
-        this.init().then(() => console.log('窗口策略初始化完成'));
-    }
-
-    private async init(): Promise<void> {
+    async init(): Promise<void> {
         if (Constant.platform === 'ts') {
             let strategy = await import('./impl/TsbWindowStrategyImpl');
             this.strategy = new strategy.default();

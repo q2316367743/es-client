@@ -46,11 +46,13 @@
                     </template>
                 </el-dropdown>
                 <!-- 最小化 -->
-                <el-button class="menu-item" text link :icon="minusIcon" @click="toMin"/>
+                <el-button class="menu-item" text link :disabled="!optionShow.min" :icon="minusIcon" @click="toMin"/>
                 <!-- 最大化 -->
-                <el-button class="menu-item" text link :icon="fullScreenIcon" @click="toMax"/>
+                <el-button class="menu-item" text link :disabled="!optionShow.max" :icon="fullScreenIcon"
+                           @click="toMax"/>
                 <!-- 关闭 -->
-                <el-button class="menu-item" text link :icon="closeIcon" @click="toClose"/>
+                <el-button class="menu-item" text link :disabled="!optionShow.close" :icon="closeIcon"
+                           @click="toClose"/>
             </div>
         </header>
         <!-- 左侧菜单 -->
@@ -180,7 +182,8 @@ import {
     usePageJumpEvent,
     useUrlEditEvent,
     useUrlSelectEvent,
-    versionManage, windowStrategyContext
+    versionManage,
+    windowStrategyContext
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
@@ -218,6 +221,11 @@ export default defineComponent({
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
+            optionShow: {
+                min: true,
+                max: true,
+                close: true
+            },
             PageNameEnum,
             // 图标
             minusIcon: markRaw(Minus),
@@ -257,6 +265,9 @@ export default defineComponent({
             });
             // 未完全退出事件
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
+
+            // 窗口显示获取
+            this.optionShow = windowStrategyContext.getStrategy().show();
 
             // 版本更新处理
             switch (versionManage.checkUpdate()) {
