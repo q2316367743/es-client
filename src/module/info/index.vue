@@ -1,8 +1,8 @@
 <!-- 此处是右上角详情 -->
 <template>
-    <div class="info">
+    <div class="info" style="padding-top: 2px">
         <el-dropdown trigger="click" @command="handleCommand" :disabled="url === undefined">
-            <el-icon :size="24">
+            <el-icon :size="20">
                 <info-icon/>
             </el-icon>
             <template #dropdown>
@@ -60,8 +60,7 @@ export default defineComponent({
                     this.state();
                     break;
                 case 'node_status':
-                    // this.node_stats();
-                    this.$emit('command', command);
+                    this.node_stats();
                     break;
                 case 'cluster_nodes':
                     this.cluster_nodes();

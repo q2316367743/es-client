@@ -91,7 +91,7 @@ export default defineComponent({
 // 下拉列表
 .data-browse-pull-down {
     .vxe-pulldown--panel {
-        left: -220px;
+        left: -120px;
         box-shadow: 0 0 12px rgba(0, 0, 0, .12);
     }
 }

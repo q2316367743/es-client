@@ -3,12 +3,6 @@
     <el-form style="margin-top: 10px;" label-width="160px" label-position="top">
         <el-collapse v-model="actives">
             <el-collapse-item :title="$t('setting.base.layout.title')">
-                <el-form-item :label="$t('setting.base.layout.mode.title')">
-                    <el-select v-model="layoutMode">
-                        <el-option :value="LayoutModeEnum.DEFAULT" :label="$t('setting.base.layout.mode.default')"/>
-                        <el-option :value="LayoutModeEnum.CLASSIC" :label="$t('setting.base.layout.mode.classic')"/>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="默认页面">
                     <el-select v-model="instance.defaultPage">
                         <el-option :value="PageNameEnum.HOME" label="概览"/>
@@ -165,7 +159,6 @@ import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import Setting from "@/domain/Setting";
-import {ElLoading} from "element-plus";
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
@@ -175,7 +168,6 @@ export default defineComponent({
     name: 'setting-base',
     data: () => ({
         instance: useSettingStore().getDefaultValue(),
-        layoutMode: '',
         LayoutModeEnum,
         TabCloseModeEnum,
         PageNameEnum,
@@ -187,12 +179,6 @@ export default defineComponent({
         actives: ['']
     }),
     created() {
-        // 获取布局方式
-        document.body.setAttribute('layout-mode', this.layoutMode);
-        let layoutMode = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE);
-        if (layoutMode) {
-            this.layoutMode = layoutMode
-        }
         // 默认值
         if (!this.instance.tabMaxCount) {
             this.instance.tabMaxCount = useSettingStore().getTabMaxCount;
@@ -206,10 +192,6 @@ export default defineComponent({
         })
     },
     watch: {
-        layoutMode(newValue: string) {
-            document.body.setAttribute('layout-mode', newValue);
-            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.LAYOUT_MODE, newValue);
-        },
         instance: {
             handler(newValue: Setting) {
                 useSettingStore().setInstance(newValue);
@@ -256,7 +238,6 @@ export default defineComponent({
                     url, baseSearchHistory, seniorSearchHistory,
                     lodis: {
                         version: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION),
-                        layout_mode: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE),
                         setting: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING)
                     }
                 }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');

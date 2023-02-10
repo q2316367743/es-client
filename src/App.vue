@@ -1,54 +1,43 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
     <el-config-provider :locale="locale">
-        <!-- 左侧菜单 -->
-        <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
-            <div class="logo">
-                <div v-if="!fullScreen">{{ $t('app.name') }}</div>
-                <div style="padding-top: 3px;cursor:pointer;" @click="toggleFullScreen">
+        <header id="header">
+            <div class="left">
+                <div class="logo">{{ $t('app.name') }}</div>
+                <div class="full-screen" @click="toggleFullScreen">
                     <el-icon :size="20">
                         <expand v-if="fullScreen"/>
                         <fold v-else/>
                     </el-icon>
                 </div>
+                <!-- 索引服务器选择 -->
+                <el-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')"
+                           clearable @change="selectUrl" class="url-select">
+                    <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                    <el-option :label="$t('common.operation.add')" value="add"/>
+                </el-select>
+                <!-- 刷新按钮 -->
+                <el-button class="refresh" @click="refresh">{{ $t('common.operation.refresh') }}</el-button>
             </div>
-            <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
-                 @click="selectMenu(PageNameEnum.HOME)">
-                <span v-if="fullScreen"><el-icon><data-line/></el-icon></span>
-                <span v-else>{{ $t('menu.home') }}</span>
-            </div>
-            <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
-                 @click="selectMenu(PageNameEnum.DATA_BROWSER)">
-                <span v-if="fullScreen"><el-icon><Tickets/></el-icon></span>
-                <span v-else>{{ $t('menu.dataBrowser') }}</span>
-            </div>
-            <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
-                 @click="selectMenu(PageNameEnum.BASE_SEARCH)">
-                <span v-if="fullScreen"><el-icon><search/></el-icon></span>
-                <span v-else>{{ $t('menu.baseSearch') }}</span>
-            </div>
-            <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
-                 @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
-                <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
-                <span v-else>{{ $t('menu.seniorSearch') }}</span>
-            </div>
-            <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
-                 @click="selectMenu( PageNameEnum.SETTING)">
-                <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
-                <span v-else>{{ $t('menu.setting') }}</span>
-            </div>
-            <div class="dark" v-if="fullScreen">
+            <div class="right">
                 <!-- 各种信息弹框 -->
-                <div class="nav-list" style="padding-top: 11px;">
-                    <info></info>
+                <div class="menu-item">
+                    <info/>
                 </div>
+                <!-- 主题切换 -->
+                <el-button class="menu-item" text link @click="darkChange">
+                    <el-icon :size="24">
+                        <moon-icon v-if="isDark"/>
+                        <sun-icon v-else/>
+                    </el-icon>
+                </el-button>
                 <!-- 多语言切换 -->
                 <el-dropdown @command="languageCommand" trigger="click">
-                    <div class="nav-list">
-                        <el-icon :size="24">
-                            <translate></translate>
+                    <el-button class="menu-item" text link>
+                        <el-icon :size="20">
+                            <translate/>
                         </el-icon>
-                    </div>
+                    </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
                             <el-dropdown-item command="zhCn">中文</el-dropdown-item>
@@ -56,80 +45,63 @@
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
-                <div class="nav-list" @click="darkChange">
-                    <el-icon :size="24">
-                        <i class="vxe-icon-moon" v-if="isDark"></i>
-                        <i class="vxe-icon-sunny" v-else></i>
-                    </el-icon>
+                <!-- 最小化 -->
+                <el-button class="menu-item" text link :icon="minusIcon"/>
+                <!-- 最大化 -->
+                <el-button class="menu-item" text link :icon="fullScreenIcon"/>
+                <!-- 关闭 -->
+                <el-button class="menu-item" text link :icon="closeIcon"/>
+            </div>
+        </header>
+        <!-- 左侧菜单 -->
+        <div id="main">
+            <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
+                <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
+                     @click="selectMenu(PageNameEnum.HOME)">
+                    <span v-if="fullScreen"><el-icon><data-line/></el-icon></span>
+                    <span v-else>{{ $t('menu.home') }}</span>
+                </div>
+                <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
+                     @click="selectMenu(PageNameEnum.DATA_BROWSER)">
+                    <span v-if="fullScreen"><el-icon><Tickets/></el-icon></span>
+                    <span v-else>{{ $t('menu.dataBrowser') }}</span>
+                </div>
+                <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
+                     @click="selectMenu(PageNameEnum.BASE_SEARCH)">
+                    <span v-if="fullScreen"><el-icon><search/></el-icon></span>
+                    <span v-else>{{ $t('menu.baseSearch') }}</span>
+                </div>
+                <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
+                     @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
+                    <span v-if="fullScreen"><el-icon><Filter/></el-icon></span>
+                    <span v-else>{{ $t('menu.seniorSearch') }}</span>
+                </div>
+                <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
+                     @click="selectMenu( PageNameEnum.SETTING)">
+                    <span v-if="fullScreen"><el-icon><setting-icon/></el-icon></span>
+                    <span v-else>{{ $t('menu.setting') }}</span>
+                </div>
+                <div class="version">
+                    <el-dropdown @command="versionCommand">
+                        <el-link>v{{ Constant.version }}</el-link>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item command="feedback">{{ $t('app.feedback') }}</el-dropdown-item>
+                                <el-dropdown-item command="log">{{ $t('app.updateRecord') }}</el-dropdown-item>
+                                <el-dropdown-item command="about">{{ $t('app.about') }}</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
                 </div>
             </div>
-            <div class="version" v-else>
-                <el-dropdown @command="versionCommand">
-                    <el-link>v{{ Constant.version }}</el-link>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item command="feedback">{{ $t('app.feedback') }}</el-dropdown-item>
-                            <el-dropdown-item command="log">{{ $t('app.updateRecord') }}</el-dropdown-item>
-                            <el-dropdown-item command="about">{{ $t('app.about') }}</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
+            <!-- 内容-->
+            <div id="container" :class="fullScreen ? 'full-screen' : ''">
+                <home v-show="active === PageNameEnum.HOME"></home>
+                <data-browse v-show="active === PageNameEnum.DATA_BROWSER"></data-browse>
+                <base-search v-show="active === PageNameEnum.BASE_SEARCH"></base-search>
+                <senior-search v-show="active === PageNameEnum.SENIOR_SEARCH"></senior-search>
+                <setting v-show="active === PageNameEnum.SETTING"></setting>
             </div>
-        </div>
-        <!-- 顶部-->
-        <div id="index" :class="fullScreen ? 'full-screen' : ''">
-            <!-- 索引服务器选择 -->
-            <el-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" style="padding-top: 9px;"
-                       clearable @change="selectUrl">
-                <el-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
-                <el-option :label="$t('common.operation.add')" value="add"/>
-            </el-select>
-            <!-- 刷新按钮 -->
-            <el-button @click="refresh">{{ $t('common.operation.refresh') }}</el-button>
-        </div>
-        <!-- 索引标题 -->
-        <div id="title" :class="fullScreen ? 'full-screen' : ''" v-if="name !== ''">
-            <!-- 服务器名称 -->
-            <div class="cluster-name">{{ name }}</div>
-            <!-- 服务器状态 -->
-            <div class="server-status">{{ $t('app.clusterHealth') }}: {{ status }}
-                ({{ active_shards }} of {{ total_shards }})
-            </div>
-        </div>
-        <div id="menu" :class="fullScreen ? 'full-screen' : ''">
-            <!-- 主题切换 -->
-            <div class="menu-item" @click="darkChange">
-                <el-icon :size="24">
-                    <moon-icon v-if="isDark"/>
-                    <sun-icon v-else/>
-                </el-icon>
-            </div>
-            <!-- 多语言切换 -->
-            <el-dropdown @command="languageCommand" trigger="click">
-                <div class="menu-item">
-                    <el-icon :size="24">
-                        <translate/>
-                    </el-icon>
-                </div>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="zhCn">中文</el-dropdown-item>
-                        <el-dropdown-item command="enUs">English</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-            <!-- 各种信息弹框 -->
-            <div class="menu-item">
-                <info></info>
-            </div>
-        </div>
-        <!-- 内容-->
-        <div id="main" :class="fullScreen ? 'full-screen' : ''">
-            <home v-show="active === PageNameEnum.HOME"></home>
-            <data-browse v-show="active === PageNameEnum.DATA_BROWSER"></data-browse>
-            <base-search v-show="active === PageNameEnum.BASE_SEARCH"></base-search>
-            <senior-search v-show="active === PageNameEnum.SENIOR_SEARCH"></senior-search>
-            <setting v-show="active === PageNameEnum.SETTING"></setting>
         </div>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url/>
@@ -157,16 +129,19 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
 // 引入框架
-import {defineAsyncComponent, defineComponent} from 'vue';
+import {defineAsyncComponent, defineComponent, markRaw} from 'vue';
 import {mapState} from "pinia";
 import {
+    Close,
     Coin,
     DataBoard,
     DataLine,
     Expand,
     Filter,
     Fold,
+    FullScreen,
     HomeFilled,
+    Minus,
     Operation,
     Search,
     Setting as SettingIcon,
@@ -200,7 +175,6 @@ import Assert from "@/utils/Assert";
 import {
     applicationLaunch,
     isDark,
-    lodisStrategyContext,
     toggleDark,
     useFullScreen,
     usePageJumpEvent,
@@ -209,7 +183,6 @@ import {
     versionManage
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 let showHeightNotification = true;
 let showWidthNotification = true;
@@ -242,7 +215,12 @@ export default defineComponent({
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
-            PageNameEnum
+            PageNameEnum,
+            // 图标
+            minusIcon: markRaw(Minus),
+            fullScreenIcon: markRaw(FullScreen),
+            closeIcon: markRaw(Close),
+            translateIcon: markRaw(Translate)
         };
     },
     computed: {
@@ -276,12 +254,6 @@ export default defineComponent({
             });
             // 未完全退出事件
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
-
-            // 布局方式
-            let layoutMode = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAYOUT_MODE);
-            if (layoutMode) {
-                document.body.setAttribute('layout-mode', layoutMode);
-            }
 
             // 版本更新处理
             switch (versionManage.checkUpdate()) {

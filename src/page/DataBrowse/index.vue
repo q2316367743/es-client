@@ -80,7 +80,7 @@
                        @checkbox-change="checkboxChange" @cell-menu="cellMenu">
                 <vxe-column type="seq" width="50" fixed="left"></vxe-column>
                 <vxe-column type="checkbox" width="60"></vxe-column>
-                <vxe-column type="expand" width="80">
+                <vxe-column type="expand" width="80" title="源">
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
                             <json-view :data="row._source" :copy="false"/>
