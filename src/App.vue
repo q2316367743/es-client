@@ -5,26 +5,29 @@
             <header id="header">
                 <div class="left">
                     <div class="logo">{{ $t('app.name') }}</div>
-                    <div class="full-screen" @click="toggleFullScreen">
-                        <icon-menu-unfold v-if="fullScreen"/>
+                    <div class="full-screen" @click="collapsed = !collapsed">
+                        <icon-menu-unfold v-if="collapsed"/>
                         <icon-menu-fold v-else/>
                     </div>
                     <!-- 索引服务器选择 -->
                     <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small"
-                              allow-clear @change="selectUrl" class="url-select">
+                              allow-clear @change="selectUrl" class="url-select" :loading="urlSelectLoading">
                         <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
-                        <a-option :label="$t('common.operation.add')" value="add"/>
+                        <template #footer>
+                            <div style="padding: 6px 0; text-align: center;">
+                                <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
+                                </a-button>
+                            </div>
+                        </template>
                     </a-select>
                     <!-- 刷新按钮 -->
                     <a-button class="refresh" @click="refresh">{{ $t('common.operation.refresh') }}</a-button>
                 </div>
                 <div class="right">
                     <!-- 各种信息弹框 -->
-                    <div class="menu-item">
-                        <info/>
-                    </div>
+                    <info class-name="menu-item"/>
                     <!-- 主题切换 -->
-                    <a-button class="menu-item" text link @click="darkChange">
+                    <a-button class="menu-item" @click="darkChange">
                         <icon-moon v-if="isDark"/>
                         <icon-sun v-else/>
                     </a-button>
@@ -39,21 +42,21 @@
                         </template>
                     </a-dropdown>
                     <!-- 最小化 -->
-                    <a-button class="menu-item" text link :disabled="!optionShow.min"
+                    <a-button class="menu-item" :disabled="!optionShow.min"
                               @click="toMin">
                         <template #icon>
                             <icon-minus/>
                         </template>
                     </a-button>
                     <!-- 最大化 -->
-                    <a-button class="menu-item" text link :disabled="!optionShow.max"
+                    <a-button class="menu-item" :disabled="!optionShow.max"
                               @click="toMax">
                         <template #icon>
                             <icon-copy/>
                         </template>
                     </a-button>
                     <!-- 关闭 -->
-                    <a-button class="menu-item" text link :disabled="!optionShow.close"
+                    <a-button class="menu-item" :disabled="!optionShow.close"
                               @click="toClose">
                         <template #icon>
                             <icon-close/>
@@ -63,52 +66,57 @@
             </header>
             <!-- 左侧菜单 -->
             <div id="main">
-                <div id="navigation" :class="fullScreen ? 'full-screen' : ''">
-                    <div class="nav-list" :class="active === PageNameEnum.HOME ? 'active' : ''"
-                         @click="selectMenu(PageNameEnum.HOME)">
-                        <span v-if="fullScreen"><icon-dashboard/></span>
-                        <span v-else>{{ $t('menu.home') }}</span>
-                    </div>
-                    <div class="nav-list" :class="active === PageNameEnum.DATA_BROWSER ? 'active' : ''"
-                         @click="selectMenu(PageNameEnum.DATA_BROWSER)">
-                        <span v-if="fullScreen"><icon-apps/></span>
-                        <span v-else>{{ $t('menu.dataBrowser') }}</span>
-                    </div>
-                    <div class="nav-list" :class="active === PageNameEnum.BASE_SEARCH ? 'active' : ''"
-                         @click="selectMenu(PageNameEnum.BASE_SEARCH)">
-                        <span v-if="fullScreen"><icon-search/></span>
-                        <span v-else>{{ $t('menu.baseSearch') }}</span>
-                    </div>
-                    <div class="nav-list" :class="active === PageNameEnum.SENIOR_SEARCH ? 'active' : ''"
-                         @click="selectMenu(PageNameEnum.SENIOR_SEARCH)">
-                        <span v-if="fullScreen"><icon-filter/></span>
-                        <span v-else>{{ $t('menu.seniorSearch') }}</span>
-                    </div>
-                    <div class="nav-list" :class="active === PageNameEnum.SETTING ? 'active' : ''"
-                         @click="selectMenu( PageNameEnum.SETTING)">
-                        <span v-if="fullScreen"><icon-settings/></span>
-                        <span v-else>{{ $t('menu.setting') }}</span>
-                    </div>
+                <div id="navigation" :style="{width: collapsed ? '50px' : '184px'}">
+                    <a-menu :collapsed="collapsed" v-model:selected-keys="selectedKeys" breakpoint="x1">
+                        <a-menu-item :key="PageNameEnum.HOME">
+                            <template #icon>
+                                <icon-dashboard/>
+                            </template>
+                            {{ $t('menu.home') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.DATA_BROWSER">
+                            <template #icon>
+                                <icon-apps/>
+                            </template>
+                            {{ $t('menu.dataBrowser') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.BASE_SEARCH">
+                            <template #icon>
+                                <icon-search/>
+                            </template>
+                            {{ $t('menu.baseSearch') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
+                            <template #icon>
+                                <icon-filter/>
+                            </template>
+                            {{ $t('menu.seniorSearch') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.SETTING">
+                            <template #icon>
+                                <icon-settings/>
+                            </template>
+                            {{ $t('menu.setting') }}
+                        </a-menu-item>
+                    </a-menu>
                     <div class="version">
-                        <a-dropdown @command="versionCommand">
+                        <a-dropdown @select="versionCommand">
                             <a-link>v{{ Constant.version }}</a-link>
-                            <template #dropdown>
-                                <a-doption>
-                                    <a-doption command="feedback">{{ $t('app.feedback') }}</a-doption>
-                                    <a-doption command="log">{{ $t('app.updateRecord') }}</a-doption>
-                                    <a-doption command="about">{{ $t('app.about') }}</a-doption>
-                                </a-doption>
+                            <template #content>
+                                <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
+                                <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
+                                <a-doption value="about">{{ $t('app.about') }}</a-doption>
                             </template>
                         </a-dropdown>
                     </div>
                 </div>
                 <!-- 内容-->
-                <div id="container" :class="fullScreen ? 'full-screen' : ''">
-                    <home v-show="active === PageNameEnum.HOME"></home>
-                    <data-browse v-show="active === PageNameEnum.DATA_BROWSER"></data-browse>
-                    <base-search v-show="active === PageNameEnum.BASE_SEARCH"></base-search>
-                    <senior-search v-show="active === PageNameEnum.SENIOR_SEARCH"></senior-search>
-                    <setting v-show="active === PageNameEnum.SETTING"></setting>
+                <div id="container">
+                    <home v-show="selectedKeys[0] === PageNameEnum.HOME"></home>
+                    <data-browse v-show="selectedKeys[0] === PageNameEnum.DATA_BROWSER"></data-browse>
+                    <base-search v-show="selectedKeys[0] === PageNameEnum.BASE_SEARCH"></base-search>
+                    <senior-search v-show="selectedKeys[0] === PageNameEnum.SENIOR_SEARCH"></senior-search>
+                    <setting v-show="selectedKeys[0] === PageNameEnum.SETTING"></setting>
                 </div>
             </div>
             <!-- 保存或新增URL弹窗 -->
@@ -164,7 +172,6 @@ import {
     applicationLaunch,
     isDark,
     toggleDark,
-    useFullScreen,
     usePageJumpEvent,
     useUrlEditEvent,
     useUrlSelectEvent,
@@ -195,20 +202,21 @@ export default defineComponent({
     },
     data: () => {
         return {
-            active: PageNameEnum.HOME,
             urlId: undefined as number | undefined,
             locale: zhCn,
             isDark,
             Constant,
-            fullScreen: useFullScreen.fullScreen,
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
+            collapsed: false,
+            selectedKeys: new Array<PageNameEnum>(),
             optionShow: {
                 min: true,
                 max: true,
                 close: true
             },
+            urlSelectLoading: true,
             PageNameEnum,
             // 图标
         };
@@ -232,7 +240,8 @@ export default defineComponent({
         },
     },
     created() {
-        applicationLaunch.register(async (setText) => {
+        applicationLaunch.register(async () => {
+            this.urlSelectLoading = false;
             // 刷新索引列表
             useUrlStore().reset(() => {
                 // utools第一次进入事件
@@ -258,7 +267,10 @@ export default defineComponent({
                     this.updateDialog = true;
                     break;
             }
-            await versionManage.execUpdate(setText);
+            await versionManage.execUpdate();
+
+            this.selectedKeys = [useSettingStore().getDefaultPage];
+
         });
 
         // 国际化
@@ -295,7 +307,6 @@ export default defineComponent({
         this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {
-        toggleFullScreen: useFullScreen.toggle,
         async selectUrl(value: string | number) {
             // 新增，打开新增面板
             if (value === 'add') {
@@ -321,7 +332,7 @@ export default defineComponent({
             emitter.emit(MessageEventEnum.URL_UPDATE);
             // 选择链接后判断自动全屏
             if (useSettingStore().getAutoFullScreen) {
-                useFullScreen.setFullScreen(true);
+                this.collapsed = true;
             }
 
         },
@@ -331,7 +342,7 @@ export default defineComponent({
         },
         selectMenu(index: PageNameEnum) {
             // 切换active
-            this.active = index;
+            this.selectedKeys = [index];
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
         languageCommand(command: string) {

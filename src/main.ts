@@ -12,7 +12,10 @@ import '@/less/theme.less';
 import '@/less/main.less';
 import '@/less/post.css'
 
-import '@arco-design/web-vue/es/spin/style/css.js'
+// arco样式
+import '@arco-design/web-vue/es/spin/style/css.js';
+import '@arco-design/web-vue/es/message/style/css.js';
+import '@arco-design/web-vue/es/notification/style/css.js';
 
 // VXETable导入
 import VXETable from 'vxe-table';

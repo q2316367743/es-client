@@ -13,7 +13,7 @@ import useLoadingStore from "@/store/LoadingStore";
 export default class ApplicationLaunch {
 
     private ready: boolean = false;
-    private readonly launchItems = new Array<(setText?: (text: string) => void) => Promise<void>>();
+    private readonly launchItems = new Array<() => Promise<void>>();
     private lodisStrategyContext: LodisStrategyContext;
     private storageStrategyContext: StorageStrategyContext;
     private httpStrategyContext: HttpStrategyContext;
@@ -34,9 +34,7 @@ export default class ApplicationLaunch {
     executeInit(): void {
         this.init().then(() => {
             this.ready = true;
-            this.execute((text) => {
-                useLoadingStore().setText(text);
-            })
+            this.execute()
                 .then(() => console.log("初始化任务执行完成"))
                 .finally(() => useLoadingStore().close());
         });
@@ -54,12 +52,12 @@ export default class ApplicationLaunch {
         await this.windowStrategyContext.init();
     }
 
-    private async execute(setText: (text: string) => void): Promise<void> {
-        setText("初始化任务执行中")
+    private async execute(): Promise<void> {
+        useLoadingStore().setText("初始化任务执行中")
         // 启动完成
         for (let launchItem of this.launchItems) {
             try {
-                await launchItem(setText);
+                await launchItem();
             } catch (e) {
                 MessageUtil.error('启动项启动错误', e as Error);
                 console.error(e);
@@ -72,7 +70,7 @@ export default class ApplicationLaunch {
      * 注册启动项
      * @param launchItem 启动项
      */
-    register(launchItem: (setText?: (text: string) => void) => Promise<void>): void {
+    register(launchItem: () => Promise<void>): void {
         this.launchItems.push(launchItem);
         if (this.ready) {
             // 已经启动了

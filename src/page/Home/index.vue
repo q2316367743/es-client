@@ -5,7 +5,7 @@
             <div style="display: flex">
                 <!-- 输入框 -->
                 <a-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
-                         style="width: 300px;height: 32px;" @input="search" clearable></a-input>
+                         style="width: 300px;height: 32px;" @input="search" @clear="search" allow-clear></a-input>
                 <a-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
                           style="margin-left: 5px;width: 150px;" clearable @change="search">
                     <a-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></a-option>
@@ -29,7 +29,7 @@
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
-            <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 15%;"/>
+            <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 20%;"/>
             <a-spin :loading="indexLoading" style="width: 100%;">
                 <vxe-list :data="showIndices" :auto-resize="true" :height="height">
                     <template #default="{ items }">
@@ -76,9 +76,9 @@
             <a-form :model="condition" label-width="80px" label-position="left">
                 <a-form-item label="状态">
                     <a-radio-group v-model="condition.state">
-                        <a-radio :label="0">忽略</a-radio>
-                        <a-radio :label="1">开启</a-radio>
-                        <a-radio :label="2">关闭</a-radio>
+                        <a-radio :value="0">忽略</a-radio>
+                        <a-radio :value="1">开启</a-radio>
+                        <a-radio :value="2">关闭</a-radio>
                     </a-radio-group>
                 </a-form-item>
             </a-form>

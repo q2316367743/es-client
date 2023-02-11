@@ -89,12 +89,11 @@ code {
 
     .right {
         display: flex;
-        padding-right: 8px;
+        padding-right: 4px;
 
         .menu-item {
             padding: 4px 9px;
             margin: 4px;
-            cursor: pointer;
             -webkit-app-region: no-drag;
 
             .el-icon {
@@ -107,6 +106,7 @@ code {
             }
 
         }
+
     }
 }
 
@@ -121,31 +121,12 @@ code {
 
 #navigation {
     height: 100%;
-    width: 184px;
+    width: fit-content;
     box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
     overflow: hidden;
     transition: all 0.2s;
     position: relative;
-
-    &.full-screen {
-        width: 50px;
-    }
-
-    .nav-list {
-        height: 56px;
-        cursor: pointer;
-        line-height: 56px;
-        padding-left: 16px;
-
-        &:hover {
-            background-color: var(--hover-color);
-        }
-
-        &.active {
-            color: var(--active-color);
-        }
-    }
 
     .version {
         position: absolute;
@@ -155,9 +136,6 @@ code {
         text-align: center;
         font-size: 14px;
 
-        .el-link {
-            color: var(--text-color);
-        }
     }
 
 }
@@ -211,7 +189,7 @@ code {
 }
 
 
-.es-dialog .el-dialog__body {
+.es-dialog .arco-modal-body {
     height: 70vh;
     overflow: auto;
 }

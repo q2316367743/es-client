@@ -1,99 +1,85 @@
 <template>
-    <div class="base-search">
-        <!-- 标签页 -->
-        <transition name="el-zoom-in-top">
-            <div class="base-search-tab" v-show="showTabs">
+    <a-spin :loading="loading" :tip="$t('common.loading.search')">
+        <div class="base-search">
+            <!-- 标签页 -->
+            <div class="base-search-tab" v-if="instance.showTab">
                 <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
                           @option-tab="optionTab"/>
             </div>
-        </transition>
-        <transition name="el-zoom-in-top">
             <!-- 主要显示区域 -->
-            <a-spin :loading="loading" :tip="$t('common.loading.search')">
-                <div class="base-search-main" :class="showTabs ? '' : 'full-screen'">
-                    <!-- 顶部菜单栏 -->
-                    <div class="base-option">
-                        <div class="left">
-                            <a-auto-complete filterable :data="indices" v-model="current.index" style="width: 260px;"
-                                             clearable :placeholder="$t('baseSearch.placeholder.selectIndex')">
-                                <template #default="{ item }">
-                                    <div>{{ item.name }}</div>
-                                </template>
-                            </a-auto-complete>
-                            <!-- 搜索 -->
-                            <a-button type="primary" status="success" style="margin-left: 12px" @click="search">{{
-                                    $t('common.operation.search')
-                                }}
-                            </a-button>
-                            <!-- 清空 -->
-                            <a-button type="primary" status="danger" @click="clear(true)">{{
-                                    $t('common.operation.clear')
-                                }}
-                            </a-button>
-                            <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
-                        </div>
-                        <div class="right">
-                            <a-select v-model="view" style="width: 120px;">
-                                <a-option :label="$t('common.keyword.jsonView')" :value="2"></a-option>
-                                <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
-                            </a-select>
-                            <a-button type="secondary" style="margin-left: 12px;" @click="showTabs = !showTabs">
-                                <template #icon>
-                                    <icon-fullscreen/>
-                                </template>
-                            </a-button>
-                        </div>
+            <div class="base-search-main" :class="instance.showTab ? '' : 'full-screen'">
+                <!-- 顶部菜单栏 -->
+                <div class="base-option">
+                    <div class="left">
+                        <a-auto-complete filterable :data="indices" v-model="current.index" style="width: 260px;"
+                                         clearable :placeholder="$t('baseSearch.placeholder.selectIndex')">
+                            <template #default="{ item }">
+                                <div>{{ item.name }}</div>
+                            </template>
+                        </a-auto-complete>
+                        <!-- 搜索 -->
+                        <a-button type="primary" status="success" style="margin-left: 12px" @click="search">{{
+                                $t('common.operation.search')
+                            }}
+                        </a-button>
+                        <!-- 清空 -->
+                        <a-button type="primary" status="danger" @click="clear(true)">{{
+                                $t('common.operation.clear')
+                            }}
+                        </a-button>
+                        <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
                     </div>
-                    <!-- 核心查询区 -->
-                    <div class="base-display">
-                        <a-scrollbar @scroll="onScroll" ref="baseDisplay">
-                            <!-- 查询条件 -->
-                            <div class="base-condition" ref="baseCondition"
-                                 :class="paginationFixed ? 'pagination-fixed-show' : ''">
-                                <a-form :model="current" layout="vertical" label-width="80px" style="overflow: auto">
-                                    <!-- 条件 -->
-                                    <a-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
-                                        <field-condition-container v-model="current.conditions" :fields="fields"/>
-                                    </a-form-item>
-                                    <!-- 排序 -->
-                                    <a-form-item :label="$t('baseSearch.form.order')">
-                                        <field-order-container v-model="current.orders" :fields="fields"/>
-                                    </a-form-item>
-                                    <div ref="pagination">
-                                        <a-pagination :total="current.total" :page-size="size" show-total show-jumper
-                                                      show-page-size/>
-                                    </div>
-                                </a-form>
-                            </div>
-                            <!-- 查询结果 -->
-                            <div class="base-content" ref="baseContent">
-                                <data-view :view="view" :result="current.result"/>
-                            </div>
-                        </a-scrollbar>
-                        <a-back-top target-container=".base-display .el-scrollbar__wrap" v-show="showTop"/>
-                        <div class="pagination-fixed-none" :class="paginationFixed ? 'pagination-fixed-show' : ''">
-                            <a-pagination :total="current.total" :page-size="size" show-total show-jumper
-                                          show-page-size/>
-                        </div>
-                        <div class="base-search-condition-sentence">
-                            <a-button type="text" @click="showBody">
-                                {{ $t('baseSearch.form.displayQueryStatement') }}
-                            </a-button>
-                            <a-button type="text" @click="jumpToSeniorSearch">
-                                {{ $t('common.action.jumpToSeniorSearch') }}
-                            </a-button>
-                        </div>
+                    <div class="right">
+                        <a-select v-model="view" style="width: 120px;">
+                            <a-option :label="$t('common.keyword.jsonView')" :value="2"></a-option>
+                            <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
+                        </a-select>
                     </div>
                 </div>
-            </a-spin>
-        </transition>
-        <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                 append-to-body
-                 class="es-dialog" :close-on-click-modal="false">
-            <json-view :data="condition.data"/>
-        </a-modal>
-        <bsh-manage v-model="historyDialog"/>
-    </div>
+                <!-- 核心查询区 -->
+                <div class="base-display" ref="baseDisplay">
+                    <!-- 查询条件 -->
+                    <div class="base-condition" ref="baseCondition">
+                        <a-form :model="current" layout="vertical" label-width="80px"
+                                style="overflow-x: auto;overflow-y: hidden;">
+                            <!-- 条件 -->
+                            <a-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
+                                <field-condition-container v-model="current.conditions" :fields="fields"/>
+                            </a-form-item>
+                            <!-- 排序 -->
+                            <a-form-item :label="$t('baseSearch.form.order')">
+                                <field-order-container v-model="current.orders" :fields="fields"/>
+                            </a-form-item>
+                            <a-affix :offset-top="90" target="baseDisplay">
+                                <a-pagination :total="current.total" v-model:current="page" v-model:page-size="size"
+                                              show-total show-jumper
+                                              show-page-size/>
+                            </a-affix>
+                        </a-form>
+                    </div>
+                    <!-- 查询结果 -->
+                    <div class="base-content" ref="baseContent">
+                        <data-view :view="view" :result="current.result"/>
+                    </div>
+                </div>
+                <a-back-top target-container=".base-display" v-show="showTop"/>
+                <div class="base-search-condition-sentence">
+                    <a-button type="text" @click="showBody">
+                        {{ $t('baseSearch.form.displayQueryStatement') }}
+                    </a-button>
+                    <a-button type="text" @click="jumpToSeniorSearch">
+                        {{ $t('common.action.jumpToSeniorSearch') }}
+                    </a-button>
+                </div>
+            </div>
+            <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
+                     append-to-body
+                     class="es-dialog" :close-on-click-modal="false">
+                <json-view :data="condition.data"/>
+            </a-modal>
+            <bsh-manage v-model="historyDialog"/>
+        </div>
+    </a-spin>
 </template>
 
 <script lang="ts">
@@ -147,10 +133,6 @@ interface Name {
     label: string;
     value: string;
 }
-
-// 最后一次执行时间
-let lastExecuteTime = 0
-let executorId = -1;
 
 // 公共方法
 export default defineComponent({
@@ -215,8 +197,6 @@ export default defineComponent({
             // 视图
             view: useSettingStore().getDefaultViewer,
             showTop: true,
-            showTabs: useSettingStore().getShowTab,
-            paginationFixed: false
         };
     },
     computed: {
@@ -244,6 +224,7 @@ export default defineComponent({
                 });
             }
         }),
+        ...mapState(useSettingStore, ['instance']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
@@ -251,34 +232,9 @@ export default defineComponent({
     watch: {
         size() {
             this.search();
-            this.sync();
         },
         page() {
             this.search();
-            this.sync();
-        },
-        current: {
-            handler() {
-                // 同步要有限度
-                let now = new Date().getTime();
-                if (now - lastExecuteTime < 500) {
-                    // 清除执行器
-                    clearTimeout(executorId);
-                    // 设置500ms延迟执行
-                    executorId = setTimeout(() => {
-                        this.sync();
-                    }, 500) as unknown as number;
-                } else {
-                    // 设置500ms延迟执行
-                    executorId = setTimeout(() => {
-                        this.sync();
-                    }, 500) as unknown as number;
-                }
-                lastExecuteTime = now;
-                // 重置字段
-                this.fields = useIndexStore().field(this.current.index);
-            },
-            deep: true
         },
         searchId() {
             let baseSearchItem = this.searchMap.get(this.searchId);
@@ -323,20 +279,14 @@ export default defineComponent({
                     result: {}
                 }
             } as BaseSearchItem
-            this.searchMap.set(searchId, searchItem);
-            this.searchId = searchId;
+            if (useSettingStore().getShowTab) {
+                // 显示标签
+                this.searchMap.set(searchId, searchItem);
+                this.searchId = searchId;
+            }
 
             // 因为延迟问题，预先设置值
-            this.current = {
-                // 选择的索引名称
-                index: searchItem.body.index,
-                // 条件
-                conditions: searchItem.body.conditions,
-                orders: searchItem.body.orders,
-                // 查询结果
-                total: searchItem.body.total,
-                result: searchItem.body.result,
-            };
+            this.current = searchItem.body;
             this.page = searchItem.body.page;
             this.size = searchItem.body.size;
             this.$nextTick(() => {
@@ -352,24 +302,6 @@ export default defineComponent({
                 dialog: true,
                 data: QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
             }
-        },
-        sync() {
-            this.searchMap.set(this.searchId, {
-                header: {
-                    id: this.searchId,
-                    name: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.name).orElse("基础查询"),
-                    relationId: Optional.ofNullable(this.searchMap.get(this.searchId)).map(e => e.header).map(e => e.relationId).get()
-                },
-                body: {
-                    index: this.current.index,
-                    conditions: this.current.conditions,
-                    orders: this.current.orders,
-                    page: this.page,
-                    size: this.size,
-                    total: this.current.total,
-                    result: this.current.result
-                }
-            });
         },
         search() {
             if (this.current.index.length === 0) {
@@ -549,10 +481,6 @@ export default defineComponent({
             };
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
-        },
-        onScroll() {
-            let pagination = this.$refs['pagination'] as HTMLDivElement;
-            this.paginationFixed = pagination.getBoundingClientRect().top < 88.4375;
         },
     },
 });

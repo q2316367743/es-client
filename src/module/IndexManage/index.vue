@@ -1,6 +1,5 @@
 <template>
-    <a-drawer :title="index" v-model:visible="drawer" width="60%" class="index-manage" render-to-body unmount-on-close
-              :footer="false">
+    <a-drawer :title="index" v-model:visible="drawer" width="60%" class="index-manage" render-to-body unmount-on-close>
         <a-tabs v-model:active-key="active" class="tab">
             <a-tab-pane title="总览" key="1"/>
             <a-tab-pane title="设置" key="2"/>
@@ -15,7 +14,7 @@
                 </a-scrollbar>
             </div>
         </a-spin>
-        <div class="footer">
+        <template #footer>
             <a-dropdown trigger="click" @command="indexManage">
                 <a-button type="primary">
                     管理
@@ -33,7 +32,7 @@
                     <a-doption disabled value="lifecycle">增加生命周期</a-doption>
                 </template>
             </a-dropdown>
-        </div>
+        </template>
     </a-drawer>
 </template>
 <script lang="ts">
@@ -82,6 +81,7 @@ export default defineComponent({
         useIndexManageEvent.on(index => {
             this.drawer = true;
             this.index = index;
+            this.active = '1';
         })
     },
     methods: {
@@ -209,11 +209,8 @@ export default defineComponent({
         bottom: 52px;
     }
 
-    .footer {
-        position: absolute;
-        left: 40px;
-        right: 20px;
-        bottom: 12px;
+    .arco-drawer-footer {
+        text-align: left !important;
     }
 }
 </style>

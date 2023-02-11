@@ -12,14 +12,16 @@
                 <div class="data-browse-pull-down-index" v-else>
                     <a-input v-model="indexFilter" class="data-browse-pull-down-search"
                              ref="dataBrowsePullDownSearch" clearable/>
-                    <a-scrollbar height="358px" class="data-browse-pull-down-data">
-                        <div v-for="item in indicesShow" class="data-browse-list-item"
-                             :class="item === index ? 'data-browse-list-item-this' : ''"
-                             @click="indexChange(item)">
-                            <span>{{ item.name }}</span>
-                            <span v-if="item.alias && item.alias.length > 0">
+                    <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
+                        <div>
+                            <div v-for="item in indicesShow" class="data-browse-list-item"
+                                 :class="item === index ? 'data-browse-list-item-this' : ''"
+                                 @click="indexChange(item)">
+                                <span>{{ item.name }}</span>
+                                <span v-if="item.alias && item.alias.length > 0">
                                             <a-tag v-for="alias in item.alias">{{ alias }}</a-tag>
                                         </span>
+                            </div>
                         </div>
                     </a-scrollbar>
                 </div>
@@ -87,7 +89,7 @@ export default defineComponent({
 // 下拉列表
 .data-browse-pull-down {
     .vxe-pulldown--panel {
-        left: -120px;
+        left: -170px;
         box-shadow: 0 0 12px rgba(0, 0, 0, .12);
     }
 }
@@ -110,6 +112,7 @@ export default defineComponent({
             height: 358px;
             width: 400px;
             margin-top: 5px;
+            overflow: auto;
         }
     }
 

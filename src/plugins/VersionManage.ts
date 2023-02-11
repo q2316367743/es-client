@@ -3,6 +3,7 @@ import useSettingStore from "@/store/SettingStore";
 import {lodisStrategyContext, seniorSearchHistoryService} from "@/global/BeanFactory";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+import useLoadingStore from "@/store/LoadingStore";
 
 export default class VersionManage {
 
@@ -29,7 +30,7 @@ export default class VersionManage {
         return this.status;
     }
 
-    public async execUpdate(setText?: (text: string) => void): Promise<void> {
+    public async execUpdate(): Promise<void> {
         if (this.status === 3) {
             console.log("已是最新版")
             return Promise.resolve();
@@ -37,7 +38,7 @@ export default class VersionManage {
         if (this.storageVersion === '') {
             this.first();
         } else if (this.storageVersion === '2.4.0') {
-            await this.update240(setText);
+            await this.update240();
         }
         // 更新数据
         lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
@@ -58,10 +59,8 @@ export default class VersionManage {
         }
     }
 
-    private async update240(setText?: (text: string) => void) {
-        if (setText) {
-            setText("2.4.0版本更新 - 高级查询历史记录迁移");
-        }
+    private async update240() {
+        useLoadingStore().setText("2.4.0版本更新 - 高级查询历史记录迁移");
         // 历史记录迁移
         let records = await seniorSearchHistoryService.list()
         for (let record of records) {
@@ -78,9 +77,7 @@ export default class VersionManage {
             }
         }
 
-        if (setText) {
-            setText("2.4.0版本更新 - 服务器模式升级");
-        }
+        useLoadingStore().setText("2.4.0版本更新 - 服务器模式升级");
 
     }
 

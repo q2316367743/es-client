@@ -41,17 +41,20 @@
                 v-for="(item, idx) in index?.alias"
                 :key="idx"
                 closable
+                color="blue"
                 style="margin-right: 5px"
                 @close="removeAlias(item)"
             >{{ item }}
             </a-tag>
-            <a-button size="small" @click="newAlias">新增</a-button>
+            <a-button type="primary" status="normal" size="mini" @click="newAlias">新增</a-button>
         </div>
         <!-- 拓展面板按钮 -->
         <div class="expand-btn">
-            <a-button type="text" @click="showExpand = !showExpand">
-                <icon-up v-if="showExpand"/>
-                <icon-down v-else/>
+            <a-button type="text" @click="showExpand = !showExpand" size="small">
+                <template #icon>
+                    <icon-up v-if="showExpand"/>
+                    <icon-down v-else/>
+                </template>
             </a-button>
         </div>
         <!-- 拓展面板 -->
@@ -249,7 +252,7 @@ export default defineComponent({
 
     .alias {
         position: absolute;
-        top: 36px;
+        top: 40px;
         right: 102px;
     }
 

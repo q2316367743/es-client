@@ -43,6 +43,7 @@
                         v-for="index in instance.homeExcludeIndices"
                         :key="index"
                         closable
+                        color="blue"
                         :disable-transitions="false"
                         @close="removeHomeExcludeIndex(index)"
                         class="home-exclude-index"
@@ -94,14 +95,14 @@
             <a-collapse-item header="标签栏设置" key="6">
                 <a-form-item>
                     <template #label>
-                        <span>是否默认展示标签栏</span>
+                        <span>是否启用标签栏</span>
                         <a-tooltip content="基础查询和高级查询" placement="top" effect="light">
                             <icon-question-circle style="margin-left: 5px;"/>
                         </a-tooltip>
                     </template>
                     <a-switch v-model="instance.showTab" :active-value="true" :inactive-value="false"
-                              active-text="展示"
-                              inactive-text="隐藏"/>
+                              active-text="启用"
+                              inactive-text="禁用"/>
                 </a-form-item>
                 <a-form-item>
                     <template #label>
@@ -110,10 +111,10 @@
                             <icon-question-circle style="margin-left: 5px;"/>
                         </a-tooltip>
                     </template>
-                    <a-input-number controls-position="right" v-model="instance.tabMaxCount"/>
+                    <a-input-number controls-position="right" v-model="instance.tabMaxCount" :disabled="!instance.showTab"/>
                 </a-form-item>
                 <a-form-item label="标签栏超过最大数量后的关闭模式">
-                    <a-radio-group v-model="instance.tabCloseMode">
+                    <a-radio-group v-model="instance.tabCloseMode" :disabled="!instance.showTab">
                         <a-radio :value="TabCloseModeEnum.ALERT">警告</a-radio>
                         <a-radio :value="TabCloseModeEnum.FIRST">关闭第一个</a-radio>
                     </a-radio-group>

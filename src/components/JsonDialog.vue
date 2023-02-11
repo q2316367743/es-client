@@ -3,12 +3,12 @@
         :title="title"
         v-model:visible="visible"
         width="70%"
-        append-to-body
+        render-to-body
         class="es-dialog"
         :close-on-click-modal="false"
         top="10vh"
         draggable
-        destroy-on-close
+        unmount-on-close
     >
         <json-view :data="json"/>
     </a-modal>
@@ -43,6 +43,9 @@ export default defineComponent({
     watch: {
         visible(now) {
             this.$emit("update:value", now);
+        },
+        value(newValue) {
+            this.visible = this.value;
         }
     }
 });

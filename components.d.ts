@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AAffix: typeof import('@arco-design/web-vue')['Affix']
     AAutoComplete: typeof import('@arco-design/web-vue')['AutoComplete']
     ABacktop: typeof import('@arco-design/web-vue')['Backtop']
     ABackTop: typeof import('@arco-design/web-vue')['BackTop']
@@ -28,6 +29,8 @@ declare module '@vue/runtime-core' {
     AInput: typeof import('@arco-design/web-vue')['Input']
     AInputNumber: typeof import('@arco-design/web-vue')['InputNumber']
     ALink: typeof import('@arco-design/web-vue')['Link']
+    AMenu: typeof import('@arco-design/web-vue')['Menu']
+    AMenuItem: typeof import('@arco-design/web-vue')['MenuItem']
     AModal: typeof import('@arco-design/web-vue')['Modal']
     AOption: typeof import('@arco-design/web-vue')['Option']
     Apache2_0: typeof import('./src/components/License/Apache2_0.vue')['default']
@@ -40,6 +43,7 @@ declare module '@vue/runtime-core' {
     AScrollbar: typeof import('@arco-design/web-vue')['Scrollbar']
     ASelect: typeof import('@arco-design/web-vue')['Select']
     ASpin: typeof import('@arco-design/web-vue')['Spin']
+    ASubMenu: typeof import('@arco-design/web-vue')['SubMenu']
     ASwitch: typeof import('@arco-design/web-vue')['Switch']
     ATabPane: typeof import('@arco-design/web-vue')['TabPane']
     ATabs: typeof import('@arco-design/web-vue')['Tabs']

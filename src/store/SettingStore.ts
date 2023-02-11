@@ -33,7 +33,7 @@ function getDefaultValue(): Setting {
         jsonThemeByDark: 'github-dark',
 
         // 标签栏设置
-        showTab: true,
+        showTab: false,
         tabMaxCount: 10,
         tabCloseMode: TabCloseModeEnum.ALERT,
 
@@ -50,7 +50,7 @@ const useSettingStore = defineStore('setting', {
         }
     },
     getters: {
-        getDefaultPage: (state) => Optional.ofNullable(state.instance.defaultPage).orElse(PageNameEnum.HOME),
+        getDefaultPage: (state): PageNameEnum => Optional.ofNullable(state.instance.defaultPage).orElse(PageNameEnum.HOME),
         getLanguage: (state) => state.language,
         getDefaultShard: (state) => state.instance.defaultShard,
         getDefaultReplica: (state) => state.instance.defaultReplica,

@@ -4,25 +4,29 @@ export default {
     success(content: string, title?: string): void {
         Notification.success({
             content,
-            title
+            title,
+            closable: true
         })
     },
     info(content: string, title?: string): void {
         Notification.info({
             content,
-            title
+            title,
+            closable: true
         })
     },
     warning(content: string, title?: string): void {
         Notification.warning({
             content,
-            title
+            title,
+            closable: true
         })
     },
     error(content: string, title?: string): void {
         Notification.error({
             content,
-            title
+            title,
+            closable: true
         })
     }
 }

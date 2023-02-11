@@ -1,21 +1,23 @@
 <!-- 此处是右上角详情 -->
 <template>
-    <div class="info" style="padding-top: 2px">
-        <a-dropdown trigger="click" @command="handleCommand" :disabled="url === undefined">
-            <info-icon style="font-size: 20px"/>
-            <template #content>
-                <a-doption value="info">{{ $t('app.info.info') }}</a-doption>
-                <a-doption value="status">{{ $t('app.info.status') }}</a-doption>
-                <a-doption value="node_status">{{ $t('app.info.nodeStatus') }}</a-doption>
-                <a-doption value="cluster_nodes">{{ $t('app.info.clusterNodes') }}</a-doption>
-                <a-doption value="plugin">{{ $t('app.info.plugin') }}</a-doption>
-                <a-doption value="cluster_status">{{ $t('app.info.clusterStatus') }}</a-doption>
-                <a-doption value="cluster_health">{{ $t('app.info.clusterHealth') }}</a-doption>
-                <a-doption value="template">{{ $t('app.info.template') }}</a-doption>
+    <a-dropdown trigger="click" @select="handleCommand">
+        <a-button :class="className" :disabled="url === undefined">
+            <template #icon>
+                <info-icon style="font-size: 20px"/>
             </template>
-        </a-dropdown>
-        <json-dialog :json="data" :title="title" v-model="dialog" :preview-mode="previewMode"></json-dialog>
-    </div>
+        </a-button>
+        <template #content>
+            <a-doption value="info">{{ $t('app.info.info') }}</a-doption>
+            <a-doption value="status">{{ $t('app.info.status') }}</a-doption>
+            <a-doption value="node_status">{{ $t('app.info.nodeStatus') }}</a-doption>
+            <a-doption value="cluster_nodes">{{ $t('app.info.clusterNodes') }}</a-doption>
+            <a-doption value="plugin">{{ $t('app.info.plugin') }}</a-doption>
+            <a-doption value="cluster_status">{{ $t('app.info.clusterStatus') }}</a-doption>
+            <a-doption value="cluster_health">{{ $t('app.info.clusterHealth') }}</a-doption>
+            <a-doption value="template">{{ $t('app.info.template') }}</a-doption>
+        </template>
+    </a-dropdown>
+    <json-dialog :json="data" :title="title" v-model:value="dialog" :preview-mode="previewMode"></json-dialog>
 </template>
 <script lang="ts">
 import clusterApi from "@/api/ClusterApi";
@@ -30,6 +32,13 @@ import useUrlStore from "@/store/UrlStore";
 export default defineComponent({
     name: 'home-info',
     emits: ['command'],
+    props: {
+        className: {
+            type: String,
+            required: false,
+            default: ''
+        }
+    },
     components: {
         InfoIcon,
         JsonDialog,

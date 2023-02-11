@@ -1,6 +1,6 @@
 <template>
     <a-spin :loading="loading" tip="数据查询中">
-        <a-descriptions title="概览" :column="2" class="index-manage-summary" border>
+        <a-descriptions title="概览" :column="2" class="index-manage-summary" bordered>
             <a-descriptions-item label="健康">
                 <div class="health">
                     <div class="dot" :style="{backgroundColor: health}"/>
@@ -19,7 +19,7 @@
             <a-descriptions-item label="unassigned分片">{{ unassignedShards }}</a-descriptions-item>
             <a-descriptions-item label="存储大小">{{ storageSize }}</a-descriptions-item>
             <a-descriptions-item label="别名">
-                <a-tag v-for="alias in aliases" class="alias">{{ alias }}</a-tag>
+                <a-tag color="blue" closable v-for="alias in aliases" class="alias">{{ alias }}</a-tag>
             </a-descriptions-item>
         </a-descriptions>
     </a-spin>

@@ -6,17 +6,17 @@
         <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
             <i class="vxe-icon-arrow-left"/>
         </div>
-        <a-dropdown trigger="click" @command="pageSizeChange">
+        <a-dropdown trigger="click" @select="pageSizeChange">
             <div class="item" style="font-size: 12px;line-height: 20px;">
                 {{ (page - 1) * size }} - {{ Math.min(page * size, total) }}
             </div>
-            <template #dropdown>
-                    <a-doption value="1">10</a-doption>
-                    <a-doption value="2">100</a-doption>
-                    <a-doption value="3">250</a-doption>
-                    <a-doption value="4">500</a-doption>
-                    <a-doption value="5">1,000</a-doption>
-                    <a-doption value="6">自定义</a-doption>
+            <template #content>
+                <a-doption value="1">10</a-doption>
+                <a-doption value="2">100</a-doption>
+                <a-doption value="3">250</a-doption>
+                <a-doption value="4">500</a-doption>
+                <a-doption value="5">1,000</a-doption>
+                <a-doption value="6">自定义</a-doption>
             </template>
         </a-dropdown>
         <div class="item" style="font-size: 12px">
