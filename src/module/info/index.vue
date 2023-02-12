@@ -1,9 +1,9 @@
 <!-- 此处是右上角详情 -->
 <template>
     <a-dropdown trigger="click" @select="handleCommand">
-        <a-button :class="className" :disabled="url === undefined">
+        <a-button type="text" status="normal" :class="className" :disabled="url === undefined">
             <template #icon>
-                <info-icon style="font-size: 20px"/>
+                <icon-info-circle :size="16"/>
             </template>
         </a-button>
         <template #content>
@@ -25,7 +25,6 @@ import clusterApi from "@/api/ClusterApi";
 import {defineComponent} from "vue";
 
 import JsonDialog from "@/components/JsonDialog.vue";
-import InfoIcon from "@/icon/InfoIcon.vue";
 import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
 
@@ -40,7 +39,6 @@ export default defineComponent({
         }
     },
     components: {
-        InfoIcon,
         JsonDialog,
     },
     data: () => ({
@@ -54,7 +52,7 @@ export default defineComponent({
         ...mapState(useUrlStore, ['url'])
     },
     methods: {
-        handleCommand(command: string) {
+        handleCommand(command: any) {
             switch (command) {
                 case 'info':
                     this.info();

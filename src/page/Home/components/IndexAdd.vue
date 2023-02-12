@@ -6,7 +6,7 @@
             </a-form-item>
         </a-form>
         <a-collapse v-model="indexCollapse">
-            <a-collapse-item :header="$t('home.newIndex.setting')" name="1">
+            <a-collapse-item :header="$t('home.newIndex.setting')" key="1">
                 <a-form :model="index.settings">
                     <a-form-item :label="$t('home.newIndex.shardNumber')">
                         <a-input-number v-model="index.settings.numberOfShards" controls-position="right">
@@ -18,7 +18,7 @@
                     </a-form-item>
                 </a-form>
             </a-collapse-item>
-            <a-collapse-item :header="$t('home.newIndex.fieldSetting')" name="2">
+            <a-collapse-item :header="$t('home.newIndex.fieldSetting')" key="2">
                 <div v-if="index.mapping.length === 0">
                     <a-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}</a-button>
                 </div>
@@ -39,7 +39,7 @@
                                 </a-button>
                             </a-form-item>
                             <a-form-item>
-                                <a-button type="danger" @click="removeProperty(property)">{{
+                                <a-button type="primary" status="danger" @click="removeProperty(property)">{{
                                         $t('common.operation.delete')
                                     }}
                                 </a-button>
@@ -50,9 +50,9 @@
             </a-collapse-item>
         </a-collapse>
         <template #footer>
-            <a-button type="info" text @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch') }}
-            </a-button>
-            <a-button type="info" text @click="copyIndex">{{ $t('common.action.copy') }}</a-button>
+            <a-button type="text" @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch') }}</a-button>
+            <a-button type="text" text @click="copyIndex">{{ $t('common.action.copy') }}</a-button>
+            <a-button type="secondary" text @click="this.dialog = false">{{ $t('common.operation.cancel') }}</a-button>
             <a-button type="primary" @click="addIndex">{{ $t('common.operation.add') }}</a-button>
         </template>
     </a-modal>

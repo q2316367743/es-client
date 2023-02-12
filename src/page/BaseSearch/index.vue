@@ -59,7 +59,7 @@
                     </div>
                     <!-- 查询结果 -->
                     <div class="base-content" ref="baseContent">
-                        <data-view :view="view" :result="current.result"/>
+                        <data-view :view="view" :result="current.result" :abs="false"/>
                     </div>
                 </div>
                 <a-back-top target-container=".base-display" v-show="showTop"/>

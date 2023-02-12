@@ -1,4 +1,4 @@
-import {Modal, Input} from "@arco-design/web-vue";
+import {Input, Modal} from "@arco-design/web-vue";
 import {h, VNode} from "vue";
 import Optional from "@/utils/Optional";
 
@@ -58,10 +58,8 @@ export default {
     }): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             let value = '';
-            const onInput = (e: InputEvent) => {
-                console.log(e)
-                let el = e.target as HTMLInputElement;
-                value = el.value;
+            const onInput = (e: string) => {
+                value = e;
             }
             Modal.confirm({
                 content: () => h('div', {class: 'es-prompt'}, [

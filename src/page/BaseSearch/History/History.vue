@@ -22,13 +22,13 @@
                     </vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
-                            <a-button type="success" size="small" @click="load(row)">
+                            <a-button type="primary" status="success" size="small" @click="load(row)">
                                 {{ $t('common.operation.load') }}
                             </a-button>
                             <a-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
                                            cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <a-button type="danger" size="small">{{ $t('common.operation.delete') }}
+                                    <a-button type="primary" status="danger" size="small">{{ $t('common.operation.delete') }}
                                     </a-button>
                                 </template>
                             </a-popconfirm>

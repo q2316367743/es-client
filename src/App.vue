@@ -27,14 +27,14 @@
                     <!-- 各种信息弹框 -->
                     <info class-name="menu-item"/>
                     <!-- 主题切换 -->
-                    <a-button class="menu-item" @click="darkChange">
-                        <icon-moon v-if="isDark"/>
-                        <icon-sun v-else/>
+                    <a-button class="menu-item" @click="darkChange" type="text" status="normal">
+                        <icon-moon :size="16" v-if="isDark"/>
+                        <icon-sun :size="16" v-else/>
                     </a-button>
                     <!-- 多语言切换 -->
                     <a-dropdown @select="languageCommand" trigger="click">
-                        <a-button class="menu-item" text link>
-                            <icon-language/>
+                        <a-button class="menu-item" type="text" status="normal">
+                            <icon-language :size="16"/>
                         </a-button>
                         <template #content>
                             <a-doption value="zhCn">中文</a-doption>
@@ -307,7 +307,7 @@ export default defineComponent({
         this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {
-        async selectUrl(value: string | number) {
+        async selectUrl(value: any) {
             // 新增，打开新增面板
             if (value === 'add') {
                 this.urlId = undefined;
@@ -345,7 +345,7 @@ export default defineComponent({
             this.selectedKeys = [index];
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
-        languageCommand(command: string) {
+        languageCommand(command: any) {
             useSettingStore().setLanguage(command);
             this.$i18n.locale = command;
             if (command === 'zh') {
@@ -358,7 +358,7 @@ export default defineComponent({
             toggleDark();
             emitter.emit(MessageEventEnum.SYSTEM_THEME);
         },
-        versionCommand(command: string) {
+        versionCommand(command: any) {
             switch (command) {
                 case 'about':
                     this.selectMenu(PageNameEnum.SETTING);

@@ -5,7 +5,7 @@
         editable
         show-add-button auto-switch
         class="tab-menu"
-        @add="editTabs($event, 'add')"
+        @add="editTabs('', 'add')"
         @delete="editTabs($event, 'remove')"
         :hide-content="true"
     >
@@ -14,7 +14,7 @@
             :key="item.id"
         >
             <template #title>
-                <a-dropdown trigger="contextmenu" @select="optionTab">
+                <a-dropdown trigger="contextMenu" @select="optionTab">
                     <div>{{ item.name }}</div>
                     <template #content>
                         <a-doption :value="`close-one|${item.id}`">关闭此标签</a-doption>
@@ -64,7 +64,7 @@ export default defineComponent({
         this.searchId = this.modelValue!;
     },
     methods: {
-        editTabs(targetName: number, action: 'remove' | 'add') {
+        editTabs(targetName: any, action: 'remove' | 'add') {
             if (action === 'add') {
                 let count = Optional.ofNullable(this.searchItemHeaders).map(e => e!.length).orElse(0);
                 if (count === useSettingStore().getTabMaxCount - 1) {
@@ -88,7 +88,7 @@ export default defineComponent({
             }
             this.$emit('editTabs', targetName, action);
         },
-        optionTab(command: string) {
+        optionTab(command: any) {
             this.$emit('optionTab', command);
         }
     }

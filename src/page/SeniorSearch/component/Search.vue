@@ -1,11 +1,12 @@
 <template>
     <vxe-table :data="records" empty-text="没有记录" ref="seniorSearchRecordRef"
                :column-config="columnConfig" :export-config="exportConfig">
-        <vxe-column type="seq" width="50" fixed="left" title="序号"></vxe-column>
+        <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
         <vxe-column type="expand" width="80" title="请求体">
             <template #content="{ row, rowIndex }">
                 <div class="data-browse-expand">
-                    <json-view :data="JSON.parse(row.params)"/>
+                    <a-button type="text" status="normal">复制</a-button>
+                    <json-view :data="JSON.parse(row.params)" :copy="false"/>
                 </div>
             </template>
         </vxe-column>

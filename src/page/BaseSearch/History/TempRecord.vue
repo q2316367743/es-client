@@ -5,7 +5,7 @@
                 <a-input v-model="index" style="width: 200px;" placeholder="索引" @input="loadData" clearable/>
             </div>
             <div>
-                <a-button type="danger" @click="reset">
+                <a-button type="primary" status="danger" @click="reset">
                     <template #icon>
                         <icon-delete/>
                     </template>
@@ -30,13 +30,13 @@
                     </vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="270">
                         <template #default="{ row }">
-                            <a-button type="success" size="small" @click="load(row)">{{
+                            <a-button type="primary" status="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
                                 }}
                             </a-button>
                             <a-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
                             </a-button>
-                            <a-button type="danger" size="small" @click="removeById(row.id)">
+                            <a-button type="primary" status="danger" size="small" @click="removeById(row.id)">
                                 {{ $t('common.operation.delete') }}
                             </a-button>
                         </template>

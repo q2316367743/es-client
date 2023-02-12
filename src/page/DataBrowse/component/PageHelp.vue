@@ -78,7 +78,7 @@ export default defineComponent({
             this.updatePage(this.page - 1);
             this.update();
         },
-        pageSizeChange(command: string) {
+        pageSizeChange(command: any) {
             this.pageSizeChangeExec(command, this.update, (page, size) => {
                 this.updatePage(page);
                 this.updateSize(size);

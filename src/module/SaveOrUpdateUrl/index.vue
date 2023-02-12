@@ -13,7 +13,7 @@
                 <a-input-number v-model="url.sequence" controls-position="right" size="large"/>
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
-                <a-switch v-model="url.isAuth" size="large" active-text="true" inactive-text="false"/>
+                <a-switch v-model="url.isAuth" active-text="true" inactive-text="false"/>
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.authUser')" prop="authUser" v-if="url.isAuth">
                 <a-input v-model="url.authUser" size="large"/>

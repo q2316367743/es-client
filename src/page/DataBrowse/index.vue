@@ -68,13 +68,13 @@
                        :header-cell-class-name="() => ('rain-table-panel-header')" :sort-config="sortConfig"
                        @menu-click="menuClick" @sort-change="sortChange" @checkbox-all="checkboxAll"
                        @checkbox-change="checkboxChange" @cell-menu="cellMenu">
-                <vxe-column type="seq" width="50" fixed="left"></vxe-column>
+                <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
                 <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="expand" width="80" title="源">
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
+                            <a-button type="text" text link class="copy" @click="copy(row._source)">复制</a-button>
                             <json-view :data="row._source" :copy="false"/>
-                            <a-button type="primary" text link class="copy" @click="copy(row._source)">复制</a-button>
                         </div>
                     </template>
                 </vxe-column>
@@ -105,7 +105,7 @@
                 :extensions="extensions"
             />
             <template #footer>
-                <a-button text @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
+                <a-button type="text" @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
                 <a-button @click="addConfig.dialog = false">取消</a-button>
                 <a-button type="primary" @click="recordAddClick">新增</a-button>
             </template>
@@ -125,7 +125,7 @@
                 :extensions="extensions"
             />
             <template #footer>
-                <a-button text @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
+                <a-button type="text" @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
                 <a-button @click="editConfig.dialog = false">取消</a-button>
                 <a-button type="primary" @click="recordEditClick">修改</a-button>
             </template>
@@ -231,13 +231,6 @@ export default defineComponent({
 
         // vxe表格相关配置
         loading: false,
-        tableTooltipConfig: {
-            showAll: true,
-            enterable: true,
-            contentMethod: ({type, column, row, items, _columnIndex}) => {
-                return column.title;
-            }
-        } as VxeTablePropTypes.TooltipConfig,
         columnConfig: {
             resizable: true,
             isCurrent: true

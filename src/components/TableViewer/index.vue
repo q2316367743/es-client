@@ -1,36 +1,32 @@
 <template>
-    <div class="table-viewer-show">
-        <vxe-toolbar ref="tableViewerToolbar" custom export/>
-        <vxe-table class="es-scrollbar" empty-text="数据为空"
-                   :data="records" ref="tableViewerTable"
-                   :column-config="columnConfig" :export-config="exportConfig">
-            <vxe-column type="expand" width="80">
-                <template #content="{ row, rowIndex }">
-                    <div class="data-browse-expand">
-                        <json-view :data="row._source"/>
-                        <a-button type="primary" text link class="copy" @click="copy(row._source)">复制</a-button>
-                    </div>
-                </template>
-            </vxe-column>
-            <vxe-column type="seq" width="50" fixed="left" title="序号"></vxe-column>
-            <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format"/>
-            <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable
-                        :formatter="format"/>
-            <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable
-                        :formatter="format"/>
-            <vxe-column v-for="(header, index) of mappings" :key="index" :field="header.field" :title="header.field"
-                        show-overflow="tooltip" sortable :width="header.weight"
-                        :formatter="format">
-                <template #default="{ row }">
-                    {{ typeof row[header.field] === 'object' ? JSON.stringify(row[header.field]) : row[header.field] }}
-                </template>
-            </vxe-column>
-        </vxe-table>
-    </div>
+    <vxe-table class="es-scrollbar" empty-text="数据为空" :data="records" height="100%"
+               :column-config="columnConfig" :export-config="exportConfig">
+        <vxe-column type="expand" width="80">
+            <template #content="{ row, rowIndex }">
+                <div class="data-browse-expand">
+                    <a-button type="text" status="normal" class="copy" @click="copy(row._source)">复制</a-button>
+                    <json-view :data="row._source"/>
+                </div>
+            </template>
+        </vxe-column>
+        <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
+        <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format"/>
+        <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable
+                    :formatter="format"/>
+        <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable
+                    :formatter="format"/>
+        <vxe-column v-for="(header, index) of mappings" :key="index" :field="header.field" :title="header.field"
+                    show-overflow="tooltip" sortable :width="header.weight"
+                    :formatter="format">
+            <template #default="{ row }">
+                {{ typeof row[header.field] === 'object' ? JSON.stringify(row[header.field]) : row[header.field] }}
+            </template>
+        </vxe-column>
+    </vxe-table>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import {VxeColumnPropTypes, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
+import {VxeColumnPropTypes, VxeTablePropTypes} from "vxe-table";
 import XEUtils from "xe-utils";
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
@@ -74,11 +70,6 @@ export default defineComponent({
     },
     mounted() {
         this.render();
-        let tableViewerTable = this.$refs['tableViewerTable'] as VxeTableInstance;
-        let tableViewerToolbar = this.$refs['tableViewerToolbar'] as VxeToolbarInstance;
-        this.$nextTick(() => {
-            tableViewerTable.connect(tableViewerToolbar);
-        });
     },
     methods: {
         format(column: { cellValue: any }): VxeColumnPropTypes.Formatter {
@@ -138,9 +129,6 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-.table-viewer-show {
-    overflow: auto;
-}
 
 .table-viewer-column {
     z-index: 10;

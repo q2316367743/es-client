@@ -1,62 +1,75 @@
 <template>
     <a-spin :loading="loading" tip="数据查询中">
         <div class="senior-search">
+            <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                      v-if="instance.showTab" class="senior-search-tab"
+                      @option-tab="optionTab"/>
             <!-- 下半部分 -->
-            <div class="senior-main">
-                <!-- 左面查询条件 -->
-                <div class="side" :style="{width: `${width}px`}">
-                    <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                              v-show="showTabs"
-                              @option-tab="optionTab"/>
-                    <div class="controller" :class="showTabs ? 'show-tabs' : ''">
+            <!-- 左面查询条件 -->
+            <a-split class="senior-main" min="42px" :style="{top: instance.showTab ? '40px' : '0'}" :size="0.3">
+                <template #first>
+                    <div class="side">
                         <div class="option">
-                            <ss-option-btn :tooltip="$t('common.operation.run')"
-                                           :class-name="url ? 'run' : 'run disable'"
-                                           @click="search">
-                                <run-icon/>
-                            </ss-option-btn>
-                            <ss-option-btn :tooltip="$t('common.operation.save')" class-name="save"
-                                           @click="save">
-                                <save-icon/>
-                            </ss-option-btn>
-                            <ss-option-btn :tooltip="$t('common.operation.format')" class-name="format"
-                                           @click="formatDocument">
-                                <format-icon/>
-                            </ss-option-btn>
-                            <ss-option-btn :tooltip="viewTip" class-name="view" @click="view = (view === 2) ? 3 : 2">
-                                <json-icon v-if="view === 2"/>
-                                <table-icon v-else-if="view === 3"/>
-                                <view-icon v-else/>
-                            </ss-option-btn>
-                            <ss-option-btn tooltip="标签栏" class-name="tab" @click="showTabs = !showTabs">
-                                <tag-icon/>
-                            </ss-option-btn>
-                            <ss-option-btn tooltip="帮助" class-name="help" @click="openHelp">
-                                <i class="vxe-icon-question-circle"/>
-                            </ss-option-btn>
+                            <a-tooltip :content="$t('common.operation.run')" position="right">
+                                <a-button type="text" status="normal" @click="search" :disabled="!url">
+                                    <template #icon>
+                                        <icon-play-arrow-fill :size="22"/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip :content="$t('common.operation.save')" position="right">
+                                <a-button type="text" status="success" @click="save">
+                                    <template #icon>
+                                        <icon-save :size="18"/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip :content="$t('common.operation.format')" position="right">
+                                <a-button type="text" status="normal" @click="formatDocument">
+                                    <template #icon>
+                                        <format-icon/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip :content="viewTip" position="right">
+                                <a-button type="text" status="normal" @click="view = (view === 2) ? 3 : 2">
+                                    <template #icon>
+                                        <icon-code-block v-if="view === 2"/>
+                                        <icon-nav v-else-if="view === 3"/>
+                                        <view-icon v-else/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip content="帮助" position="right">
+                                <a-button type="text" status="normal" @click="openHelp">
+                                    <template #icon>
+                                        <icon-question-circle :size="18"/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
                         </div>
-                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
-                                            :style="{width: `calc(100% - 24px)`, height: '100%'}"/>
+                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"/>
                     </div>
-                </div>
-                <div class="sep" ref="seniorSearchSep" :style="{left: `${width + 5}px`}"/>
-                <div class="senior-content" :style="{left: `${width + 15}px`}">
-                    <a-tabs v-model="displayActive" class="senior-display-tabs">
-                        <a-tab-pane label="结果" name="result"/>
-                        <a-tab-pane label="请求记录" name="search"/>
-                        <a-tab-pane label="历史记录" name="history"/>
-                    </a-tabs>
-                    <a-scrollbar class="senior-display-scroll">
-                        <!-- 结果集渲染 -->
-                        <data-view v-show="displayActive === 'result'" :view="view" :result="current.result"/>
-                        <!-- 请求记录 -->
-                        <senior-search-record v-show="displayActive === 'search'"/>
-                        <!-- 历史记录 -->
-                        <senior-search-history v-show="displayActive === 'history'"/>
-                    </a-scrollbar>
+                </template>
+                <template #second>
+                    <div class="senior-display">
+                        <a-tabs v-model:active-key="displayActive" class="senior-display-tabs">
+                            <a-tab-pane title="结果" key="result"/>
+                            <a-tab-pane title="请求记录" key="search"/>
+                            <a-tab-pane title="历史记录" key="history"/>
+                        </a-tabs>
+                        <div class="senior-display-content">
+                            <!-- 结果集渲染 -->
+                            <data-view v-show="displayActive === 'result'" :view="view" :result="current.result"/>
+                            <!-- 请求记录 -->
+                            <senior-search-record v-show="displayActive === 'search'"/>
+                            <!-- 历史记录 -->
+                            <senior-search-history v-show="displayActive === 'history'"/>
+                        </div>
+                    </div>
                     <a-back-top target-container=".senior-content .el-scrollbar__wrap" v-show="showTop"/>
-                </div>
-            </div>
+                </template>
+            </a-split>
         </div>
     </a-spin>
 </template>
@@ -81,7 +94,8 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import {
     applicationLaunch,
     httpStrategyContext,
-    isDark, nativeStrategyContext,
+    isDark,
+    nativeStrategyContext,
     seniorSearchHistoryService,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
@@ -99,7 +113,6 @@ import Optional from "@/utils/Optional";
 
 import {requestBuild} from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
-import SsOptionBtn from "@/page/SeniorSearch/component/OptionBtn.vue";
 
 // 图标
 import RunIcon from "@/icon/RunIcon.vue";
@@ -112,16 +125,9 @@ import TableIcon from "@/icon/TableIcon.vue";
 import NotificationUtil from "@/utils/NotificationUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
-// 记录点击开始位置
-let startX = 0;
-let startWidth = 0;
-
-let minWidth = 120;
-
 export default defineComponent({
     name: 'SeniorSearch',
     components: {
-        SsOptionBtn,
         TableIcon, JsonIcon, TagIcon, ViewIcon, FormatIcon, SaveIcon, RunIcon,
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
         SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
@@ -131,7 +137,7 @@ export default defineComponent({
     data: () => {
         let searchMap = new Map<number, SeniorSearchItem>();
         let searchId = new Date().getTime();
-        searchMap.set(searchId, {
+        let searchItem = {
             header: {
                 id: searchId,
                 name: '高级查询'
@@ -140,18 +146,15 @@ export default defineComponent({
                 body: '',
                 result: {}
             }
-        });
+        };
+        searchMap.set(searchId, searchItem);
         return {
             // 展示数据
-            current: {
-                body: '',
-                result: {} as any,
-            } as SeniorSearchItemBody,
+            current: searchItem.body as SeniorSearchItemBody,
             // 查询map
             searchMap,
             // 当前显示的ID
             searchId,
-            showTabs: true,
             // 语法提示
             suggestions: [],
             // 相关数据
@@ -159,7 +162,6 @@ export default defineComponent({
             showTop: true,
             isDark,
             displayActive: 'result',
-            width: 500,
             loading: false,
         }
     },
@@ -223,17 +225,23 @@ export default defineComponent({
                 }
             } as SeniorSearchItem;
 
-
-            // 判断是否当前标签页
-            if (typeof param.current === 'undefined' || !param.current) {
-                // 新标签页
-                this.current = searchItem.body;
-                this.searchMap.set(searchId, searchItem);
-                this.searchId = searchId;
+            // 显示标签页
+            if (this.instance.showTab) {
+                // 判断是否当前标签页
+                if (typeof param.current === 'undefined' || !param.current) {
+                    // 新标签页
+                    this.current = searchItem.body;
+                    this.searchMap.set(searchId, searchItem);
+                    this.searchId = searchId;
+                } else {
+                    // 当前标签页
+                    this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
+                }
             } else {
-                // 当前标签页
+                // 隐藏标签页，插入到当前标签页
                 this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
             }
+
 
             // 搜索
             this.$nextTick(() => {
@@ -243,49 +251,10 @@ export default defineComponent({
             });
         });
 
-        let seniorSearch = document.getElementById('container')! as HTMLDivElement;
-        let seniorSearchSep = this.$refs['seniorSearchSep'] as HTMLDivElement;
         applicationLaunch.register(() => {
-            this.showTabs = useSettingStore().getShowTab
             this.view = useSettingStore().getDefaultViewer;
             return Promise.resolve();
         });
-        // 初始化大小
-        let windowWidth = seniorSearch.offsetWidth;
-        this.width = Math.round(windowWidth * 0.3);
-
-        window.addEventListener('resize', () => {
-            let offsetWidth = seniorSearch.offsetWidth;
-            // 重新定义最大宽度
-            let defaultWidth = Math.round(offsetWidth * 0.3);
-            // 重新定义当前宽度
-            if (this.width < minWidth || window.innerWidth - 40 < seniorSearchSep.offsetLeft) {
-                this.width = defaultWidth;
-            }
-        });
-
-        mitt.on(MessageEventEnum.URL_UPDATE, () => {
-            this.width = Math.round(seniorSearch.offsetWidth * 0.3);
-        });
-
-
-        seniorSearchSep.addEventListener('mousedown', (e: MouseEvent) => {
-            startX = e.clientX
-            startWidth = this.width;
-        });
-        window.addEventListener('mousemove', (e: MouseEvent) => {
-            if (startX > 0) {
-                let width = startWidth + e.clientX - startX;
-                let windowWidth = seniorSearchSep.offsetLeft;
-                if (width > minWidth && windowWidth <= seniorSearch.offsetWidth) {
-                    this.width = width;
-                }
-            }
-        });
-        window.addEventListener('mouseup', () => {
-            startX = 0;
-            startWidth = 0;
-        })
 
     },
     // 获取最大宽度

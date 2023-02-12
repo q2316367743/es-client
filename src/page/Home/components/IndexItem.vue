@@ -13,14 +13,14 @@
         <!-- 操作 -->
         <div class="option">
             <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
-                <a-button link type="text" @click="jumpToBaseSearch">
+                <a-button type="text" @click="jumpToBaseSearch">
                     <template #icon>
                         <icon-search/>
                     </template>
                 </a-button>
             </a-tooltip>
             <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
-                <a-button link type="text" :status="indexStateBtn" @click="indexOperation">
+                <a-button type="text" :status="indexStateBtn" @click="indexOperation">
                     <template #icon>
                         <icon-pause v-if="indexStateBtn === 'danger'"/>
                         <icon-play-arrow v-else/>
@@ -28,7 +28,7 @@
                 </a-button>
             </a-tooltip>
             <a-tooltip :effect="theme" content="删除索引" placement="bottom">
-                <a-button link type="text" @click="removeIndex">
+                <a-button type="text" @click="removeIndex">
                     <template #icon>
                         <icon-delete/>
                     </template>

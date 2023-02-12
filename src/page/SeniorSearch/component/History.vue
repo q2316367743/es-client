@@ -23,7 +23,7 @@
                     <vxe-column field="name" :title="$t('common.keyword.name')" width="150"></vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="200">
                         <template #default="{ row }">
-                            <a-button type="success" size="small" @click="load(row)">{{
+                            <a-button type="primary" status="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
                                 }}
                             </a-button>
@@ -36,7 +36,7 @@
                                           :cancel-button-text="$t('common.operation.cancel')"
                                           @confirm="removeById(row.id)" width="200px">
                                 <template #reference>
-                                    <a-button type="danger" size="small">{{ $t('common.operation.delete') }}
+                                    <a-button type="primary" status="danger" size="small">{{ $t('common.operation.delete') }}
                                     </a-button>
                                 </template>
                             </a-popconfirm>

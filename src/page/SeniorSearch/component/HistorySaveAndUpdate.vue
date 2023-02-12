@@ -10,7 +10,7 @@
             </a-select>
         </a-form-item>
         <a-form-item label="参数">
-            <a-input v-model="data.body" type="textarea" :rows="12"/>
+            <a-textarea v-model="data.body" :rows="12"/>
         </a-form-item>
         <a-form-item>
             <a-button @click="reset">重置</a-button>

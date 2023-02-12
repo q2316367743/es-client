@@ -1,6 +1,8 @@
 <template>
-    <div class="data-view">
-        <json-view v-if="view === 2" :data="result"/>
+    <div :class="abs ? 'data-view' : ''">
+        <div v-if="view === 2" class="data-json-view">
+            <json-view :data="result"/>
+        </div>
         <table-viewer v-else-if="view === 3" :data="result"/>
     </div>
 </template>
@@ -15,9 +17,30 @@ export default defineComponent({
     components: {JsonView, TableViewer},
     props: {
         view: Number,
-        result: Object
+        result: Object,
+        abs: {
+            type: Boolean,
+            required: false,
+            default: true
+        }
     },
 });
 </script>
-<style scoped>
+<style scoped lang="less">
+.data-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .data-json-view {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+    }
+}
 </style>
