@@ -251,6 +251,11 @@ export default defineComponent({
                     this.clearAfter();
                 }
             }
+        },
+        'current.index': {
+            handler(newValue: string) {
+                this.fields = useIndexStore().field(newValue);
+            }
         }
     },
     created() {

@@ -1,13 +1,13 @@
 <template>
-    <a-select v-model="order.field" filterable
-               :placeholder="$t('baseSearch.placeholder.order')"
-               style="margin-left: 10px">
+    <a-select v-model="order.field" allow-search
+              :placeholder="$t('baseSearch.placeholder.order')"
+              style="margin-left: 10px;width: 250px;">
         <a-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name"
-                   :value="field.name"></a-option>
+                  :value="field.name"></a-option>
     </a-select>
     <a-select v-model="order.type" filterable
-               :placeholder="$t('baseSearch.placeholder.order')"
-               style="margin-left: 10px;width: 80px;">
+              :placeholder="$t('baseSearch.placeholder.order')"
+              style="margin-left: 10px;width: 80px;">
         <a-option label="asc" value="asc"></a-option>
         <a-option label="desc" value="desc"></a-option>
     </a-select>
@@ -15,7 +15,7 @@
             $t('common.operation.add')
         }}
     </a-button>
-    <a-button type="danger" @click="remove(order.id)">{{
+    <a-button type="primary" status="danger" @click="remove(order.id)">{{
             $t('common.operation.delete')
         }}
     </a-button>

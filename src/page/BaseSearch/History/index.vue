@@ -41,11 +41,6 @@ export default defineComponent({
             this.$emit('update:modelValue', newValue);
         }
     },
-    created() {
-        if (this.modelValue === undefined) {
-            this.dialog = this.modelValue;
-        }
-    },
     methods: {
         load() {
             this.dialog = false;

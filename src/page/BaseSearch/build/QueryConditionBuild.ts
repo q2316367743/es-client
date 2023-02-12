@@ -22,6 +22,9 @@ function getBaseBody(page: number, size: number): any {
 }
 
 function buildQuery(query: BaseQuery, array: Array<any>): void {
+    if (!query.field || query.field === '') {
+        return;
+    }
     let condition = {} as any;
     let expression = {} as any;
     let cod = query.condition;
