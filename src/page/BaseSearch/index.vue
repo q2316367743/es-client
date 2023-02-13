@@ -11,12 +11,11 @@
                 <!-- 顶部菜单栏 -->
                 <div class="base-option">
                     <div class="left">
-                        <a-auto-complete filterable :data="indices" v-model="current.index" style="width: 260px;"
-                                         clearable :placeholder="$t('baseSearch.placeholder.selectIndex')">
-                            <template #default="{ item }">
-                                <div>{{ item.name }}</div>
-                            </template>
-                        </a-auto-complete>
+                        <a-select v-model="current.index" style="width: 260px;" allow-search
+                                  allow-clear :placeholder="$t('baseSearch.placeholder.selectIndex')">
+                            <a-option v-for="index in indices" :key="index.label" :label="index.label"
+                                      :value="index.value"/>
+                        </a-select>
                         <!-- 搜索 -->
                         <a-button type="primary" status="success" style="margin-left: 12px" @click="search">{{
                                 $t('common.operation.search')
@@ -36,33 +35,35 @@
                         </a-select>
                     </div>
                 </div>
-                <!-- 核心查询区 -->
-                <div class="base-display" ref="baseDisplay">
-                    <!-- 查询条件 -->
-                    <div class="base-condition" ref="baseCondition">
-                        <a-form :model="current" layout="vertical" label-width="80px"
-                                style="overflow-x: auto;overflow-y: hidden;">
-                            <!-- 条件 -->
-                            <a-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
-                                <field-condition-container v-model="current.conditions" :fields="fields"/>
-                            </a-form-item>
-                            <!-- 排序 -->
-                            <a-form-item :label="$t('baseSearch.form.order')">
-                                <field-order-container v-model="current.orders" :fields="fields"/>
-                            </a-form-item>
-                            <a-affix :offset-top="90" target="baseDisplay">
-                                <a-pagination :total="current.total" v-model:current="page" v-model:page-size="size"
-                                              show-total show-jumper
-                                              show-page-size/>
-                            </a-affix>
-                        </a-form>
+                <a-scrollbar style="height: calc(100vh - 58px);margin-top: 40px;overflow: auto;">
+                    <!-- 核心查询区 -->
+                    <div class="base-display" ref="baseDisplay">
+                        <!-- 查询条件 -->
+                        <div class="base-condition" ref="baseCondition">
+                            <a-form :model="current" layout="vertical" label-width="80px"
+                                    style="overflow-x: auto;overflow-y: hidden;">
+                                <!-- 条件 -->
+                                <a-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
+                                    <field-condition-container v-model="current.conditions" :fields="fields"/>
+                                </a-form-item>
+                                <!-- 排序 -->
+                                <a-form-item :label="$t('baseSearch.form.order')">
+                                    <field-order-container v-model="current.orders" :fields="fields"/>
+                                </a-form-item>
+                                <a-affix :offset-top="90" target="baseDisplay">
+                                    <a-pagination :total="current.total" v-model:current="page" v-model:page-size="size"
+                                                  show-total show-jumper
+                                                  show-page-size/>
+                                </a-affix>
+                            </a-form>
+                        </div>
+                        <!-- 查询结果 -->
+                        <div class="base-content" ref="baseContent">
+                            <data-view :view="view" :result="current.result" :abs="false"/>
+                        </div>
                     </div>
-                    <!-- 查询结果 -->
-                    <div class="base-content" ref="baseContent">
-                        <data-view :view="view" :result="current.result" :abs="false"/>
-                    </div>
-                </div>
-                <a-back-top target-container=".base-display" v-show="showTop"/>
+                    <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
+                </a-scrollbar>
                 <div class="base-search-condition-sentence">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
@@ -126,13 +127,7 @@ import useUrlStore from "@/store/UrlStore";
 import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-
-interface Name {
-    name: string;
-    fields: Array<Field>;
-    label: string;
-    value: string;
-}
+import {SelectOptionData} from "@arco-design/web-vue";
 
 // 公共方法
 export default defineComponent({
@@ -202,25 +197,21 @@ export default defineComponent({
     computed: {
         // 索引
         ...mapState(useIndexStore, {
-            indices: (state) => {
-                let names = new Array<Name>();
+            indices: (state): SelectOptionData[] => {
+                let names = new Array<SelectOptionData>();
                 let indices = state.indices;
                 indices.forEach(e => {
                     names.push({
-                        name: e.name,
-                        fields: e.fields,
                         label: e.name,
-                        value: e.name
+                        value: `n:${e.name}`
                     });
                     e.alias.forEach(a => names.push({
-                        name: a,
-                        fields: e.fields,
-                        label: e.name,
-                        value: a
+                        label: a,
+                        value: `a:${e.name}`
                     }))
                 });
                 return names.sort((a, b) => {
-                    return a.name.localeCompare(b.name, "zh-CN");
+                    return a.label.localeCompare(b.label, "zh-CN");
                 });
             }
         }),
@@ -255,6 +246,15 @@ export default defineComponent({
         'current.index': {
             handler(newValue: string) {
                 this.fields = useIndexStore().field(newValue);
+                if (!useSettingStore().getShowTab) {
+                    // 如果不显示标签栏，执行搜索
+                    if (newValue === '') {
+                        this.clear();
+                    } else {
+                        // 选择了索引
+                        this.search();
+                    }
+                }
             }
         }
     },
@@ -315,7 +315,7 @@ export default defineComponent({
             }
             this.loading = true;
             DocumentApi._search(
-                this.current.index,
+                this.current.index.slice(2),
                 QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
             ).then((response) => {
                 // 结果

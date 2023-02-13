@@ -41,6 +41,15 @@
                             <a-doption value="enUs">English</a-doption>
                         </template>
                     </a-dropdown>
+                    <!-- 版本 -->
+                    <a-dropdown @select="versionCommand">
+                        <a-button class="menu-item" type="text" status="normal">{{ Constant.version }}</a-button>
+                        <template #content>
+                            <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
+                            <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
+                            <a-doption value="about">{{ $t('app.about') }}</a-doption>
+                        </template>
+                    </a-dropdown>
                     <!-- 最小化 -->
                     <a-button class="menu-item" :disabled="!optionShow.min"
                               @click="toMin">
@@ -99,16 +108,6 @@
                             {{ $t('menu.setting') }}
                         </a-menu-item>
                     </a-menu>
-                    <div class="version">
-                        <a-dropdown @select="versionCommand">
-                            <a-link>v{{ Constant.version }}</a-link>
-                            <template #content>
-                                <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
-                                <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
-                                <a-doption value="about">{{ $t('app.about') }}</a-doption>
-                            </template>
-                        </a-dropdown>
-                    </div>
                 </div>
                 <!-- 内容-->
                 <div id="container">
