@@ -2,7 +2,7 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title">
-            <a-link :type="indexStateTitle" @click="indexInfo">{{ index?.name }}</a-link>
+            <a-link type="primary" :style="{color: indexStateTitle}" @click="indexInfo">{{ index?.name }}</a-link>
             <div class="url-copy" @click="execCopy(index?.name)">复制</div>
         </div>
         <!-- 详细 -->
@@ -38,15 +38,17 @@
         <!-- 别名 -->
         <div class="alias">
             <a-tag
-                v-for="(item, idx) in index?.alias"
+                v-for="(item, idx) in aliases"
                 :key="idx"
                 closable
                 color="blue"
                 style="margin-right: 5px"
-                @close="removeAlias(item)"
-            >{{ item }}
+                :visible="item.visible"
+                @close="removeAlias(idx)"
+            >{{ item.name }}
             </a-tag>
-            <a-button type="primary" status="normal" size="mini" @click="newAlias">新增</a-button>
+            <a-button type="primary" status="normal" size="mini" @click="newAlias">{{ $t('common.operation.add') }}
+            </a-button>
         </div>
         <!-- 拓展面板按钮 -->
         <div class="expand-btn">
@@ -99,6 +101,7 @@ import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import IndexAlias from "@/domain/IndexAlias";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -111,6 +114,7 @@ export default defineComponent({
         showExpand: false,
         open: true,
         isDark,
+        aliases: new Array<IndexAlias>()
     }),
     computed: {
         indexStateBtn(): 'danger' | 'success' | 'normal' {
@@ -132,17 +136,23 @@ export default defineComponent({
                 return '未知状态'
             }
         },
-        indexStateTitle(): 'primary' | 'info' | 'warning' {
-            if (this.index?.state === 'open') {
-                return 'primary';
-            } else if (this.index?.state === 'close') {
-                return 'info';
+        indexStateTitle(): 'gray' | '' {
+            if (this.index?.state === 'close') {
+                return 'gray';
             } else {
-                return 'warning'
+                return ''
             }
         },
         theme() {
             return this.isDark ? 'dark' : 'light';
+        }
+    },
+    created() {
+        if (this.index) {
+            this.index.alias.forEach(alias => this.aliases.push({
+                name: alias,
+                visible: true
+            }));
         }
     },
     methods: {
@@ -158,16 +168,29 @@ export default defineComponent({
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
             }).then((value) => IndexApi(this.index?.name!).newAlias(value)
-                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+                .then(res => {
+                    MessageUtil.success(JSON.stringify(res), this.reset);
+                    this.aliases.push({
+                        name: value,
+                        visible: true
+                    })
+                })
                 .catch(e => MessageUtil.error('新建别名错误', e)));
         },
-        removeAlias(alias: string) {
+        removeAlias(index: number) {
             MessageBoxUtil.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-            }).then(() => IndexApi(this.index?.name!).removeAlias(alias)
-                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
-                .catch(e => MessageUtil.error('删除别名错误', e)));
+            })
+                .then(() => IndexApi(this.index?.name!).removeAlias(this.aliases[index].name)
+                    .then(res => {
+                        MessageUtil.success(JSON.stringify(res), this.reset);
+                        this.aliases[index].visible = false;
+                    })
+                    .catch(e => MessageUtil.error('删除别名错误', e)))
+                .catch(() => {
+                    this.aliases[index].visible = true;
+                });
         },
         removeIndex() {
             MessageBoxUtil.confirm("此操作将永久删除该索引, 是否继续?", "提示", {

@@ -19,7 +19,17 @@
             <a-descriptions-item label="unassigned分片">{{ unassignedShards }}</a-descriptions-item>
             <a-descriptions-item label="存储大小">{{ storageSize }}</a-descriptions-item>
             <a-descriptions-item label="别名">
-                <a-tag color="blue" closable v-for="alias in aliases" class="alias">{{ alias }}</a-tag>
+                <a-tag
+                    v-for="(item, idx) in aliases"
+                    :key="idx"
+                    closable
+                    color="blue"
+                    style="margin-right: 5px"
+                    :visible="item.visible"
+                    @close="removeAlias(idx)"
+                >{{ item.name }}
+                </a-tag>
+                <a-button type="primary" status="normal" size="mini" @click="newAlias">{{$t('common.operation.add')}}</a-button>
             </a-descriptions-item>
         </a-descriptions>
     </a-spin>
@@ -32,6 +42,10 @@ import IndexApi from "@/api/IndexApi";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 import {mapState} from "pinia";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import IndexAlias from "@/domain/IndexAlias";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'index-manage-summary',
@@ -52,7 +66,7 @@ export default defineComponent({
         docsCount: '0',
         docsDeleted: '0',
         storageSize: '',
-        aliases: new Array<string>()
+        aliases: new Array<IndexAlias>()
     }),
     created() {
         this.init();
@@ -91,10 +105,47 @@ export default defineComponent({
                     .orCallback(() => this.docsCount = '')
                     .orElse('');
                 this.storageSize = indexView.size;
-                this.aliases = indexView.alias;
+                this.aliases = new Array<IndexAlias>();
+                indexView.alias.forEach(alias => this.aliases.push({
+                    name: alias,
+                    visible: true
+                }));
             }).catch(e => MessageUtil.error("索引健康值获取错误", e))
                 .finally(() => this.loading = false);
-        }
+        },
+
+        newAlias() {
+            MessageBoxUtil.prompt("请输入新别名", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+            }).then((value) => IndexApi(this.index!).newAlias(value)
+                .then(res => {
+                    MessageUtil.success(JSON.stringify(res), this.reset);
+                    this.aliases.push({
+                        name: value,
+                        visible: true
+                    })
+                })
+                .catch(e => MessageUtil.error('新建别名错误', e)));
+        },
+        removeAlias(index: number) {
+            MessageBoxUtil.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+            })
+                .then(() => IndexApi(this.index!).removeAlias(this.aliases[index].name)
+                    .then(res => {
+                        MessageUtil.success(JSON.stringify(res), this.reset);
+                        this.aliases[index].visible = false;
+                    })
+                    .catch(e => MessageUtil.error('删除别名错误', e)))
+                .catch(() => {
+                    this.aliases[index].visible = true;
+                });
+        },
+        reset() {
+            emitter.emit(MessageEventEnum.REFRESH_URL);
+        },
     }
 });
 </script>
