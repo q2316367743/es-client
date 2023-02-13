@@ -167,26 +167,9 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.setting {
-    .el-card__body {
-        .data {
-            width: 100%;
-        }
-
-        .page {
-            text-align: center;
-            position: absolute;
-            left: 5px;
-            right: 5px;
-            bottom: 20px;
-        }
-
-        .add-btn {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            width: 32px;
-        }
+.setting-url {
+    .url-copy {
+        display: inline;
     }
 }
 </style>

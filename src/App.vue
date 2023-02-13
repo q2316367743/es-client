@@ -10,9 +10,16 @@
                         <icon-menu-fold v-else/>
                     </div>
                     <!-- 索引服务器选择 -->
-                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small"
-                              allow-clear @change="selectUrl" class="url-select" :loading="urlSelectLoading">
+                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
+                              allow-clear @change="selectUrl" class="url-select" :loading="urlSelectLoading"
+                              :show-extra-options="true">
                         <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                        <template #empty>
+                            <div style="padding: 6px 0; text-align: center;">
+                                <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
+                                </a-button>
+                            </div>
+                        </template>
                         <template #footer>
                             <div style="padding: 6px 0; text-align: center;">
                                 <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}

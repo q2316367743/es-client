@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     ATimeline: typeof import('@arco-design/web-vue')['Timeline']
     ATimelineItem: typeof import('@arco-design/web-vue')['TimelineItem']
     ATooltip: typeof import('@arco-design/web-vue')['Tooltip']
+    ATrigger: typeof import('@arco-design/web-vue')['Trigger']
     Bsd: typeof import('./src/components/License/Bsd.vue')['default']
     DataView: typeof import('./src/components/DataView/index.vue')['default']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']

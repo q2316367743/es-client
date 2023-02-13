@@ -1,7 +1,7 @@
 <template>
     <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="600px" draggable
              :close-on-click-modal="false" destroy-on-close>
-        <a-form :model="url" label-width="100px" ref="urlForm" :rules="rules">
+        <a-form :model="url" label-width="100px" ref="urlForm">
             <a-form-item :label="$t('common.keyword.name')" prop="name">
                 <a-input v-model="url.name"></a-input>
             </a-form-item>
@@ -23,20 +23,22 @@
             </a-form-item>
         </a-form>
         <template #footer>
-            <a-popover :visible="testDialog" placement="top" :width="300" trigger="click">
-                <a-result :icon="testData.icon" :title="testData.title" :sub-title="testData.name">
-                    <template #extra>
-                        <div v-if="testData.icon === 'success'">elasticsearch版本：{{ testData.version }}</div>
-                        <div v-if="testData.icon === 'success'">lucene版本：{{ testData.luceneVersion }}</div>
-                        <div>
-                            <a-button @click="testDialog = false">关闭</a-button>
-                        </div>
-                    </template>
-                </a-result>
-                <template #reference>
-                    <a-button @click="test">{{ $t('common.operation.test') }}</a-button>
+            <a-trigger position="top" trigger="click" content-class="save-or-update-url-content" :popup-offset="10">
+                <a-button @click="test">{{ $t('common.operation.test') }}</a-button>
+                <template #content>
+                    <a-spin :loading="loading">
+                        <a-result :status="testData.icon" :title="testData.title">
+                            <template #subtitle> {{ testData.name }}</template>
+                            <template #extra>
+                                <div v-if="testData.icon === 'success'">elasticsearch版本：{{ testData.version }}</div>
+                                <div v-if="testData.icon === 'success'" class="save-or-update-url-content-lucene">
+                                    lucene版本：{{ testData.luceneVersion }}
+                                </div>
+                            </template>
+                        </a-result>
+                    </a-spin>
                 </template>
-            </a-popover>
+            </a-trigger>
             <a-button type="primary" @click="submit">
                 {{ isSave ? $t('common.operation.add') : $t('common.operation.update') }}
             </a-button>
@@ -65,32 +67,9 @@ export default defineComponent({
         } as Url,
         dialog: false,
         isSave: true,
-        rules: {
-            name: [
-                {
-                    required: true,
-                    message: '请输入链接名',
-                    trigger: 'blur',
-                }
-            ],
-            value: [
-                {
-                    required: true,
-                    message: '请输入链接',
-                    trigger: 'blur',
-                }
-            ],
-            sequence: [
-                {
-                    required: true,
-                    message: '请输入排序',
-                    trigger: 'blur',
-                }
-            ]
-        },
-        testDialog: false,
+        loading: false,
         testData: {
-            icon: 'success',
+            icon: 'info',
             title: '',
             name: '',
             version: '',
@@ -118,6 +97,7 @@ export default defineComponent({
     },
     methods: {
         submit() {
+            this.loading = true;
             if (this.isSave) {
                 // 新增
                 urlService.insert({
@@ -128,7 +108,10 @@ export default defineComponent({
                     authUser: this.url.authUser,
                     authPassword: this.url.authPassword
                 }).then(() => MessageUtil.success('新增成功', useUrlStore().reset))
-                    .catch(e => MessageUtil.error('新增失败', e));
+                    .catch(e => MessageUtil.error('新增失败', e))
+                    .finally(() => {
+                        this.loading = false;
+                    });
             } else {
                 // 更新
                 urlService.updateById(this.url.id!, {
@@ -142,7 +125,10 @@ export default defineComponent({
                     // eslint-disable-next-line
                 })
                     .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
-                    .catch(e => MessageUtil.error('修改失败', e));
+                    .catch(e => MessageUtil.error('修改失败', e))
+                    .finally(() => {
+                        this.loading = false;
+                    });
             }
             this.url = {
                 name: '',
@@ -152,7 +138,6 @@ export default defineComponent({
                 authUser: '',
                 authPassword: ''
             } as Url;
-            this.testDialog = false;
             this.testData = {
                 icon: 'success',
                 title: '',
@@ -163,6 +148,14 @@ export default defineComponent({
             this.dialog = false;
         },
         test() {
+            this.loading = true;
+            this.testData = {
+                icon: 'info',
+                title: '',
+                name: '',
+                version: '',
+                luceneVersion: ''
+            };
             httpStrategyContext.getStrategy().fetch<any>({
                 baseURL: this.url.value,
                 url: '/',
@@ -172,7 +165,6 @@ export default defineComponent({
                     password: this.url.authPassword!
                 } : undefined
             }).then((response) => {
-                this.testDialog = true;
                 this.testData = {
                     icon: 'success',
                     title: '链接成功',
@@ -181,7 +173,6 @@ export default defineComponent({
                     luceneVersion: response.version.lucene_version
                 }
             }).catch(() => {
-                this.testDialog = true;
                 this.testData = {
                     icon: 'error',
                     title: '链接不可用',
@@ -189,11 +180,21 @@ export default defineComponent({
                     version: '',
                     luceneVersion: ''
                 }
+            }).finally(() => {
+                this.loading = false;
             });
         },
     }
 });
 </script>
-<style scoped>
+<style lang="less">
+.save-or-update-url-content {
+    background-color: var(--bg-color);
+    border-radius: 20%;
+    box-shadow: 0 0 6px var(--shadow-color);
 
+    .save-or-update-url-content-lucene {
+        margin-top: 10px;
+    }
+}
 </style>
