@@ -1,5 +1,6 @@
 <template>
-    <a-drawer :title="index" v-model:visible="drawer" width="60%" render-to-body unmount-on-close>
+    <a-drawer :title="index" class="index-manage-drawer" v-model:visible="drawer" width="60%" render-to-body
+              unmount-on-close>
         <div class="index-manage">
             <a-tabs v-model:active-key="active" class="tab">
                 <a-tab-pane title="总览" key="1"/>
@@ -199,28 +200,31 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.index-manage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-
-    .tab {
+.index-manage-drawer {
+    .index-manage {
         position: absolute;
-        top: 5px;
-        left: 20px;
-        right: 20px;
-    }
-
-    .content {
-        position: absolute;
-        top: 54px;
-        left: 20px;
-        right: 20px;
+        top: 0;
+        left: 0;
+        right: 0;
         bottom: 0;
-        overflow: auto;
+        overflow: hidden;
+
+        .tab {
+            position: absolute;
+            top: 5px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .content {
+            position: absolute;
+            top: 54px;
+            left: 20px;
+            right: 20px;
+            bottom: 0;
+            overflow: auto;
+        }
+
     }
 
     .arco-drawer-footer {
