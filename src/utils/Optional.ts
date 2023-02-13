@@ -11,11 +11,21 @@ export default class Optional<T> {
     }
 
     public map<S>(mapper: (value: T) => S): Optional<S> {
-        return new Optional<S>(this.value !== undefined ? mapper(this.value!) : undefined);
+        if (this.value !== undefined && this.value !== null) {
+            return new Optional<S>(mapper(this.value));
+        } else {
+
+            return new Optional<S>(undefined);
+        }
     }
 
     public peek(peek: (value: T) => T): Optional<T> {
-        return new Optional<T>(this.value !== undefined ? peek(this.value) : undefined);
+        if (this.value !== undefined && this.value !== null) {
+            return new Optional<T>(peek(this.value));
+        } else {
+
+            return new Optional<T>(undefined);
+        }
     }
 
     /**

@@ -17,11 +17,15 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
                 }
             }
         }
+        let timeout = 5;
+        if (config.timeout) {
+            timeout = Math.round(config.timeout / 1000);
+        }
         fetch<T>(url, {
             method: config.method?.toUpperCase() as HttpVerb,
             headers: config.headers,
             body: config.data ? Body.json(config.data) : undefined,
-            timeout: config.timeout || 5000,
+            timeout: timeout,
             responseType: 1,
             query: config.params
         }).then((response: Response<T>) => {
