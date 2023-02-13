@@ -1,9 +1,9 @@
 <template>
-    <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close>
+    <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close :footer="false">
         <div class="bsh-manage">
-            <a-tabs v-model="active" class="history-manage-tabs">
-                <a-tab-pane label="临时" name="temp"></a-tab-pane>
-                <a-tab-pane label="历史" name="history"></a-tab-pane>
+            <a-tabs v-model:active-key="active" class="history-manage-tabs">
+                <a-tab-pane title="临时" key="temp"></a-tab-pane>
+                <a-tab-pane title="历史" key="history"></a-tab-pane>
             </a-tabs>
             <div class="bsh-manage-body">
                 <!-- 临时记录 -->
@@ -16,8 +16,6 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import BaseSearchHistory from "@/entity/BaseSearchHistory";
-import {useBaseSearchEvent} from "@/global/BeanFactory";
 import BshTempRecord from "@/page/BaseSearch/History/TempRecord.vue";
 import BshHistory from "@/page/BaseSearch/History/History.vue";
 
@@ -51,7 +49,7 @@ export default defineComponent({
 <style scoped lang="less">
 .bsh-manage {
     position: absolute;
-    top: 80px;
+    top: 20px;
     left: 20px;
     right: 20px;
     bottom: 20px;

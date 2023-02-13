@@ -143,6 +143,10 @@ export default defineComponent({
                 text-overflow: ellipsis; //溢出显示省略号
             }
         }
+
+        .url-copy {
+            display: inline;
+        }
     }
 }
 </style>

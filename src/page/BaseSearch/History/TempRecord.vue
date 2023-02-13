@@ -20,7 +20,7 @@
                     <vxe-column field="index" :title="$t('common.keyword.index')" width="250">
                         <template #default="{row}">
                             <a-link type="primary" target="_blank">{{ row.index }}</a-link>
-                            <div class="url-copy" @click="execCopy(row.link)">{{ $t('common.operation.copy') }}</div>
+                            <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column field="id" title="时间" width="200">
@@ -28,7 +28,7 @@
                             {{ prettyDate(new Date(row.id)) }}
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('common.keyword.operation')" width="270">
+                    <vxe-column :title="$t('common.keyword.operation')" width="320">
                         <template #default="{ row }">
                             <a-button type="primary" status="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
@@ -179,6 +179,10 @@ export default defineComponent({
                 white-space: nowrap; //不折行
                 text-overflow: ellipsis; //溢出显示省略号
             }
+        }
+
+        .url-copy {
+            display: inline;
         }
 
     }

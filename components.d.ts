@@ -8,7 +8,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AAffix: typeof import('@arco-design/web-vue')['Affix']
-    AAutoComplete: typeof import('@arco-design/web-vue')['AutoComplete']
     ABackTop: typeof import('@arco-design/web-vue')['BackTop']
     AButton: typeof import('@arco-design/web-vue')['Button']
     ACard: typeof import('@arco-design/web-vue')['Card']

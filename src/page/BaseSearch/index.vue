@@ -211,7 +211,7 @@ export default defineComponent({
                     }))
                 });
                 return names.sort((a, b) => {
-                    return a.label.localeCompare(b.label, "zh-CN");
+                    return a.label!.localeCompare(b.label!, "zh-CN");
                 });
             }
         }),
@@ -246,14 +246,8 @@ export default defineComponent({
         'current.index': {
             handler(newValue: string) {
                 this.fields = useIndexStore().field(newValue);
-                if (!useSettingStore().getShowTab) {
-                    // 如果不显示标签栏，执行搜索
-                    if (newValue === '') {
-                        this.clear();
-                    } else {
-                        // 选择了索引
-                        this.search();
-                    }
+                if (newValue === '') {
+                    this.clear();
                 }
             }
         }
@@ -275,7 +269,7 @@ export default defineComponent({
                     relationId: event.id
                 },
                 body: {
-                    index: event.index,
+                    index: `n:${event.index}`,
                     conditions: event.conditions,
                     orders: event.orders,
                     page: 1,
@@ -314,8 +308,9 @@ export default defineComponent({
                 return;
             }
             this.loading = true;
+            const index = this.current.index.slice(2);
             DocumentApi._search(
-                this.current.index.slice(2),
+                index,
                 QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
             ).then((response) => {
                 // 结果
@@ -335,7 +330,7 @@ export default defineComponent({
                 // 增加到历史
                 useBaseTempRecordStore().addTempRecord({
                     id: new Date().getTime(),
-                    index: this.current.index,
+                    index: index,
                     conditions: this.current.conditions,
                     orders: this.current.orders
                 })
