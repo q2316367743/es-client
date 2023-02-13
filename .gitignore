@@ -36,3 +36,4 @@ src-server/node_modules
 
 /utools
 /src-server/es-client.db
+/src-electron/dist/

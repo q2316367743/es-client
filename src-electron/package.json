@@ -1,0 +1,65 @@
+{
+  "name": "es-client",
+  "version": "2.6.0",
+  "description": "elasticsearch客户端",
+  "main": "src/main.ts",
+  "repository": "https://gitee.com/qiaoshengda/es-client",
+  "author": "Esion",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "tsc && electron dist/main.js env=dev"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "electron": "^23.0.0",
+    "typescript": "^4.9.5"
+  },
+  "build": {
+    "appId": "xyz.esion.es-client",
+    "productName": "es-client",
+    "copyright": "Copyright © 2023 esion.xyz",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "../public/logo.png"
+    },
+    "win": {
+      "icon": "../public/logo.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "../public/logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "guid": "xyz.esion.es-client",
+      "language": "zh-CN",
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "../public/logo.png",
+      "uninstallerIcon": "../public/logo.png",
+      "installerHeaderIcon": "../public/logo.png",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "es-client"
+    },
+    "files": [
+      "dist/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist_electron"
+    },
+    "electronDownload": {
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
+    }
+  }
+}
