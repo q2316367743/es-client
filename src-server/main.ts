@@ -12,7 +12,7 @@ const app = express();
 app.use(json());
 
 // 静态资源服务器
-const rootPath = path.join('public');
+const rootPath = path.join(__dirname, '..', 'public');
 app.use(serveStatic(rootPath));
 
 // 跨域问题
