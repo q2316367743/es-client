@@ -1,19 +1,21 @@
 <template>
-    <a-drawer :title="index" v-model:visible="drawer" width="60%" class="index-manage" render-to-body unmount-on-close>
-        <a-tabs v-model:active-key="active" class="tab">
-            <a-tab-pane title="总览" key="1"/>
-            <a-tab-pane title="设置" key="2"/>
-            <a-tab-pane title="映射" key="3"/>
-            <a-tab-pane title="统计信息" key="4"/>
-        </a-tabs>
-        <a-spin :loading="loading" tip="加载中">
-            <div class="content">
-                <a-scrollbar>
-                    <json-view v-if="jsonViewShow" :data="data"/>
-                    <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
-                </a-scrollbar>
-            </div>
-        </a-spin>
+    <a-drawer :title="index" v-model:visible="drawer" width="60%" render-to-body unmount-on-close>
+        <div class="index-manage">
+            <a-tabs v-model:active-key="active" class="tab">
+                <a-tab-pane title="总览" key="1"/>
+                <a-tab-pane title="设置" key="2"/>
+                <a-tab-pane title="映射" key="3"/>
+                <a-tab-pane title="统计信息" key="4"/>
+            </a-tabs>
+            <a-spin :loading="loading" tip="加载中">
+                <div class="content">
+                    <a-scrollbar>
+                        <json-view v-if="jsonViewShow" :data="data"/>
+                        <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
+                    </a-scrollbar>
+                </div>
+            </a-spin>
+        </div>
         <template #footer>
             <a-dropdown trigger="click" @command="indexManage">
                 <a-button type="primary">
@@ -65,6 +67,11 @@ export default defineComponent({
     watch: {
         active(newValue: string) {
             this.assignJson(newValue);
+        },
+        index() {
+            this.$nextTick(() => {
+                this.assignJson(this.active);
+            })
         }
     },
     computed: {
@@ -81,7 +88,6 @@ export default defineComponent({
         useIndexManageEvent.on(index => {
             this.drawer = true;
             this.index = index;
-            this.active = '1';
         })
     },
     methods: {
@@ -194,19 +200,27 @@ export default defineComponent({
 </script>
 <style lang="less">
 .index-manage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+
     .tab {
         position: absolute;
-        top: 10px;
+        top: 5px;
         left: 20px;
         right: 20px;
     }
 
     .content {
         position: absolute;
-        top: 40px;
+        top: 54px;
         left: 20px;
         right: 20px;
-        bottom: 52px;
+        bottom: 0;
+        overflow: auto;
     }
 
     .arco-drawer-footer {
