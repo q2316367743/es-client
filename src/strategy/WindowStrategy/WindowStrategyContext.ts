@@ -14,7 +14,7 @@ export default class WindowStrategyContext {
             let strategy = await import('./impl/UtoolsWindowStrategyImpl');
             this.strategy = new strategy.default();
         } else if (Constant.mode === 'desktop') {
-            let strategy = await import('./impl/ElectronWindowStrategyImpl');
+            let strategy = await import('./impl/TauriWindowStrategyImpl');
             this.strategy = new strategy.default();
         } else {
             let strategy = await import('./impl/BrowserWindowStrategyImpl');

@@ -18,7 +18,7 @@
         "dev:ts": "vite --host --mode=tsbrowser",
         "dev:utools": "vite --host --mode=utools",
         "dev:serve": "vite --host --mode=server",
-        "dev:electron": "vite --host --mode=desktop_windows",
+        "dev:tauri": "vite --host --mode=desktop_windows",
         "build": "vue-tsc --noEmit && vite build",
         "build:edge": "vue-tsc --noEmit && vite build --mode=edge",
         "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
@@ -33,7 +33,6 @@
     "dependencies": {
         "@arco-design/web-vue": "^2.42.1",
         "@codemirror/lang-json": "^6.0.1",
-        "@tauri-apps/api": "^1.2.0",
         "@vueuse/core": "^9.9.0",
         "axios": "^1.2.2",
         "codemirror": "^6.0.1",
@@ -53,7 +52,8 @@
         "xe-utils": "^3.5.7"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^1.2.2",
+        "@tauri-apps/api": "^1.2.0",
+        "@tauri-apps/cli": "^1.2.3",
         "@types/js-yaml": "^4.0.5",
         "@types/node": "^18.11.18",
         "@types/x2js": "^3.1.0",

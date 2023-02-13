@@ -2,9 +2,9 @@
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
     <a-spin :loading="loading" :tip="text">
         <a-config-provider :locale="locale" size="medium">
-            <header id="header">
+            <header id="header" data-tauri-drag-region>
                 <div class="left">
-                    <div class="logo">{{ $t('app.name') }}</div>
+                    <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
                     <div class="full-screen" @click="collapsed = !collapsed">
                         <icon-menu-unfold v-if="collapsed"/>
                         <icon-menu-fold v-else/>
@@ -179,13 +179,6 @@ import {
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import useLoadingStore from "@/store/LoadingStore";
-import NotificationUtil from "@/utils/NotificationUtil";
-
-let showHeightNotification = true;
-let showWidthNotification = true;
-
-const MIN_WIDTH = 1000;
-const MIN_HEIGHT = 800;
 
 export default defineComponent({
     components: {
@@ -285,14 +278,6 @@ export default defineComponent({
             this.selectMenu(page);
         });
 
-        if (Constant.storage !== 'utools') {
-            // 检测窗口大小
-            this.windowWarningNotification();
-            // 窗口调整大小事件
-            window.addEventListener('resize', () => {
-                this.windowWarningNotification();
-            });
-        }
 
         // 执行窗口刷新事件
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
@@ -370,33 +355,6 @@ export default defineComponent({
                 case 'feedback':
                     this.feedbackDialog = true;
                     break;
-            }
-        },
-        windowWarningNotification() {
-            // 窗口警告通知
-            if (window.innerWidth < MIN_WIDTH && window.innerHeight < MIN_HEIGHT) {
-                if (showWidthNotification && showHeightNotification) {
-                    NotificationUtil.warning(this.$t('app.widthAndHeightMin'), this.$t('common.message.warning'));
-                    showWidthNotification = false;
-                    showHeightNotification = false;
-                }
-            }
-
-            if (window.innerWidth < MIN_WIDTH) {
-                if (showWidthNotification) {
-                    NotificationUtil.warning(this.$t('app.widthMin'), this.$t('common.message.warning'));
-                    showWidthNotification = false;
-                }
-            } else {
-                showWidthNotification = true
-            }
-            if (window.innerHeight < MIN_HEIGHT) {
-                if (showHeightNotification) {
-                    NotificationUtil.warning(this.$t('app.heightMin'), this.$t('common.message.warning'));
-                    showHeightNotification = false;
-                }
-            } else {
-                showHeightNotification = true
             }
         },
         toMin: () => windowStrategyContext.getStrategy().min(),

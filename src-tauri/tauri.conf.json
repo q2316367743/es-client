@@ -20,6 +20,14 @@
       "shell": {
         "all": true,
         "open": true
+      },
+      "window": {
+        "maximize": true,
+        "unmaximize": true,
+        "minimize": true,
+        "close": true,
+        "setTitle": true,
+        "startDragging": true
       }
     },
     "bundle": {
@@ -71,7 +79,8 @@
         "width": 1200,
         "minHeight": 600,
         "minWidth": 1000,
-        "center": true
+        "center": true,
+        "decorations": false
       }
     ]
   }
