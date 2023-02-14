@@ -237,6 +237,9 @@ export default defineComponent({
         url() {
             this.urlId = this.url?.id!;
         },
+        selectedKeys(newValue: any[]) {
+            emitter.emit(MessageEventEnum.PAGE_ACTIVE, newValue[0]);
+        }
     },
     created() {
         applicationLaunch.register(async () => {
@@ -335,7 +338,6 @@ export default defineComponent({
         selectMenu(index: PageNameEnum) {
             // 切换active
             this.selectedKeys = [index];
-            emitter.emit(MessageEventEnum.PAGE_ACTIVE, index);
         },
         languageCommand(command: any) {
             useSettingStore().setLanguage(command);
