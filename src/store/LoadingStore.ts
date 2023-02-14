@@ -1,9 +1,11 @@
 import {defineStore} from "pinia";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 const useLoadingStore = defineStore('loading', {
     state: () => ({
         loading: false,
-        text: ''
+        text: '',
+        timer: 0
     }),
     getters: {
         isLoading: state => state.loading
@@ -17,6 +19,20 @@ const useLoadingStore = defineStore('loading', {
         start(text: string): void {
             this.loading = true;
             this.text = text;
+            if (this.timer != 0) {
+                // 清除上个定时器
+                clearTimeout(this.timer);
+            }
+            // 创建新的定时器
+            this.timer = setTimeout(() => {
+                NotificationUtil.confirm("检测到全局加载已超过10秒，是否立即关闭全局加载框", "警告", {
+                    confirmButtonText: '关闭',
+                    cancelButtonText: '忽略'
+                }).then(() => {
+                    this.loading = false;
+                    this.timer = 0;
+                }).catch(() => console.log('忽略提示'))
+            }, 10 * 1000);
         },
 
         /**
@@ -36,6 +52,9 @@ const useLoadingStore = defineStore('loading', {
         close(): void {
             this.loading = false;
             this.text = '';
+            // 清除定时器
+            clearTimeout(this.timer);
+            this.timer = 0;
         }
     }
 });
