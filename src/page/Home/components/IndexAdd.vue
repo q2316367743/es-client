@@ -65,8 +65,7 @@ import {IndexInstance, Property} from "@/domain/IndexInstance";
 import indexApi from "@/api/IndexApi";
 import useIndexStore from "@/store/IndexStore";
 import BrowserUtil from "@/utils/BrowserUtil";
-import IndexCreateBuild from "@/build/IndexCreateBuild";
-import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {usePageJumpEvent, useSeniorSearchEvent, versionStrategyContext} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
@@ -124,7 +123,7 @@ export default defineComponent({
         },
         addIndex() {
             // 新增
-            indexApi(this.index.name).create(IndexCreateBuild(this.index))
+            indexApi(this.index.name).create(versionStrategyContext.getStrategy().indexCreateBuild(this.index))
                 .then(res => MessageUtil.success(res, useIndexStore().reset))
                 .catch(e => MessageUtil.error('索引创建错误', e));
             // 关闭弹框
@@ -134,7 +133,7 @@ export default defineComponent({
         },
         copyIndex() {
             // 执行拷贝
-            BrowserUtil.copy(JSON.stringify(IndexCreateBuild(this.index), null, 4));
+            BrowserUtil.copy(JSON.stringify(versionStrategyContext.getStrategy().indexCreateBuild(this.index), null, 4));
             // 关闭弹框
             this.dialog = false;
         },
@@ -145,7 +144,7 @@ export default defineComponent({
             useSeniorSearchEvent.emit({
                 link: this.index.name,
                 method: 'PUT',
-                params: JSON.stringify(IndexCreateBuild(this.index), null, 4),
+                params: JSON.stringify(versionStrategyContext.getStrategy().indexCreateBuild(this.index), null, 4),
                 execute: false
             });
             // 关闭弹框

@@ -17,7 +17,7 @@
         "dev": "vite --host",
         "dev:ts": "vite --host --mode=tsbrowser",
         "dev:utools": "vite --host --mode=utools",
-        "dev:serve": "vite --host --mode=server",
+        "dev:server": "vite --host --mode=server",
         "dev:tauri": "vite --host --mode=desktop_windows",
         "build": "vue-tsc --noEmit && vite build",
         "build:edge": "vue-tsc --noEmit && vite build --mode=edge",

@@ -35,6 +35,11 @@
             </a-link>
             进行评论与打分。
         </p>
+        <p>
+            utools用户也可以在
+            <a-link @click="open(data.distributes.utools)" target="_blank" type="primary">utools插件商店</a-link>
+            进行评论与打分。
+        </p>
     </div>
 </template>
 <script lang="ts">

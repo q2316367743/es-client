@@ -34,7 +34,11 @@ export interface Mapping {
     /**
      *
      */
-    properties: Record<string, Property>;
+    properties?: Record<string, Property>;
+
+    _doc?: {
+        properties: Record<string, Property>;
+    }
 
 }
 

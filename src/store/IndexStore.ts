@@ -3,7 +3,7 @@ import {defineStore} from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
-import {useEsVersion} from "@/global/BeanFactory";
+import {versionStrategyContext} from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
@@ -70,12 +70,12 @@ const useIndexStore = defineStore('index', {
                 clusterApi.info()
                     .then(info => {
                         // 异步执行就可以
-                        useEsVersion().setVersion(Optional.ofNullable(info)
+                        versionStrategyContext.setVersion(Optional.ofNullable(info)
                             .map(e => e.version)
                             .map(e => e.number)
                             .orElse(''));
                     })
-                    .catch(e => NotificationUtil.error(e, '获取elasticsearch版本失败'));
+                    .catch(e => NotificationUtil.error(e.toString(), '获取elasticsearch版本失败'));
                 return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();

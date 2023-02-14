@@ -72,7 +72,6 @@ export default {
                         value: config.inputValue,
                         style: 'margin-top: 8px;',
                         onVnodeMounted: (e: VNode) => {
-                            console.log(e, e.el);
                             (e.el as HTMLInputElement)
                                 .getElementsByTagName("input")
                                 .item(0)!

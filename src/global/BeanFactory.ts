@@ -1,5 +1,5 @@
 import x2js from 'x2js';
-import {createGlobalState, useDark, useEventBus, useToggle} from "@vueuse/core";
+import {useDark, useEventBus, useToggle} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
 
@@ -23,9 +23,10 @@ import highlightJson from "highlight.js/lib/languages/json";
 
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
-import {ref} from "vue";
 import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 import NativeStrategyContext from "@/strategy/NativeStrategy/NativeStrategyContext";
+import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
+import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -42,6 +43,8 @@ export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
 export const windowStrategyContext = new WindowStrategyContext();
 export const nativeStrategyContext = new NativeStrategyContext();
+export const versionStrategyContext = new VersionStrategyContext();
+versionStrategyContext.register(new V6VersionStrategyImpl());
 
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(
@@ -75,34 +78,6 @@ export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
 export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE);
 
 // 全局状态
-
-// es版本
-export const useEsVersion = createGlobalState(() => {
-    let version = '';
-
-    function setVersion(newValue: string) {
-        version = newValue;
-    }
-
-    function getVersion() {
-        return version;
-    }
-
-    return {version, setVersion, getVersion};
-});
-export const useFullScreen = createGlobalState(() => {
-    let fullScreen = ref(false);
-
-    function toggle() {
-        fullScreen.value = !fullScreen.value;
-    }
-
-    function setFullScreen(value: boolean) {
-        fullScreen.value = value;
-    }
-
-    return {fullScreen, toggle, setFullScreen}
-})();
 
 // 代码高亮
 highlight.registerLanguage('json', highlightJson);
