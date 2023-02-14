@@ -1,6 +1,4 @@
-import {IndexInstance} from '@/domain/IndexInstance';
 import {httpStrategyContext} from "@/global/BeanFactory";
-import IndexCreateBuild from '@/build/IndexCreateBuild';
 
 /**
  * 与索引有关的API

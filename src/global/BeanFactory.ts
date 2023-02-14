@@ -27,6 +27,7 @@ import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyConte
 import NativeStrategyContext from "@/strategy/NativeStrategy/NativeStrategyContext";
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
+import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -45,6 +46,7 @@ export const windowStrategyContext = new WindowStrategyContext();
 export const nativeStrategyContext = new NativeStrategyContext();
 export const versionStrategyContext = new VersionStrategyContext();
 versionStrategyContext.register(new V6VersionStrategyImpl());
+versionStrategyContext.register(new V7VersionStrategyImpl());
 
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(
