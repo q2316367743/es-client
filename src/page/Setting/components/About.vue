@@ -50,8 +50,8 @@
         </p>
         <div class="title-2">建议反馈</div>
         <feedback-module/>
-        <a-modal title="Apache2.0" v-model:visible="licenseDialog" append-to-body :close-on-click-modal="false" draggable
-                   destroy-on-close style="height: 80vh" top="10vh">
+        <a-modal title="Apache2.0" v-model:visible="licenseDialog" render-to-body :mask-closable="false" draggable
+                   unmount-on-close width="700px">
             <div style="height: calc(80vh - 60px - 54px)">
                 <a-scrollbar>
                     <license-apache2_0/>

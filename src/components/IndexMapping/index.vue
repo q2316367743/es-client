@@ -56,6 +56,7 @@
         </div>
         <a-button type="text" status="normal" class="index-mapping-switch" @click="source.show = !source.show">切换
         </a-button>
+        <a-back-top target-container=".index-mapping-mapper"/>
     </a-spin>
 </template>
 <script lang="ts">
@@ -116,7 +117,7 @@ export default defineComponent({
     mounted() {
         if (this.mapping) {
             this.setDate(this.mapping);
-        }else {
+        } else {
             this.hasType = versionStrategyContext.getStrategy().hasType();
             this.dataItems = [{
                 type: '',
