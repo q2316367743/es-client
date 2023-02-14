@@ -111,7 +111,7 @@ export default defineComponent({
     name: 'Home',
     components: {
         IndexItem, JsonDialog,
-        HomeIndexAdd: defineAsyncComponent(() => import('@/module/IndexAdd/IndexAdd.vue'))
+        HomeIndexAdd: defineAsyncComponent(() => import('@/module/IndexAdd/index.vue'))
     },
     data: () => {
         return {

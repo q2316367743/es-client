@@ -20,7 +20,7 @@
                 </a-form>
             </a-tab-pane>
             <a-tab-pane :title="$t('home.newIndex.mappingSetting')" key="2">
-                <index-mapping/>
+                <index-mapping style="position: relative"/>
             </a-tab-pane>
         </a-tabs>
         <template #footer>

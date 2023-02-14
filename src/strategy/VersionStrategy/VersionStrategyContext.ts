@@ -43,7 +43,7 @@ export default class VersionStrategyContext {
 
     private chooseVersion(): boolean {
         for (let strategy of this.strategies) {
-            if (this.version.match(strategy.getVersion())) {
+            if (this.version.match(strategy.getVersionExp())) {
                 this.strategy = strategy;
                 return false;
             }

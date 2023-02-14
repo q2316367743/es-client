@@ -9,7 +9,12 @@ export default interface VersionStrategy {
     /**
      * 获取适用的版本
      */
-    getVersion(): string;
+    getVersionExp(): RegExp;
+
+    /**
+     * 是否存在类型
+     */
+    hasType(): boolean;
 
     /**
      * 索引创建构造器

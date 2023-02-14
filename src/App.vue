@@ -160,10 +160,6 @@ import zhCn from '@arco-design/web-vue/es/locale/lang/zh-cn';
 import Info from '@/module/info/index.vue';
 // 页面
 import Home from '@/page/Home/index.vue';
-import DataBrowse from '@/page/DataBrowse/index.vue';
-import BaseSearch from '@/page/BaseSearch/index.vue';
-import SeniorSearch from '@/page/SeniorSearch/index.vue';
-import Setting from '@/page/Setting/index.vue';
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
@@ -190,7 +186,11 @@ import useLoadingStore from "@/store/LoadingStore";
 export default defineComponent({
     components: {
         // 页面
-        Home, DataBrowse, BaseSearch, SeniorSearch, Setting,
+        Home,
+        DataBrowse: defineAsyncComponent(() => import('@/page/DataBrowse/index.vue')),
+        BaseSearch: defineAsyncComponent(() => import('@/page/BaseSearch/index.vue')),
+        SeniorSearch: defineAsyncComponent(() => import('@/page/SeniorSearch/index.vue')),
+        Setting: defineAsyncComponent(() => import('@/page/Setting/index.vue')),
         // 组件
         Info,
         SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),
@@ -270,6 +270,8 @@ export default defineComponent({
 
             this.selectedKeys = [useSettingStore().getDefaultPage];
 
+            this.selectMenu(useSettingStore().getDefaultPage);
+
         });
 
         // 国际化
@@ -295,7 +297,6 @@ export default defineComponent({
             // 设置全局字体大小
             document.body.style.fontSize = '20px';
         }
-        this.selectMenu(useSettingStore().getDefaultPage);
     },
     methods: {
         async selectUrl(value: any) {

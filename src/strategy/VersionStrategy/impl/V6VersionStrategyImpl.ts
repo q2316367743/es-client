@@ -6,8 +6,12 @@ import {IndexCreate} from "@/es/IndexCreate";
  * v6版本策略
  */
 export default class V6VersionStrategyImpl implements VersionStrategy {
-    getVersion(): string {
-        return "6.*.*";
+    getVersionExp(): RegExp {
+        return /^6\.\d\.\d$/;
+    }
+
+    hasType(): boolean {
+        return true;
     }
 
     private getDefaultBody(setting: Setting): any {

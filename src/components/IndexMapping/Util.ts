@@ -3,6 +3,7 @@ import {Mapping, Property} from "@/es/IndexBase";
 import MappingData from "@/components/IndexMapping/domain/MappingData";
 import Optional from "@/utils/Optional";
 import {typeMap} from "@/components/IndexMapping/Constant";
+import {versionStrategyContext} from "@/global/BeanFactory";
 
 function generateKey(): string {
     return (Math.round(Math.random() * 1000) + new Date().getTime()) + ''
@@ -30,25 +31,33 @@ export function typeRender(type: string): string {
 
 export function mappingNodeBuild(mapping: Record<string, Mapping>): Array<MappingData> {
     let mappingDataItems = new Array<MappingData>();
-    for (let mappingKey in mapping) {
-        let item = mapping[mappingKey]
-        let data = {
-            type: mappingKey,
-            dynamic: item.dynamic,
-            nodes: [{
-                disabled: true,
-                key: 'root',
-                type: 'root',
-                value: '',
-                children: new Array<MappingNode>()
-            }] as Array<MappingNode>
-        } as MappingData
-        for (let key in item.properties) {
-            nodeBuild(key, item.properties[key], data.nodes[0].children);
+    if (versionStrategyContext.getStrategy().hasType()) {
+        for (let mappingKey in mapping) {
+            let item = mapping[mappingKey]
+            typeBuild(mappingKey, item, mappingDataItems);
         }
-        mappingDataItems.push(data);
+    }else {
+        typeBuild('', mapping, mappingDataItems);
     }
     return mappingDataItems;
+}
+
+function typeBuild(key: string, mapping: Mapping, mappingDataItems: Array<MappingData>) {
+    let data = {
+        type: key,
+        dynamic: mapping.dynamic,
+        nodes: [{
+            disabled: true,
+            key: 'root',
+            type: 'root',
+            value: '',
+            children: new Array<MappingNode>()
+        }] as Array<MappingNode>
+    } as MappingData
+    for (let key in mapping.properties) {
+        nodeBuild(key, mapping.properties[key], data.nodes[0].children);
+    }
+    mappingDataItems.push(data);
 }
 
 function nodeBuild(key: string, property: Property, nodes: Array<MappingNode>) {
@@ -84,7 +93,7 @@ function nodeBuild(key: string, property: Property, nodes: Array<MappingNode>) {
                 }, {
                     key: generateKey(),
                     type: 'ignore_above',
-                    value: property.fields.keyword.ignore_above,
+                    value: property.fields.keyword.ignore_above + '',
                     children: new Array<MappingNode>()
                 }] as Array<MappingNode>
             })
