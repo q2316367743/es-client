@@ -1,6 +1,6 @@
 import Field from "@/view/Field";
 
-export default function IndexFieldBuild(mappings: any, include_doc: boolean = true): Array<Field> {
+export default function IndexFieldBuild(mappings: any): Array<Field> {
     let fields = new Array<Field>();
     let properties = {} as any;
     if (mappings._doc) {
@@ -11,9 +11,6 @@ export default function IndexFieldBuild(mappings: any, include_doc: boolean = tr
         return new Array<Field>();
     }
     let prefix = '';
-    if (include_doc) {
-        prefix = '_doc';
-    }
     for (let key in properties) {
         buildField(key, properties[key], fields, prefix)
     }
@@ -21,7 +18,10 @@ export default function IndexFieldBuild(mappings: any, include_doc: boolean = tr
 }
 
 function buildField(name: string, field: any, fields: Array<Field>, prefix: string): void {
-    let realName = prefix + '.' + name;
+    let realName = name
+    if (prefix !== '') {
+        realName = prefix + '.' + name;
+    }
     if (field.fields) {
         // 如果存在`fields`字段，则代表这个字段是`text`类型+`keyword`类型
         fields.push({

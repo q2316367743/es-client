@@ -91,7 +91,7 @@
                 "name": "名字",
                 "type": "类型"
             },
-            "fieldSetting": "字段设置",
+            "mappingSetting": "映射设置",
             "replicaNumber": "副本数",
             "setting": "设置",
             "shardNumber": "分片数"

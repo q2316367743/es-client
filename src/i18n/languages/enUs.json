@@ -91,7 +91,7 @@
                 "name": "name",
                 "type": "type"
             },
-            "fieldSetting": "field setting",
+            "mappingSetting": "mapping setting",
             "replicaNumber": "replica number",
             "setting": "setting",
             "shardNumber": "shard number"

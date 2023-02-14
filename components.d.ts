@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AAffix: typeof import('@arco-design/web-vue')['Affix']
+    AAutoComplete: typeof import('@arco-design/web-vue')['AutoComplete']
     ABackTop: typeof import('@arco-design/web-vue')['BackTop']
     AButton: typeof import('@arco-design/web-vue')['Button']
     ACard: typeof import('@arco-design/web-vue')['Card']
@@ -47,9 +48,11 @@ declare module '@vue/runtime-core' {
     ATimeline: typeof import('@arco-design/web-vue')['Timeline']
     ATimelineItem: typeof import('@arco-design/web-vue')['TimelineItem']
     ATooltip: typeof import('@arco-design/web-vue')['Tooltip']
+    ATree: typeof import('@arco-design/web-vue')['Tree']
     ATrigger: typeof import('@arco-design/web-vue')['Trigger']
     Bsd: typeof import('./src/components/License/Bsd.vue')['default']
     DataView: typeof import('./src/components/DataView/index.vue')['default']
+    IndexMapping: typeof import('./src/components/IndexMapping/index.vue')['default']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
     JsonView: typeof import('./src/components/JsonView/index.vue')['default']
     Mit: typeof import('./src/components/License/Mit.vue')['default']

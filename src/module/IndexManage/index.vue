@@ -10,10 +10,9 @@
             </a-tabs>
             <a-spin :loading="loading" tip="加载中">
                 <div class="content">
-                    <a-scrollbar>
-                        <json-view v-if="jsonViewShow" :data="data"/>
-                        <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
-                    </a-scrollbar>
+                    <json-view v-if="jsonViewShow" :data="data"/>
+                    <index-mapping :mapping="this.data" v-else-if="active === '3'"/>
+                    <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
                 </div>
             </a-spin>
         </div>
@@ -53,11 +52,12 @@ import Optional from "@/utils/Optional";
 import {mapState} from "pinia";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import IndexMapping from "@/components/IndexMapping/index.vue";
 
 export default defineComponent({
     name: 'index-manage',
     emits: ['update:modelValue'],
-    components: {IndexManageSummary, JsonView},
+    components: {IndexMapping, IndexManageSummary, JsonView},
     data: () => ({
         drawer: false,
         active: '1',
@@ -77,7 +77,7 @@ export default defineComponent({
     },
     computed: {
         jsonViewShow() {
-            return ArrayUtil.contains(['2', '3', '4'], this.active);
+            return ArrayUtil.contains(['2', '4'], this.active);
         },
         ...mapState(useIndexStore, ['indicesMap']),
         state() {

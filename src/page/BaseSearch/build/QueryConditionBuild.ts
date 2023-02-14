@@ -32,26 +32,26 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     if (query.condition === 'match' ||
         query.condition === 'term' ||
         query.condition === 'wildcard') {
-        expression[query.field.substring(5)] = query.value;
+        expression[query.field] = query.value;
     } else if (query.condition === 'range_lt') {
         let value = {} as any;
         value['lt'] = query.value;
-        expression[query.field.substring(5)] = value;
+        expression[query.field] = value;
         cod = 'range';
     } else if (query.condition === 'range_lte') {
         let value = {} as any;
         value['lte'] = query.value;
-        expression[query.field.substring(5)] = value;
+        expression[query.field] = value;
         cod = 'range';
     } else if (query.condition === 'range_gt') {
         let value = {} as any;
         value['gt'] = query.value;
-        expression[query.field.substring(5)] = value;
+        expression[query.field] = value;
         cod = 'range';
     } else if (query.condition === 'range_gte') {
         let value = {} as any;
         value['gte'] = query.value;
-        expression[query.field.substring(5)] = value;
+        expression[query.field] = value;
         cod = 'range';
     } else {
         throw new Error('查询条件不支持')
@@ -66,7 +66,7 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
         if (order.field === '' || order.type === null) {
             continue;
         }
-        body.sort[order.field.substring(5)] = {order: order.type};
+        body.sort[order.field] = {order: order.type};
     }
 }
 

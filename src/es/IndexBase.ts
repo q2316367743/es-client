@@ -9,9 +9,11 @@ export interface IndexBase {
     settings: Setting;
 
     /**
-     * 映射
+     * 映射：
+     *
+     * 类型 => 映射
      */
-    mappings: Mapping;
+    mappings: Record<string, Mapping>;
 
 }
 
@@ -36,9 +38,7 @@ export interface Mapping {
      */
     properties?: Record<string, Property>;
 
-    _doc?: {
-        properties: Record<string, Property>;
-    }
+    dynamic?: string;
 
 }
 
@@ -68,8 +68,14 @@ export interface Property {
      */
     format?: string;
 
+    /**
+     * 动态
+     */
+    dynamic?: Dynamic;
+
 }
 
+export type Dynamic = 'true' | 'false' | 'strict';
 
 export type Type = 'text' |
     'long' |

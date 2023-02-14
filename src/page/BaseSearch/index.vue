@@ -245,7 +245,9 @@ export default defineComponent({
         },
         'current.index': {
             handler(newValue: string) {
-                this.fields = useIndexStore().field(newValue);
+                if (newValue.length > 2) {
+                    this.fields = useIndexStore().field(newValue.slice(2));
+                }
                 if (newValue === '') {
                     this.clear();
                 }

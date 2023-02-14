@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineAsyncComponent, defineComponent} from 'vue';
 import {mapState} from 'pinia';
 import {useElementSize} from "@vueuse/core";
 
@@ -101,7 +101,6 @@ import mitt from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import {stringContain} from "@/utils/SearchUtil";
 
-import HomeIndexAdd from "@/page/Home/components/IndexAdd.vue";
 import IndexItemView from '@/view/IndexItemView';
 import {useIndexManageEvent} from "@/global/BeanFactory";
 
@@ -110,7 +109,10 @@ let lastExecuteId = -1;
 
 export default defineComponent({
     name: 'Home',
-    components: {HomeIndexAdd, IndexItem, JsonDialog},
+    components: {
+        IndexItem, JsonDialog,
+        HomeIndexAdd: defineAsyncComponent(() => import('@/module/IndexAdd/IndexAdd.vue'))
+    },
     data: () => {
         return {
             // 根据条件过滤后的索引

@@ -93,10 +93,10 @@ const useIndexStore = defineStore('index', {
         field(indexName: string): Array<Field> {
             let indexView = this.indicesMap.get(indexName);
             if (indexView) {
-                return [...Array.from(indexView.fields), {
-                    name: '_doc._id',
+                return [{
+                    name: '_id',
                     type: 'text'
-                }]
+                }, ...Array.from(indexView.fields)]
             }
             return new Array<Field>;
         }

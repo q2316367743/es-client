@@ -1,13 +1,14 @@
 <template>
-    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="850px">
-        <a-form :model="index">
+    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="850px" draggable
+             class="home-index-add" render-to-body unmount-on-close>
+        <a-form :model="index" layout="vertical">
             <a-form-item :label="$t('common.keyword.name')">
                 <a-input v-model="index.name" style="width: 300px;"></a-input>
             </a-form-item>
         </a-form>
-        <a-collapse v-model="indexCollapse">
-            <a-collapse-item :header="$t('home.newIndex.setting')" key="1">
-                <a-form :model="index.settings">
+        <a-tabs v-model:active-key="indexCollapse">
+            <a-tab-pane :title="$t('home.newIndex.setting')" key="1">
+                <a-form :model="index.settings" layout="vertical">
                     <a-form-item :label="$t('home.newIndex.shardNumber')">
                         <a-input-number v-model="index.settings.numberOfShards" controls-position="right">
                         </a-input-number>
@@ -17,38 +18,11 @@
                         </a-input-number>
                     </a-form-item>
                 </a-form>
-            </a-collapse-item>
-            <a-collapse-item :header="$t('home.newIndex.fieldSetting')" key="2">
-                <div v-if="index.mapping.length === 0">
-                    <a-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}</a-button>
-                </div>
-                <a-form :model="index.mapping" v-else>
-                    <div v-for="(property, idx) in index.mapping" :key="idx">
-                        <a-form :model="property" :inline="true">
-                            <a-form-item :label="$t('home.newIndex.field.name')">
-                                <a-input v-model="property.field"></a-input>
-                            </a-form-item>
-                            <a-form-item :label="$t('home.newIndex.field.type')">
-                                <a-select v-model="property.type">
-                                    <a-option v-for="(type) in types" :key="type" :label="type" :value="type">
-                                    </a-option>
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item>
-                                <a-button type="primary" @click="addProperty">{{ $t('common.operation.add') }}
-                                </a-button>
-                            </a-form-item>
-                            <a-form-item>
-                                <a-button type="primary" status="danger" @click="removeProperty(property)">{{
-                                        $t('common.operation.delete')
-                                    }}
-                                </a-button>
-                            </a-form-item>
-                        </a-form>
-                    </div>
-                </a-form>
-            </a-collapse-item>
-        </a-collapse>
+            </a-tab-pane>
+            <a-tab-pane :title="$t('home.newIndex.mappingSetting')" key="2">
+                <index-mapping/>
+            </a-tab-pane>
+        </a-tabs>
         <template #footer>
             <a-button type="text" @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch') }}</a-button>
             <a-button type="text" text @click="copyIndex">{{ $t('common.action.copy') }}</a-button>
@@ -70,9 +44,11 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import MessageUtil from "@/utils/MessageUtil";
+import IndexMapping from "@/components/IndexMapping/index.vue";
 
 export default defineComponent({
-    name: 'home-index-add',
+    name: 'index-add',
+    components: {IndexMapping},
     emits: ['update:modelValue'],
     props: {
         modelValue: Boolean
@@ -113,14 +89,6 @@ export default defineComponent({
         this.dialog = Optional.ofNullable(this.modelValue).orElse(false);
     },
     methods: {
-        addProperty() {
-            this.index.mapping.push({id: new Date().getTime(), field: '', 'type': 'text'})
-        },
-        removeProperty(property: Property) {
-            this.index.mapping = this.index.mapping.filter((target: Property) => {
-                return property.id !== target.id;
-            });
-        },
         addIndex() {
             // 新增
             indexApi(this.index.name).create(versionStrategyContext.getStrategy().indexCreateBuild(this.index))
@@ -153,6 +121,15 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
+<style lang="less">
+.home-index-add {
 
+    .arco-modal-body {
+        max-height: 70vh;
+    }
+
+    .arco-form-item-wrapper-col {
+        width: 350px;
+    }
+}
 </style>
