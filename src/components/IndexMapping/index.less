@@ -7,7 +7,6 @@
 
         .index-mapping-main {
             display: flex;
-            margin-top: 10px;
 
             .arco-tag {
                 margin: 4px 6px;
@@ -17,7 +16,6 @@
         .index-mapping-mapper {
             width: 100%;
             margin-top: 10px;
-            height: 100%;
             overflow: auto;
 
             .index-mapping-mapper-node {
@@ -61,6 +59,19 @@
         position: absolute;
         top: 0;
         right: 0;
+    }
+
+    .read-only {
+        min-width: 165px;
+        height: 32px;
+        padding: 0 12px;
+        line-height: 32px;
+        font-size: 14px;
+        color: var(--color-text-1);
+        background-color: var(--color-fill-2);
+        border-radius: var(--border-radius-small);
+        box-sizing: border-box;
+        cursor: text;
     }
 
 }

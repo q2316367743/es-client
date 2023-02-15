@@ -11,7 +11,7 @@
             <a-spin :loading="loading" tip="加载中">
                 <div class="content">
                     <json-view v-if="jsonViewShow" :data="data"/>
-                    <index-mapping :mapping="this.data" v-else-if="active === '3'"/>
+                    <index-mapping read-only :mapping="this.data" v-else-if="active === '3'"/>
                     <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
                 </div>
             </a-spin>

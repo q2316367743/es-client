@@ -6,39 +6,41 @@
                 <div class="index-mapping-tab">
                     <div class="index-mapping-main">
                         <a-tag bordered color="blue">type</a-tag>
+                        <div v-if="readOnly" class="read-only">{{item.type}}</div>
                         <a-input v-model="dataItems[index].type" style="width: 200px;" size="mini"
-                                 :disabled="!hasType"/>
+                                 :disabled="!hasType" v-else/>
                         <a-tag bordered color="blue">dynamic</a-tag>
+                        <div v-if="readOnly" class="read-only">{{item.dynamic}}</div>
                         <a-select v-model="dataItems[index].dynamic" style="width: 200px;" size="mini"
-                                  :disabled="!hasType">
+                                  :disabled="!hasType" v-else>
                             <a-option label="动态模式" value="true"/>
                             <a-option label="静态模式" value="false"/>
                             <a-option label="严格模式" value="strict"/>
                         </a-select>
                     </div>
-                    <div class="index-mapping-mapper">
+                    <div class="index-mapping-mapper" :style="{height: readOnly ? 'calc(100% - 50px)' : '100%'}">
                         <a-tree v-model:expanded-keys="expandedKeys" :data="dataItems[index].nodes" block-node show-line
                                 auto-expand-parent :ref="'indexManageTree' + index">
                             <template #title="nodeData">
                                 <div class="index-mapping-mapper-node">
                                     <a-tag bordered color="blue">{{ typeRender(nodeData.type) }}</a-tag>
-                                    <a-auto-complete :data="typeAutoData" size="mini"
-                                                     :disabled="nodeData.key === 'root'"
-                                                     allow-clear
-                                                     v-model="nodeData.type"/>
+                                    <div v-if="readOnly" class="read-only">{{nodeData.type}}</div>
+                                    <a-auto-complete :data="typeAutoData" size="mini" :disabled="nodeData.key === 'root'"
+                                                     allow-clear v-model="nodeData.type" v-else/>
+                                    <div v-if="readOnly" class="read-only" style="margin-left: 16px;">{{nodeData.value}}</div>
                                     <a-input size="mini" :disabled="!allowEdit(nodeData.type)" v-model="nodeData.value"
-                                             style="margin-left: 16px;"/>
+                                             style="margin-left: 16px;" v-else/>
                                 </div>
                             </template>
                             <template #extra="nodeData">
                                 <div class="index-mapping-mapper-option">
-                                    <a-button type="text" status="danger" :disabled="nodeData.key === 'root'"
+                                    <a-button type="text" status="danger" :disabled="nodeData.key === 'root' || readOnly"
                                               @click="() => removeChildNode(nodeData)">
                                         <template #icon>
                                             <icon-close/>
                                         </template>
                                     </a-button>
-                                    <a-button type="text" status="normal" :disabled="!allowAdd(nodeData.type)"
+                                    <a-button type="text" status="normal" :disabled="!allowAdd(nodeData.type) || readOnly"
                                               @click="() => addChildNode(nodeData)">
                                         <template #icon>
                                             <icon-plus/>
@@ -78,7 +80,12 @@ export default defineComponent({
     name: 'index-mapping',
     components: {JsonView},
     props: {
-        mapping: Object as PropType<Record<string, Mapping>>
+        mapping: Object as PropType<Record<string, Mapping>>,
+        readOnly: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     },
     data: () => {
         let dataItems = new Array<MappingData>();

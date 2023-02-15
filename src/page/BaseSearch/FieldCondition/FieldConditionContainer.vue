@@ -1,12 +1,14 @@
 <template>
-    <div v-if="conditions.length === 0">
-        <a-button type="primary" @click="init">{{ $t('common.operation.add') }}
-        </a-button>
-    </div>
-    <div v-for="(item, idx) in conditions" :key="idx"
-         style="margin-bottom: 10px;display: flex;">
-        <field-condition-item v-model="conditions[idx]" :fields="fields"
-                              @add="add" @remove="remove"/>
+    <div class="field-condition-container">
+        <div v-if="conditions.length === 0">
+            <a-button type="primary" @click="init">{{ $t('common.operation.add') }}
+            </a-button>
+        </div>
+        <div v-for="(item, idx) in conditions" :key="idx"
+             style="margin-bottom: 10px;">
+            <field-condition-item v-model="conditions[idx]" :fields="fields"
+                                  @add="add" @remove="remove"/>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -65,5 +67,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-
+.field-condition-container {
+    display: block;
+}
 </style>

@@ -46,7 +46,7 @@
             </a-scrollbar>
         </div>
         <a-modal v-model:visible="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'"
-                 append-to-body>
+                 render-to-body unmount-on-close draggable width="50%">
             <history-save-and-update v-model="dialog.data" @submit="submit"/>
         </a-modal>
     </div>

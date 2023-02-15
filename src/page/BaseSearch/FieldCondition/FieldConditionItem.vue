@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="field-condition-item">
         <!-- 选择查询模式 -->
         <a-select v-model="condition.type" filterable :placeholder="$t('baseSearch.placeholder.condition')"
                   style="width: 110px;">
@@ -86,4 +86,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.field-condition-item {
+    display: flex;
+}
 </style>
