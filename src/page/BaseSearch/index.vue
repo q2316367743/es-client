@@ -1,5 +1,5 @@
 <template>
-    <a-spin :loading="loading" :tip="$t('common.loading.search')">
+    <a-spin :loading="loading" :tip="$t('common.loading.search')" class="base-spin">
         <div class="base-search">
             <!-- 标签页 -->
             <div class="base-search-tab" v-if="instance.showTab">
@@ -35,7 +35,7 @@
                         </a-select>
                     </div>
                 </div>
-                <a-scrollbar style="height: calc(100vh - 58px);margin-top: 40px;overflow: auto;">
+                <a-scrollbar style="height: calc(100vh - 108px);margin-top: 40px;overflow: auto;">
                     <!-- 核心查询区 -->
                     <div class="base-display" ref="baseDisplay">
                         <!-- 查询条件 -->
@@ -50,16 +50,17 @@
                                 <a-form-item :label="$t('baseSearch.form.order')">
                                     <field-order-container v-model="current.orders" :fields="fields"/>
                                 </a-form-item>
-                                <a-affix :offset-top="90" target="baseDisplay">
-                                    <a-pagination :total="current.total" v-model:current="page" v-model:page-size="size"
-                                                  show-total show-jumper
-                                                  show-page-size/>
-                                </a-affix>
+                                <div class="base-condition-pagination">
+                                    <a-pagination :total="current.total" v-model:current="page" :page-size="size"
+                                                  show-total/>
+                                    <a-input-number v-model="size" style="width: 70px"/>
+                                </div>
                             </a-form>
                         </div>
                         <!-- 查询结果 -->
                         <div class="base-content" ref="baseContent">
-                            <data-view :view="view" :result="current.result" :abs="false"/>
+                            <data-view :view="view" :result="current.result" :abs="false"
+                                       table-height="calc(100vh - 108px)"/>
                         </div>
                     </div>
                     <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
@@ -222,10 +223,14 @@ export default defineComponent({
     },
     watch: {
         size() {
-            this.search();
+            if (this.current.index.length > 0) {
+                this.search();
+            }
         },
         page() {
-            this.search();
+            if (this.current.index.length > 0) {
+                this.search();
+            }
         },
         searchId() {
             let baseSearchItem = this.searchMap.get(this.searchId);
@@ -360,14 +365,18 @@ export default defineComponent({
         },
         jumpToSeniorSearch() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            let index = this.current.index;
+            if (index && index !== '') {
+                index = index.slice(2);
+            }
             useSeniorSearchEvent.emit({
-                link: `/${this.current.index}/_search`,
+                link: `/${index}/_search`,
                 method: 'POST',
                 params: JSON.stringify(
                     QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
                     null,
                     4),
-                execute: true
+                execute: false
             })
         },
         editTabs(targetName: number, action: 'remove' | 'add') {

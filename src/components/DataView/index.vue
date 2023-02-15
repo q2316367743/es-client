@@ -3,7 +3,7 @@
         <div v-if="view === 2" class="data-json-view">
             <json-view :data="result"/>
         </div>
-        <table-viewer v-else-if="view === 3" :data="result"/>
+        <table-viewer v-else-if="view === 3" :data="result" :style="{height: tableHeight}"/>
     </div>
 </template>
 <script lang="ts">
@@ -22,6 +22,11 @@ export default defineComponent({
             type: Boolean,
             required: false,
             default: true
+        },
+        tableHeight: {
+            type: String,
+            required: false,
+            default: '100%'
         }
     },
 });
