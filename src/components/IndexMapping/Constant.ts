@@ -8,7 +8,7 @@ export const typeMap = {
     'boost': '权重',
     'coerce': '强制类型转换',
     'copy_to': '合并参数',
-    'properties': '属性',
+    // 'properties': '属性',
     'fields': '字段',
     'search_analyzer': '搜索分析器',
     'ignore_above': '忽略超越限制的字段',

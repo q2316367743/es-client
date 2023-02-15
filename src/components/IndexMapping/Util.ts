@@ -4,6 +4,8 @@ import MappingData from "@/components/IndexMapping/domain/MappingData";
 import Optional from "@/utils/Optional";
 import {typeMap} from "@/components/IndexMapping/Constant";
 import {versionStrategyContext} from "@/global/BeanFactory";
+import {allowEditTypes} from "./Constant";
+import {SelectOptionData} from "@arco-design/web-vue";
 
 function generateKey(): string {
     return (Math.round(Math.random() * 1000) + new Date().getTime()) + ''
@@ -36,7 +38,7 @@ export function mappingNodeBuild(mapping: Record<string, Mapping>): Array<Mappin
             let item = mapping[mappingKey]
             typeBuild(mappingKey, item, mappingDataItems);
         }
-    }else {
+    } else {
         typeBuild('', mapping, mappingDataItems);
     }
     return mappingDataItems;
@@ -45,7 +47,7 @@ export function mappingNodeBuild(mapping: Record<string, Mapping>): Array<Mappin
 function typeBuild(key: string, mapping: Mapping, mappingDataItems: Array<MappingData>) {
     let data = {
         type: key,
-        dynamic: mapping.dynamic,
+        dynamic: Optional.ofNullable(mapping).map(e => e.dynamic).orElse(""),
         nodes: [{
             disabled: true,
             key: 'root',
@@ -54,7 +56,8 @@ function typeBuild(key: string, mapping: Mapping, mappingDataItems: Array<Mappin
             children: new Array<MappingNode>()
         }] as Array<MappingNode>
     } as MappingData
-    for (let key in mapping.properties) {
+    for (let key in Optional.ofNullable(mapping).map(e => e.properties).orElse({})) {
+        // @ts-ignore
         nodeBuild(key, mapping.properties[key], data.nodes[0].children);
     }
     mappingDataItems.push(data);
@@ -113,4 +116,88 @@ function nodeBuild(key: string, property: Property, nodes: Array<MappingNode>) {
         });
     }
     nodes.push(node);
+}
+
+export function mappingBuild(data: Array<MappingData>): Record<string, Mapping> | Record<string, Property> {
+    if (versionStrategyContext.getStrategy().hasType()) {
+        let result = {} as Record<string, Mapping>;
+        for (let datum of data) {
+            let item = {
+                properties: {},
+                dynamic: datum.dynamic
+            };
+            propertiesBuild(datum.nodes[0].children, item.properties)
+            result[datum.type] = item;
+        }
+        return result
+    } else {
+        if (data.length === 0) {
+            return {};
+        }
+        let item = {} as Record<string, Property>
+        propertiesBuild(data[0].nodes[0].children, item);
+        return item;
+    }
+}
+
+function propertiesBuild(nodes: Array<MappingNode>, properties: Property) {
+    let result = {} as Record<string, Property>;
+    for (let node of nodes) {
+        console.log(node)
+        if (allowEditTypes.includes(node.type)) {
+            //@ts-ignore
+            properties[node.type] = node.value;
+        } else {
+            let ii = {} as Record<string, Property>;
+            ii[node.type] = {}
+            propertiesBuild(node.children, ii[node.type]);
+            if (properties['properties']) {
+                properties['properties'][node.type] = ii[node.type];
+            }else {
+                properties['properties'] = ii;
+            }
+        }
+    }
+    return result;
+}
+
+/**
+ * 值提示构建
+ *
+ * @param type 类型
+ */
+export function valueTipsBuild(type: string): Array<SelectOptionData> {
+    return tipsBuild(type).map(e => ({
+        label: e,
+        value: e
+    }));
+}
+
+function tipsBuild(type: string): Array<string> {
+    switch (type) {
+        case 'dynamic':
+            return ['true', 'false', 'strict'];
+        case 'enabled':
+        case 'fielddata':
+        case 'ignore_malformed':
+        case 'include_in_all':
+        case 'norms':
+        case 'store':
+            return ['true', 'false'];
+        case 'format':
+            return ['yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss', 'HH:mm:ss', 'epoch_millis'];
+        case 'index_options':
+            return ['docs', 'freqs', 'positions', 'offsets']
+        case 'index':
+            return ['analyzed', 'not_analyzed']
+        case 'similarity':
+            return ['classic', 'BM25'];
+        case 'term_vector':
+            return ['no', 'yes', 'with_positions', 'with_offset', 'with_positions_offsets'];
+        case 'type':
+            return ['text', 'keyword', 'long', 'integer', 'short', 'byte', 'double', 'float', 'half_float', 'scaled_float',
+                'date', 'boolean', 'binary', 'Array', 'object', 'nested', 'geo_shape']
+        default:
+            return [];
+    }
 }

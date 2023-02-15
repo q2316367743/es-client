@@ -20,7 +20,7 @@
                 </a-form>
             </a-tab-pane>
             <a-tab-pane :title="$t('home.newIndex.mappingSetting')" key="2">
-                <index-mapping style="position: relative"/>
+                <index-mapping style="position: relative" ref="indexMapping" overflow/>
             </a-tab-pane>
         </a-tabs>
         <template #footer>
@@ -90,8 +90,11 @@ export default defineComponent({
     },
     methods: {
         addIndex() {
+            let indexMapping = this.$refs['indexMapping'] as any;
+            let indexCreate = versionStrategyContext.getStrategy().indexCreateBuild(this.index);
+            indexCreate.mappings = indexMapping.getMapping()
             // 新增
-            indexApi(this.index.name).create(versionStrategyContext.getStrategy().indexCreateBuild(this.index))
+            indexApi(this.index.name).create(indexCreate)
                 .then(res => MessageUtil.success(res, useIndexStore().reset))
                 .catch(e => MessageUtil.error('索引创建错误', e));
             // 关闭弹框
@@ -108,11 +111,15 @@ export default defineComponent({
         jumpToSeniorSearch() {
             // 页面跳转
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
+            // 构建数据
+            let indexMapping = this.$refs['indexMapping'] as any;
+            let indexCreate = versionStrategyContext.getStrategy().indexCreateBuild(this.index);
+            indexCreate.mappings = indexMapping.getMapping()
             // 高级查询数据填充
             useSeniorSearchEvent.emit({
                 link: this.index.name,
                 method: 'PUT',
-                params: JSON.stringify(versionStrategyContext.getStrategy().indexCreateBuild(this.index), null, 4),
+                params: JSON.stringify(indexCreate, null, 4),
                 execute: false
             });
             // 关闭弹框
