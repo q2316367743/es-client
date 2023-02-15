@@ -10,13 +10,6 @@
                 <template #first>
                     <div class="side">
                         <div class="option">
-                            <a-tooltip :content="$t('common.operation.run')" position="right">
-                                <a-button type="text" status="normal" @click="search" :disabled="!url">
-                                    <template #icon>
-                                        <icon-play-arrow-fill :size="22"/>
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
                             <a-tooltip :content="$t('common.operation.save')" position="right">
                                 <a-button type="text" status="success" @click="save">
                                     <template #icon>
@@ -48,7 +41,7 @@
                                 </a-button>
                             </a-tooltip>
                         </div>
-                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"/>
+                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor" @execute="execute"/>
                     </div>
                 </template>
                 <template #second>
@@ -259,12 +252,15 @@ export default defineComponent({
     },
     // 获取最大宽度
     methods: {
-        async search() {
+        search() {
+            this.execute();
+        },
+        execute(lineNumber?: number) {
             if (!this.url) {
                 return;
             }
             let restClientEditor = this.$refs.restClientEditor as any;
-            let request = requestBuild(restClientEditor.getInstance());
+            let request = requestBuild(restClientEditor.getInstance(), lineNumber);
             if (!request) {
                 MessageUtil.error('请求块无法识别');
                 return;

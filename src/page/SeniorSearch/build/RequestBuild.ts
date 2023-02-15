@@ -31,11 +31,15 @@ export interface Request {
 
 }
 
-export function requestBuild(instance: monaco.editor.IStandaloneCodeEditor): Request | undefined {
+export function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, lineNumber?: number): Request | undefined {
     let value = instance.getValue();
     let position = instance.getPosition();
     if (!position) {
         return;
+    }
+    let executeLine = position.lineNumber;
+    if (lineNumber) {
+        executeLine = lineNumber
     }
     let list = grammaticalAnalysis(value);
     if (list.length === 0) {
@@ -43,14 +47,14 @@ export function requestBuild(instance: monaco.editor.IStandaloneCodeEditor): Req
     }
     for (let i = 0; i < list.length; i++) {
         let item = list[i];
-        if (position.lineNumber) {
-            if (item.number > position.lineNumber) {
+        if (executeLine) {
+            if (item.number > executeLine) {
                 if (i > 0) {
                     return list[i - 1];
                 } else {
                     return;
                 }
-            } else if (item.number === position.lineNumber) {
+            } else if (item.number === executeLine) {
                 return item;
             }
         }
@@ -106,6 +110,5 @@ function grammaticalAnalysis(value: string): Array<Grammatical> {
         request.params = request.paramList.join('\n');
         list.push(request);
     }
-    console.log(list)
     return list;
 }

@@ -265,7 +265,6 @@ export default defineComponent({
             this.clear(true);
         });
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
-            console.log(index, PageNameEnum.BASE_SEARCH, index === PageNameEnum.BASE_SEARCH)
             this.showTop = (index === PageNameEnum.BASE_SEARCH)
         });
         useBaseSearchEvent.on(event => {

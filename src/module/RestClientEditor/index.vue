@@ -9,15 +9,17 @@ import * as monaco from 'monaco-editor';
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
-import language from "./language";
-import configuration from "./configuration";
-import provider from "./provider";
+import language from "@/module/RestClientEditor/language";
+import configuration from "@/module/RestClientEditor/configuration";
+import provider from "@/module/RestClientEditor/provider";
+import codelens from "@/module/RestClientEditor/codelens";
+import Optional from "@/utils/Optional";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
 // @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
 self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
-    getWorker(_: any, label: string) {
+    getWorker(_: any) {
         return new EditorWorker(); // 基础功能文件， 提供了所有语言通用功能 无论使用什么语言，monaco都会去加载他。
     }
 };
@@ -29,6 +31,7 @@ export default defineComponent({
     props: {
         modelValue: String
     },
+    emits: ['execute', 'update:modelValue'],
     data: () => ({
         content: '',
         isDark,
@@ -77,6 +80,12 @@ export default defineComponent({
             }
             return true;
         });
+
+        let commandId = instance.addCommand(0, (...args: any[]) => {
+            this.$emit('execute', args[1])
+        });
+
+        monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
     },
     methods: {
         getInstance(): monaco.editor.IStandaloneCodeEditor {
