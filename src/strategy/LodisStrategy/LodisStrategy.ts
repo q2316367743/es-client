@@ -1,11 +1,11 @@
 export default interface LodisStrategy {
 
-    set(key: string, value: string): void;
+    set(key: string, value: string): Promise<void>;
 
-    get(key: string): string | null;
+    get(key: string): Promise<string | null>;
 
-    has(key: string): boolean;
+    has(key: string): Promise<boolean>;
 
-    remove(key: string): void;
+    remove(key: string): Promise<void>;
 
 }

@@ -8,7 +8,7 @@ export default function build(commandId: string) {
             let lines = model.getValue().split("\n");
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i];
-                if (line.match(`${supportMethods.join("|")} [-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]`)) {
+                if (line.match(`^\s*${supportMethods.join("|")} [-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]`)) {
                     codeLens.push({
                         range: {
                             startLineNumber: i + 1,

@@ -133,8 +133,7 @@ export default defineComponent({
             useSeniorSearchEvent.emit({
                 id: history.id,
                 name: history.name,
-                body: history.body,
-                execute: false
+                body: history.body
             });
         },
         removeById(id: number) {

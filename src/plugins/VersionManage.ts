@@ -11,13 +11,14 @@ export default class VersionManage {
     private storageVersion?: string;
     private status: number = 2;
 
-    init() {
-        this.storageVersion = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION) || '';
+    async init() {
+        this.storageVersion = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION) || '';
         if (this.storageVersion === '') {
             this.status = 1;
         } else if (this.currentVersion === this.storageVersion) {
             this.status = 3;
         }
+        return Promise.resolve();
     }
 
     /**
@@ -41,7 +42,7 @@ export default class VersionManage {
             await this.update240();
         }
         // 更新数据
-        lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
+        await lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
         this.storageVersion = this.currentVersion + '';
         this.status = 2;
         return Promise.resolve();
@@ -54,7 +55,8 @@ export default class VersionManage {
             useSettingStore().instance.autoFullScreen = true;
             useSettingStore().instance.showTab = false;
             useSettingStore().sync();
-            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, LayoutModeEnum.CLASSIC);
+            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, LayoutModeEnum.CLASSIC)
+                .then(() => console.log('设置默认布局方式'));
             document.body.setAttribute('layout-mode', LayoutModeEnum.CLASSIC);
         }
     }
@@ -76,9 +78,7 @@ export default class VersionManage {
                 await seniorSearchHistoryService.update(record);
             }
         }
-
         useLoadingStore().setText("2.4.0版本更新 - 服务器模式升级");
-
     }
 
 }

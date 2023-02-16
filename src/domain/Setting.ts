@@ -74,6 +74,11 @@ export default interface Setting {
     defaultViewer: number;
 
     /**
+     * JSON字体，单位px，默认14
+     */
+    jsonFontSize: number;
+
+    /**
      * JSON主题 - 白天
      */
     jsonThemeByLight: string;

@@ -374,8 +374,7 @@ export default defineComponent({
                 params: JSON.stringify(
                     QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
                     null,
-                    4),
-                execute: false
+                    4)
             })
         },
         editTabs(targetName: number, action: 'remove' | 'add') {

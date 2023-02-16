@@ -27,9 +27,16 @@
                             <a-tooltip :content="viewTip" position="right">
                                 <a-button type="text" status="normal" @click="view = (view === 2) ? 3 : 2">
                                     <template #icon>
-                                        <icon-code-block v-if="view === 2"/>
-                                        <icon-nav v-else-if="view === 3"/>
-                                        <view-icon v-else/>
+                                        <icon-code-block :size="18" v-if="view === 2"/>
+                                        <icon-nav :size="18" v-else-if="view === 3"/>
+                                        <view-icon :size="18" v-else/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip content="设置" position="right">
+                                <a-button type="text" status="normal" @click="settingDialog = true">
+                                    <template #icon>
+                                        <icon-settings :size="18"/>
                                     </template>
                                 </a-button>
                             </a-tooltip>
@@ -41,7 +48,8 @@
                                 </a-button>
                             </a-tooltip>
                         </div>
-                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor" @execute="execute"/>
+                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
+                                            @execute="execute"/>
                     </div>
                 </template>
                 <template #second>
@@ -64,6 +72,10 @@
                 </template>
             </a-split>
         </div>
+        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body
+                 width="600px" :footer="false">
+            <senior-search-setting @close="settingDialog = false"/>
+        </a-modal>
     </a-spin>
 </template>
 
@@ -125,6 +137,7 @@ export default defineComponent({
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
         SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
         SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/component/History.vue')),
+        SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Setting.vue')),
         TabMenu, DataView,
     },
     data: () => {
@@ -156,6 +169,7 @@ export default defineComponent({
             isDark,
             displayActive: 'result',
             loading: false,
+            settingDialog: false
         }
     },
     computed: {
@@ -236,12 +250,6 @@ export default defineComponent({
             }
 
 
-            // 搜索
-            this.$nextTick(() => {
-                if (param.execute) {
-                    this.search();
-                }
-            });
         });
 
         applicationLaunch.register(() => {

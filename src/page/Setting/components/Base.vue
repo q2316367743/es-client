@@ -81,6 +81,9 @@
                         <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
                     </a-select>
                 </a-form-item>
+                <a-form-item label="JSON视图 - 字体大小">
+                    <a-input-number controls-position="right" v-model="instance.jsonFontSize"></a-input-number>
+                </a-form-item>
                 <a-form-item :label="$t('setting.base.display.jsonViewThemeLight')">
                     <a-select v-model="instance.jsonThemeByLight">
                         <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
@@ -100,7 +103,7 @@
                             <icon-question-circle style="margin-left: 5px;"/>
                         </a-tooltip>
                     </template>
-                    <a-switch v-model="instance.showTab" :active-value="true" :inactive-value="false"
+                    <a-switch v-model="instance.showTab" :checked-value="true" :unchecked-value="false"
                               active-text="启用"
                               inactive-text="禁用"/>
                 </a-form-item>
@@ -122,7 +125,7 @@
             </a-collapse-item>
             <a-collapse-item :header="$t('setting.base.other.title')" key="7">
                 <a-form-item :label="$t('setting.base.other.fullScreen.title')">
-                    <a-switch v-model="instance.autoFullScreen" :active-value="true" :inactive-value="false"
+                    <a-switch v-model="instance.autoFullScreen" :checked-value="true" :unchecked-value="false"
                               :active-text="$t('common.operation.open')"
                               :inactive-text="$t('common.operation.close')"/>
                 </a-form-item>
@@ -226,14 +229,19 @@ export default defineComponent({
                 let baseSearchHistory = await baseSearchHistoryService.list();
                 useLoadingStore().setText('获取高级搜索历史');
                 let seniorSearchHistory = await seniorSearchHistoryService.list();
+                useLoadingStore().setText('获取设置信息');
+                let version = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION);
+                let setting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
+                let editorSetting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.EDITOR_SETTING);
                 useLoadingStore().setText('开始下载');
                 BrowserUtil.download(JSON.stringify({
                     version: Constant.version,
                     time: XEUtils.toDateString(new Date(), 'yyyy-MM-dd HH:ss:mm'),
                     url, baseSearchHistory, seniorSearchHistory,
                     lodis: {
-                        version: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION),
-                        setting: lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING)
+                        version,
+                        setting,
+                        editorSetting
                     }
                 }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');
             } catch (e: any) {

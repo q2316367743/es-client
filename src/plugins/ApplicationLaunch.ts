@@ -44,8 +44,8 @@ export default class ApplicationLaunch {
         useLoadingStore().start('初始化组件中')
         // 本地存储
         await this.lodisStrategyContext.init();
-        versionManage.init();
-        useSettingStore().init();
+        await versionManage.init();
+        await useSettingStore().init();
         // 初始化http模式
         await this.httpStrategyContext.init();
         await this.storageStrategyContext.init();

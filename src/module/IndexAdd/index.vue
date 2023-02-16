@@ -119,8 +119,7 @@ export default defineComponent({
             useSeniorSearchEvent.emit({
                 link: this.index.name,
                 method: 'PUT',
-                params: JSON.stringify(indexCreate, null, 4),
-                execute: false
+                params: JSON.stringify(indexCreate, null, 4)
             });
             // 关闭弹框
             this.dialog = false;

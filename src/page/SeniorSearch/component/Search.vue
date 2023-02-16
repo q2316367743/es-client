@@ -78,8 +78,7 @@ export default defineComponent({
                 current: true,
                 params: record.params,
                 link: record.link,
-                method: record.method,
-                execute: false
+                method: record.method
             })
         }
     }

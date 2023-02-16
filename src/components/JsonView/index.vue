@@ -1,5 +1,5 @@
 <template>
-    <div class="json-view hljs">
+    <div class="json-view hljs" :style="{fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px'}">
         <pre>
             <code class="language-json hljs" v-html="value"></code>
         </pre>
@@ -11,6 +11,9 @@
 import {defineComponent} from "vue";
 import {highlight} from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
+import {mapState} from "pinia";
+import useSettingStore from "@/store/SettingStore";
+import Optional from "@/utils/Optional";
 
 export default defineComponent({
     name: 'json-view',
@@ -24,8 +27,12 @@ export default defineComponent({
     },
     data: () => ({
         value: '',
-        pretty: ''
+        pretty: '',
+        Optional
     }),
+    computed: {
+        ...mapState(useSettingStore, ['instance'])
+    },
     watch: {
         data() {
             let value = JSON.stringify(this.data, null, 4);

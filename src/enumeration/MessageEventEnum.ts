@@ -32,6 +32,11 @@ enum MessageEventEnum {
      */
     SENIOR_HISTORY_UPDATE = 'event:history:senior:update',
 
+    /**
+     * 编辑器设置更新
+     */
+    EDITOR_SETTING_UPDATE = 'event:editor:setting:update',
+
     // 执行
 
     /**

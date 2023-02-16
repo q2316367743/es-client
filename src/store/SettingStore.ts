@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import {getDefaultLanguage} from '@/utils/GlobalUtil';
-import {useLocalStorage} from "@vueuse/core";
 import Setting from "@/domain/Setting";
 import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
@@ -29,6 +28,7 @@ function getDefaultValue(): Setting {
         // 显示设置
         pageSize: 20,
         defaultViewer: 2,
+        jsonFontSize: 16,
         jsonThemeByLight: 'github',
         jsonThemeByDark: 'github-dark',
 
@@ -65,10 +65,14 @@ const useSettingStore = defineStore('setting', {
         getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT)
     },
     actions: {
-        init() {
-            let setting = lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
+        async init() {
+            let setting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
             if (setting && setting !== '') {
-                this.instance = JSON.parse(setting);
+                try {
+                    this.instance = Object.assign(getDefaultValue(), JSON.parse(setting));
+                } catch (e) {
+                    console.error(e);
+                }
             }
         },
         setLanguage(language: string): void {
@@ -96,7 +100,8 @@ const useSettingStore = defineStore('setting', {
             this.sync();
         },
         sync() {
-            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SETTING, JSON.stringify(this.instance));
+            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SETTING, JSON.stringify(this.instance))
+                .then(() => console.log("同步成功"));
         }
     }
 });

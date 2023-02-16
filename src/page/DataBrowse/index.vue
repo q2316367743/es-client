@@ -519,8 +519,7 @@ export default defineComponent({
                                     ]
                                 }
                             }
-                        }, null, 4),
-                        execute: false
+                        }, null, 4)
                     });
                     this.clearChoose();
                 })
@@ -627,8 +626,7 @@ export default defineComponent({
                 params: JSON.stringify(
                     conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size),
                     null,
-                    4),
-                execute: true
+                    4)
             })
         },
         openExportDialog() {
@@ -653,8 +651,7 @@ export default defineComponent({
             useSeniorSearchEvent.emit({
                 link: `/${this.index?.name}/_doc`,
                 method: 'POST',
-                params: this.addConfig.data,
-                execute: false
+                params: this.addConfig.data
             });
             this.addConfig.dialog = false;
             // 清除当前选中
@@ -665,8 +662,7 @@ export default defineComponent({
             useSeniorSearchEvent.emit({
                 link: `/${this.index?.name}/_doc/${this.editConfig.id}`,
                 method: 'PUT',
-                params: this.editConfig.data,
-                execute: false
+                params: this.editConfig.data
             });
             this.editConfig.dialog = false;
             // 清除当前选中

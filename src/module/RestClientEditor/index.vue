@@ -3,7 +3,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {isDark} from "@/global/BeanFactory";
+import {applicationLaunch, isDark} from "@/global/BeanFactory";
 
 import * as monaco from 'monaco-editor';
 // @ts-ignore
@@ -14,6 +14,9 @@ import configuration from "@/module/RestClientEditor/configuration";
 import provider from "@/module/RestClientEditor/provider";
 import codelens from "@/module/RestClientEditor/codelens";
 import Optional from "@/utils/Optional";
+import useEditorSettingStore from "@/store/useEditorSettingStore";
+import emitter from "@/plugins/mitt";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
@@ -61,31 +64,48 @@ export default defineComponent({
         monaco.languages.setLanguageConfiguration('http', configuration);
         monaco.languages.registerCompletionItemProvider('http', provider);
 
-        const container = this.$refs.container as HTMLElement;
-        instance = monaco.editor.create(container, {
-            value: this.modelValue,
-            language: 'http',
-            automaticLayout: true,
-            theme: this.isDark as boolean ? 'vs-dark' : 'vs',
-            minimap: {
-                enabled: false
-            },
-            fontFamily: "consoles",
-            wordWrap: 'on'
-        });
-        instance.onDidChangeModelContent(() => {
-            const value = instance.getValue();
-            if (this.content !== value) {
-                this.$emit('update:modelValue', value);
-            }
-            return true;
-        });
+        applicationLaunch.register(() => {
+            const container = this.$refs.container as HTMLElement;
+            instance = monaco.editor.create(container, {
+                value: this.modelValue,
+                language: 'http',
+                automaticLayout: true,
+                theme: this.isDark as boolean ? 'vs-dark' : 'vs',
+                minimap: {
+                    enabled: useEditorSettingStore().getMinimap
+                },
+                fontFamily: "consoles",
+                wordWrap: useEditorSettingStore().getWordWrap,
+                fontSize: useEditorSettingStore().getFontSize
+            });
 
-        let commandId = instance.addCommand(0, (...args: any[]) => {
-            this.$emit('execute', args[1])
-        });
+            // 注册更新程序
+            emitter.on(MessageEventEnum.EDITOR_SETTING_UPDATE, () => {
+                instance.updateOptions({
+                    minimap: {
+                        enabled: useEditorSettingStore().getMinimap
+                    },
+                    wordWrap: useEditorSettingStore().getWordWrap,
+                    fontSize: useEditorSettingStore().getFontSize
+                })
+            })
 
-        monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
+            instance.onDidChangeModelContent(() => {
+                const value = instance.getValue();
+                if (this.content !== value) {
+                    this.$emit('update:modelValue', value);
+                }
+                return true;
+            });
+
+            let commandId = instance.addCommand(0, (...args: any[]) => {
+                this.$emit('execute', args[1])
+            });
+
+            monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
+
+            return Promise.resolve();
+        })
     },
     methods: {
         getInstance(): monaco.editor.IStandaloneCodeEditor {
