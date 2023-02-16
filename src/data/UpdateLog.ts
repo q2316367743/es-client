@@ -23,6 +23,12 @@ export default [
             label: LogItemEnum.OPTIMIZATION,
             content: '10s未关闭全局loading，进行提示'
         }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '标签页是否隐藏变为是否启用'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '数据浏览与基础查询的索引'
+        }, {
             label: LogItemEnum.REPAIR,
             content: '修复索引管理未刷新异常'
         }],
