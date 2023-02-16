@@ -129,7 +129,7 @@
             <save-or-update-url/>
             <index-manage/>
             <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')"
-                     mask-closable  draggable lock-scroll width="600px">
+                     mask-closable draggable lock-scroll width="600px">
                 <version-update v-if="updateDialog"/>
             </a-modal>
             <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" style="height: 90vh;"
@@ -173,6 +173,7 @@ import Assert from "@/utils/Assert";
 import {
     applicationLaunch,
     isDark,
+    lodisStrategyContext,
     toggleDark,
     usePageJumpEvent,
     useUrlEditEvent,
@@ -182,6 +183,7 @@ import {
 } from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import useLoadingStore from "@/store/LoadingStore";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 
 export default defineComponent({
     components: {
@@ -239,6 +241,11 @@ export default defineComponent({
         },
         selectedKeys(newValue: any[]) {
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, newValue[0]);
+        },
+        urlId(newValue) {
+            if (newValue && typeof newValue === 'number') {
+                lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.LAST_URL, newValue + '');
+            }
         }
     },
     created() {
@@ -249,7 +256,23 @@ export default defineComponent({
                 // utools第一次进入事件
                 let code = sessionStorage.getItem('action');
                 if (code && code !== 'application') {
-                    this.selectUrl(parseInt(code));
+                    let id = parseInt(code);
+                    if (isNaN(id)) {
+                        this.selectUrl(id);
+                    }
+                } else {
+                    // 如果是utils，但是从应用进来，或者不是utils（因为只有utils存在action）
+                    // 如果展示历史
+                    if (useSettingStore().getLastUrl) {
+                        lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAST_URL).then(value => {
+                            if (value) {
+                                let id = parseInt(value);
+                                if (Number.isInteger(id)) {
+                                    this.selectUrl(id);
+                                }
+                            }
+                        });
+                    }
                 }
                 // 删除sessionStorage
                 sessionStorage.removeItem('action');
@@ -270,8 +293,6 @@ export default defineComponent({
                     break;
             }
             await versionManage.execUpdate();
-
-            this.selectedKeys = [useSettingStore().getDefaultPage];
 
             this.selectMenu(useSettingStore().getDefaultPage);
 

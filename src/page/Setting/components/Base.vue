@@ -134,6 +134,19 @@
                         <template #unchecked>{{ $t('common.operation.close') }}</template>
                     </a-switch>
                 </a-form-item>
+                <a-form-item>
+                    <template #label>
+                        <span>保存上次选择的连接</span>
+                        <a-tooltip content="保存后，下一次打开es-client自动选中该链接" placement="top" effect="light">
+                            <icon-question-circle style="margin-left: 5px;"/>
+                        </a-tooltip>
+                    </template>
+                    <a-switch v-model="instance.lastUrl" :checked-value="true" :unchecked-value="false"
+                              type="round">
+                        <template #checked>保存</template>
+                        <template #unchecked>忽略</template>
+                    </a-switch>
+                </a-form-item>
                 <a-form-item label="备份">
                     <a-button type="primary" @click="backup">下载</a-button>
                 </a-form-item>

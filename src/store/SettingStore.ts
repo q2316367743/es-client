@@ -39,6 +39,7 @@ function getDefaultValue(): Setting {
 
         // 其他设置
         autoFullScreen: false,
+        lastUrl: false
     };
 }
 
@@ -62,7 +63,8 @@ const useSettingStore = defineStore('setting', {
         getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>()),
         getShowTab: (state): boolean => Optional.ofNullable(state.instance.showTab).orElse(true),
         getTabMaxCount: (state): number => Optional.ofNullable(state.instance.tabMaxCount).orElse(10),
-        getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT)
+        getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT),
+        getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false)
     },
     actions: {
         async init() {

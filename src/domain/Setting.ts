@@ -95,4 +95,9 @@ export default interface Setting {
      */
     autoFullScreen: boolean;
 
+    /**
+     * 保存上次选择的连接
+     */
+    lastUrl: boolean;
+
 }
