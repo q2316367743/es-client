@@ -379,61 +379,71 @@ export default defineComponent({
                     });
                     break;
                 case 'save-history':
-                    let searchItem = this.searchMap.get(id);
-                    if (!searchItem) {
-                        MessageUtil.error('标签未找到');
-                        return;
-                    }
-                    MessageBoxUtil.prompt('请输入记录名字', '新增记录', {
-                        confirmButtonText: '新增',
-                        cancelButtonText: '取消',
-                        inputValue: isNaN(parseInt(searchItem.header.name)) ? searchItem.header.name : '',
-                        inputPattern: /\S+/,
-                        inputErrorMessage: '请输入有效字符'
-                    })
-                        .then((value) => {
-                            if (!searchItem) {
-                                MessageUtil.error('标签未找到');
-                                return;
-                            }
-                            seniorSearchHistoryService.save({
-                                urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
-                                name: value,
-                                body: searchItem.body.body,
-                            })
-                                .then(id => {
-                                    // 发送消息
-                                    MessageUtil.success('新增成功');
-                                    // 发送事件
-                                    emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
-                                    // 修改标签
-                                    if (searchItem) {
-                                        searchItem.header.relationId = id;
-                                    }
-                                })
-                                .catch(e => MessageUtil.error('新增失败', e));
-                        }).catch(() => console.log('取消新增'));
+                    this.saveHistory(id);
                     break;
                 case 'update-history':
-                    let searchItem2 = this.searchMap.get(id);
-                    if (!searchItem2) {
-                        MessageUtil.error('标签未找到');
-                        return;
-                    }
-                    let relationId = parseInt(strings[2]);
-                    seniorSearchHistoryService.update({
-                        id: relationId,
-                        name: searchItem2.header.name,
-                        body: searchItem2.body.body,
-                    })
-                        .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
-                        .catch(e => MessageUtil.error('更新失败', e));
+                    this.updateHistory(id, strings[2]);
                     break;
             }
             // 全部关闭了
             if (this.searchMap.size === 0) {
                 this.clearAfter();
             }
+        },
+        saveHistory(id: number) {
+            let searchItem = this.searchMap.get(id);
+            if (!searchItem) {
+                MessageUtil.error('标签未找到');
+                return;
+            }
+            MessageBoxUtil.prompt('请输入记录名字', '新增记录', {
+                confirmButtonText: '新增',
+                cancelButtonText: '取消',
+                inputValue: isNaN(parseInt(searchItem.header.name)) ? searchItem.header.name : '',
+                inputPattern: /\S+/,
+                inputErrorMessage: '请输入有效字符'
+            })
+                .then(value => {
+                    if (!searchItem) {
+                        MessageUtil.error('标签未找到');
+                        return;
+                    }
+                    seniorSearchHistoryService.save({
+                        urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
+                        name: value,
+                        body: searchItem.body.body,
+                    })
+                        .then(id => {
+                            // 发送消息
+                            MessageUtil.success('新增成功');
+                            // 发送事件
+                            emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
+                            // 修改标签
+                            if (searchItem) {
+                                searchItem.header.relationId = id;
+                                searchItem.header.name = value;
+                            }
+                        })
+                        .catch(e => MessageUtil.error('新增失败', e));
+                }).catch(() => console.log('取消新增'));
+        },
+        updateHistory(id: number, name: string) {
+            let searchItem2 = this.searchMap.get(id);
+            if (!searchItem2) {
+                MessageUtil.error('标签未找到');
+                return;
+            }
+            let relationId = parseInt(name);
+            seniorSearchHistoryService.update({
+                id: relationId,
+                name: searchItem2.header.name,
+                body: searchItem2.body.body,
+            })
+                .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
+                .catch(e => {
+                    MessageUtil.error('更新失败', e);
+                    this.saveHistory(id);
+                });
         },
         save() {
             let searchItem = this.searchMap.get(this.searchId);

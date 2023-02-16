@@ -53,9 +53,10 @@
                                     <field-order-container v-model="current.orders" :fields="fields"/>
                                 </a-form-item>
                                 <div class="base-condition-pagination">
-                                    <a-pagination :total="current.total" v-model:current="page" :page-size="size"
+                                    <a-pagination :total="current.total" v-model:current="current.page"
+                                                  :page-size="current.size"
                                                   show-total/>
-                                    <a-input-number v-model="size" style="width: 70px"/>
+                                    <a-input-number v-model="current.size" style="width: 70px"/>
                                 </div>
                             </a-form>
                         </div>
@@ -149,7 +150,7 @@ export default defineComponent({
     data: () => {
         let searchMap = new Map<number, BaseSearchItem>();
         let searchId = new Date().getTime();
-        searchMap.set(searchId, {
+        let searchItem = {
             header: {
                 id: searchId,
                 name: '基础查询'
@@ -161,26 +162,15 @@ export default defineComponent({
                 page: 1,
                 size: useSettingStore().getPageSize,
                 total: 0,
-                result: {}
+                result: {} as any
             }
-        });
+        };
+        searchMap.set(searchId, searchItem);
         return {
             searchMap,
             searchId,
 
-            current: {
-                // 选择的索引名称
-                index: '',
-                // 条件
-                conditions: new Array<BaseQuery>(),
-                orders: new Array<BaseOrder>(),
-                // 查询结果
-                total: 0,
-                result: {} as any,
-            },
-            // 分页
-            page: 1,
-            size: useSettingStore().getPageSize,
+            current: searchItem.body,
 
             fields: new Array<Field>(),
 
@@ -245,14 +235,18 @@ export default defineComponent({
         },
     },
     watch: {
-        size() {
-            if (this.current.index.length > 0) {
-                this.search();
+        "current.size": {
+            handler() {
+                if (this.current.index.length > 0) {
+                    this.search();
+                }
             }
         },
-        page() {
-            if (this.current.index.length > 0) {
-                this.search();
+        "current.page": {
+            handler() {
+                if (this.current.index.length > 0) {
+                    this.search();
+                }
             }
         },
         searchId() {
@@ -261,8 +255,8 @@ export default defineComponent({
                 this.current = {
                     ...baseSearchItem.body
                 }
-                this.page = baseSearchItem.body.page;
-                this.size = baseSearchItem.body.size;
+                this.current.page = baseSearchItem.body.page;
+                this.current.size = baseSearchItem.body.size;
             } else {
                 if (this.searchMap.size > 0) {
                     this.searchId = this.searchMap.keys().next().value;
@@ -321,8 +315,6 @@ export default defineComponent({
 
             // 因为延迟问题，预先设置值
             this.current = searchItem.body;
-            this.page = searchItem.body.page;
-            this.size = searchItem.body.size;
             this.$nextTick(() => {
                 if (event.execute) {
                     this.search();
@@ -335,7 +327,7 @@ export default defineComponent({
             try {
                 this.condition = {
                     dialog: true,
-                    data: QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
+                    data: QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
                 }
             } catch (e) {
                 MessageUtil.error('条件构造错误', e);
@@ -343,14 +335,14 @@ export default defineComponent({
         },
         search() {
             if (this.current.index.length === 0) {
-                MessageBoxUtil.alert(this.$t('baseSearch.placeholder.selectIndex'));
+                MessageBoxUtil.alert(this.$t('baseSearch.placeholder.selectIndex'), null);
                 return;
             }
             this.loading = true;
             try {
                 DocumentApi._search(
                     this.current.index,
-                    QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
+                    QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
                 ).then((response) => {
                     // 结果
                     this.current.result = response;
@@ -384,8 +376,8 @@ export default defineComponent({
             }
         },
         clear(clear_index: boolean = false) {
-            this.page = 1;
-            this.size = useSettingStore().getPageSize;
+            this.current.page = 1;
+            this.current.size = useSettingStore().getPageSize;
             this.current.total = 0;
             this.current.conditions = new Array<BaseQuery>();
             this.current.orders = new Array<BaseOrder>();
@@ -405,7 +397,7 @@ export default defineComponent({
                     link: `/${this.current.index}/_search`,
                     method: 'POST',
                     params: JSON.stringify(
-                        QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
+                        QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders),
                         null,
                         4)
                 });

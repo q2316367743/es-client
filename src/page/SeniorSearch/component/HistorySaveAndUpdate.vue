@@ -12,10 +12,6 @@
         <a-form-item label="参数">
             <a-textarea v-model="data.body" :rows="12"/>
         </a-form-item>
-        <a-form-item>
-            <a-button @click="reset">重置</a-button>
-            <a-button type="primary" @click="submit">{{ data.id === 0 ? '新增' : '修改' }}</a-button>
-        </a-form-item>
     </a-form>
 </template>
 <script lang="ts">
@@ -29,7 +25,7 @@ export default defineComponent({
     props: {
         modelValue: Object as PropType<SeniorSearchHistory>,
     },
-    emits: ['update:modelValue', 'submit'],
+    emits: ['update:modelValue'],
     data: () => ({
         data: {
             id: 0,
@@ -62,14 +58,6 @@ export default defineComponent({
         if (this.modelValue) {
             this.data = this.modelValue;
             this.old = JSON.parse(JSON.stringify(this.data));
-        }
-    },
-    methods: {
-        submit() {
-            this.$emit('submit');
-        },
-        reset() {
-            this.data = JSON.parse(JSON.stringify(this.old));
         }
     }
 });

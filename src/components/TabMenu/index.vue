@@ -1,6 +1,6 @@
 <template>
     <a-tabs
-        v-model="searchId"
+        v-model:active-key="searchId"
         type="card-gutter"
         editable
         show-add-button auto-switch

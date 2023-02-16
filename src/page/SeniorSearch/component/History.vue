@@ -4,8 +4,16 @@
             <template #buttons>
                 <a-input v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
                          @input="search"></a-input>
+                <a-button type="primary" @click="search">
+                    <template #icon>
+                        <icon-refresh />
+                    </template>
+                </a-button>
                 <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
-                          style="margin-left: 12px;"/>
+                          style="margin-left: 12px;" type="round">
+                    <template #checked>当前链接</template>
+                    <template #unchecked>全部</template>
+                </a-switch>
             </template>
             <template #tools>
                 <a-button type="primary" style="margin-right: 12px;" @click="addOpen">
@@ -21,7 +29,7 @@
                            :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
                     <vxe-column field="name" :title="$t('common.keyword.name')" width="150"></vxe-column>
-                    <vxe-column :title="$t('common.keyword.operation')" width="200">
+                    <vxe-column :title="$t('common.keyword.operation')" width="220">
                         <template #default="{ row }">
                             <a-button type="primary" status="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
@@ -31,14 +39,14 @@
                                     $t('common.operation.update')
                                 }}
                             </a-button>
-                            <a-popconfirm title="确认删除此条记录？"
-                                          :confirm-button-text="$t('common.operation.delete')"
-                                          :cancel-button-text="$t('common.operation.cancel')"
-                                          @confirm="removeById(row.id)" width="200px">
-                                <template #reference>
-                                    <a-button type="primary" status="danger" size="small">{{ $t('common.operation.delete') }}
-                                    </a-button>
-                                </template>
+                            <a-popconfirm content="确认删除此条记录？"
+                                          :ok-text="$t('common.operation.delete')"
+                                          :cancel-text="$t('common.operation.cancel')"
+                                          @ok="removeById(row.id)">
+                                <a-button type="primary" status="danger" size="small">{{
+                                        $t('common.operation.delete')
+                                    }}
+                                </a-button>
                             </a-popconfirm>
                         </template>
                     </vxe-column>
@@ -46,8 +54,8 @@
             </a-scrollbar>
         </div>
         <a-modal v-model:visible="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'"
-                 render-to-body unmount-on-close draggable width="50%">
-            <history-save-and-update v-model="dialog.data" @submit="submit"/>
+                 render-to-body unmount-on-close draggable width="50%" @ok="submit" ok-text="修改">
+            <history-save-and-update v-model="dialog.data"/>
         </a-modal>
     </div>
 </template>
@@ -169,6 +177,7 @@ export default defineComponent({
                     .catch(e => MessageUtil.error('新增失败', e));
             } else {
                 // 修改
+                console.log(this.dialog.data)
                 seniorSearchHistoryService.update(this.dialog.data)
                     .then(() => MessageUtil.success('修改成功', () => {
                         this.search();

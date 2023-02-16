@@ -57,7 +57,7 @@ export default {
         inputValue?: string
     }): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            let value = '';
+            let value = Optional.ofNullable(config.inputValue).orElse("") as string;
             const onInput = (e: string) => {
                 value = e;
             }
@@ -67,9 +67,8 @@ export default {
                     // @ts-ignore
                     h(Input, {
                         type: 'text',
-                        class: 'arco-input arco-input-size-medium',
                         onInput,
-                        value: config.inputValue,
+                        "default-value": config.inputValue,
                         style: 'margin-top: 8px;',
                         onVnodeMounted: (e: VNode) => {
                             (e.el as HTMLInputElement)
