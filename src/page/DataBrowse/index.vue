@@ -28,11 +28,11 @@
                 <db-index-select @index-change="indexChange"/>
                 <!-- 打印 -->
                 <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
-                    <i class="vxe-icon-print"/>
+                    <icon-printer/>
                 </db-simple-item>
                 <!-- 索引结构 -->
                 <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
-                    <structure-icon style="margin-top: 4px;font-size: 16px;"/>
+                    <icon-nav />
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">

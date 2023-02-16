@@ -1,10 +1,11 @@
 <template>
-    <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show">
+    <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
+               :popup-offset="2">
         <div class="item" style="display: flex;" @click="showIndex">
             <div v-if="index === ''" style="user-select: none;">未选择索引</div>
             <div v-else style="user-select: none;">{{ index }}</div>
-            <icon-up :size="20" style="margin: 2px;" v-if="show"/>
-            <icon-down :size="20" style="margin: 2px;" v-else/>
+            <icon-up style="margin: 5px;" v-if="show"/>
+            <icon-down style="margin: 5px;" v-else/>
         </div>
         <template #content>
             <div class="data-browse-pull-down-panel">

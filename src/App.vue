@@ -86,7 +86,7 @@
                     <a-menu :collapsed="collapsed" v-model:selected-keys="selectedKeys" breakpoint="x1">
                         <a-menu-item :key="PageNameEnum.HOME">
                             <template #icon>
-                                <icon-dashboard/>
+                                <icon-home/>
                             </template>
                             {{ $t('menu.home') }}
                         </a-menu-item>
