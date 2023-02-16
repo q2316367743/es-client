@@ -88,13 +88,38 @@ body[arco-theme=dark] {
     }
 
     .vxe-header--column {
-        background-color: var(--container-color);
+        background-color: var(--container-color) !important;
         color: var(--text-color);
+    }
+    .vxe-body--column {
+        background-color: var(--container-color) !important;
+        color: var(--text-color);
+        &.col--current {
+            background-color: var(--hover-color) !important;
+        }
+    }
+
+    .vxe-body--row{
+        &.row--current {
+            .vxe-body--column {
+                background-color: var(--hover-color) !important;
+            }
+        }
     }
 
     .vxe-button {
         background-color: var(--container-color);
         color: var(--text-color);
+    }
+
+    .vxe-custom--option-wrapper {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+
+    .vxe-toolbar .vxe-custom--option-wrapper .vxe-custom--body .vxe-custom--option:hover {
+        background-color: var(--hover-color);
+
     }
 
     // CodeMirror

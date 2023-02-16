@@ -1,87 +1,95 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
-  "build": {
-    "beforeBuildCommand": "yarn build:tauri:windows",
-    "beforeDevCommand": "yarn dev:tauri",
-    "devPath": "http://localhost:5173",
-    "distDir": "../dist"
-  },
-  "package": {
-    "productName": "es-client",
-    "version": "2.5.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "http": {
-        "all": true,
-        "request": true,
-        "scope": ["http://**/*", "https://**/*"]
-      },
-      "shell": {
-        "all": true,
-        "open": true
-      },
-      "window": {
-        "maximize": true,
-        "unmaximize": true,
-        "minimize": true,
-        "close": true,
-        "setTitle": true,
-        "startDragging": true
-      }
+    "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+    "build": {
+        "beforeBuildCommand": "yarn build:tauri:windows",
+        "beforeDevCommand": "yarn dev:tauri",
+        "devPath": "http://localhost:5173",
+        "distDir": "../dist"
     },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "icons/logo.png",
-        "icons/favicon.ico"
-      ],
-      "identifier": "xyz.esion.es-client",
-      "publisher": "esion",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": "",
-        "webviewInstallMode": {
-          "type": "embedBootstrapper"
-        }
-      }
+    "package": {
+        "productName": "es-client",
+        "version": "2.5.0"
     },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": false
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "height": 800,
-        "resizable": true,
-        "title": "es-client",
-        "width": 1200,
-        "minHeight": 600,
-        "minWidth": 1000,
-        "center": true,
-        "decorations": false
-      }
-    ]
-  }
+    "tauri": {
+        "allowlist": {
+            "http": {
+                "all": true,
+                "request": true,
+                "scope": [
+                    "http://**/*",
+                    "https://**/*"
+                ]
+            },
+            "shell": {
+                "all": true,
+                "open": true
+            },
+            "window": {
+                "maximize": true,
+                "unmaximize": true,
+                "minimize": true,
+                "close": true,
+                "setTitle": true,
+                "startDragging": true
+            }
+        },
+        "bundle": {
+            "active": true,
+            "category": "DeveloperTool",
+            "copyright": "",
+            "deb": {
+                "depends": []
+            },
+            "externalBin": [],
+            "icon": [
+                "icons/logo.png",
+                "icons/favicon.ico"
+            ],
+            "identifier": "xyz.esion.es-client",
+            "publisher": "esion",
+            "longDescription": "",
+            "macOS": {
+                "entitlements": null,
+                "exceptionDomain": "",
+                "frameworks": [],
+                "providerShortName": null,
+                "signingIdentity": null
+            },
+            "resources": [],
+            "shortDescription": "",
+            "targets": "all",
+            "windows": {
+                "certificateThumbprint": null,
+                "digestAlgorithm": "sha256",
+                "timestampUrl": "",
+                "webviewInstallMode": {
+                    "type": "embedBootstrapper"
+                }
+            }
+        },
+        "security": {
+            "csp": null
+        },
+        "updater": {
+            "active": true,
+            "endpoints": [
+                "https://releases.myapp.com/{{target}}/{{current_version}}"
+            ],
+            "dialog": true,
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZEOERGNEU0NjZBREI0NjYKUldSbXRLMW01UFNOL1NxVUZ4WHVaU1hYYi9SY2xTVEhrWTZyaVRqUExIelRSVmtoVk1wcHpmVm8K"
+        },
+        "windows": [
+            {
+                "fullscreen": false,
+                "height": 800,
+                "resizable": true,
+                "title": "es-client",
+                "width": 1200,
+                "minHeight": 600,
+                "minWidth": 1000,
+                "center": true,
+                "decorations": false
+            }
+        ]
+    }
 }

@@ -61,13 +61,12 @@
                         </div>
                         <!-- 查询结果 -->
                         <div class="base-content" ref="baseContent">
-                            <data-view :view="view" :result="current.result" :abs="false"
-                                       table-height="calc(100vh - 108px)"/>
+                            <base-search-data-view :view="view" :result="current.result"/>
                         </div>
                     </div>
                     <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
                 </a-scrollbar>
-                <div class="base-search-condition-sentence">
+                <div class="base-search-condition-sentence" :style="{right: view === 2 ? '20px' : '50px'}">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
                     </a-button>
@@ -132,11 +131,13 @@ import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {SelectOptionData} from "@arco-design/web-vue";
+import BaseSearchDataView from "@/page/BaseSearch/DataView/index.vue";
 
 // 公共方法
 export default defineComponent({
     name: 'base-search',
     components: {
+        BaseSearchDataView,
         BshManage,
         JsonView,
         FieldConditionContainer,

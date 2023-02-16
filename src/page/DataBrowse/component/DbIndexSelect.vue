@@ -138,6 +138,7 @@ export default defineComponent({
             width: 400px;
             margin-top: 5px;
             overflow: auto;
+            color: var(--text-color)
         }
     }
 
