@@ -2,6 +2,33 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.6.0',
+        time: '2023-02-17',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '将UI组件库从element-plus改为arco-design'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '可以自定义JSON视图字体大小，增加rest client编辑器设置'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '新增映射信息树形展示，新增索引映射信息支持多层映射'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '高级查询rest client再次升级，在编辑器内就可以发送请求'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '基础搜索可自定义分页大小'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '10s未关闭全局loading，进行提示'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '修复索引管理未刷新异常'
+        }],
+        doc: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/zm52vqonettg8uz1'
+    },
+    {
         version: '2.5.0',
         time: '2023-02-10',
         items: [{

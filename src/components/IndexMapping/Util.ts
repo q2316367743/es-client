@@ -31,6 +31,18 @@ export function typeRender(type: string): string {
     return Optional.ofNullable(typeMap[type]).orElse('属性');
 }
 
+export function typeColor(type: string): string {
+    if (typeMap[type]) {
+        if (type === 'type') {
+            return 'purple';
+        }else {
+            return 'blue';
+        }
+    }else {
+        return 'green';
+    }
+}
+
 export function mappingNodeBuild(mapping: Record<string, Mapping>): Array<MappingData> {
     let mappingDataItems = new Array<MappingData>();
     if (versionStrategyContext.getStrategy().hasType()) {

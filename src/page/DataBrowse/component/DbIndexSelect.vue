@@ -1,12 +1,12 @@
 <template>
-    <vxe-pulldown destroy-on-close v-model="show" class="data-browse-pull-down">
+    <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show">
         <div class="item" style="display: flex;" @click="showIndex">
-            <div v-if="!index" style="user-select: none;">未选择索引</div>
-            <div v-else style="user-select: none;">{{ index.name }}</div>
+            <div v-if="index === ''" style="user-select: none;">未选择索引</div>
+            <div v-else style="user-select: none;">{{ index }}</div>
             <icon-up :size="20" style="margin: 2px;" v-if="show"/>
             <icon-down :size="20" style="margin: 2px;" v-else/>
         </div>
-        <template #dropdown>
+        <template #content>
             <div class="data-browse-pull-down-panel">
                 <a-empty v-if="indices.length === 0" description="请选择链接"/>
                 <div class="data-browse-pull-down-index" v-else>
@@ -15,19 +15,18 @@
                     <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
                         <div>
                             <div v-for="item in indicesShow" class="data-browse-list-item"
-                                 :class="item === index ? 'data-browse-list-item-this' : ''"
-                                 @click="indexChange(item)">
+                                 :class="item.name === index ? 'data-browse-list-item-this' : ''"
+                                 @click="indexChange(item.name, item.index)">
                                 <span>{{ item.name }}</span>
-                                <span v-if="item.alias && item.alias.length > 0">
-                                            <a-tag v-for="alias in item.alias">{{ alias }}</a-tag>
-                                        </span>
+                                <a-tag color="blue" v-if="item.type === 'index'">索引</a-tag>
+                                <a-tag color="green" v-else-if="item.type === 'alias'">别名</a-tag>
                             </div>
                         </div>
                     </a-scrollbar>
                 </div>
             </div>
         </template>
-    </vxe-pulldown>
+    </a-trigger>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -36,26 +35,52 @@ import {mapState} from "pinia";
 import useIndexStore from "@/store/IndexStore";
 import {stringContain} from "@/utils/SearchUtil";
 
+interface Item {
+
+    name: string;
+
+    type: 'index' | 'alias';
+
+    index: IndexView;
+
+}
+
 export default defineComponent({
     name: 'db-index-select',
     emit: ['indexChange'],
     data: () => ({
         show: false,
-        index: undefined as IndexView | undefined,
+        index: '',
         indexFilter: ''
     }),
     computed: {
         ...mapState(useIndexStore, ['indices']),
-        indicesShow(): Array<IndexView> {
+        indicesShow(): Array<Item> {
+            let items = new Set<Item>();
             if (this.indices.length === 0) {
-                return new Array<IndexView>();
+                return Array.from(items);
+            }
+            let indices = this.indices.filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter));
+            for (let index of indices) {
+                items.add({
+                    name: index.name,
+                    type: 'index',
+                    index
+                });
+                if (index.alias) {
+                    for (let alias of index.alias) {
+                        items.add({
+                            name: alias,
+                            type: 'alias',
+                            index
+                        });
+                    }
+                }
             }
             // 此处是索引排序
-            return this.indices
-                .filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter))
-                .sort((e1, e2) => {
-                    return e1.name.localeCompare(e2.name, 'zh');
-                })
+            return Array.from(items).sort((e1, e2) => {
+                return e1.name.localeCompare(e2.name, 'zh');
+            });
         },
     },
     methods: {
@@ -77,8 +102,8 @@ export default defineComponent({
                 });
             }
         },
-        indexChange(index: IndexView) {
-            this.index = index;
+        indexChange(name: string, index: IndexView) {
+            this.index = name;
             this.show = false;
             this.$emit('indexChange', index);
         }
@@ -105,7 +130,7 @@ export default defineComponent({
 
         .data-browse-pull-down-search {
             width: 390px;
-            padding-left: 10px;
+            margin-left: 5px;
         }
 
         .data-browse-pull-down-data {

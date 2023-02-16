@@ -129,7 +129,7 @@
             <save-or-update-url/>
             <index-manage/>
             <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')"
-                     close-on-click-modal append-to-body draggable lock-scroll>
+                     mask-closable  draggable lock-scroll width="600px">
                 <version-update v-if="updateDialog"/>
             </a-modal>
             <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" style="height: 90vh;"

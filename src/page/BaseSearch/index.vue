@@ -17,7 +17,7 @@
                                       :value="index.value"/>
                         </a-select>
                         <!-- 搜索 -->
-                        <a-button type="primary" status="success" style="margin-left: 12px" @click="search">{{
+                        <a-button type="primary" status="success" @click="search">{{
                                 $t('common.operation.search')
                             }}
                         </a-button>
@@ -25,6 +25,8 @@
                         <a-button type="primary" status="danger" @click="clear(true)">{{
                                 $t('common.operation.clear')
                             }}
+                        </a-button>
+                        <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">管理
                         </a-button>
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
                     </div>
@@ -117,6 +119,7 @@ import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldCondi
 import {
     baseSearchHistoryService,
     useBaseSearchEvent,
+    useIndexManageEvent,
     usePageJumpEvent,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
@@ -199,21 +202,40 @@ export default defineComponent({
         // 索引
         ...mapState(useIndexStore, {
             indices: (state): SelectOptionData[] => {
-                let names = new Array<SelectOptionData>();
+                let options = new Array<SelectOptionData>();
+                let names = new Set<string>();
                 let indices = state.indices;
                 indices.forEach(e => {
-                    names.push({
-                        label: e.name,
-                        value: `n:${e.name}`
-                    });
-                    e.alias.forEach(a => names.push({
-                        label: a,
-                        value: `a:${e.name}`
-                    }))
+                    if (!names.has(e.name)) {
+                        options.push({
+                            label: e.name,
+                            value: e.name,
+                            index: e.name
+                        });
+                    }
+                    e.alias.forEach(a => {
+                        if (!names.has(a)) {
+                            options.push({
+                                label: a,
+                                value: a,
+                                index: e.name
+                            })
+                        }
+                    })
                 });
-                return names.sort((a, b) => {
+                return options.sort((a, b) => {
                     return a.label!.localeCompare(b.label!, "zh-CN");
                 });
+            },
+            indexAliasMap: (state): Map<string, string> => {
+                let aliasIndexMap = new Map<string, string>();
+                state.indices.forEach(index => {
+                    aliasIndexMap.set(index.name, index.name);
+                    if (index.alias) {
+                        index.alias.forEach(alias => aliasIndexMap.set(alias, index.name));
+                    }
+                });
+                return aliasIndexMap;
             }
         }),
         ...mapState(useSettingStore, ['instance']),
@@ -251,7 +273,12 @@ export default defineComponent({
         'current.index': {
             handler(newValue: string) {
                 if (newValue.length > 2) {
-                    this.fields = useIndexStore().field(newValue.slice(2));
+                    let index = this.indexAliasMap.get(newValue);
+                    if (index) {
+                        this.fields = useIndexStore().field(index).sort((a, b) => {
+                            return a.name.localeCompare(b.name, "zh-CN");
+                        });
+                    }
                 }
                 if (newValue === '') {
                     this.clear();
@@ -304,9 +331,13 @@ export default defineComponent({
     },
     methods: {
         showBody() {
-            this.condition = {
-                dialog: true,
-                data: QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
+            try {
+                this.condition = {
+                    dialog: true,
+                    data: QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
+                }
+            } catch (e) {
+                MessageUtil.error('条件构造错误', e);
             }
         },
         search() {
@@ -315,37 +346,41 @@ export default defineComponent({
                 return;
             }
             this.loading = true;
-            const index = this.current.index.slice(2);
-            DocumentApi._search(
-                index,
-                QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
-            ).then((response) => {
-                // 结果
-                this.current.result = response;
-                // 解析总数
-                if (this.current.result.hits) {
-                    if (parseInt(this.current.result.hits.total)) {
-                        this.current.total = parseInt(this.current.result.hits.total)
-                    } else if (parseInt(this.current.result.hits.total.value)) {
-                        this.current.total = parseInt(this.current.result.hits.total.value);
+            try {
+                DocumentApi._search(
+                    this.current.index,
+                    QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders)
+                ).then((response) => {
+                    // 结果
+                    this.current.result = response;
+                    // 解析总数
+                    if (this.current.result.hits) {
+                        if (parseInt(this.current.result.hits.total)) {
+                            this.current.total = parseInt(this.current.result.hits.total)
+                        } else if (parseInt(this.current.result.hits.total.value)) {
+                            this.current.total = parseInt(this.current.result.hits.total.value);
+                        } else {
+                            this.current.total = 0;
+                        }
                     } else {
                         this.current.total = 0;
                     }
-                } else {
-                    this.current.total = 0;
-                }
-                // 增加到历史
-                useBaseTempRecordStore().addTempRecord({
-                    id: new Date().getTime(),
-                    index: index,
-                    conditions: this.current.conditions,
-                    orders: this.current.orders
-                })
-            }).catch((e) => {
-                this.current.result = e.response.data;
-            }).finally(() => {
+                    // 增加到历史
+                    useBaseTempRecordStore().addTempRecord({
+                        id: new Date().getTime(),
+                        index: this.current.index,
+                        conditions: this.current.conditions,
+                        orders: this.current.orders
+                    })
+                }).catch((e) => {
+                    this.current.result = e.response.data;
+                }).finally(() => {
+                    this.loading = false;
+                });
+            } catch (e) {
+                MessageUtil.error('条件构造错误', e);
                 this.loading = false;
-            });
+            }
         },
         clear(clear_index: boolean = false) {
             this.page = 1;
@@ -364,18 +399,18 @@ export default defineComponent({
         },
         jumpToSeniorSearch() {
             usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            let index = this.current.index;
-            if (index && index !== '') {
-                index = index.slice(2);
+            try {
+                useSeniorSearchEvent.emit({
+                    link: `/${this.current.index}/_search`,
+                    method: 'POST',
+                    params: JSON.stringify(
+                        QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
+                        null,
+                        4)
+                });
+            } catch (e) {
+                MessageUtil.error('条件构造错误', e);
             }
-            useSeniorSearchEvent.emit({
-                link: `/${index}/_search`,
-                method: 'POST',
-                params: JSON.stringify(
-                    QueryConditionBuild(this.current.conditions, this.page, this.size, this.current.orders),
-                    null,
-                    4)
-            })
         },
         editTabs(targetName: number, action: 'remove' | 'add') {
             if (action === 'add') {
@@ -492,6 +527,18 @@ export default defineComponent({
             this.searchMap.set(searchId, searchItem);
             this.searchId = searchId;
         },
+        openIndexManage() {
+            if (this.current.index === '') {
+                MessageUtil.error('请先选择索引');
+                return;
+            }
+            let index = this.indexAliasMap.get(this.current.index);
+            if (index) {
+                useIndexManageEvent.emit(index);
+            } else {
+                MessageUtil.warning(`索引【${this.current.index}】未找到`)
+            }
+        }
     },
 });
 </script>

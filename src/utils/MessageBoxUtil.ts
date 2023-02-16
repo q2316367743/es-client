@@ -25,17 +25,17 @@ export default {
         })
     },
 
-    alert(content: string, config?: {
+    alert(content: string, title: string | null, config?: {
         confirmButtonText?: string,
         cancelButtonText?: string
     }): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             Modal.confirm({
                 content,
-                title: '警告',
+                title: Optional.ofNullable(title).orElse("警告"),
                 draggable: true,
-                okText: Optional.ofNullable(config).map(e => e?.confirmButtonText).orElse(''),
-                cancelText: Optional.ofNullable(config).map(e => e?.cancelButtonText).orElse(''),
+                okText: Optional.ofNullable(config).map(e => e?.confirmButtonText).orElse('确定'),
+                cancelText: Optional.ofNullable(config).map(e => e?.cancelButtonText).orElse('取消'),
                 onOk: () => {
                     resolve();
                 },

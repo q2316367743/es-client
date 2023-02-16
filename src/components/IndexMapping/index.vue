@@ -27,7 +27,7 @@
                         auto-expand-parent :ref="'indexManageTree' + index">
                     <template #title="nodeData">
                         <div class="index-mapping-mapper-node">
-                            <a-tag bordered color="blue">{{ typeRender(nodeData.type) }}</a-tag>
+                            <a-tag bordered :color="typeColor(nodeData.type)">{{ typeRender(nodeData.type) }}</a-tag>
                             <div v-if="readOnly" class="read-only">{{ nodeData.type }}</div>
                             <a-auto-complete :data="typeAutoData" size="mini" :disabled="nodeData.key === 'root'"
                                              allow-clear v-model="nodeData.type" v-else/>
@@ -74,7 +74,7 @@ import {allowEditTypes, typeAutoData} from "@/components/IndexMapping/Constant";
 import {
     mappingBuild,
     mappingNodeBuild,
-    removeTreeNode,
+    removeTreeNode, typeColor,
     typeRender,
     valueTipsBuild
 } from "@/components/IndexMapping/Util";
@@ -154,6 +154,8 @@ export default defineComponent({
         }
     },
     methods: {
+        typeRender,
+        typeColor,
         valueTipsBuild(keyword: string) {
             this.valueTips = valueTipsBuild(keyword);
         },
@@ -189,7 +191,6 @@ export default defineComponent({
         removeChildNode(node: MappingNode) {
             removeTreeNode(node.key, this.dataItems[this.activeKey].nodes);
         },
-        typeRender,
         allowEdit(type: string): boolean {
             return allowEditTypes.includes(type);
         },

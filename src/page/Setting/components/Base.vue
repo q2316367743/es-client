@@ -104,8 +104,10 @@
                         </a-tooltip>
                     </template>
                     <a-switch v-model="instance.showTab" :checked-value="true" :unchecked-value="false"
-                              active-text="启用"
-                              inactive-text="禁用"/>
+                              type="round">
+                        <template #checked>启用</template>
+                        <template #unchecked>禁用</template>
+                    </a-switch>
                 </a-form-item>
                 <a-form-item>
                     <template #label>
@@ -114,7 +116,8 @@
                             <icon-question-circle style="margin-left: 5px;"/>
                         </a-tooltip>
                     </template>
-                    <a-input-number controls-position="right" v-model="instance.tabMaxCount" :disabled="!instance.showTab"/>
+                    <a-input-number controls-position="right" v-model="instance.tabMaxCount"
+                                    :disabled="!instance.showTab"/>
                 </a-form-item>
                 <a-form-item label="标签栏超过最大数量后的关闭模式">
                     <a-radio-group v-model="instance.tabCloseMode" :disabled="!instance.showTab">
@@ -126,8 +129,10 @@
             <a-collapse-item :header="$t('setting.base.other.title')" key="7">
                 <a-form-item :label="$t('setting.base.other.fullScreen.title')">
                     <a-switch v-model="instance.autoFullScreen" :checked-value="true" :unchecked-value="false"
-                              :active-text="$t('common.operation.open')"
-                              :inactive-text="$t('common.operation.close')"/>
+                              type="round">
+                        <template #checked>{{ $t('common.operation.open') }}</template>
+                        <template #unchecked>{{ $t('common.operation.close') }}</template>
+                    </a-switch>
                 </a-form-item>
                 <a-form-item label="备份">
                     <a-button type="primary" @click="backup">下载</a-button>

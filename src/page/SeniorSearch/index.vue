@@ -33,7 +33,7 @@
                                     </template>
                                 </a-button>
                             </a-tooltip>
-                            <a-tooltip content="设置" position="right">
+                            <a-tooltip content="编辑器设置" position="right">
                                 <a-button type="text" status="normal" @click="settingDialog = true">
                                     <template #icon>
                                         <icon-settings :size="18"/>

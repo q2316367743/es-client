@@ -4,6 +4,10 @@ import {lodisStrategyContext, seniorSearchHistoryService} from "@/global/BeanFac
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import useLoadingStore from "@/store/LoadingStore";
+import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import Optional from "@/utils/Optional";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 export default class VersionManage {
 
@@ -40,6 +44,8 @@ export default class VersionManage {
             this.first();
         } else if (this.storageVersion === '2.4.0') {
             await this.update240();
+        } else if (this.storageVersion === '2.5.0') {
+            await this.update250();
         }
         // 更新数据
         await lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
@@ -79,6 +85,18 @@ export default class VersionManage {
             }
         }
         useLoadingStore().setText("2.4.0版本更新 - 服务器模式升级");
+    }
+
+    private async update250() {
+        MessageUtil.info("此次更新可能导致设置信息丢失，请注意保存");
+        lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING).then(content => {
+            let json = Optional.ofNullable(content).orElse("{}");
+            MessageBoxUtil.alert(`设置信息：\n${json}`, "设置信息", {
+                confirmButtonText: "复制到剪切板"
+            }).then(() => {
+                BrowserUtil.copy(json);
+            })
+        })
     }
 
 }

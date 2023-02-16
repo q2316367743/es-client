@@ -22,7 +22,6 @@
             <a-option label="term" value="term"></a-option>
             <!-- 通配符查询 -->
             <a-option label="wildcard" value="wildcard"></a-option>
-            <a-option label="range" value="range"></a-option>
             <a-option label="range lt" value="range_lt"></a-option>
             <a-option label="range lte" value="range_lte"></a-option>
             <a-option label="range gt" value="range_gt"></a-option>
