@@ -570,7 +570,6 @@ export default defineComponent({
 
         // 右侧
         indexChange(index: IndexView) {
-            console.log(index);
             this.index = index;
             this.page = 1;
             this.size = useSettingStore().getPageSize;

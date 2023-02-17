@@ -123,7 +123,9 @@ export default defineComponent({
 .data-browse-pull-down-panel {
     width: 400px;
     height: 400px;
-    background-color: var(--container-color);
+    background-color: var(--bg-color);
+    border-radius: 5px;
+    box-shadow: 0 0 6px var(--shadow-color);
 
     .data-browse-pull-down-index {
         width: 400px;

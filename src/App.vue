@@ -247,6 +247,7 @@ export default defineComponent({
     },
     created() {
         applicationLaunch.register(async () => {
+            console.log('开始执行应用启动后任务')
             this.urlSelectLoading = false;
             // 刷新索引列表
             useUrlStore().reset(() => {
@@ -313,11 +314,6 @@ export default defineComponent({
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
             this.refresh();
         });
-        // 字体判断
-        if (Constant.platform === 'edge') {
-            // 设置全局字体大小
-            document.body.style.fontSize = '20px';
-        }
     },
     methods: {
         async selectUrl(value: any) {

@@ -298,7 +298,7 @@ export default defineComponent({
                     relationId: event.id
                 },
                 body: {
-                    index: `n:${event.index}`,
+                    index: event.index,
                     conditions: event.conditions,
                     orders: event.orders,
                     page: 1,

@@ -55,14 +55,13 @@ export default {
                         type: 'primary',
                         onClick: () => {
                             resolve();
+                            flag = false;
                             notificationReturn.close();
                         }
                     }, () => (config.confirmButtonText))
                 ]),
                 onClose() {
-                    console.log('关闭')
                     if (flag) {
-                        console.log('关闭1')
                         reject();
                     }
                 }

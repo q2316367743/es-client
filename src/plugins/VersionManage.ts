@@ -52,8 +52,6 @@ export default class VersionManage {
                 method: 'GET',
                 responseType: "json"
             }).then(content => {
-                console.log(content);
-                console.log(Constant.sign, content.sign)
                 if (content.sign > Constant.sign) {
                     // 存在更新
                     NotificationUtil.confirm(
@@ -80,6 +78,7 @@ export default class VersionManage {
             return Promise.resolve();
         }
         if (this.storageVersion === '') {
+            console.log("新用户")
             this.first();
         } else if (this.storageVersion === '2.4.0') {
             await this.update240();

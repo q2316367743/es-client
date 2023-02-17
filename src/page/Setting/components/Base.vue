@@ -180,6 +180,9 @@ import Constant from "@/global/Constant";
 import XEUtils from "xe-utils";
 import useLoadingStore from "@/store/LoadingStore";
 
+let isInit = false;
+let isFirst = true;
+
 export default defineComponent({
     name: 'setting-base',
     data: () => ({
@@ -204,13 +207,20 @@ export default defineComponent({
         }
         applicationLaunch.register(() => {
             this.instance = useSettingStore().instance;
+            isInit = true;
             return Promise.resolve();
         })
     },
     watch: {
         instance: {
             handler(newValue: Setting) {
-                useSettingStore().setInstance(newValue);
+                if (isInit) {
+                    if (isFirst) {
+                        isFirst = false;
+                    }else {
+                        useSettingStore().setInstance(newValue);
+                    }
+                }
             },
             deep: true
         }
