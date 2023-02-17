@@ -36,6 +36,7 @@ export default {
         cancelButtonText: string
     }): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            let flag = true;
             let notificationReturn = Notification.info({
                 content,
                 title,
@@ -46,17 +47,25 @@ export default {
                         type: 'text',
                         onClick: () => {
                             reject();
+                            flag = false;
                             notificationReturn.close();
                         }
-                    }, config.cancelButtonText),
+                    }, () => (config.cancelButtonText)),
                     h(Button, {
                         type: 'primary',
                         onClick: () => {
                             resolve();
                             notificationReturn.close();
                         }
-                    }, config.confirmButtonText)
+                    }, () => (config.confirmButtonText))
                 ]),
+                onClose() {
+                    console.log('关闭')
+                    if (flag) {
+                        console.log('关闭1')
+                        reject();
+                    }
+                }
             });
         })
     }

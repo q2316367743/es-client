@@ -12,13 +12,7 @@ const useLoadingStore = defineStore('loading', {
     },
     actions: {
 
-        /**
-         * 开始加载
-         * @param text 加载显示文本
-         */
-        start(text: string): void {
-            this.loading = true;
-            this.text = text;
+        addTimeout(timeout: number) {
             if (this.timer != 0) {
                 // 清除上个定时器
                 clearTimeout(this.timer);
@@ -31,8 +25,21 @@ const useLoadingStore = defineStore('loading', {
                 }).then(() => {
                     this.loading = false;
                     this.timer = 0;
-                }).catch(() => console.log('忽略提示'))
-            }, 10 * 1000);
+                }).catch(() => {
+                    console.log('忽略提示');
+                    this.addTimeout(20);
+                })
+            }, timeout * 1000);
+        },
+
+        /**
+         * 开始加载
+         * @param text 加载显示文本
+         */
+        start(text: string): void {
+            this.loading = true;
+            this.text = text;
+            this.addTimeout(10);
         },
 
         /**
