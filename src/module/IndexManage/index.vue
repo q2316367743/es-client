@@ -11,7 +11,7 @@
             <a-spin :loading="loading" tip="加载中">
                 <div class="content">
                     <json-view v-if="jsonViewShow" :data="data"/>
-                    <index-mapping read-only :mapping="this.data" :overflow="false" v-else-if="active === '3'"/>
+                    <index-mapping read-only :mapping="data" :overflow="false" v-else-if="active === '3'"/>
                     <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
                 </div>
             </a-spin>
@@ -80,7 +80,7 @@ export default defineComponent({
             return ArrayUtil.contains(['2', '4'], this.active);
         },
         ...mapState(useIndexStore, ['indicesMap']),
-        state() {
+        state(): 'open'| 'close' |'' {
             let indexView = useIndexStore().indicesMap.get(this.index);
             return Optional.ofNullable(indexView).map(e => e.state).orElse('');
         }
@@ -145,8 +145,6 @@ export default defineComponent({
             this.execCommand(command).then(() => {
                 // 1. 发送索引更新事件
                 emitter.emit(MessageEventEnum.REFRESH_URL);
-                // 2. 更新状态
-                this.state = command === 'open' ? 'open' : command === 'close' ? 'close' : this.state;
                 // 3. 更新本组件
                 this.assignJson(this.active);
             }).catch(e => console.error(e));

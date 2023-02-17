@@ -26,7 +26,7 @@
         <template #footer>
             <a-button type="text" @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch') }}</a-button>
             <a-button type="text" text @click="copyIndex">{{ $t('common.action.copy') }}</a-button>
-            <a-button type="secondary" text @click="this.dialog = false">{{ $t('common.operation.cancel') }}</a-button>
+            <a-button type="secondary" text @click="dialog = false">{{ $t('common.operation.cancel') }}</a-button>
             <a-button type="primary" @click="addIndex">{{ $t('common.operation.add') }}</a-button>
         </template>
     </a-modal>

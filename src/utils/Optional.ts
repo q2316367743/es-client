@@ -39,7 +39,7 @@ export default class Optional<T> {
         return this;
     }
 
-    public orElse<S extends T>(value: S): S {
+    public orElse<S = T>(value: S): S {
         if (this.value === undefined || this.value === null) {
             return value;
         }

@@ -3,9 +3,9 @@
 [![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client)
 [![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
 [![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
-[![star](https://img.shields.io/badge/edge-v2.5.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
-[![star](https://img.shields.io/badge/firefox-v2.5.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
-[![star](https://img.shields.io/badge/windows-v2.5.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
+[![star](https://img.shields.io/badge/edge-v2.6.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+[![star](https://img.shields.io/badge/firefox-v2.6.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+[![star](https://img.shields.io/badge/windows-v2.6.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 [![OSCS Status](https://www.oscs1024.com/platform/badge/es-client.svg?size=small)](https://www.murphysec.com/accept?code=9a8096e0fd00acdcdb1901030f42d5d6&type=1&from=2)
 
 > elasticsearch查询客户端。
@@ -32,6 +32,7 @@
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 - [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
+- [可道云](http://kodcloud.esion.xyz/#s/89HBcbIw)
 
 ## 详细文档
 

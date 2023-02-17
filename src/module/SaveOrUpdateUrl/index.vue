@@ -69,7 +69,7 @@ export default defineComponent({
         isSave: true,
         loading: false,
         testData: {
-            icon: 'info',
+            icon: 'info' as 'success' | 'error' | 'info',
             title: '',
             name: '',
             version: '',

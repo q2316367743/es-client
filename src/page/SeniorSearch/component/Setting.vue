@@ -1,5 +1,5 @@
 <template>
-    <a-form v-model="instance" layout="vertical">
+    <a-form :model="instance" layout="vertical">
         <a-form-item label="字体大小">
             <a-input-number v-model="instance.fontSize" :min="8" :max="100" :step="1" style="width: 100px"/>
         </a-form-item>

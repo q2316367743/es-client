@@ -21,7 +21,7 @@ export default class DexieInstance extends Dexie {
             usePageJumpEvent.emit(PageNameEnum.SETTING);
             emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'url')
             trans.table('url').toArray().then(list => {
-                MessageBoxUtil.alert(`版本升级，历史url数据：${JSON.stringify(list)}，请注意数据丢失。`, {
+                MessageBoxUtil.alert(`版本升级，历史url数据：${JSON.stringify(list)}，请注意数据丢失。`, null, {
                     confirmButtonText: '复制到剪切板'
                 }).then(() => {
                     BrowserUtil.copy(JSON.stringify(list, null, 4));
