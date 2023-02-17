@@ -10,6 +10,8 @@ export interface Log {
 
     version: string;
 
+    sign: number;
+
     time: string;
 
     items: Array<string | LogItem | Array<string>>

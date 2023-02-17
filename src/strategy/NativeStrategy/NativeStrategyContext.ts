@@ -11,13 +11,15 @@ export default class NativeStrategyContext {
     }
 
     private async init(): Promise<void> {
+        let strategy;
         if (Constant.platform === 'utools') {
-            let strategy = await import('./impl/UtoolsNativeStrategy');
-            this.strategy = new strategy.default();
+            strategy = await import('./impl/UtoolsNativeStrategyImpl');
+        } else if (Constant.mode === 'desktop') {
+            strategy = await import('./impl/TauriNativeStrategyImpl');
         } else {
-            let strategy = await import('./impl/BrowserNativeStrategyImpl');
-            this.strategy = new strategy.default();
+            strategy = await import('./impl/BrowserNativeStrategyImpl');
         }
+        this.strategy = new strategy.default();
     }
 
     getStrategy(): NativeStrategy {

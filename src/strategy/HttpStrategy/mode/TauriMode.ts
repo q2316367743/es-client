@@ -6,7 +6,8 @@ import Optional from "@/utils/Optional";
 
 export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
     return new Promise((resolve, reject) => {
-        const url = `${Optional.ofNullable(config.baseURL).orElse("")}/${config.url}`;
+        const baseUrl = Optional.ofNullable(config.baseURL).orElse("");
+        const url = `${baseUrl === '' ? '' : (baseUrl + '/')}${config.url}`;
         if (config.auth) {
             let authorization = btoa(`${config.auth.username}:${config.auth.password}`);
             if (config.headers) {

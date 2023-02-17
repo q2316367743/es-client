@@ -54,6 +54,7 @@
                         <template #content>
                             <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
                             <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
+                            <a-doption value="update" v-if="Constant.mode === 'desktop'">检查更新</a-doption>
                             <a-doption value="about">{{ $t('app.about') }}</a-doption>
                         </template>
                     </a-dropdown>
@@ -277,7 +278,7 @@ export default defineComponent({
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
 
             // 版本更新处理
-            switch (versionManage.checkUpdate()) {
+            switch (versionManage.checkBasicUpdate()) {
                 case 1:
                     this.newDialog = true;
                     break;
@@ -286,6 +287,9 @@ export default defineComponent({
                     break;
             }
             await versionManage.execUpdate();
+
+            // 客户端版本更新
+            versionManage.checkDesktopUpdate();
 
             this.selectMenu(useSettingStore().getDefaultPage);
 
@@ -375,6 +379,9 @@ export default defineComponent({
                 case 'log':
                     this.selectMenu(PageNameEnum.SETTING);
                     emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'update');
+                    break;
+                case 'update':
+                    versionManage.checkDesktopUpdate(true);
                     break;
                 case 'feedback':
                     this.feedbackDialog = true;

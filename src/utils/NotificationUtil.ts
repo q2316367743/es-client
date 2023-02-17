@@ -13,7 +13,7 @@ export default {
         Notification.info({
             content,
             title,
-            closable: true
+            closable: true,
         })
     },
     warning(content: string, title?: string): void {
@@ -36,7 +36,6 @@ export default {
         cancelButtonText: string
     }): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const id = `${Date.now()}`;
             let notificationReturn = Notification.info({
                 content,
                 title,

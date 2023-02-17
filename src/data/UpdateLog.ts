@@ -3,6 +3,7 @@ import {Log, LogItemEnum} from "@/view/Data";
 export default [
     {
         version: '2.6.0',
+        sign: 260,
         time: '2023-02-17',
         items: [{
             label: LogItemEnum.UPDATE,
@@ -39,6 +40,7 @@ export default [
     },
     {
         version: '2.5.0',
+        sign: 250,
         time: '2023-02-10',
         items: [{
             label: LogItemEnum.OPTIMIZATION,
@@ -59,6 +61,7 @@ export default [
     },
     {
         version: '2.4.0',
+        sign: 240,
         time: '2023-02-03',
         items: [{
             label: LogItemEnum.ADD,
@@ -79,6 +82,7 @@ export default [
     },
     {
         version: '2.3.0',
+        sign: 230,
         time: '2023-01-17',
         items: [{
             label: LogItemEnum.OPTIMIZATION,
@@ -94,6 +98,7 @@ export default [
     },
     {
         version: '2.2.0',
+        sign: 220,
         time: '2023-01-06',
         items: [{
             label: LogItemEnum.ADD,
@@ -126,6 +131,7 @@ export default [
     },
     {
         version: "2.1.1",
+        sign: 211,
         time: "2023-01-03",
         items: [
             "紧急修复超时设置无效/异常",
@@ -136,6 +142,7 @@ export default [
     },
     {
         version: "2.1.0",
+        sign: 210,
         time: "2023-01-02",
         items: [
             "★数据浏览增加功能：新增数据、修改数据、删除数据",
@@ -146,6 +153,7 @@ export default [
     },
     {
         version: "2.0.0",
+        sign: 200,
         time: "2022-12-17",
         items: [
             "★全新的UI",
@@ -160,12 +168,14 @@ export default [
     },
     {
         version: "1.5.0",
+        sign: 150,
         time: "2022-12-01",
         items: [
             "数据浏览功能强化"
         ]
     }, {
         version: "1.4.0",
+        sign: 140,
         time: "2022-11-23",
         items: [
             "项目重构，结构调整",
@@ -175,6 +185,7 @@ export default [
         ]
     }, {
         version: "1.3.0",
+        sign: 130,
         time: "2022-09-05",
         items: [
             "增加认证",
@@ -184,6 +195,7 @@ export default [
         remark: "注意：如果使用认证，如果显示跨域问题，需要在elasticsearch中加入<code>http.cors.allow-headers:\"Content-Type\"</code>"
     }, {
         version: "1.2.0",
+        sign: 120,
         time: "2022-06-20",
         items: [
             "修复基础查询字段【移除】问题",
@@ -191,6 +203,7 @@ export default [
         ],
     }, {
         version: "1.1.0",
+        sign: 110,
         time: "2022-06-02",
         items: [
             "去除无用语句",
@@ -198,6 +211,7 @@ export default [
         ],
     }, {
         version: "1.0.0",
+        sign: 100,
         time: "2022-05-26",
         items: [
             "页面布局重构，更加清爽",
@@ -205,6 +219,7 @@ export default [
         ],
     }, {
         version: "0.9.3",
+        sign: 93,
         time: "2022-05-17",
         items: [
             "修复高级查询语法提示错误",
@@ -212,6 +227,7 @@ export default [
         ],
     }, {
         version: "0.9.2",
+        sign: 92,
         time: "2022-05-16",
         title: "",
         items: [
@@ -220,6 +236,7 @@ export default [
         remark: ""
     }, {
         version: "0.9.1",
+        sign: 91,
         time: "2022-04-29",
         items: [
             "修复服务器地址更新页面不刷新问题",
@@ -227,6 +244,7 @@ export default [
         ],
     }, {
         version: "0.9.0",
+        sign: 90,
         time: "2022-04-29",
         items: [
             "新增数据浏览功能",
@@ -234,6 +252,7 @@ export default [
         ],
     }, {
         version: "0.8.1",
+        sign: 81,
         time: "2022-04-28",
         items: [
             "修复基础查询字段选择失效问题",
@@ -241,6 +260,7 @@ export default [
         ],
     }, {
         version: "0.8.0",
+        sign: 80,
         time: "2022-04-01",
         items: [
             "优化样式",
@@ -248,6 +268,7 @@ export default [
         ]
     }, {
         version: '0.7.0',
+        sign: 70,
         time: '2022-03-04',
         items: [
             "优化代码逻辑，减少卡顿",
@@ -255,6 +276,7 @@ export default [
         ]
     }, {
         version: '0.6.0',
+        sign: 60,
         time: '2022-02-17',
         items: [
             "链接管理优化，可以在首页上面新增链接",
@@ -270,6 +292,7 @@ export default [
         remark: "链接在设置 => 链接管理中管理，进行增删改查"
     }, {
         version: "0.5.0",
+        sign: 50,
         time: "2022-02-10",
         items: [
             "使用ts和vue3进行重写",
@@ -281,12 +304,14 @@ export default [
         ]
     }, {
         version: "0.4.4",
+        sign: 44,
         time: "2021-12-18",
         items: [
             "增加分片和副本的显示"
         ]
     }, {
         version: "0.4.3",
+        sign: 43,
         time: "2021-12-12",
         items: [
             "增加了意见反馈",
@@ -294,6 +319,7 @@ export default [
         ]
     }, {
         version: "0.4.0",
+        sign: 40,
         time: "2021-11-13",
         items: [
             "重构了路由",
@@ -302,6 +328,7 @@ export default [
         ]
     }, {
         version: "0.3.0",
+        sign: 30,
         time: "2021-11-09",
         title: "完成基本功能",
         items: [
@@ -310,6 +337,7 @@ export default [
         ]
     }, {
         version: "0.2.0",
+        sign: 20,
         time: "2021-11-08",
         title: "完成基本功能",
         items: [
@@ -320,6 +348,7 @@ export default [
         ]
     }, {
         version: "0.1.0",
+        sign: 10,
         time: "2021-11-08",
         title: "完成项目雏形",
         items: [

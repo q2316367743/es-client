@@ -1,6 +1,6 @@
 import NativeStrategy from "@/strategy/NativeStrategy/NativeStrategy";
 
-export default class UtoolsNativeStrategy implements NativeStrategy{
+export default class UtoolsNativeStrategyImpl implements NativeStrategy{
 
     openLink(link: string): void {
         utools.shellOpenExternal(link);

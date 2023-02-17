@@ -1,6 +1,11 @@
 import Constant from "@/global/Constant";
 import useSettingStore from "@/store/SettingStore";
-import {lodisStrategyContext, seniorSearchHistoryService} from "@/global/BeanFactory";
+import {
+    httpStrategyContext,
+    lodisStrategyContext,
+    nativeStrategyContext,
+    seniorSearchHistoryService
+} from "@/global/BeanFactory";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import useLoadingStore from "@/store/LoadingStore";
@@ -8,6 +13,8 @@ import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Optional from "@/utils/Optional";
 import BrowserUtil from "@/utils/BrowserUtil";
+import {Log} from "@/view/Data";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 export default class VersionManage {
 
@@ -26,13 +33,45 @@ export default class VersionManage {
     }
 
     /**
-     * 检查更新
+     * 检查更新（基础）
      * 1：新用户
      * 2：需要更新
      * 3：不需要更新
      */
-    public checkUpdate(): number {
+    public checkBasicUpdate(): number {
         return this.status;
+    }
+
+    /**
+     * 检测客户端更新
+     */
+    public checkDesktopUpdate(show: boolean = false): void {
+        if (Constant.mode === 'desktop') {
+            httpStrategyContext.getStrategy().fetch<Log>({
+                url: Constant.updater,
+                method: 'GET',
+                responseType: "json"
+            }).then(content => {
+                console.log(content);
+                console.log(Constant.sign, content.sign)
+                if (content.sign > Constant.sign) {
+                    // 存在更新
+                    NotificationUtil.confirm(
+                        `检测到新版本【${content.version}】，当前版本【${Constant.version}】，请前往gitee或网盘中下载安装包更新。`,
+                        "版本更新",
+                        {
+                            confirmButtonText: "前往下载",
+                            cancelButtonText: "取消"
+                        }).then(() => {
+                            nativeStrategyContext.getStrategy().openLink(Constant.repositories[0].url);
+                    })
+                }else {
+                    if (show) {
+                        MessageUtil.info("当前已是最新版本");
+                    }
+                }
+            })
+        }
     }
 
     public async execUpdate(): Promise<void> {

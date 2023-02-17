@@ -5,6 +5,7 @@ import UpdateLog from '@/data/UpdateLog'
 export default {
     name: "es-client",
     version: UpdateLog[0].version,
+    sign: UpdateLog[0].sign,
     build: UpdateLog[0].time,
     author: "Esion",
     email: 'm17762618644@163.com',
@@ -36,5 +37,6 @@ export default {
         'utools': 'https://u.tools/'
     },
     txc: 'https://support.qq.com/products/489458',
-    logs: UpdateLog
+    logs: UpdateLog,
+    updater: "https://static.esion.xyz/share/es-client/updater.json"
 }

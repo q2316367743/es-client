@@ -1,4 +1,4 @@
-import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
+import HttpStrategyConfig, {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
@@ -46,6 +46,11 @@ export default class HttpStrategyProxy {
     }
 
     fetch<T>(config: HttpStrategyConfig): Promise<T> {
+        if (config.method) {
+            config.method = config.method.toUpperCase() as Method;
+        }else {
+            config.method = "GET";
+        }
         return this.fetchSelf(config);
     }
 
