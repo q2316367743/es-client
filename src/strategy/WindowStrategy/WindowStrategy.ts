@@ -1,3 +1,5 @@
+import WindowShow from "@/strategy/WindowStrategy/WindowShow";
+
 export default interface WindowStrategy {
 
     min(): void;
@@ -5,14 +7,5 @@ export default interface WindowStrategy {
     max(): void;
 
     close(): void;
-
-    show(): {
-        min: boolean;
-
-        max: boolean;
-
-        close: boolean;
-
-    };
 
 }

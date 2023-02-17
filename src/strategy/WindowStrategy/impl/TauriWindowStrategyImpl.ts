@@ -1,6 +1,5 @@
 import WindowStrategy from "@/strategy/WindowStrategy/WindowStrategy";
 import {appWindow} from '@tauri-apps/api/window'
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default class TauriWindowStrategyImpl implements WindowStrategy {
     close(): void {
@@ -11,7 +10,7 @@ export default class TauriWindowStrategyImpl implements WindowStrategy {
         appWindow.isMaximized().then(max => {
             if (max) {
                 appWindow.unmaximize().then(() => console.log('恢复'));
-            }else {
+            } else {
                 appWindow.maximize().then(() => console.log('最大化'));
             }
         })
@@ -19,10 +18,6 @@ export default class TauriWindowStrategyImpl implements WindowStrategy {
 
     min(): void {
         appWindow.minimize().then(() => console.log('最小化'))
-    }
-
-    show(): { min: boolean; max: boolean; close: boolean } {
-        return {close: true, max: true, min: true};
     }
 
 }

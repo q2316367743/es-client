@@ -58,21 +58,19 @@
                         </template>
                     </a-dropdown>
                     <!-- 最小化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.min"
-                              @click="toMin">
+                    <a-button class="menu-item" :disabled="!optionShow.min" v-if="optionShow.visibility" @click="toMin">
                         <template #icon>
                             <icon-minus/>
                         </template>
                     </a-button>
                     <!-- 最大化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.max"
-                              @click="toMax">
+                    <a-button class="menu-item" :disabled="!optionShow.max" v-if="optionShow.visibility" @click="toMax">
                         <template #icon>
                             <icon-copy/>
                         </template>
                     </a-button>
                     <!-- 关闭 -->
-                    <a-button class="menu-item" :disabled="!optionShow.close"
+                    <a-button class="menu-item" :disabled="!optionShow.close" v-if="optionShow.visibility"
                               @click="toClose">
                         <template #icon>
                             <icon-close/>
@@ -184,6 +182,7 @@ import {
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import useLoadingStore from "@/store/LoadingStore";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+import WindowStrategyUtil from "@/strategy/WindowStrategy/WindowStrategyUtil";
 
 export default defineComponent({
     components: {
@@ -212,11 +211,8 @@ export default defineComponent({
             feedbackDialog: false,
             collapsed: false,
             selectedKeys: new Array<PageNameEnum>(),
-            optionShow: {
-                min: true,
-                max: true,
-                close: true
-            },
+            // 窗口操作展示
+            optionShow: WindowStrategyUtil(),
             urlSelectLoading: true,
             PageNameEnum,
             // 图标
@@ -279,9 +275,6 @@ export default defineComponent({
             });
             // 未完全退出事件
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
-
-            // 窗口显示获取
-            this.optionShow = windowStrategyContext.getStrategy().show();
 
             // 版本更新处理
             switch (versionManage.checkUpdate()) {

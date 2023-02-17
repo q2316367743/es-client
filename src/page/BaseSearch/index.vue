@@ -45,7 +45,7 @@
                             <a-form :model="current" layout="vertical" label-width="80px"
                                     style="overflow-x: auto;overflow-y: hidden;">
                                 <!-- 条件 -->
-                                <a-form-item :label="$t('baseSearch.form.condition')" style="min-width: 1100px">
+                                <a-form-item :label="$t('baseSearch.form.condition')">
                                     <field-condition-container v-model="current.conditions" :fields="fields"/>
                                 </a-form-item>
                                 <!-- 排序 -->

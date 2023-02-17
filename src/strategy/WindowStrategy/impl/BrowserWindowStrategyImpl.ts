@@ -20,9 +20,4 @@ export default class BrowserWindowStrategyImpl implements WindowStrategy {
         MessageUtil.warning('浏览器模式下无法隐藏');
     }
 
-    show(): { min: boolean; max: boolean; close: boolean } {
-        return {close: false, max: true, min: false};
-    }
-
-
 }

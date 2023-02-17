@@ -157,6 +157,10 @@ export default defineComponent({
         &:hover {
             background-color: var(--hover-color);
         }
+
+        .arco-tag {
+            margin: 8px 4px;
+        }
     }
 
     .data-browse-list-item-this {

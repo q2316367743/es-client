@@ -6,7 +6,7 @@
                       @option-tab="optionTab"/>
             <!-- 下半部分 -->
             <!-- 左面查询条件 -->
-            <a-split class="senior-main" min="42px" :style="{top: instance.showTab ? '40px' : '0'}" :default-size="0.3">
+            <a-split class="senior-main" min="42px" :style="{top: instance.showTab ? '40px' : '0'}" default-size="400px">
                 <template #first>
                     <div class="side">
                         <div class="option">
