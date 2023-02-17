@@ -14,6 +14,9 @@ export default [
             label: LogItemEnum.ADD,
             content: '新增映射信息树形展示，新增索引映射信息支持多层映射'
         }, {
+            label: LogItemEnum.ADD,
+            content: '设置中新增记住上一次链接，开启后，下次访问自动选择该链接'
+        }, {
             label: LogItemEnum.OPTIMIZATION,
             content: '高级查询rest client再次升级，在编辑器内就可以发送请求'
         }, {
