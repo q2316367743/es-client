@@ -13,8 +13,8 @@
                 <vxe-table ref="bsHistoryTable" :data="histories" class="data" :column-config="columnConfig"
                            :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
-                    <vxe-column field="name" :title="$t('common.keyword.name')" width="250"></vxe-column>
-                    <vxe-column field="index" :title="$t('common.keyword.index')" width="400">
+                    <vxe-column field="name" :title="$t('common.keyword.name')" width="230"></vxe-column>
+                    <vxe-column field="index" :title="$t('common.keyword.index')" width="350">
                         <template #default="{row}">
                             <a-link type="primary" target="_blank">{{ row.index }}</a-link>
                             <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>

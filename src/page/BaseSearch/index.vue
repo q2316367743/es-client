@@ -24,6 +24,24 @@
                         <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">管理
                         </a-button>
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
+                        <a-button-group>
+                            <a-button type="outline" :disabled="current.index === ''" @click="historyCommand('save')">
+                                {{ header.relationId ? '更新' : '保存' }}
+                            </a-button>
+                            <a-dropdown @select="historyCommand">
+                                <a-button type="outline" :disabled="!header.relationId">
+                                    <template #icon>
+                                        <icon-down/>
+                                    </template>
+                                </a-button>
+                                <template #content>
+                                    <a-doption value="rename">重命名</a-doption>
+                                    <a-doption value="append">新增到新的历史</a-doption>
+                                    <a-doption value="cancel">取消关联</a-doption>
+                                </template>
+                            </a-dropdown>
+                        </a-button-group>
+
                     </div>
                     <div class="right">
                         <a-button type="primary" :disabled="current.index === ''" @click="openDownload">导出
@@ -218,6 +236,7 @@ export default defineComponent({
             searchMap,
             searchId,
 
+            header: searchItem.header,
             current: searchItem.body,
 
             fields: new Array<Field>(),
@@ -302,11 +321,8 @@ export default defineComponent({
         searchId() {
             let baseSearchItem = this.searchMap.get(this.searchId);
             if (baseSearchItem) {
-                this.current = {
-                    ...baseSearchItem.body
-                }
-                this.current.page = baseSearchItem.body.page;
-                this.current.size = baseSearchItem.body.size;
+                this.header = baseSearchItem.header;
+                this.current = baseSearchItem.body;
             } else {
                 if (this.searchMap.size > 0) {
                     this.searchId = this.searchMap.keys().next().value;
@@ -364,13 +380,14 @@ export default defineComponent({
             }
 
             // 因为延迟问题，预先设置值
+            this.header.relationId = event.id;
             this.current = searchItem.body;
             this.$nextTick(() => {
                 if (event.execute) {
                     this.search();
                 }
             })
-        })
+        });
     },
     methods: {
         showBody() {
@@ -521,7 +538,11 @@ export default defineComponent({
                         index: searchItem.body.index,
                         conditions: toRaw(searchItem.body.conditions),
                         orders: toRaw(searchItem.body.orders)
-                    }).then(() => MessageUtil.success('新增成功'))
+                    })
+                        .then(id => {
+                            MessageUtil.success('新增成功');
+                            this.header.relationId = id;
+                        })
                         .catch(e => MessageUtil.error('新增失败', e));
                     break;
                 case 'update-history':
@@ -539,7 +560,7 @@ export default defineComponent({
                         orders: toRaw(searchItem2.body.orders)
                     })
                         .then(() => MessageUtil.success(
-                            '更新失败',
+                            '更新成功',
                             () => emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE)))
                         .catch(e => MessageUtil.error('更新失败', e));
 
@@ -589,6 +610,30 @@ export default defineComponent({
                 .then(() => MessageUtil.success("导出成功"))
                 .catch(e => MessageUtil.error("导出失败", e))
                 .finally(() => this.download.dialog = false);
+        },
+        historyCommand(command: string) {
+            switch (command) {
+                case 'save':
+                    if (this.header.relationId) {
+                        // 更新
+                        this.optionTab(`update-history|${this.header.id}|${this.header.relationId}`);
+                    } else {
+                        // 新增
+                        this.optionTab(`save-history|${this.header.id}`);
+                    }
+                    break;
+                case 'rename':
+                    // 新增
+                    this.optionTab(`rename|${this.header.id}`);
+                    break;
+                case 'append':
+                    // 新增
+                    this.optionTab(`save-history|${this.header.id}`);
+                    break;
+                case 'cancel':
+                    this.header.relationId = undefined;
+                    break;
+            }
         }
     }
 });

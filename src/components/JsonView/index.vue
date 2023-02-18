@@ -66,7 +66,7 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped lang="less">
+<style lang="less">
 .json-view {
     position: relative;
 
@@ -78,6 +78,10 @@ export default defineComponent({
 
     .hljs {
         padding-top: 0;
+
+        span {
+            cursor: text;
+        }
     }
 }
 </style>
