@@ -19,7 +19,10 @@ export default {
                     resolve();
                 },
                 onCancel: () => {
-                    reject();
+                    reject('cancel');
+                },
+                onClose: () => {
+                    reject('close');
                 }
             })
         })

@@ -80,7 +80,7 @@ export default {
             }).then(() => {
                 let ids = new Array<string>();
                 deleteRowIndies.forEach(id => ids.push(id));
-                DocumentApi._delete_by_query(index?.name!, {
+                DocumentApi(index?.name!)._delete_by_query({
                     query: {
                         bool: {
                             must: [

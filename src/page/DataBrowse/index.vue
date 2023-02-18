@@ -156,18 +156,19 @@ import Optional from "@/utils/Optional";
 import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 import PageHelp from "@/page/DataBrowse/component/PageHelp.vue";
 import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
 import DbCondition from "@/page/DataBrowse/component/DbCondition.vue";
-
+import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
+import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
 import conditionBuild from '@/page/DataBrowse/build/ConditionBuild';
 import recordBuild from '@/page/DataBrowse/build/RecordBuild';
 import DataBuild from "@/page/DataBrowse/build/DataBuild";
 import '@/page/DataBrowse/index.less';
 import tool from "@/page/DataBrowse/tool";
 
-import BrowserUtil from "@/utils/BrowserUtil";
 import mitt from "@/plugins/mitt";
 import {
     isDark,
@@ -180,8 +181,6 @@ import StructureIcon from "@/icon/StructureIcon.vue";
 import BaseOrder from "@/entity/BaseOrder";
 
 import JsonView from "@/components/JsonView/index.vue";
-import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
-import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
 
 export default defineComponent({
     name: 'data-browse',
@@ -481,6 +480,7 @@ export default defineComponent({
         recordReduce(deleteRowIndies?: Set<string>) {
             let indices = Optional.ofNullable(deleteRowIndies)
                 .orElse(this.deleteRowIndies);
+            console.log(indices, this.index)
             let result = tool.recordReduce(indices, this.index);
             if (result) {
                 result.then(() => {
