@@ -5,7 +5,7 @@
         width="70%"
         render-to-body
         class="es-dialog"
-        :close-on-click-modal="false"
+        :mask-closable="false"
         top="10vh"
         draggable
         unmount-on-close

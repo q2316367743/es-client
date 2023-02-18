@@ -14,9 +14,17 @@ export default class Optional<T> {
         if (this.value !== undefined && this.value !== null) {
             return new Optional<S>(mapper(this.value));
         } else {
-
             return new Optional<S>(undefined);
         }
+    }
+
+    public attr(attrName: string): Optional<any> {
+        if (this.value !== undefined && this.value !== null) {
+            return new Optional<any>((this.value as any)[attrName]);
+        } else {
+            return new Optional<any>(undefined);
+        }
+
     }
 
     public peek(peek: (value: T) => T): Optional<T> {
@@ -33,7 +41,7 @@ export default class Optional<T> {
      * @param callback 回调函数
      */
     public orCallback(callback: () => void): Optional<T> {
-        if (typeof this.value === 'undefined') {
+        if (this.value !== undefined && this.value !== null) {
             callback();
         }
         return this;
@@ -48,6 +56,16 @@ export default class Optional<T> {
 
     public get(): T | undefined {
         return this.value;
+    }
+
+    /**
+     * 如果value不为空，作为执行
+     * @param callback
+     */
+    public then(callback: (value: T) => void) {
+        if (this.value !== undefined && this.value !== null) {
+            callback(this.value);
+        }
     }
 
 }

@@ -20,12 +20,15 @@
                 </a-button>
             </a-tooltip>
             <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
-                <a-button type="text" :status="indexStateBtn" @click="indexOperation">
-                    <template #icon>
-                        <icon-pause v-if="indexStateBtn === 'danger'"/>
-                        <icon-play-arrow v-else/>
-                    </template>
-                </a-button>
+                <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation"
+                              :ok-text="indexStateTooltip">
+                    <a-button type="text" :status="indexStateBtn">
+                        <template #icon>
+                            <icon-pause v-if="indexStateBtn === 'danger'"/>
+                            <icon-play-arrow v-else/>
+                        </template>
+                    </a-button>
+                </a-popconfirm>
             </a-tooltip>
             <a-tooltip :effect="theme" content="删除索引" placement="bottom">
                 <a-button type="text" @click="removeIndex">
@@ -61,22 +64,26 @@
         </div>
         <!-- 拓展面板 -->
         <div class="expand" v-if="showExpand">
-            <div v-for="(value, key) in index?.shard" :key="key">
-                <div
-                    class="shard"
-                    v-for="(item, idx) in value"
-                    :key="idx"
-                    @click="showShardOrReplica(item, idx)"
-                >{{ key }}
+            <div style="display: flex;">
+                <div v-for="(value, key) in index?.shard" :key="key">
+                    <div
+                        class="shard"
+                        v-for="(item, idx) in value"
+                        :key="idx"
+                        @click="showShardOrReplica(item, idx)"
+                    >{{ key }}
+                    </div>
                 </div>
             </div>
-            <div v-for="(value, key) in index?.replica" :key="key">
-                <div
-                    class="replica"
-                    v-for="(item, idx) in value"
-                    :key="idx"
-                    @click="showShardOrReplica(item, idx)"
-                >{{ key }}
+            <div style="display: flex;">
+                <div v-for="(value, key) in index?.replica" :key="key">
+                    <div
+                        class="replica"
+                        v-for="(item, idx) in value"
+                        :key="idx"
+                        @click="showShardOrReplica(item, idx)"
+                    >{{ key }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -281,13 +288,12 @@ export default defineComponent({
 
     .expand-btn {
         position: absolute;
-        top: 75px;
+        top: 74px;
         right: 12px;
     }
 
     .expand {
         margin-top: 10px;
-        display: flex;
         position: relative;
 
 

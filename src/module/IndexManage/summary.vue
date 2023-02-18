@@ -102,7 +102,6 @@ export default defineComponent({
                     .map(e => e.docs)
                     .map(e => e.deleted)
                     .map(e => e + '')
-                    .orCallback(() => this.docsCount = '')
                     .orElse('');
                 this.storageSize = indexView.size;
                 this.aliases = new Array<IndexAlias>();

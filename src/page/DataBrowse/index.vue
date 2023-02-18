@@ -32,7 +32,7 @@
                 </db-simple-item>
                 <!-- 索引结构 -->
                 <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
-                    <icon-nav />
+                    <icon-nav/>
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
@@ -323,8 +323,7 @@ export default defineComponent({
                 return;
             }
             this.loading = true;
-            DocumentApi._search(
-                this.index.name,
+            DocumentApi(this.index.name)._search(
                 conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
             ).then(result => {
                 this.result = result;
@@ -466,7 +465,7 @@ export default defineComponent({
             if (!this.index) {
                 return;
             }
-            DocumentApi._insert(this.index.name, this.addConfig.data)
+            DocumentApi(this.index.name)._insert(this.addConfig.data)
                 .then(result => MessageUtil.success(
                     `新增成功，新数据ID【${result._id || ''}】`,
                     () => {
@@ -554,7 +553,7 @@ export default defineComponent({
                 MessageUtil.error('请选择索引');
                 return;
             }
-            DocumentApi._update(this.index.name, this.editConfig.id, this.editConfig.data).then(() => {
+            DocumentApi(this.index.name)._update(this.editConfig.id, this.editConfig.data).then(() => {
                 MessageUtil.success('修改成功');
                 this.editConfig.dialog = false;
                 // 延迟100ms，

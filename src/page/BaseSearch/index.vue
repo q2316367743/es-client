@@ -17,13 +17,8 @@
                                       :value="index.value"/>
                         </a-select>
                         <!-- 搜索 -->
-                        <a-button type="primary" status="success" @click="search">{{
+                        <a-button type="primary" status="success" @click="search" :disabled="current.index === ''">{{
                                 $t('common.operation.search')
-                            }}
-                        </a-button>
-                        <!-- 清空 -->
-                        <a-button type="primary" status="danger" @click="clear(true)">{{
-                                $t('common.operation.clear')
                             }}
                         </a-button>
                         <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">管理
@@ -31,7 +26,9 @@
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
                     </div>
                     <div class="right">
-                        <a-select v-model="view" style="width: 120px;">
+                        <a-button type="primary" :disabled="current.index === ''" @click="openDownload">导出
+                        </a-button>
+                        <a-select v-model="view" style="margin-left: 8px;width: 120px;">
                             <a-option :label="$t('common.keyword.jsonView')" :value="2"></a-option>
                             <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
                         </a-select>
@@ -77,11 +74,45 @@
                 </div>
             </div>
             <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                     append-to-body
-                     class="es-dialog" :close-on-click-modal="false">
+                     render-to-body class="es-dialog" :mask-closable="false">
                 <json-view :data="condition.data"/>
             </a-modal>
             <bsh-manage v-model="historyDialog"/>
+            <a-modal title="导出" v-model:visible="download.dialog" width="600px" render-to-body unmount-on-close
+                     :mask-closable="false" draggable ok-text="导出" @ok="clickDownload">
+                <a-form :model="download" layout="vertical">
+                    <a-form-item label="文件名">
+                        <a-input v-model="download.name"/>
+                    </a-form-item>
+                    <a-form-item label="导出数量">
+                        <a-select v-model="download.count">
+                            <a-option label="当前页面" :value="1"/>
+                            <a-option label="指定范围" :value="2"/>
+                            <a-option label="全部" :value="3"/>
+                        </a-select>
+                    </a-form-item>
+                    <a-form-item label="范围" v-if="download.count === 2">
+                        <a-input-number v-model="download.customStart" placeholder="从0开始"/>
+                        <span>-</span>
+                        <a-input-number v-model="download.customEnd" placeholder="-1代表不限制"/>
+                    </a-form-item>
+                    <a-form-item label="导出内容类型">
+                        <a-select v-model="download.content">
+                            <a-option label="原始结果集" :value="1"/>
+                            <a-option label="只导出_source" :value="2"/>
+                        </a-select>
+                    </a-form-item>
+                    <a-form-item>
+                        <template #label>
+                            每次分页查询数量
+                            <a-tooltip content="数量太大可能造成浏览器卡顿" placement="top" effect="light">
+                                <icon-question-circle style="margin-left: 5px;"/>
+                            </a-tooltip>
+                        </template>
+                        <a-input-number v-model="download.size" :disabled="download.count === 1"/>
+                    </a-form-item>
+                </a-form>
+            </a-modal>
         </div>
     </a-spin>
 </template>
@@ -89,17 +120,20 @@
 <script lang="ts">
 import {defineComponent, toRaw} from "vue";
 import {mapState} from "pinia";
+import {SelectOptionData} from "@arco-design/web-vue";
 
-import TableViewer from "@/components/TableViewer/index.vue"
-import DataView from "@/components/DataView/index.vue";
+// 自定义组件
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
+import JsonView from "@/components/JsonView/index.vue";
 
-import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
 
+// 全局存储
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
+import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
+import useUrlStore from "@/store/UrlStore";
 
 import BaseQuery from '@/entity/BaseQuery';
 import BaseOrder from "@/entity/BaseOrder";
@@ -107,15 +141,21 @@ import BaseOrder from "@/entity/BaseOrder";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
-import QueryConditionBuild from './build/QueryConditionBuild';
-import './index.less';
+// 内部组件
+import '@/page/BaseSearch/index.less';
+import QueryConditionBuild from '@/page/BaseSearch/component/QueryConditionBuild';
+import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
+import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldConditionContainer.vue";
+import BshManage from "@/page/BaseSearch/History/index.vue";
+import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
+import BaseSearchDataView from "@/page/BaseSearch/DataView/index.vue";
+import {BaseSearchItem} from "@/page/BaseSearch/domain/BaseSearchItem";
+
 
 import Field from "@/view/Field";
 
-import {BaseSearchItem} from "@/page/BaseSearch/BaseSearchItem";
-import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
-import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldConditionContainer.vue";
-
+import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {
     baseSearchHistoryService,
     useBaseSearchEvent,
@@ -124,15 +164,25 @@ import {
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
-import JsonView from "@/components/JsonView/index.vue";
-import BshManage from "@/page/BaseSearch/History/index.vue";
-import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
-import useUrlStore from "@/store/UrlStore";
 import DocumentApi from "@/api/DocumentApi";
-import MessageUtil from "@/utils/MessageUtil";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {SelectOptionData} from "@arco-design/web-vue";
-import BaseSearchDataView from "@/page/BaseSearch/DataView/index.vue";
+import exportBuild from "@/page/BaseSearch/component/ExportBuild";
+
+function buildDefaultDownload(name: string, dialog: boolean = false): ExportConfig {
+    return {
+        // 导出对话框
+        dialog,
+        // 导出文件名
+        name,
+        // 导出类型：1【当前分页】，2【指定数量】，3【全部】
+        count: 1,
+        customStart: 0,
+        customEnd: -1,
+        // 导出内容类型：1【原始结果集】，2【只导出_source】
+        content: 1,
+        // 每次分页查询的数量
+        size: 1000
+    };
+}
 
 // 公共方法
 export default defineComponent({
@@ -144,8 +194,6 @@ export default defineComponent({
         FieldConditionContainer,
         FieldOrderContainer,
         TabMenu,
-        DataView,
-        TableViewer
     },
     data: () => {
         let searchMap = new Map<number, BaseSearchItem>();
@@ -164,7 +212,7 @@ export default defineComponent({
                 total: 0,
                 result: {} as any
             }
-        };
+        } as BaseSearchItem;
         searchMap.set(searchId, searchItem);
         return {
             searchMap,
@@ -183,6 +231,8 @@ export default defineComponent({
                 data: {}
             },
             historyDialog: false,
+
+            download: buildDefaultDownload(''),
 
             // 视图
             view: useSettingStore().getDefaultViewer,
@@ -282,11 +332,11 @@ export default defineComponent({
         }
     },
     created() {
-        mitt.on(MessageEventEnum.URL_UPDATE, () => {
+        emitter.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置条件
             this.clear(true);
         });
-        mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
+        emitter.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
             this.showTop = (index === PageNameEnum.BASE_SEARCH)
         });
         useBaseSearchEvent.on(event => {
@@ -340,8 +390,7 @@ export default defineComponent({
             }
             this.loading = true;
             try {
-                DocumentApi._search(
-                    this.current.index,
+                DocumentApi(this.current.index)._search(
                     QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
                 ).then((response) => {
                     // 结果
@@ -531,8 +580,17 @@ export default defineComponent({
             } else {
                 MessageUtil.warning(`索引【${this.current.index}】未找到`)
             }
+        },
+        openDownload() {
+            this.download = buildDefaultDownload(this.current.index + '.json', true);
+        },
+        clickDownload() {
+            exportBuild(this.download, this.current)
+                .then(() => MessageUtil.success("导出成功"))
+                .catch(e => MessageUtil.error("导出失败", e))
+                .finally(() => this.download.dialog = false);
         }
-    },
+    }
 });
 </script>
 

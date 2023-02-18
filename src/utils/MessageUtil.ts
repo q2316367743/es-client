@@ -17,7 +17,7 @@ function error(message: string, e: any, callback: () => void): void;
 function error(message: string, e?: any, callback?: () => void): void {
     Message.error({
         closable: true,
-        content: Optional.ofNullable(e).map(e => `${message}，${e.message || e}`).orElse(message)
+        content: Optional.ofNullable(e).map(e => `${message}，${e.toString()}`).orElse(message)
     });
     console.error(e);
     callback && callback();

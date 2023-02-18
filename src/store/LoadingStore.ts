@@ -50,6 +50,7 @@ const useLoadingStore = defineStore('loading', {
             if (!this.loading) {
                 this.loading = true;
             }
+            this.addTimeout(10);
             this.text = text;
         },
 

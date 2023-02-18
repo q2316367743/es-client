@@ -5,7 +5,7 @@
             <div style="display: flex">
                 <!-- 输入框 -->
                 <a-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
-                         style="width: 300px;height: 32px;" @input="search" @clear="search" allow-clear></a-input>
+                         style="width: 250px;height: 32px;" @input="search" @clear="search" allow-clear></a-input>
                 <a-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
                           style="margin-left: 5px;width: 150px;" clearable @change="search">
                     <a-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></a-option>
@@ -70,9 +70,9 @@
         <!-- 新增索引 -->
         <home-index-add v-model="indexAddDialog"/>
         <!-- 数据展示 -->
-        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model="indexItem.dialog"/>
+        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model:value="indexItem.dialog"/>
         <!-- 更多查询条件 -->
-        <a-modal v-model:visible="condition.dialog" destroy-on-close append-to-body title="更多查询条件">
+        <a-modal v-model:visible="condition.dialog" unmount-on-close render-to-body title="更多查询条件" draggable>
             <a-form :model="condition" label-width="80px" label-position="left">
                 <a-form-item label="状态">
                     <a-radio-group v-model="condition.state">
