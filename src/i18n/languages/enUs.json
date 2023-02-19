@@ -19,7 +19,7 @@
         "updateRecord": "Update Records",
         "urlUnFind": "The specified link was not found. Please refresh the page and try again.",
         "versionUpdate": "Version update",
-        "welcome": "Click the version in the lower left corner to view the information, update records and make suggestions and feedback",
+        "welcome": "Click the version in the lower right corner to view the information, update records and make suggestions and feedback",
         "widthAndHeightMin": "It is detected that the width is less than 1200px and the height is less than 800px, which may cause abnormal display.",
         "widthMin": "The detected width is less than 1200px, which may cause abnormal display."
     },

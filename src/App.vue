@@ -1,85 +1,98 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <a-spin :loading="loading" :tip="text">
-        <a-config-provider :locale="locale" size="medium">
-            <header id="header" data-tauri-drag-region>
-                <div class="left">
-                    <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
-                    <div class="full-screen" @click="collapsed = !collapsed">
+    <a-config-provider :locale="locale" size="medium">
+        <!-- 顶部菜单栏 -->
+        <header id="header" data-tauri-drag-region>
+            <div class="left">
+                <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
+                <a-button type="text" status="normal" class="full-screen" @click="collapsed = !collapsed"
+                          :disabled="loading">
+                    <template #icon>
                         <icon-menu-unfold v-if="collapsed"/>
                         <icon-menu-fold v-else/>
-                    </div>
-                    <!-- 索引服务器选择 -->
-                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
-                              allow-clear @change="selectUrl" class="url-select" :loading="urlSelectLoading"
-                              :show-extra-options="true">
-                        <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
-                        <template #empty>
-                            <div style="padding: 6px 0; text-align: center;">
-                                <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
-                                </a-button>
-                            </div>
-                        </template>
-                        <template #footer>
-                            <div style="padding: 6px 0; text-align: center;">
-                                <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
-                                </a-button>
-                            </div>
-                        </template>
-                    </a-select>
-                    <!-- 刷新按钮 -->
-                    <a-button class="refresh" @click="refresh">{{ $t('common.operation.refresh') }}</a-button>
-                </div>
-                <div class="right">
-                    <!-- 各种信息弹框 -->
-                    <info class-name="menu-item"/>
-                    <!-- 主题切换 -->
-                    <a-button class="menu-item" @click="darkChange" type="text" status="normal">
-                        <icon-moon :size="16" v-if="isDark"/>
-                        <icon-sun :size="16" v-else/>
+                    </template>
+                </a-button>
+                <!-- 索引服务器选择 -->
+                <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
+                          allow-clear @change="selectUrl" class="url-select" :loading="urlSelectLoading || loading"
+                          :show-extra-options="true">
+                    <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                    <template #empty>
+                        <div style="padding: 6px 0; text-align: center;">
+                            <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
+                            </a-button>
+                        </div>
+                    </template>
+                    <template #footer>
+                        <div style="padding: 6px 0; text-align: center;">
+                            <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
+                            </a-button>
+                        </div>
+                    </template>
+                </a-select>
+                <!-- 刷新按钮 -->
+                <a-button class="refresh" @click="refresh" :disabled="loading">{{
+                        $t('common.operation.refresh')
+                    }}
+                </a-button>
+            </div>
+            <div class="right">
+                <!-- 各种信息弹框 -->
+                <info class-name="menu-item" :disabled="loading"/>
+                <!-- 主题切换 -->
+                <a-button class="menu-item" @click="darkChange" type="text" status="normal" :disabled="loading">
+                    <icon-moon :size="16" v-if="isDark"/>
+                    <icon-sun :size="16" v-else/>
+                </a-button>
+                <!-- 多语言切换 -->
+                <a-dropdown @select="languageCommand" trigger="click">
+                    <a-button class="menu-item" type="text" status="normal" :disabled="loading">
+                        <icon-language :size="16"/>
                     </a-button>
-                    <!-- 多语言切换 -->
-                    <a-dropdown @select="languageCommand" trigger="click">
-                        <a-button class="menu-item" type="text" status="normal">
-                            <icon-language :size="16"/>
-                        </a-button>
-                        <template #content>
-                            <a-doption value="zhCn">中文</a-doption>
-                            <a-doption value="enUs">English</a-doption>
-                        </template>
-                    </a-dropdown>
-                    <!-- 版本 -->
-                    <a-dropdown @select="versionCommand">
-                        <a-button class="menu-item" type="text" status="normal">{{ Constant.version }}</a-button>
-                        <template #content>
-                            <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
-                            <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
-                            <a-doption value="update" v-if="Constant.mode === 'desktop'">检查更新</a-doption>
-                            <a-doption value="about">{{ $t('app.about') }}</a-doption>
-                        </template>
-                    </a-dropdown>
-                    <!-- 最小化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.min" v-if="optionShow.visibility" @click="toMin">
-                        <template #icon>
-                            <icon-minus/>
-                        </template>
+                    <template #content>
+                        <a-doption value="zhCn">中文</a-doption>
+                        <a-doption value="enUs">English</a-doption>
+                    </template>
+                </a-dropdown>
+                <!-- 版本 -->
+                <a-dropdown @select="versionCommand">
+                    <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
+                            Constant.version
+                        }}
                     </a-button>
-                    <!-- 最大化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.max" v-if="optionShow.visibility" @click="toMax">
-                        <template #icon>
-                            <icon-copy/>
-                        </template>
-                    </a-button>
-                    <!-- 关闭 -->
-                    <a-button class="menu-item" :disabled="!optionShow.close" v-if="optionShow.visibility"
-                              @click="toClose">
-                        <template #icon>
-                            <icon-close/>
-                        </template>
-                    </a-button>
-                </div>
-            </header>
-            <!-- 左侧菜单 -->
+                    <template #content>
+                        <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
+                        <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
+                        <a-doption value="update" v-if="Constant.mode === 'desktop'">检查更新</a-doption>
+                        <a-doption value="about">{{ $t('app.about') }}</a-doption>
+                    </template>
+                </a-dropdown>
+                <!-- 最小化 -->
+                <a-button class="menu-item" :disabled="!optionShow.min || urlSelectLoading" v-if="optionShow.visibility"
+                          @click="toMin">
+                    <template #icon>
+                        <icon-minus/>
+                    </template>
+                </a-button>
+                <!-- 最大化 -->
+                <a-button class="menu-item" :disabled="!optionShow.max || urlSelectLoading" v-if="optionShow.visibility"
+                          @click="toMax">
+                    <template #icon>
+                        <icon-copy/>
+                    </template>
+                </a-button>
+                <!-- 关闭 -->
+                <a-button class="menu-item" :disabled="!optionShow.close || urlSelectLoading"
+                          v-if="optionShow.visibility"
+                          @click="toClose">
+                    <template #icon>
+                        <icon-close/>
+                    </template>
+                </a-button>
+            </div>
+        </header>
+        <a-spin :loading="loading" :tip="text" class="global-spin" :class="Constant.mode === 'desktop'?'desktop': ''">
+            <!-- 主页面 -->
             <div id="main">
                 <div id="navigation" :style="{width: collapsed ? '50px' : '184px'}">
                     <a-menu :collapsed="collapsed" v-model:selected-keys="selectedKeys" breakpoint="x1">
@@ -124,25 +137,25 @@
                     <setting v-show="selectedKeys[0] === PageNameEnum.SETTING"></setting>
                 </div>
             </div>
-            <!-- 保存或新增URL弹窗 -->
-            <save-or-update-url/>
-            <index-manage/>
-            <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')"
-                     mask-closable draggable lock-scroll width="600px">
-                <version-update v-if="updateDialog"/>
-            </a-modal>
-            <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" style="height: 90vh;"
-                     close-on-click-modal append-to-body draggable lock-scroll top="5vh">
-                <a-scrollbar height="calc(80vh - 54px)">
-                    <setting-about v-if="newDialog"/>
-                </a-scrollbar>
-            </a-modal>
-            <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh"
-                     :close-on-click-modal="false" append-to-body draggable lock-scroll>
-                <feedback-module v-if="feedbackDialog"/>
-            </a-modal>
-        </a-config-provider>
-    </a-spin>
+        </a-spin>
+        <!-- 保存或新增URL弹窗 -->
+        <save-or-update-url/>
+        <index-manage/>
+        <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')"
+                 mask-closable draggable lock-scroll width="600px">
+            <version-update v-if="updateDialog"/>
+        </a-modal>
+        <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog"
+                 mask-closable render-to-body draggable top="5vh" width="600px">
+            <a-scrollbar height="calc(80vh - 54px)">
+                <setting-about v-if="newDialog"/>
+            </a-scrollbar>
+        </a-modal>
+        <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh"
+                 :close-on-click-modal="false" append-to-body draggable lock-scroll>
+            <feedback-module v-if="feedbackDialog"/>
+        </a-modal>
+    </a-config-provider>
 </template>
 
 <script lang="ts">

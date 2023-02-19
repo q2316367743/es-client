@@ -1,7 +1,7 @@
 <!-- 此处是右上角详情 -->
 <template>
     <a-dropdown trigger="click" @select="handleCommand">
-        <a-button type="text" status="normal" :class="className" :disabled="url === undefined">
+        <a-button type="text" status="normal" :class="className" :disabled="url === undefined || disabled">
             <template #icon>
                 <icon-info-circle :size="16"/>
             </template>
@@ -36,7 +36,8 @@ export default defineComponent({
             type: String,
             required: false,
             default: ''
-        }
+        },
+        disabled: Boolean
     },
     components: {
         JsonDialog,

@@ -47,9 +47,9 @@ code {
 
 #header {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 1px;
+    left: 1px;
+    right: 1px;
     height: 40px;
     display: flex;
     box-shadow: 0 0 12px var(--shadow-color);
@@ -71,7 +71,8 @@ code {
         }
 
         .full-screen {
-            padding: 12px 10px 12px 0;
+            padding: 12px;
+            margin: 4px;
             cursor: pointer;
             -webkit-app-region: no-drag;
         }
@@ -112,10 +113,10 @@ code {
 
 #main {
     position: fixed;
-    top: 48px;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 49px;
+    left: 1px;
+    right: 01px;
+    bottom: 1px;
     display: flex;
 }
 
@@ -148,6 +149,16 @@ code {
     box-shadow: 0 0 12px var(--shadow-color);
     background-color: var(--container-color);
     position: relative;
+}
+
+
+.desktop {
+    border: 1px solid var(--border-color);
+}
+
+.global-spin {
+    height: calc(100% - 49px) !important;
+    margin-top: 49px;
 }
 
 // 重定义样式
