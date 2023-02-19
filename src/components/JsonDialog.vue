@@ -5,10 +5,10 @@
         width="70%"
         render-to-body
         class="es-dialog"
-        :mask-closable="false"
         top="10vh"
         draggable
         unmount-on-close
+        :footer="false"
     >
         <json-view :data="json"/>
     </a-modal>

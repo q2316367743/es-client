@@ -22,7 +22,6 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
         if (config.timeout) {
             timeout = Math.round(config.timeout / 1000);
         }
-        console.log(url, config)
         fetch<T>(url, {
             method: config.method?.toUpperCase() as HttpVerb,
             headers: config.headers,

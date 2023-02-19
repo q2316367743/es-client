@@ -8,6 +8,7 @@ import Optional from "@/utils/Optional";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
 import NotificationUtil from "@/utils/NotificationUtil";
+import useNotificationStore from "@/store/NotificationStore";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
     let indicesMap = new Map<string, IndexView>();
@@ -65,7 +66,7 @@ const useIndexStore = defineStore('index', {
                     let unassigned_shards = health.unassigned_shards;
                     this.total_shards = this.active_shards + unassigned_shards;
                     this.status = health.status;
-                }).catch(e => NotificationUtil.error(e, '获取索引健康值失败'));
+                }).catch(e => useNotificationStore().send(e, '获取索引健康值失败'));
 
                 clusterApi.info()
                     .then(info => {
@@ -75,7 +76,7 @@ const useIndexStore = defineStore('index', {
                             .map(e => e.number)
                             .orElse(''));
                     })
-                    .catch(e => NotificationUtil.error(e.toString(), '获取elasticsearch版本失败'));
+                    .catch(e => useNotificationStore().send(e.toString(), '获取elasticsearch版本失败'));
                 return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();

@@ -26,8 +26,6 @@ function error(message: string, e?: any, callback?: () => void): void {
             closable: true,
             content: Optional.ofNullable(e).map(e => `${message}`).orElse(message)
         });
-        // 使用通知
-        NotificationUtil.error(JSON.stringify(e, null, 3), "请求异常");
     }
     console.error(e);
     callback && callback();

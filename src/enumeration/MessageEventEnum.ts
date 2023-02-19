@@ -52,7 +52,9 @@ enum MessageEventEnum {
     /**
      * 执行链接刷新
      */
-    REFRESH_URL = 'execute:refresh:url'
+    REFRESH_URL = 'execute:refresh:url',
+
+    OPEN_NOTIFICATION_MANAGE = 'execute:open:notification:manage'
 
 }
 

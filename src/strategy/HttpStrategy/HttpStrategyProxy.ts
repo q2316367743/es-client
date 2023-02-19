@@ -2,6 +2,7 @@ import HttpStrategyConfig, {Method} from "@/strategy/HttpStrategy/HttpStrategyCo
 import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
+import useNotificationStore from "@/store/NotificationStore";
 
 export default class HttpStrategyProxy {
 
@@ -42,16 +43,23 @@ export default class HttpStrategyProxy {
                 "Content-Type": "application/json"
             }
         }
-        return this.fetchSelf(config);
+        return this.fetch<T>(config);
     }
 
     fetch<T>(config: HttpStrategyConfig): Promise<T> {
         if (config.method) {
             config.method = config.method.toUpperCase() as Method;
-        }else {
+        } else {
             config.method = "GET";
         }
-        return this.fetchSelf(config);
+        return new Promise<T>((resolve, reject) => {
+            this.fetchSelf(config).then(rsp => {
+                resolve(rsp);
+            }).catch(reason => {
+                useNotificationStore().http(config, reason);
+                reject(reason);
+            })
+        });
     }
 
     native<T>(config: HttpStrategyConfig): Promise<T> {

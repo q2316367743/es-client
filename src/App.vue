@@ -32,7 +32,7 @@
                         </template>
                     </a-select>
                     <!-- 刷新按钮 -->
-                    <a-button class="refresh" @click="refresh" :disabled="loading">{{
+                    <a-button class="refresh" @click="refresh" :disabled="loading || !urlId || urlId === ''">{{
                             $t('common.operation.refresh')
                         }}
                     </a-button>
@@ -40,6 +40,11 @@
                 <div class="right">
                     <!-- 各种信息弹框 -->
                     <info class-name="menu-item" :disabled="loading"/>
+                    <!-- 主题切换 -->
+                    <a-button class="menu-item" type="text" status="normal" :disabled="loading"
+                              @click="notificationDrawer = true">
+                        <icon-notification/>
+                    </a-button>
                     <!-- 主题切换 -->
                     <a-button class="menu-item" @click="darkChange" type="text" status="normal" :disabled="loading">
                         <icon-moon :size="16" v-if="isDark"/>
@@ -156,9 +161,13 @@
             </a-scrollbar>
         </a-modal>
         <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh"
-                 :close-on-click-modal="false" append-to-body draggable lock-scroll>
+                 :close-on-click-modal="false" render-to-body draggable unmount-on-close>
             <feedback-module v-if="feedbackDialog"/>
         </a-modal>
+        <a-drawer title="通知中心" v-model:visible="notificationDrawer" :close-on-click-modal="false" render-to-body
+                  unmount-on-close width="350px" :footer="false">
+            <notification-manage/>
+        </a-drawer>
     </a-config-provider>
 </template>
 
@@ -217,10 +226,11 @@ export default defineComponent({
         FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
         SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue")),
         IndexManage: defineAsyncComponent(() => import('@/module/IndexManage/index.vue')),
+        NotificationManage: defineAsyncComponent(() => import('@/module/NotificationManage/index.vue')),
     },
     data: () => {
         return {
-            urlId: undefined as number | undefined,
+            urlId: undefined as number | string | undefined,
             locale: zhCn,
             isDark,
             Constant,
@@ -232,6 +242,7 @@ export default defineComponent({
             // 窗口操作展示
             optionShow: WindowStrategyUtil(),
             urlSelectLoading: true,
+            notificationDrawer: false,
             PageNameEnum,
             // 图标
         };
@@ -326,11 +337,15 @@ export default defineComponent({
             this.selectMenu(page);
         });
 
-
         // 执行窗口刷新事件
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
             this.refresh();
         });
+
+        // 打开通知中心
+        emitter.on(MessageEventEnum.OPEN_NOTIFICATION_MANAGE, () => {
+            this.notificationDrawer = true;
+        })
     },
     methods: {
         async selectUrl(value: any) {
