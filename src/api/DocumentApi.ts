@@ -20,7 +20,7 @@ export default function DocumentApi(index: string) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                data: data
+                data: JSON.parse(data)
             })
         },
         _delete_by_query(data: any): Promise<any> {

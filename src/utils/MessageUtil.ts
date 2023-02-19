@@ -1,5 +1,6 @@
 import {Message} from '@arco-design/web-vue';
 import Optional from "@/utils/Optional";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 function success(message: string): void;
 function success(message: string, callback: () => void): void;
@@ -15,10 +16,19 @@ function error(message: string): void;
 function error(message: string, e: any): void;
 function error(message: string, e: any, callback: () => void): void;
 function error(message: string, e?: any, callback?: () => void): void {
-    Message.error({
-        closable: true,
-        content: Optional.ofNullable(e).map(e => `${message}，${e.toString()}`).orElse(message)
-    });
+    if (typeof e === 'string') {
+        Message.error({
+            closable: true,
+            content: Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
+        });
+    }else {
+        Message.error({
+            closable: true,
+            content: Optional.ofNullable(e).map(e => `${message}`).orElse(message)
+        });
+        // 使用通知
+        NotificationUtil.error(JSON.stringify(e, null, 3), "请求异常");
+    }
     console.error(e);
     callback && callback();
 }
