@@ -115,6 +115,18 @@
                 </a-form-item>
                 <a-form-item>
                     <template #label>
+                        <span>标签载入方式</span>
+                        <a-tooltip content="高级查询有效" placement="top" effect="light">
+                            <icon-question-circle style="margin-left: 5px;"/>
+                        </a-tooltip>
+                    </template>
+                    <a-radio-group v-model="instance.tabLoadMode" :disabled="instance.showTab">
+                        <a-radio :value="1">追加</a-radio>
+                        <a-radio :value="2">覆盖</a-radio>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item>
+                    <template #label>
                         <span>标签栏最大数量</span>
                         <a-tooltip content="数量太多会导致性能变差" placement="top" effect="light">
                             <icon-question-circle style="margin-left: 5px;"/>
@@ -221,7 +233,7 @@ export default defineComponent({
                 if (isInit) {
                     if (isFirst) {
                         isFirst = false;
-                    }else {
+                    } else {
                         useSettingStore().setInstance(newValue);
                     }
                 }

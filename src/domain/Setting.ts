@@ -57,6 +57,11 @@ export default interface Setting {
     showTab: boolean;
 
     /**
+     * 标签载入模式
+     */
+    tabLoadMode: number;
+
+    /**
      * 标签栏最大数量
      */
     tabMaxCount: number,

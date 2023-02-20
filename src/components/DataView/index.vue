@@ -4,6 +4,7 @@
             <json-view :data="result"/>
         </div>
         <table-viewer v-else-if="view === 3" :data="result" :style="{height: tableHeight}"/>
+        <a-back-top target-container=".data-view .data-json-view" />
     </div>
 </template>
 <script lang="ts">
@@ -31,7 +32,7 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped lang="less">
+<style lang="less">
 .data-view {
     position: absolute;
     top: 0;

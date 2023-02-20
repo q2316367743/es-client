@@ -7,6 +7,7 @@ import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {lodisStrategyContext} from "@/global/BeanFactory";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 
 function getDefaultValue(): Setting {
     return {
@@ -35,6 +36,7 @@ function getDefaultValue(): Setting {
 
         // 标签栏设置
         showTab: false,
+        tabLoadMode: TabLoadModeEnum.APPEND,
         tabMaxCount: 10,
         tabCloseMode: TabCloseModeEnum.ALERT,
 
@@ -64,6 +66,7 @@ const useSettingStore = defineStore('setting', {
         getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
         getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>()),
         getShowTab: (state): boolean => Optional.ofNullable(state.instance.showTab).orElse(true),
+        getTabLoadMode: (state): TabLoadModeEnum => Optional.ofNullable(state.instance.tabLoadMode).orElse(TabLoadModeEnum.APPEND),
         getTabMaxCount: (state): number => Optional.ofNullable(state.instance.tabMaxCount).orElse(10),
         getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT),
         getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false)

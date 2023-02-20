@@ -6,12 +6,15 @@
                       @option-tab="optionTab"/>
             <!-- 下半部分 -->
             <!-- 左面查询条件 -->
-            <a-split class="senior-main" min="42px" :style="{top: instance.showTab ? '40px' : '0'}" default-size="400px">
+            <a-split class="senior-main" min="42px" :style="{top: instance.showTab ? '40px' : '0'}"
+                     default-size="400px">
                 <template #first>
                     <div class="side">
                         <div class="option">
-                            <a-tooltip :content="$t('common.operation.save')" position="right">
-                                <a-button type="text" status="success" @click="save">
+                            <a-tooltip
+                                :content="header.relationId ? $t('common.operation.update') : $t('common.operation.save')"
+                                position="right">
+                                <a-button type="text" :status="header.relationId ? 'danger' : 'success'" @click="save">
                                     <template #icon>
                                         <icon-save :size="18"/>
                                     </template>
@@ -19,6 +22,13 @@
                             </a-tooltip>
                             <a-tooltip :content="$t('common.operation.format')" position="right">
                                 <a-button type="text" status="normal" @click="formatDocument">
+                                    <template #icon>
+                                        <icon-code/>
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip content="清空" position="right">
+                                <a-button type="text" status="normal" @click="clearBody">
                                     <template #icon>
                                         <format-icon/>
                                     </template>
@@ -129,6 +139,7 @@ import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
 import NotificationUtil from "@/utils/NotificationUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -155,6 +166,7 @@ export default defineComponent({
         };
         searchMap.set(searchId, searchItem);
         return {
+            header: searchItem.header as TabMenuItem,
             // 展示数据
             current: searchItem.body as SeniorSearchItemBody,
             // 查询map
@@ -234,6 +246,8 @@ export default defineComponent({
 
             // 显示标签页
             if (this.instance.showTab) {
+                // 头部
+                this.header = searchItem.header;
                 // 判断是否当前标签页
                 if (typeof param.current === 'undefined' || !param.current) {
                     // 新标签页
@@ -245,8 +259,17 @@ export default defineComponent({
                     this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
                 }
             } else {
+                // 头部
+                this.header.name = searchItem.header.name;
+                this.header.relationId = searchItem.header.relationId;
                 // 隐藏标签页，插入到当前标签页
-                this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
+                if (useSettingStore().getTabLoadMode === TabLoadModeEnum.APPEND) {
+                    this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
+                } else if (useSettingStore().getTabLoadMode === TabLoadModeEnum.COVER) {
+                    this.current.body = searchItem.body.body;
+                } else {
+                    MessageUtil.error("标签载入模式错误")
+                }
             }
 
 
@@ -477,6 +500,9 @@ export default defineComponent({
         },
         openHelp() {
             nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
+        },
+        clearBody() {
+            this.current.body = '';
         }
     },
 });

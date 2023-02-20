@@ -6,7 +6,7 @@
             <template #content="{ row, rowIndex }">
                 <div class="data-browse-expand">
                     <a-button type="text" status="normal">复制</a-button>
-                    <json-view :data="JSON.parse(row.params)" :copy="false"/>
+                    <json-view :data="row.params ? JSON.parse(row.params) : {}" :copy="false"/>
                 </div>
             </template>
         </vxe-column>
@@ -26,7 +26,7 @@
         </vxe-column>
         <vxe-column field="method" width="100" title="请求方式"></vxe-column>
         <vxe-column field="link" width="150" title="请求连接" show-overflow="ellipsis"></vxe-column>
-        <vxe-column width="250" title="操作">
+        <vxe-column width="85" title="操作" fixed="right">
             <template #default="{ row }">
                 <a-button type="primary" @click="load(row)">载入</a-button>
             </template>

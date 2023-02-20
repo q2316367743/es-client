@@ -6,7 +6,7 @@
                          @input="search"></a-input>
                 <a-button type="primary" @click="search">
                     <template #icon>
-                        <icon-refresh />
+                        <icon-refresh/>
                     </template>
                 </a-button>
                 <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
@@ -28,8 +28,8 @@
                 <vxe-table ref="historyTable" :data="histories" class="data" :column-config="columnConfig"
                            :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
-                    <vxe-column field="name" :title="$t('common.keyword.name')" width="150"></vxe-column>
-                    <vxe-column :title="$t('common.keyword.operation')" width="220">
+                    <vxe-column field="name" :title="$t('common.keyword.name')"></vxe-column>
+                    <vxe-column :title="$t('common.keyword.operation')" width="220" fixed="right">
                         <template #default="{ row }">
                             <a-button type="primary" status="success" size="small" @click="load(row)">{{
                                     $t('common.operation.load')
