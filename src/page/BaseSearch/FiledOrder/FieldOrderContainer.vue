@@ -1,11 +1,13 @@
 <template>
-    <div v-if="orders.length === 0">
-        <a-button type="primary" @click="add">{{ $t('common.operation.add') }}
-        </a-button>
-    </div>
-    <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
-         :key="idx">
-        <field-order-item v-model="orders[idx]" :fields="fields" @add="add" @remove="remove"/>
+    <div class="file-order-container">
+        <div v-if="orders.length === 0">
+            <a-button type="primary" @click="add">{{ $t('common.operation.add') }}
+            </a-button>
+        </div>
+        <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders"
+             :key="idx">
+            <field-order-item v-model="orders[idx]" :fields="fields" @add="add" @remove="remove"/>
+        </div>
     </div>
 </template>
 <script lang="ts">

@@ -44,7 +44,7 @@ const useNotificationStore = defineStore('notification', {
                 id: now.getTime(),
                 time: now,
                 title: title,
-                type: 'http',
+                type: 'original',
                 body: `${content}`,
             });
         },

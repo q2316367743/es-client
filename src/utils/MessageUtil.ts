@@ -1,13 +1,12 @@
 import {Message} from '@arco-design/web-vue';
 import Optional from "@/utils/Optional";
-import NotificationUtil from "@/utils/NotificationUtil";
 
-function success(message: string): void;
-function success(message: string, callback: () => void): void;
-function success(message: string, callback?: () => void): void {
+function success(message: any): void;
+function success(message: any, callback: () => void): void;
+function success(message: any, callback?: () => void): void {
     Message.success({
         closable: true,
-        content: message + ''
+        content: typeof message === 'string' ? message : JSON.stringify(message)
     });
     callback && callback();
 }
@@ -21,7 +20,7 @@ function error(message: string, e?: any, callback?: () => void): void {
             closable: true,
             content: Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
         });
-    }else {
+    } else {
         Message.error({
             closable: true,
             content: Optional.ofNullable(e).map(e => `${message}`).orElse(message)
@@ -34,10 +33,10 @@ function error(message: string, e?: any, callback?: () => void): void {
 export default {
 
     success,
-    info(message: string) {
+    info(message: any) {
         Message.info({
             closable: true,
-            content: message + ''
+            content: typeof message === 'string' ? message : JSON.stringify(message)
         });
     },
     warning(message: string) {
