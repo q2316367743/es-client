@@ -3,7 +3,7 @@
         <!-- 标题 -->
         <div class="title">
             <a-link type="primary" :style="{color: indexStateTitle}" @click="indexInfo">{{ index?.name }}</a-link>
-            <div class="url-copy" @click="execCopy(index?.name)">复制</div>
+            <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
         </div>
         <!-- 详细 -->
         <div class="detail">
@@ -258,19 +258,21 @@ export default defineComponent({
 
     .title {
         display: flex;
+        height: 40px;
 
         .arco-link {
             font-size: 24px;
             font-weight: bold;
         }
 
-        .url-copy {
-            margin-top: 4px;
+        .arco-btn {
+            margin: 6px;
         }
+
     }
 
     .detail {
-        margin-top: 10px;
+        margin-top: 24px;
         color: var(--text-color);
     }
 
@@ -282,7 +284,7 @@ export default defineComponent({
 
     .alias {
         position: absolute;
-        top: 40px;
+        top: 50px;
         right: 102px;
     }
 

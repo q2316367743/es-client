@@ -1,5 +1,5 @@
 <template>
-    <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close :footer="false">
+    <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close :footer="false" popup-container="#main">
         <div class="bsh-manage">
             <a-tabs v-model:active-key="active" class="history-manage-tabs">
                 <a-tab-pane title="临时" key="temp"></a-tab-pane>

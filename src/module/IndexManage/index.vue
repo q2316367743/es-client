@@ -1,6 +1,6 @@
 <template>
     <a-drawer :title="index" class="index-manage-drawer" v-model:visible="drawer" width="60%" render-to-body
-              unmount-on-close>
+              unmount-on-close popup-container="#main">
         <div class="index-manage">
             <a-tabs v-model:active-key="active" class="tab">
                 <a-tab-pane title="总览" key="1"/>

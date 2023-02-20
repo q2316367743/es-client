@@ -39,7 +39,7 @@
                     </template>
                 </vxe-list>
             </a-spin>
-            <a-back-top target-container=".vxe-list--virtual-wrapper"/>
+            <a-back-top target-container=".home-container .vxe-list--virtual-wrapper"/>
         </div>
         <div class="home-statistics" v-if="url">
             <div class="bridge" type="primary">
@@ -328,7 +328,7 @@ export default defineComponent({
 
     .home-container {
         position: absolute;
-        top: 45px;
+        top: 35px;
         left: 0;
         right: 5px;
         bottom: 26px;

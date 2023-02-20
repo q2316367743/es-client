@@ -165,7 +165,7 @@
             <feedback-module v-if="feedbackDialog"/>
         </a-modal>
         <a-drawer title="通知中心" v-model:visible="notificationDrawer" :close-on-click-modal="false" render-to-body
-                  unmount-on-close width="350px" :footer="false">
+                  unmount-on-close width="350px" :footer="false" popup-container="#main">
             <notification-manage/>
         </a-drawer>
     </a-config-provider>
