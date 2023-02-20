@@ -50,7 +50,8 @@ export default class VersionManage {
             httpStrategyContext.getStrategy().fetch<Log>({
                 url: Constant.updater,
                 method: 'GET',
-                responseType: "json"
+                responseType: "json",
+                hidden: true
             }).then(content => {
                 if (content.sign > Constant.sign) {
                     // 存在更新

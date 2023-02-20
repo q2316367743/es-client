@@ -299,7 +299,8 @@ export default defineComponent({
             httpStrategyContext.getStrategy().es<any>({
                 url: request.link,
                 method: request.method,
-                data: data
+                data: data,
+                hidden: true
             }).then((response) => {
                 this.current.result = response;
             }).catch((e) => {

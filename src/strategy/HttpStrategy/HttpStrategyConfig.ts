@@ -31,5 +31,10 @@ export default interface HttpStrategyConfig extends AxiosRequestConfig{
      * 请求头
      */
     headers?: Record<string, any>;
+
+    /**
+     * 是否隐藏
+     */
+    hidden?: boolean;
     
 }

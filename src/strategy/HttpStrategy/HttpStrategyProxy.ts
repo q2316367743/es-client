@@ -56,7 +56,9 @@ export default class HttpStrategyProxy {
             this.fetchSelf(config).then(rsp => {
                 resolve(rsp);
             }).catch(reason => {
-                useNotificationStore().http(config, reason);
+                if (config.hidden !== true) {
+                    useNotificationStore().http(config, reason);
+                }
                 reject(reason);
             })
         });
