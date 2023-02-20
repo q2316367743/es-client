@@ -163,8 +163,7 @@ export default defineComponent({
                 auth: this.url.isAuth ? {
                     username: this.url.authUser!,
                     password: this.url.authPassword!
-                } : undefined,
-                hidden: true
+                } : undefined
             }).then((response) => {
                 this.testData = {
                     icon: 'success',

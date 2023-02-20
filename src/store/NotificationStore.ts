@@ -33,7 +33,8 @@ function notification(content: string, title: string) {
 
 const useNotificationStore = defineStore('notification', {
     state: () => ({
-        items: new Array<NotificationItem>()
+        items: new Array<NotificationItem>(),
+        hasRead: true
     }),
     actions: {
         send(content: string, title: string) {
@@ -48,13 +49,13 @@ const useNotificationStore = defineStore('notification', {
             });
         },
         /**
-         * 发送一共消息
+         * 新增一共消息
          * @param item 消息
          */
         add(item: NotificationItem) {
             notification(item.body, item.title);
-            item.read = true;
             this.items.push(item);
+            this.hasRead = false;
         },
         http(config: HttpStrategyConfig, body: any) {
             let now = new Date();
@@ -75,16 +76,10 @@ const useNotificationStore = defineStore('notification', {
             });
         },
         /**
-         * 读一个消息
-         * @param id 消息ID
+         * 消息已读
          */
-        read(id: number) {
-            for (let item of this.items) {
-                if (item.id == id) {
-                    item.read = true;
-                    return;
-                }
-            }
+        read() {
+            this.hasRead = true;
         }
     }
 });

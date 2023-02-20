@@ -37,14 +37,14 @@
                         </div>
                     </template>
                     <template #extra="nodeData">
-                        <div class="index-mapping-mapper-option">
-                            <a-button type="text" status="danger" :disabled="nodeData.key === 'root' || readOnly"
+                        <div class="index-mapping-mapper-option" v-if="!readOnly">
+                            <a-button type="text" status="danger" :disabled="nodeData.key === 'root'"
                                       @click="() => removeChildNode(nodeData)">
                                 <template #icon>
                                     <icon-close/>
                                 </template>
                             </a-button>
-                            <a-button type="text" status="normal" :disabled="!allowAdd(nodeData.type) || readOnly"
+                            <a-button type="text" status="normal" :disabled="!allowAdd(nodeData.type)"
                                       @click="() => addChildNode(nodeData)">
                                 <template #icon>
                                     <icon-plus/>

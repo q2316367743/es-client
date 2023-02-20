@@ -26,11 +26,6 @@ export interface NotificationItem {
     type: 'original' |  'http'
 
     /**
-     * 是否读取
-     */
-    read?: boolean;
-
-    /**
      * 内容
      */
     body: string;

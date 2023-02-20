@@ -17,7 +17,7 @@
             </a-spin>
         </div>
         <template #footer>
-            <a-dropdown trigger="click" @command="indexManage">
+            <a-dropdown trigger="click" @select="indexManage">
                 <a-button type="primary">
                     管理
                     <icon-up/>

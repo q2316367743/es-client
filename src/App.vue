@@ -1,6 +1,6 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <a-config-provider :locale="locale" size="medium">
+    <a-config-provider :locale="locale" size="medium" global>
         <div id="app" :class="Constant.mode === 'desktop'?'desktop': ''">
             <!-- 顶部菜单栏 -->
             <header id="header" data-tauri-drag-region>
@@ -40,10 +40,12 @@
                 <div class="right">
                     <!-- 各种信息弹框 -->
                     <info class-name="menu-item" :disabled="loading"/>
-                    <!-- 主题切换 -->
+                    <!-- 通知中心 -->
                     <a-button class="menu-item" type="text" status="normal" :disabled="loading"
-                              @click="notificationDrawer = true">
-                        <icon-notification/>
+                              @click="openNotification">
+                        <a-badge :count="hasRead ? 0 : 1" dot>
+                            <icon-notification/>
+                        </a-badge>
                     </a-button>
                     <!-- 主题切换 -->
                     <a-button class="menu-item" @click="darkChange" type="text" status="normal" :disabled="loading">
@@ -165,7 +167,7 @@
             <feedback-module v-if="feedbackDialog"/>
         </a-modal>
         <a-drawer title="通知中心" v-model:visible="notificationDrawer" :close-on-click-modal="false" render-to-body
-                  unmount-on-close width="350px" :footer="false" popup-container="#main">
+                  unmount-on-close width="350px" :footer="false" popup-container="#main" :closable="false">
             <notification-manage/>
         </a-drawer>
     </a-config-provider>
@@ -210,6 +212,7 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import useLoadingStore from "@/store/LoadingStore";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import WindowStrategyUtil from "@/strategy/WindowStrategy/WindowStrategyUtil";
+import useNotificationStore from "@/store/NotificationStore";
 
 export default defineComponent({
     components: {
@@ -252,6 +255,7 @@ export default defineComponent({
         ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status']),
         ...mapState(useSettingStore, ['instance']),
         ...mapState(useLoadingStore, ['loading', 'text']),
+        ...mapState(useNotificationStore, ['hasRead']),
         jsonTheme() {
             if (isDark.value) {
                 return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('atom-one-dark');
@@ -344,7 +348,7 @@ export default defineComponent({
 
         // 打开通知中心
         emitter.on(MessageEventEnum.OPEN_NOTIFICATION_MANAGE, () => {
-            this.notificationDrawer = true;
+            this.openNotification()
         })
     },
     methods: {
@@ -418,7 +422,11 @@ export default defineComponent({
         },
         toMin: () => windowStrategyContext.getStrategy().min(),
         toMax: () => windowStrategyContext.getStrategy().max(),
-        toClose: () => windowStrategyContext.getStrategy().close()
+        toClose: () => windowStrategyContext.getStrategy().close(),
+        openNotification() {
+            this.notificationDrawer = true;
+            useNotificationStore().read();
+        }
     },
 });
 </script>
