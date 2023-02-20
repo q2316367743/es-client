@@ -65,10 +65,14 @@
                     </a-button>
                 </a-form-item>
             </a-collapse-item>
-            <a-collapse-item :header="$t('setting.base.http.title')" key="4">
-                <a-form-item :label="$t('setting.base.http.timeout')">
+            <a-collapse-item :header="$t('setting.base.time.title')" key="4">
+                <a-form-item :label="$t('setting.base.time.timeout')">
                     <a-input-number controls-position="right" v-model="instance.timeout" :min="0" :step="1000"
-                                    :placeholder="$t('setting.base.http.timeoutPlaceholder')"></a-input-number>
+                                    :placeholder="$t('setting.base.time.timeoutPlaceholder')"></a-input-number>
+                </a-form-item>
+                <a-form-item label="通知关闭时间">
+                    <a-input-number controls-position="right" v-model="instance.notificationTime" :min="0" :step="1000"
+                                    placeholder="单位（ms）"></a-input-number>
                 </a-form-item>
             </a-collapse-item>
             <a-collapse-item :header="$t('setting.base.display.title')" key="5">

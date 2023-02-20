@@ -3,7 +3,7 @@
     <a-config-provider :locale="locale" size="medium" global>
         <div id="app" :class="Constant.mode === 'desktop'?'desktop': ''">
             <!-- 顶部菜单栏 -->
-            <header id="header" data-tauri-drag-region>
+            <header id="header" data-tauri-drag-region @click="closeNotification">
                 <div class="left">
                     <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
                     <a-button type="text" status="normal" class="full-screen" @click="collapsed = !collapsed"
@@ -42,7 +42,7 @@
                     <info class-name="menu-item" :disabled="loading"/>
                     <!-- 通知中心 -->
                     <a-button class="menu-item" type="text" status="normal" :disabled="loading"
-                              @click="openNotification">
+                              @click.stop="openNotification">
                         <a-badge :count="hasRead ? 0 : 1" dot>
                             <icon-notification/>
                         </a-badge>
@@ -426,6 +426,9 @@ export default defineComponent({
         openNotification() {
             this.notificationDrawer = true;
             useNotificationStore().read();
+        },
+        closeNotification() {
+            this.notificationDrawer = false;
         }
     },
 });

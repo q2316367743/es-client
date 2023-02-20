@@ -1,17 +1,18 @@
 import {defineStore} from "pinia";
-import {NotificationItem} from "@/domain/NotificationItem";
-import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import {Button, Notification} from "@arco-design/web-vue";
 import {h} from "vue";
+import {NotificationItem} from "@/domain/NotificationItem";
+import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import useSettingStore from "@/store/SettingStore";
 
 function notification(content: string, title: string) {
     let notificationReturn = Notification.info({
         content,
         title,
         closable: true,
-        duration: 10 * 1000,
+        duration: useSettingStore().getNotificationTime,
         footer: () => h('div', [
             h(Button, {
                 type: 'text',

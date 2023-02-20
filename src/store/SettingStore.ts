@@ -20,6 +20,7 @@ function getDefaultValue(): Setting {
 
         // http设置
         timeout: 5000,
+        notificationTime: 5000,
 
         // 全局索引查询条件
         homeSearchState: 0,
@@ -58,6 +59,7 @@ const useSettingStore = defineStore('setting', {
         getDefaultViewer: (state) => ArrayUtil.contains([1, 2, 3], state.instance.defaultViewer) ? state.instance.defaultViewer : 1,
         getPageSize: (state): number => state.instance.pageSize,
         getTimeout: (state): number => Optional.ofNullable(state.instance.timeout).orElse(5000),
+        getNotificationTime: (state): number => Optional.ofNullable(state.instance.notificationTime).orElse(5000),
         getAutoFullScreen: (state): boolean => state.instance.autoFullScreen,
         getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
         getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>()),

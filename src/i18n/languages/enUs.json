@@ -139,10 +139,10 @@
                 "pageSize": "Default Page Size",
                 "title": "Display Setting"
             },
-            "http": {
+            "time": {
                 "timeout": "Timeout",
                 "timeoutPlaceholder": "Please enter the timeout in ms",
-                "title": "HTTP Setting"
+                "title": "Time Setting"
             },
             "layout": {
                 "mode": {

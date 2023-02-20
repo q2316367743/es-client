@@ -1,11 +1,13 @@
 import {Button, Notification} from "@arco-design/web-vue";
 import {h} from "vue";
+import useSettingStore from "@/store/SettingStore";
 
 export default {
     success(content: string, title?: string): void {
         Notification.success({
             content,
             title,
+            duration: useSettingStore().getNotificationTime,
             closable: true
         })
     },
@@ -13,6 +15,7 @@ export default {
         Notification.info({
             content,
             title,
+            duration: useSettingStore().getNotificationTime,
             closable: true,
         })
     },
@@ -20,6 +23,7 @@ export default {
         Notification.warning({
             content,
             title,
+            duration: useSettingStore().getNotificationTime,
             closable: true
         })
     },
@@ -27,6 +31,7 @@ export default {
         Notification.error({
             content,
             title,
+            duration: useSettingStore().getNotificationTime,
             closable: true
         })
     },
@@ -41,7 +46,7 @@ export default {
                 content,
                 title,
                 closable: true,
-                duration: 10 * 1000,
+                duration: useSettingStore().getNotificationTime,
                 footer: () => h('div', [
                     h(Button, {
                         type: 'text',

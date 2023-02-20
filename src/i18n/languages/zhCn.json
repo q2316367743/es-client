@@ -139,10 +139,10 @@
                 "pageSize": "默认分页大小",
                 "title": "显示设置"
             },
-            "http": {
+            "time": {
                 "timeout": "超时时间",
                 "timeoutPlaceholder": "请输入超时时间，单位（ms）",
-                "title": "HTTP设置"
+                "title": "时间相关设置"
             },
             "layout": {
                 "mode": {
