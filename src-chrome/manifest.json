@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "es-client",
+    "version": "2.6.0",
+    "description": "elasticsearch管理客户端",
+    "content_security_policy": {
+        "script-src": "self",
+        "object-src": "self"
+    },
+    "action": {
+        "icons": {
+            "16": "icons/logo_200.png"
+        }
+    },
+    "icons": {
+        "16": "icons/logo_200.png"
+    },
+    "background": {
+        "service_worker": "src/serviceWorker.js",
+        "type": "module"
+    },
+    "permissions": [
+        "tabs"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ]
+}

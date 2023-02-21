@@ -1,0 +1,1 @@
+chrome.action.onClicked.addListener(() => chrome.tabs.create({ 'url': chrome.runtime.getURL('es-client/index.html') }));
