@@ -81,6 +81,10 @@ const useNotificationStore = defineStore('notification', {
          */
         read() {
             this.hasRead = true;
+        },
+        clear() {
+            this.hasRead =true;
+            this.items = [];
         }
     }
 });

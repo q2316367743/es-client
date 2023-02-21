@@ -1,23 +1,23 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
     <a-config-provider :locale="locale" size="medium" global>
-        <div id="app" :class="Constant.mode === 'desktop'?'desktop': ''">
+        <div id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
             <!-- 顶部菜单栏 -->
             <header id="header" data-tauri-drag-region @click="closeNotification">
                 <div class="left">
                     <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
                     <a-button type="text" status="normal" class="full-screen" @click="collapsed = !collapsed"
-                              :disabled="loading">
+                        :disabled="loading">
                         <template #icon>
-                            <icon-menu-unfold v-if="collapsed"/>
-                            <icon-menu-fold v-else/>
+                            <icon-menu-unfold v-if="collapsed" />
+                            <icon-menu-fold v-else />
                         </template>
                     </a-button>
                     <!-- 索引服务器选择 -->
-                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
-                              allow-clear @change="selectUrl" class="url-select" :loading="urlSelectLoading || loading"
-                              :show-extra-options="true">
-                        <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search allow-clear
+                        @change="selectUrl" class="url-select" :loading="urlSelectLoading || loading"
+                        :show-extra-options="true">
+                        <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id" />
                         <template #empty>
                             <div style="padding: 6px 0; text-align: center;">
                                 <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
@@ -33,29 +33,29 @@
                     </a-select>
                     <!-- 刷新按钮 -->
                     <a-button class="refresh" @click="refresh" :disabled="loading || !urlId || urlId === ''">{{
-                            $t('common.operation.refresh')
-                        }}
+                        $t('common.operation.refresh')
+                    }}
                     </a-button>
                 </div>
                 <div class="right">
                     <!-- 各种信息弹框 -->
-                    <info class-name="menu-item" :disabled="loading"/>
+                    <info class-name="menu-item" :disabled="loading" />
                     <!-- 通知中心 -->
                     <a-button class="menu-item" type="text" status="normal" :disabled="loading"
-                              @click.stop="openNotification">
+                        @click.stop="openNotification">
                         <a-badge :count="hasRead ? 0 : 1" dot>
-                            <icon-notification/>
+                            <icon-notification />
                         </a-badge>
                     </a-button>
                     <!-- 主题切换 -->
                     <a-button class="menu-item" @click="darkChange" type="text" status="normal" :disabled="loading">
-                        <icon-moon :size="16" v-if="isDark"/>
-                        <icon-sun :size="16" v-else/>
+                        <icon-moon :size="16" v-if="isDark" />
+                        <icon-sun :size="16" v-else />
                     </a-button>
                     <!-- 多语言切换 -->
                     <a-dropdown @select="languageCommand" trigger="click">
                         <a-button class="menu-item" type="text" status="normal" :disabled="loading">
-                            <icon-language :size="16"/>
+                            <icon-language :size="16" />
                         </a-button>
                         <template #content>
                             <a-doption value="zhCn">中文</a-doption>
@@ -65,8 +65,8 @@
                     <!-- 版本 -->
                     <a-dropdown @select="versionCommand">
                         <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
-                                Constant.version
-                            }}
+                            Constant.version
+                        }}
                         </a-button>
                         <template #content>
                             <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
@@ -76,27 +76,24 @@
                         </template>
                     </a-dropdown>
                     <!-- 最小化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.min || urlSelectLoading"
-                              v-if="optionShow.visibility"
-                              @click="toMin">
+                    <a-button class="menu-item" :disabled="!optionShow.min || urlSelectLoading" v-if="optionShow.visibility"
+                        @click="toMin">
                         <template #icon>
-                            <icon-minus/>
+                            <icon-minus />
                         </template>
                     </a-button>
                     <!-- 最大化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.max || urlSelectLoading"
-                              v-if="optionShow.visibility"
-                              @click="toMax">
+                    <a-button class="menu-item" :disabled="!optionShow.max || urlSelectLoading" v-if="optionShow.visibility"
+                        @click="toMax">
                         <template #icon>
-                            <icon-copy/>
+                            <icon-copy />
                         </template>
                     </a-button>
                     <!-- 关闭 -->
                     <a-button class="menu-item" :disabled="!optionShow.close || urlSelectLoading"
-                              v-if="optionShow.visibility"
-                              @click="toClose">
+                        v-if="optionShow.visibility" @click="toClose">
                         <template #icon>
-                            <icon-close/>
+                            <icon-close />
                         </template>
                     </a-button>
                 </div>
@@ -104,35 +101,35 @@
             <a-spin :loading="loading" :tip="text" class="global-spin">
                 <!-- 主页面 -->
                 <div id="main">
-                    <div id="navigation" :style="{width: collapsed ? '50px' : '184px'}">
+                    <div id="navigation" :style="{ width: collapsed ? '50px' : '184px' }">
                         <a-menu :collapsed="collapsed" v-model:selected-keys="selectedKeys" breakpoint="x1">
                             <a-menu-item :key="PageNameEnum.HOME">
                                 <template #icon>
-                                    <icon-home/>
+                                    <icon-home />
                                 </template>
                                 {{ $t('menu.home') }}
                             </a-menu-item>
                             <a-menu-item :key="PageNameEnum.DATA_BROWSER">
                                 <template #icon>
-                                    <icon-apps/>
+                                    <icon-apps />
                                 </template>
                                 {{ $t('menu.dataBrowser') }}
                             </a-menu-item>
                             <a-menu-item :key="PageNameEnum.BASE_SEARCH">
                                 <template #icon>
-                                    <icon-search/>
+                                    <icon-search />
                                 </template>
                                 {{ $t('menu.baseSearch') }}
                             </a-menu-item>
                             <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
                                 <template #icon>
-                                    <icon-filter/>
+                                    <icon-filter />
                                 </template>
                                 {{ $t('menu.seniorSearch') }}
                             </a-menu-item>
                             <a-menu-item :key="PageNameEnum.SETTING">
                                 <template #icon>
-                                    <icon-settings/>
+                                    <icon-settings />
                                 </template>
                                 {{ $t('menu.setting') }}
                             </a-menu-item>
@@ -150,26 +147,23 @@
             </a-spin>
         </div>
         <!-- 保存或新增URL弹窗 -->
-        <save-or-update-url/>
-        <index-manage/>
-        <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')"
-                 mask-closable draggable lock-scroll width="600px">
-            <version-update v-if="updateDialog"/>
+        <save-or-update-url />
+        <index-manage />
+        <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')" mask-closable draggable lock-scroll
+            width="600px">
+            <version-update v-if="updateDialog" />
         </a-modal>
-        <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog"
-                 mask-closable render-to-body draggable top="5vh" width="600px">
+        <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog" mask-closable render-to-body
+            draggable top="5vh" width="600px">
             <a-scrollbar height="calc(80vh - 54px)">
-                <setting-about v-if="newDialog"/>
+                <setting-about v-if="newDialog" />
             </a-scrollbar>
         </a-modal>
-        <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh"
-                 :close-on-click-modal="false" render-to-body draggable unmount-on-close>
-            <feedback-module v-if="feedbackDialog"/>
+        <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh" :close-on-click-modal="false"
+            render-to-body draggable unmount-on-close>
+            <feedback-module v-if="feedbackDialog" />
         </a-modal>
-        <a-drawer title="通知中心" v-model:visible="notificationDrawer" :close-on-click-modal="false" render-to-body
-                  unmount-on-close width="350px" :footer="false" popup-container="#main" :closable="false">
-            <notification-manage/>
-        </a-drawer>
+        <notification-manage v-model="notificationDrawer" />
     </a-config-provider>
 </template>
 
@@ -179,8 +173,8 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
 // 引入框架
-import {defineAsyncComponent, defineComponent} from 'vue';
-import {mapState} from "pinia";
+import { defineAsyncComponent, defineComponent } from 'vue';
+import { mapState } from "pinia";
 import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
 import zhCn from '@arco-design/web-vue/es/locale/lang/zh-cn';
 // 模块
