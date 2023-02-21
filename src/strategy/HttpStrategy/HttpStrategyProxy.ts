@@ -3,6 +3,7 @@ import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
 import useNotificationStore from "@/store/NotificationStore";
+import HttpStrategyError from "./HttpStrategyError";
 
 export default class HttpStrategyProxy {
 
@@ -55,9 +56,12 @@ export default class HttpStrategyProxy {
         return new Promise<T>((resolve, reject) => {
             this.fetchSelf(config).then(rsp => {
                 resolve(rsp);
-            }).catch(reason => {
+            }).catch((reason: HttpStrategyError) => {
                 if (config.hidden !== true) {
                     useNotificationStore().http(config, reason);
+                }
+                if(reason.code === 401) {
+                    console.log('401异常')
                 }
                 reject(reason);
             })

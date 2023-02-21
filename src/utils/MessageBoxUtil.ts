@@ -1,5 +1,5 @@
-import {Input, Modal} from "@arco-design/web-vue";
-import {h, VNode} from "vue";
+import { Input, InputPassword, Modal } from "@arco-design/web-vue";
+import { h, VNode } from "vue";
 import Optional from "@/utils/Optional";
 
 export default {
@@ -65,7 +65,7 @@ export default {
                 value = e;
             }
             Modal.confirm({
-                content: () => h('div', {class: 'es-prompt'}, [
+                content: () => h('div', { class: 'es-prompt' }, [
                     h('div', {}, content),
                     // @ts-ignore
                     h(Input, {
@@ -79,6 +79,65 @@ export default {
                                 .item(0)!
                                 .focus();
                         }
+                    })
+                ]),
+                title: '提示',
+                draggable: true,
+                okText: config.confirmButtonText,
+                cancelText: config.cancelButtonText,
+                onOk: () => {
+                    resolve(value);
+                },
+                onCancel: () => {
+                    reject('cancel');
+                },
+                onClose: () => {
+                    reject('close');
+                }
+            })
+        })
+    },
+
+    password(content: string, title: string, config: {
+        confirmButtonText?: string,
+        cancelButtonText?: string
+    }): Promise<{
+        username: string;
+        password: string;
+    }> {
+        return new Promise<{
+            username: string;
+            password: string;
+        }>((resolve, reject) => {
+            let value = {
+                username: '',
+                password: ''
+            };
+            const onUsernameInput = (e: string) => {
+                value.username = e;
+            }
+            const onPasswordInput = (e: string) => {
+                value.username = e;
+            }
+            Modal.confirm({
+                content: () => h('div', { class: 'es-prompt' }, [
+                    h('div', {}, content),
+                    // @ts-ignore
+                    h(Input, {
+                        type: 'text',
+                        onInput: onUsernameInput,
+                        style: 'margin-top: 8px;',
+                        onVnodeMounted: (e: VNode) => {
+                            (e.el as HTMLInputElement)
+                                .getElementsByTagName("input")
+                                .item(0)!
+                                .focus();
+                        }
+                    }),
+                    h(InputPassword, {
+                        type: 'text',
+                        onInput: onPasswordInput,
+                        style: 'margin-top: 8px;'
                     })
                 ]),
                 title: '提示',

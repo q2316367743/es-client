@@ -1,8 +1,9 @@
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
 // 引入tauri
-import {Body, fetch, HttpVerb, Response} from '@tauri-apps/api/http';
+import { Body, fetch, HttpVerb, Response } from '@tauri-apps/api/http';
 import Optional from "@/utils/Optional";
+import HttpStrategyError from "../HttpStrategyError";
 
 export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -35,10 +36,15 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
                     resolve(response.data);
                 } else {
                     reject({
-                        response: {
-                            data: response.data
-                        }
-                    })
+                        code: response.status,
+                        // response.data.error.reason
+                        reason: Optional.ofNullable(response)
+                            .attr("data")
+                            .attr("error")
+                            .attr("reason")
+                            .orElse(""),
+                        data: response.data
+                    } as HttpStrategyError)
                 }
             } else {
                 reject({
@@ -50,10 +56,10 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
         }).catch((reason: any) => {
             console.error(reason)
             reject({
-                response: {
-                    data: reason
-                }
-            })
+                code: reason.response.data.status,
+                reason: reason.response.data.error.reason,
+                data: reason
+            } as HttpStrategyError)
         });
     });
 }
