@@ -2,12 +2,10 @@
     <a-spin :loading="loading" tip="数据查询中">
         <div class="senior-search">
             <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                      v-if="instance.showTab" class="senior-search-tab"
-                      @option-tab="optionTab"/>
+                v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab" />
             <!-- 下半部分 -->
             <!-- 左面查询条件 -->
-            <a-split class="senior-main" min="42px" :style="{top: instance.showTab ? '40px' : '0'}"
-                     default-size="400px">
+            <a-split class="senior-main" min="42px" :style="{ top: instance.showTab ? '40px' : '0' }" default-size="400px">
                 <template #first>
                     <div class="side">
                         <div class="option">
@@ -16,85 +14,85 @@
                                 position="right">
                                 <a-button type="text" :status="header.relationId ? 'danger' : 'success'" @click="save">
                                     <template #icon>
-                                        <icon-save :size="18"/>
+                                        <icon-save :size="18" />
                                     </template>
                                 </a-button>
                             </a-tooltip>
                             <a-tooltip :content="$t('common.operation.format')" position="right">
                                 <a-button type="text" status="normal" @click="formatDocument">
                                     <template #icon>
-                                        <icon-code/>
+                                        <icon-code />
                                     </template>
                                 </a-button>
                             </a-tooltip>
                             <a-tooltip content="清空" position="right">
                                 <a-button type="text" status="normal" @click="clearBody">
                                     <template #icon>
-                                        <format-icon/>
+                                        <format-icon />
                                     </template>
                                 </a-button>
                             </a-tooltip>
                             <a-tooltip :content="viewTip" position="right">
                                 <a-button type="text" status="normal" @click="view = (view === 2) ? 3 : 2">
                                     <template #icon>
-                                        <icon-code-block :size="18" v-if="view === 2"/>
-                                        <icon-nav :size="18" v-else-if="view === 3"/>
-                                        <view-icon :size="18" v-else/>
+                                        <icon-code-block :size="18" v-if="view === 2" />
+                                        <icon-nav :size="18" v-else-if="view === 3" />
+                                        <view-icon :size="18" v-else />
                                     </template>
                                 </a-button>
                             </a-tooltip>
                             <a-tooltip content="编辑器设置" position="right">
                                 <a-button type="text" status="normal" @click="settingDialog = true">
                                     <template #icon>
-                                        <icon-settings :size="18"/>
+                                        <icon-settings :size="18" />
                                     </template>
                                 </a-button>
                             </a-tooltip>
                             <a-tooltip content="帮助" position="right">
                                 <a-button type="text" status="normal" @click="openHelp">
                                     <template #icon>
-                                        <icon-question-circle :size="18"/>
+                                        <icon-question-circle :size="18" />
                                     </template>
                                 </a-button>
                             </a-tooltip>
                         </div>
                         <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
-                                            @execute="execute"/>
+                            @execute="execute" />
                     </div>
                 </template>
                 <template #second>
                     <div class="senior-display">
                         <a-tabs v-model:active-key="displayActive" class="senior-display-tabs">
-                            <a-tab-pane title="结果" key="result"/>
-                            <a-tab-pane title="请求记录" key="search"/>
-                            <a-tab-pane title="历史记录" key="history"/>
+                            <a-tab-pane title="结果" key="result" />
+                            <a-tab-pane title="请求记录" key="search" />
+                            <a-tab-pane title="历史记录" key="history" />
                         </a-tabs>
                         <div class="senior-display-content">
                             <!-- 结果集渲染 -->
-                            <data-view v-show="displayActive === 'result'" :view="view" :result="current.result"/>
+                            <data-view v-show="displayActive === 'result'" :view="view" :result="current.result" />
                             <!-- 请求记录 -->
-                            <senior-search-record v-show="displayActive === 'search'"/>
+                            <senior-search-record v-show="displayActive === 'search'" />
                             <!-- 历史记录 -->
-                            <senior-search-history v-show="displayActive === 'history'"/>
+                            <senior-search-history v-show="displayActive === 'history'" />
                         </div>
                     </div>
-                    <a-back-top target-container=".senior-content .el-scrollbar__wrap" v-show="showTop"/>
+                    <a-back-top target-container=".senior-content .el-scrollbar__wrap" v-show="showTop" />
                 </template>
             </a-split>
         </div>
-        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body
-                 width="600px" :footer="false">
-            <senior-search-setting @close="settingDialog = false"/>
+        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body width="600px"
+            :footer="false">
+            <senior-search-setting @close="settingDialog = false" />
         </a-modal>
     </a-spin>
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, defineComponent} from "vue";
-import {mapState} from "pinia";
+import { defineAsyncComponent, defineComponent } from "vue";
+import { mapState } from "pinia";
 
 import './index.less';
-import {SeniorSearchItem, SeniorSearchItemBody} from './domain/SeniorSearchItem';
+import { SeniorSearchItem, SeniorSearchItemBody } from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 import emitter from '@/plugins/mitt';
@@ -126,7 +124,7 @@ import DataView from "@/components/DataView/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
-import {requestBuild} from "@/page/SeniorSearch/build/RequestBuild";
+import { requestBuild } from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
 
 // 图标
@@ -166,6 +164,7 @@ export default defineComponent({
         };
         searchMap.set(searchId, searchItem);
         return {
+            // 标签信息
             header: searchItem.header as TabMenuItem,
             // 展示数据
             current: searchItem.body as SeniorSearchItemBody,
@@ -503,11 +502,11 @@ export default defineComponent({
         },
         clearBody() {
             this.current.body = '';
+            this.header.relationId = undefined;
+            this.current.result = {};
         }
     },
 });
 </script>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>
