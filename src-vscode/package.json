@@ -20,9 +20,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:es-client.command.open"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
