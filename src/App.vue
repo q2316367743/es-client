@@ -277,11 +277,12 @@ export default defineComponent({
             this.urlSelectLoading = false;
             // 刷新索引列表
             useUrlStore().reset(() => {
-                // utools第一次进入事件
+                // utools/vscode第一次进入事件
                 let code = sessionStorage.getItem('action');
+                console.log('当前的code：', code)
                 if (code && code !== 'application') {
                     let id = parseInt(code);
-                    if (isNaN(id)) {
+                    if (Number.isInteger(id)) {
                         this.selectUrl(id);
                     }
                 } else {
@@ -300,6 +301,16 @@ export default defineComponent({
                 }
                 // 删除sessionStorage
                 sessionStorage.removeItem('action');
+                // vscode事件
+                window.addEventListener('message', event => {
+                    const message = event.data;
+                    if (message['type'] === 'url-open') {
+                        let id = parseInt(message['content']);
+                        if (Number.isInteger(id)) {
+                            this.selectUrl(id);
+                        }
+                    }
+                });
             });
             // 未完全退出事件
             useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
@@ -343,7 +354,19 @@ export default defineComponent({
         // 打开通知中心
         emitter.on(MessageEventEnum.OPEN_NOTIFICATION_MANAGE, () => {
             this.openNotification()
-        })
+        });
+
+        if (Constant.platform === 'vscode') {
+            // vscode需要实现主题自适应
+            let theme = document.body.className;
+            if (theme === 'vscode-light') {
+                // 浅色主题
+                isDark.value = false;
+            } else if (theme === 'vscode-dark') {
+                // 黑夜主题
+                isDark.value = true;
+            }
+        }
     },
     methods: {
         async selectUrl(value: any) {

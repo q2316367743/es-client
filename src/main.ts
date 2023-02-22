@@ -28,6 +28,13 @@ if (window.utools) {
     });
 }
 
+window.addEventListener('message', event => {
+	const message = event.data;
+    if(message['type'] === 'url-open') {
+        sessionStorage.setItem('action', message['content']);
+    }
+});
+
 // 插件
 createApp(App)
     .use(store)

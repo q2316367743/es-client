@@ -1,8 +1,9 @@
+import { type } from "os";
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
 import { getUri } from "../utils/getUri";
 
 const cssList = ['index-e1faed21.css'];
-const jsPath = 'index-7d2bc783.js';
+const jsPath = 'index-06c018c6.js';
 const moduleList = ['Optional-5aba4012.js', 'MessageUtil-1ade0a86.js', 'BrowserUtil-07f57a05.js', 'UrlStore-46299021.js'];
 
 /**
@@ -40,34 +41,10 @@ export class EsClientPanel {
         this._setWebviewMessageListener(this._panel.webview);
     }
 
-    /**
-     * 如果当前webview面板存在，则呈现该面板，否则将创建并显示新的webview面板。
-     *
-     * @param extensionUri 包含扩展名的目录的URI。
-     */
-    public static render(extensionUri: Uri) {
-        if (EsClientPanel.currentPanel) {
-            // 如果webview面板已经存在，请将其显示出来
-            EsClientPanel.currentPanel._panel.reveal(ViewColumn.One);
-        } else {
-            // If a webview panel does not already exist create and show a new one
-            const panel = window.createWebviewPanel(
-                // 面板视图类型
-                "showEsClient",
-                // 面板标题
-                "es-client",
-                // 显示面板的编辑器列
-                ViewColumn.One,
-                // 额外面板配置
-                {
-                    // 在Web视图中启用JavaScript
-                    enableScripts: true,
-                    // 限制webview仅从“es-client”目录加载资源
-                    localResourceRoots: [Uri.joinPath(extensionUri, "es-client")],
-                }
-            );
-
-            EsClientPanel.currentPanel = new EsClientPanel(panel, extensionUri);
+    public sendMessage(message: Message) {
+        if (this._panel) {
+            // 存在面板
+            this._panel.webview.postMessage(message);
         }
     }
 
@@ -152,4 +129,65 @@ export class EsClientPanel {
             this._disposables
         );
     }
+
+    /**
+     * 如果当前webview面板存在，则呈现该面板，否则将创建并显示新的webview面板。
+     *
+     * @param extensionUri 包含扩展名的目录的URI。
+     */
+    public static render(extensionUri: Uri) {
+        if (EsClientPanel.currentPanel) {
+            // 如果webview面板已经存在，请将其显示出来
+            EsClientPanel.currentPanel._panel.reveal(ViewColumn.One);
+        } else {
+            // If a webview panel does not already exist create and show a new one
+            const panel = window.createWebviewPanel(
+                // 面板视图类型
+                "showEsClient",
+                // 面板标题
+                "es-client",
+                // 显示面板的编辑器列
+                ViewColumn.One,
+                // 额外面板配置
+                {
+                    // 在Web视图中启用JavaScript
+                    enableScripts: true,
+                    // webview被隐藏时保持状态，避免被重置
+                    retainContextWhenHidden: true,
+                    // 限制webview仅从“es-client”目录加载资源
+                    localResourceRoots: [Uri.joinPath(extensionUri, "es-client")],
+                }
+            );
+
+            EsClientPanel.currentPanel = new EsClientPanel(panel, extensionUri);
+        }
+    }
+
+    /**
+     * 发送一个url打开消息
+     * 
+     * @param urlId url的ID
+     */
+    public static sendUrlMessage(type: MessageType, urlId: string, extensionUri: Uri) {
+        if (!EsClientPanel.currentPanel) {
+            // 不存在，则渲染
+            this.render(extensionUri);
+        }
+        if (EsClientPanel.currentPanel) {
+            EsClientPanel.currentPanel.sendMessage({
+                type,
+                content: urlId
+            });
+        }
+    }
+}
+
+export type MessageType = 'url-open' | 'url-add' | 'url-remove' | 'url-update'
+
+export interface Message {
+
+    type: MessageType,
+
+    content: string
+
 }
