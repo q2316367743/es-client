@@ -37,3 +37,10 @@ src-server/node_modules
 /utools
 /src-server/es-client.db
 /src-electron/dist/
+
+# vscode
+
+/src-vscode/node_modules
+/src-vscode/out
+/src-vscode/.vscode-test-web
+/src-vscode/es-client

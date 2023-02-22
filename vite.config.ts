@@ -1,13 +1,13 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import {ArcoResolver} from 'unplugin-vue-components/resolvers';
+import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 
 import path from 'path'
 
 // 插件
-import {visualizer} from 'rollup-plugin-visualizer';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
@@ -31,6 +31,8 @@ function outDir() {
             return 'dist';
         case 'build:tauri:macos':
             return 'dist';
+        case 'build:vscode':
+            return 'src-vscode/es-client';
         default:
             return 'dist';
     }
@@ -44,15 +46,15 @@ export default defineConfig({
             'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
         }
     },
-    plugins: [vue(), visualizer({open: true}),
-        AutoImport({
-            resolvers: [ArcoResolver()],
-        }),
-        Components({
-            resolvers: [ArcoResolver({
-                sideEffect: true
-            })],
-        }),
+    plugins: [vue(), visualizer({ open: true }),
+    AutoImport({
+        resolvers: [ArcoResolver()],
+    }),
+    Components({
+        resolvers: [ArcoResolver({
+            sideEffect: true
+        })],
+    }),
     ],
     base: './',
     build: {

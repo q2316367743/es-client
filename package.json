@@ -13,6 +13,7 @@
         "directory": "/",
         "url": "https://gitee.com/qiaoshengda/es-client"
     },
+    "license": "Apache-2.0",
     "scripts": {
         "dev": "vite --host",
         "dev:ts": "vite --host --mode=tsbrowser",
@@ -28,6 +29,7 @@
         "build:tauri:windows": "vue-tsc --noEmit && vite build --mode=desktop_windows",
         "build:tauri:linux": "vue-tsc --noEmit && vite build --mode=desktop_linux",
         "build:tauri:macos": "vue-tsc --noEmit && vite build --mode=desktop_macos",
+        "build:vscode": "vue-tsc --noEmit && vite build --mode=vscode",
         "preview": "vite preview"
     },
     "dependencies": {

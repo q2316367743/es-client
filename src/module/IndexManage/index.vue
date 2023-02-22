@@ -141,7 +141,7 @@ export default defineComponent({
                 this.loading = false;
             })
         },
-        indexManage(command: string) {
+        indexManage(command: any) {
             this.execCommand(command).then(() => {
                 // 1. 发送索引更新事件
                 emitter.emit(MessageEventEnum.REFRESH_URL);

@@ -611,7 +611,7 @@ export default defineComponent({
                 .catch(e => MessageUtil.error("导出失败", e))
                 .finally(() => this.download.dialog = false);
         },
-        historyCommand(command: string) {
+        historyCommand(command: any) {
             switch (command) {
                 case 'save':
                     if (this.header.relationId) {
