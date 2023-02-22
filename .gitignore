@@ -43,3 +43,4 @@ src-server/node_modules
 /src-vscode/out
 /src-vscode/.vscode-test-web
 /src-vscode/es-client
+*.vsix

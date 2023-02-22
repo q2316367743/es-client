@@ -5,13 +5,10 @@ import { lodisStrategyContext } from "@/global/BeanFactory";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import DefaultUtil from "@/utils/DefaultUtil";
 
 const useEditorSettingStore = defineStore('editor-setting', {
-    state: () => ({
-        fontSize: 14,
-        minimap: false,
-        wordWrap: 'on' as 'off' | 'on' | 'wordWrapColumn' | 'bounded'
-    }),
+    state: DefaultUtil.getDefaultEditorSettingValue,
     getters: {
         getFontSize: (state): number => Optional.ofNullable(state.fontSize).orElse(16),
         getMinimap: (state): boolean => Optional.ofNullable(state.minimap).orElse(false),

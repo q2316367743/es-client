@@ -1,56 +1,23 @@
-import {defineStore} from "pinia";
-import {getDefaultLanguage} from '@/utils/GlobalUtil';
+import { defineStore } from "pinia";
+import { lodisStrategyContext } from "@/global/BeanFactory";
 import Setting from "@/domain/Setting";
+// 工具类
 import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
+import { getDefaultLanguage } from '@/utils/GlobalUtil';
+import DefaultUtil from "@/utils/DefaultUtil";
+// 枚举
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import {lodisStrategyContext} from "@/global/BeanFactory";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 
-function getDefaultValue(): Setting {
-    return {
-
-        // 布局设置
-        defaultPage: PageNameEnum.HOME,
-
-        // 新建索引
-        defaultReplica: 1,
-        defaultShard: 5,
-
-        // http设置
-        timeout: 5000,
-        notificationTime: 5000,
-
-        // 全局索引查询条件
-        homeSearchState: 0,
-        homeExcludeIndices: new Array<string>(),
-
-        // 显示设置
-        pageSize: 20,
-        defaultViewer: 2,
-        jsonFontSize: 16,
-        jsonThemeByLight: 'github',
-        jsonThemeByDark: 'github-dark',
-
-        // 标签栏设置
-        showTab: false,
-        tabLoadMode: TabLoadModeEnum.APPEND,
-        tabMaxCount: 10,
-        tabCloseMode: TabCloseModeEnum.ALERT,
-
-        // 其他设置
-        autoFullScreen: false,
-        lastUrl: false
-    };
-}
 
 const useSettingStore = defineStore('setting', {
     state: () => {
         return {
             language: getDefaultLanguage(),
-            instance: getDefaultValue()
+            instance: DefaultUtil.getDefaultSettingValue()
         }
     },
     getters: {
@@ -76,7 +43,7 @@ const useSettingStore = defineStore('setting', {
             let setting = await lodisStrategyContext.getStrategy().get<Setting>(LocalStorageKeyEnum.SETTING);
             if (setting) {
                 try {
-                    this.instance = Object.assign(getDefaultValue(), setting);
+                    this.instance = Object.assign(DefaultUtil.getDefaultSettingValue(), setting);
                 } catch (e) {
                     console.error(e);
                 }
@@ -101,7 +68,7 @@ const useSettingStore = defineStore('setting', {
             this.instance.homeExcludeIndices.splice(this.instance.homeExcludeIndices.indexOf(index), 1);
             this.sync();
         },
-        getDefaultValue,
+        getDefaultValue: DefaultUtil.getDefaultSettingValue,
         setInstance(setting: Setting) {
             this.instance = setting;
             this.sync();

@@ -1,37 +1,78 @@
-# Hello World (Vue)
+# es-client
 
-This is an implementation of the default [Hello World](https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/default/hello-world) sample extension that demonstrates how to set up and use a [Vue](https://vuejs.org/) + [Webview UI Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit) webview extension.
+[![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
+[![star](https://img.shields.io/badge/edge-v2.6.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+[![star](https://img.shields.io/badge/firefox-v2.6.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+[![star](https://img.shields.io/badge/windows-v2.6.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 
-![A screenshot of the sample extension.](./assets/hello-world-screenshot.png)
+> elasticsearch查询客户端。
+>
+> elasticsearch的客户端比较出名的就是[elasticsearch head](https://github.com/mobz/elasticsearch-head)
+> 和[Kibana](https://github.com/elastic/kibana)了，
+> 但是elasticsearch head已经停止更新，且样式老旧，功能不全；
+> 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+arco-design进行开发了一个elasticsearch的客户端。
 
-## Documentation
+## 安装 & 更新
 
-For a deeper dive into how this sample works, read the guides below.
+本项目已经推送到Firefox拓展和Edge外接程序中，但由于Edge审核比较慢，所以Firefox的更新速度会比Edge快一些，谷歌插件商店上架比较麻烦，所以并未上架。
 
-- [Extension structure](./docs/extension-structure.md)
-- [Extension commands](./docs/extension-commands.md)
-- [Extension development cycle](./docs/extension-development-cycle.md)
+### 发行版
 
-## Run The Sample
+- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+- [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+- [想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
+- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
+- [utools](https://www.u.tools/)
+
+### 存储
+
+- [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
+- [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
+- [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
+- [可道云](http://kodcloud.esion.xyz/#s/89HBcbIw)
+
+## 详细文档
+
+[语雀](https://www.yuque.com/baozhiyige-tewwf/ygxv4r)
+
+## 反馈社区
+
+[兔小巢](https://support.qq.com/products/489458)
+
+## 开发
 
 ```bash
-# Copy sample extension locally
-npx degit microsoft/vscode-webview-ui-toolkit-samples/frameworks/hello-world-vue hello-world
-
-# Navigate into sample directory
-cd hello-world
-
-# Install dependencies for both the extension and webview UI source code
-npm run install:all
-
-# Build webview UI source code
-npm run build:webview
-
-# Open sample in VS Code
-code .
+git clone https://gitee.com/qiaoshengda/es-client.git
+yarn install
+yarn dev
 ```
 
-Once the sample is open inside VS Code you can run the extension by doing the following:
+## 自行打包
 
-1. Press `F5` to open a new Extension Development Host window
-2. Inside the host window, open the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and type `Hello World (Vue): Show`
+本项目推荐使用`yarn`
+
+1. 安装依赖：`yarn install`
+2. 构建浏览器版本：`yarn build:ts`
+3. 构建Chrome插件：`yarn build:edge`
+4. 构建Firefox插件：`yarn build:firefox`
+
+## 项目预览
+
+- 首页
+  ![图片](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87.png)
+- 数据浏览
+  ![图片-1653033250795](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033250795.png)
+- 基础查询
+  ![图片-1653033209166](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033209166.png)
+- 高级查询
+  ![图片-1653033316089](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033316089.png)
+- 设置
+  ![图片-1653033335849](https://static.esion.xyz/picture/%E5%9B%BE%E7%89%87-1653033335849.png)
+
+## 项目功能
+
+- 链接管理功能
+- 索引浏览功能
+- 索引管理功能
+- 语法提示与高亮
+- 。。。

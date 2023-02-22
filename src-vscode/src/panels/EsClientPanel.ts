@@ -1,10 +1,10 @@
-import { type } from "os";
-import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
+import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn, workspace } from "vscode";
 import { getUri } from "../utils/getUri";
 
 const cssList = ['index-e1faed21.css'];
-const jsPath = 'index-06c018c6.js';
-const moduleList = ['Optional-5aba4012.js', 'MessageUtil-1ade0a86.js', 'BrowserUtil-07f57a05.js', 'UrlStore-46299021.js'];
+const jsPath = 'index-e534212a.js';
+const moduleList = ['Optional-5aba4012.js', 'MessageUtil-1ade0a86.js', 'BrowserUtil-07f57a05.js', 'UrlStore-ddc6cccb.js'];
+
 
 /**
  * 此类管理es-client Web视图面板的状态和行为。
@@ -30,22 +30,12 @@ export class EsClientPanel {
     private constructor(panel: WebviewPanel, extensionUri: Uri) {
         this._panel = panel;
 
-        // Set an event listener to listen for when the panel is disposed (i.e. when the user closes
-        // the panel or when the panel is closed programmatically)
+        // 设置一个事件侦听器，以便在释放面板时侦听（即，当用户关闭面板或以编程方式关闭面板时）
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
-        // Set the HTML content for the webview panel
+        // 设置Web视图面板的HTML内容
         this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
 
-        // Set an event listener to listen for messages passed from the webview context
-        this._setWebviewMessageListener(this._panel.webview);
-    }
-
-    public sendMessage(message: Message) {
-        if (this._panel) {
-            // 存在面板
-            this._panel.webview.postMessage(message);
-        }
     }
 
     /**
@@ -105,32 +95,6 @@ export class EsClientPanel {
     }
 
     /**
-     * 设置事件侦听器以侦听从webview上下文传递的消息，并基于接收到的消息执行代码。
-     *
-     * @param webview 对扩展Web视图的引用
-     * @param context 对扩展上下文的引用
-     */
-    private _setWebviewMessageListener(webview: Webview) {
-        webview.onDidReceiveMessage(
-            (message: any) => {
-                const command = message.command;
-                const text = message.text;
-
-                switch (command) {
-                    case "hello":
-                        // Code that should run in response to the hello message command
-                        window.showInformationMessage(text);
-                        return;
-                    // Add more switch case statements here as more webview message commands
-                    // are created within the webview context (i.e. inside media/main.js)
-                }
-            },
-            undefined,
-            this._disposables
-        );
-    }
-
-    /**
      * 如果当前webview面板存在，则呈现该面板，否则将创建并显示新的webview面板。
      *
      * @param extensionUri 包含扩展名的目录的URI。
@@ -162,32 +126,5 @@ export class EsClientPanel {
             EsClientPanel.currentPanel = new EsClientPanel(panel, extensionUri);
         }
     }
-
-    /**
-     * 发送一个url打开消息
-     * 
-     * @param urlId url的ID
-     */
-    public static sendUrlMessage(type: MessageType, urlId: string, extensionUri: Uri) {
-        if (!EsClientPanel.currentPanel) {
-            // 不存在，则渲染
-            this.render(extensionUri);
-        }
-        if (EsClientPanel.currentPanel) {
-            EsClientPanel.currentPanel.sendMessage({
-                type,
-                content: urlId
-            });
-        }
-    }
-}
-
-export type MessageType = 'url-open' | 'url-add' | 'url-remove' | 'url-update'
-
-export interface Message {
-
-    type: MessageType,
-
-    content: string
 
 }
