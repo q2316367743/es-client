@@ -33,7 +33,7 @@ export default interface Setting {
     timeout: number;
 
     /**
-     * 通知时间
+     * 通知关闭时间
      */
     notificationTime: number;
 
@@ -52,7 +52,7 @@ export default interface Setting {
     /*--------------------------------- 标签栏设置 ---------------------------------*/
 
     /**
-     * 展示标签栏
+     * 启用标签栏
      */
     showTab: boolean;
 

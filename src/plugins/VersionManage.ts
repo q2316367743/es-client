@@ -13,8 +13,9 @@ import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Optional from "@/utils/Optional";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {Log} from "@/view/Data";
+import { Log } from "@/view/Data";
 import NotificationUtil from "@/utils/NotificationUtil";
+import Setting from "@/domain/Setting";
 
 export default class VersionManage {
 
@@ -23,7 +24,7 @@ export default class VersionManage {
     private status: number = 2;
 
     async init() {
-        this.storageVersion = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.VERSION) || '';
+        this.storageVersion = await lodisStrategyContext.getStrategy().get<string>(LocalStorageKeyEnum.VERSION) || '';
         if (this.storageVersion === '') {
             this.status = 1;
         } else if (this.currentVersion === this.storageVersion) {
@@ -63,8 +64,8 @@ export default class VersionManage {
                             cancelButtonText: "取消"
                         }).then(() => {
                             nativeStrategyContext.getStrategy().openLink(Constant.repositories[0].url);
-                    })
-                }else {
+                        })
+                } else {
                     if (show) {
                         MessageUtil.info("当前已是最新版本");
                     }
@@ -87,7 +88,7 @@ export default class VersionManage {
             await this.update250();
         }
         // 更新数据
-        await lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, this.currentVersion);
+        await lodisStrategyContext.getStrategy().set<string>(LocalStorageKeyEnum.VERSION, this.currentVersion);
         this.storageVersion = this.currentVersion + '';
         this.status = 2;
         return Promise.resolve();
@@ -100,7 +101,7 @@ export default class VersionManage {
             useSettingStore().instance.autoFullScreen = true;
             useSettingStore().instance.showTab = false;
             useSettingStore().sync();
-            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.VERSION, LayoutModeEnum.CLASSIC)
+            lodisStrategyContext.getStrategy().set<string>(LocalStorageKeyEnum.VERSION, LayoutModeEnum.CLASSIC)
                 .then(() => console.log('设置默认布局方式'));
             document.body.setAttribute('layout-mode', LayoutModeEnum.CLASSIC);
         }
@@ -128,8 +129,8 @@ export default class VersionManage {
 
     private async update250() {
         MessageUtil.info("此次更新可能导致设置信息丢失，请注意保存");
-        lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING).then(content => {
-            let json = Optional.ofNullable(content).orElse("{}");
+        lodisStrategyContext.getStrategy().get<Setting>(LocalStorageKeyEnum.SETTING).then(content => {
+            let json = Optional.ofNullable(content).map(e => JSON.stringify(e)).orElse('');
             MessageBoxUtil.alert(`设置信息：\n${json}`, "设置信息", {
                 confirmButtonText: "复制到剪切板"
             }).then(() => {

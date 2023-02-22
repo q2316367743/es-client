@@ -289,14 +289,15 @@ export default defineComponent({
                     // 如果是utils，但是从应用进来，或者不是utils（因为只有utils存在action）
                     // 如果展示历史
                     if (useSettingStore().getLastUrl) {
-                        lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.LAST_URL).then(value => {
-                            if (value) {
-                                let id = parseInt(value);
-                                if (Number.isInteger(id)) {
-                                    this.selectUrl(id);
+                        lodisStrategyContext.getStrategy().get<string>(LocalStorageKeyEnum.LAST_URL)
+                            .then(value => {
+                                if (value) {
+                                    let id = parseInt(value);
+                                    if (Number.isInteger(id)) {
+                                        this.selectUrl(id);
+                                    }
                                 }
-                            }
-                        });
+                            });
                     }
                 }
                 // 删除sessionStorage

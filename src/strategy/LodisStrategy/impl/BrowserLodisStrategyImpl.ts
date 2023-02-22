@@ -2,8 +2,15 @@ import LodisStrategy from "@/strategy/LodisStrategy/LodisStrategy";
 
 export default class BrowserLodisStrategyImpl implements LodisStrategy {
 
-    get(key: string): Promise<string | null> {
-        return Promise.resolve(localStorage.getItem(key));
+    get<T>(key: string): Promise<T | null> {
+        let value = localStorage.getItem(key);
+        if (!value) {
+            return Promise.resolve(null);
+        }
+        if (/^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/.test(value)) {
+            return Promise.resolve(JSON.parse(value));
+        }
+        return Promise.resolve(value as any);
     }
 
     has(key: string): Promise<boolean> {
@@ -15,8 +22,13 @@ export default class BrowserLodisStrategyImpl implements LodisStrategy {
         return Promise.resolve();
     }
 
-    set(key: string, value: string): Promise<void> {
-        localStorage.setItem(key, value);
+    set<T>(key: string, value: T): Promise<void> {
+        if (typeof value === "string") {
+            // 字符串
+            localStorage.setItem(key, value);
+        } else {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
         return Promise.resolve();
     }
 

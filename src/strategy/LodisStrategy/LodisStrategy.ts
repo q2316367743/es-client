@@ -1,8 +1,8 @@
 export default interface LodisStrategy {
 
-    set(key: string, value: string): Promise<void>;
+    set<T>(key: string, value: T): Promise<void>;
 
-    get(key: string): Promise<string | null>;
+    get<T>(key: string): Promise<T | null>;
 
     has(key: string): Promise<boolean>;
 

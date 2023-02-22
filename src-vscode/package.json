@@ -52,7 +52,92 @@
                 "view": "es-client-url",
                 "contents": "没有找到链接，如果想了解更多，请查看 [语雀](https://www.yuque.com/baozhiyige-tewwf/ygxv4r)。\n[新增链接](command:es-client-url.add)"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "es-client",
+            "properties": {
+                "es-client.setting.defaultPage": {
+                    "type": "string",
+                    "default": "home",
+                    "description": "默认页面",
+                    "enum": [
+                        "home",
+                        "data-browser",
+                        "base-search",
+                        "senior-search"
+                    ],
+                    "enumDescriptions": [
+                        "概览",
+                        "数据浏览",
+                        "基础搜索",
+                        "高级搜索"
+                    ]
+                },
+                "es-client.setting.defaultShard": {
+                    "type": "number",
+                    "default": 5,
+                    "description": "默认分片"
+                },
+                "es-client.setting.defaultReplica": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "默认副本"
+                },
+                "es-client.setting.timeout": {
+                    "type": "number",
+                    "default": 5000,
+                    "description": "超时时间"
+                },
+                "es-client.setting.notificationTime": {
+                    "type": "number",
+                    "default": 5000,
+                    "description": "通知关闭时间"
+                },
+                "es-client.setting.homeSearchState": {
+                    "type": "number",
+                    "default": 5000,
+                    "description": "默认搜索状态",
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "enumDescriptions": [
+                        "忽略",
+                        "开启",
+                        "关闭"
+                    ]
+                },
+                "es-client.setting.showTab": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "启用标签栏"
+                },
+                "es-client.setting.tabLoadMode": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "标签载入模式（未启用时有效）",
+                    "enum": [
+                        1,
+                        2
+                    ],
+                    "enumDescriptions": [
+                        "追加",
+                        "覆盖"
+                    ]
+                },
+                "es-client.setting.autoFullScreen": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "选择链接后自动全屏"
+                },
+                "es-client.setting.lastUrl": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "保存上次选择的连接（命令进入有效）"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

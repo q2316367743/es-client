@@ -73,10 +73,10 @@ const useSettingStore = defineStore('setting', {
     },
     actions: {
         async init() {
-            let setting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
-            if (setting && setting !== '') {
+            let setting = await lodisStrategyContext.getStrategy().get<Setting>(LocalStorageKeyEnum.SETTING);
+            if (setting) {
                 try {
-                    this.instance = Object.assign(getDefaultValue(), JSON.parse(setting));
+                    this.instance = Object.assign(getDefaultValue(), setting);
                 } catch (e) {
                     console.error(e);
                 }
@@ -107,7 +107,7 @@ const useSettingStore = defineStore('setting', {
             this.sync();
         },
         sync() {
-            lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.SETTING, JSON.stringify(this.instance))
+            lodisStrategyContext.getStrategy().set<Setting>(LocalStorageKeyEnum.SETTING, this.instance)
                 .then(() => console.log("同步成功"));
         }
     }
