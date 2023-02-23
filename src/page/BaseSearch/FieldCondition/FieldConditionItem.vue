@@ -1,21 +1,27 @@
 <template>
     <div class="field-condition-item">
+        <!-- 是否启用 -->
+        <a-switch :checked-value="true" :unchecked-value="false" type="circle" v-model="condition.isEnable"
+            checked-color="rgb(var(--green-6))" unchecked-color="rgb(var(--red-6))" style="margin: 4px 10px 4px 0;">
+            <template #checked>启用</template>
+            <template #unchecked>禁用</template>
+        </a-switch>
         <!-- 选择查询模式 -->
         <a-select v-model="condition.type" filterable :placeholder="$t('baseSearch.placeholder.condition')"
-                  style="width: 110px;">
+            style="width: 110px;">
             <a-option label="must" value="must"></a-option>
             <a-option label="must_not" value="must_not"></a-option>
             <a-option label="should" value="should"></a-option>
         </a-select>
         <!-- 选择查询字段 -->
         <a-select v-model="condition.field" allow-search :placeholder="$t('baseSearch.placeholder.field')"
-                  style="margin-left: 10px;width: 250px;">
+            style="margin-left: 10px;width: 250px;">
             <a-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name"></a-option>
         </a-select>
         <!-- 选择查询条件 -->
         <!-- TODO: 此处还需处理，对于不同类型，需要不同查询条件 -->
         <a-select v-model="condition.condition" filterable :placeholder="$t('baseSearch.placeholder.condition')"
-                  style="margin-left: 10px;width: 110px;">
+            style="margin-left: 10px;width: 110px;">
             <!-- 分词查询 -->
             <a-option label="match" value="match"></a-option>
             <!-- 精准查询 -->
@@ -27,22 +33,22 @@
             <a-option label="range gt" value="range_gt"></a-option>
             <a-option label="range gte" value="range_gte"></a-option>
         </a-select>
-        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px"/>
+        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px" />
         <!-- 操作 -->
         <a-button type="primary" style="margin-left: 10px" @click="add">{{
-                $t('common.operation.add')
-            }}
+            $t('common.operation.add')
+        }}
         </a-button>
         <a-button type="primary" status="danger" @click="remove(condition.id)">{{
-                $t('common.operation.delete')
-            }}
+            $t('common.operation.delete')
+        }}
         </a-button>
     </div>
 </template>
 <script lang="ts">
 import BaseQuery from "@/entity/BaseQuery";
 import Field from "@/view/Field";
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
     name: 'field-condition-item',

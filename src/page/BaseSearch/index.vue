@@ -4,22 +4,22 @@
             <!-- 标签页 -->
             <div class="base-search-tab" v-if="instance.showTab">
                 <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                          @option-tab="optionTab"/>
+                    @option-tab="optionTab" />
             </div>
             <!-- 主要显示区域 -->
             <div class="base-search-main" :class="instance.showTab ? '' : 'full-screen'">
                 <!-- 顶部菜单栏 -->
                 <div class="base-option">
                     <div class="left">
-                        <a-select v-model="current.index" style="width: 260px;" allow-search
-                                  allow-clear :placeholder="$t('baseSearch.placeholder.selectIndex')">
+                        <a-select v-model="current.index" style="width: 260px;" allow-search allow-clear
+                            :placeholder="$t('baseSearch.placeholder.selectIndex')">
                             <a-option v-for="index in indices" :key="index.label" :label="index.label"
-                                      :value="index.value"/>
+                                :value="index.value" />
                         </a-select>
                         <!-- 搜索 -->
                         <a-button type="primary" status="success" @click="search" :disabled="current.index === ''">{{
-                                $t('common.operation.search')
-                            }}
+                            $t('common.operation.search')
+                        }}
                         </a-button>
                         <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">管理
                         </a-button>
@@ -31,7 +31,7 @@
                             <a-dropdown @select="historyCommand">
                                 <a-button type="outline" :disabled="!header.relationId">
                                     <template #icon>
-                                        <icon-down/>
+                                        <icon-down />
                                     </template>
                                 </a-button>
                                 <template #content>
@@ -58,31 +58,30 @@
                         <!-- 查询条件 -->
                         <div class="base-condition" ref="baseCondition">
                             <a-form :model="current" layout="vertical" label-width="80px"
-                                    style="overflow-x: auto;overflow-y: hidden;">
+                                style="overflow-x: auto;overflow-y: hidden;">
                                 <!-- 条件 -->
                                 <a-form-item :label="$t('baseSearch.form.condition')">
-                                    <field-condition-container v-model="current.conditions" :fields="fields"/>
+                                    <field-condition-container v-model="current.conditions" :fields="fields" />
                                 </a-form-item>
                                 <!-- 排序 -->
                                 <a-form-item :label="$t('baseSearch.form.order')">
-                                    <field-order-container v-model="current.orders" :fields="fields"/>
+                                    <field-order-container v-model="current.orders" :fields="fields" />
                                 </a-form-item>
                                 <div class="base-condition-pagination">
                                     <a-pagination :total="current.total" v-model:current="current.page"
-                                                  :page-size="current.size"
-                                                  show-total/>
-                                    <a-input-number v-model="current.size" style="width: 70px"/>
+                                        :page-size="current.size" show-total />
+                                    <a-input-number v-model="current.size" style="width: 70px" />
                                 </div>
                             </a-form>
                         </div>
                         <!-- 查询结果 -->
                         <div class="base-content" ref="baseContent">
-                            <base-search-data-view :view="view" :result="current.result"/>
+                            <base-search-data-view :view="view" :result="current.result" />
                         </div>
                     </div>
-                    <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
+                    <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
                 </a-scrollbar>
-                <div class="base-search-condition-sentence" :style="{right: view === 2 ? '20px' : '50px'}">
+                <div class="base-search-condition-sentence" :style="{ right: view === 2 ? '20px' : '50px' }">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
                     </a-button>
@@ -92,42 +91,42 @@
                 </div>
             </div>
             <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                     render-to-body class="es-dialog" :mask-closable="false">
-                <json-view :data="condition.data"/>
+                render-to-body class="es-dialog" :mask-closable="false">
+                <json-view :data="condition.data" />
             </a-modal>
-            <bsh-manage v-model="historyDialog"/>
+            <bsh-manage v-model="historyDialog" />
             <a-modal title="导出" v-model:visible="download.dialog" width="600px" render-to-body unmount-on-close
-                     :mask-closable="false" draggable ok-text="导出" @ok="clickDownload">
+                :mask-closable="false" draggable ok-text="导出" @ok="clickDownload">
                 <a-form :model="download" layout="vertical">
                     <a-form-item label="文件名">
-                        <a-input v-model="download.name"/>
+                        <a-input v-model="download.name" />
                     </a-form-item>
                     <a-form-item label="导出数量">
                         <a-select v-model="download.count">
-                            <a-option label="当前页面" :value="1"/>
-                            <a-option label="指定范围" :value="2"/>
-                            <a-option label="全部" :value="3"/>
+                            <a-option label="当前页面" :value="1" />
+                            <a-option label="指定范围" :value="2" />
+                            <a-option label="全部" :value="3" />
                         </a-select>
                     </a-form-item>
                     <a-form-item label="范围" v-if="download.count === 2">
-                        <a-input-number v-model="download.customStart" placeholder="从0开始"/>
+                        <a-input-number v-model="download.customStart" placeholder="从0开始" />
                         <span>-</span>
-                        <a-input-number v-model="download.customEnd" placeholder="-1代表不限制"/>
+                        <a-input-number v-model="download.customEnd" placeholder="-1代表不限制" />
                     </a-form-item>
                     <a-form-item label="导出内容类型">
                         <a-select v-model="download.content">
-                            <a-option label="原始结果集" :value="1"/>
-                            <a-option label="只导出_source" :value="2"/>
+                            <a-option label="原始结果集" :value="1" />
+                            <a-option label="只导出_source" :value="2" />
                         </a-select>
                     </a-form-item>
                     <a-form-item>
                         <template #label>
                             每次分页查询数量
                             <a-tooltip content="数量太大可能造成浏览器卡顿" placement="top" effect="light">
-                                <icon-question-circle style="margin-left: 5px;"/>
+                                <icon-question-circle style="margin-left: 5px;" />
                             </a-tooltip>
                         </template>
-                        <a-input-number v-model="download.size" :disabled="download.count === 1"/>
+                        <a-input-number v-model="download.size" :disabled="download.count === 1" />
                     </a-form-item>
                 </a-form>
             </a-modal>
@@ -136,9 +135,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, toRaw} from "vue";
-import {mapState} from "pinia";
-import {SelectOptionData} from "@arco-design/web-vue";
+import { defineComponent, toRaw } from "vue";
+import { mapState } from "pinia";
+import { SelectOptionData } from "@arco-design/web-vue";
 
 // 自定义组件
 import TabMenu from "@/components/TabMenu/index.vue";
@@ -167,7 +166,7 @@ import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldCondi
 import BshManage from "@/page/BaseSearch/History/index.vue";
 import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
 import BaseSearchDataView from "@/page/BaseSearch/DataView/index.vue";
-import {BaseSearchItem} from "@/page/BaseSearch/domain/BaseSearchItem";
+import { BaseSearchItem } from "@/page/BaseSearch/domain/BaseSearchItem";
 
 
 import Field from "@/view/Field";
@@ -639,6 +638,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>

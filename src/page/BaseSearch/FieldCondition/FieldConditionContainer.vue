@@ -4,22 +4,20 @@
             <a-button type="primary" @click="init">{{ $t('common.operation.add') }}
             </a-button>
         </div>
-        <div v-for="(item, idx) in conditions" :key="idx"
-             style="margin-bottom: 10px;">
-            <field-condition-item v-model="conditions[idx]" :fields="fields"
-                                  @add="add" @remove="remove"/>
+        <div v-for="(item, idx) in conditions" :key="idx" style="margin-bottom: 10px;">
+            <field-condition-item v-model="conditions[idx]" :fields="fields" @add="add" @remove="remove" />
         </div>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 import FieldConditionItem from "@/page/BaseSearch/FieldCondition/FieldConditionItem.vue";
 import BaseQuery from "@/entity/BaseQuery";
 import Field from "@/view/Field";
 
 export default defineComponent({
     name: 'field-condition-container',
-    components: {FieldConditionItem},
+    components: { FieldConditionItem },
     props: {
         modelValue: Object as PropType<Array<BaseQuery>>,
         fields: Object as PropType<Array<Field>>
@@ -45,7 +43,8 @@ export default defineComponent({
                 type: 'must',
                 field: '',
                 condition: 'term',
-                value: ''
+                value: '',
+                isEnable: true
             });
         },
         add() {
@@ -54,7 +53,8 @@ export default defineComponent({
                 type: 'must',
                 field: '',
                 condition: 'term',
-                value: ''
+                value: '',
+                isEnable: true
             });
         },
         remove(id: number) {

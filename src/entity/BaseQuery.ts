@@ -30,4 +30,9 @@ export default interface BaseQuery {
      */
     value: string;
 
+    /**
+     * 是否启用
+     */
+    isEnable: boolean;
+
 }

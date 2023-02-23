@@ -15,4 +15,9 @@ export default interface BaseOrder {
      */
     type: string;
 
+    /**
+     * 是否启用
+     */
+    isEnable: boolean;
+
 }

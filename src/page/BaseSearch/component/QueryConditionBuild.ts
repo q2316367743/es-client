@@ -25,6 +25,9 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     if (!query.field || query.field === '') {
         return;
     }
+    if (query.isEnable === false) {
+        return;
+    }
     let condition = {} as any;
     let expression = {} as any;
     let cod = query.condition;
@@ -65,6 +68,9 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
     for (let order of orders) {
         if (order.field === '' || order.type === null) {
             continue;
+        }
+        if (order.isEnable === false) {
+            return;
         }
         body.sort[order.field] = {order: order.type};
     }
