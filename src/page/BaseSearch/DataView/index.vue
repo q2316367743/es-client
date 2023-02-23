@@ -1,9 +1,7 @@
 <template>
     <div class="base-search-data-view">
         <json-view v-if="view === 2" :data="result" />
-        <div v-else-if="view === 3" class="base-search-table-view">
-            <base-search-table-view :data="result" />
-        </div>
+        <base-search-table-view v-else-if="view === 3" :data="result" />
     </div>
 </template>
 <script lang="ts">
@@ -13,7 +11,7 @@ import BaseSearchTableView from "@/page/BaseSearch/DataView/TableView.vue";
 
 export default defineComponent({
     name: 'base-search-data-view',
-    components: {BaseSearchTableView, JsonView},
+    components: { BaseSearchTableView, JsonView },
     props: {
         result: Object,
         view: {
@@ -28,9 +26,4 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.base-search-table-view {
-    height: calc(100vh - 108px);
-    width: 100%;
-    overflow: hidden;
-}
 </style>
