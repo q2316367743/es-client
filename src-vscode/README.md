@@ -1,9 +1,12 @@
 # es-client
 
+[![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client)
 [![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
+[![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
 [![star](https://img.shields.io/badge/edge-v2.6.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 [![star](https://img.shields.io/badge/firefox-v2.6.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 [![star](https://img.shields.io/badge/windows-v2.6.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
+[![OSCS Status](https://www.oscs1024.com/platform/badge/es-client.svg?size=small)](https://www.murphysec.com/accept?code=9a8096e0fd00acdcdb1901030f42d5d6&type=1&from=2)
 
 > elasticsearch查询客户端。
 >
@@ -11,25 +14,6 @@
 > 和[Kibana](https://github.com/elastic/kibana)了，
 > 但是elasticsearch head已经停止更新，且样式老旧，功能不全；
 > 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+arco-design进行开发了一个elasticsearch的客户端。
-
-## 安装 & 更新
-
-本项目已经推送到Firefox拓展和Edge外接程序中，但由于Edge审核比较慢，所以Firefox的更新速度会比Edge快一些，谷歌插件商店上架比较麻烦，所以并未上架。
-
-### 发行版
-
-- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
-- [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
-- [想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
-- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
-- [utools](https://www.u.tools/)
-
-### 存储
-
-- [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
-- [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
-- [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
-- [可道云](http://kodcloud.esion.xyz/#s/89HBcbIw)
 
 ## 详细文档
 
@@ -39,22 +23,44 @@
 
 [兔小巢](https://support.qq.com/products/489458)
 
-## 开发
+## 安装 & 更新
+
+### 发行版
+
+- [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+- [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+- [想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
+- [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
+- [utools](https://www.u.tools/)
+- [vscode](https://marketplace.visualstudio.com/items?itemName=m17762618644.es-client)
+
+### 存储
+
+- [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
+- [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
+- [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
+- [可道云](http://kodcloud.esion.xyz/#s/89HBcbIw)
+
+### 开发
 
 ```bash
 git clone https://gitee.com/qiaoshengda/es-client.git
 yarn install
 yarn dev
+# open http://localhost:5173
 ```
 
-## 自行打包
+### 自行打包
 
 本项目推荐使用`yarn`
 
 1. 安装依赖：`yarn install`
-2. 构建浏览器版本：`yarn build:ts`
+2. 构建浏览器版本：`yarn build`
 3. 构建Chrome插件：`yarn build:edge`
 4. 构建Firefox插件：`yarn build:firefox`
+5. 构建想天浏览器：`yarn build:ts`
+6. 构建vscode：`yarn build:vscode`
+7. 构建桌面客户端：`yarn tauri build`
 
 ## 项目预览
 
