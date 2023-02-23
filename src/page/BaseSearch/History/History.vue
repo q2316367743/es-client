@@ -2,35 +2,34 @@
     <div class="bs-history">
         <vxe-toolbar ref="bsHistoryToolbar" custom export class="bs-history-toolbar">
             <template #buttons>
-                <a-input v-model="name" :placeholder="$t('common.keyword.name')"
-                          style="width: 200px;" @input="search"></a-input>
+                <a-input v-model="name" :placeholder="$t('common.keyword.name')" style="width: 200px;"
+                    @input="search"></a-input>
                 <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
-                           style="margin-left: 12px;"/>
+                    style="margin-left: 12px;" />
             </template>
         </vxe-toolbar>
         <div class="bs-history-body">
             <a-scrollbar>
                 <vxe-table ref="bsHistoryTable" :data="histories" class="data" :column-config="columnConfig"
-                           :export-config="exportConfig">
+                    :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
-                    <vxe-column field="name" :title="$t('common.keyword.name')" width="230"></vxe-column>
-                    <vxe-column field="index" :title="$t('common.keyword.index')" width="350">
-                        <template #default="{row}">
+                    <vxe-column field="name" :title="$t('common.keyword.name')"></vxe-column>
+                    <vxe-column field="index" :title="$t('common.keyword.index')">
+                        <template #default="{ row }">
                             <a-link type="primary" target="_blank">{{ row.index }}</a-link>
                             <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
-                    <vxe-column :title="$t('common.keyword.operation')" width="200">
+                    <vxe-column :title="$t('common.keyword.operation')" width="200" fixed="right">
                         <template #default="{ row }">
                             <a-button type="primary" status="success" size="small" @click="load(row)">
                                 {{ $t('common.operation.load') }}
                             </a-button>
-                            <a-popconfirm title="确认删除此条记录？" confirm-button-text="删除"
-                                           cancel-button-text="取消" @confirm="removeById(row.id)" width="200px">
-                                <template #reference>
-                                    <a-button type="primary" status="danger" size="small">{{ $t('common.operation.delete') }}
-                                    </a-button>
-                                </template>
+                            <a-popconfirm content="确认删除此条记录？" ok-text="删除" cancel-text="取消" @ok="removeById(row.id)"
+                                width="200px">
+                                <a-button type="primary" status="danger" size="small">
+                                    {{ $t('common.operation.delete') }}
+                                </a-button>
                             </a-popconfirm>
                         </template>
                     </vxe-column>
@@ -40,17 +39,17 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
+import { defineComponent } from "vue";
+import { VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from "vxe-table";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import useUrlStore from "@/store/UrlStore";
-import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
+import { baseSearchHistoryService, useBaseSearchEvent } from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import MessageUtil from "@/utils/MessageUtil";
 import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";
-import {stringContain} from "@/utils/SearchUtil";
+import { stringContain } from "@/utils/SearchUtil";
 
 export default defineComponent({
     name: 'bsh-history',
@@ -118,7 +117,6 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-
 .bs-history {
     position: absolute;
     top: 0;

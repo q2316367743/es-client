@@ -14,6 +14,7 @@
 		"tauri",
 		"tsbrowser",
 		"unplugin",
-		"utools"
+		"utools",
+		"popconfirm"
 	]
 }

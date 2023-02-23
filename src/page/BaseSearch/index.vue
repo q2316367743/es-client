@@ -24,7 +24,8 @@
                         </a-button>
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
                         <a-button-group>
-                            <a-button type="outline" :status="header.relationId ? 'danger' : 'success'">
+                            <a-button type="outline" :status="header.relationId ? 'danger' : 'success'"
+                                @click="optionTab('rename')">
                                 {{ header.name }}
                             </a-button>
                             <a-dropdown @select="optionTab">
@@ -34,9 +35,9 @@
                                     </template>
                                 </a-button>
                                 <template #content>
-                                    <a-doption value="save">保存</a-doption>
-                                    <a-doption value="append" v-if="header.relationId">保存到新的历史</a-doption>
                                     <a-doption value="update" v-if="header.relationId">更新</a-doption>
+                                    <a-doption value="save" v-else>保存</a-doption>
+                                    <a-doption value="append" v-if="header.relationId">保存到新的历史</a-doption>
                                     <a-doption value="rename">重命名</a-doption>
                                     <a-doption value="close-one" v-if="instance.showTab">关闭</a-doption>
                                     <a-doption value="close-other" v-if="instance.showTab">关闭其他</a-doption>
@@ -377,13 +378,15 @@ export default defineComponent({
                 }
             } as BaseSearchItem
             if (useSettingStore().getShowTab) {
-                // 显示标签
+                // 显示标签栏
                 this.searchMap.set(searchId, searchItem);
                 this.searchId = searchId;
+                this.header = searchItem.header;
+            } else {
+                // 隐藏标签栏
+                this.header.relationId = searchItem.header.relationId;
+                this.header.name = searchItem.header.name
             }
-
-            // 因为延迟问题，预先设置值
-            this.header.relationId = event.id;
             this.current = searchItem.body;
             this.$nextTick(() => {
                 if (event.execute) {
@@ -455,6 +458,8 @@ export default defineComponent({
                 dialog: false,
                 data: {}
             }
+            this.header.name = '基础查询';
+            this.header.relationId = undefined;
             if (clear_index) {
                 this.current.index = '';
             }

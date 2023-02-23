@@ -2,12 +2,12 @@
     <div class="temp-record">
         <div class="temp-record-head">
             <div>
-                <a-input v-model="index" style="width: 200px;" placeholder="索引" @input="loadData" clearable/>
+                <a-input v-model="index" style="width: 200px;" placeholder="索引" @input="loadData" clearable />
             </div>
             <div>
                 <a-button type="primary" status="danger" @click="reset">
                     <template #icon>
-                        <icon-delete/>
+                        <icon-delete />
                     </template>
                     清空
                 </a-button>
@@ -15,24 +15,24 @@
         </div>
         <div class="temp-record-body">
             <a-scrollbar>
-                <vxe-table :row-config="{isHover: true}" ref="tempRecordTable">
-                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"/>
+                <vxe-table :row-config="{ isHover: true }" ref="tempRecordTable">
+                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')" />
                     <vxe-column field="index" :title="$t('common.keyword.index')" width="250">
-                        <template #default="{row}">
+                        <template #default="{ row }">
                             <a-link type="primary" target="_blank">{{ row.index }}</a-link>
                             <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </vxe-column>
                     <vxe-column field="id" title="时间" width="200">
-                        <template #default="{row}">
+                        <template #default="{ row }">
                             {{ prettyDate(new Date(row.id)) }}
                         </template>
                     </vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="320">
                         <template #default="{ row }">
                             <a-button type="primary" status="success" size="small" @click="load(row)">{{
-                                    $t('common.operation.load')
-                                }}
+                                $t('common.operation.load')
+                            }}
                             </a-button>
                             <a-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
                             </a-button>
@@ -47,20 +47,20 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, toRaw} from "vue";
-import {VxeTableInstance} from "vxe-table";
+import { defineComponent, toRaw } from "vue";
+import { VxeTableInstance } from "vxe-table";
 
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import BrowserUtil from "@/utils/BrowserUtil";
-import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
+import { baseSearchHistoryService, useBaseSearchEvent } from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import {stringContain} from "@/utils/SearchUtil";
+import { stringContain } from "@/utils/SearchUtil";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import XEUtils from "xe-utils";
-import {mapState} from "pinia";
+import { mapState } from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
@@ -148,8 +148,6 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-
-
 .temp-record {
     position: absolute;
     top: 0;

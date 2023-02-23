@@ -48,13 +48,13 @@
                         </a-badge>
                     </a-button>
                     <!-- 主题切换 -->
-                    <a-button class="menu-item" @click="darkChange" type="text" status="normal" :disabled="loading">
+                    <a-button class="menu-item" @click="darkChange" type="text" status="normal">
                         <icon-moon :size="16" v-if="isDark" />
                         <icon-sun :size="16" v-else />
                     </a-button>
                     <!-- 多语言切换 -->
                     <a-dropdown @select="languageCommand" trigger="click">
-                        <a-button class="menu-item" type="text" status="normal" :disabled="loading">
+                        <a-button class="menu-item" type="text" status="normal">
                             <icon-language :size="16" />
                         </a-button>
                         <template #content>

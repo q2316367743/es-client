@@ -1,10 +1,11 @@
-import axios, {AxiosError} from "axios";
+import axios, { AxiosError } from "axios";
 
 import HttpStrategyConfig from "../HttpStrategyConfig";
 
 import MessageUtil from "@/utils/MessageUtil";
 import { P } from "@tauri-apps/api/event-2a9960e7";
 import HttpStrategyError from "../HttpStrategyError";
+import Optional from "@/utils/Optional";
 
 
 const instance = axios.create();
@@ -25,14 +26,23 @@ instance.interceptors.response.use(
 
 export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-        instance(config).then((rsp:any) => {
+        instance(config).then((rsp: any) => {
             resolve(rsp);
-        }).catch(reason =>{
+        }).catch(reason => {
+            //reason.response.status
             reject({
-                code: reason.response.status,
-                reason: reason.message,
-                data: reason.response.data
-            }as HttpStrategyError)
+                code: Optional.ofNullable(reason)
+                    .attr('response')
+                    .attr('status')
+                    .orElse(500),
+                reason: Optional.ofNullable(reason)
+                    .attr('message')
+                    .orElse(''),
+                data: Optional.ofNullable(reason)
+                    .attr('response')
+                    .attr('data')
+                    .orElse({})
+            } as HttpStrategyError)
         })
     });
 }
