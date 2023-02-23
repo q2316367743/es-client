@@ -2,7 +2,7 @@
     <div class="field-condition-item">
         <!-- 是否启用 -->
         <a-switch :checked-value="true" :unchecked-value="false" type="circle" v-model="condition.isEnable"
-            checked-color="rgb(var(--green-6))" unchecked-color="rgb(var(--red-6))" style="margin: 4px 10px 4px 0;">
+            checked-color="rgb(var(--green-6))" unchecked-color="var(--color-fill-4)" style="margin: 4px 10px 4px 0;">
             <template #checked>启用</template>
             <template #unchecked>禁用</template>
         </a-switch>

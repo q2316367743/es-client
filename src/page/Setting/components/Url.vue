@@ -6,31 +6,29 @@
             </template>
             <template #tools>
                 <a-input v-model="condition.name" :placeholder="$t('common.keyword.name')"
-                         style="margin-right: 10px;"></a-input>
+                    style="margin-right: 10px;"></a-input>
             </template>
         </vxe-toolbar>
-        <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig"
-                   :export-config="exportConfig">
-            <vxe-column type="checkbox" width="60"></vxe-column>
-            <vxe-column type="seq" width="50" :title="$t('common.keyword.index')"></vxe-column>
-            <vxe-column field="name" :title="$t('common.keyword.name')" width="180"></vxe-column>
-            <vxe-column field="value" :title="$t('common.keyword.url')" width="250">
-                <template #default="{row}">
+        <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">
+            <vxe-column type="seq" width="50" :title="$t('common.keyword.index')" fixed="left"></vxe-column>
+            <vxe-column field="name" :title="$t('common.keyword.name')" width="180" fixed="left"></vxe-column>
+            <vxe-column field="value" :title="$t('common.keyword.url')">
+                <template #default="{ row }">
                     <a-link @click="open(row.value)" type="primary" target="_blank">{{ row.value }}</a-link>
                     <div class="url-copy" @click="execCopy(row.value)">{{ $t('common.operation.copy') }}</div>
                 </template>
             </vxe-column>
             <vxe-column field="updateTime" :title="$t('setting.link.form.updateTime')" width="160"
-                        :formatter="prettyDate"/>
-            <vxe-column field="isAuth" :title="$t('setting.link.form.isAuth')" width="120" :formatter="prettyAuth"/>
-            <vxe-column field="authUser" :title="$t('setting.link.form.authUser')" :visible="false"/>
-            <vxe-column field="authPassword" :title="$t('setting.link.form.authPassword')" :visible="false"/>
-            <vxe-column :title="$t('common.keyword.operation')" width="150">
+                :formatter="prettyDate" />
+            <vxe-column field="isAuth" :title="$t('setting.link.form.isAuth')" width="120" :formatter="prettyAuth" />
+            <vxe-column field="authUser" :title="$t('setting.link.form.authUser')" :visible="false" />
+            <vxe-column field="authPassword" :title="$t('setting.link.form.authPassword')" :visible="false" />
+            <vxe-column :title="$t('common.keyword.operation')" width="150" fixed="right">
                 <template #default="{ row }">
                     <a-button type="primary" size="small" @click="editOpen(row)">{{ $t('common.operation.edit') }}
                     </a-button>
                     <a-button type="primary" status="danger" size="small" @click="remove(row.id, row.value)"
-                              style="margin-left: 8px;">
+                        style="margin-left: 8px;">
                         {{ $t('common.operation.delete') }}
                     </a-button>
                 </template>
@@ -39,10 +37,10 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, toRaw} from "vue";
-import {mapState} from "pinia";
-import {toDateString} from "xe-utils";
-import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
+import { defineComponent, toRaw } from "vue";
+import { mapState } from "pinia";
+import { toDateString } from "xe-utils";
+import { VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from "vxe-table";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -51,7 +49,7 @@ import Url from "@/entity/Url";
 // 组件
 import JsonDialog from "@/components/JsonDialog.vue";
 
-import {nativeStrategyContext, urlService, useUrlEditEvent} from "@/global/BeanFactory";
+import { nativeStrategyContext, urlService, useUrlEditEvent } from "@/global/BeanFactory";
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
@@ -64,7 +62,7 @@ interface Params {
 
 export default defineComponent({
     name: 'setting-url',
-    components: {JsonDialog},
+    components: { JsonDialog },
     data: () => ({
         condition: {
             name: '',
