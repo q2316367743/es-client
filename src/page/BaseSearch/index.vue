@@ -3,8 +3,7 @@
         <div class="base-search">
             <!-- 标签页 -->
             <div class="base-search-tab" v-if="instance.showTab">
-                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                    @option-tab="optionTab" />
+                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs" />
             </div>
             <!-- 主要显示区域 -->
             <div class="base-search-main" :class="instance.showTab ? '' : 'full-screen'">
@@ -25,19 +24,24 @@
                         </a-button>
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
                         <a-button-group>
-                            <a-button type="outline" :disabled="current.index === ''" @click="historyCommand('save')">
-                                {{ header.relationId ? '更新' : '保存' }}
+                            <a-button type="outline" :status="header.relationId ? 'danger' : 'success'">
+                                {{ header.name }}
                             </a-button>
-                            <a-dropdown @select="historyCommand">
-                                <a-button type="outline" :disabled="!header.relationId">
+                            <a-dropdown @select="optionTab">
+                                <a-button type="outline">
                                     <template #icon>
                                         <icon-down />
                                     </template>
                                 </a-button>
                                 <template #content>
+                                    <a-doption value="save">保存</a-doption>
+                                    <a-doption value="append" v-if="header.relationId">保存到新的历史</a-doption>
+                                    <a-doption value="update" v-if="header.relationId">更新</a-doption>
                                     <a-doption value="rename">重命名</a-doption>
-                                    <a-doption value="append">新增到新的历史</a-doption>
-                                    <a-doption value="cancel">取消关联</a-doption>
+                                    <a-doption value="close-one" v-if="instance.showTab">关闭</a-doption>
+                                    <a-doption value="close-other" v-if="instance.showTab">关闭其他</a-doption>
+                                    <a-doption value="close-all" v-if="instance.showTab">关闭全部</a-doption>
+                                    <a-doption value="cancel" v-if="header.relationId">取消关联</a-doption>
                                 </template>
                             </a-dropdown>
                         </a-button-group>
@@ -484,59 +488,16 @@ export default defineComponent({
                 }
             }
         },
-        optionTab(command: string) {
-            let strings = command.split('|');
-            let option = strings[0];
-            let id = parseInt(strings[1]);
-            switch (option) {
-                case 'close-one':
-                    this.searchMap.delete(id);
-                    if (this.searchId === id) {
-                        if (this.searchMap.size > 0) {
-                            this.searchId = this.searchMap.keys().next().value
-                        }
-                    }
-                    break;
-                case 'close-other':
-                    // 移除其他
-                    Array.from(this.searchMap.keys()).forEach(e => {
-                        if (e !== id) {
-                            this.searchMap.delete(e);
-                        }
-                    })
-                    this.searchId = id;
-                    break;
-                case 'close-all':
-                    this.searchMap.clear();
-                    break;
-                case 'rename':
-                    MessageBoxUtil.prompt("请输入新的标签名字", "修改标签名", {
-                        confirmButtonText: '修改',
-                        cancelButtonText: '取消',
-                        inputValue: strings[2],
-                        inputPattern: /.+/,
-                        inputErrorMessage: '必须输入标签名'
-                    }).then((value) => {
-                        let searchItem = this.searchMap.get(id);
-                        if (searchItem) {
-                            searchItem.header.name = value;
-                        }
-                    }).catch(() => {
-                    });
-                    break;
-                case 'save-history':
-                    let searchItem = this.searchMap.get(id);
-                    if (!searchItem) {
-                        MessageUtil.error('标签未找到');
-                        return;
-                    }
+        optionTab(command: any) {
+            switch (command) {
+                case 'save':
                     // 保存到历史
                     baseSearchHistoryService.save({
                         urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
-                        name: searchItem.header.name,
-                        index: searchItem.body.index,
-                        conditions: toRaw(searchItem.body.conditions),
-                        orders: toRaw(searchItem.body.orders)
+                        name: this.header.name,
+                        index: this.current.index,
+                        conditions: toRaw(this.current.conditions),
+                        orders: toRaw(this.current.orders)
                     })
                         .then(id => {
                             MessageUtil.success('新增成功');
@@ -544,24 +505,52 @@ export default defineComponent({
                         })
                         .catch(e => MessageUtil.error('新增失败', e));
                     break;
-                case 'update-history':
-                    let searchItem2 = this.searchMap.get(id);
-                    if (!searchItem2) {
-                        MessageUtil.error('标签未找到');
-                        return;
-                    }
-                    let relationId = parseInt(strings[2]);
+                case 'update':
                     baseSearchHistoryService.update({
-                        id: relationId,
-                        name: searchItem2.header.name,
-                        index: searchItem2.body.index,
-                        conditions: toRaw(searchItem2.body.conditions),
-                        orders: toRaw(searchItem2.body.orders)
+                        id: this.header.relationId,
+                        name: this.header.name,
+                        index: this.current.index,
+                        conditions: toRaw(this.current.conditions),
+                        orders: toRaw(this.current.orders)
                     })
                         .then(() => MessageUtil.success(
                             '更新成功',
                             () => emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE)))
                         .catch(e => MessageUtil.error('更新失败', e));
+                    break;
+                case 'rename':
+                    MessageBoxUtil.prompt("请输入新的标签名字", "修改标签名", {
+                        confirmButtonText: '修改',
+                        cancelButtonText: '取消',
+                        inputValue: this.header.name,
+                        inputPattern: /.+/,
+                        inputErrorMessage: '必须输入标签名'
+                    }).then((value) => {
+                        this.header.name = value;
+                    }).catch(() => {
+                        console.error('取消修改');
+                    });
+                    break;
+                case 'close-one':
+                    this.searchMap.delete(this.searchId);
+                    if (this.searchMap.size > 0) {
+                        this.searchId = this.searchMap.keys().next().value
+                    }
+                    break;
+                case 'close-other':
+                    // 移除其他
+                    Array.from(this.searchMap.keys()).forEach(e => {
+                        if (e !== this.searchId) {
+                            this.searchMap.delete(e);
+                        }
+                    })
+                    break;
+                case 'close-all':
+                    this.searchMap.clear();
+                    break;
+                case 'cancel':
+                    this.header.relationId = undefined;
+                    break;
 
             }
             // 全部关闭了
@@ -610,30 +599,6 @@ export default defineComponent({
                 .catch(e => MessageUtil.error("导出失败", e))
                 .finally(() => this.download.dialog = false);
         },
-        historyCommand(command: any) {
-            switch (command) {
-                case 'save':
-                    if (this.header.relationId) {
-                        // 更新
-                        this.optionTab(`update-history|${this.header.id}|${this.header.relationId}`);
-                    } else {
-                        // 新增
-                        this.optionTab(`save-history|${this.header.id}`);
-                    }
-                    break;
-                case 'rename':
-                    // 新增
-                    this.optionTab(`rename|${this.header.id}`);
-                    break;
-                case 'append':
-                    // 新增
-                    this.optionTab(`save-history|${this.header.id}`);
-                    break;
-                case 'cancel':
-                    this.header.relationId = undefined;
-                    break;
-            }
-        }
     }
 });
 </script>
