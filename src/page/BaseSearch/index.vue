@@ -37,7 +37,7 @@
                                 <template #content>
                                     <a-doption value="update" v-if="header.relationId">更新</a-doption>
                                     <a-doption value="save" v-else>保存</a-doption>
-                                    <a-doption value="append" v-if="header.relationId">保存到新的历史</a-doption>
+                                    <a-doption value="save" v-if="header.relationId">保存到新的历史</a-doption>
                                     <a-doption value="rename">重命名</a-doption>
                                     <a-doption value="close-one" v-if="instance.showTab">关闭</a-doption>
                                     <a-doption value="close-other" v-if="instance.showTab">关闭其他</a-doption>

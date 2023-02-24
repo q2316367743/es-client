@@ -7,7 +7,7 @@ import {IndexCreate} from "@/es/IndexCreate";
  */
 export default class V7VersionStrategyImpl implements VersionStrategy {
     getVersionExp(): RegExp {
-        return /^7\.\d\.\d$/;
+        return /^7\.\d+\.\d+$/;
     }
 
     hasType(): boolean {

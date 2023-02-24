@@ -31,6 +31,11 @@ export interface LogItem {
 
     content: string;
 
+    /**
+     * 兔小巢反馈
+     */
+    txc?: string
+
 }
 
 export enum LogItemEnum {

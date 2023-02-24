@@ -28,6 +28,7 @@ import NativeStrategyContext from "@/strategy/NativeStrategy/NativeStrategyConte
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
+import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStrategyImpl";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -47,6 +48,7 @@ export const nativeStrategyContext = new NativeStrategyContext();
 export const versionStrategyContext = new VersionStrategyContext();
 versionStrategyContext.register(new V6VersionStrategyImpl());
 versionStrategyContext.register(new V7VersionStrategyImpl());
+versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(

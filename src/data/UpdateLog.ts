@@ -2,6 +2,42 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.6.1',
+        sign: 261,
+        time: '2023-02-24',
+        items: [{
+            label: LogItemEnum.OPTIMIZATION,
+            content: '全局loading超时进行提示，避免无法操作'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '基础搜索历史记录的使用'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '概览展示细节优化'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '基础查询新增数据错误'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '基础搜索表格视图最后一排被隐藏',
+            txc: 'https://support.qq.com/products/489458/post/167703728675805795/'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: 'ES版本策略识别错误',
+            txc: 'https://support.qq.com/products/489458/post/167696662123830625/'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '发行版：vscode拓展'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '增加消息中心，现在可以展示http异常的想要内容了'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '基础搜索条件和排序增加是否启用',
+            txc: 'https://support.qq.com/products/489458/post/167703760819408023/'
+        }]
+    },
+    {
         version: '2.6.0',
         sign: 260,
         time: '2023-02-17',

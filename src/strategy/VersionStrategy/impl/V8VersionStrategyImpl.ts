@@ -5,13 +5,13 @@ import {IndexCreate} from "@/es/IndexCreate";
 /**
  * v6版本策略
  */
-export default class V6VersionStrategyImpl implements VersionStrategy {
+export default class V8VersionStrategyImpl implements VersionStrategy {
     getVersionExp(): RegExp {
-        return /^6\.\d+\.\d+$/;
+        return /^8\.\d+\.\d+$/;
     }
 
     hasType(): boolean {
-        return true;
+        return false;
     }
 
     private getDefaultBody(setting: Setting): any {
@@ -21,9 +21,7 @@ export default class V6VersionStrategyImpl implements VersionStrategy {
                 number_of_replicas: setting.numberOfReplicas
             },
             mappings: {
-                _doc: {
-                    properties: {}
-                }
+                properties: {}
             }
         }
     }
@@ -36,7 +34,7 @@ export default class V6VersionStrategyImpl implements VersionStrategy {
                 'type': property.type
             };
         }
-        body.mappings._doc.properties = properties;
+        body.mappings.properties = properties;
         return body;
     }
 

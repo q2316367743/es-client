@@ -9,10 +9,11 @@
             </ol>
             <li v-else>
                 <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">{{
-                        renderTag(item.label).name
-                    }}
+                    renderTag(item.label).name
+                }}
                 </a-tag>
                 <span style="margin-left:5px;">{{ item.content }}</span>
+                <span v-if="item.txc"><a-link @click="open(item.txc)">@兔小巢</a-link></span>
             </li>
         </template>
     </ol>
@@ -23,9 +24,9 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
-import {Log, LogItemEnum} from "@/view/Data";
-import {nativeStrategyContext} from "@/global/BeanFactory";
+import { defineComponent, PropType } from "vue";
+import { Log, LogItemEnum } from "@/view/Data";
+import { nativeStrategyContext } from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'update-item',
@@ -70,6 +71,4 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

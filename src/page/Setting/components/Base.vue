@@ -60,7 +60,7 @@
                         style="width: 72px;"
                         class="home-exclude-item"
                     />
-                    <a-button v-else size="small" @click="addHomeExcludeIndexClick" class="home-exclude-item">
+                    <a-button type="primary" v-else size="small" @click="addHomeExcludeIndexClick" class="home-exclude-item">
                         新增索引
                     </a-button>
                 </a-form-item>
