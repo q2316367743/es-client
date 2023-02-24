@@ -5,7 +5,7 @@ import axios from "axios";
 export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
     return new Promise<T>((resolve, reject) => {
         axios.request({
-            url: 'http://localhost:3000/api/fetch',
+            url: '/api/fetch',
             method: 'POST',
             data: config
         }).then(response => {

@@ -4,6 +4,7 @@ import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
 import useNotificationStore from "@/store/NotificationStore";
 import HttpStrategyError from "./HttpStrategyError";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default class HttpStrategyProxy {
 
@@ -57,6 +58,8 @@ export default class HttpStrategyProxy {
             this.fetchSelf(config).then(rsp => {
                 resolve(rsp);
             }).catch((reason: HttpStrategyError) => {
+                console.error(reason)
+                MessageUtil.error(reason.reason);
                 if (config.hidden !== true) {
                     useNotificationStore().http(config, reason);
                 }

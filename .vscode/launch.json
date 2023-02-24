@@ -18,6 +18,19 @@
 			"type": "node"
 		},
 		{
+			"name": "tauri dev",
+			"request": "launch",
+			"runtimeArgs": [
+				"tauri",
+				"dev"
+			],
+			"runtimeExecutable": "yarn",
+			"skipFiles": [
+				"**/node_modules/**"
+			],
+			"type": "node"
+		},
+		{
 			"name": "Run Extension",
 			"type": "extensionHost",
 			"request": "launch",

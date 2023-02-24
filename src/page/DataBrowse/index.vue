@@ -599,7 +599,8 @@ export default defineComponent({
                 orders.push({
                     id: count++,
                     field: `_doc.${key}`,
-                    type: condition.sort[key].order
+                    type: condition.sort[key].order,
+                    isEnable: true
                 });
             }
             useBaseSearchEvent.emit({

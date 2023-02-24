@@ -2,8 +2,6 @@ import axios, { AxiosError } from "axios";
 
 import HttpStrategyConfig from "../HttpStrategyConfig";
 
-import MessageUtil from "@/utils/MessageUtil";
-import { P } from "@tauri-apps/api/event-2a9960e7";
 import HttpStrategyError from "../HttpStrategyError";
 import Optional from "@/utils/Optional";
 
@@ -18,8 +16,6 @@ instance.interceptors.response.use(
         return response.data;
     },
     (error: AxiosError) => {
-        console.error(error)
-        MessageUtil.error(error.message);
         return Promise.reject(error)
     }
 )

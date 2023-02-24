@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "es-client",
-        "version": "2.6.0"
+        "version": "2.6.1"
     },
     "tauri": {
         "allowlist": {
@@ -64,6 +64,10 @@
                 "timestampUrl": "",
                 "webviewInstallMode": {
                     "type": "embedBootstrapper"
+                },
+                "wix": {
+                    "license": "../LICENSE",
+                    "language": "zh-CN"
                 }
             }
         },

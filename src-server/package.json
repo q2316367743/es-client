@@ -1,6 +1,6 @@
 {
   "name": "es-client-server",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "es-client服务器",
   "main": "main.ts",
   "repository": "https://gitee.com/qiaoshengda/es-client",

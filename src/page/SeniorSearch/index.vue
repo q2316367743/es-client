@@ -326,7 +326,7 @@ export default defineComponent({
             }).then((response) => {
                 this.current.result = response;
             }).catch((e) => {
-                this.current.result = e.response.data
+                this.current.result = e.data
                 success = false
             }).finally(() => {
                 this.displayActive = 'result';
