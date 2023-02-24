@@ -1,23 +1,23 @@
 <template>
     <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
-               :popup-offset="2">
+        :popup-offset="2">
         <div class="item" style="display: flex;" @click="showIndex">
             <div v-if="index === ''" style="user-select: none;">未选择索引</div>
             <div v-else style="user-select: none;">{{ index }}</div>
-            <icon-up style="margin: 5px;" v-if="show"/>
-            <icon-down style="margin: 5px;" v-else/>
+            <icon-up style="margin: 5px;" v-if="show" />
+            <icon-down style="margin: 5px;" v-else />
         </div>
         <template #content>
             <div class="data-browse-pull-down-panel">
-                <a-empty v-if="indices.length === 0" description="请选择链接"/>
+                <a-empty v-if="indices.length === 0" description="请选择链接" />
                 <div class="data-browse-pull-down-index" v-else>
-                    <a-input v-model="indexFilter" class="data-browse-pull-down-search"
-                             ref="dataBrowsePullDownSearch" clearable/>
+                    <a-input v-model="indexFilter" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch"
+                        clearable />
                     <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
                         <div>
                             <div v-for="item in indicesShow" class="data-browse-list-item"
-                                 :class="item.name === index ? 'data-browse-list-item-this' : ''"
-                                 @click="indexChange(item.name, item.index)">
+                                :class="item.name === index ? 'data-browse-list-item-this' : ''"
+                                @click="indexChange(item.name, item.index)">
                                 <span>{{ item.name }}</span>
                                 <a-tag color="blue" v-if="item.type === 'index'">索引</a-tag>
                                 <a-tag color="green" v-else-if="item.type === 'alias'">别名</a-tag>
@@ -30,11 +30,11 @@
     </a-trigger>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import IndexView from "@/view/index/IndexView";
-import {mapState} from "pinia";
+import { mapState } from "pinia";
 import useIndexStore from "@/store/IndexStore";
-import {stringContain} from "@/utils/SearchUtil";
+import { stringContain } from "@/utils/SearchUtil";
 
 interface Item {
 
@@ -116,16 +116,16 @@ export default defineComponent({
 .data-browse-pull-down {
     .vxe-pulldown--panel {
         left: -170px;
-        box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+        box-shadow: 0 0 12px var(--color-border-2);
     }
 }
 
 .data-browse-pull-down-panel {
     width: 400px;
     height: 400px;
-    background-color: var(--bg-color);
+    background-color: var(--color-bg-1);
     border-radius: 5px;
-    box-shadow: 0 0 6px var(--shadow-color);
+    box-shadow: 0 0 6px var(--color-border-2);
 
     .data-browse-pull-down-index {
         width: 400px;
@@ -141,7 +141,7 @@ export default defineComponent({
             width: 400px;
             margin-top: 5px;
             overflow: auto;
-            color: var(--text-color)
+            color: var(--color-text-1)
         }
     }
 
@@ -151,13 +151,13 @@ export default defineComponent({
         justify-content: space-between;
         height: 40px;
         line-height: 40px;
-        border-bottom: 1px solid var(--hover-color);
+        border-bottom: 1px solid var(--color-border-2);
         cursor: pointer;
         overflow: hidden;
         padding-left: 16px;
 
         &:hover {
-            background-color: var(--hover-color);
+            background-color: var(--color-border-2);
         }
 
         .arco-tag {
@@ -166,8 +166,8 @@ export default defineComponent({
     }
 
     .data-browse-list-item-this {
-        color: var(--active-color);
-        background-color: var(--hover-color);
+        color: rgb(var(--arcoblue-6));
+        background-color: var(--color-border-2);
     }
 }
 </style>

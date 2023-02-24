@@ -4,53 +4,52 @@
         <div class="option">
             <!-- 左侧条件 -->
             <div class="left">
-                <page-help :total="count" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)"/>
+                <page-help :total="count" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)" />
                 <div class="sep"></div>
                 <db-simple-item :disable="!index" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
-                    <i class="vxe-icon-refresh"/>
+                    <i class="vxe-icon-refresh" />
                 </db-simple-item>
                 <div class="sep"></div>
                 <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
-                    <i class="vxe-icon-add"/>
+                    <i class="vxe-icon-add" />
                 </db-simple-item>
                 <db-simple-item :disable="deleteRowIndies.size === 0" :tip="$t('common.operation.delete')"
-                                @click="recordReduce">
-                    <i class="vxe-icon-minus"/>
+                    @click="recordReduce">
+                    <i class="vxe-icon-minus" />
                 </db-simple-item>
                 <db-simple-item :disable="deleteRowIndies.size !== 1" :tip="$t('common.operation.update')"
-                                @click="recordEdit">
-                    <i class="vxe-icon-edit"/>
+                    @click="recordEdit">
+                    <i class="vxe-icon-edit" />
                 </db-simple-item>
             </div>
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <db-index-select @index-change="indexChange"/>
+                <db-index-select @index-change="indexChange" />
                 <!-- 打印 -->
                 <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
-                    <icon-printer/>
+                    <icon-printer />
                 </db-simple-item>
                 <!-- 索引结构 -->
                 <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
-                    <icon-nav/>
+                    <icon-nav />
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
-                    <icon-search/>
+                    <icon-search />
                 </db-simple-item>
                 <!-- 跳转到高级查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
-                    <icon-filter/>
+                    <icon-filter />
                 </db-simple-item>
                 <!-- 操作 -->
                 <a-dropdown trigger="click">
                     <div class="item">
-                        <icon-more-vertical/>
+                        <icon-more-vertical />
                     </div>
                     <template #content>
                         <a-doption>
-                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz"
-                                    target="_blank">帮助
+                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助
                             </a-link>
                         </a-doption>
                     </template>
@@ -59,85 +58,68 @@
         </div>
         <!-- 输入条件 -->
         <db-condition v-model:must-value="must" v-model:should-value="should" v-model:must-not-value="mustNot"
-                      v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)"/>
+            v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)" />
         <!-- 数据表格 -->
         <div class="content-table">
-            <vxe-table border height="100%" class="es-scrollbar" :empty-text="emptyText"
-                       :data="records" ref="vxeTable" :loading="loading" :menu-config="menuConfig"
-                       :column-config="columnConfig" :row-config="rowConfig" @current-change="currentChange"
-                       :header-cell-class-name="() => ('rain-table-panel-header')" :sort-config="sortConfig"
-                       @menu-click="menuClick" @sort-change="sortChange" @checkbox-all="checkboxAll"
-                       @checkbox-change="checkboxChange" @cell-menu="cellMenu">
+            <vxe-table border height="100%" class="es-scrollbar" :empty-text="emptyText" :data="records" ref="vxeTable"
+                :loading="loading" :menu-config="menuConfig" :column-config="columnConfig" :row-config="rowConfig"
+                @current-change="currentChange" :header-cell-class-name="() => ('rain-table-panel-header')"
+                :sort-config="sortConfig" @menu-click="menuClick" @sort-change="sortChange" @checkbox-all="checkboxAll"
+                @checkbox-change="checkboxChange" @cell-menu="cellMenu">
                 <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
                 <vxe-column type="checkbox" width="60"></vxe-column>
                 <vxe-column type="expand" width="80" title="源">
                     <template #content="{ row, rowIndex }">
                         <div class="data-browse-expand">
                             <a-button type="text" text link class="copy" @click="copy(row._source)">复制</a-button>
-                            <json-view :data="row._source" :copy="false"/>
+                            <json-view :data="row._source" :copy="false" />
                         </div>
                     </template>
                 </vxe-column>
-                <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format"/>
+                <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format" />
                 <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable
-                            :formatter="format"/>
+                    :formatter="format" />
                 <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable
-                            :formatter="format"/>
+                    :formatter="format" />
                 <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
-                            :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
-                            :formatter="format"/>
+                    :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
+                    :formatter="format" />
             </vxe-table>
         </div>
         <!-- 导出弹窗 -->
-        <export-dialog v-model="exportDialog" :index-name="index ? index.name : ''" :records="records"
-                       :result="result"/>
+        <export-dialog v-model="exportDialog" :index-name="index ? index.name : ''" :records="records" :result="result" />
         <!-- 新增对话框 -->
-        <vxe-modal v-model="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" :show-footer="true" :resize="true"
-                   width="800px" height="520px" :draggable="true">
+        <a-modal v-model:visible="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" width="800px" height="520px"
+            draggable>
             <!-- @ts-ignore -->
-            <codemirror
-                v-model="addConfig.data"
-                placeholder="请在这里输入查询条件"
-                :style="{ height: '400px' }"
-                :autofocus="true"
-                :indent-with-tab="true"
-                :tabSize="4"
-                :extensions="extensions"
-            />
+            <codemirror v-model="addConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }" :autofocus="true"
+                :indent-with-tab="true" :tabSize="4" :extensions="extensions" />
             <template #footer>
                 <a-button type="text" @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
                 <a-button @click="addConfig.dialog = false">取消</a-button>
                 <a-button type="primary" @click="recordAddClick">新增</a-button>
             </template>
-        </vxe-modal>
+        </a-modal>
         <!-- 修改对话框 -->
-        <vxe-modal v-model="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`"
-                   :show-footer="true" :resize="true"
-                   width="800px" height="520px" :draggable="true">
+        <a-modal v-model:visible="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`" :resize="true"
+            width="800px" height="520px" draggable>
             <!-- @ts-ignore -->
-            <codemirror
-                v-model="editConfig.data"
-                placeholder="请在这里输入查询条件"
-                :style="{ height: '400px' }"
-                :autofocus="true"
-                :indent-with-tab="true"
-                :tabSize="4"
-                :extensions="extensions"
-            />
+            <codemirror v-model="editConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }" :autofocus="true"
+                :indent-with-tab="true" :tabSize="4" :extensions="extensions" />
             <template #footer>
                 <a-button type="text" @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
                 <a-button @click="editConfig.dialog = false">取消</a-button>
                 <a-button type="primary" @click="recordEditClick">修改</a-button>
             </template>
-        </vxe-modal>
+        </a-modal>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {mapState} from 'pinia';
-import {Codemirror} from 'vue-codemirror';
-import {json} from '@codemirror/lang-json';
-import {VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes} from 'vxe-table'
+import { defineComponent } from "vue";
+import { mapState } from 'pinia';
+import { Codemirror } from 'vue-codemirror';
+import { json } from '@codemirror/lang-json';
+import { VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes } from 'vxe-table'
 import XEUtils from 'xe-utils';
 
 import useIndexStore from "@/store/IndexStore";
@@ -326,7 +308,7 @@ export default defineComponent({
                 conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
             ).then(result => {
                 this.result = result;
-                let {headers, records, count} = recordBuild(result, this.index!);
+                let { headers, records, count } = recordBuild(result, this.index!);
                 if (renderHeader) {
                     this.headers = headers;
                 }
@@ -680,6 +662,4 @@ export default defineComponent({
     }
 });
 </script>
-<style lang="less">
-
-</style>
+<style lang="less"></style>

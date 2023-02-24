@@ -189,9 +189,10 @@ export default defineComponent({
 </script>
 <style lang="less">
 .save-or-update-url-content {
-    background-color: var(--bg-color);
+    background-color: var(--color-bg-1);
     border-radius: 20%;
-    box-shadow: 0 0 6px var(--shadow-color);
+    box-shadow: 0 0 6px var(--color-border-2);
+    color: var(--color-text-1);
 
     .save-or-update-url-content-lucene {
         margin-top: 10px;

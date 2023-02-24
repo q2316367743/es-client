@@ -11,22 +11,27 @@
     box-sizing: border-box;
 }
 
-::-webkit-scrollbar { /*滚动条整体样式*/
-    width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 5px;
+    /*高宽分别对应横竖滚动条的尺寸*/
     height: 4px;
 }
 
-::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
     border-radius: 3px;
     background-color: var(--color-text-2, var(--color-neutral-4));
 }
 
-::-webkit-scrollbar-track { /*滚动条里面轨道*/
+::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
     border-radius: 3px;
-    background: var(--container-color);
+    background: var(--color-bg-2);
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
@@ -41,8 +46,8 @@ code {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: var(--color-bg-1);
+    color: var(--color-text-1);
 }
 
 #header {
@@ -52,8 +57,8 @@ code {
     right: 1px;
     height: 40px;
     display: flex;
-    box-shadow: 0 0 12px var(--shadow-color);
-    background-color: var(--container-color);
+    background-color: var(--color-bg-2);
+    border-bottom: 1px solid var(--color-border-2);
     justify-content: space-between;
     -webkit-app-region: drag;
 
@@ -83,7 +88,7 @@ code {
         }
 
         .refresh {
-            margin: 5px;
+            margin: 4px;
             -webkit-app-region: no-drag;
         }
     }
@@ -98,11 +103,11 @@ code {
             -webkit-app-region: no-drag;
 
             .el-icon {
-                color: var(--text-color);
+                color: var(--color-text-1);
             }
 
             &:hover {
-                background-color: var(--bg-color);
+                background-color: var(--color-bg-1);
                 border-radius: 4px;
             }
 
@@ -113,7 +118,7 @@ code {
 
 #main {
     position: fixed;
-    top: 49px;
+    top: 41px;
     left: 1px;
     right: 01px;
     bottom: 1px;
@@ -123,11 +128,11 @@ code {
 #navigation {
     height: 100%;
     width: fit-content;
-    box-shadow: 0 0 12px var(--shadow-color);
-    background-color: var(--container-color);
+    background-color: var(--color-bg-2);
     overflow: hidden;
     transition: all 0.2s;
     position: relative;
+    border-right: 1px solid var(--color-border-2);
 
     .version {
         position: absolute;
@@ -145,15 +150,13 @@ code {
 #container {
     width: 100%;
     height: 100%;
-    margin-left: 8px;
-    box-shadow: 0 0 12px var(--shadow-color);
-    background-color: var(--container-color);
+    background-color: var(--color-bg-2);
     position: relative;
 }
 
 
 .desktop {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border-2);
 }
 
 .global-spin {
@@ -186,6 +189,7 @@ code {
 
 .arco-btn-group {
     margin-left: 8px;
+
     .arco-btn {
         margin-left: 0;
     }
@@ -199,8 +203,8 @@ code {
 // 公共样式
 
 .url-copy {
-    background-color: var(--hover-color);
-    color: var(--text-color);
+    background-color: var(--color-border-2);
+    color: var(--color-text-1);
     border-radius: 11px;
     padding: 1px 5px;
     margin-left: 5px;
@@ -208,6 +212,7 @@ code {
     cursor: pointer;
     display: flex;
     align-items: center;
+
     &:hover {
         filter: invert(100%);
     }
@@ -233,7 +238,7 @@ code {
 
     &[type=primary] {
         .label {
-            background-color: var(--active-color);
+            background-color: rgb(var(--arcoblue-6));
         }
     }
 
@@ -264,10 +269,10 @@ code {
     .value {
         width: 50px;
         text-align: center;
-        border-top: 1px solid var(--border-color);
-        border-right: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-        border-left: 0 solid var(--border-color);
+        border-top: 1px solid var(--color-border-2);
+        border-right: 1px solid var(--color-border-2);
+        border-bottom: 1px solid var(--color-border-2);
+        border-left: 0 solid var(--color-border-2);
     }
 
 }
@@ -278,6 +283,4 @@ code {
     width: 8px;
     height: 8px;
     border-radius: 100%;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2);
 }
-

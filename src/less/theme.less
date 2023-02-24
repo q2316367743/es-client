@@ -1,240 +1,257 @@
-body[arco-theme=light] {
-    --bg-color: #f2f2f2;
-    --text-color: #000000;
-    --container-color: #ffffff;
-    --hover-color: #9ec7f4;
-    --disable-color: #a8abb2;
-    --shadow-color: rgba(0, 0, 0, .12);
-    --active-color: #017eff;
-    --border-color: #e4e7ed;
-    --choose-color: #000000;
-    --choose-bg-color: #ff9632;
+// vxe
+.vxe-table {
+
+    .vxe-body--row.row--hover {
+        background-color: var(--color-border-2);
+    }
+
+    .vxe-body--row.row--current {
+        background-color: var(--color-border-2);
+    }
+
+    .vxe-table--header-border-line {
+        border-bottom: 1px solid var(--color-border-2) !important;
+    }
+
+
 }
 
-// 主题变量
-body[arco-theme=dark] {
-    --bg-color: #17191a;
-    --text-color: #ffffff;
-    --container-color: #232324;
-    --hover-color: #414343;
-    --disable-color: #a8abb2;
-    --shadow-color: var(--container-color);
-    --active-color: #1177d7;
-    --border-color: #ffffff;
-    --choose-color: #000000;
-    --choose-bg-color: #ff9632;
 
-    // vxe
-
-    .vxe-table--render-default {
-        color: var(--text-color);
-
-        .vxe-table--body-wrapper {
-            background-color: var(--container-color);
-        }
+.vxe-table--render-default.border--full {
+    .vxe-table--header-wrapper {
+        background-color: var(--color-bg-2) !important;
     }
+}
 
-    .vxe-table--render-default.border--full {
+
+.vxe-table--render-default {
+    color: var(--color-text-1);
+
+    &.border--default {
         .vxe-table--header-wrapper {
-            background-color: var(--container-color);
+            background-color: var(--color-bg-2);
         }
     }
 
-    .vxe-table {
+    &.border--full {
         .vxe-table--header-wrapper {
-            color: var(--el-text-color-regular);
+            background-color: var(--color-bg-2) !important;
+        }
+
+        .vxe-body--column {
+            background-image: linear-gradient(var(--color-border-2), var(--color-border-2)),
+                linear-gradient(var(--color-border-2), var(--color-border-2)) !important;
+        }
+
+        .vxe-header--column {
+            background-image: linear-gradient(var(--color-border-2), var(--color-border-2)),
+                linear-gradient(var(--color-border-2), var(--color-border-2)) !important;
+
         }
     }
 
-    .vxe-table--render-default .vxe-body--row.row--hover {
-        background-color: var(--hover-color);
+    .vxe-table--body-wrapper {
+        background-color: var(--color-bg-2) !important;
     }
 
-    .vxe-pulldown {
-        color: var(--text-color);
+    .vxe-header--column.col--current {
+        background-color: var(--color-border-3) !important;
+    }
+    .vxe-table--border-line {
+        border: 1px solid var(--color-border-2) !important;
     }
 
-    .vxe-pulldown--panel {
-        color: var(--text-color);
+}
 
-        .vxe-pulldown--wrapper {
-            background-color: var(--container-color);
+.vxe-modal--wrapper {
+    color: var(--color-text-1);
+
+    .vxe-modal--box {
+        background-color: var(--color-bg-2);
+        border: none;
+    }
+
+    .vxe-modal--header {
+        background-color: var(--color-border-2);
+    }
+}
+
+.vxe-header--column {
+    background-color: var(--color-bg-2) !important;
+    color: var(--color-text-1);
+}
+
+.vxe-body--column {
+    background-color: var(--color-bg-2) !important;
+    color: var(--color-text-1);
+
+    &.col--current {
+        background-color: var(--color-border-2) !important;
+    }
+}
+
+.vxe-body--row {
+    &.row--current {
+        .vxe-body--column {
+            background-color: var(--color-border-2) !important;
         }
     }
+}
 
-    .vxe-table--render-default .vxe-body--row.row--current {
-        background-color: var(--hover-color);
+
+
+.vxe-pulldown {
+    color: var(--color-text-1);
+}
+
+.vxe-pulldown--panel {
+    color: var(--color-text-1);
+
+    .vxe-pulldown--wrapper {
+        background-color: var(--color-bg-2);
     }
+}
 
-    .vxe-table--render-default.border--default .vxe-table--header-wrapper {
-        background-color: var(--container-color);
-    }
-
-    .vxe-modal--wrapper {
-        color: var(--text-color);
-
-        .vxe-modal--box {
-            background-color: var(--container-color);
-            border: none;
-        }
-
-        .vxe-modal--header {
-            background-color: var(--hover-color);
-        }
-    }
-
-    .vxe-toolbar {
-        background-color: var(--container-color);
-    }
-
-    .vxe-header--column {
-        background-color: var(--container-color) !important;
-        color: var(--text-color);
-    }
-    .vxe-body--column {
-        background-color: var(--container-color) !important;
-        color: var(--text-color);
-        &.col--current {
-            background-color: var(--hover-color) !important;
-        }
-    }
-
-    .vxe-body--row{
-        &.row--current {
-            .vxe-body--column {
-                background-color: var(--hover-color) !important;
-            }
-        }
-    }
-
-    .vxe-button {
-        background-color: var(--container-color);
-        color: var(--text-color);
-    }
+.vxe-toolbar {
+    background-color: var(--color-bg-2) !important;
+    color: var(--color-text-1) !important;
 
     .vxe-custom--option-wrapper {
-        background-color: var(--bg-color);
-        color: var(--text-color);
+        .vxe-custom--body {
+            .vxe-custom--option:hover {
+                background-color: var(--color-border-2);
+
+            }
+        }
+    }
+}
+
+.vxe-button {
+    background-color: var(--color-bg-2);
+    color: var(--color-text-1);
+}
+
+.vxe-custom--option-wrapper {
+    background-color: var(--color-bg-1);
+    color: var(--color-text-1);
+}
+
+
+// CodeMirror
+.cm-scroller {
+    color: #abb2bf;
+    background-color: #282c34;
+
+    .cm-content {
+        caret-color: #528bff;
     }
 
-    .vxe-toolbar .vxe-custom--option-wrapper .vxe-custom--body .vxe-custom--option:hover {
-        background-color: var(--hover-color);
-
+    .cm-cursor,
+    .cm-dropCursor {
+        border-left-color: #528bff;
     }
 
-    // CodeMirror
-    .cm-scroller {
+    &.cm-focused .cm-selectionBackground,
+    .cm-selectionBackground,
+    .cm-content ::selection {
+        background-color: #3E4451;
+    }
+
+    .cm-panels {
+        background-color: #21252b;
         color: #abb2bf;
+    }
+
+    .cm-panels.cm-panels-top {
+        border-bottom: 2px solid black;
+    }
+
+    .cm-panels.cm-panels-bottom {
+        border-top: 2px solid black;
+    }
+
+    .cm-searchMatch {
+        background-color: #72a1ff59;
+        outline: 1px solid #457dff;
+    }
+
+    .cm-searchMatch.cm-searchMatch-selected {
+        background-color: #6199ff2f;
+    }
+
+    .cm-activeLine {
+        background-color: #6699ff0b;
+    }
+
+    .cm-selectionMatch {
+        background-color: #aafe661a;
+    }
+
+    &.cm-focused .cm-matchingBracket,
+    &.cm-focused .cm-nonmatchingBracket {
+        background-color: #bad0f847;
+        outline: 1px solid #515a6b;
+    }
+
+    .cm-gutters {
         background-color: #282c34;
+        color: #7d8799;
+        border: none;
+    }
 
-        .cm-content {
-            caret-color: #528bff;
-        }
+    .cm-activeLineGutter {
+        background-color: #2c313a;
+    }
 
-        .cm-cursor, .cm-dropCursor {
-            border-left-color: #528bff;
-        }
+    .cm-foldPlaceholder {
+        background-color: transparent;
+        border: none;
+        color: #ddd;
+    }
 
-        &.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection {
-            background-color: #3E4451;
-        }
+    .cm-tooltip {
+        border: none;
+        background-color: #353a42;
+    }
 
-        .cm-panels {
-            background-color: #21252b;
+    .cm-tooltip .cm-tooltip-arrow:before {
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+    }
+
+    .cm-tooltip .cm-tooltip-arrow:after {
+        border-top-color: #353a42;
+        border-bottom-color: #353a42;
+    }
+
+    .cm-tooltip-autocomplete {
+        &>ul>li[aria-selected] {
+            background-color: #2c313a;
             color: #abb2bf;
         }
-
-        .cm-panels.cm-panels-top {
-            border-bottom: 2px solid black;
-        }
-
-        .cm-panels.cm-panels-bottom {
-            border-top: 2px solid black;
-        }
-
-        .cm-searchMatch {
-            background-color: #72a1ff59;
-            outline: 1px solid #457dff;
-        }
-
-        .cm-searchMatch.cm-searchMatch-selected {
-            background-color: #6199ff2f;
-        }
-
-        .cm-activeLine {
-            background-color: #6699ff0b;
-        }
-
-        .cm-selectionMatch {
-            background-color: #aafe661a;
-        }
-
-        &.cm-focused .cm-matchingBracket, &.cm-focused .cm-nonmatchingBracket {
-            background-color: #bad0f847;
-            outline: 1px solid #515a6b;
-        }
-
-        .cm-gutters {
-            background-color: #282c34;
-            color: #7d8799;
-            border: none;
-        }
-
-        .cm-activeLineGutter {
-            background-color: #2c313a;
-        }
-
-        .cm-foldPlaceholder {
-            background-color: transparent;
-            border: none;
-            color: #ddd;
-        }
-
-        .cm-tooltip {
-            border: none;
-            background-color: #353a42;
-        }
-
-        .cm-tooltip .cm-tooltip-arrow:before {
-            border-top-color: transparent;
-            border-bottom-color: transparent;
-        }
-
-        .cm-tooltip .cm-tooltip-arrow:after {
-            border-top-color: #353a42;
-            border-bottom-color: #353a42;
-        }
-
-        .cm-tooltip-autocomplete {
-            & > ul > li[aria-selected] {
-                background-color: #2c313a;
-                color: #abb2bf;
-            }
-        }
-
-        .ͼe {
-            color: #98c379;
-        }
-
-        .ͼc {
-            color: #d19a66;
-        }
-
-        .ͼd {
-            color: #e5c07b;
-        }
     }
 
-    //自定义
-    #data-browse {
-        .condition {
-            .condition-item {
-                .input {
-                    background-color: var(--container-color);
-                    color: var(--text-color);
-                }
+    .ͼe {
+        color: #98c379;
+    }
+
+    .ͼc {
+        color: #d19a66;
+    }
+
+    .ͼd {
+        color: #e5c07b;
+    }
+}
+
+//自定义
+#data-browse {
+    .condition {
+        .condition-item {
+            .input {
+                background-color: var(--color-bg-2);
+                color: var(--color-text-1);
             }
         }
     }
-
 }

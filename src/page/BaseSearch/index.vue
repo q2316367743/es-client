@@ -51,9 +51,10 @@
                     <div class="right">
                         <a-button type="primary" :disabled="current.index === ''" @click="openDownload">导出
                         </a-button>
-                        <a-select v-model="view" style="margin-left: 8px;width: 120px;">
-                            <a-option :label="$t('common.keyword.jsonView')" :value="2"></a-option>
-                            <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
+                        <a-select v-model="view" style="margin-left: 8px;width: 140px;">
+                            <a-option :label="$t('common.keyword.jsonView')" :value="2" />
+                            <a-option :label="$t('common.keyword.tableView')" :value="3" />
+                            <a-option label="JSON树视图" :value="4" />
                         </a-select>
                     </div>
                 </div>
@@ -86,7 +87,7 @@
                     </div>
                     <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
                 </a-scrollbar>
-                <div class="base-search-condition-sentence" :style="{ right: view === 2 ? '20px' : '50px' }">
+                <div class="base-search-condition-sentence" :style="{ right: view === 3 ? '50px' : '20px' }">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
                     </a-button>

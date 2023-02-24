@@ -2,7 +2,7 @@
     <div class="entry">
         <div>
             <span>恭喜你成功更新到 </span>
-            <span style="color: var(--active-color)">{{ version }}</span>
+            <span style="color: rgb(var(--arcoblue-6))">{{ version }}</span>
         </div>
         <div>本次更新如下</div>
         <update-item :log="log" />

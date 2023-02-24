@@ -312,7 +312,7 @@ export default defineComponent({
 }
 
 .like-link {
-    color: var(--active-color);
+    color: rgb(var(--arcoblue-6));
 }
 
 .setting-base {

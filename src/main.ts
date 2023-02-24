@@ -10,7 +10,8 @@ import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 // 引入样式
 import '@/less/theme.less';
 import '@/less/main.less';
-import '@/less/post.css'
+import '@/less/post.css';
+import '@/less/customer.less';
 
 // arco样式
 import '@arco-design/web-vue/es/spin/style/css.js';

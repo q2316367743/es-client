@@ -2,7 +2,7 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title">
-            <a-link type="primary" :style="{color: indexStateTitle}" @click="indexInfo">{{ index?.name }}</a-link>
+            <a-link type="primary" :style="{ color: indexStateTitle }" @click="indexInfo">{{ index?.name }}</a-link>
             <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
         </div>
         <!-- 详细 -->
@@ -15,17 +15,16 @@
             <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
                 <a-button type="text" @click="jumpToBaseSearch">
                     <template #icon>
-                        <icon-search/>
+                        <icon-search />
                     </template>
                 </a-button>
             </a-tooltip>
             <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
-                <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation"
-                              :ok-text="indexStateTooltip">
+                <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation" :ok-text="indexStateTooltip">
                     <a-button type="text" :status="indexStateBtn">
                         <template #icon>
-                            <icon-pause v-if="indexStateBtn === 'danger'"/>
-                            <icon-play-arrow v-else/>
+                            <icon-pause v-if="indexStateBtn === 'danger'" />
+                            <icon-play-arrow v-else />
                         </template>
                     </a-button>
                 </a-popconfirm>
@@ -33,22 +32,15 @@
             <a-tooltip :effect="theme" content="删除索引" placement="bottom">
                 <a-button type="text" @click="removeIndex">
                     <template #icon>
-                        <icon-delete/>
+                        <icon-delete />
                     </template>
                 </a-button>
             </a-tooltip>
         </div>
         <!-- 别名 -->
         <div class="alias">
-            <a-tag
-                v-for="(item, idx) in aliases"
-                :key="idx"
-                closable
-                color="blue"
-                style="margin-right: 5px"
-                :visible="item.visible"
-                @close="removeAlias(idx)"
-            >{{ item.name }}
+            <a-tag v-for="(item, idx) in aliases" :key="idx" closable color="blue" style="margin-right: 5px"
+                :visible="item.visible" @close="removeAlias(idx)">{{ item.name }}
             </a-tag>
             <a-button type="primary" status="normal" size="mini" @click="newAlias">{{ $t('common.operation.add') }}
             </a-button>
@@ -57,8 +49,8 @@
         <div class="expand-btn">
             <a-button type="text" @click="showExpand = !showExpand" size="small">
                 <template #icon>
-                    <icon-up v-if="showExpand"/>
-                    <icon-down v-else/>
+                    <icon-up v-if="showExpand" />
+                    <icon-down v-else />
                 </template>
             </a-button>
         </div>
@@ -66,23 +58,15 @@
         <div class="expand" v-if="showExpand">
             <div style="display: flex;">
                 <div v-for="(value, key) in index?.shard" :key="key">
-                    <div
-                        class="shard"
-                        v-for="(item, idx) in value"
-                        :key="idx"
-                        @click="showShardOrReplica(item, idx)"
-                    >{{ key }}
+                    <div class="shard" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">{{ key
+                    }}
                     </div>
                 </div>
             </div>
             <div style="display: flex;">
                 <div v-for="(value, key) in index?.replica" :key="key">
-                    <div
-                        class="replica"
-                        v-for="(item, idx) in value"
-                        :key="idx"
-                        @click="showShardOrReplica(item, idx)"
-                    >{{ key }}
+                    <div class="replica" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">{{
+                        key }}
                     </div>
                 </div>
             </div>
@@ -90,7 +74,7 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 
 import IndexApi from '@/api/IndexApi'
 
@@ -101,7 +85,7 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import emitter from "@/plugins/mitt";
-import {isDark, useBaseSearchEvent, usePageJumpEvent} from "@/global/BeanFactory";
+import { isDark, useBaseSearchEvent, usePageJumpEvent } from "@/global/BeanFactory";
 import IndexItemView from "@/view/IndexItemView";
 
 import BaseOrder from "@/entity/BaseOrder";
@@ -251,7 +235,7 @@ export default defineComponent({
 .home-index-card {
     margin: 5px;
     padding: 10px;
-    border: var(--border-color) solid 1px;
+    border: var(--color-border-2) solid 1px;
     border-radius: 5px;
     position: relative;
     min-width: 700px;
@@ -273,7 +257,7 @@ export default defineComponent({
 
     .detail {
         margin-top: 24px;
-        color: var(--text-color);
+        color: var(--color-text-1);
     }
 
     .option {

@@ -1,30 +1,29 @@
 <template>
-    <vxe-modal v-model="exportDialog" title="导出数据" :show-footer="true" :resize="true"
-               width="600px" height="400px" :draggable="true">
+    <a-modal v-model:visible="exportDialog" title="导出数据" width="600px" height="400px" draggable>
         <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
             <a-form :model="exportConfig" label-width="120px">
                 <a-form-item label="文件名">
-                    <a-input v-model="exportConfig.name" style="width: 215px;"/>
+                    <a-input v-model="exportConfig.name" style="width: 215px;" />
                 </a-form-item>
                 <a-form-item label="保存类型">
                     <a-select v-model="exportConfig.type">
-                        <a-option label="JSON数据（*.json）" :value="1"/>
-                        <a-option label="网页（*.html）" :value="2" disabled/>
-                        <a-option label="XML数据（*.xml）" :value="3"/>
-                        <a-option label="YAML数据（*.yaml）" :value="4"/>
+                        <a-option label="JSON数据（*.json）" :value="1" />
+                        <a-option label="网页（*.html）" :value="2" disabled />
+                        <a-option label="XML数据（*.xml）" :value="3" />
+                        <a-option label="YAML数据（*.yaml）" :value="4" />
                     </a-select>
                 </a-form-item>
                 <a-form-item label="选择数据">
                     <a-select v-model="exportConfig.data">
-                        <a-option label="当前数据（当前页的数据）" :value="1"/>
-                        <a-option label="选中数据（当前页选中的数据）" :value="2" disabled/>
+                        <a-option label="当前数据（当前页的数据）" :value="1" />
+                        <a-option label="选中数据（当前页选中的数据）" :value="2" disabled />
                     </a-select>
                 </a-form-item>
                 <a-form-item label="文件内容">
                     <a-select v-model="exportConfig.result">
-                        <a-option label="表格数据" :value="1"/>
-                        <a-option label="原始数据" :value="2"/>
-                        <a-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2"/>
+                        <a-option label="表格数据" :value="1" />
+                        <a-option label="原始数据" :value="2" />
+                        <a-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2" />
                     </a-select>
                 </a-form-item>
             </a-form>
@@ -35,10 +34,10 @@
             <a-button @click="runExportDialog(2)" type="primary" status="success">打印</a-button>
             <a-button @click="runExportDialog(3)" type="primary">导出</a-button>
         </template>
-    </vxe-modal>
+    </a-modal>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 import ExportConfig from "@/page/DataBrowse/domain/ExportConfig";
 import exportData from "@/page/DataBrowse/domain/ExportData";
 import MessageUtil from "@/utils/MessageUtil";
@@ -119,6 +118,4 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

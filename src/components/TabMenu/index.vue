@@ -72,7 +72,7 @@ export default defineComponent({
         .el-tabs__item {
             &.is-active {
                 .el-tooltip__trigger {
-                    color: var(--active-color);
+                    color: rgb(var(--arcoblue-6));
                 }
             }
 

@@ -341,7 +341,7 @@ export default defineComponent({
         bottom: 0;
         height: 25px;
         line-height: 30px;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid var(--color-border-2);
         display: flex;
 
         .bridge {
