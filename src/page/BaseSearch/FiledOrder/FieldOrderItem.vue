@@ -6,7 +6,7 @@
         <template #unchecked>禁用</template>
     </a-switch>
     <a-select v-model="order.field" allow-search :placeholder="$t('baseSearch.placeholder.order')"
-        style="margin-left: 10px;width: 250px;">
+        style="width: 250px;">
         <a-option v-for="(field, idx1) in fields" :key="idx1" :label="field.name" :value="field.name"></a-option>
     </a-select>
     <a-select v-model="order.type" filterable :placeholder="$t('baseSearch.placeholder.order')"

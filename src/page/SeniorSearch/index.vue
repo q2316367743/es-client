@@ -282,15 +282,12 @@ export default defineComponent({
     },
     // 获取最大宽度
     methods: {
-        search() {
-            this.execute();
-        },
-        execute(lineNumber?: number) {
+        execute(index: number) {
             if (!this.url) {
                 return;
             }
             let restClientEditor = this.$refs.restClientEditor as any;
-            let request = requestBuild(restClientEditor.getInstance(), lineNumber);
+            let request = requestBuild(restClientEditor.getInstance(), index);
             if (!request) {
                 MessageUtil.error('请求块无法识别');
                 return;

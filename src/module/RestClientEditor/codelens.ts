@@ -1,14 +1,15 @@
 import * as monaco from 'monaco-editor';
-import {supportMethods} from "@/data/EsUrl";
+import { URL_REGEX } from "@/data/EsUrl";
 
 export default function build(commandId: string) {
     return {
         provideCodeLenses(model: monaco.editor.ITextModel): monaco.languages.ProviderResult<monaco.languages.CodeLensList> {
             let codeLens = new Array<monaco.languages.CodeLens>();
             let lines = model.getValue().split("\n");
+            let index = 0;
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i];
-                if (line.match(`^\s*${supportMethods.join("|")} [-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]`)) {
+                if (line.match(URL_REGEX)) {
                     codeLens.push({
                         range: {
                             startLineNumber: i + 1,
@@ -21,9 +22,10 @@ export default function build(commandId: string) {
                             id: commandId,
                             title: '执行',
                             tooltip: '执行此请求',
-                            arguments: [i+1]
+                            arguments: [index]
                         },
                     });
+                    index += 1;
                 }
             }
             return {
