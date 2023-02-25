@@ -311,16 +311,16 @@ export default defineComponent({
 <style lang="less">
 .home {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
 
     .home-option {
         position: absolute;
         top: 0;
-        left: 5px;
-        right: 10px;
+        left: 0;
+        right: 0;
         height: 40px;
         display: flex;
         justify-content: space-between;
@@ -330,14 +330,14 @@ export default defineComponent({
         position: absolute;
         top: 35px;
         left: 0;
-        right: 5px;
+        right: 0;
         bottom: 26px;
     }
 
     .home-statistics {
         position: absolute;
         left: 0;
-        right: 5px;
+        right: 0;
         bottom: 0;
         height: 25px;
         line-height: 30px;

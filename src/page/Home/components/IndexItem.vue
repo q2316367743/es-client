@@ -233,7 +233,7 @@ export default defineComponent({
 </script>
 <style lang="less">
 .home-index-card {
-    margin: 5px;
+    margin: 5px 0;
     padding: 10px;
     border: var(--color-border-2) solid 1px;
     border-radius: 5px;

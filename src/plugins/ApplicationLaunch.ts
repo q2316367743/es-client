@@ -6,6 +6,7 @@ import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyCo
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 import useLoadingStore from "@/store/LoadingStore";
+import useEditorSettingStore from "@/store/useEditorSettingStore";
 
 /**
  * 应用启动器
@@ -45,7 +46,9 @@ export default class ApplicationLaunch {
         // 本地存储
         await this.lodisStrategyContext.init();
         await versionManage.init();
+        // 设置初始化
         await useSettingStore().init();
+        await useEditorSettingStore().init();
         // 初始化http模式
         await this.httpStrategyContext.init();
         await this.storageStrategyContext.init();
