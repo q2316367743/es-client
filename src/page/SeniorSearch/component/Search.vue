@@ -1,12 +1,12 @@
 <template>
-    <vxe-table :data="records" empty-text="没有记录" ref="seniorSearchRecordRef"
-               :column-config="columnConfig" :export-config="exportConfig">
+    <vxe-table :data="records" empty-text="没有记录" ref="seniorSearchRecordRef" :column-config="columnConfig"
+        :export-config="exportConfig">
         <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
         <vxe-column type="expand" width="80" title="请求体">
             <template #content="{ row, rowIndex }">
                 <div class="data-browse-expand">
                     <a-button type="text" status="normal">复制</a-button>
-                    <json-view :data="row.params ? JSON.parse(row.params) : {}" :copy="false"/>
+                    <json-view :data="row.params ? JSON.parse(row.params) : {}" :copy="false" />
                 </div>
             </template>
         </vxe-column>
@@ -14,7 +14,7 @@
         <vxe-column field="success" width="100" title="查询状态">
             <template #default="{ row }">
                 <div style="display: flex;">
-                    <div class="dot" :style="{backgroundColor: row.success ? 'green':'red'}"/>
+                    <div class="dot" :style="{ backgroundColor: row.success ? 'green' : 'red' }" />
                     <div>{{ row.success ? '成功' : '失败' }}</div>
                 </div>
             </template>
@@ -34,18 +34,18 @@
     </vxe-table>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {mapState} from "pinia";
+import { defineComponent } from "vue";
+import { mapState } from "pinia";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
-import {VxeTablePropTypes} from "vxe-table";
+import { VxeTablePropTypes } from "vxe-table";
 import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
 import XEUtils from "xe-utils";
-import {useSeniorSearchEvent} from "@/global/BeanFactory";
+import { useSeniorSearchEvent } from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";
 
 export default defineComponent({
     name: 'senior-search-record',
-    components: {JsonView},
+    components: { JsonView },
     data: () => ({
         columnConfig: {
             resizable: true
@@ -84,6 +84,4 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

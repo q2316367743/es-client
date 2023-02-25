@@ -32,15 +32,20 @@
                                     </template>
                                 </a-button>
                             </a-tooltip>
-                            <a-tooltip :content="viewTip" position="right">
-                                <a-button type="text" status="normal" @click="view = (view === 2) ? 3 : 2">
+                            <a-dropdown position="bl" @select="(command: any) => view = command">
+                                <a-button type="text" status="normal">
                                     <template #icon>
                                         <icon-code-block :size="18" v-if="view === 2" />
                                         <icon-nav :size="18" v-else-if="view === 3" />
                                         <view-icon :size="18" v-else />
                                     </template>
                                 </a-button>
-                            </a-tooltip>
+                                <template #content>
+                                    <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
+                                    <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
+                                    <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
+                                </template>
+                            </a-dropdown>
                             <a-tooltip content="编辑器设置" position="right">
                                 <a-button type="text" status="normal" @click="settingDialog = true">
                                     <template #icon>
@@ -103,6 +108,7 @@ import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 
 import {
     applicationLaunch,
@@ -120,7 +126,8 @@ import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import DataView from "@/components/DataView/index.vue";
-
+// 工具类
+import NotificationUtil from "@/utils/NotificationUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
@@ -135,9 +142,11 @@ import ViewIcon from "@/icon/ViewIcon.vue";
 import TagIcon from "@/icon/TagIcon.vue";
 import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
-import NotificationUtil from "@/utils/NotificationUtil";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
+import SeniorTabComponent from "./component/SeniorTabComponent";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+
+
+const seniorTabComponent = new SeniorTabComponent();
 
 export default defineComponent({
     name: 'SeniorSearch',
@@ -150,28 +159,15 @@ export default defineComponent({
         TabMenu, DataView,
     },
     data: () => {
-        let searchMap = new Map<number, SeniorSearchItem>();
-        let searchId = new Date().getTime();
-        let searchItem = {
-            header: {
-                id: searchId,
-                name: '高级查询'
-            },
-            body: {
-                body: '',
-                result: {}
-            }
-        };
-        searchMap.set(searchId, searchItem);
         return {
             // 标签信息
-            header: searchItem.header as TabMenuItem,
+            header: seniorTabComponent.header,
             // 展示数据
-            current: searchItem.body as SeniorSearchItemBody,
+            current: seniorTabComponent.body,
             // 查询map
-            searchMap,
+            searchMap: seniorTabComponent.searchMap,
             // 当前显示的ID
-            searchId,
+            searchId: seniorTabComponent.searchId,
             // 语法提示
             suggestions: [],
             // 相关数据
@@ -180,7 +176,8 @@ export default defineComponent({
             isDark,
             displayActive: 'result',
             loading: false,
-            settingDialog: false
+            settingDialog: false,
+            ViewTypeEnum
         }
     },
     computed: {
@@ -188,16 +185,6 @@ export default defineComponent({
         ...mapState(useUrlStore, ['url']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
-        },
-        viewTip() {
-            switch (this.view) {
-                case 2:
-                    return '切换至表格视图';
-                case 3:
-                    return '切换至JSON视图';
-                default:
-                    return '视图切换';
-            }
         }
     },
     watch: {
@@ -207,22 +194,7 @@ export default defineComponent({
             }
         },
         searchId(newValue: number) {
-            let searchItem = this.searchMap.get(newValue);
-            if (!searchItem) {
-                let searchId = new Date().getTime();
-                searchItem = {
-                    header: {
-                        id: searchId,
-                        name: '高级查询'
-                    },
-                    body: {
-                        body: '',
-                        result: {}
-                    } as SeniorSearchItemBody
-                }
-                this.searchMap.set(searchId, searchItem);
-            }
-            this.current = searchItem.body;
+            seniorTabComponent.choose(newValue);
         },
     },
     mounted() {
@@ -348,159 +320,46 @@ export default defineComponent({
         },
         editTabs(targetName: number, action: 'remove' | 'add') {
             if (action === 'add') {
-                this.clearAfter();
+                seniorTabComponent.add();
             } else if (action === 'remove') {
-                this.searchMap.delete(targetName);
-                if (this.searchMap.size === 0) {
-                    this.clearAfter();
-                } else {
-                    this.searchId = this.searchMap.keys().next().value
-                }
+                seniorTabComponent.remove(targetName);
             }
         },
         optionTab(command: string) {
-            let strings = command.split('|');
-            let option = strings[0];
-            let id = parseInt(strings[1]);
-            switch (option) {
+            switch (command) {
                 case 'close-one':
-                    this.searchMap.delete(id);
-                    if (this.searchId === id) {
-                        if (this.searchMap.size > 0) {
-                            this.searchId = this.searchMap.keys().next().value
-                        }
-                    }
+                    seniorTabComponent.close();
                     break;
                 case 'close-other':
                     // 移除其他
-                    Array.from(this.searchMap.keys()).forEach(e => {
-                        if (e !== id) {
-                            this.searchMap.delete(e);
-                        }
-                    })
-                    this.searchId = id;
+                    seniorTabComponent.closeOther();
                     break;
                 case 'close-all':
-                    this.searchMap.clear();
+                    seniorTabComponent.closeAll();
                     break;
                 case 'rename':
-                    MessageBoxUtil.prompt("请输入新的标签名字", "修改标签名", {
-                        confirmButtonText: '修改',
-                        cancelButtonText: '取消',
-                        inputValue: strings[2],
-                        inputPattern: /.+/,
-                        inputErrorMessage: '必须输入标签名'
-                    }).then((value) => {
-                        let searchItem = this.searchMap.get(id);
-                        if (searchItem) {
-                            searchItem.header.name = value;
-                        }
-                    }).catch(() => {
-                    });
+                    seniorTabComponent.rename();
                     break;
-                case 'save-history':
-                    this.saveHistory(id);
+                case 'save':
+                    seniorTabComponent.save();
                     break;
-                case 'update-history':
-                    this.updateHistory(id, strings[2]);
+                case 'update':
+                    seniorTabComponent.update();
                     break;
             }
-            // 全部关闭了
-            if (this.searchMap.size === 0) {
-                this.clearAfter();
-            }
-        },
-        saveHistory(id: number) {
-            let searchItem = this.searchMap.get(id);
-            if (!searchItem) {
-                MessageUtil.error('标签未找到');
-                return;
-            }
-            MessageBoxUtil.prompt('请输入记录名字', '新增记录', {
-                confirmButtonText: '新增',
-                cancelButtonText: '取消',
-                inputValue: isNaN(parseInt(searchItem.header.name)) ? searchItem.header.name : '',
-                inputPattern: /\S+/,
-                inputErrorMessage: '请输入有效字符'
-            })
-                .then(value => {
-                    if (!searchItem) {
-                        MessageUtil.error('标签未找到');
-                        return;
-                    }
-                    seniorSearchHistoryService.save({
-                        urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
-                        name: value,
-                        body: searchItem.body.body,
-                    })
-                        .then(id => {
-                            // 发送消息
-                            MessageUtil.success('新增成功');
-                            // 发送事件
-                            emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE);
-                            // 修改标签
-                            if (searchItem) {
-                                searchItem.header.relationId = id;
-                                searchItem.header.name = value;
-                            }
-                        })
-                        .catch(e => MessageUtil.error('新增失败', e));
-                }).catch(() => console.log('取消新增'));
-        },
-        updateHistory(id: number, name: string) {
-            let searchItem2 = this.searchMap.get(id);
-            if (!searchItem2) {
-                MessageUtil.error('标签未找到');
-                return;
-            }
-            let relationId = parseInt(name);
-            seniorSearchHistoryService.update({
-                id: relationId,
-                name: searchItem2.header.name,
-                body: searchItem2.body.body,
-            })
-                .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
-                .catch(e => {
-                    MessageUtil.error('更新失败', e);
-                    this.saveHistory(id);
-                });
         },
         save() {
-            let searchItem = this.searchMap.get(this.searchId);
-            if (!searchItem) {
-                MessageUtil.error('系统异常，标签获取错误');
-                return;
-            }
-            if (searchItem.header.relationId) {
-                // 更新
-                this.optionTab(`update-history|${searchItem.header.id}|${searchItem.header.relationId}`);
+            if (this.header.relationId) {
+                seniorTabComponent.update();
             } else {
-                // 新增
-                this.optionTab(`save-history|${searchItem.header.id}`);
+                seniorTabComponent.save();
             }
-        },
-        clearAfter() {
-            let searchId = new Date().getTime();
-            let searchItem = {
-                header: {
-                    id: searchId,
-                    name: '高级查询'
-                },
-                body: {
-                    body: '',
-                    result: {}
-                }
-            } as SeniorSearchItem;
-            this.searchMap.set(searchId, searchItem);
-            this.searchId = searchId;
         },
         openHelp() {
             nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
         },
         clearBody() {
-            this.current.body = '';
-            this.header.relationId = undefined;
-            this.current.result = {};
+            seniorTabComponent.clear();
         }
     },
 });

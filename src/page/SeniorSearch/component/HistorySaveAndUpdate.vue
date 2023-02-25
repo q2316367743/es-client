@@ -1,23 +1,23 @@
 <template>
     <a-form :model="data" label-position="left" label-width="100px">
         <a-form-item label="名称">
-            <a-input v-model="data.name" style="width: 350px"/>
+            <a-input v-model="data.name" style="width: 350px" />
         </a-form-item>
         <a-form-item label="所属链接">
             <a-select v-model="data.urlId">
-                <a-option :value="0" label="忽略"/>
-                <a-option v-for="item in urls" :value="item.id" :label="item.name"/>
+                <a-option :value="0" label="忽略" />
+                <a-option v-for="item in urls" :value="item.id" :label="item.name" />
             </a-select>
         </a-form-item>
         <a-form-item label="参数">
-            <a-textarea v-model="data.body" :rows="12"/>
+            <a-textarea v-model="data.body" :rows="12" />
         </a-form-item>
     </a-form>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import {mapState} from "pinia";
+import { mapState } from "pinia";
 import useUrlStore from "@/store/UrlStore";
 
 export default defineComponent({
@@ -62,6 +62,4 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

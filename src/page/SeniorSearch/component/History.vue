@@ -3,14 +3,14 @@
         <vxe-toolbar ref="historyToolbar" custom export class="hm-history-toolbar">
             <template #buttons>
                 <a-input v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
-                         @input="search"></a-input>
+                    @input="search"></a-input>
                 <a-button type="primary" @click="search">
                     <template #icon>
-                        <icon-refresh/>
+                        <icon-refresh />
                     </template>
                 </a-button>
                 <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
-                          style="margin-left: 12px;" type="round">
+                    style="margin-left: 12px;" type="round">
                     <template #checked>当前链接</template>
                     <template #unchecked>全部</template>
                 </a-switch>
@@ -18,7 +18,7 @@
             <template #tools>
                 <a-button type="primary" style="margin-right: 12px;" @click="addOpen">
                     <template #icon>
-                        <icon-plus/>
+                        <icon-plus />
                     </template>
                 </a-button>
             </template>
@@ -26,26 +26,24 @@
         <div class="hm-history-body">
             <a-scrollbar>
                 <vxe-table ref="historyTable" :data="histories" class="data" :column-config="columnConfig"
-                           :export-config="exportConfig">
+                    :export-config="exportConfig">
                     <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
                     <vxe-column field="name" :title="$t('common.keyword.name')"></vxe-column>
                     <vxe-column :title="$t('common.keyword.operation')" width="220" fixed="right">
                         <template #default="{ row }">
                             <a-button type="primary" status="success" size="small" @click="load(row)">{{
-                                    $t('common.operation.load')
-                                }}
+                                $t('common.operation.load')
+                            }}
                             </a-button>
                             <a-button type="primary" size="small" @click="updateOpen(row)">{{
-                                    $t('common.operation.update')
-                                }}
+                                $t('common.operation.update')
+                            }}
                             </a-button>
-                            <a-popconfirm content="确认删除此条记录？"
-                                          :ok-text="$t('common.operation.delete')"
-                                          :cancel-text="$t('common.operation.cancel')"
-                                          @ok="removeById(row.id)">
+                            <a-popconfirm content="确认删除此条记录？" :ok-text="$t('common.operation.delete')"
+                                :cancel-text="$t('common.operation.cancel')" @ok="removeById(row.id)">
                                 <a-button type="primary" status="danger" size="small">{{
-                                        $t('common.operation.delete')
-                                    }}
+                                    $t('common.operation.delete')
+                                }}
                                 </a-button>
                             </a-popconfirm>
                         </template>
@@ -53,27 +51,27 @@
                 </vxe-table>
             </a-scrollbar>
         </div>
-        <a-modal v-model:visible="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'"
-                 render-to-body unmount-on-close draggable width="50%" @ok="submit" ok-text="修改">
-            <history-save-and-update v-model="dialog.data"/>
+        <a-modal v-model:visible="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'" render-to-body
+            unmount-on-close draggable width="50%" @ok="submit" ok-text="修改">
+            <history-save-and-update v-model="dialog.data" />
         </a-modal>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import {VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance} from "vxe-table";
-import {toDateString} from "xe-utils";
+import { VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from "vxe-table";
+import { toDateString } from "xe-utils";
 
 import BrowserUtil from "@/utils/BrowserUtil";
-import {seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
+import { seniorSearchHistoryService, useSeniorSearchEvent } from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useUrlStore from "@/store/UrlStore";
-import {mapState} from "pinia";
+import { mapState } from "pinia";
 import HistorySaveAndUpdate from "@/page/SeniorSearch/component/HistorySaveAndUpdate.vue";
 import MessageUtil from "@/utils/MessageUtil";
-import {stringContain} from "@/utils/SearchUtil";
+import { stringContain } from "@/utils/SearchUtil";
 
 interface Params {
     cellValue: any
@@ -83,7 +81,7 @@ interface Params {
 
 export default defineComponent({
     name: 'senior-search-history',
-    components: {HistorySaveAndUpdate},
+    components: { HistorySaveAndUpdate },
     emits: ['load'],
     data: () => ({
         histories: new Array<SeniorSearchHistory>(),
@@ -190,7 +188,6 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-
 @media (max-width: 1200px) {
     .hm-history {
         .hm-history-toolbar {
@@ -233,5 +230,4 @@ export default defineComponent({
         }
     }
 }
-
 </style>
