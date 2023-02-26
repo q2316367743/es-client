@@ -13,15 +13,18 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import JsonViewer from 'vue-json-viewer';
+import { mapState } from "pinia";
+
 import { highlight } from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
-import { mapState } from "pinia";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 export default defineComponent({
     name: 'senior-search-data-view',
+    components: { JsonViewer },
     props: {
         view: Number,
         data: Object,

@@ -35,9 +35,9 @@
                             <a-dropdown position="bl" @select="(command: any) => view = command">
                                 <a-button type="text" status="normal">
                                     <template #icon>
-                                        <icon-code-block :size="18" v-if="view === 2" />
-                                        <icon-nav :size="18" v-else-if="view === 3" />
-                                        <view-icon :size="18" v-else />
+                                        <icon-code-block :size="18" v-if="view === ViewTypeEnum.JSON" />
+                                        <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE" />
+                                        <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE" />
                                     </template>
                                 </a-button>
                                 <template #content>
@@ -74,7 +74,8 @@
                         </a-tabs>
                         <div class="senior-display-content">
                             <!-- 结果集渲染 -->
-                            <senior-search-data-view v-show="displayActive === 'result'" :view="view" :data="current.result" />
+                            <senior-search-data-view v-show="displayActive === 'result'" :view="view"
+                                :data="current.result" />
                             <!-- 请求记录 -->
                             <senior-search-record v-show="displayActive === 'search'" />
                             <!-- 历史记录 -->
