@@ -1,17 +1,14 @@
 <template>
-    <div class="json-view hljs" :style="{fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px'}">
-        <pre>
-            <code class="language-json hljs" v-html="value"></code>
-        </pre>
+    <div class="json-view hljs" :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+        <pre class="language-json hljs" v-html="value"></pre>
         <a-button v-if="copy" type="text" link class="json-view-copy" @click="execCopy">复制</a-button>
     </div>
-
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {highlight} from '@/global/BeanFactory';
+import { defineComponent } from "vue";
+import { highlight } from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
-import {mapState} from "pinia";
+import { mapState } from "pinia";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 

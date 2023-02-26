@@ -74,7 +74,7 @@
                         </a-tabs>
                         <div class="senior-display-content">
                             <!-- 结果集渲染 -->
-                            <data-view v-show="displayActive === 'result'" :view="view" :result="current.result" />
+                            <senior-search-data-view v-show="displayActive === 'result'" :view="view" :data="current.result" />
                             <!-- 请求记录 -->
                             <senior-search-record v-show="displayActive === 'search'" />
                             <!-- 历史记录 -->
@@ -100,7 +100,6 @@ import './index.less';
 import { SeniorSearchItem, SeniorSearchItemBody } from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
-import emitter from '@/plugins/mitt';
 
 import useUrlStore from "@/store/UrlStore";
 import useSettingStore from "@/store/SettingStore";
@@ -115,7 +114,6 @@ import {
     httpStrategyContext,
     isDark,
     nativeStrategyContext,
-    seniorSearchHistoryService,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
@@ -125,7 +123,6 @@ import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 // 组件
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
-import DataView from "@/components/DataView/index.vue";
 // 工具类
 import NotificationUtil from "@/utils/NotificationUtil";
 import MessageUtil from "@/utils/MessageUtil";
@@ -133,6 +130,7 @@ import Optional from "@/utils/Optional";
 
 import { requestBuild } from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
+import SeniorSearchDataView from "@/page/SeniorSearch/component/DataView/index.vue";
 
 // 图标
 import RunIcon from "@/icon/RunIcon.vue";
@@ -156,7 +154,7 @@ export default defineComponent({
         SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
         SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/component/History.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Setting.vue')),
-        TabMenu, DataView,
+        TabMenu, SeniorSearchDataView,
     },
     data: () => {
         return {
