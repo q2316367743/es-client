@@ -51,8 +51,12 @@
             }
 
             .base-display {
-                border-radius: 4px;
-                border-top: 1px solid var(--color-border-2);
+                position: absolute;
+                top: 40px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow: auto;
 
 
                 .base-condition {
@@ -61,9 +65,7 @@
                     position: relative;
                     transition: 0.3s;
                     border-radius: 4px;
-                    border-left: 1px solid var(--color-border-2);
-                    border-right: 1px solid var(--color-border-2);
-                    border-bottom: 1px solid var(--color-border-2);
+                    border: 1px solid var(--color-border-2);
 
                     .base-condition-pagination {
                         display: flex;
@@ -72,6 +74,12 @@
 
                 .base-content {
                     position: relative;
+                    border-radius: 4px;
+                    margin-top: 8px;
+                    padding: 8px;
+                    border: 1px solid var(--color-border-2);
+                    height: 100%;
+                    overflow: hidden;
 
                     .el-pagination {
                         padding: 2px 0;
@@ -92,6 +100,7 @@
             .base-search-condition-sentence {
                 position: absolute;
                 top: 48px;
+                right: 90px;
             }
         }
     }

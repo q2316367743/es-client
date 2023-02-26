@@ -58,36 +58,34 @@
                         </a-select>
                     </div>
                 </div>
-                <a-scrollbar style="height: calc(100vh - 108px);margin-top: 40px;overflow: auto;">
-                    <!-- 核心查询区 -->
-                    <div class="base-display" ref="baseDisplay">
-                        <!-- 查询条件 -->
-                        <div class="base-condition" ref="baseCondition">
-                            <a-form :model="current" layout="vertical" label-width="80px"
-                                style="overflow-x: auto;overflow-y: hidden;">
-                                <!-- 条件 -->
-                                <a-form-item :label="$t('baseSearch.form.condition')">
-                                    <field-condition-container v-model="current.conditions" :fields="fields" />
-                                </a-form-item>
-                                <!-- 排序 -->
-                                <a-form-item :label="$t('baseSearch.form.order')">
-                                    <field-order-container v-model="current.orders" :fields="fields" />
-                                </a-form-item>
-                                <div class="base-condition-pagination">
-                                    <a-pagination :total="current.total" v-model:current="current.page"
-                                        :page-size="current.size" show-total />
-                                    <a-input-number v-model="current.size" style="width: 70px" />
-                                </div>
-                            </a-form>
-                        </div>
-                        <!-- 查询结果 -->
-                        <div class="base-content" ref="baseContent">
-                            <base-search-data-view :view="view" :result="current.result" />
-                        </div>
+                <!-- 核心查询区 -->
+                <div class="base-display" ref="baseDisplay">
+                    <!-- 查询条件 -->
+                    <div class="base-condition" ref="baseCondition">
+                        <a-form :model="current" layout="vertical" label-width="80px"
+                            style="overflow-x: auto;overflow-y: hidden;">
+                            <!-- 条件 -->
+                            <a-form-item :label="$t('baseSearch.form.condition')">
+                                <field-condition-container v-model="current.conditions" :fields="fields" />
+                            </a-form-item>
+                            <!-- 排序 -->
+                            <a-form-item :label="$t('baseSearch.form.order')">
+                                <field-order-container v-model="current.orders" :fields="fields" />
+                            </a-form-item>
+                            <div class="base-condition-pagination">
+                                <a-pagination :total="current.total" v-model:current="current.page"
+                                    :page-size="current.size" show-total />
+                                <a-input-number v-model="current.size" style="width: 70px" />
+                            </div>
+                        </a-form>
                     </div>
-                    <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
-                </a-scrollbar>
-                <div class="base-search-condition-sentence" :style="{ right: view === 3 ? '50px' : '20px' }">
+                    <!-- 查询结果 -->
+                    <div class="base-content hljs" ref="baseContent">
+                        <data-view :view="view" :data="current.result" />
+                    </div>
+                </div>
+                <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
+                <div class="base-search-condition-sentence">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
                     </a-button>
@@ -149,6 +147,7 @@ import { SelectOptionData } from "@arco-design/web-vue";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import JsonView from "@/components/JsonView/index.vue";
+import DataView from "@/components/DataView/index.vue";
 
 import emitter from '@/plugins/mitt';
 
@@ -210,7 +209,7 @@ function buildDefaultDownload(name: string, dialog: boolean = false): ExportConf
 export default defineComponent({
     name: 'base-search',
     components: {
-        BaseSearchDataView,
+        DataView,
         BshManage,
         JsonView,
         FieldConditionContainer,

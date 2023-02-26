@@ -53,6 +53,7 @@ declare module '@vue/runtime-core' {
     ATree: typeof import('@arco-design/web-vue')['Tree']
     ATrigger: typeof import('@arco-design/web-vue')['Trigger']
     Bsd: typeof import('./src/components/License/Bsd.vue')['default']
+    DataView: typeof import('./src/components/DataView/index.vue')['default']
     IndexMapping: typeof import('./src/components/IndexMapping/index.vue')['default']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']
     JsonView: typeof import('./src/components/JsonView/index.vue')['default']

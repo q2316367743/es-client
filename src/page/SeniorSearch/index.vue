@@ -74,8 +74,7 @@
                         </a-tabs>
                         <div class="senior-display-content">
                             <!-- 结果集渲染 -->
-                            <senior-search-data-view v-show="displayActive === 'result'" :view="view"
-                                :data="current.result" />
+                            <data-view v-show="displayActive === 'result'" :view="view" :data="current.result" />
                             <!-- 请求记录 -->
                             <senior-search-record v-show="displayActive === 'search'" />
                             <!-- 历史记录 -->
@@ -98,7 +97,7 @@ import { defineAsyncComponent, defineComponent } from "vue";
 import { mapState } from "pinia";
 
 import './index.less';
-import { SeniorSearchItem, SeniorSearchItemBody } from './domain/SeniorSearchItem';
+import { SeniorSearchItem } from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 
@@ -131,7 +130,7 @@ import Optional from "@/utils/Optional";
 
 import { requestBuild } from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
-import SeniorSearchDataView from "@/page/SeniorSearch/component/DataView/index.vue";
+import DataView from "@/components/DataView/index.vue";
 
 // 图标
 import RunIcon from "@/icon/RunIcon.vue";
@@ -155,7 +154,7 @@ export default defineComponent({
         SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Search.vue')),
         SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/component/History.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/component/Setting.vue')),
-        TabMenu, SeniorSearchDataView,
+        TabMenu, DataView,
     },
     data: () => {
         return {

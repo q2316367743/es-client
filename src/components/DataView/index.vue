@@ -1,15 +1,14 @@
 <template>
-    <div class="senior-search-data-view">
+    <div class="data-view hljs">
         <a-scrollbar class="scrollbar">
             <pre :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }"
-                class="senior-search-data-scroll language-json hljs" v-html="value" v-if="view === ViewTypeEnum.JSON"></pre>
-            <div v-show="view === ViewTypeEnum.JSON_TREE" id="senior-search-json-tree-view"
-                class="senior-search-data-scroll hljs" />
+                class="data-scroll language-json hljs" v-html="value" v-if="view === ViewTypeEnum.JSON"></pre>
+            <div v-show="view === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
         </a-scrollbar>
         <table-viewer v-if="view === ViewTypeEnum.TABLE" :data="data" />
-        <a-button type="text" link class="senior-search-json-view-copy" v-show="view === ViewTypeEnum.JSON"
+        <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE"
             @click="execCopy">复制</a-button>
-        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container" />
+        <a-back-top target-container=".data-view .arco-scrollbar-container" />
     </div>
 </template>
 <script lang="ts">
@@ -26,13 +25,14 @@ import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 export default defineComponent({
-    name: 'senior-search-data-view',
+    name: 'data-view',
     components: { JsonViewer },
     props: {
         view: Number,
         data: Object,
     },
     data: () => ({
+        jsonTreeId: 'json-tree-view-' + new Date().getTime(),
         value: '',
         pretty: '',
         copyable: { copyText: "复制", copiedText: "复制成功", timeout: 2000 },
@@ -58,6 +58,8 @@ export default defineComponent({
             BrowserUtil.copy(this.pretty);
         },
         render() {
+            let value = JSON.stringify(this.data, null, 4);
+            this.pretty = value;
             if (this.view === ViewTypeEnum.JSON) {
                 this.renderJsonView()
             } else if (this.view === ViewTypeEnum.JSON_TREE) {
@@ -65,19 +67,18 @@ export default defineComponent({
             }
         },
         renderJsonView() {
-            let value = JSON.stringify(this.data, null, 4);
-            this.pretty = value;
-            if (value !== '') {
-                this.$nextTick(() => {
-                    let highlightResult = highlight.highlight(value, {
-                        language: 'json'
-                    });
-                    this.value = highlightResult.value;
-                })
+            if (this.pretty === '') {
+                this.pretty = '{}';
             }
+            this.$nextTick(() => {
+                let highlightResult = highlight.highlight(this.pretty, {
+                    language: 'json'
+                });
+                this.value = highlightResult.value;
+            });
         },
         renderJsonTreeView() {
-            renderJSONTreeView(this.data!, document.getElementById("senior-search-json-tree-view")!, {
+            renderJSONTreeView(this.data!, document.getElementById(this.jsonTreeId)!, {
                 expanded: true
             })
         }
@@ -85,7 +86,7 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.senior-search-data-view {
+.data-view {
     height: 100%;
     width: 100%;
     position: relative;
@@ -109,7 +110,7 @@ export default defineComponent({
     }
 
 
-    .senior-search-json-view-copy {
+    .json-view-copy {
         position: absolute;
         top: 0;
         right: 20px;
