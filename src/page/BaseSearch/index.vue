@@ -207,7 +207,6 @@ function buildDefaultDownload(name: string, dialog: boolean = false): ExportConf
     };
 }
 
-// 公共方法
 export default defineComponent({
     name: 'base-search',
     components: {

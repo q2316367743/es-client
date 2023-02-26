@@ -21,7 +21,8 @@
             ]
         },
         "types": [
-            "utools-api-types"
+            "utools-api-types",
+            "src/lib/JsonTree/index.d.ts"
         ]
     },
     "include": [

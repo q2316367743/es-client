@@ -2,19 +2,22 @@
     <div class="senior-search-data-view">
         <a-scrollbar class="scrollbar">
             <pre :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }"
-                class="language-json hljs" v-html="value" v-if="view === ViewTypeEnum.JSON"></pre>
-            <json-viewer v-else-if="view === ViewTypeEnum.JSON_TREE" :value="data" :expand-depth=5 :copyable="copyable" sort
-                preview-mode theme="es-awesome-json-theme" style="margin-top: 8px;" />
+                class="senior-search-data-scroll language-json hljs" v-html="value" v-if="view === ViewTypeEnum.JSON"></pre>
+            <div v-show="view === ViewTypeEnum.JSON_TREE" id="senior-search-json-tree-view"
+                class="senior-search-data-scroll hljs" />
         </a-scrollbar>
         <table-viewer v-if="view === ViewTypeEnum.TABLE" :data="data" />
         <a-button type="text" link class="senior-search-json-view-copy" v-show="view === ViewTypeEnum.JSON"
             @click="execCopy">复制</a-button>
+        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container" />
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 import JsonViewer from 'vue-json-viewer';
 import { mapState } from "pinia";
+import { renderJSONTreeView } from "@/components/JsonTree";
+import '@/components/JsonTree/index.less';
 
 import { highlight } from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -41,36 +44,27 @@ export default defineComponent({
     },
     watch: {
         data() {
-            if (this.view === ViewTypeEnum.JSON) {
-                let value = JSON.stringify(this.data, null, 4);
-                this.pretty = value;
-                if (value !== '') {
-                    this.$nextTick(() => {
-                        let highlightResult = highlight.highlight(value, {
-                            language: 'json'
-                        });
-                        this.value = highlightResult.value;
-                    })
-                }
-            }
+            this.render();
         },
-        view(newValue: number) {
-            if (newValue === ViewTypeEnum.JSON) {
-                let value = JSON.stringify(this.data, null, 4);
-                this.pretty = value;
-                if (value !== '') {
-                    this.$nextTick(() => {
-                        let highlightResult = highlight.highlight(value, {
-                            language: 'json'
-                        });
-                        this.value = highlightResult.value;
-                    })
-                }
-            }
+        view() {
+            this.render();
         }
     },
-    created() {
-        if (this.view === ViewTypeEnum.JSON) {
+    mounted() {
+        this.render();
+    },
+    methods: {
+        execCopy() {
+            BrowserUtil.copy(this.pretty);
+        },
+        render() {
+            if (this.view === ViewTypeEnum.JSON) {
+                this.renderJsonView()
+            } else if (this.view === ViewTypeEnum.JSON_TREE) {
+                this.renderJsonTreeView();
+            }
+        },
+        renderJsonView() {
             let value = JSON.stringify(this.data, null, 4);
             this.pretty = value;
             if (value !== '') {
@@ -81,11 +75,11 @@ export default defineComponent({
                     this.value = highlightResult.value;
                 })
             }
-        }
-    },
-    methods: {
-        execCopy() {
-            BrowserUtil.copy(this.pretty);
+        },
+        renderJsonTreeView() {
+            renderJSONTreeView(this.data!, document.getElementById("senior-search-json-tree-view")!, {
+                expanded: true
+            })
         }
     }
 });
