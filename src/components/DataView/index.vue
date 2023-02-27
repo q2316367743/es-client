@@ -13,7 +13,6 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import JsonViewer from 'vue-json-viewer';
 import { mapState } from "pinia";
 import { renderJSONTreeView } from "@/components/JsonTree";
 import '@/components/JsonTree/index.less';
@@ -26,7 +25,6 @@ import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 export default defineComponent({
     name: 'data-view',
-    components: { JsonViewer },
     props: {
         view: Number,
         data: Object,

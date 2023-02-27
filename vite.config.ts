@@ -16,7 +16,7 @@ function _resolve(dir: string) {
 function outDir() {
     switch (process.env.npm_lifecycle_event) {
         case 'build:ts':
-            return 'dist';
+            return 'dist-ts';
         case 'build:utools':
             return 'utools';
         case 'build:edge':

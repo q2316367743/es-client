@@ -29,16 +29,20 @@ pnpm-debug.log*
 *.sw?
 
 stats.html
+
+#utools
+/utools
+
+# 服务器
 src-server/dist
 /src-server/public
 src-server/node_modules
-
-/utools
 /src-server/es-client.db
-/src-electron/dist/
+
+# 想天浏览器
+/dist-ts
 
 # vscode
-
 /src-vscode/node_modules
 /src-vscode/out
 /src-vscode/.vscode-test-web
