@@ -5,9 +5,9 @@
             <div style="display: flex">
                 <!-- 输入框 -->
                 <a-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
-                         style="width: 250px;height: 32px;" @input="search" @clear="search" allow-clear></a-input>
+                    style="width: 250px;height: 32px;" @input="search" @clear="search" allow-clear></a-input>
                 <a-select v-model="condition.order" :placeholder="$t('home.placeholder.order')"
-                          style="margin-left: 5px;width: 150px;" clearable @change="search">
+                    style="margin-left: 5px;width: 150px;" clearable @change="search">
                     <a-option :label="$t('home.order.nameAsc')" value="NAME_ASC"></a-option>
                     <a-option :label="$t('home.order.nameDesc')" value="NAME_DESC"></a-option>
                     <a-option :label="$t('home.order.sizeAsc')" value="SIZE_ASC"></a-option>
@@ -18,28 +18,27 @@
                 <a-button style="margin-left: 5px" @click="condition.dialog = true">{{ $t('common.operation.more') }}
                 </a-button>
                 <a-button type="primary" style="margin-left: 5px" @click="search">{{
-                        $t('common.operation.search')
-                    }}
+                    $t('common.operation.search')
+                }}
                 </a-button>
             </div>
             <a-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">{{
-                    $t('common.operation.new')
-                }}
+                $t('common.operation.new')
+            }}
             </a-button>
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
-            <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 20%;"/>
+            <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 20%;" />
             <a-spin :loading="indexLoading" style="width: 100%;">
                 <vxe-list :data="showIndices" :auto-resize="true" :height="height">
                     <template #default="{ items }">
-                        <index-item v-for="item in items" v-show="item.show" :index="item"
-                                    @open-dialog="indexOpenDialog"
-                                    @open-manage="indexOpenManage"/>
+                        <index-item v-for="item in items" v-show="item.show" :index="item" @open-dialog="indexOpenDialog"
+                            @open-manage="indexOpenManage" />
                     </template>
                 </vxe-list>
             </a-spin>
-            <a-back-top target-container=".home-container .vxe-list--virtual-wrapper"/>
+            <a-back-top target-container=".home-container .vxe-list--virtual-wrapper" />
         </div>
         <div class="home-statistics" v-if="url">
             <div class="bridge" type="primary">
@@ -68,9 +67,9 @@
             </div>
         </div>
         <!-- 新增索引 -->
-        <home-index-add v-model="indexAddDialog"/>
+        <home-index-add v-model="indexAddDialog" />
         <!-- 数据展示 -->
-        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model:value="indexItem.dialog"/>
+        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model:value="indexItem.dialog" />
         <!-- 更多查询条件 -->
         <a-modal v-model:visible="condition.dialog" unmount-on-close render-to-body title="更多查询条件" draggable>
             <a-form :model="condition" label-width="80px" label-position="left">
@@ -87,9 +86,9 @@
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, defineComponent} from 'vue';
-import {mapState} from 'pinia';
-import {useElementSize} from "@vueuse/core";
+import { defineAsyncComponent, defineComponent } from 'vue';
+import { mapState } from 'pinia';
+import { useElementSize } from "@vueuse/core";
 
 import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
@@ -99,10 +98,10 @@ import JsonDialog from "@/components/JsonDialog.vue";
 
 import mitt from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import {stringContain} from "@/utils/SearchUtil";
+import { stringContain } from "@/utils/SearchUtil";
 
 import IndexItemView from '@/view/IndexItemView';
-import {useIndexManageEvent} from "@/global/BeanFactory";
+import { useIndexManageEvent } from "@/global/BeanFactory";
 
 let lastSearchTime = 0;
 let lastExecuteId = -1;
@@ -179,7 +178,7 @@ export default defineComponent({
     },
     mounted() {
         let homeContainer = this.$refs['homeContainer'] as HTMLDivElement;
-        const {height} = useElementSize(homeContainer);
+        const { height } = useElementSize(homeContainer);
         this.height = height;
     },
     methods: {

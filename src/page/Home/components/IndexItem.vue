@@ -39,9 +39,11 @@
         </div>
         <!-- 别名 -->
         <div class="alias">
-            <a-tag v-for="(item, idx) in aliases" :key="idx" closable color="blue" style="margin-right: 5px"
-                :visible="item.visible" @close="removeAlias(idx)">{{ item.name }}
-            </a-tag>
+            <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked" v-for="(item, idx) in index?.alias"
+                :key="idx" style="margin-right: 5px">
+                {{ item }}
+                <icon-close :size="16" @click="removeAlias(item)" class="alias-close" />
+            </span>
             <a-button type="primary" status="normal" size="mini" @click="newAlias">{{ $t('common.operation.add') }}
             </a-button>
         </div>
@@ -138,14 +140,6 @@ export default defineComponent({
             return this.isDark ? 'dark' : 'light';
         }
     },
-    created() {
-        if (this.index) {
-            this.index.alias.forEach(alias => this.aliases.push({
-                name: alias,
-                visible: true
-            }));
-        }
-    },
     methods: {
         showShardOrReplica(json: any, idx: number) {
             let title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
@@ -159,29 +153,20 @@ export default defineComponent({
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
             }).then((value) => IndexApi(this.index?.name!).newAlias(value)
-                .then(res => {
-                    MessageUtil.success(JSON.stringify(res), this.reset);
-                    this.aliases.push({
-                        name: value,
-                        visible: true
-                    })
-                })
+                .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('新建别名错误', e)));
         },
-        removeAlias(index: number) {
+        removeAlias(alias: string) {
             MessageBoxUtil.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
             })
-                .then(() => IndexApi(this.index?.name!).removeAlias(this.aliases[index].name)
+                .then(() => IndexApi(this.index?.name!).removeAlias(alias)
                     .then(res => {
                         MessageUtil.success(JSON.stringify(res), this.reset);
-                        this.aliases[index].visible = false;
                     })
                     .catch(e => MessageUtil.error('删除别名错误', e)))
-                .catch(() => {
-                    this.aliases[index].visible = true;
-                });
+                .catch(() => console.log('取消删除'));
         },
         removeIndex() {
             MessageBoxUtil.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
@@ -270,6 +255,17 @@ export default defineComponent({
         position: absolute;
         top: 50px;
         right: 102px;
+
+        .alias-close {
+            margin-left: 4px;
+            padding: 2px;
+
+            &:hover {
+                background-color: var(--color-fill-3);
+                border-radius: 50%;
+                cursor: pointer;
+            }
+        }
     }
 
     .expand-btn {
