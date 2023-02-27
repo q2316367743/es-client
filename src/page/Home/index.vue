@@ -31,14 +31,14 @@
         <div class="home-container" ref="homeContainer">
             <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 20%;" />
             <a-spin :loading="indexLoading" style="width: 100%;">
-                <vxe-list :data="showIndices" :auto-resize="true" :height="height">
-                    <template #default="{ items }">
-                        <index-item v-for="item in items" v-show="item.show" :index="item" @open-dialog="indexOpenDialog"
-                            @open-manage="indexOpenManage" />
-                    </template>
-                </vxe-list>
+                <a-scrollbar>
+                    <div class="home-index-items">
+                        <index-item v-for="item in showIndices" v-show="item.show" :index="item"
+                            @open-dialog="indexOpenDialog" @open-manage="indexOpenManage" />
+                    </div>
+                </a-scrollbar>
             </a-spin>
-            <a-back-top target-container=".home-container .vxe-list--virtual-wrapper" />
+            <a-back-top target-container=".home-container .arco-scrollbar-container" />
         </div>
         <div class="home-statistics" v-if="url">
             <div class="bridge" type="primary">
@@ -331,6 +331,19 @@ export default defineComponent({
         left: 0;
         right: 0;
         bottom: 26px;
+
+        .arco-scrollbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            .arco-scrollbar-container {
+                height: 100%;
+                overflow: auto;
+            }
+        }
     }
 
     .home-statistics {
