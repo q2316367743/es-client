@@ -58,6 +58,9 @@ export default defineComponent({
         render() {
             let value = JSON.stringify(this.data, null, 4);
             this.pretty = value;
+            if (this.pretty === '') {
+                this.pretty = '{}';
+            }
             if (this.view === ViewTypeEnum.JSON) {
                 this.renderJsonView()
             } else if (this.view === ViewTypeEnum.JSON_TREE) {
@@ -65,9 +68,6 @@ export default defineComponent({
             }
         },
         renderJsonView() {
-            if (this.pretty === '') {
-                this.pretty = '{}';
-            }
             this.$nextTick(() => {
                 let highlightResult = highlight.highlight(this.pretty, {
                     language: 'json'
