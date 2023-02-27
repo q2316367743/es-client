@@ -110,7 +110,7 @@ export default defineComponent({
 
     .json-view-copy {
         position: absolute;
-        top: 5px;
+        top: 0;
         right: 15px;
     }
 }
