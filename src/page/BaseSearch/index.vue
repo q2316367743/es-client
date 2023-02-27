@@ -52,9 +52,10 @@
                         <a-button type="primary" :disabled="current.index === ''" @click="openDownload">导出
                         </a-button>
                         <a-select v-model="view" style="margin-left: 8px;width: 140px;">
-                            <a-option :label="$t('common.keyword.jsonView')" :value="2" />
-                            <a-option :label="$t('common.keyword.tableView')" :value="3" />
-                            <a-option label="JSON树视图" :value="4" />
+                            <a-option label="基础视图" :value="ViewTypeEnum.BASE" />
+                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON" />
+                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE" />
+                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE" />
                         </a-select>
                     </div>
                 </div>
@@ -179,6 +180,7 @@ import Field from "@/view/Field";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {
+    applicationLaunch,
     baseSearchHistoryService,
     useBaseSearchEvent,
     useIndexManageEvent,
@@ -188,6 +190,7 @@ import {
 import Optional from "@/utils/Optional";
 import DocumentApi from "@/api/DocumentApi";
 import exportBuild from "@/page/BaseSearch/component/ExportBuild";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 function buildDefaultDownload(name: string, dialog: boolean = false): ExportConfig {
     return {
@@ -257,8 +260,9 @@ export default defineComponent({
             download: buildDefaultDownload(''),
 
             // 视图
-            view: useSettingStore().getDefaultViewer,
+            view: ViewTypeEnum.JSON,
             showTop: true,
+            ViewTypeEnum
         };
     },
     computed: {
@@ -392,6 +396,10 @@ export default defineComponent({
                     this.search();
                 }
             })
+        });
+        applicationLaunch.register(() => {
+            this.view = useSettingStore().getDefaultViewer
+            return Promise.resolve()
         });
     },
     methods: {

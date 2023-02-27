@@ -1,8 +1,8 @@
 <template>
     <div class="data-view hljs">
-        <a-scrollbar class="scrollbar">
-            <pre :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }"
-                class="data-scroll language-json hljs" v-html="value" v-if="view === ViewTypeEnum.JSON"></pre>
+        <a-scrollbar class="scrollbar" :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+            <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
+            <pre class="data-scroll language-json hljs" v-html="value" v-else-if="view === ViewTypeEnum.JSON"></pre>
             <div v-show="view === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
         </a-scrollbar>
         <table-viewer v-if="view === ViewTypeEnum.TABLE" :data="data" />
@@ -110,8 +110,8 @@ export default defineComponent({
 
     .json-view-copy {
         position: absolute;
-        top: 0;
-        right: 20px;
+        top: 5px;
+        right: 15px;
     }
 }
 </style>

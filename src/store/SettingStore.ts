@@ -11,6 +11,7 @@ import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 
 const useSettingStore = defineStore('setting', {
@@ -25,7 +26,7 @@ const useSettingStore = defineStore('setting', {
         getLanguage: (state) => state.language,
         getDefaultShard: (state) => state.instance.defaultShard,
         getDefaultReplica: (state) => state.instance.defaultReplica,
-        getDefaultViewer: (state) => ArrayUtil.contains([1, 2, 3], state.instance.defaultViewer) ? state.instance.defaultViewer : 1,
+        getDefaultViewer: (state): ViewTypeEnum => Optional.ofNullable(state.instance.defaultViewer).orElse(ViewTypeEnum.JSON),
         getPageSize: (state): number => state.instance.pageSize,
         getTimeout: (state): number => Optional.ofNullable(state.instance.timeout).orElse(5000),
         getNotificationTime: (state): number => Optional.ofNullable(state.instance.notificationTime).orElse(5000),

@@ -35,12 +35,14 @@
                             <a-dropdown position="bl" @select="(command: any) => view = command">
                                 <a-button type="text" status="normal">
                                     <template #icon>
-                                        <icon-code-block :size="18" v-if="view === ViewTypeEnum.JSON" />
+                                        <icon-code :size="18" v-if="view === ViewTypeEnum.BASE" />
+                                        <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON" />
                                         <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE" />
                                         <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE" />
                                     </template>
                                 </a-button>
                                 <template #content>
+                                    <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
                                     <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
                                     <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
                                     <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
@@ -169,7 +171,7 @@ export default defineComponent({
             // 语法提示
             suggestions: [],
             // 相关数据
-            view: 2,
+            view: ViewTypeEnum.JSON,
             showTop: true,
             isDark,
             displayActive: 'result',
