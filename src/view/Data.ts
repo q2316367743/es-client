@@ -36,6 +36,16 @@ export interface LogItem {
      */
     txc?: string
 
+    /**
+     * gitee反馈
+     */
+    gitee?: {
+
+        title: string;
+
+        content: string;
+    }
+
 }
 
 export enum LogItemEnum {

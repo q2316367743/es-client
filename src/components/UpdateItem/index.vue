@@ -14,6 +14,7 @@
                 </a-tag>
                 <span style="margin-left:5px;">{{ item.content }}</span>
                 <span v-if="item.txc"><a-link @click="open(item.txc)">@兔小巢</a-link></span>
+                <span v-if="item.gitee"><a-link @click="open(item.gitee?.content)">#{{ item.gitee?.title }}</a-link></span>
             </li>
         </template>
     </ol>

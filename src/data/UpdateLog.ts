@@ -1,6 +1,34 @@
-import {Log, LogItemEnum} from "@/view/Data";
+import { Log, LogItemEnum } from "@/view/Data";
 
 export default [
+    {
+        version: '2.6.2',
+        sign: 262,
+        time: '2023-03-03',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '修复高级查询语法解析错误',
+            gitee: {
+                title: '新建query查询条件无法执行，出现多个执行按钮',
+                content: 'https://gitee.com/qiaoshengda/es-client/issues/I6HHJG'
+            }
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '修复概览别名展示错误'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '优化颜色，全局颜色更加统一'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '优化高级查询结果展示'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '优化基础查询结果展示'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '新增JSON树视图和基础视图'
+        }]
+    },
     {
         version: '2.6.1',
         sign: 261,
