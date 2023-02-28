@@ -1,5 +1,5 @@
 <template>
-    <div class="base-search-data-view hljs"
+    <div class="base-search-data-view hljs" :class="view === ViewTypeEnum.TABLE ? 'table-viewer-show' : ''"
         :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
         <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="view === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
@@ -94,6 +94,12 @@ export default defineComponent({
         position: absolute;
         top: 0;
         right: 15px;
+    }
+    &.table-viewer-show {
+        height: calc(100vh - 108px);
+        overflow: hidden;
+        padding: 0;
+        border: 0px;
     }
 }
 </style>

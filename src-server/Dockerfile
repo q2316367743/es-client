@@ -1,6 +1,6 @@
 FROM node:16.15.1
 
-LABEL author="esion" version="2.6.1"
+LABEL author="esion" version="2.6.2"
 
 # 拷贝文件
 COPY dist /app/es-client

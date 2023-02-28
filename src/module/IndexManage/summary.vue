@@ -3,7 +3,7 @@
         <a-descriptions title="概览" :column="2" class="index-manage-summary" bordered>
             <a-descriptions-item label="健康">
                 <div class="health">
-                    <div class="dot" :style="{backgroundColor: health}"/>
+                    <div class="dot" :style="{ backgroundColor: health }" />
                     <div>{{ health }}</div>
                 </div>
             </a-descriptions-item>
@@ -19,31 +19,26 @@
             <a-descriptions-item label="unassigned分片">{{ unassignedShards }}</a-descriptions-item>
             <a-descriptions-item label="存储大小">{{ storageSize }}</a-descriptions-item>
             <a-descriptions-item label="别名">
-                <a-tag
-                    v-for="(item, idx) in aliases"
-                    :key="idx"
-                    closable
-                    color="blue"
-                    style="margin-right: 5px"
-                    :visible="item.visible"
-                    @close="removeAlias(idx)"
-                >{{ item.name }}
-                </a-tag>
-                <a-button type="primary" status="normal" size="mini" @click="newAlias">{{$t('common.operation.add')}}</a-button>
+                <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked summary-alias"
+                    v-for="(item, idx) in aliasItems" :key="idx" style="margin-right: 5px">
+                    {{ item }}
+                    <icon-close :size="16" @click="removeAlias(item)" class="alias-close" />
+                </span>
+                <a-button type="primary" status="normal" size="mini" @click="newAlias">{{ $t('common.operation.add') }}
+                </a-button>
             </a-descriptions-item>
         </a-descriptions>
     </a-spin>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import useIndexStore from "@/store/IndexStore";
 import Assert from "@/utils/Assert";
 import IndexApi from "@/api/IndexApi";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
-import {mapState} from "pinia";
+import { mapState } from "pinia";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import IndexAlias from "@/domain/IndexAlias";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
@@ -66,7 +61,7 @@ export default defineComponent({
         docsCount: '0',
         docsDeleted: '0',
         storageSize: '',
-        aliases: new Array<IndexAlias>()
+        aliasItems: new Array<string>()
     }),
     created() {
         this.init();
@@ -104,11 +99,7 @@ export default defineComponent({
                     .map(e => e + '')
                     .orElse('');
                 this.storageSize = indexView.size;
-                this.aliases = new Array<IndexAlias>();
-                indexView.alias.forEach(alias => this.aliases.push({
-                    name: alias,
-                    visible: true
-                }));
+                this.aliasItems = indexView.alias;
             }).catch(e => MessageUtil.error("索引健康值获取错误", e))
                 .finally(() => this.loading = false);
         },
@@ -120,27 +111,18 @@ export default defineComponent({
             }).then((value) => IndexApi(this.index!).newAlias(value)
                 .then(res => {
                     MessageUtil.success(JSON.stringify(res), this.reset);
-                    this.aliases.push({
-                        name: value,
-                        visible: true
-                    })
                 })
                 .catch(e => MessageUtil.error('新建别名错误', e)));
         },
-        removeAlias(index: number) {
+        removeAlias(alias: string) {
             MessageBoxUtil.confirm("此操作将永久删除该别名, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
             })
-                .then(() => IndexApi(this.index!).removeAlias(this.aliases[index].name)
-                    .then(res => {
-                        MessageUtil.success(JSON.stringify(res), this.reset);
-                        this.aliases[index].visible = false;
-                    })
+                .then(() => IndexApi(this.index!).removeAlias(alias)
+                    .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                     .catch(e => MessageUtil.error('删除别名错误', e)))
-                .catch(() => {
-                    this.aliases[index].visible = true;
-                });
+                .catch(() => console.log('取消删除别买'));
         },
         reset() {
             emitter.emit(MessageEventEnum.REFRESH_URL);
@@ -161,6 +143,21 @@ export default defineComponent({
     .alias {
         margin-right: 5px;
         margin-bottom: 5px;
+    }
+
+    .summary-alias {
+
+        .alias-close {
+            margin-left: 4px;
+            padding: 2px;
+
+            &:hover {
+                background-color: var(--color-fill-3);
+                border-radius: 50%;
+                cursor: pointer;
+            }
+        }
+
     }
 }
 </style>

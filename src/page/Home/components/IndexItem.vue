@@ -94,7 +94,6 @@ import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import IndexAlias from "@/domain/IndexAlias";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -107,7 +106,6 @@ export default defineComponent({
         showExpand: false,
         open: true,
         isDark,
-        aliases: new Array<IndexAlias>()
     }),
     computed: {
         indexStateBtn(): 'danger' | 'success' | 'normal' {

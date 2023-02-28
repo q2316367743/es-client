@@ -82,9 +82,9 @@ function grammaticalAnalysis(value: string): Array<Grammatical> {
         requests.push(request);
     }
     let grammaticalItems = new Array<Grammatical>();
-    for(let i= 0;i < requests.length; i++) {
-        let grammatical = renderGrammatical(request, i);
-        if(grammatical) {
+    for (let i = 0; i < requests.length; i++) {
+        let grammatical = renderGrammatical(requests[i], i);
+        if (grammatical) {
             grammaticalItems.push(grammatical);
         }
     }

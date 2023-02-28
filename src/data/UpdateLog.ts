@@ -26,7 +26,7 @@ export default [
             content: '优化基础查询结果展示'
         }, {
             label: LogItemEnum.ADD,
-            content: '新增JSON树视图和基础视图'
+            content: '新增JSON树视图和基础视图，基础视图主要用于展示非JSON数据'
         }]
     },
     {
