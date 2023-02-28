@@ -61,29 +61,32 @@
                 </div>
                 <!-- 核心查询区 -->
                 <div class="base-display" ref="baseDisplay">
-                    <!-- 查询条件 -->
-                    <div class="base-condition" ref="baseCondition">
-                        <a-form :model="current" layout="vertical" label-width="80px"
-                            style="overflow-x: auto;overflow-y: hidden;">
-                            <!-- 条件 -->
-                            <a-form-item :label="$t('baseSearch.form.condition')">
-                                <field-condition-container v-model="current.conditions" :fields="fields" />
-                            </a-form-item>
-                            <!-- 排序 -->
-                            <a-form-item :label="$t('baseSearch.form.order')">
-                                <field-order-container v-model="current.orders" :fields="fields" />
-                            </a-form-item>
-                            <div class="base-condition-pagination">
-                                <a-pagination :total="current.total" v-model:current="current.page"
-                                    :page-size="current.size" show-total />
-                                <a-input-number v-model="current.size" style="width: 70px" />
-                            </div>
-                        </a-form>
-                    </div>
-                    <!-- 查询结果 -->
-                    <div class="base-content hljs" ref="baseContent">
-                        <data-view :view="view" :data="current.result" />
-                    </div>
+                    <a-scrollbar class="scrollbar">
+                        <!-- 查询条件 -->
+                        <div class="base-condition" ref="baseCondition">
+                            <a-form :model="current" layout="vertical" label-width="80px"
+                                style="overflow-x: auto;overflow-y: hidden;">
+                                <!-- 条件 -->
+                                <a-form-item :label="$t('baseSearch.form.condition')">
+                                    <field-condition-container v-model="current.conditions" :fields="fields" />
+                                </a-form-item>
+                                <!-- 排序 -->
+                                <a-form-item :label="$t('baseSearch.form.order')">
+                                    <field-order-container v-model="current.orders" :fields="fields" />
+                                </a-form-item>
+                                <div class="base-condition-pagination">
+                                    <a-pagination :total="current.total" v-model:current="current.page"
+                                        :page-size="current.size" show-total />
+                                    <a-input-number v-model="current.size" style="width: 70px" />
+                                </div>
+                            </a-form>
+                        </div>
+                        <!-- 查询结果 -->
+                        <div class="base-content hljs" ref="baseContent">
+                            <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result" />
+                        </div>
+                    </a-scrollbar>
+                    <a-back-top target-container=".base-display .arco-scrollbar-container" />
                 </div>
                 <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
                 <div class="base-search-condition-sentence">
@@ -92,6 +95,9 @@
                     </a-button>
                     <a-button type="text" @click="jumpToSeniorSearch">
                         {{ $t('common.action.jumpToSeniorSearch') }}
+                    </a-button>
+                    <a-button type="text" @click="execCopy">
+                        {{ $t('common.action.copy') }}
                     </a-button>
                 </div>
             </div>
@@ -148,7 +154,6 @@ import { SelectOptionData } from "@arco-design/web-vue";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import JsonView from "@/components/JsonView/index.vue";
-import DataView from "@/components/DataView/index.vue";
 
 import emitter from '@/plugins/mitt';
 
@@ -166,13 +171,17 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 
 // 内部组件
 import '@/page/BaseSearch/index.less';
-import QueryConditionBuild from '@/page/BaseSearch/component/QueryConditionBuild';
+
+import QueryConditionBuild from '@/page/BaseSearch/components/QueryConditionBuild';
+import exportBuild from "@/page/BaseSearch/components/ExportBuild";
+
+import { BaseSearchItem } from "@/page/BaseSearch/domain/BaseSearchItem";
+import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
+
 import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
 import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldConditionContainer.vue";
 import BshManage from "@/page/BaseSearch/History/index.vue";
-import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
 import BaseSearchDataView from "@/page/BaseSearch/DataView/index.vue";
-import { BaseSearchItem } from "@/page/BaseSearch/domain/BaseSearchItem";
 
 
 import Field from "@/view/Field";
@@ -189,7 +198,6 @@ import {
 } from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import DocumentApi from "@/api/DocumentApi";
-import exportBuild from "@/page/BaseSearch/component/ExportBuild";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 function buildDefaultDownload(name: string, dialog: boolean = false): ExportConfig {
@@ -212,7 +220,7 @@ function buildDefaultDownload(name: string, dialog: boolean = false): ExportConf
 export default defineComponent({
     name: 'base-search',
     components: {
-        DataView,
+        BaseSearchDataView,
         BshManage,
         JsonView,
         FieldConditionContainer,
@@ -608,9 +616,12 @@ export default defineComponent({
         clickDownload() {
             exportBuild(this.download, this.current)
                 .then(() => MessageUtil.success("导出成功"))
-                .catch(e => MessageUtil.error("导出失败", e))
+                .catch((e: any) => MessageUtil.error("导出失败", e))
                 .finally(() => this.download.dialog = false);
         },
+        execCopy() {
+            (this.$refs['baseSearchDataView'] as any).execCopy()
+        }
     }
 });
 </script>

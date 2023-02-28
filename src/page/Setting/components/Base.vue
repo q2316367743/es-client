@@ -81,8 +81,10 @@
                 </a-form-item>
                 <a-form-item :label="$t('setting.base.display.defaultView.title')">
                     <a-select v-model="instance.defaultViewer">
+                        <a-option label="基础视图" :value="1"></a-option>
                         <a-option :label="$t('common.keyword.jsonView')" :value="2"></a-option>
                         <a-option :label="$t('common.keyword.tableView')" :value="3"></a-option>
+                        <a-option label="JSON树视图" :value="4"></a-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="JSON视图 - 字体大小">

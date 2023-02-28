@@ -12,6 +12,7 @@ import '@/less/theme.less';
 import '@/less/main.less';
 import '@/less/post.css';
 import '@/less/customer.less';
+import '@/components/JsonTree/index.less';
 
 // arco样式
 import '@arco-design/web-vue/es/spin/style/css.js';

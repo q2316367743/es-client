@@ -1,21 +1,20 @@
 <template>
-    <div class="data-view hljs">
+    <div class="senior-search-data-view hljs">
         <a-scrollbar class="scrollbar" :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
-            <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
-            <pre class="data-scroll language-json hljs" v-html="value" v-else-if="view === ViewTypeEnum.JSON"></pre>
-            <div v-show="view === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
+            <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
+            <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"></pre>
+            <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
         </a-scrollbar>
-        <table-viewer v-if="view === ViewTypeEnum.TABLE" :data="data" />
+        <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="data" />
         <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE"
             @click="execCopy">复制</a-button>
-        <a-back-top target-container=".data-view .arco-scrollbar-container" />
+        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container" />
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "pinia";
 import { renderJSONTreeView } from "@/components/JsonTree";
-import '@/components/JsonTree/index.less';
 
 import { highlight } from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -24,7 +23,7 @@ import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 export default defineComponent({
-    name: 'data-view',
+    name: 'senior-search-data-view',
     props: {
         view: Number,
         data: Object,
@@ -35,7 +34,8 @@ export default defineComponent({
         pretty: '',
         copyable: { copyText: "复制", copiedText: "复制成功", timeout: 2000 },
         Optional,
-        ViewTypeEnum
+        ViewTypeEnum,
+        show: ViewTypeEnum.JSON
     }),
     computed: {
         ...mapState(useSettingStore, ['instance'])
@@ -56,15 +56,29 @@ export default defineComponent({
             BrowserUtil.copy(this.pretty);
         },
         render() {
-            let value = JSON.stringify(this.data, null, 4);
-            this.pretty = value;
-            if (this.pretty === '') {
-                this.pretty = '{}';
-            }
-            if (this.view === ViewTypeEnum.JSON) {
-                this.renderJsonView()
-            } else if (this.view === ViewTypeEnum.JSON_TREE) {
-                this.renderJsonTreeView();
+            if (typeof this.data === 'object') {
+                let value = JSON.stringify(this.data, null, 4);
+                this.pretty = value;
+                if (this.pretty === '') {
+                    this.pretty = '{}';
+                }
+                this.show = this.view || ViewTypeEnum.JSON;
+                if (this.view === ViewTypeEnum.JSON) {
+                    this.renderJsonView()
+                } else if (this.view === ViewTypeEnum.JSON_TREE) {
+                    this.renderJsonTreeView();
+                }
+            } else if (typeof this.data === 'string') {
+                // 字符串，直接展示
+                this.pretty = this.data;
+                this.show = ViewTypeEnum.BASE;
+            } else if (typeof this.data !== 'undefined') {
+                this.pretty = '没有相应体';
+                this.show = ViewTypeEnum.BASE;
+            } else {
+                this.pretty = `${this.data}`;
+                this.show = ViewTypeEnum.BASE;
+
             }
         },
         renderJsonView() {
@@ -84,17 +98,17 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.data-view {
+.senior-search-data-view {
     height: 100%;
     width: 100%;
     position: relative;
 
     .arco-scrollbar {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        top: 4px;
+        left: 6px;
+        right: 6px;
+        bottom: 4px;
 
         .scrollbar {
             overflow: auto;

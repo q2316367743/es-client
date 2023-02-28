@@ -60,6 +60,23 @@
                 border-bottom: 1px solid var(--color-border-2);
                 border-radius: 4px;
 
+                .arco-scrollbar {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+
+                    .scrollbar {
+                        overflow: auto;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+
+                    }
+                }
 
                 .base-condition {
                     overflow-y: hidden;
@@ -76,35 +93,15 @@
 
                 .base-content {
                     position: relative;
-                    border-radius: 4px;
                     margin-top: 8px;
-                    padding: 8px;
-                    border-left: 1px solid var(--color-border-2);
-                    border-right: 1px solid var(--color-border-2);
-                    border-top: 1px solid var(--color-border-2);
                     height: 100%;
-                    overflow: hidden;
-
-                    .el-pagination {
-                        padding: 2px 0;
-                    }
-
-                    .page {
-                        width: 100%;
-                        text-align: center;
-                        margin-top: 10px;
-                    }
-
-                    .editor-viewer {
-                        margin-top: 10px;
-                    }
                 }
             }
 
             .base-search-condition-sentence {
                 position: absolute;
                 top: 48px;
-                right: 90px;
+                right: 10px;
             }
         }
     }
