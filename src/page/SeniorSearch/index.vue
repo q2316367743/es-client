@@ -55,6 +55,13 @@
                                     </template>
                                 </a-button>
                             </a-tooltip>
+                            <a-tooltip content="导出" position="right">
+                                <a-button type="text" status="normal" @click="exportData">
+                                    <template #icon>
+                                        <icon-launch :size="18" />
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
                             <a-tooltip content="帮助" position="right">
                                 <a-button type="text" status="normal" @click="openHelp">
                                     <template #icon>
@@ -76,7 +83,8 @@
                         </a-tabs>
                         <div class="senior-display-content">
                             <!-- 结果集渲染 -->
-                            <senior-search-data-view v-show="displayActive === 'result'" :view="view" :data="current.result" />
+                            <senior-search-data-view v-show="displayActive === 'result'" :view="view"
+                                :data="current.result" />
                             <!-- 请求记录 -->
                             <senior-search-record v-show="displayActive === 'search'" />
                             <!-- 历史记录 -->
@@ -143,6 +151,8 @@ import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
 import SeniorTabComponent from "./components/SeniorTabComponent";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import { exportData } from "@/components/ExportComponent";
+import { ExportScope, ExportSource, ExportType } from "@/components/ExportComponent/domain";
 
 
 const seniorTabComponent = new SeniorTabComponent();
@@ -360,6 +370,23 @@ export default defineComponent({
         },
         clearBody() {
             seniorTabComponent.clear();
+        },
+        exportData() {
+            if (Object.keys(this.current.result).length === 0) {
+                MessageUtil.error('请先执行查询');
+                return;
+            }
+            exportData({
+                name: '高级查询数据导出',
+                type: ExportType.HTML,
+                separator: '',
+                scope: ExportScope.ALL,
+                customStart: 0,
+                customEnd: -1,
+                source: ExportSource.HIT,
+                fields: [],
+                size: 1000
+            }, this.current.result);
         }
     },
 });

@@ -81,8 +81,6 @@ export const useUrlSelectEvent = useEventBus<number>(EventBusEnum.URL_SELECT_EVE
 export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
 export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE);
 
-// 全局状态
-
 // 代码高亮
 highlight.registerLanguage('json', highlightJson);
 export {highlight};
