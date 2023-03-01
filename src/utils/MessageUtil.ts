@@ -15,6 +15,7 @@ function error(message: string): void;
 function error(message: string, e: any): void;
 function error(message: string, e: any, callback: () => void): void;
 function error(message: string, e?: any, callback?: () => void): void {
+    console.log(e, typeof e)
     if (typeof e === 'string') {
         Message.error({
             closable: true,
@@ -23,7 +24,7 @@ function error(message: string, e?: any, callback?: () => void): void {
     } else {
         Message.error({
             closable: true,
-            content: Optional.ofNullable(e).map(e => `${message}`).orElse(message)
+            content: Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
         });
     }
     console.error(e);

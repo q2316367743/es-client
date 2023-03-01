@@ -14,7 +14,7 @@ function exportNoSql(config: ExportConfig, data: any): void {
         Assert.isFalse(!data || !data.hits || !data.hits.hits,
             "结构错误无法导出");
         obj = (data.hits.hits as Array<any>).map(e => e['_source']);
-    }else {
+    } else {
         obj = data;
     }
     if (config.type === ExportType.JSON) {
@@ -44,7 +44,7 @@ interface Result {
 
 function renderRecord(config: ExportConfig, data: any): Result {
     let records = new Array<any>();
-    let keys = new Array<string>();
+    let keys = new Set<string>();
     if (config.source === ExportSource.HIT) {
         Assert.isFalse(!data || !data.hits || !data.hits.hits,
             "结构错误无法导出");
@@ -52,13 +52,14 @@ function renderRecord(config: ExportConfig, data: any): Result {
             let temp = {} as Record<string, any>;
             Object.keys(item).forEach(key => {
                 if (key === '_source') {
-                    Object.keys(item['_source']).forEach(key1 => {
-                        temp[key1] = item[key1];
-                        keys.push(key1);
+                    let _source = item['_source'];
+                    Object.keys(_source).forEach(key1 => {
+                        temp[key1] = _source[key1];
+                        keys.add(key1);
                     })
                 } else {
                     temp[key] = item[key];
-                    keys.push(key);
+                    keys.add(key);
                 }
             });
             records.push(temp);
@@ -71,7 +72,7 @@ function renderRecord(config: ExportConfig, data: any): Result {
         throw new Error('结构错误无法导出');
     }
     return {
-        keys,
+        keys: Array.from(keys),
         records
     }
 }
@@ -96,8 +97,10 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
             <tbody>
                 ${records
             .map(record => keys.map(key => {
-                if (typeof record[key] === 'object') {
-                    return `<td>$${JSON.stringify(record[key])}</td>`;
+                if (typeof record[key] === 'undefined') {
+                    return '<td></td>';
+                } else if (typeof record[key] === 'object') {
+                    return `<td>${JSON.stringify(record[key])}</td>`;
                 } else {
                     return `<td>${record[key]}</td>`;
                 }

@@ -99,6 +99,7 @@
             :footer="false">
             <senior-search-setting @close="settingDialog = false" />
         </a-modal>
+        <senior-search-export-dialog v-model="exportDialog" :data="current.result"/>
     </a-spin>
 </template>
 
@@ -151,8 +152,6 @@ import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
 import SeniorTabComponent from "./components/SeniorTabComponent";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import { exportData } from "@/components/ExportComponent";
-import { ExportScope, ExportSource, ExportType } from "@/components/ExportComponent/domain";
 
 
 const seniorTabComponent = new SeniorTabComponent();
@@ -166,6 +165,7 @@ export default defineComponent({
         SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/components/History.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Setting.vue')),
         SeniorSearchDataView: defineAsyncComponent(() => import('@/page/SeniorSearch/components/DataView/index.vue')),
+        SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/SeniorSearch/components/ExportDialog.vue')),
         TabMenu
     },
     data: () => {
@@ -187,6 +187,7 @@ export default defineComponent({
             displayActive: 'result',
             loading: false,
             settingDialog: false,
+            exportDialog: false,
             ViewTypeEnum
         }
     },
@@ -376,17 +377,7 @@ export default defineComponent({
                 MessageUtil.error('请先执行查询');
                 return;
             }
-            exportData({
-                name: '高级查询数据导出',
-                type: ExportType.HTML,
-                separator: '',
-                scope: ExportScope.ALL,
-                customStart: 0,
-                customEnd: -1,
-                source: ExportSource.HIT,
-                fields: [],
-                size: 1000
-            }, this.current.result);
+            this.exportDialog = true;
         }
     },
 });
