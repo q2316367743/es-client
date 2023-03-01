@@ -5,4 +5,4 @@ declare module '*.vue' {
     export default component
 }
 
-declare module 'vue-json-viewer';
+declare module '@json2csv/plainjs';

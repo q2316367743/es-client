@@ -1,4 +1,5 @@
 import x2js from 'x2js';
+import { Parser } from '@json2csv/plainjs';
 import {useDark, useEventBus, useToggle} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
@@ -58,6 +59,7 @@ export const json2xml = new x2js({
     selfClosingElements: false,
     escapeMode: false
 });
+export const json2Csv = new Parser({});
 
 // 黑夜模式
 export const isDark = useDark({

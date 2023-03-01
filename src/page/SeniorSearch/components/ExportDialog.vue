@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false">
+    <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false" draggable>
         <a-form :model="instance" layout="vertical">
             <a-form-item label=文件名>
                 <a-input v-model="instance.name" />
@@ -85,7 +85,7 @@ export default defineComponent({
                     case ExportType.CSV:
                     case ExportType.TSV:
                     case ExportType.TXT:
-                        if(this.instance.source === ExportSource.ALL) {
+                        if (this.instance.source === ExportSource.ALL) {
                             MessageUtil.warning('导出结构化数据，只能导出hits中或_source中的数据');
                             this.instance.source = ExportSource.HIT;
                         }

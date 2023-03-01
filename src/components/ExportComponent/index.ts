@@ -1,4 +1,4 @@
-import { json2xml } from "@/global/BeanFactory";
+import { json2Csv, json2xml } from "@/global/BeanFactory";
 import jsYaml from 'js-yaml';
 import BrowserUtil from "@/utils/BrowserUtil";
 import { ExportConfig, ExportScope, ExportSource, ExportType } from "./domain";
@@ -114,6 +114,14 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
 `
 }
 
+function exportForCsv(config: ExportConfig, data: any): void {
+    let { keys, records } = renderRecord(config, data);
+    
+    BrowserUtil.download(json2Csv.parse(records),
+        config.name + '.csv',
+        "text/csv");
+}
+
 function exportForTxt(config: ExportConfig, data: any): void {
     let { keys, records } = renderRecord(config, data);
     BrowserUtil.download(txtTemplate(config.separator, keys, records),
@@ -151,6 +159,8 @@ export function exportData(config: ExportConfig, data: any): void {
             exportForHtml(config, data);
             break;
         case ExportType.CSV:
+            exportForCsv(config, data);
+            break;
         case ExportType.TSV:
         case ExportType.TXT:
             exportForTxt(config, data);

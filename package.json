@@ -36,6 +36,7 @@
     "dependencies": {
         "@arco-design/web-vue": "^2.42.1",
         "@codemirror/lang-json": "^6.0.1",
+        "@json2csv/plainjs": "^6.1.2",
         "@vueuse/core": "^9.9.0",
         "axios": "^1.2.2",
         "codemirror": "^6.0.1",
