@@ -3,6 +3,7 @@ import jsYaml from 'js-yaml';
 import { ExportConfig, ExportSource, ExportType } from "./domain";
 import Assert from "@/utils/Assert";
 import DownloadType from "@/strategy/NativeStrategy/DownloadType";
+import { toRaw } from "vue";
 
 function exportNoSql(config: ExportConfig, data: any): void {
     let obj = {};
@@ -68,9 +69,14 @@ function renderRecord(config: ExportConfig, data: any): Result {
         Assert.isFalse(!data || !data.hits || !data.hits.hits,
             "结构错误无法导出");
         records = (data.hits.hits as Array<any>).map(e => e['_source']);
+        records.forEach(record => Object.keys(record)
+            .forEach(key => {
+                keys.add(key);
+            }));
     } else {
         throw new Error('结构错误无法导出');
     }
+    console.log(keys)
     return {
         keys: Array.from(keys),
         records
@@ -116,7 +122,7 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
 
 function exportForCsv(config: ExportConfig, data: any): void {
     let { keys, records } = renderRecord(config, data);
-    
+
     nativeStrategyContext.getStrategy().download(json2Csv.parse(records),
         config.name + '.csv',
         DownloadType.CSV);
@@ -149,6 +155,7 @@ function txtTemplate(separator: string, keys: Array<string>, records: Array<any>
  * @param data 导出的源数据
  */
 export function exportData(config: ExportConfig, data: any): void {
+    data = toRaw(data);
     switch (config.type) {
         case ExportType.JSON:
         case ExportType.YML:
