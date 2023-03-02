@@ -5,4 +5,15 @@ declare module '*.vue' {
     export default component
 }
 
-declare module '@json2csv/plainjs';
+declare module '@json2csv/plainjs' {
+    export interface Option {
+        /**
+         * 列的分隔符。如果未指定，则默认为`,`
+         */
+        delimiter?: string;
+    }
+    export class Parser{
+        constructor(option?: Option);
+        parse(data: any): string;
+    }
+};

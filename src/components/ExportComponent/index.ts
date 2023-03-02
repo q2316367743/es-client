@@ -1,9 +1,22 @@
-import { json2Csv, json2xml, nativeStrategyContext } from "@/global/BeanFactory";
+// 导出库
+import x2js from 'x2js';
+import { Parser } from '@json2csv/plainjs';
 import jsYaml from 'js-yaml';
+
+import { nativeStrategyContext } from "@/global/BeanFactory";
 import { ExportConfig, ExportSource, ExportType } from "./domain";
 import Assert from "@/utils/Assert";
 import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 import { toRaw } from "vue";
+
+const json2xml = new x2js({
+    selfClosingElements: false,
+    escapeMode: false
+});
+const json2Csv = new Parser({});
+const json2Tsv = new Parser({
+    delimiter: '\t'
+});
 
 function exportNoSql(config: ExportConfig, data: any): void {
     let obj = {};
@@ -121,32 +134,30 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
 }
 
 function exportForCsv(config: ExportConfig, data: any): void {
-    let { keys, records } = renderRecord(config, data);
+    let { records } = renderRecord(config, data);
 
     nativeStrategyContext.getStrategy().download(json2Csv.parse(records),
         config.name + '.csv',
         DownloadType.CSV);
 }
 
-function exportForTxt(config: ExportConfig, data: any): void {
-    let { keys, records } = renderRecord(config, data);
-    nativeStrategyContext.getStrategy().download(txtTemplate(config.separator, keys, records),
+function exportForTsv(config: ExportConfig, data: any): void {
+    let { records } = renderRecord(config, data);
+    nativeStrategyContext.getStrategy().download(json2Tsv.parse(records),
         config.name + '.txt',
         DownloadType.TXT);
 }
 
-function txtTemplate(separator: string, keys: Array<string>, records: Array<any>): string {
-    return `${keys.join(separator)}
-    ${records
-            .map(record => keys.map(key => {
-                if (typeof record[key] === 'object') {
-                    return `$${JSON.stringify(record[key])}`;
-                } else {
-                    return `${record[key]}`;
-                }
-            }).join(separator))
-            .join('\n')}`;
+function exportForTxt(config: ExportConfig, data: any): void {
+    let { records } = renderRecord(config, data);
+    const json2Txt = new Parser({
+        delimiter: config.separator
+    });
+    nativeStrategyContext.getStrategy().download(json2Txt.parse(records),
+        config.name + '.txt',
+        DownloadType.TXT);
 }
+
 
 /**
  * 导出数据
@@ -169,6 +180,8 @@ export function exportData(config: ExportConfig, data: any): void {
             exportForCsv(config, data);
             break;
         case ExportType.TSV:
+            exportForTsv(config, data);
+            break;
         case ExportType.TXT:
             exportForTxt(config, data);
             break;
