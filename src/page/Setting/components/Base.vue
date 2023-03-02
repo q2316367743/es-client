@@ -4,10 +4,10 @@
             <a-collapse-item :header="$t('setting.base.layout.title')" key="1">
                 <a-form-item label="默认页面">
                     <a-select v-model="instance.defaultPage">
-                        <a-option :value="PageNameEnum.HOME" label="概览"/>
-                        <a-option :value="PageNameEnum.DATA_BROWSER" label="数据浏览"/>
-                        <a-option :value="PageNameEnum.BASE_SEARCH" label="基础搜索"/>
-                        <a-option :value="PageNameEnum.SENIOR_SEARCH" label="高级搜索"/>
+                        <a-option :value="PageNameEnum.HOME" label="概览" />
+                        <a-option :value="PageNameEnum.DATA_BROWSER" label="数据浏览" />
+                        <a-option :value="PageNameEnum.BASE_SEARCH" label="基础搜索" />
+                        <a-option :value="PageNameEnum.SENIOR_SEARCH" label="高级搜索" />
                     </a-select>
                 </a-form-item>
             </a-collapse-item>
@@ -36,31 +36,18 @@
                     <template #label>
                         <span>排除指定索引</span>
                         <a-tooltip content="支持正则表达式" placement="top" effect="light">
-                            <icon-question-circle style="margin-left: 5px;"/>
+                            <icon-question-circle style="margin-left: 5px;" />
                         </a-tooltip>
                     </template>
-                    <a-tag
-                        v-for="index in instance.homeExcludeIndices"
-                        :key="index"
-                        closable
-                        color="blue"
-                        :disable-transitions="false"
-                        @close="removeHomeExcludeIndex(index)"
-                        class="home-exclude-index"
-                    >
+                    <a-tag v-for="index in instance.homeExcludeIndices" :key="index" closable color="blue"
+                        :disable-transitions="false" @close="removeHomeExcludeIndex(index)" class="home-exclude-index">
                         {{ index }}
                     </a-tag>
-                    <a-input
-                        v-if="homeExcludeIndicesConfig.input"
-                        ref="homeExcludeIndexInput"
-                        v-model="homeExcludeIndicesConfig.value"
-                        size="small"
-                        @keyup.enter="addHomeExcludeIndex"
-                        @blur="addHomeExcludeIndex"
-                        style="width: 72px;"
-                        class="home-exclude-item"
-                    />
-                    <a-button type="primary" v-else size="small" @click="addHomeExcludeIndexClick" class="home-exclude-item">
+                    <a-input v-if="homeExcludeIndicesConfig.input" ref="homeExcludeIndexInput"
+                        v-model="homeExcludeIndicesConfig.value" size="small" @keyup.enter="addHomeExcludeIndex"
+                        @blur="addHomeExcludeIndex" style="width: 72px;" class="home-exclude-item" />
+                    <a-button type="primary" v-else size="small" @click="addHomeExcludeIndexClick"
+                        class="home-exclude-item">
                         新增索引
                     </a-button>
                 </a-form-item>
@@ -68,11 +55,11 @@
             <a-collapse-item :header="$t('setting.base.time.title')" key="4">
                 <a-form-item :label="$t('setting.base.time.timeout')">
                     <a-input-number controls-position="right" v-model="instance.timeout" :min="0" :step="1000"
-                                    :placeholder="$t('setting.base.time.timeoutPlaceholder')"></a-input-number>
+                        :placeholder="$t('setting.base.time.timeoutPlaceholder')"></a-input-number>
                 </a-form-item>
                 <a-form-item label="通知关闭时间">
                     <a-input-number controls-position="right" v-model="instance.notificationTime" :min="0" :step="1000"
-                                    placeholder="单位（ms）"></a-input-number>
+                        placeholder="单位（ms）"></a-input-number>
                 </a-form-item>
             </a-collapse-item>
             <a-collapse-item :header="$t('setting.base.display.title')" key="5">
@@ -92,12 +79,12 @@
                 </a-form-item>
                 <a-form-item :label="$t('setting.base.display.jsonViewThemeLight')">
                     <a-select v-model="instance.jsonThemeByLight">
-                        <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
+                        <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme" />
                     </a-select>
                 </a-form-item>
                 <a-form-item :label="$t('setting.base.display.jsonViewThemeDark')">
                     <a-select v-model="instance.jsonThemeByDark">
-                        <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
+                        <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme" />
                     </a-select>
                 </a-form-item>
             </a-collapse-item>
@@ -106,11 +93,10 @@
                     <template #label>
                         <span>是否启用标签栏</span>
                         <a-tooltip content="基础查询和高级查询" placement="top" effect="light">
-                            <icon-question-circle style="margin-left: 5px;"/>
+                            <icon-question-circle style="margin-left: 5px;" />
                         </a-tooltip>
                     </template>
-                    <a-switch v-model="instance.showTab" :checked-value="true" :unchecked-value="false"
-                              type="round">
+                    <a-switch v-model="instance.showTab" :checked-value="true" :unchecked-value="false" type="round">
                         <template #checked>启用</template>
                         <template #unchecked>禁用</template>
                     </a-switch>
@@ -119,7 +105,7 @@
                     <template #label>
                         <span>标签载入方式</span>
                         <a-tooltip content="高级查询有效" placement="top" effect="light">
-                            <icon-question-circle style="margin-left: 5px;"/>
+                            <icon-question-circle style="margin-left: 5px;" />
                         </a-tooltip>
                     </template>
                     <a-radio-group v-model="instance.tabLoadMode" :disabled="instance.showTab">
@@ -131,11 +117,11 @@
                     <template #label>
                         <span>标签栏最大数量</span>
                         <a-tooltip content="数量太多会导致性能变差" placement="top" effect="light">
-                            <icon-question-circle style="margin-left: 5px;"/>
+                            <icon-question-circle style="margin-left: 5px;" />
                         </a-tooltip>
                     </template>
                     <a-input-number controls-position="right" v-model="instance.tabMaxCount"
-                                    :disabled="!instance.showTab"/>
+                        :disabled="!instance.showTab" />
                 </a-form-item>
                 <a-form-item label="标签栏超过最大数量后的关闭模式">
                     <a-radio-group v-model="instance.tabCloseMode" :disabled="!instance.showTab">
@@ -146,8 +132,7 @@
             </a-collapse-item>
             <a-collapse-item :header="$t('setting.base.other.title')" key="7">
                 <a-form-item :label="$t('setting.base.other.fullScreen.title')">
-                    <a-switch v-model="instance.autoFullScreen" :checked-value="true" :unchecked-value="false"
-                              type="round">
+                    <a-switch v-model="instance.autoFullScreen" :checked-value="true" :unchecked-value="false" type="round">
                         <template #checked>{{ $t('common.operation.open') }}</template>
                         <template #unchecked>{{ $t('common.operation.close') }}</template>
                     </a-switch>
@@ -156,11 +141,10 @@
                     <template #label>
                         <span>保存上次选择的连接</span>
                         <a-tooltip content="保存后，下一次打开es-client自动选中该链接" placement="top" effect="light">
-                            <icon-question-circle style="margin-left: 5px;"/>
+                            <icon-question-circle style="margin-left: 5px;" />
                         </a-tooltip>
                     </template>
-                    <a-switch v-model="instance.lastUrl" :checked-value="true" :unchecked-value="false"
-                              type="round">
+                    <a-switch v-model="instance.lastUrl" :checked-value="true" :unchecked-value="false" type="round">
                         <template #checked>保存</template>
                         <template #unchecked>忽略</template>
                     </a-switch>
@@ -173,13 +157,14 @@
     </a-form>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import useSettingStore from "@/store/SettingStore";
 
 import {
     applicationLaunch,
     baseSearchHistoryService,
     lodisStrategyContext,
+    nativeStrategyContext,
     seniorSearchHistoryService,
     urlService
 } from "@/global/BeanFactory";
@@ -197,6 +182,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
 import XEUtils from "xe-utils";
 import useLoadingStore from "@/store/LoadingStore";
+import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 
 let isInit = false;
 let isFirst = true;
@@ -280,7 +266,7 @@ export default defineComponent({
                 let setting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
                 let editorSetting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.EDITOR_SETTING);
                 useLoadingStore().setText('开始下载');
-                BrowserUtil.download(JSON.stringify({
+                nativeStrategyContext.getStrategy().download(JSON.stringify({
                     version: Constant.version,
                     time: XEUtils.toDateString(new Date(), 'yyyy-MM-dd HH:ss:mm'),
                     url, baseSearchHistory, seniorSearchHistory,
@@ -289,7 +275,7 @@ export default defineComponent({
                         setting,
                         editorSetting
                     }
-                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, 'application/json');
+                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, DownloadType.JSON);
             } catch (e: any) {
                 MessageUtil.error('下载失败', e);
             } finally {

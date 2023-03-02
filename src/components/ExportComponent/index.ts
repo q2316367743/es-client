@@ -1,8 +1,8 @@
-import { json2Csv, json2xml } from "@/global/BeanFactory";
+import { json2Csv, json2xml, nativeStrategyContext } from "@/global/BeanFactory";
 import jsYaml from 'js-yaml';
-import BrowserUtil from "@/utils/BrowserUtil";
-import { ExportConfig, ExportScope, ExportSource, ExportType } from "./domain";
+import { ExportConfig, ExportSource, ExportType } from "./domain";
 import Assert from "@/utils/Assert";
+import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 
 function exportNoSql(config: ExportConfig, data: any): void {
     let obj = {};
@@ -18,19 +18,19 @@ function exportNoSql(config: ExportConfig, data: any): void {
         obj = data;
     }
     if (config.type === ExportType.JSON) {
-        BrowserUtil.download(JSON.stringify(obj),
+        nativeStrategyContext.getStrategy().download(JSON.stringify(obj),
             config.name + '.json',
-            "application/json");
+            DownloadType.JSON);
         return;
     } else if (config.type === ExportType.XML) {
-        BrowserUtil.download(json2xml.js2xml(obj),
+        nativeStrategyContext.getStrategy().download(json2xml.js2xml(obj),
             config.name + '.xml',
-            "application/xml");
+            DownloadType.XML);
         return;
     } else if (config.type === ExportType.YML) {
-        BrowserUtil.download(jsYaml.dump(obj),
+        nativeStrategyContext.getStrategy().download(jsYaml.dump(obj),
             config.name + '.yml',
-            "application/yml");
+            DownloadType.YML);
         return;
     }
 }
@@ -79,9 +79,9 @@ function renderRecord(config: ExportConfig, data: any): Result {
 
 function exportForHtml(config: ExportConfig, data: any): void {
     let { keys, records } = renderRecord(config, data);
-    BrowserUtil.download(htmlTemplate(config.name, keys, records),
+    nativeStrategyContext.getStrategy().download(htmlTemplate(config.name, keys, records),
         config.name + '.html',
-        "application/html");
+        DownloadType.HTML);
 }
 
 function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
@@ -117,16 +117,16 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
 function exportForCsv(config: ExportConfig, data: any): void {
     let { keys, records } = renderRecord(config, data);
     
-    BrowserUtil.download(json2Csv.parse(records),
+    nativeStrategyContext.getStrategy().download(json2Csv.parse(records),
         config.name + '.csv',
-        "text/csv");
+        DownloadType.CSV);
 }
 
 function exportForTxt(config: ExportConfig, data: any): void {
     let { keys, records } = renderRecord(config, data);
-    BrowserUtil.download(txtTemplate(config.separator, keys, records),
+    nativeStrategyContext.getStrategy().download(txtTemplate(config.separator, keys, records),
         config.name + '.txt',
-        "txt/plain");
+        DownloadType.TXT);
 }
 
 function txtTemplate(separator: string, keys: Array<string>, records: Array<any>): string {

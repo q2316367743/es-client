@@ -1,10 +1,11 @@
 import { VXETable } from 'vxe-table';
 import jsYaml from 'js-yaml';
 
-import { json2xml } from '@/global/BeanFactory';
+import { json2xml, nativeStrategyContext } from '@/global/BeanFactory';
 
 import ExportConfig from "./ExportConfig";
 import BrowserUtil from "@/utils/BrowserUtil";
+import DownloadType from '@/strategy/NativeStrategy/DownloadType';
 
 function verifyExportConfig(exportConfig: ExportConfig) {
     if (exportConfig.name === '') {
@@ -137,13 +138,13 @@ export default function exportData(exportConfig: ExportConfig, records: Array<an
     } else if (exportConfig.config === 3) {
         // 下载
         if (exportConfig.type === 1) {
-            BrowserUtil.download(content, exportConfig.name, 'application/json');
+            nativeStrategyContext.getStrategy().download(content, exportConfig.name, DownloadType.JSON);
         } else if (exportConfig.type === 2) {
-            BrowserUtil.download(content, exportConfig.name, 'text/html');
+            nativeStrategyContext.getStrategy().download(content, exportConfig.name, DownloadType.HTML);
         } else if (exportConfig.type === 3) {
-            BrowserUtil.download(content, exportConfig.name, 'text/xml');
+            nativeStrategyContext.getStrategy().download(content, exportConfig.name, DownloadType.XML);
         } else if (exportConfig.type === 4) {
-            BrowserUtil.download(content, exportConfig.name, 'text/yaml');
+            nativeStrategyContext.getStrategy().download(content, exportConfig.name, DownloadType.YML);
         }
     } else {
         throw new Error('导出方式未知')

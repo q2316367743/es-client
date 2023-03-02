@@ -1,12 +1,44 @@
-import Constant from "@/global/Constant";
-import NativeStrategy from "@/strategy/NativeStrategy/NativeStrategy";
+// tauri
+import { open } from "@tauri-apps/api/shell"
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { writeText } from '@tauri-apps/api/clipboard';
+import { save } from '@tauri-apps/api/dialog';
+import { writeTextFile } from '@tauri-apps/api/fs';
+
+// 工具类
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
-import { open } from "@tauri-apps/api/shell"
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+
+import Constant from "@/global/Constant";
+import NativeStrategy from "@/strategy/NativeStrategy/NativeStrategy";
+import DownloadType from "../DownloadType";
 
 export default class TauriNativeStrategyImpl implements NativeStrategy {
+
+    copy(value: string): void {
+        writeText(value).then(() => MessageUtil.success('成功复制到剪切板'));
+    }
+
+    download(value: string, name: string, type: DownloadType): void {
+        // 打开保存对话框
+        save({
+            title: '保存文件',
+            defaultPath: name,
+            filters: [{
+                name: `${type}文件`,
+                extensions: [type]
+            }, {
+                name: '任意文件',
+                extensions: ['*']
+            }]
+        }).then(result => {
+            if (result) {
+                writeTextFile(result, value)
+                    .then(() => MessageUtil.success('下载完成'));
+            }
+        })
+    }
 
     checkUpdate(): void {
         checkUpdate().then(result => {

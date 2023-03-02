@@ -1,10 +1,11 @@
 import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
 import {BaseSearchItemBody} from "@/page/BaseSearch/domain/BaseSearchItem";
-import BrowserUtil from "@/utils/BrowserUtil";
 import QueryConditionBuild from "@/page/BaseSearch/components/QueryConditionBuild";
 import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
+import { nativeStrategyContext } from "@/global/BeanFactory";
+import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 
 export default async function exportBuild(
     config: ExportConfig, body: BaseSearchItemBody
@@ -21,7 +22,7 @@ export default async function exportBuild(
     } else {
         throw new Error("导出类型未知")
     }
-    BrowserUtil.download(content, config.name, "application/json");
+    nativeStrategyContext.getStrategy().download(content, config.name, DownloadType.JSON);
 }
 
 async function exportCurrent(config: ExportConfig, body: BaseSearchItemBody): Promise<Array<any>> {

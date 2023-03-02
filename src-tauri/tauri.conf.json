@@ -31,6 +31,15 @@
                 "close": true,
                 "setTitle": true,
                 "startDragging": true
+            },
+            "clipboard": {
+                "writeText": true
+            },
+            "dialog": {
+                "save": true
+            },
+            "fs": {
+                "writeFile": true
             }
         },
         "bundle": {
