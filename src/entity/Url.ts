@@ -42,4 +42,9 @@ export default interface Url extends Base {
      */
     authPassword?: string;
 
+    /**
+     * 版本信息
+     */
+    version: string;
+
 }

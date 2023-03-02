@@ -13,8 +13,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Optional from "@/utils/Optional";
 import BrowserUtil from "@/utils/BrowserUtil";
-import { Log } from "@/view/Data";
-import NotificationUtil from "@/utils/NotificationUtil";
 import Setting from "@/domain/Setting";
 
 export default class VersionManage {
@@ -41,37 +39,6 @@ export default class VersionManage {
      */
     public checkBasicUpdate(): number {
         return this.status;
-    }
-
-    /**
-     * 检测客户端更新
-     */
-    public checkDesktopUpdate(show: boolean = false): void {
-        if (Constant.mode === 'desktop') {
-            httpStrategyContext.getStrategy().fetch<Log>({
-                url: Constant.updater,
-                method: 'GET',
-                responseType: "json",
-                hidden: true
-            }).then(content => {
-                if (content.sign > Constant.sign) {
-                    // 存在更新
-                    NotificationUtil.confirm(
-                        `检测到新版本【${content.version}】，当前版本【${Constant.version}】，请前往gitee或网盘中下载安装包更新。`,
-                        "版本更新",
-                        {
-                            confirmButtonText: "前往下载",
-                            cancelButtonText: "取消"
-                        }).then(() => {
-                            nativeStrategyContext.getStrategy().openLink(Constant.repositories[0].url);
-                        })
-                } else {
-                    if (show) {
-                        MessageUtil.info("当前已是最新版本");
-                    }
-                }
-            })
-        }
     }
 
     public async execUpdate(): Promise<void> {

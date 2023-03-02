@@ -195,6 +195,7 @@ import {
     applicationLaunch,
     isDark,
     lodisStrategyContext,
+    nativeStrategyContext,
     toggleDark,
     usePageJumpEvent,
     useUrlEditEvent,
@@ -274,9 +275,10 @@ export default defineComponent({
     created() {
         applicationLaunch.register(async () => {
             console.log('开始执行应用启动后任务')
-            this.urlSelectLoading = false;
             // 刷新索引列表
             useUrlStore().reset(() => {
+                // url渲染成功
+                this.urlSelectLoading = false;
                 // utools/vscode第一次进入事件
                 let code = sessionStorage.getItem('action');
                 console.log('当前的code：', code)
@@ -326,9 +328,6 @@ export default defineComponent({
                     break;
             }
             await versionManage.execUpdate();
-
-            // 客户端版本更新
-            versionManage.checkDesktopUpdate();
 
             this.selectMenu(useSettingStore().getDefaultPage);
 
@@ -431,7 +430,7 @@ export default defineComponent({
                     emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'update');
                     break;
                 case 'update':
-                    versionManage.checkDesktopUpdate(true);
+                    nativeStrategyContext.getStrategy().checkUpdate();
                     break;
                 case 'feedback':
                     this.feedbackDialog = true;

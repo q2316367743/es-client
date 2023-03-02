@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, defineComponent} from "vue";
+import { defineAsyncComponent, defineComponent } from "vue";
 
 // 引入相关组件
 import emitter from "@/plugins/mitt";

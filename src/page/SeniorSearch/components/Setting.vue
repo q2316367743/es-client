@@ -25,7 +25,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import useEditorSettingStore from "@/store/useEditorSettingStore";
+import useEditorSettingStore from "@/store/EditorSettingStore";
 import EditorSetting from "@/domain/EditorSetting";
 import MessageUtil from "@/utils/MessageUtil";
 

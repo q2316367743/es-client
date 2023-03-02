@@ -68,15 +68,9 @@ const useIndexStore = defineStore('index', {
                     this.status = health.status;
                 }).catch(e => useNotificationStore().send(e, '获取索引健康值失败'));
 
-                clusterApi.info()
-                    .then(info => {
-                        // 异步执行就可以
-                        versionStrategyContext.setVersion(Optional.ofNullable(info)
-                            .map(e => e.version)
-                            .map(e => e.number)
-                            .orElse(''));
-                    })
-                    .catch(e => useNotificationStore().send(e.toString(), '获取elasticsearch版本失败'));
+                // 设置当前版本
+                versionStrategyContext.setVersion();
+
                 return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();

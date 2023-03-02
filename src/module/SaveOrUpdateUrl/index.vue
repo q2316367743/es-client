@@ -1,6 +1,6 @@
 <template>
     <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="600px" draggable
-             :close-on-click-modal="false" destroy-on-close>
+        :close-on-click-modal="false" destroy-on-close>
         <a-form :model="url" label-width="100px" ref="urlForm">
             <a-form-item :label="$t('common.keyword.name')" prop="name">
                 <a-input v-model="url.name"></a-input>
@@ -10,16 +10,20 @@
                 </a-input>
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.sequence')" prop="sequence">
-                <a-input-number v-model="url.sequence" controls-position="right" size="large"/>
+                <a-input-number v-model="url.sequence" controls-position="right" size="large" />
+            </a-form-item>
+            <a-form-item label="版本" prop="version">
+                <a-input v-model="url.version" placeholder="请输入版本，点击测试自动识别">
+                </a-input>
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
-                <a-switch v-model="url.isAuth" active-text="true" inactive-text="false"/>
+                <a-switch v-model="url.isAuth" active-text="true" inactive-text="false" />
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.authUser')" prop="authUser" v-if="url.isAuth">
-                <a-input v-model="url.authUser" size="large"/>
+                <a-input v-model="url.authUser" size="large" />
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.authPassword')" prop="authPassword" v-if="url.isAuth">
-                <a-input v-model="url.authPassword" size="large"/>
+                <a-input v-model="url.authPassword" size="large" />
             </a-form-item>
         </a-form>
         <template #footer>
@@ -46,11 +50,11 @@
     </a-modal>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 
 import Url from '@/entity/Url';
 
-import {httpStrategyContext, urlService, useUrlEditEvent} from '@/global/BeanFactory';
+import { httpStrategyContext, urlService, useUrlEditEvent } from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import MessageUtil from "@/utils/MessageUtil";
 
@@ -106,7 +110,8 @@ export default defineComponent({
                     sequence: this.url.sequence,
                     isAuth: this.url.isAuth,
                     authUser: this.url.authUser,
-                    authPassword: this.url.authPassword
+                    authPassword: this.url.authPassword,
+                    version: this.url.version
                 }).then(() => MessageUtil.success('新增成功', useUrlStore().reset))
                     .catch(e => MessageUtil.error('新增失败', e))
                     .finally(() => {
@@ -121,8 +126,8 @@ export default defineComponent({
                     createTime: this.url.createTime || new Date(),
                     isAuth: this.url.isAuth,
                     authUser: this.url.authUser,
-                    authPassword: this.url.authPassword
-                    // eslint-disable-next-line
+                    authPassword: this.url.authPassword,
+                    version: this.url.version
                 })
                     .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
                     .catch(e => MessageUtil.error('修改失败', e))
@@ -172,6 +177,7 @@ export default defineComponent({
                     version: response.version.number,
                     luceneVersion: response.version.lucene_version
                 }
+                this.url.version = `${response.version.number}`;
             }).catch(() => {
                 this.testData = {
                     icon: 'error',

@@ -6,7 +6,7 @@ import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyCo
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 import useLoadingStore from "@/store/LoadingStore";
-import useEditorSettingStore from "@/store/useEditorSettingStore";
+import useEditorSettingStore from "@/store/EditorSettingStore";
 
 /**
  * 应用启动器

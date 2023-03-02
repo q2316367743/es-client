@@ -8,6 +8,11 @@ export default interface NativeStrategy {
      * 打开链接
      * @param link 链接
      */
-    openLink(link: string): void
+    openLink(link: string): void;
+
+    /**
+     * 检查更新
+     */
+    checkUpdate(): void;
 
 }

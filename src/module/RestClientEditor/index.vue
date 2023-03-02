@@ -14,7 +14,7 @@ import configuration from "@/module/RestClientEditor/configuration";
 import provider from "@/module/RestClientEditor/provider";
 import codelens from "@/module/RestClientEditor/codelens";
 import Optional from "@/utils/Optional";
-import useEditorSettingStore from "@/store/useEditorSettingStore";
+import useEditorSettingStore from "@/store/EditorSettingStore";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 

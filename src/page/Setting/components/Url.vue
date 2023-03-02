@@ -18,6 +18,7 @@
                     <div class="url-copy" @click="execCopy(row.value)">{{ $t('common.operation.copy') }}</div>
                 </template>
             </vxe-column>
+            <vxe-column field="version" title="版本" width="180" />
             <vxe-column field="updateTime" :title="$t('setting.link.form.updateTime')" width="160"
                 :formatter="prettyDate" />
             <vxe-column field="isAuth" :title="$t('setting.link.form.isAuth')" width="120" :formatter="prettyAuth" />
@@ -74,7 +75,8 @@ export default defineComponent({
             sequence: 0,
             isAuth: false,
             authUser: '',
-            authPassword: ''
+            authPassword: '',
+            version: ''
         } as Url,
         columnConfig: {
             resizable: true
