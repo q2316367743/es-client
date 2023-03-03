@@ -1,39 +1,30 @@
 <template>
-    <vxe-table class="es-scrollbar" empty-text="数据为空" :data="records" height="100%" :column-config="columnConfig"
-        :export-config="exportConfig">
-        <vxe-column type="expand" width="80" title="源">
-            <template #content="{ row, rowIndex }">
-                <div class="data-browse-expand">
-                    <a-button type="text" status="normal" class="copy" @click="copy(row._source)">复制</a-button>
-                    <json-view :data="row._source" />
-                </div>
-            </template>
-        </vxe-column>
-        <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
-        <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format" />
-        <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable :formatter="format" />
-        <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable :formatter="format" />
-        <vxe-column v-for="(header, index) of mappings" :key="index" :field="header.field" :title="header.field"
-            show-overflow="tooltip" sortable :width="header.weight" :formatter="format">
-            <template #default="{ row }">
-                {{ typeof row[header.field] === 'object' ? JSON.stringify(row[header.field]) : row[header.field] }}
-            </template>
-        </vxe-column>
-    </vxe-table>
+    <div class="table-viewer" :id="id">
+        <div class="table-view-wrap">
+            <a-table :columns="columns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
+                sticky-header :scroll="scroll" :pagination="false" row-key="_id"
+                :bordered="bordered" />
+        </div>
+    </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { VxeColumnPropTypes, VxeTablePropTypes } from "vxe-table";
-import XEUtils from "xe-utils";
+import { defineComponent, h, PropType } from "vue";
+import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
+
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
 
-interface Col {
-
-    field: string;
-
-    weight: number;
-
+function buildTableColumnData(dataIndex: string, width: number, title?: string): TableColumnData {
+    return {
+        title: title ? title : dataIndex,
+        dataIndex,
+        ellipsis: true,
+        width,
+        sortable: {
+            sortDirections: ['ascend', 'descend']
+        },
+        cellClass: 'table-view-cell'
+    }
 }
 
 export default defineComponent({
@@ -46,18 +37,27 @@ export default defineComponent({
     data: () => {
         let now = new Date().getTime();
         return {
-            flag: 0,
-            records: [] as Array<any>,
-            mappings: [] as Array<Col>,
-            columnConfig: {
-                resizable: true
-            },
-            exportConfig: {
-                filename: '数据-' + now,
-                sheetName: '数据-' + now,
-                // 自定义类型
-                types: ['csv', 'html', 'xml', 'txt']
-            } as VxeTablePropTypes.ExportConfig
+            records: [] as Array<TableData>,
+            columns: [] as Array<TableColumnData>,
+            emptyText: '空空如也',
+
+            id: 'table-view-' + now,
+
+            // 配置
+            expandable: {
+                title: '源数据',
+                width: 80,
+                expandedRowRender: (record: TableData) => {
+                    return h(JsonView, {
+                        data: record['_source']
+                    });
+                }
+            } as TableExpandable,
+            bordered: { wrapper: true, cell: true } as TableBorder,
+            scroll: {
+                x: '100%',
+                y: '100%'
+            }
         }
     },
     watch: {
@@ -69,44 +69,81 @@ export default defineComponent({
         this.render();
     },
     methods: {
-        format(column: { cellValue: any }): VxeColumnPropTypes.Formatter {
-            if (column.cellValue instanceof Date) {
-                return XEUtils.toDateString(column.cellValue, 'yyyy-MM-dd HH:ss:mm')
-            }
-            return column.cellValue;
-        },
         render() {
             // 当变化时，进行渲染
             if (!this.verify_index()) {
-                this.flag = 0;
-                if (this.data?.status) {
-                    this.flag = 1;
-                }
+                this.records = []
+                this.columns = [];
+                this.emptyText = '数据无法解析，请使用其他视图查看'
                 return;
-            } else {
-                this.flag = 2;
             }
+            // 数据清空
             this.records = [];
-            this.mappings = [];
-            let keySet = new Set<string>();
+            let columnMap = new Map<string, TableColumnData>();
+            // 基础对象
+            ['_id', '_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
+
+            // 开始渲染
             for (let item of this.data.hits.hits) {
-                let i = {} as any;
-                i['_id'] = item['_id'];
-                i['_index'] = item['_index'];
-                i['_score'] = item['_score'];
-                let source = item['_source'];
-                for (let key in source) {
-                    i[key] = source[key];
-                    if (!keySet.has(key)) {
-                        this.mappings.push({
-                            field: key,
-                            weight: Math.max(key.length * 20 + 15, 60)
-                        });
-                        keySet.add(key);
+                let record = {} as Record<string, string>;
+                record['_id'] = item['_id'];
+                record['_index'] = item['_index'];
+                record['_score'] = item['_score'];
+                let _source = item['_source'];
+                this.renderObj(_source, columnMap, record, '');
+                record['_source'] = item;
+                this.records.push(record);
+            }
+            this.columns = Array.from(columnMap.values());
+            let x = 0;
+            this.columns.map(e => e.width).forEach(e => x += (e || 0));
+            this.scroll.x = `${x}px`
+        },
+        renderObj(
+            obj: Record<string, any>,
+            columnMap: Map<string, TableColumnData>,
+            record: Record<string, string>,
+            prefix: string
+        ) {
+            for (let key in obj) {
+                // 基础值
+                let source = obj[key];
+                let dataIndex = prefix === '' ? key : `${prefix}-${key}`;
+                let title = prefix === '' ? key : `${prefix}.${key}`;
+                let width = 80;
+                let value = '';
+                // 处理对象
+                if (typeof source === 'object') {
+                    // JSON转字符串
+                    if (source instanceof Array) {
+                        value = JSON.stringify(source);
+                    } else {
+                        this.renderObj(source, columnMap, record, title);
+                        break;
                     }
+                } else {
+                    // 普通类型，直接渲染
+                    value = `${source}`;
                 }
-                i['_source'] = item;
-                this.records.push(i);
+                // 计算宽度
+                width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
+                // 列
+                let column = buildTableColumnData(dataIndex, width, title);
+
+                // 判断列宽度
+                if (columnMap.has(dataIndex)) {
+                    let temp = columnMap.get(dataIndex);
+                    if (temp && temp.width && temp.width < width) {
+                        // 宽度不合适，使用新的
+                        columnMap.set(dataIndex, column);
+                    }
+                } else {
+                    // 不存在列，新增
+                    columnMap.set(dataIndex, column);
+                }
+
+                // 值
+                record[dataIndex] = value;
             }
         },
         verify_index(): boolean {
@@ -125,39 +162,26 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped lang="less">
-.table-viewer-column {
-    z-index: 10;
-    position: absolute;
-    right: 20px;
-    top: 0;
-}
+<style lang="less">
+.table-viewer {
+    height: 100%;
+    width: 100%;
+    position: relative;
 
-.table-viewer-table {
-    position: absolute;
-    top: 50px;
-    right: 10px;
-    left: 0;
-}
-
-.column {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    .dialog-open {
-        display: none;
+    .table-view-wrap {
         position: absolute;
-        top: 8px;
+        top: 34px;
+        left: 0;
         right: 0;
-        height: 23px;
-        width: 23px;
-        cursor: pointer;
+        bottom: 0;
     }
+}
 
-    &:hover .dialog-open {
-        display: block;
-    }
+.arco-table-container {
+    height: 100%;
+}
+
+.table-view-cell {
+    font-family: JetBrainsMono, 微软雅黑, Courier, monospace;
 }
 </style>

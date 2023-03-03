@@ -14,7 +14,6 @@ import { mapState } from "pinia";
 import { renderJSONTreeView } from "@/components/JsonTree";
 
 import { highlight } from '@/global/BeanFactory';
-import BrowserUtil from "@/utils/BrowserUtil";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
@@ -48,9 +47,6 @@ export default defineComponent({
         this.render();
     },
     methods: {
-        execCopy() {
-            BrowserUtil.copy(this.pretty);
-        },
         render() {
             let value = JSON.stringify(this.data, null, 4);
             this.pretty = value;

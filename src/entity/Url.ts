@@ -45,6 +45,6 @@ export default interface Url extends Base {
     /**
      * 版本信息
      */
-    version: string;
+    version?: string;
 
 }

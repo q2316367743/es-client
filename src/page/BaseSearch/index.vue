@@ -61,34 +61,30 @@
                 </div>
                 <!-- 核心查询区 -->
                 <div class="base-display" ref="baseDisplay">
-                    <a-scrollbar class="scrollbar">
-                        <div>
-                            <!-- 查询条件 -->
-                            <div class="base-condition" ref="baseCondition">
-                                <a-form :model="current" layout="vertical" label-width="80px"
-                                    style="overflow-x: auto;overflow-y: hidden;">
-                                    <!-- 条件 -->
-                                    <a-form-item :label="$t('baseSearch.form.condition')">
-                                        <field-condition-container v-model="current.conditions" :fields="fields" />
-                                    </a-form-item>
-                                    <!-- 排序 -->
-                                    <a-form-item :label="$t('baseSearch.form.order')">
-                                        <field-order-container v-model="current.orders" :fields="fields" />
-                                    </a-form-item>
-                                    <div class="base-condition-pagination">
-                                        <a-pagination :total="current.total" v-model:current="current.page"
-                                            :page-size="current.size" show-total />
-                                        <a-input-number v-model="current.size" style="width: 70px" />
-                                    </div>
-                                </a-form>
+                    <!-- 查询条件 -->
+                    <div class="base-condition" ref="baseCondition">
+                        <a-form :model="current" layout="vertical" label-width="80px"
+                            style="overflow-x: auto;overflow-y: hidden;">
+                            <!-- 条件 -->
+                            <a-form-item :label="$t('baseSearch.form.condition')">
+                                <field-condition-container v-model="current.conditions" :fields="fields" />
+                            </a-form-item>
+                            <!-- 排序 -->
+                            <a-form-item :label="$t('baseSearch.form.order')">
+                                <field-order-container v-model="current.orders" :fields="fields" />
+                            </a-form-item>
+                            <div class="base-condition-pagination">
+                                <a-pagination :total="current.total" v-model:current="current.page"
+                                    :page-size="current.size" show-total />
+                                <a-input-number v-model="current.size" style="width: 70px" />
                             </div>
-                            <!-- 查询结果 -->
-                            <div class="base-content hljs" ref="baseContent">
-                                <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result" />
-                            </div>
-                        </div>
-                    </a-scrollbar>
-                    <a-back-top target-container=".base-display .arco-scrollbar-container" />
+                        </a-form>
+                    </div>
+                    <!-- 查询结果 -->
+                    <div class="base-content hljs" ref="baseContent">
+                        <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result" />
+                    </div>
+                    <a-back-top target-container=".base-display" />
                 </div>
                 <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
                 <div class="base-search-condition-sentence">
