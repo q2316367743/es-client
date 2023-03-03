@@ -11,16 +11,23 @@
                     <a-option :value="ExportType.XML">XML文件(*.xml)</a-option>
                     <a-option :value="ExportType.HTML">网页(*.html)</a-option>
                     <a-option :value="ExportType.CSV">CSV(*.csv)</a-option>
-                    <a-option :value="ExportType.TSV">管道分隔(*.tsv)</a-option>
+                    <a-option :value="ExportType.TSV">管道分隔(*.txt)</a-option>
                     <a-option :value="ExportType.TXT">文本文件(*.txt)</a-option>
                 </a-select>
             </a-form-item>
             <a-form-item label="分隔符" v-if="instance.type === ExportType.TXT">
                 <a-input v-model="instance.separator" />
             </a-form-item>
+            <a-form-item label="表头"
+                v-if="[ExportType.HTML, ExportType.CSV, ExportType.TSV, ExportType.TXT].includes(instance.type)">
+                <a-select v-model="instance.header">
+                    <a-option :value="ExportHeader.BASE">基础表头</a-option>
+                    <a-option :value="ExportHeader.DEEP">深度解析</a-option>
+                </a-select>
+            </a-form-item>
             <a-form-item label="导出范围">
                 <a-select v-model="instance.scope">
-                    <a-option :value="ExportScope.ALL">全部</a-option>
+                    <a-option :value="ExportScope.CURRENT">当前页面</a-option>
                 </a-select>
             </a-form-item>
             <a-form-item label="来源">
@@ -32,14 +39,15 @@
             </a-form-item>
         </a-form>
         <template #footer>
+            <a-button type="text" status="normal" @click="exportCopy">{{ $t('common.action.copy') }}</a-button>
             <a-button @click="visible = false">取消</a-button>
-            <a-button type="primary" @click="exportExecute">导出</a-button>
+            <a-button type="primary" @click="exportDownload">导出</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts">
 import { exportData } from "@/components/ExportComponent";
-import { ExportScope, ExportSource, ExportType } from "@/components/ExportComponent/domain";
+import { ExportConfig, ExportHeader, ExportScope, ExportSource, ExportType, ExportMode } from "@/components/ExportComponent/domain";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import { defineComponent, PropType } from "vue";
@@ -60,16 +68,19 @@ export default defineComponent({
             name: '高级查询数据导出',
             type: ExportType.JSON,
             separator: '',
-            scope: ExportScope.ALL,
+            header: ExportHeader.BASE,
+            scope: ExportScope.CURRENT,
             customStart: 0,
             customEnd: -1,
             source: ExportSource.ALL,
             fields: [],
-            size: 1000
-        },
+            size: 1000,
+            mode: ExportMode.DOWNLOAD
+        } as ExportConfig,
         ExportType,
         ExportScope,
-        ExportSource
+        ExportSource,
+        ExportHeader
     }),
     watch: {
         modelValue(newValue: boolean) {
@@ -95,7 +106,15 @@ export default defineComponent({
         }
     },
     methods: {
-        exportExecute() {
+        exportCopy() {
+            this.instance.mode = ExportMode.COPY;
+            this.execute();
+        },
+        exportDownload() {
+            this.instance.mode = ExportMode.DOWNLOAD;
+            this.execute();
+        },
+        execute() {
             try {
                 useLoadingStore().start('开始导出');
                 exportData(this.instance, this.data);

@@ -56,7 +56,7 @@
                                 </a-button>
                             </a-tooltip>
                             <a-tooltip content="导出" position="right">
-                                <a-button type="text" status="normal" @click="exportData">
+                                <a-button type="text" status="warning" @click="exportData">
                                     <template #icon>
                                         <icon-launch :size="18" />
                                     </template>
@@ -99,7 +99,7 @@
             :footer="false">
             <senior-search-setting @close="settingDialog = false" />
         </a-modal>
-        <senior-search-export-dialog v-model="exportDialog" :data="current.result"/>
+        <senior-search-export-dialog v-model="exportDialog" :data="current.result" />
     </a-spin>
 </template>
 

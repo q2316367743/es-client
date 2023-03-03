@@ -45,6 +45,20 @@ export enum ExportType {
 
 }
 
+export enum ExportHeader {
+
+    /**
+     * 基础
+     */
+    BASE = 1,
+
+    /**
+     * 深度
+     */
+    DEEP = 2
+
+}
+
 export enum ExportScope {
 
     /**
@@ -85,6 +99,20 @@ export enum ExportSource {
 
 }
 
+export enum ExportMode {
+
+    /**
+     * 下载
+     */
+    DOWNLOAD = 1,
+
+    /**
+     * 拷贝到剪切板
+     */
+    COPY = 2
+
+}
+
 export interface ExportConfig {
 
     /**
@@ -101,6 +129,11 @@ export interface ExportConfig {
      * 指定分隔符
      */
     separator: string;
+
+    /**
+     * 表头渲染
+     */
+    header: ExportHeader;
 
     /**
      * 导出范围
@@ -131,5 +164,10 @@ export interface ExportConfig {
      * 每次分页查询的数量
      */
     size: number;
+
+    /**
+     * 导出方式
+     */
+    mode: ExportMode;
 
 }
