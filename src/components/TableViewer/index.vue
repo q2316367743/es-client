@@ -9,7 +9,7 @@
                 </a-button>
                 <template #content>
                     <div class="table-view-trigger">
-                        <a-list>
+                        <a-list style="width: 250px">
                             <template #header>
                                 <a-button type="primary" size="small" @click="resetColumn">重置</a-button>
                             </template>
@@ -34,6 +34,7 @@
 <script lang="ts">
 import { defineComponent, h, PropType } from "vue";
 import { TableBorder, TableColumnData, TableData, TableExpandable } from "@arco-design/web-vue";
+import Sortable from 'sortablejs';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
@@ -137,6 +138,22 @@ export default defineComponent({
             this.scroll.x = `${x}px`;
             this.showColumns = this.columns;
             this.checkItems = this.showColumns.map(column => column.dataIndex!);
+            // 拖拽
+            this.$nextTick(() => {
+                let tableViewWrap = document.getElementById(this.id);
+                console.log(tableViewWrap, tableViewWrap!.querySelector('.arco-table-tr'))
+                Sortable.create(tableViewWrap!.querySelector('.arco-table-tr')!, {
+                    handle: '.arco-table-th', //设置指定列作为拖拽
+                    onEnd: (evt: any) => {
+                        const { newIndex, oldIndex } = evt;
+                        console.log(newIndex)
+                        console.log(oldIndex)
+                        // FIXME: 此处有问题
+                        const currRow = this.showColumns.splice(oldIndex, 1)[0]
+                        this.showColumns.splice(newIndex, 0, currRow)
+                    }
+                });
+            })
         },
         renderObj(
             obj: Record<string, any>,
@@ -166,7 +183,7 @@ export default defineComponent({
                 }
                 // 计算宽度
                 width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
-                width = Math.min(width, 800);
+                width = Math.min(width, 600);
                 // 列
                 let column = buildTableColumnData(dataIndex, width, title, width === 800);
 
