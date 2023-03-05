@@ -10,6 +10,10 @@
                 <!-- 顶部菜单栏 -->
                 <div class="base-option">
                     <div class="left">
+                        <div class="base-extra-button" :class="extra ? 'open' : ''" @click="extra = !extra">
+                            <icon-right />
+                        </div>
+                        <!-- 索引选择 -->
                         <a-select v-model="current.index" style="width: 260px;" allow-search allow-clear
                             :placeholder="$t('baseSearch.placeholder.selectIndex')">
                             <a-option v-for="index in indices" :key="index.label" :label="index.label"
@@ -20,9 +24,25 @@
                             $t('common.operation.search')
                         }}
                         </a-button>
+                        <!-- 历史 -->
+                        <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
+
+                    </div>
+                    <div class="right">
+                        <a-select v-model="view" style="margin-left: 8px;width: 140px;">
+                            <a-option label="基础视图" :value="ViewTypeEnum.BASE" />
+                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON" />
+                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE" />
+                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE" />
+                        </a-select>
+                    </div>
+                </div>
+                <div class="base-extra" v-if="extra">
+                    <div class="left">
+                        <!-- 索引管理 -->
                         <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">管理
                         </a-button>
-                        <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
+                        <!-- 标签编辑 -->
                         <a-button-group>
                             <a-button type="outline" :status="header.relationId ? 'danger' : 'success'"
                                 @click="optionTab('rename')">
@@ -46,21 +66,14 @@
                                 </template>
                             </a-dropdown>
                         </a-button-group>
-
                     </div>
                     <div class="right">
                         <a-button type="primary" :disabled="current.index === ''" @click="openDownload">导出
                         </a-button>
-                        <a-select v-model="view" style="margin-left: 8px;width: 140px;">
-                            <a-option label="基础视图" :value="ViewTypeEnum.BASE" />
-                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON" />
-                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE" />
-                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE" />
-                        </a-select>
                     </div>
                 </div>
                 <!-- 核心查询区 -->
-                <div class="base-display" ref="baseDisplay">
+                <div class="base-display" ref="baseDisplay" :style="`top: ${extra ? '80' : '40'}px`">
                     <!-- 查询条件 -->
                     <div class="base-condition" ref="baseCondition">
                         <a-form :model="current" layout="vertical" label-width="80px"
@@ -87,7 +100,7 @@
                     <a-back-top target-container=".base-display" />
                 </div>
                 <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
-                <div class="base-search-condition-sentence">
+                <div class="base-search-condition-sentence" :style="`top: ${extra ? '82' : '42'}px`">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
                     </a-button>
@@ -255,6 +268,7 @@ export default defineComponent({
 
             loading: false,
             visibility: true,
+            extra: false,
 
             // 条件对话框
             condition: {

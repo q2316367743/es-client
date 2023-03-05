@@ -41,18 +41,59 @@
                 top: 0;
                 left: 0;
                 right: 0;
+                height: 32px;
                 display: flex;
                 justify-content: space-between;
-                height: 32px;
 
-                .left .right {
+                .left {
+                    display: flex;
+
+                    .base-extra-button {
+                        width: 14px;
+                        padding-top: 8px;
+                        height: 32px;
+                        background-color: var(--color-border-2);
+                        margin-right: 8px;
+                        cursor: pointer;
+
+                        .arco-icon {
+                            transition: 0.2s;
+                        }
+
+                        &.open {
+                            .arco-icon {
+                                transform: rotate(90deg);
+                            }
+                        }
+                    }
+                }
+
+                .right {
+                    display: flex;
+                }
+            }
+
+            .base-extra {
+                position: absolute;
+                top: 40px;
+                left: 0;
+                right: 0;
+                height: 32px;
+                display: flex;
+                justify-content: space-between;
+
+                .left {
+                    display: flex;
+
+                }
+
+                .right {
                     display: flex;
                 }
             }
 
             .base-display {
                 position: absolute;
-                top: 40px;
                 left: 0;
                 right: 0;
                 bottom: 0;
@@ -83,7 +124,6 @@
 
             .base-search-condition-sentence {
                 position: absolute;
-                top: 42px;
                 right: 5px;
             }
         }
