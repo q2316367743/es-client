@@ -1,28 +1,50 @@
 <template>
     <div class="table-viewer" :id="id">
+        <div class="table-view-toolbar">
+            <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[105, 3]">
+                <a-button type="outline" size="small">
+                    <template #icon>
+                        <icon-select-all />
+                    </template>
+                </a-button>
+                <template #content>
+                    <div class="table-view-trigger">
+                        <a-list>
+                            <template #header>
+                                <a-button type="primary" size="small" @click="resetColumn">重置</a-button>
+                            </template>
+                            <a-scrollbar style="height: 341px;overflow: auto;">
+                                <a-checkbox-group v-model="checkItems" @change="handleChange">
+                                    <a-list-item v-for="column in columns">
+                                        <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
+                                    </a-list-item>
+                                </a-checkbox-group>
+                            </a-scrollbar>
+                        </a-list>
+                    </div>
+                </template>
+            </a-trigger>
+        </div>
         <div class="table-view-wrap">
-            <a-table :columns="columns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
-                sticky-header :scroll="scroll" :pagination="false" row-key="_id"
-                :bordered="bordered" />
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
+                sticky-header :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" />
         </div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent, h, PropType } from "vue";
-import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
+import { TableBorder, TableColumnData, TableData, TableExpandable } from "@arco-design/web-vue";
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
 
-function buildTableColumnData(dataIndex: string, width: number, title?: string): TableColumnData {
+function buildTableColumnData(dataIndex: string, width: number, title?: string, tooltip: boolean = false): TableColumnData {
     return {
         title: title ? title : dataIndex,
         dataIndex,
         ellipsis: true,
+        tooltip,
         width,
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
         cellClass: 'table-view-cell'
     }
 }
@@ -39,6 +61,7 @@ export default defineComponent({
         return {
             records: [] as Array<TableData>,
             columns: [] as Array<TableColumnData>,
+            showColumns: [] as Array<TableColumnData>,
             emptyText: '空空如也',
 
             id: 'table-view-' + now,
@@ -57,7 +80,11 @@ export default defineComponent({
             scroll: {
                 x: '100%',
                 y: '100%'
-            }
+            },
+
+            // 筛选
+            checkItems: new Array<string>(),
+            allowUpdate: true
         }
     },
     watch: {
@@ -81,7 +108,17 @@ export default defineComponent({
             this.records = [];
             let columnMap = new Map<string, TableColumnData>();
             // 基础对象
-            ['_id', '_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
+            columnMap.set('_id', {
+                title: '_id',
+                dataIndex: '_id',
+                ellipsis: true,
+                width: 110,
+                sortable: {
+                    sortDirections: ['ascend', 'descend']
+                },
+                cellClass: 'table-view-cell table-view-fixed'
+            });
+            ['_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
 
             // 开始渲染
             for (let item of this.data.hits.hits) {
@@ -97,7 +134,9 @@ export default defineComponent({
             this.columns = Array.from(columnMap.values());
             let x = 0;
             this.columns.map(e => e.width).forEach(e => x += (e || 0));
-            this.scroll.x = `${x}px`
+            this.scroll.x = `${x}px`;
+            this.showColumns = this.columns;
+            this.checkItems = this.showColumns.map(column => column.dataIndex!);
         },
         renderObj(
             obj: Record<string, any>,
@@ -127,8 +166,9 @@ export default defineComponent({
                 }
                 // 计算宽度
                 width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
+                width = Math.min(width, 800);
                 // 列
-                let column = buildTableColumnData(dataIndex, width, title);
+                let column = buildTableColumnData(dataIndex, width, title, width === 800);
 
                 // 判断列宽度
                 if (columnMap.has(dataIndex)) {
@@ -158,6 +198,15 @@ export default defineComponent({
         },
         copy(value: any) {
             BrowserUtil.copy(JSON.stringify(value, null, 4));
+        },
+        handleChange(values: any[]) {
+            this.showColumns = this.columns.filter(column => values.includes(column.dataIndex));
+            this.allowUpdate = this.showColumns.length === this.columns.length;
+        },
+        resetColumn() {
+            this.showColumns = this.columns;
+            this.checkItems = this.showColumns.map(column => column.dataIndex!);
+            this.allowUpdate = true;
         }
     }
 });
@@ -167,6 +216,10 @@ export default defineComponent({
     height: 100%;
     width: 100%;
     position: relative;
+
+    .table-view-toolbar {
+        margin: 2px;
+    }
 
     .table-view-wrap {
         position: absolute;
@@ -179,6 +232,19 @@ export default defineComponent({
 
 .arco-table-container {
     height: 100%;
+}
+
+.table-view-trigger {
+    width: 250px;
+    height: 400px;
+    background-color: var(--color-fill-2);
+    border-radius: var(--border-radius-small);
+    box-shadow: 0 0 12px var(--color-border-2);
+    display: flex;
+
+    .arco-list-header {
+        text-align: center;
+    }
 }
 
 .table-view-cell {
