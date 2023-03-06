@@ -3,7 +3,7 @@
         :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
         <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="view === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
-        <table-viewer v-else-if="view === ViewTypeEnum.TABLE" :data="data" />
+        <table-viewer v-else-if="view === ViewTypeEnum.TABLE" :data="data" :index="index" />
         <div v-show="view === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
         <a-back-top target-container=".base-search-data-view .arco-scrollbar-container" />
     </div>
@@ -23,6 +23,11 @@ export default defineComponent({
     props: {
         view: Number,
         data: Object,
+        index: {
+            type: String,
+            required: false,
+            default: ''
+        }
     },
     data: () => ({
         jsonTreeId: 'json-tree-view-' + new Date().getTime(),

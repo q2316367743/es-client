@@ -27,7 +27,8 @@
         </div>
         <div class="table-view-wrap">
             <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
-                sticky-header :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable"/>
+                sticky-header :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"
+                :draggable="draggable" />
         </div>
     </div>
 </template>
@@ -58,7 +59,12 @@ let sort: Sortable | undefined;
 export default defineComponent({
     name: 'table-viewer',
     props: {
-        data: Object as PropType<any>
+        data: Object as PropType<any>,
+        index: {
+            type: String,
+            required: false,
+            default: ''
+        }
     },
     components: { JsonView },
 
@@ -69,6 +75,8 @@ export default defineComponent({
             columns: [] as Array<TableColumnData>,
             showColumns: [] as Array<TableColumnData>,
             emptyText: '空空如也',
+
+            oldIndex: '',
 
             id: 'table-view-' + now,
 
@@ -145,8 +153,18 @@ export default defineComponent({
             let x = 0;
             this.columns.map(e => e.width).forEach(e => x += (e || 0));
             this.scroll.x = `${x}px`;
-            this.showColumns = this.columns
-            this.checkItems = this.showColumns.map(column => column.dataIndex!);
+            // 此处设置显示的列
+            console.log(this.allowUpdate, this.oldIndex, this.index)
+            if (this.index !== this.oldIndex ||
+                (this.allowUpdate && this.index === '') ||
+                (this.index === this.oldIndex && this.index !== '' && this.allowUpdate)
+            ) {
+                // 重置索引:切换索引 || (索引为空 && 允许更新) || (索引存在 && 索引未切换 && 允许更新)
+                this.allowUpdate = true;
+                this.showColumns = this.columns
+                this.checkItems = this.showColumns.map(column => column.dataIndex!);
+            }
+            this.oldIndex = this.index || '';
             // 拖拽
             this.$nextTick(() => {
                 this.addSortable();
@@ -182,7 +200,7 @@ export default defineComponent({
                 width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
                 width = Math.min(width, 600);
                 // 列
-                let column = buildTableColumnData(dataIndex, width, title, width === 800, typeof source === 'number');
+                let column = buildTableColumnData(dataIndex, width, title, width === 600, typeof source === 'number');
 
                 // 判断列宽度
                 if (columnMap.has(dataIndex)) {

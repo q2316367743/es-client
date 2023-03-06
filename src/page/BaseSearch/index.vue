@@ -95,7 +95,8 @@
                     </div>
                     <!-- 查询结果 -->
                     <div class="base-content hljs" ref="baseContent">
-                        <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result" />
+                        <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result"
+                            :index="current.index" />
                     </div>
                     <a-back-top target-container=".base-display" />
                 </div>
