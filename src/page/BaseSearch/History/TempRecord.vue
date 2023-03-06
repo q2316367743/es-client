@@ -14,41 +14,39 @@
             </div>
         </div>
         <div class="temp-record-body">
-            <a-scrollbar>
-                <vxe-table :row-config="{ isHover: true }" ref="tempRecordTable">
-                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')" />
-                    <vxe-column field="index" :title="$t('common.keyword.index')" width="250">
-                        <template #default="{ row }">
-                            <a-link type="primary" target="_blank">{{ row.index }}</a-link>
-                            <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
+            <a-table :data="tempRecords" style="height: 100%;">
+                <template #columns>
+                    <a-table-column data-index="index" :title="$t('common.keyword.index')" :width="250">
+                        <template #cell="{ record }">
+                            <a-link type="primary" target="_blank">{{ record.index }}</a-link>
+                            <div class="url-copy" @click="execCopy(record.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
-                    </vxe-column>
-                    <vxe-column field="id" title="时间" width="200">
-                        <template #default="{ row }">
-                            {{ prettyDate(new Date(row.id)) }}
+                    </a-table-column>
+                    <a-table-column data-index="id" title="时间" :width="200">
+                        <template #cell="{ record }">
+                            {{ prettyDate(new Date(record.id)) }}
                         </template>
-                    </vxe-column>
-                    <vxe-column :title="$t('common.keyword.operation')" width="320">
-                        <template #default="{ row }">
-                            <a-button type="primary" status="success" size="small" @click="load(row)">{{
+                    </a-table-column>
+                    <a-table-column :title="$t('common.keyword.operation')" :width="190">
+                        <template #cell="{ record }">
+                            <a-button type="primary" status="success" size="small" @click="load(record)">{{
                                 $t('common.operation.load')
                             }}
                             </a-button>
-                            <a-button type="primary" size="small" @click="appendToHistory(row)">新增到历史记录
+                            <a-button type="primary" size="small" @click="appendToHistory(record)">新增到历史记录
                             </a-button>
-                            <a-button type="primary" status="danger" size="small" @click="removeById(row.id)">
+                            <a-button type="primary" status="danger" size="small" @click="removeById(record.id)">
                                 {{ $t('common.operation.delete') }}
                             </a-button>
                         </template>
-                    </vxe-column>
-                </vxe-table>
-            </a-scrollbar>
+                    </a-table-column>
+                </template>
+            </a-table>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent, toRaw } from "vue";
-import { VxeTableInstance } from "vxe-table";
 
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -101,8 +99,6 @@ export default defineComponent({
                 showTempRecords = showTempRecords.filter(e => stringContain(e.index, this.index));
             }
             showTempRecords = this.tempRecords.sort((e1, e2) => e2.id! - e1.id!);
-            let tempRecordTable = this.$refs['tempRecordTable'] as VxeTableInstance;
-            tempRecordTable.reloadData(this.renderRecord(useBaseTempRecordStore().getRecords));
         },
         execCopy(url: string) {
             BrowserUtil.copy(url);
@@ -158,7 +154,7 @@ export default defineComponent({
     .temp-record-head {
         display: flex;
         justify-content: space-between;
-        padding: 0.55em 0;
+        padding-bottom: 0.55em;
     }
 
     .temp-record-body {

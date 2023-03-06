@@ -1,47 +1,51 @@
 <template>
     <div class="setting-url">
-        <vxe-toolbar ref="urlToolbar" custom export>
-            <template #buttons>
-                <a-button type="primary" @click="editOpen(undefined)">{{ $t('common.operation.add') }}</a-button>
+        <div class="setting-url-toolbar">
+            <a-button type="primary" @click="editOpen(undefined)">{{ $t('common.operation.add') }}</a-button>
+            <div></div>
+            <a-input v-model="condition.name" :placeholder="$t('common.keyword.name')" allow-clear />
+        </div>
+        <a-table ref="urlTable" :data="showUrls" class="data" sticky-header style="height: 100%;">
+            <template #columns>
+                <a-table-column data-index="name" :title="$t('common.keyword.name')" :width="180"
+                    fixed="left"></a-table-column>
+                <a-table-column data-index="value" :title="$t('common.keyword.url')">
+                    <template #cell="{ record }">
+                        <a-link @click="open(record.value)" type="primary" target="_blank">{{ record.value }}</a-link>
+                        <div class="url-copy" @click="execCopy(record.value)">{{ $t('common.operation.copy') }}</div>
+                    </template>
+                </a-table-column>
+                <a-table-column data-index="version" title="版本" :width="180" />
+                <a-table-column :title="$t('setting.link.form.updateTime')" :width="200">
+                    <template #cell="{ record }">
+                        {{ prettyDate(record.updateTime) }}
+                    </template>
+                </a-table-column>
+                <a-table-column :title="$t('setting.link.form.isAuth')" :width="120">
+                    <template #cell="{ record }">
+                        {{ prettyAuth(record.isAuth) }}
+                    </template>
+                </a-table-column>
+                <a-table-column data-index="authUser" :title="$t('setting.link.form.authUser')" :width="120" />
+                <a-table-column data-index="authPassword" :title="$t('setting.link.form.authPassword')" :width="120" />
+                <a-table-column :title="$t('common.keyword.operation')" :width="160" fixed="right">
+                    <template #cell="{ record }">
+                        <a-button type="primary" size="small" @click="editOpen(record)">{{ $t('common.operation.edit') }}
+                        </a-button>
+                        <a-button type="primary" status="danger" size="small" @click="remove(record.id, record.value)"
+                            style="margin-left: 8px;">
+                            {{ $t('common.operation.delete') }}
+                        </a-button>
+                    </template>
+                </a-table-column>
             </template>
-            <template #tools>
-                <a-input v-model="condition.name" :placeholder="$t('common.keyword.name')"
-                    style="margin-right: 10px;"></a-input>
-            </template>
-        </vxe-toolbar>
-        <vxe-table ref="urlTable" :data="showUrls" class="data" :column-config="columnConfig" :export-config="exportConfig">
-            <vxe-column type="seq" width="50" :title="$t('common.keyword.index')" fixed="left"></vxe-column>
-            <vxe-column field="name" :title="$t('common.keyword.name')" width="180" fixed="left"></vxe-column>
-            <vxe-column field="value" :title="$t('common.keyword.url')">
-                <template #default="{ row }">
-                    <a-link @click="open(row.value)" type="primary" target="_blank">{{ row.value }}</a-link>
-                    <div class="url-copy" @click="execCopy(row.value)">{{ $t('common.operation.copy') }}</div>
-                </template>
-            </vxe-column>
-            <vxe-column field="version" title="版本" width="180" />
-            <vxe-column field="updateTime" :title="$t('setting.link.form.updateTime')" width="160"
-                :formatter="prettyDate" />
-            <vxe-column field="isAuth" :title="$t('setting.link.form.isAuth')" width="120" :formatter="prettyAuth" />
-            <vxe-column field="authUser" :title="$t('setting.link.form.authUser')" :visible="false" />
-            <vxe-column field="authPassword" :title="$t('setting.link.form.authPassword')" :visible="false" />
-            <vxe-column :title="$t('common.keyword.operation')" width="150" fixed="right">
-                <template #default="{ row }">
-                    <a-button type="primary" size="small" @click="editOpen(row)">{{ $t('common.operation.edit') }}
-                    </a-button>
-                    <a-button type="primary" status="danger" size="small" @click="remove(row.id, row.value)"
-                        style="margin-left: 8px;">
-                        {{ $t('common.operation.delete') }}
-                    </a-button>
-                </template>
-            </vxe-column>
-        </vxe-table>
+        </a-table>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent, toRaw } from "vue";
 import { mapState } from "pinia";
 import { toDateString } from "xe-utils";
-import { VxeTableDefines, VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from "vxe-table";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -54,12 +58,6 @@ import { nativeStrategyContext, urlService, useUrlEditEvent } from "@/global/Bea
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-
-interface Params {
-    cellValue: any
-    column: VxeTableDefines.ColumnInfo
-    row: any
-}
 
 export default defineComponent({
     name: 'setting-url',
@@ -78,26 +76,6 @@ export default defineComponent({
             authPassword: '',
             version: ''
         } as Url,
-        columnConfig: {
-            resizable: true
-        },
-        exportConfig: {
-            filename: 'elasticsearch链接',
-            sheetName: 'elasticsearch链接',
-            columns: [{
-                field: 'name'
-            }, {
-                field: 'value'
-            }, {
-                field: 'isAuth'
-            }, {
-                field: 'authUser'
-            }, {
-                field: 'authPassword'
-            }],
-            // 自定义类型
-            types: ['csv', 'html', 'xml', 'txt']
-        } as VxeTablePropTypes.ExportConfig
     }),
     computed: {
         ...mapState(useUrlStore, ['urls']),
@@ -105,19 +83,12 @@ export default defineComponent({
             return this.urls.filter(url => this.condition.name === '' || (url.name && url.name.indexOf(this.condition.name) > -1))
         }
     },
-    mounted() {
-        let urlTable = this.$refs['urlTable'] as VxeTableInstance;
-        let urlToolbar = this.$refs['urlToolbar'] as VxeToolbarInstance;
-        this.$nextTick(() => {
-            urlTable.connect(urlToolbar);
-        });
-    },
     methods: {
-        prettyDate(params: Params) {
-            return toDateString(params.cellValue, "yyyy-MM-dd HH:mm:ss");
+        prettyDate(params: Date) {
+            return toDateString(params, "yyyy-MM-dd HH:mm:ss");
         },
-        prettyAuth(params: Params) {
-            return params.cellValue ? this.$t('setting.link.form.needAuth') : this.$t('setting.link.form.notAuth');
+        prettyAuth(params: boolean) {
+            return params ? this.$t('setting.link.form.needAuth') : this.$t('setting.link.form.notAuth');
         },
         remove(id: number, value: string) {
             MessageBoxUtil.confirm('是否删除相关的搜索历史', '提示', {
@@ -168,6 +139,12 @@ export default defineComponent({
 </script>
 <style lang="less">
 .setting-url {
+    .setting-url-toolbar {
+        display: grid;
+        grid-template-columns: 60px 1fr 300px;
+        margin: 8px 5px;
+    }
+
     .url-copy {
         display: inline;
     }

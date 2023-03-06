@@ -1,51 +1,50 @@
 <template>
     <div class="bs-history">
-        <vxe-toolbar ref="bsHistoryToolbar" custom export class="bs-history-toolbar">
-            <template #buttons>
-                <a-input v-model="name" :placeholder="$t('common.keyword.name')" style="width: 200px;"
-                    @input="search"></a-input>
-                <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
-                    style="margin-left: 12px;" />
-            </template>
-        </vxe-toolbar>
+        <div class="bs-history-toolbar">
+            <a-input v-model="name" :placeholder="$t('common.keyword.name')" style="width: 200px;"
+                @input="search"></a-input>
+            <a-switch v-model="onlyCurrent" @change="search" style="margin-left: 12px;" type="round">
+                <template #checked>当前链接</template>
+                <template #unchecked>全部</template>
+            </a-switch>
+        </div>
         <div class="bs-history-body">
-            <a-scrollbar>
-                <vxe-table ref="bsHistoryTable" :data="histories" class="data" :column-config="columnConfig"
-                    :export-config="exportConfig">
-                    <vxe-column type="seq" width="50" :title="$t('common.keyword.seq')"></vxe-column>
-                    <vxe-column field="name" :title="$t('common.keyword.name')"></vxe-column>
-                    <vxe-column field="index" :title="$t('common.keyword.index')">
-                        <template #default="{ row }">
-                            <a-link type="primary" target="_blank">{{ row.index }}</a-link>
-                            <div class="url-copy" @click="execCopy(row.index)">{{ $t('common.operation.copy') }}</div>
+            <a-table :data="histories" class="data" style="height: 100%;">
+                <template #columns>
+                    <a-table-column data-index="name" :title="$t('common.keyword.name')"></a-table-column>
+                    <a-table-column data-index="index" :title="$t('common.keyword.index')">
+                        <template #cell="{ record }">
+                            <a-link type="primary" target="_blank">{{ record.index }}</a-link>
+                            <div class="url-copy" @click="execCopy(record.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
-                    </vxe-column>
-                    <vxe-column :title="$t('common.keyword.operation')" width="200" fixed="right">
-                        <template #default="{ row }">
-                            <a-button type="primary" status="success" size="small" @click="load(row)">
+                    </a-table-column>
+                    <a-table-column :title="$t('common.keyword.operation')" :width="200" fixed="right">
+                        <template #cell="{ record }">
+                            <a-button type="primary" status="success" size="small" @click="load(record)">
                                 {{ $t('common.operation.load') }}
                             </a-button>
-                            <a-popconfirm content="确认删除此条记录？" ok-text="删除" cancel-text="取消" @ok="removeById(row.id)"
+                            <a-popconfirm content="确认删除此条记录？" ok-text="删除" cancel-text="取消" @ok="removeById(record.id)"
                                 width="200px">
                                 <a-button type="primary" status="danger" size="small">
                                     {{ $t('common.operation.delete') }}
                                 </a-button>
                             </a-popconfirm>
                         </template>
-                    </vxe-column>
-                </vxe-table>
-            </a-scrollbar>
+                    </a-table-column>
+                </template>
+            </a-table>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance } from "vxe-table";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import useUrlStore from "@/store/UrlStore";
 import { baseSearchHistoryService, useBaseSearchEvent } from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+
+// 工具类
 import MessageUtil from "@/utils/MessageUtil";
 import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";
@@ -56,25 +55,10 @@ export default defineComponent({
     emits: ['load'],
     data: () => ({
         histories: new Array<BaseSearchHistory>(),
-        columnConfig: {
-            resizable: true
-        },
-        exportConfig: {
-            filename: '查询历史',
-            sheetName: '查询历史',
-            // 自定义类型
-            types: ['csv', 'html', 'xml', 'txt']
-        } as VxeTablePropTypes.ExportConfig,
         name: '',
         onlyCurrent: true,
     }),
     mounted() {
-        // 历史表格工具连接
-        let bsHistoryTable = this.$refs['bsHistoryTable'] as VxeTableInstance;
-        let bsHistoryToolbar = this.$refs['bsHistoryToolbar'] as VxeToolbarInstance;
-        this.$nextTick(() => {
-            bsHistoryTable.connect(bsHistoryToolbar);
-        });
         this.search();
         emitter.on(MessageEventEnum.BASE_HISTORY_UPDATE, () => {
             // 历史记录变更，也要进行重新查询历史
