@@ -15,7 +15,7 @@
                             </template>
                             <a-scrollbar style="height: 341px;overflow: auto;">
                                 <a-checkbox-group v-model="checkItems" @change="handleChange">
-                                    <a-list-item v-for="column in columns">
+                                    <a-list-item v-for="column in columns" style="width: 250px;margin: 5px 3px;">
                                         <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
                                     </a-list-item>
                                 </a-checkbox-group>
@@ -39,16 +39,21 @@ import Sortable from 'sortablejs';
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
 
-function buildTableColumnData(dataIndex: string, width: number, title?: string, tooltip: boolean = false): TableColumnData {
+function buildTableColumnData(dataIndex: string, width: number, title?: string, tooltip: boolean = false, fixed: boolean = false): TableColumnData {
     return {
         title: title ? title : dataIndex,
         dataIndex,
         ellipsis: true,
         tooltip,
         width,
-        cellClass: 'table-view-cell'
+        cellClass: fixed ? 'table-view-cell table-view-fixed' : 'table-view-cell',
+        sortable: fixed ? {
+            sortDirections: ["ascend", "descend"]
+        } : undefined
     }
 }
+
+let sort: Sortable | undefined;
 
 export default defineComponent({
     name: 'table-viewer',
@@ -132,27 +137,16 @@ export default defineComponent({
                 record['_source'] = item;
                 this.records.push(record);
             }
+            // 渲染结束，开始赋值
             this.columns = Array.from(columnMap.values());
             let x = 0;
             this.columns.map(e => e.width).forEach(e => x += (e || 0));
             this.scroll.x = `${x}px`;
-            this.showColumns = this.columns;
+            this.showColumns = this.columns
             this.checkItems = this.showColumns.map(column => column.dataIndex!);
             // 拖拽
             this.$nextTick(() => {
-                let tableViewWrap = document.getElementById(this.id);
-                console.log(tableViewWrap, tableViewWrap!.querySelector('.arco-table-tr'))
-                Sortable.create(tableViewWrap!.querySelector('.arco-table-tr')!, {
-                    handle: '.arco-table-th', //设置指定列作为拖拽
-                    onEnd: (evt: any) => {
-                        const { newIndex, oldIndex } = evt;
-                        console.log(newIndex)
-                        console.log(oldIndex)
-                        // FIXME: 此处有问题
-                        const currRow = this.showColumns.splice(oldIndex, 1)[0]
-                        this.showColumns.splice(newIndex, 0, currRow)
-                    }
-                });
+                this.addSortable();
             })
         },
         renderObj(
@@ -185,7 +179,7 @@ export default defineComponent({
                 width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
                 width = Math.min(width, 600);
                 // 列
-                let column = buildTableColumnData(dataIndex, width, title, width === 800);
+                let column = buildTableColumnData(dataIndex, width, title, width === 800, typeof source === 'number');
 
                 // 判断列宽度
                 if (columnMap.has(dataIndex)) {
@@ -224,6 +218,46 @@ export default defineComponent({
             this.showColumns = this.columns;
             this.checkItems = this.showColumns.map(column => column.dataIndex!);
             this.allowUpdate = true;
+        },
+        addSortable() {
+            let tableViewWrap = document.getElementById(this.id);
+            if (sort) {
+                sort.destroy();
+            }
+            const wrapperTr = tableViewWrap!.querySelector('.arco-table-tr')! as HTMLElement;
+            sort = Sortable.create(wrapperTr, {
+                draggable: '.arco-table-th',
+                filter: '.table-view-fixed',
+                swapThreshold: 1,
+                animation: 150,
+                delay: 0,
+                onUpdate: (evt: any) => {
+                    const { newIndex, oldIndex } = evt;
+                    if (newIndex == oldIndex) {
+                        // 没有变位置，直接返回
+                        return;
+                    }
+                    // 表头修改
+                    const newItem = wrapperTr.children[newIndex];
+                    const oldItem = wrapperTr.children[oldIndex];
+
+                    // 先删除移动的节点
+                    wrapperTr.removeChild(newItem)
+                    // 再插入移动的节点到原有节点，还原了移动的操作
+                    if (newIndex > oldIndex) {
+                        wrapperTr.insertBefore(newItem, oldItem)
+                    } else {
+                        wrapperTr.insertBefore(newItem, oldItem.nextSibling)
+                    }
+                    // 移除就得索引
+                    this.$nextTick(() => {
+                        let temp = this.showColumns[oldIndex - 1];
+                        // 变化列
+                        this.showColumns[oldIndex - 1] = this.showColumns[newIndex - 1]
+                        this.showColumns[newIndex - 1] = temp;
+                    });
+                }
+            });
         }
     }
 });

@@ -19,5 +19,7 @@
 		"unplugin",
 		"utools",
 		"vueuse"
-	]
+	],
+	"editor.suggest.snippetsPreventQuickSuggestions": false,
+	"aiXcoder.showTrayIcon": true
 }
