@@ -1,6 +1,7 @@
 <template>
     <a-form :model="instance" layout="vertical" class="setting-base">
         <a-collapse v-model="actives">
+            <!-- 布局设置 -->
             <a-collapse-item :header="$t('setting.base.layout.title')" key="1">
                 <a-form-item label="默认页面">
                     <a-select v-model="instance.defaultPage">
@@ -19,6 +20,7 @@
                     <a-input-number controls-position="right" v-model="instance.defaultReplica"></a-input-number>
                 </a-form-item>
             </a-collapse-item>
+            <!-- 全局索引查询条件 -->
             <a-collapse-item key="3">
                 <template #header>
                     全局索引查询条件（修改后请
@@ -52,6 +54,7 @@
                     </a-button>
                 </a-form-item>
             </a-collapse-item>
+            <!-- 时间设置 -->
             <a-collapse-item :header="$t('setting.base.time.title')" key="4">
                 <a-form-item :label="$t('setting.base.time.timeout')">
                     <a-input-number controls-position="right" v-model="instance.timeout" :min="0" :step="1000"
@@ -62,6 +65,7 @@
                         placeholder="单位（ms）"></a-input-number>
                 </a-form-item>
             </a-collapse-item>
+            <!-- 显示设置 -->
             <a-collapse-item :header="$t('setting.base.display.title')" key="5">
                 <a-form-item :label="$t('setting.base.display.pageSize')">
                     <a-input-number controls-position="right" v-model="instance.pageSize"></a-input-number>
@@ -87,7 +91,20 @@
                         <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme" />
                     </a-select>
                 </a-form-item>
+                <a-form-item>
+                    <template #label>
+                        <span>表格视图页头模式</span>
+                        <a-tooltip content="基础查询和高级查询" placement="top" effect="light">
+                            <icon-question-circle style="margin-left: 5px;" />
+                        </a-tooltip>
+                    </template>
+                    <a-select v-model="instance.tableHeaderMode">
+                        <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING" />
+                        <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER" />
+                    </a-select>
+                </a-form-item>
             </a-collapse-item>
+            <!-- 标签栏设置 -->
             <a-collapse-item header="标签栏设置" key="6">
                 <a-form-item>
                     <template #label>
@@ -130,6 +147,7 @@
                     </a-radio-group>
                 </a-form-item>
             </a-collapse-item>
+            <!-- 其他设置 -->
             <a-collapse-item :header="$t('setting.base.other.title')" key="7">
                 <a-form-item :label="$t('setting.base.other.fullScreen.title')">
                     <a-switch v-model="instance.autoFullScreen" :checked-value="true" :unchecked-value="false" type="round">
@@ -158,7 +176,10 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import XEUtils from "xe-utils";
+// 状态管理
 import useSettingStore from "@/store/SettingStore";
+import useLoadingStore from "@/store/LoadingStore";
 
 import {
     applicationLaunch,
@@ -168,20 +189,20 @@ import {
     seniorSearchHistoryService,
     urlService
 } from "@/global/BeanFactory";
+import Constant from "@/global/Constant";
 import JsonTheme from "@/data/JsonTheme";
 import emitter from "@/plugins/mitt";
 
+// 枚举
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
+
 import Setting from "@/domain/Setting";
-import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
-import Constant from "@/global/Constant";
-import XEUtils from "xe-utils";
-import useLoadingStore from "@/store/LoadingStore";
 import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 
 let isInit = false;
@@ -191,15 +212,16 @@ export default defineComponent({
     name: 'setting-base',
     data: () => ({
         instance: useSettingStore().getDefaultValue(),
-        LayoutModeEnum,
-        TabCloseModeEnum,
-        PageNameEnum,
-        JsonTheme,
         homeExcludeIndicesConfig: {
             input: false,
             value: ''
         },
-        actives: ['']
+        actives: [''],
+        LayoutModeEnum,
+        TabCloseModeEnum,
+        PageNameEnum,
+        JsonTheme,
+        TableHeaderModeEnum
     }),
     created() {
         // 默认值

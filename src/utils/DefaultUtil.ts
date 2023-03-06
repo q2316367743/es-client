@@ -2,6 +2,7 @@ import EditorSetting from "@/domain/EditorSetting";
 import Setting from "@/domain/Setting";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
+import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 
 export default {
@@ -29,6 +30,7 @@ export default {
             jsonFontSize: 16,
             jsonThemeByLight: 'github',
             jsonThemeByDark: 'github-dark',
+            tableHeaderMode: TableHeaderModeEnum.RENDER,
 
             // 标签栏设置
             showTab: false,

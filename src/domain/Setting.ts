@@ -1,5 +1,6 @@
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 
 /**
  * 设置
@@ -97,6 +98,11 @@ export default interface Setting {
      * JSON主题 - 黑夜
      */
     jsonThemeByDark: string;
+
+    /**
+     * 表格表头渲染模式
+     */
+    tableHeaderMode: TableHeaderModeEnum;
 
     /*--------------------------------- 其他设置 ---------------------------------*/
 

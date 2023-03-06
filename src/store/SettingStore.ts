@@ -12,6 +12,7 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 
 
 const useSettingStore = defineStore('setting', {
@@ -37,6 +38,7 @@ const useSettingStore = defineStore('setting', {
         getTabLoadMode: (state): TabLoadModeEnum => Optional.ofNullable(state.instance.tabLoadMode).orElse(TabLoadModeEnum.APPEND),
         getTabMaxCount: (state): number => Optional.ofNullable(state.instance.tabMaxCount).orElse(10),
         getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT),
+        getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.instance.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),
         getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false)
     },
     actions: {

@@ -27,13 +27,13 @@
         </div>
         <div class="table-view-wrap">
             <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
-                sticky-header :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" />
+                sticky-header :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable"/>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent, h, PropType } from "vue";
-import { TableBorder, TableColumnData, TableData, TableExpandable } from "@arco-design/web-vue";
+import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -87,6 +87,9 @@ export default defineComponent({
                 x: '100%',
                 y: '100%'
             },
+            draggable: {
+                type: 'handle'
+            } as TableDraggable,
 
             // 筛选
             checkItems: new Array<string>(),
@@ -251,10 +254,10 @@ export default defineComponent({
                     }
                     // 移除就得索引
                     this.$nextTick(() => {
-                        let temp = this.showColumns[oldIndex - 1];
+                        let temp = this.showColumns[oldIndex - 2];
                         // 变化列
-                        this.showColumns[oldIndex - 1] = this.showColumns[newIndex - 1]
-                        this.showColumns[newIndex - 1] = temp;
+                        this.showColumns[oldIndex - 2] = this.showColumns[newIndex - 2]
+                        this.showColumns[newIndex - 2] = temp;
                     });
                 }
             });
