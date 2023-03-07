@@ -4,52 +4,76 @@
         <div class="option">
             <!-- 左侧条件 -->
             <div class="left">
-                <page-help :total="count" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)" />
+                <page-help :total="total" v-model:size="size" v-model:page="page"
+                           @page-update="executeQuery(false)"/>
                 <div class="sep"></div>
                 <db-simple-item :disable="!index" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
-                    <i class="vxe-icon-refresh" />
+                    <icon-refresh/>
                 </db-simple-item>
                 <div class="sep"></div>
                 <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
-                    <i class="vxe-icon-add" />
+                    <icon-plus/>
                 </db-simple-item>
-                <db-simple-item :disable="deleteRowIndies.size === 0" :tip="$t('common.operation.delete')"
-                    @click="recordReduce">
-                    <i class="vxe-icon-minus" />
+                <db-simple-item :disable="selectedKeys.length === 0" :tip="$t('common.operation.delete')"
+                                @click="recordReduce">
+                    <icon-minus/>
                 </db-simple-item>
-                <db-simple-item :disable="deleteRowIndies.size !== 1" :tip="$t('common.operation.update')"
-                    @click="recordEdit">
-                    <i class="vxe-icon-edit" />
+                <db-simple-item :disable="selectedKeys.length !== 1" :tip="$t('common.operation.update')"
+                                @click="recordEdit">
+                    <icon-edit/>
                 </db-simple-item>
             </div>
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <db-index-select @index-change="indexChange" />
+                <db-index-select @index-change="indexChange"/>
                 <!-- 打印 -->
                 <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
-                    <icon-printer />
+                    <icon-printer/>
                 </db-simple-item>
                 <!-- 索引结构 -->
                 <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
-                    <icon-nav />
+                    <icon-nav/>
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
-                    <icon-search />
+                    <icon-search/>
                 </db-simple-item>
                 <!-- 跳转到高级查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
-                    <icon-filter />
+                    <icon-filter/>
                 </db-simple-item>
+                <!-- 筛选 -->
+                <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[-85, 3]">
+                    <div class="item">
+                        <icon-select-all/>
+                    </div>
+                    <template #content>
+                        <div class="table-view-trigger">
+                            <a-list style="width: 250px">
+                                <template #header>
+                                    <a-button type="primary" size="small" @click="resetColumn">重置</a-button>
+                                </template>
+                                <a-scrollbar style="height: 341px;overflow: auto;">
+                                    <a-checkbox-group v-model="checkItems" @change="handleChange">
+                                        <a-list-item v-for="column in columns" style="width: 250px;margin: 5px 3px;">
+                                            <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
+                                        </a-list-item>
+                                    </a-checkbox-group>
+                                </a-scrollbar>
+                            </a-list>
+                        </div>
+                    </template>
+                </a-trigger>
                 <!-- 操作 -->
                 <a-dropdown trigger="click">
                     <div class="item">
-                        <icon-more-vertical />
+                        <icon-more-vertical/>
                     </div>
                     <template #content>
                         <a-doption>
-                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助
+                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz"
+                                    target="_blank">帮助
                             </a-link>
                         </a-doption>
                     </template>
@@ -57,43 +81,30 @@
             </div>
         </div>
         <!-- 输入条件 -->
-        <db-condition v-model:must-value="must" v-model:should-value="should" v-model:must-not-value="mustNot"
-            v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)" />
+        <db-condition v-model:must-value="must" v-model:should-value="should"
+                      v-model:must-not-value="mustNot"
+                      v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)"/>
         <!-- 数据表格 -->
         <div class="content-table">
-            <vxe-table border height="100%" class="es-scrollbar" :empty-text="emptyText" :data="records" ref="vxeTable"
-                :loading="loading" :menu-config="menuConfig" :column-config="columnConfig" :row-config="rowConfig"
-                @current-change="currentChange" :header-cell-class-name="() => ('rain-table-panel-header')"
-                :sort-config="sortConfig" @menu-click="menuClick" @sort-change="sortChange" @checkbox-all="checkboxAll"
-                @checkbox-change="checkboxChange" @cell-menu="cellMenu">
-                <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
-                <vxe-column type="checkbox" width="60"></vxe-column>
-                <vxe-column type="expand" width="80" title="源">
-                    <template #content="{ row, rowIndex }">
-                        <div class="data-browse-expand">
-                            <a-button type="text" text link class="copy" @click="copy(row._source)">复制</a-button>
-                            <json-view :data="row._source" :copy="false" />
-                        </div>
-                    </template>
-                </vxe-column>
-                <vxe-column field="_id" title="_id" show-overflow="tooltip" width="80" sortable :formatter="format" />
-                <vxe-column field="_index" title="_index" show-overflow="tooltip" width="100" sortable
-                    :formatter="format" />
-                <vxe-column field="_score" title="_score" show-overflow="tooltip" width="100" sortable
-                    :formatter="format" />
-                <vxe-column v-for="header of headers" :key="header.id" :field="header.field" :title="header.field"
-                    :width="header.minWidth" :title-prefix="header.help" show-overflow="tooltip" sortable
-                    :formatter="format" />
-            </vxe-table>
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
+                     scrollbar v-model:selectedKeys="selectedKeys" :scroll="scroll" :loading="loading"
+                     :pagination="false" row-key="_id" :bordered="bordered" :row-selection="rowSelection" :id="id">
+                <template #empty>
+                    <div class="data-browse-empty">{{ emptyText }}</div>
+                </template>
+            </a-table>
         </div>
         <!-- 导出弹窗 -->
-        <export-dialog v-model="exportDialog" :index-name="index ? index.name : ''" :records="records" :result="result" />
+        <export-dialog v-model="exportDialog" :index-name="indexName" :records="records"
+                       :result="result"/>
         <!-- 新增对话框 -->
-        <a-modal v-model:visible="addConfig.dialog" :title="`在【${index?.name}】中新增数据`" width="800px" height="520px"
-            draggable>
+        <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px"
+                 height="520px"
+                 draggable>
             <!-- @ts-ignore -->
-            <codemirror v-model="addConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }" :autofocus="true"
-                :indent-with-tab="true" :tabSize="4" :extensions="extensions" />
+            <codemirror v-model="addConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }"
+                        :autofocus="true"
+                        :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
             <template #footer>
                 <a-button type="text" @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
                 <a-button @click="addConfig.dialog = false">取消</a-button>
@@ -101,11 +112,13 @@
             </template>
         </a-modal>
         <!-- 修改对话框 -->
-        <a-modal v-model:visible="editConfig.dialog" :title="`在【${index?.name}】中修改【${editConfig.id}】数据`" :resize="true"
-            width="800px" height="520px" draggable>
+        <a-modal v-model:visible="editConfig.dialog" :title="`在【${indexName}】中修改【${editConfig.id}】数据`"
+                 :resize="true"
+                 width="800px" height="520px" draggable>
             <!-- @ts-ignore -->
-            <codemirror v-model="editConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }" :autofocus="true"
-                :indent-with-tab="true" :tabSize="4" :extensions="extensions" />
+            <codemirror v-model="editConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }"
+                        :autofocus="true"
+                        :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
             <template #footer>
                 <a-button type="text" @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
                 <a-button @click="editConfig.dialog = false">取消</a-button>
@@ -115,27 +128,20 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from 'pinia';
-import { Codemirror } from 'vue-codemirror';
-import { json } from '@codemirror/lang-json';
-import { VxeColumnPropTypes, VxeTableDefines, VxeTablePropTypes } from 'vxe-table'
+import {defineComponent, h, markRaw} from "vue";
+import {mapState} from 'pinia';
+import {Codemirror} from 'vue-codemirror';
+import {json} from '@codemirror/lang-json';
 import XEUtils from 'xe-utils';
 
 import useIndexStore from "@/store/IndexStore";
-import useSettingStore from "@/store/SettingStore";
 import useUrlStore from "@/store/UrlStore";
 
 import IndexView from "@/view/index/IndexView";
-import Header from "@/view/Header";
-
-import DocumentApi from "@/api/DocumentApi";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import Optional from "@/utils/Optional";
-import StrUtil from "@/utils/StrUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -145,24 +151,21 @@ import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
 import DbCondition from "@/page/DataBrowse/component/DbCondition.vue";
 import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
 import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
-import conditionBuild from '@/page/DataBrowse/build/ConditionBuild';
-import recordBuild from '@/page/DataBrowse/build/RecordBuild';
 import DataBuild from "@/page/DataBrowse/build/DataBuild";
 import '@/page/DataBrowse/index.less';
-import tool from "@/page/DataBrowse/tool";
 
 import mitt from "@/plugins/mitt";
 import {
     isDark,
-    useBaseSearchEvent,
-    useIndexManageEvent,
-    usePageJumpEvent,
-    useSeniorSearchEvent
 } from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
-import BaseOrder from "@/entity/BaseOrder";
 
 import JsonView from "@/components/JsonView/index.vue";
+import {TableBorder, TableData, TableExpandable} from "@arco-design/web-vue";
+import DataBrowseComponent from "@/page/DataBrowse/component/DataBrowseComponent";
+import Sortable from "sortablejs";
+
+let sort: Sortable | undefined;
 
 export default defineComponent({
     name: 'data-browse',
@@ -176,89 +179,76 @@ export default defineComponent({
         StructureIcon,
         Codemirror
     },
-    data: () => ({
-        page: 1,
-        size: useSettingStore().getPageSize,
-        count: 1,
-        index: undefined as IndexView | undefined,
-        isDark,
+    data: () => {
+        const dataBrowseComponent = new DataBrowseComponent();
+        return {
+            isDark,
+            dataBrowseComponent: markRaw(dataBrowseComponent),
+            id: dataBrowseComponent.id,
 
-        // 弹窗
-        exportDialog: false,
+            loading: dataBrowseComponent.loading,
 
-        // 查询条件
-        must: '',
-        should: '',
-        mustNot: '',
-        orderBy: '',
+            page: dataBrowseComponent.page,
+            size: dataBrowseComponent.size,
+            total: dataBrowseComponent.total,
+            index: dataBrowseComponent.index,
 
-        // 展示数据
-        headers: [] as Array<Header>,
-        result: {} as any,
-        records: new Array<any>(),
+            // 弹窗
+            exportDialog: false,
 
-        //当前选中信息
-        record: undefined as any | undefined,
-        recordRowIndex: 0,
-        recordColumnIndex: 0,
-        // 删除的行索引
-        deleteRowIndies: new Set<string>(),
+            // 查询条件
+            must: dataBrowseComponent.must,
+            should: dataBrowseComponent.should,
+            mustNot: dataBrowseComponent.mustNot,
+            orderBy: dataBrowseComponent.orderBy,
 
-        menuRecord: undefined as {
-            field: string,
-            value: string,
-            data: any
-        } | undefined,
+            // 展示数据
+            columns: dataBrowseComponent.columns,
+            showColumns: dataBrowseComponent.showColumns,
+            checkItems: dataBrowseComponent.checkItems,
+            result: dataBrowseComponent.result,
+            records: dataBrowseComponent.records,
+            selectedKeys: dataBrowseComponent.selectedKeys,
 
-        // vxe表格相关配置
-        loading: false,
-        columnConfig: {
-            resizable: true,
-            isCurrent: true
-        },
-        rowConfig: {
-            isCurrent: true
-        },
-        sortConfig: {
-            remote: true
-        } as VxeTablePropTypes.SortConfig,
+            // 配置
+            expandable: {
+                title: '源数据',
+                width: 80,
+                expandedRowRender: (record: TableData) => {
+                    return h(JsonView, {
+                        data: record['_source']
+                    });
+                }
+            } as TableExpandable,
+            bordered: {wrapper: true, cell: true} as TableBorder,
+            scroll: {
+                x: '100%',
+                y: '100%'
+            },
+            rowSelection: {
+                type: 'checkbox',
+                showCheckedAll: true,
+                onlyCurrent: false,
+            },
 
-        // 对话框
-        addConfig: {
-            dialog: false,
-            data: ''
-        },
-        editConfig: {
-            dialog: false,
-            id: '',
-            data: ''
-        },
-        extensions: [json()] as Array<any>
-    }),
+            // 对话框
+            addConfig: {
+                dialog: false,
+                data: ''
+            },
+            editConfig: {
+                dialog: false,
+                id: '',
+                data: ''
+            },
+            extensions: [json()] as Array<any>
+        }
+    },
     computed: {
         ...mapState(useIndexStore, ['indices', 'indicesMap']),
         ...mapState(useUrlStore, ['url']),
         recordMap() {
-            return ArrayUtil.map(this.records, '_id');
-        },
-        menuConfig(): VxeTablePropTypes.MenuConfig {
-            if (!this.index) {
-                let indexItems = new Array<VxeTableDefines.MenuFirstOption>();
-                for (let index of this.indices) {
-                    if (!StrUtil.matchAll(index.name, useSettingStore().getHomeExcludeIndices)) {
-                        indexItems.push({
-                            code: `index-${index.name}`,
-                            name: index.name
-                        })
-                    }
-                }
-                return {
-                    body: {
-                        options: [indexItems]
-                    }
-                } as VxeTablePropTypes.MenuConfig;
-            }
-            return tool.renderMenu();
+            return ArrayUtil.map<any, string, '_id'>(this.records, '_id');
         },
         emptyText() {
             if (!this.url) {
@@ -268,166 +258,29 @@ export default defineComponent({
                 return '请在右上角选择索引'
             }
             return '什么也没有';
+        },
+        indexName(): string {
+            return this.index ? this.index.name : '';
         }
     },
     created() {
         mitt.on(MessageEventEnum.URL_UPDATE, () => {
-            // 重置条件
-            this.index = undefined;
-            this.must = '';
-            this.should = '';
-            this.mustNot = '';
-            this.orderBy = '';
-            this.exportDialog = false;
+            this.dataBrowseComponent.clean();
             this.addConfig.dialog = false;
-            this.page = 1;
-            this.size = useSettingStore().getPageSize;
-            this.count = 1;
-            // 展示数据
-            this.headers = [] as Array<Header>;
-            this.result = {} as any;
-            this.records = new Array<any>();
-
-            //当前选中信息
-            this.record = undefined as any | undefined;
-            this.recordRowIndex = 0;
-            this.recordColumnIndex = 0;
-            // 删除的行索引
-            this.deleteRowIndies = new Set<string>();
-
-            this.loading = false;
         });
     },
     methods: {
-        executeQuery(renderHeader: boolean = true) {
-            if (!this.index) {
-                return;
-            }
-            this.loading = true;
-            DocumentApi(this.index.name)._search(
-                conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
-            ).then(result => {
-                this.result = result;
-                let { headers, records, count } = recordBuild(result, this.index!);
-                if (renderHeader) {
-                    this.headers = headers;
-                }
-                this.records = records;
-                this.count = count;
-            }).catch(e => MessageUtil.error('查询失败', e))
-                .finally(() => this.loading = false);
-        },
         // >----------------------------------- 表格事件 ---------------------------------->
-        format(column: { cellValue: any }): VxeColumnPropTypes.Formatter {
-            if (column.cellValue instanceof Date) {
-                return XEUtils.toDateString(column.cellValue, 'yyyy-MM-dd HH:ss:mm')
-            }
-            return column.cellValue;
+        format(column: Date): string {
+            return XEUtils.toDateString(column, 'yyyy-MM-dd HH:ss:mm')
         },
-        currentChange(data: any) {
-            this.record = data.row;
-            this.recordRowIndex = data.rowIndex;
-            this.recordColumnIndex = data.columnIndex;
-        },
-        sortChange(column: any) {
-            // 解析orderBy语句
-            if (this.orderBy === '') {
-                if (column.order) {
-                    this.orderBy = `${column.field} ${column.order}`
-                } else {
-                    this.orderBy = ''
-                }
-            } else {
-                if (this.orderBy.includes(column.field)) {
-                    // 存在排序字段
-                    // 如果需要排序
-                    let startIndex = this.orderBy.indexOf(column.field);
-                    let tempOrderBy = this.orderBy.substring(startIndex);
-                    let nextOrderByIndex = tempOrderBy.indexOf(',') > -1 ? tempOrderBy.indexOf(',') : tempOrderBy.length;
-                    let endIndex = startIndex + nextOrderByIndex;
-                    if (column.order) {
-                        this.orderBy = this.orderBy.substring(0, startIndex) +
-                            `${column.field} ${column.order}` +
-                            this.orderBy.substring(endIndex, this.orderBy.length)
-                    } else {
-                        this.orderBy = this.orderBy.substring(0, endIndex === this.orderBy.length ? startIndex - 1 : startIndex) +
-                            this.orderBy.substring(endIndex, this.orderBy.length)
-                    }
-                } else {
-                    // 不存在，直接拼后面
-                    this.orderBy = this.orderBy + `,${column.field} ${column.order}`
-                }
-            }
-            this.executeQuery()
-        },
-        checkboxAll(param: VxeTableDefines.CheckboxAllEventParams) {
-            this.deleteRowIndies = new Set<string>();
-            param.$table.getCheckboxRecords().map(e => e['_id']).forEach(id => this.deleteRowIndies.add(id));
-        },
-        checkboxChange(param: VxeTableDefines.CheckboxChangeEventParams) {
-            this.deleteRowIndies = new Set<string>();
-            param.$table.getCheckboxRecords().map(e => e['_id']).forEach(id => this.deleteRowIndies.add(id));
-        },
-        menuClick(param: VxeTableDefines.MenuClickParams) {
-            let code = param.menu.code!;
-            // 索引特殊，先处理
-            if (code.startsWith('index')) {
-                // 跳转索引
-                let index = this.indicesMap.get(code.substring(6));
-                if (index) {
-                    this.indexChange(index);
-                }
-                return;
-            }
-            // 未选择不处理
-            if (!this.menuRecord) {
-                MessageUtil.error('错误，无法获取选中元素')
-                return;
-            }
-            if (code === 'copy') {
-                BrowserUtil.copy(Optional.ofNullable(this.menuRecord).map(e => e['value']).orElse(""));
-            } else if (code === 'add') {
-                this.recordAdd();
-            } else if (code === 'update') {
-                this.recordEdit(this.menuRecord.data['_id'])
-            } else if (code === 'delete') {
-                this.recordReduce(new Set<string>([this.menuRecord.data['_id']]));
-            } else if (code.startsWith('query')) {
-                // 查询
-                let codes = code.split('|');
-                let express = `${this.menuRecord.field} ${codes[2]} '${this.menuRecord.value}'`;
-                switch (codes[1]) {
-                    case 'must':
-                        this.must = express;
-                        break;
-                    case 'should':
-                        this.should = express;
-                        break;
-                    case 'must not':
-                        this.mustNot = express;
-                        break;
-                }
-                this.executeQuery(false);
-            } else if (code.startsWith('sort')) {
-                // 排序
-                if (code === 'sort-clear') {
-                    this.orderBy = '';
-                } else if (code === 'sort-asc') {
-                    this.orderBy = `${this.menuRecord.field}`
-                } else if (code === 'sort-desc') {
-                    this.orderBy = `${this.menuRecord.field} desc`
-                }
-                this.executeQuery(false);
-            } else {
-                console.error(code)
-            }
-        },
-        cellMenu(param: VxeTableDefines.CellMenuEventParams) {
-            this.menuRecord = {
-                field: param.column.field,
-                value: param.cell.textContent as string,
-                data: param.row
-            };
+        executeQuery(renderHeader: boolean) {
+            this.dataBrowseComponent.executeQuery(renderHeader)
+                .then(() => {
+                    this.$nextTick(() => {
+                        this.addSortable();
+                    })
+                });
         },
         // <----------------------------------- 表格事件 ----------------------------------<
 
@@ -443,68 +296,11 @@ export default defineComponent({
             }
         },
         recordAddClick() {
-            if (!this.index) {
-                return;
-            }
-            DocumentApi(this.index.name)._insert(this.addConfig.data)
-                .then(result => MessageUtil.success(
-                    `新增成功，新数据ID【${result._id || ''}】`,
-                    () => {
-                        this.addConfig.dialog = false;
-                        // 延迟100ms，
-                        this.$nextTick(() => {
-                            setTimeout(() => {
-                                this.executeQuery(false);
-                            }, 1000);
-                        })
-                    })).catch(e => MessageUtil.error('新增失败', e));
+            this.dataBrowseComponent.add(this.addConfig.data)
+                .then(() => this.editConfig.dialog = false);
         },
-        recordReduce(deleteRowIndies?: Set<string>) {
-            let indices = Optional.ofNullable(deleteRowIndies)
-                .orElse(this.deleteRowIndies);
-            console.log(indices, this.index)
-            let result = tool.recordReduce(indices, this.index);
-            if (result) {
-                result.then(() => {
-                    // 延迟100ms，
-                    this.$nextTick(() => {
-                        setTimeout(() => {
-                            this.executeQuery(false);
-                        }, 1000);
-                    });
-                    // 当前选中重置
-                    this.record = undefined as any | undefined;
-                    this.recordRowIndex = 0;
-                    this.recordColumnIndex = 0;
-                    // 删除的行索引
-                    this.deleteRowIndies = new Set<string>();
-                    // 清除选中行
-                    (this.$refs['vxeTable'] as any).clearCheckboxRow();
-                }).catch(() => {
-                    // 跳转到高级查询
-                    let ids = new Array<string>();
-                    indices.forEach(id => ids.push(id));
-                    usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-                    useSeniorSearchEvent.emit({
-                        link: `/${this.index?.name}/_delete_by_query`,
-                        method: 'POST',
-                        params: JSON.stringify({
-                            query: {
-                                bool: {
-                                    must: [
-                                        {
-                                            ids: {
-                                                values: ids
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }, null, 4)
-                    });
-                    this.clearChoose();
-                })
-            }
+        recordReduce(deleteRowIndies?: Array<string>) {
+            this.dataBrowseComponent.reduce(deleteRowIndies)
         },
         recordEdit(_id?: string) {
             if (!this.index) {
@@ -512,7 +308,7 @@ export default defineComponent({
                 return;
             }
             let record;
-            if (this.deleteRowIndies.size !== 1) {
+            if (this.selectedKeys.length !== 1) {
                 if (_id) {
                     record = this.recordMap.get(_id);
                     if (!record) {
@@ -522,7 +318,7 @@ export default defineComponent({
                     return;
                 }
             } else {
-                record = this.recordMap.get(this.deleteRowIndies.keys().next().value);
+                record = this.recordMap.get(this.selectedKeys[0]);
             }
             this.editConfig = {
                 dialog: true,
@@ -531,84 +327,25 @@ export default defineComponent({
             }
         },
         recordEditClick() {
-            if (!this.index) {
-                MessageUtil.error('请选择索引');
-                return;
-            }
-            DocumentApi(this.index.name)._update(this.editConfig.id, this.editConfig.data).then(() => {
-                MessageUtil.success('修改成功');
-                this.editConfig.dialog = false;
-                // 延迟100ms，
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.executeQuery(false);
-                    }, 1000);
-                });
-                // 当前选中重置
-                this.clearChoose();
-            }).catch(e => MessageUtil.error('修改失败', e));
+            this.dataBrowseComponent.update(this.editConfig.id, this.editConfig.data)
+                .then(() => {
+                    this.editConfig.dialog = false;
+                })
         },
 
         // 右侧
         indexChange(index: IndexView) {
-            this.index = index;
-            this.page = 1;
-            this.size = useSettingStore().getPageSize;
-            this.must = '';
-            this.should = '';
-            this.mustNot = '';
-            this.executeQuery();
+            this.dataBrowseComponent.indexChange(index)
+                .then(() => this.addSortable());
         },
         openMappingDrawer() {
-            if (!this.index) {
-                return;
-            }
-            useIndexManageEvent.emit(this.index.name);
+            this.dataBrowseComponent.openMappingDrawer();
         },
         jumpToBaseSearch() {
-            if (!this.index) {
-                return;
-            }
-            // 页面跳转
-            usePageJumpEvent.emit(PageNameEnum.BASE_SEARCH);
-            // 基础数据
-            let orders = new Array<BaseOrder>();
-            // 填充数据
-            let count = 1;
-            let condition = conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size);
-            // 排序
-            for (let key in condition.sort) {
-                orders.push({
-                    id: count++,
-                    field: `_doc.${key}`,
-                    type: condition.sort[key].order,
-                    isEnable: true
-                });
-            }
-            useBaseSearchEvent.emit({
-                execute: true,
-                name: this.index.name,
-                index: this.index.name,
-                conditions: [],
-                orders
-            });
+            this.dataBrowseComponent.jumpToBaseSearch();
         },
         jumpToSeniorSearch() {
-            if (!this.index) {
-                return;
-            }
-            // 跳转页面
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            // 填充数据
-            useSeniorSearchEvent.emit({
-                name: this.index.name,
-                link: `/${this.index.name}/_search`,
-                method: 'POST',
-                params: JSON.stringify(
-                    conditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size),
-                    null,
-                    4)
-            })
+            this.dataBrowseComponent.jumpToSeniorSearch();
         },
         openExportDialog() {
             // 选择了索引
@@ -628,37 +365,69 @@ export default defineComponent({
         // >----------------------------------------- 功能 ----------------------------------------->
         copy: (value: any) => BrowserUtil.copy(JSON.stringify(value, null, 4)),
         jumpToSeniorSearchByInsert() {
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            useSeniorSearchEvent.emit({
-                link: `/${this.index?.name}/_doc`,
-                method: 'POST',
-                params: this.addConfig.data
-            });
-            this.addConfig.dialog = false;
-            // 清除当前选中
-            this.clearChoose();
+            this.dataBrowseComponent.jumpToSeniorSearchByInsert(this.addConfig.data)
+                .then(() => {
+                    this.addConfig.dialog = false;
+                    // 清除当前选中
+                    this.clearChoose();
+                });
         },
         jumpToSeniorSearchByUpdate() {
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            useSeniorSearchEvent.emit({
-                link: `/${this.index?.name}/_doc/${this.editConfig.id}`,
-                method: 'PUT',
-                params: this.editConfig.data
-            });
-            this.editConfig.dialog = false;
-            // 清除当前选中
-            this.clearChoose();
+            this.dataBrowseComponent.jumpToSeniorSearchByUpdate(this.editConfig.id, this.editConfig.data)
+                .then(() => {
+                    this.editConfig.dialog = false;
+                    // 清除当前选中
+                    this.clearChoose();
+                });
         },
         clearChoose() {
-            // 当前选中重置
-            this.record = undefined as any | undefined;
-            this.recordRowIndex = 0;
-            this.recordColumnIndex = 0;
-            // 删除的行索引
-            this.deleteRowIndies = new Set<string>();
-            // 清除选中行
-            (this.$refs['vxeTable'] as any).clearCheckboxRow();
-        }
+            // TODO: 清除当前选中
+        },
+        addSortable() {
+            let tableViewWrap = document.getElementById(this.id);
+            if (sort) {
+                sort.destroy();
+            }
+            const wrapperTr = tableViewWrap!.querySelector('.arco-table-tr')! as HTMLElement;
+            sort = Sortable.create(wrapperTr, {
+                draggable: '.arco-table-th',
+                filter: '.table-view-fixed',
+                swapThreshold: 1,
+                animation: 150,
+                delay: 0,
+                onUpdate: (evt: any) => {
+                    const {newIndex, oldIndex} = evt;
+                    if (newIndex == oldIndex) {
+                        // 没有变位置，直接返回
+                        return;
+                    }
+                    // 表头修改
+                    const newItem = wrapperTr.children[newIndex];
+                    const oldItem = wrapperTr.children[oldIndex];
+
+                    // 先删除移动的节点
+                    wrapperTr.removeChild(newItem)
+                    // 再插入移动的节点到原有节点，还原了移动的操作
+                    if (newIndex > oldIndex) {
+                        wrapperTr.insertBefore(newItem, oldItem)
+                    } else {
+                        wrapperTr.insertBefore(newItem, oldItem.nextSibling)
+                    }
+                    // 列变化
+                    this.$nextTick(() => {
+                        // 变化列
+                        const currRow = this.columns.splice(oldIndex - 2, 1)[0];
+                        this.columns.splice(newIndex - 2, 0, currRow);
+                    });
+                }
+            });
+        },
+        resetColumn() {
+            this.dataBrowseComponent.resetColumn();
+        },
+        handleChange(values: any[]) {
+            this.dataBrowseComponent.handleChange(values);
+        },
     }
 });
 </script>

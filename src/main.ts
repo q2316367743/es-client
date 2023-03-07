@@ -19,10 +19,6 @@ import '@arco-design/web-vue/es/spin/style/css.js';
 import '@arco-design/web-vue/es/message/style/css.js';
 import '@arco-design/web-vue/es/notification/style/css.js';
 
-// VXETable导入
-import VXETable from 'vxe-table';
-import 'vxe-table/lib/style.css'
-
 // @ts-ignore
 if (window.utools) {
     utools.onPluginEnter(action => {
@@ -42,7 +38,6 @@ createApp(App)
     .use(store)
     .use(i18n)
     .use(ArcoVueIcon)
-    .use(VXETable)
     .mount('#app');
 
 applicationLaunch.executeInit();

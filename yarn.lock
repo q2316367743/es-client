@@ -1622,11 +1622,6 @@ vue@^3.2.45:
     "@vue/server-renderer" "3.2.45"
     "@vue/shared" "3.2.45"
 
-vxe-table@^4.3.7:
-  version "4.3.7"
-  resolved "https://r.cnpmjs.org/vxe-table/-/vxe-table-4.3.7.tgz#138c402b1681f077f9fd93c7dafa1cc974ac3af4"
-  integrity sha512-v+d7eEQ5uqtVTQCts4xkW0S15LZcIuEukYHGXI53SdoUj2gLFggPYAxQr1y659CM/ESRWPz9LNVHpd97KkjGHw==
-
 w3c-keyname@^2.2.4:
   version "2.2.6"
   resolved "https://r.cnpmjs.org/w3c-keyname/-/w3c-keyname-2.2.6.tgz#8412046116bc16c5d73d4e612053ea10a189c85f"

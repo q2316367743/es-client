@@ -53,7 +53,6 @@
         "vue-codemirror": "^6.1.1",
         "vue-i18n": "^9.2.2",
         "vue-json-viewer": "3",
-        "vxe-table": "^4.3.7",
         "x2js": "^3.4.4",
         "xe-utils": "^3.5.7"
     },

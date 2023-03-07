@@ -4,7 +4,7 @@
             <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[105, 3]">
                 <a-button type="outline" size="small">
                     <template #icon>
-                        <icon-select-all />
+                        <icon-select-all/>
                     </template>
                 </a-button>
                 <template #content>
@@ -26,33 +26,20 @@
             </a-trigger>
         </div>
         <div class="table-view-wrap">
-            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
-                sticky-header :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"
-                :draggable="draggable" />
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
+                     scrollbar :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"
+                     :draggable="draggable"/>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, h, PropType } from "vue";
-import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
+import {defineComponent, h, PropType} from "vue";
+import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
-
-function buildTableColumnData(dataIndex: string, width: number, title?: string, tooltip: boolean = false, fixed: boolean = false): TableColumnData {
-    return {
-        title: title ? title : dataIndex,
-        dataIndex,
-        ellipsis: true,
-        tooltip,
-        width,
-        cellClass: fixed ? 'table-view-cell table-view-fixed' : 'table-view-cell',
-        sortable: fixed ? {
-            sortDirections: ["ascend", "descend"]
-        } : undefined
-    }
-}
+import {JsonToTableBuild} from "@/build/JsonToTableBuild";
 
 let sort: Sortable | undefined;
 
@@ -66,7 +53,7 @@ export default defineComponent({
             default: ''
         }
     },
-    components: { JsonView },
+    components: {JsonView},
 
     data: () => {
         let now = new Date().getTime();
@@ -90,7 +77,7 @@ export default defineComponent({
                     });
                 }
             } as TableExpandable,
-            bordered: { wrapper: true, cell: true } as TableBorder,
+            bordered: {wrapper: true, cell: true} as TableBorder,
             scroll: {
                 x: '100%',
                 y: '100%'
@@ -121,40 +108,15 @@ export default defineComponent({
                 this.emptyText = '数据无法解析，请使用其他视图查看'
                 return;
             }
+            // 数据处理
+            let {columns, records} = JsonToTableBuild(this.data);
+            this.columns = columns;
+            this.records = records;
             // 数据清空
-            this.records = [];
-            let columnMap = new Map<string, TableColumnData>();
-            // 基础对象
-            columnMap.set('_id', {
-                title: '_id',
-                dataIndex: '_id',
-                ellipsis: true,
-                width: 110,
-                sortable: {
-                    sortDirections: ['ascend', 'descend']
-                },
-                cellClass: 'table-view-cell table-view-fixed'
-            });
-            ['_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
-
-            // 开始渲染
-            for (let item of this.data.hits.hits) {
-                let record = {} as Record<string, string>;
-                record['_id'] = item['_id'];
-                record['_index'] = item['_index'];
-                record['_score'] = item['_score'];
-                let _source = item['_source'];
-                this.renderObj(_source, columnMap, record, '');
-                record['_source'] = item;
-                this.records.push(record);
-            }
-            // 渲染结束，开始赋值
-            this.columns = Array.from(columnMap.values());
             let x = 0;
             this.columns.map(e => e.width).forEach(e => x += (e || 0));
             this.scroll.x = `${x}px`;
             // 此处设置显示的列
-            console.log(this.allowUpdate, this.oldIndex, this.index)
             if (this.index !== this.oldIndex ||
                 (this.allowUpdate && this.index === '') ||
                 (this.index === this.oldIndex && this.index !== '' && this.allowUpdate)
@@ -169,54 +131,6 @@ export default defineComponent({
             this.$nextTick(() => {
                 this.addSortable();
             })
-        },
-        renderObj(
-            obj: Record<string, any>,
-            columnMap: Map<string, TableColumnData>,
-            record: Record<string, string>,
-            prefix: string
-        ) {
-            for (let key in obj) {
-                // 基础值
-                let source = obj[key];
-                let dataIndex = prefix === '' ? key : `${prefix}-${key}`;
-                let title = prefix === '' ? key : `${prefix}.${key}`;
-                let width = 80;
-                let value = '';
-                // 处理对象
-                if (typeof source === 'object') {
-                    // JSON转字符串
-                    if (source instanceof Array) {
-                        value = JSON.stringify(source);
-                    } else {
-                        this.renderObj(source, columnMap, record, title);
-                        break;
-                    }
-                } else {
-                    // 普通类型，直接渲染
-                    value = `${source}`;
-                }
-                // 计算宽度
-                width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
-                width = Math.min(width, 600);
-                // 列
-                let column = buildTableColumnData(dataIndex, width, title, width === 600, typeof source === 'number');
-
-                // 判断列宽度
-                if (columnMap.has(dataIndex)) {
-                    let temp = columnMap.get(dataIndex);
-                    if (temp && temp.width && temp.width < width) {
-                        // 宽度不合适，使用新的
-                        columnMap.set(dataIndex, column);
-                    }
-                } else {
-                    // 不存在列，新增
-                    columnMap.set(dataIndex, column);
-                }
-
-                // 值
-                record[dataIndex] = value;
-            }
         },
         verify_index(): boolean {
             if (!this.data) {
@@ -253,7 +167,7 @@ export default defineComponent({
                 animation: 150,
                 delay: 0,
                 onUpdate: (evt: any) => {
-                    const { newIndex, oldIndex } = evt;
+                    const {newIndex, oldIndex} = evt;
                     if (newIndex == oldIndex) {
                         // 没有变位置，直接返回
                         return;
@@ -270,12 +184,11 @@ export default defineComponent({
                     } else {
                         wrapperTr.insertBefore(newItem, oldItem.nextSibling)
                     }
-                    // 移除就得索引
+                    // 列变化
                     this.$nextTick(() => {
-                        let temp = this.showColumns[oldIndex - 2];
                         // 变化列
-                        this.showColumns[oldIndex - 2] = this.showColumns[newIndex - 2]
-                        this.showColumns[newIndex - 2] = temp;
+                        const currRow = this.showColumns.splice(oldIndex - 2, 1)[0];
+                        this.showColumns.splice(newIndex - 2, 0, currRow);
                     });
                 }
             });
@@ -317,9 +230,5 @@ export default defineComponent({
     .arco-list-header {
         text-align: center;
     }
-}
-
-.table-view-cell {
-    font-family: JetBrainsMono, 微软雅黑, Courier, monospace;
 }
 </style>

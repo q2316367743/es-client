@@ -1,4 +1,3 @@
-import { VXETable } from 'vxe-table';
 import jsYaml from 'js-yaml';
 
 import { json2xml, nativeStrategyContext } from '@/global/BeanFactory';
@@ -6,6 +5,7 @@ import { json2xml, nativeStrategyContext } from '@/global/BeanFactory';
 import ExportConfig from "./ExportConfig";
 import BrowserUtil from "@/utils/BrowserUtil";
 import DownloadType from '@/strategy/NativeStrategy/DownloadType';
+import MessageUtil from "@/utils/MessageUtil";
 
 function verifyExportConfig(exportConfig: ExportConfig) {
     if (exportConfig.name === '') {
@@ -131,10 +131,7 @@ export default function exportData(exportConfig: ExportConfig, records: Array<an
         BrowserUtil.copy(content, false);
     } else if (exportConfig.config === 2) {
         // 打印
-        VXETable.print({
-            sheetName: exportConfig.name,
-            content
-        })
+        MessageUtil.error("不支持打印")
     } else if (exportConfig.config === 3) {
         // 下载
         if (exportConfig.type === 1) {

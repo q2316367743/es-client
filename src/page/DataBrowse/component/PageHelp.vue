@@ -1,10 +1,10 @@
 <template>
     <div class="page-help">
         <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
-            <i class="vxe-icon-arrow-double-left"/>
+            <icon-double-left/>
         </div>
         <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
-            <i class="vxe-icon-arrow-left"/>
+            <icon-left/>
         </div>
         <a-dropdown trigger="click" @select="pageSizeChange">
             <div class="item" style="font-size: 12px;line-height: 20px;">
@@ -23,10 +23,10 @@
             / {{ total }}
         </div>
         <div class="item" :class="page * size > total ? 'disable' : ''" @click="nextPage">
-            <i class="vxe-icon-arrow-right"/>
+            <icon-right/>
         </div>
         <div class="item" :class="page * size > total ? 'disable' : ''" @click="toLast">
-            <i class="vxe-icon-arrow-double-right"/>
+            <icon-double-right/>
         </div>
     </div>
 </template>
@@ -123,6 +123,7 @@ export default defineComponent({
                         cancelButtonText: '取消',
                         inputPattern: /\d+/,
                         inputErrorMessage: '请输入正确的数字',
+                        inputValue: this.size + ''
                     })
                         .then((value) => {
                             callback(1, parseInt(value));

@@ -40,8 +40,8 @@ export default {
      * @param merge key冲突合并解决办法
      * @returns map结果
      */
-    map<T, K extends keyof T>(arr: T[], attrName: K, merge?: (item1: T, item2: T) => T): Map<any, T> {
-        let result = new Map<string, T>();
+    map<T, K, A extends keyof T>(arr: T[], attrName: A, merge?: (item1: T, item2: T) => T): Map<K, T> {
+        let result = new Map<K, T>();
         for (let item of arr) {
             // @ts-ignore
             if (result.has(item[attrName])) {

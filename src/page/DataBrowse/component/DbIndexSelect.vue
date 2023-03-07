@@ -113,12 +113,6 @@ export default defineComponent({
 </script>
 <style lang="less">
 // 下拉列表
-.data-browse-pull-down {
-    .vxe-pulldown--panel {
-        left: -170px;
-        box-shadow: 0 0 12px var(--color-border-2);
-    }
-}
 
 .data-browse-pull-down-panel {
     width: 400px;
