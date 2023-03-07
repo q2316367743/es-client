@@ -31,7 +31,6 @@
         <template #footer>
             <a-button @click="runExportDialog(1)" type="text">复制到剪切板</a-button>
             <a-button @click="exportDialog = false">取消</a-button>
-            <a-button @click="runExportDialog(2)" type="primary" status="success">打印</a-button>
             <a-button @click="runExportDialog(3)" type="primary">导出</a-button>
         </template>
     </a-modal>

@@ -1,13 +1,13 @@
 // 导出库
 import x2js from 'x2js';
-import { Parser } from '@json2csv/plainjs';
+import {Parser} from '@json2csv/plainjs';
 import jsYaml from 'js-yaml';
 
-import { nativeStrategyContext } from "@/global/BeanFactory";
-import { ExportConfig, ExportHeader, ExportMode, ExportScope, ExportSource, ExportType } from "./domain";
+import {nativeStrategyContext} from "@/global/BeanFactory";
+import {ExportConfig, ExportHeader, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
 import Assert from "@/utils/Assert";
 import DownloadType from "@/strategy/NativeStrategy/DownloadType";
-import { toRaw } from "vue";
+import {toRaw} from "vue";
 import MessageUtil from '@/utils/MessageUtil';
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
@@ -24,7 +24,7 @@ const json2Tsv = new Parser({
 // ------------------------------------------------ 非结构化导出 ------------------------------------------------
 
 function exportNoSql(config: ExportConfig, data: any): ExportContent | undefined {
-    let obj = {};
+    let obj: {};
     if (config.source === ExportSource.HIT) {
         Assert.isFalse(!data || !data.hits || !data.hits.hits,
             "结构错误无法导出");
@@ -117,6 +117,7 @@ function renderRecord(config: ExportConfig, data: any): Result {
  * 解析对象为扁平化数据
  * @param items 要解析的数据
  * @param keys key
+ * @param record 记录
  * @param prefix 前缀
  */
 function deepParse(items: Record<string, any>, keys: Set<string>, record: Record<string, any>, prefix: string) {
@@ -134,7 +135,7 @@ function deepParse(items: Record<string, any>, keys: Set<string>, record: Record
 // ------------------------------------------------ 结构化导出 ------------------------------------------------
 
 function exportForHtml(config: ExportConfig, data: any): ExportContent {
-    let { keys, records } = renderRecord(config, data);
+    let {keys, records} = renderRecord(config, data);
     return {
         type: DownloadType.HTML,
         content: htmlTemplate(config.name, keys, records)
@@ -142,7 +143,7 @@ function exportForHtml(config: ExportConfig, data: any): ExportContent {
 }
 
 function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
-    return `<html>
+    return `<html lang="zh">
     <head>
         <title>${name}</title>
     </head>
@@ -153,17 +154,17 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
             </thead>
             <tbody>
                 ${records
-            .map(record => keys.map(key => {
-                if (typeof record[key] === 'undefined') {
-                    return '<td></td>';
-                } else if (typeof record[key] === 'object') {
-                    return `<td>${JSON.stringify(record[key])}</td>`;
-                } else {
-                    return `<td>${record[key]}</td>`;
-                }
-            }).join('\n'))
-            .map(e => `<tr>${e}</tr>`)
-            .join('\n')}
+        .map(record => keys.map(key => {
+            if (typeof record[key] === 'undefined') {
+                return '<td></td>';
+            } else if (typeof record[key] === 'object') {
+                return `<td>${JSON.stringify(record[key])}</td>`;
+            } else {
+                return `<td>${record[key]}</td>`;
+            }
+        }).join('\n'))
+        .map(e => `<tr>${e}</tr>`)
+        .join('\n')}
             </tbody>
         </table>
     <body>
@@ -172,7 +173,7 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
 }
 
 function exportForCsv(config: ExportConfig, data: any): ExportContent {
-    let { records } = renderRecord(config, data);
+    let {records} = renderRecord(config, data);
     return {
         type: DownloadType.CSV,
         content: json2Csv.parse(records)
@@ -180,7 +181,7 @@ function exportForCsv(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportForTsv(config: ExportConfig, data: any): ExportContent {
-    let { records } = renderRecord(config, data);
+    let {records} = renderRecord(config, data);
     return {
         type: DownloadType.TXT,
         content: json2Tsv.parse(records)
@@ -188,7 +189,7 @@ function exportForTsv(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportForTxt(config: ExportConfig, data: any): ExportContent {
-    let { records } = renderRecord(config, data);
+    let {records} = renderRecord(config, data);
     const json2Txt = new Parser({
         delimiter: config.separator
     });
@@ -210,7 +211,7 @@ interface ExportContent {
 
 /**
  * 导出数据
- * 
+ *
  * @param config 到处配置
  * @param data 导出的源数据
  */
