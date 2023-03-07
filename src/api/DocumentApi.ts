@@ -13,34 +13,34 @@ export default function DocumentApi(index: string) {
             })
         },
 
-        _insert(data: string): Promise<any> {
+        _insert(data: Record<string, any>): Promise<any> {
             return httpStrategyContext.getStrategy().es<any>({
                 url: `/${index}/_doc`,
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                data: JSON.parse(data)
+                data
             })
         },
-        _delete_by_query(data: any): Promise<any> {
+        _delete_by_query(data: Record<string, any>): Promise<any> {
             return httpStrategyContext.getStrategy().es<any>({
                 url: `/${index}/_delete_by_query`,
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                data: data
+                data
             })
         },
-        _update(id: string, data: any): Promise<any> {
+        _update(id: string, data: Record<string, any>): Promise<any> {
             return httpStrategyContext.getStrategy().es<any>({
                 url: `/${index}/_doc/${id}`,
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                data: data
+                data
             })
         }
     }

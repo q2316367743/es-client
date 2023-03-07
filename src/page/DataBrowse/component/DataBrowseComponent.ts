@@ -87,7 +87,6 @@ export default class DataBrowseComponent {
     }
 
     indexChange(index: IndexView): Promise<void> {
-        console.log(this)
         this.index.value = index;
         this.page.value = 1;
         this.size.value = useSettingStore().getPageSize;
@@ -124,13 +123,20 @@ export default class DataBrowseComponent {
      * @param data 记录内容
      */
     add(data: string): Promise<void> {
+        let record = {};
+        try {
+            record = JSON.parse(data);
+        } catch (e) {
+            MessageUtil.error("数据解析错误", e);
+            return Promise.reject(e);
+        }
         return new Promise<void>((resolve, reject) => {
             if (!this.index.value) {
                 MessageUtil.error("请先选择索引");
                 reject();
                 return;
             }
-            DocumentApi(this.index.value.name)._insert(data)
+            DocumentApi(this.index.value.name)._insert(record)
                 .then(result => {
                     MessageUtil.success(`新增成功，新数据ID【${result._id || ''}】`)
                     // 延迟100ms，
@@ -205,20 +211,28 @@ export default class DataBrowseComponent {
      * @param id 数据ID
      * @param data 新的数据
      */
-    update(id: string, data: any): Promise<void> {
+    update(id: string, data: string): Promise<void> {
+        let record = {};
+        try {
+            record = JSON.parse(data);
+        } catch (e) {
+            MessageUtil.error("数据解析错误", e);
+            return Promise.reject(e);
+        }
         return new Promise<void>((resolve, reject) => {
             if (!this.index.value) {
                 MessageUtil.error('请选择索引');
                 reject();
                 return;
             }
-            DocumentApi(this.index.value.name)._update(id, data).then(() => {
+            DocumentApi(this.index.value.name)._update(id, record).then(() => {
                 // 延迟100ms，
                 setTimeout(() => {
                     this.executeQuery(false).then(() => console.log("查询成功"));
                 }, 1000);
                 // 更新后，重置选择
                 this.selectedKeys.value = new Array<string>();
+                resolve();
             }).catch(e => reject(e));
         })
     }

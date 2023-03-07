@@ -141,7 +141,6 @@ import IndexView from "@/view/index/IndexView";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
-import Optional from "@/utils/Optional";
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -297,7 +296,7 @@ export default defineComponent({
         },
         recordAddClick() {
             this.dataBrowseComponent.add(this.addConfig.data)
-                .then(() => this.editConfig.dialog = false);
+                .then(() => this.addConfig.dialog = false);
         },
         recordReduce(deleteRowIndies?: Array<string>) {
             this.dataBrowseComponent.reduce(deleteRowIndies)
@@ -320,10 +319,11 @@ export default defineComponent({
             } else {
                 record = this.recordMap.get(this.selectedKeys[0]);
             }
+            console.log(record)
             this.editConfig = {
                 dialog: true,
                 id: record['_id'],
-                data: JSON.stringify(record['_source'], null, 4)
+                data: JSON.stringify(record['_source']['_source'], null, 4)
             }
         },
         recordEditClick() {
