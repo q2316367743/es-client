@@ -1,77 +1,62 @@
 <template>
-    <vxe-table :data="records" empty-text="没有记录" ref="seniorSearchRecordRef" :column-config="columnConfig"
-        :export-config="exportConfig">
-        <vxe-column type="seq" width="60" fixed="left" title="序号"></vxe-column>
-        <vxe-column type="expand" width="80" title="请求体">
-            <template #content="{ row, rowIndex }">
-                <div class="data-browse-expand">
-                    <a-button type="text" status="normal">复制</a-button>
-                    <json-view :data="row.params ? JSON.parse(row.params) : {}" :copy="false" />
-                </div>
-            </template>
-        </vxe-column>
-        <vxe-column field="date" width="150" title="查询时间" :formatter="formatter"></vxe-column>
-        <vxe-column field="success" width="100" title="查询状态">
-            <template #default="{ row }">
-                <div style="display: flex;">
-                    <div class="dot" :style="{ backgroundColor: row.success ? 'green' : 'red' }" />
-                    <div>{{ row.success ? '成功' : '失败' }}</div>
-                </div>
-            </template>
-        </vxe-column>
-        <vxe-column field="time" width="100" title="执行时间">
-            <template #default="{ row }">
-                {{ row.time }}ms
-            </template>
-        </vxe-column>
-        <vxe-column field="method" width="100" title="请求方式"></vxe-column>
-        <vxe-column field="link" width="150" title="请求连接" show-overflow="ellipsis"></vxe-column>
-        <vxe-column width="85" title="操作" fixed="right">
-            <template #default="{ row }">
-                <a-button type="primary" @click="load(row)">载入</a-button>
-            </template>
-        </vxe-column>
-    </vxe-table>
+    <a-table :data="records" :expandable="expandable" row-key="date">
+        <template #columns>
+            <a-table-column data-index="date" :width="150" title="查询时间">
+                <template #cell="{ record }">{{ formatter(record.date) }}</template>
+            </a-table-column>
+            <a-table-column data-index="success" :width="100" title="查询状态">
+                <template #cell="{ record }">
+                    <div style="display: flex;">
+                        <div class="dot" :style="{ backgroundColor: record.success ? 'green' : 'red' }"/>
+                        <div>{{ record.success ? '成功' : '失败' }}</div>
+                    </div>
+                </template>
+            </a-table-column>
+            <a-table-column data-index="time" :width="100" title="执行时间">
+                <template #cell="{ record }">
+                    {{ record.time }}ms
+                </template>
+            </a-table-column>
+            <a-table-column data-index="method" :width="100" title="请求方式"/>
+            <a-table-column data-index="link" :width="150" title="请求连接"/>
+            <a-table-column :width="85" title="操作" fixed="right">
+                <template #cell="{ record }">
+                    <a-button type="primary" @click="load(record)">载入</a-button>
+                </template>
+            </a-table-column>
+        </template>
+    </a-table>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "pinia";
+import {defineComponent, h} from "vue";
+import {mapState} from "pinia";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
-import { VxeTablePropTypes } from "vxe-table";
 import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
 import XEUtils from "xe-utils";
-import { useSeniorSearchEvent } from "@/global/BeanFactory";
+import {useSeniorSearchEvent} from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";
+import {TableData, TableExpandable} from "@arco-design/web-vue/es/table/interface";
 
 export default defineComponent({
     name: 'senior-search-record',
-    components: { JsonView },
+    components: {JsonView},
     data: () => ({
-        columnConfig: {
-            resizable: true
-        },
-        exportConfig: {
-            filename: '高级查询搜索历史',
-            sheetName: '高级查询搜索历史',
-            // 自定义类型
-            types: ['csv', 'html', 'xml', 'txt']
-        } as VxeTablePropTypes.ExportConfig
+        expandable: {
+            title: '请求体',
+            width: 80,
+            expandedRowRender: (record: TableData) => {
+                return h(JsonView, {
+                    data: record.params && record.params != '' ? JSON.parse(record.params) : {}
+                })
+            }
+        } as TableExpandable
     }),
     computed: {
         ...mapState(useSeniorSearchRecordStore, ['records']),
     },
-    watch: {
-        records: {
-            handler(newValue: Array<SeniorSearchRecord>) {
-                let seniorSearchRecordRef = this.$refs.seniorSearchRecordRef as any;
-                seniorSearchRecordRef.loadData(newValue.sort((a, b) => b.date.getTime() - a.date.getTime()));
-            },
-            deep: true
-        }
-    },
     methods: {
-        formatter(column: any) {
-            return XEUtils.toDateString(column.cellValue, 'yyyy-MM-dd HH:ss:mm')
+        formatter(column: Date) {
+            return XEUtils.toDateString(column, 'yyyy-MM-dd HH:ss:mm')
         },
         load(record: SeniorSearchRecord) {
             useSeniorSearchEvent.emit({
