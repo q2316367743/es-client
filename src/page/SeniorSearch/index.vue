@@ -99,7 +99,7 @@
             :footer="false">
             <senior-search-setting @close="settingDialog = false" />
         </a-modal>
-        <senior-search-export-dialog v-model="exportDialog" :data="current.result" />
+        <senior-search-export-dialog v-model="exportDialog" :result="current.result" />
     </a-spin>
 </template>
 

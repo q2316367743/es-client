@@ -65,7 +65,7 @@ export default class DataBrowseComponent {
                 conditionBuild(this.must.value, this.should.value, this.mustNot.value, this.orderBy.value, this.page.value, this.size.value)
             )
                 .then(result => {
-                    this.result = result;
+                    this.result.value = result;
                     let {columns, records, total} = JsonToTableBuild(result, this.index.value!);
                     this.columns.value = columns;
                     if (renderHeader) {

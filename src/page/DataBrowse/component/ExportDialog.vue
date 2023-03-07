@@ -1,48 +1,64 @@
 <template>
-    <a-modal v-model:visible="exportDialog" title="导出数据" width="600px" height="400px" draggable>
-        <div style="display: flex;justify-content: center;align-items: center;margin-top: 40px;">
-            <a-form :model="exportConfig" label-width="120px">
-                <a-form-item label="文件名">
-                    <a-input v-model="exportConfig.name" style="width: 215px;" />
-                </a-form-item>
-                <a-form-item label="保存类型">
-                    <a-select v-model="exportConfig.type">
-                        <a-option label="JSON数据（*.json）" :value="1" />
-                        <a-option label="网页（*.html）" :value="2" disabled />
-                        <a-option label="XML数据（*.xml）" :value="3" />
-                        <a-option label="YAML数据（*.yaml）" :value="4" />
-                    </a-select>
-                </a-form-item>
-                <a-form-item label="选择数据">
-                    <a-select v-model="exportConfig.data">
-                        <a-option label="当前数据（当前页的数据）" :value="1" />
-                        <a-option label="选中数据（当前页选中的数据）" :value="2" disabled />
-                    </a-select>
-                </a-form-item>
-                <a-form-item label="文件内容">
-                    <a-select v-model="exportConfig.result">
-                        <a-option label="表格数据" :value="1" />
-                        <a-option label="原始数据" :value="2" />
-                        <a-option label="原始结果集" :value="3" :disabled="exportConfig.type === 2" />
-                    </a-select>
-                </a-form-item>
-            </a-form>
-        </div>
+    <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false"
+             draggable>
+        <a-form :model="instance" layout="vertical">
+            <a-form-item label=文件名>
+                <a-input v-model="instance.name"/>
+            </a-form-item>
+            <a-form-item label="文件类型">
+                <a-select v-model="instance.type">
+                    <a-option :value="ExportType.JSON">JSON文件(*.json)</a-option>
+                    <a-option :value="ExportType.YML">YML文件(*.yml)</a-option>
+                    <a-option :value="ExportType.XML">XML文件(*.xml)</a-option>
+                    <a-option :value="ExportType.HTML">网页(*.html)</a-option>
+                    <a-option :value="ExportType.CSV">CSV(*.csv)</a-option>
+                    <a-option :value="ExportType.TSV">管道分隔(*.txt)</a-option>
+                    <a-option :value="ExportType.TXT">文本文件(*.txt)</a-option>
+                </a-select>
+            </a-form-item>
+            <a-form-item label="分隔符" v-if="instance.type === ExportType.TXT">
+                <a-input v-model="instance.separator"/>
+            </a-form-item>
+            <a-form-item label="导出范围">
+                <a-select v-model="instance.scope">
+                    <a-option :value="ExportScope.CURRENT">当前页面</a-option>
+                    <a-option :value="ExportScope.ALL" disabled>全部</a-option>
+                    <a-option :value="ExportScope.CUSTOM" disabled>自定义范围</a-option>
+                </a-select>
+            </a-form-item>
+            <a-form-item label="来源">
+                <a-select v-model="instance.source">
+                    <a-option :value="ExportSource.ALL"
+                              :disabled="![ExportType.JSON, ExportType.YML, ExportType.XML].includes(instance.type)">全部
+                    </a-option>
+                    <a-option :value="ExportSource.HIT">只导出hits</a-option>
+                    <a-option :value="ExportSource.SOURCE">只导出_source内容</a-option>
+                </a-select>
+            </a-form-item>
+        </a-form>
         <template #footer>
-            <a-button @click="runExportDialog(1)" type="text">复制到剪切板</a-button>
-            <a-button @click="exportDialog = false">取消</a-button>
-            <a-button @click="runExportDialog(3)" type="primary">导出</a-button>
+            <a-button type="text" status="normal" @click="exportCopy">{{ $t('common.action.copy') }}</a-button>
+            <a-button @click="visible = false">取消</a-button>
+            <a-button type="primary" @click="exportDownload">导出</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import ExportConfig from "@/page/DataBrowse/domain/ExportConfig";
-import exportData from "@/page/DataBrowse/domain/ExportData";
+import {exportData} from "@/components/ExportComponent";
+import {
+    ExportConfig,
+    ExportScope,
+    ExportSource,
+    ExportType,
+    ExportMode
+} from "@/components/ExportComponent/domain";
+import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
+import {defineComponent, PropType} from "vue";
 
 export default defineComponent({
-    name: 'export-dialog',
+    name: 'senior-search-export-dialog',
+    emits: ['update:modelValue'],
     props: {
         modelValue: Boolean,
         records: Object as PropType<Array<any>>,
@@ -54,64 +70,69 @@ export default defineComponent({
         }
     },
     data: () => ({
-        exportDialog: false,
-        exportConfig: {
-            name: '',
-            type: 1,
-            data: 1,
-            result: 1,
-            config: 1,
-            fields: new Array<string>()
-        } as ExportConfig
+        visible: false,
+        instance: {
+            name: '数据导出',
+            type: ExportType.JSON,
+            separator: '',
+            scope: ExportScope.CURRENT,
+            customStart: 0,
+            customEnd: -1,
+            source: ExportSource.ALL,
+            fields: [],
+            size: 1000,
+            mode: ExportMode.DOWNLOAD
+        } as ExportConfig,
+        ExportType,
+        ExportScope,
+        ExportSource,
     }),
     watch: {
         modelValue(newValue: boolean) {
-            this.exportDialog = newValue;
-            if (newValue) {
-                this.exportConfig = {
-                    name: this.indexName === '' ? (new Date().getTime() + '') : this.indexName,
-                    type: 1,
-                    data: 1,
-                    result: 1,
-                    config: 1,
-                    fields: new Array<string>()
-                }
+            this.visible = newValue;
+        },
+        indexName(newValue: string) {
+            if (newValue != '') {
+                this.instance.name = newValue
             }
         },
-        exportDialog(newValue: boolean) {
+        visible(newValue: boolean) {
             this.$emit('update:modelValue', newValue);
         },
-        'exportConfig.type': {
-            handler(newValue) {
-                // 如果变为html，则不能导出全部数据
-                if (newValue === 2) {
-                    if (this.exportConfig.result === 3) {
-                        this.exportConfig.result = 1;
-                    }
+        'instance.type': {
+            handler(newValue: ExportType) {
+                switch (newValue) {
+                    case ExportType.HTML:
+                    case ExportType.CSV:
+                    case ExportType.TSV:
+                    case ExportType.TXT:
+                        if (this.instance.source === ExportSource.ALL) {
+                            MessageUtil.warning('导出结构化数据，只能导出hits中或_source中的数据');
+                            this.instance.source = ExportSource.HIT;
+                        }
+                        break;
                 }
-            },
-            immediate: true
+            }
         }
     },
     methods: {
-        runExportDialog(config: number) {
-            this.exportConfig.config = config;
-            // 根据类型判断结果
+        exportCopy() {
+            this.instance.mode = ExportMode.COPY;
+            this.execute();
+        },
+        exportDownload() {
+            this.instance.mode = ExportMode.DOWNLOAD;
+            this.execute();
+        },
+        execute() {
             try {
-                if (!this.records) {
-                    MessageUtil.error('记录错误');
-                    return;
-                }
-                if (!this.result) {
-                    MessageUtil.error('结果集错误');
-                    return;
-                }
-                exportData(this.exportConfig, this.records, this.result);
-                this.exportDialog = false;
-                // 提示
-                MessageUtil.success(config === 1 ? '成功复制到剪切板' : config === 2 ? '成功打印' : config === 3 ? '成功导出' : '成功');
+                useLoadingStore().start('开始导出');
+                exportData(this.instance, this.result);
+                this.visible = false;
             } catch (e) {
-                MessageUtil.error('导出失败');
+                MessageUtil.error('导出失败', e);
+            } finally {
+                useLoadingStore().close();
             }
         }
     }

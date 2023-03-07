@@ -368,20 +368,13 @@ export default defineComponent({
             this.dataBrowseComponent.jumpToSeniorSearchByInsert(this.addConfig.data)
                 .then(() => {
                     this.addConfig.dialog = false;
-                    // 清除当前选中
-                    this.clearChoose();
                 });
         },
         jumpToSeniorSearchByUpdate() {
             this.dataBrowseComponent.jumpToSeniorSearchByUpdate(this.editConfig.id, this.editConfig.data)
                 .then(() => {
                     this.editConfig.dialog = false;
-                    // 清除当前选中
-                    this.clearChoose();
                 });
-        },
-        clearChoose() {
-            // TODO: 清除当前选中
         },
         addSortable() {
             let tableViewWrap = document.getElementById(this.id);

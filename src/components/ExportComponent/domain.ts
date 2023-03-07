@@ -45,20 +45,6 @@ export enum ExportType {
 
 }
 
-export enum ExportHeader {
-
-    /**
-     * 基础
-     */
-    BASE = 1,
-
-    /**
-     * 深度
-     */
-    DEEP = 2
-
-}
-
 export enum ExportScope {
 
     /**
@@ -129,11 +115,6 @@ export interface ExportConfig {
      * 指定分隔符
      */
     separator: string;
-
-    /**
-     * 表头渲染
-     */
-    header: ExportHeader;
 
     /**
      * 导出范围

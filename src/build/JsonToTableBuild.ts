@@ -17,15 +17,29 @@ function buildTableColumnData(dataIndex: string, width: number, title?: string, 
     }
 }
 
+export interface BuildConfig {
+
+    /**
+     * 是否包含公共
+     */
+    common: boolean;
+
+    /**
+     * 是否包含源
+     */
+    source: boolean;
+
+}
+
 export interface TableViewColumnData {
-    dataIndex?: string;
-    title?: string;
-    width?: number;
+    dataIndex: string;
+    title: string;
+    width: number;
     fixed?: 'left' | 'right';
-    ellipsis?: boolean;
+    ellipsis: boolean;
     tooltip?: boolean | Record<string, any>;
     sortable?: TableViewSortable;
-    cellClass?: ClassName;
+    cellClass: ClassName;
 
 }
 
@@ -61,31 +75,48 @@ export interface TableView {
  * @constructor
  */
 export function JsonToTableBuild(data: any, index?: IndexView): TableView {
+    return JsonToTableCompleteBuild(data, {common: true, source: true}, index);
+}
+
+/**
+ * JSON转化为表格视图
+ * @param data 数据
+ * @param config 配置
+ * @param index 索引，如果有
+ * @constructor
+ */
+export function JsonToTableCompleteBuild(data: any, config: BuildConfig, index?: IndexView): TableView {
     // 当变化时，进行渲染
     let records = new Array<any>();
     let columnMap = new Map<string, TableViewColumnData>();
-    // 基础对象
-    columnMap.set('_id', {
-        title: '_id',
-        dataIndex: '_id',
-        ellipsis: true,
-        width: 110,
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        cellClass: 'table-view-cell table-view-fixed'
-    });
-    ['_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
+    if (config.common) {
+        // 只有全部才会加入基础对象
+        columnMap.set('_id', {
+            title: '_id',
+            dataIndex: '_id',
+            ellipsis: true,
+            width: 110,
+            sortable: {
+                sortDirections: ['ascend', 'descend']
+            },
+            cellClass: 'table-view-cell table-view-fixed'
+        });
+        ['_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
+    }
 
     // 开始渲染
     for (let item of data.hits.hits) {
         let record = {} as Record<string, string>;
-        record['_id'] = item['_id'];
-        record['_index'] = item['_index'];
-        record['_score'] = item['_score'];
+        if (config.common) {
+            record['_id'] = item['_id'];
+            record['_index'] = item['_index'];
+            record['_score'] = item['_score'];
+        }
         let _source = item['_source'];
         renderObj(_source, columnMap, record, '');
-        record['_source'] = item;
+        if (config.source) {
+            record['_source'] = item;
+        }
         records.push(record);
     }
     // 渲染结束，开始赋值

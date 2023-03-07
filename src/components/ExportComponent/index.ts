@@ -4,11 +4,12 @@ import {Parser} from '@json2csv/plainjs';
 import jsYaml from 'js-yaml';
 
 import {nativeStrategyContext} from "@/global/BeanFactory";
-import {ExportConfig, ExportHeader, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
+import {ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
 import Assert from "@/utils/Assert";
 import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 import {toRaw} from "vue";
 import MessageUtil from '@/utils/MessageUtil';
+import {JsonToTableCompleteBuild, TableViewColumnData} from "@/build/JsonToTableBuild";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -54,95 +55,20 @@ function exportNoSql(config: ExportConfig, data: any): ExportContent | undefined
     }
 }
 
-// ------------------------------------------------ 结构化解析 ------------------------------------------------
-
-interface Result {
-
-    keys: Array<string>;
-
-    records: Array<any>;
-}
-
-function renderRecord(config: ExportConfig, data: any): Result {
-    let records = new Array<any>();
-    let keys = new Set<string>();
-    if (config.source === ExportSource.HIT) {
-        Assert.isFalse(!data || !data.hits || !data.hits.hits,
-            "结构错误无法导出");
-        (data.hits.hits as Array<any>).forEach(item => {
-            let temp = {} as Record<string, any>;
-            Object.keys(item).forEach(key => {
-                if (key === '_source') {
-                    let _source = item['_source'];
-                    Object.keys(_source).forEach(key1 => {
-                        temp[key1] = _source[key1];
-                        keys.add(key1);
-                    })
-                } else {
-                    temp[key] = item[key];
-                    keys.add(key);
-                }
-            });
-            records.push(temp);
-        })
-    } else if (config.source === ExportSource.SOURCE) {
-        Assert.isFalse(!data || !data.hits || !data.hits.hits,
-            "结构错误无法导出");
-        records = (data.hits.hits as Array<any>).map(e => e['_source']);
-        records.forEach(record => Object.keys(record)
-            .forEach(key => {
-                keys.add(key);
-            }));
-    } else {
-        throw new Error('结构错误无法导出');
-    }
-    if (config.header === ExportHeader.DEEP) {
-        // 深度
-        keys = new Set<string>();
-        let tempRecords = new Array<Record<string, any>>();
-        records.forEach(record => {
-            let tempRecord = {} as Record<string, any>;
-            deepParse(record, keys, tempRecord, '')
-            tempRecords.push(tempRecord);
-        });
-        records = tempRecords;
-    }
-    return {
-        keys: Array.from(keys),
-        records
-    }
-}
-
-/**
- * 解析对象为扁平化数据
- * @param items 要解析的数据
- * @param keys key
- * @param record 记录
- * @param prefix 前缀
- */
-function deepParse(items: Record<string, any>, keys: Set<string>, record: Record<string, any>, prefix: string) {
-    for (let key in items) {
-        let item = items[key];
-        let currentKey = prefix === '' ? key : (prefix + '.' + key);
-        if (typeof item === 'object') {
-            deepParse(item, keys, record, currentKey);
-        } else {
-            record[currentKey] = item;
-        }
-    }
-}
-
 // ------------------------------------------------ 结构化导出 ------------------------------------------------
 
 function exportForHtml(config: ExportConfig, data: any): ExportContent {
-    let {keys, records} = renderRecord(config, data);
+    let {columns, records} = JsonToTableCompleteBuild(data, {
+        common: config.source === ExportSource.HIT,
+        source: false
+    });
     return {
         type: DownloadType.HTML,
-        content: htmlTemplate(config.name, keys, records)
+        content: htmlTemplate(config.name, columns, records)
     }
 }
 
-function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
+function htmlTemplate(name: string, keys: Array<TableViewColumnData>, records: Array<any>) {
     return `<html lang="zh">
     <head>
         <title>${name}</title>
@@ -150,17 +76,17 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
     <body>
         <table>
             <thead>
-                <th>${keys.map(e => `<td>${e}</td>`).join('\n')}</th>
+                <tr>${keys.map(e => `<td>${e.dataIndex}</td>`).join('\n')}</tr>
             </thead>
             <tbody>
                 ${records
         .map(record => keys.map(key => {
-            if (typeof record[key] === 'undefined') {
+            if (typeof record[key.dataIndex] === 'undefined') {
                 return '<td></td>';
-            } else if (typeof record[key] === 'object') {
-                return `<td>${JSON.stringify(record[key])}</td>`;
+            } else if (typeof record[key.dataIndex] === 'object') {
+                return `<td>${JSON.stringify(record[key.dataIndex], null, 4)}</td>`;
             } else {
-                return `<td>${record[key]}</td>`;
+                return `<td>${record[key.dataIndex]}</td>`;
             }
         }).join('\n'))
         .map(e => `<tr>${e}</tr>`)
@@ -173,7 +99,10 @@ function htmlTemplate(name: string, keys: Array<string>, records: Array<any>) {
 }
 
 function exportForCsv(config: ExportConfig, data: any): ExportContent {
-    let {records} = renderRecord(config, data);
+    let {records} = JsonToTableCompleteBuild(data, {
+        common: config.source === ExportSource.HIT,
+        source: false
+    });
     return {
         type: DownloadType.CSV,
         content: json2Csv.parse(records)
@@ -181,7 +110,10 @@ function exportForCsv(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportForTsv(config: ExportConfig, data: any): ExportContent {
-    let {records} = renderRecord(config, data);
+    let {records} = JsonToTableCompleteBuild(data, {
+        common: config.source === ExportSource.HIT,
+        source: false
+    });
     return {
         type: DownloadType.TXT,
         content: json2Tsv.parse(records)
@@ -189,7 +121,10 @@ function exportForTsv(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportForTxt(config: ExportConfig, data: any): ExportContent {
-    let {records} = renderRecord(config, data);
+    let {records} = JsonToTableCompleteBuild(data, {
+        common: config.source === ExportSource.HIT,
+        source: false
+    });
     const json2Txt = new Parser({
         delimiter: config.separator
     });
