@@ -17,6 +17,9 @@
                 <a-option label="最小值换行" value="bounded"/>
             </a-select>
         </a-form-item>
+        <a-form-item label="运行 - 字体颜色">
+            <a-input v-model="instance.runColor" placeholder="颜色，十六进制"/>
+        </a-form-item>
         <div style="text-align: right;margin-top: 18px">
             <a-button @click="close">取消</a-button>
             <a-button @click="save" type="primary">保存</a-button>
@@ -26,22 +29,16 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import useEditorSettingStore from "@/store/EditorSettingStore";
-import EditorSetting from "@/domain/EditorSetting";
 import MessageUtil from "@/utils/MessageUtil";
+import DefaultUtil from "@/utils/DefaultUtil";
 
 export default defineComponent({
     name: 'senior-search-setting',
     data: () => ({
-        instance: {
-            fontSize: 14,
-            minimap: false,
-            wordWrap: 'on'
-        } as EditorSetting
+        instance: DefaultUtil.getDefaultEditorSettingValue()
     }),
     created() {
-        this.instance.fontSize = useEditorSettingStore().getFontSize;
-        this.instance.minimap = useEditorSettingStore().getMinimap;
-        this.instance.wordWrap = useEditorSettingStore().getWordWrap;
+        this.instance = useEditorSettingStore().getSetting
     },
     methods: {
         close() {

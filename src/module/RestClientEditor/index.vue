@@ -1,5 +1,5 @@
 <template>
-    <div ref="container" :id="id"></div>
+    <div ref="container" :id="id" class="es-rest-client-editor"></div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -38,7 +38,9 @@ export default defineComponent({
     data: () => ({
         content: '',
         isDark,
-        id: `rest-client-${new Date().getTime()}`
+        id: `rest-client-${new Date().getTime()}`,
+        runFontSize: 16,
+        runColor: '#0d7d6c'
     }),
     watch: {
         modelValue(newValue) {
@@ -79,6 +81,9 @@ export default defineComponent({
                 fontSize: useEditorSettingStore().getFontSize
             });
 
+            this.runFontSize = useEditorSettingStore().getRunFontSize;
+            this.runColor = useEditorSettingStore().getRunColor;
+
             // 注册更新程序
             emitter.on(MessageEventEnum.EDITOR_SETTING_UPDATE, () => {
                 instance.updateOptions({
@@ -87,7 +92,9 @@ export default defineComponent({
                     },
                     wordWrap: useEditorSettingStore().getWordWrap,
                     fontSize: useEditorSettingStore().getFontSize
-                })
+                });
+                this.runFontSize = useEditorSettingStore().getRunFontSize;
+                this.runColor = useEditorSettingStore().getRunColor;
             })
 
             instance.onDidChangeModelContent(() => {
@@ -115,8 +122,12 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.es-monaco-editor {
-    width: 100%;
-    height: 100%;
+.es-rest-client-editor {
+    .contentWidgets {
+        a {
+            font-size: v-bind(runFontSize);
+            color: v-bind(runColor);
+        }
+    }
 }
 </style>

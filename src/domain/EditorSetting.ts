@@ -20,4 +20,9 @@ export default interface EditorSetting {
      */
     wordWrap: 'off' | 'on' | 'wordWrapColumn' | 'bounded';
 
+    /**
+     * 运行文字颜色
+     */
+    runColor: string;
+
 }

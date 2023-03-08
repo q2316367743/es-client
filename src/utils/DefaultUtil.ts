@@ -47,7 +47,8 @@ export default {
         return {
             fontSize: 14,
             minimap: false,
-            wordWrap: 'on' as 'off' | 'on' | 'wordWrapColumn' | 'bounded'
+            wordWrap: 'on' as 'off' | 'on' | 'wordWrapColumn' | 'bounded',
+            runColor: '#0d7d6c'
         }
     }
 }

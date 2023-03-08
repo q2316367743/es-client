@@ -363,7 +363,7 @@ export default class DataBrowseComponent {
     }
 
     resetColumn() {
-        this.showColumns = this.columns;
+        this.showColumns.value = this.columns.value;
         this.checkItems.value = this.showColumns.value.map(column => column.dataIndex!);
         this.allowUpdate.value = true;
     }

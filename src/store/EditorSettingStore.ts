@@ -8,20 +8,22 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import DefaultUtil from "@/utils/DefaultUtil";
 
 const useEditorSettingStore = defineStore('editor-setting', {
-    state: DefaultUtil.getDefaultEditorSettingValue,
+    state: () => ({
+        instance: DefaultUtil.getDefaultEditorSettingValue()
+    }),
     getters: {
-        getFontSize: (state): number => Optional.ofNullable(state.fontSize).orElse(16),
-        getMinimap: (state): boolean => Optional.ofNullable(state.minimap).orElse(false),
-        getWordWrap: (state): 'off' | 'on' | 'wordWrapColumn' | 'bounded' => Optional.ofNullable(state.wordWrap).orElse("on")
+        getSetting: (state): EditorSetting => state.instance,
+        getFontSize: (state): number => Optional.ofNullable(state.instance.fontSize).orElse(16),
+        getMinimap: (state): boolean => Optional.ofNullable(state.instance.minimap).orElse(false),
+        getWordWrap: (state): 'off' | 'on' | 'wordWrapColumn' | 'bounded' => Optional.ofNullable(state.instance.wordWrap).orElse("on"),
+        getRunColor: (state): string => Optional.ofNullable(state.instance.runColor).orElse("#0d7d6c"),
     },
     actions: {
         async init(): Promise<void> {
             let instance = await lodisStrategyContext.getStrategy().get<EditorSetting>(LocalStorageKeyEnum.EDITOR_SETTING);
             if (instance) {
                 try {
-                    this.fontSize = Optional.ofNullable(instance).attr('fontSize').orElse(16);
-                    this.minimap = Optional.ofNullable(instance).attr('minimap').orElse(false);
-                    this.wordWrap = Optional.ofNullable(instance).attr('wordWrap').orElse('on');
+                    Object.assign(this.instance, instance);
                 } catch (e) {
                     console.error(e);
                 }
@@ -29,14 +31,16 @@ const useEditorSettingStore = defineStore('editor-setting', {
             return Promise.resolve();
         },
         async save(editorSetting: EditorSetting): Promise<void> {
-            this.fontSize = editorSetting.fontSize;
-            this.minimap = editorSetting.minimap;
-            this.wordWrap = editorSetting.wordWrap;
+            this.instance.fontSize = editorSetting.fontSize;
+            this.instance.minimap = editorSetting.minimap;
+            this.instance.wordWrap = editorSetting.wordWrap;
+            this.instance.runColor = editorSetting.runColor;
             // 保存
             await lodisStrategyContext.getStrategy().set<EditorSetting>(LocalStorageKeyEnum.EDITOR_SETTING, {
-                fontSize: this.fontSize,
-                minimap: this.minimap,
-                wordWrap: this.wordWrap
+                fontSize: this.instance.fontSize,
+                minimap: this.instance.minimap,
+                wordWrap: this.instance.wordWrap,
+                runColor: this.instance.runColor
             });
             emitter.emit(MessageEventEnum.EDITOR_SETTING_UPDATE);
             return Promise.resolve();
