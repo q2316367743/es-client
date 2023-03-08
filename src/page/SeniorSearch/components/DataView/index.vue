@@ -1,22 +1,26 @@
 <template>
     <div class="senior-search-data-view hljs">
-        <a-scrollbar class="scrollbar" :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
-            <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
-            <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"></pre>
-            <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
-        </a-scrollbar>
-        <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="data" />
+        <div class="base-scroll">
+            <a-scrollbar class="scrollbar"
+                         :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+                <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
+                <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"></pre>
+                <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
+            </a-scrollbar>
+        </div>
+        <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="data"/>
         <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE"
-            @click="execCopy">复制</a-button>
-        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container" />
+                  @click="execCopy">复制
+        </a-button>
+        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container"/>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "pinia";
-import { renderJSONTreeView } from "@/components/JsonTree";
+import {defineComponent} from "vue";
+import {mapState} from "pinia";
+import {renderJSONTreeView} from "@/components/JsonTree";
 
-import { highlight } from '@/global/BeanFactory';
+import {highlight} from '@/global/BeanFactory';
 import BrowserUtil from "@/utils/BrowserUtil";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
@@ -32,7 +36,7 @@ export default defineComponent({
         jsonTreeId: 'json-tree-view-' + new Date().getTime(),
         value: '',
         pretty: '',
-        copyable: { copyText: "复制", copiedText: "复制成功", timeout: 2000 },
+        copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
         Optional,
         ViewTypeEnum,
         show: ViewTypeEnum.JSON
@@ -103,21 +107,23 @@ export default defineComponent({
     width: 100%;
     position: relative;
 
-    .arco-scrollbar {
-        position: absolute;
-        top: 4px;
-        left: 6px;
-        right: 6px;
-        bottom: 4px;
-
-        .scrollbar {
-            overflow: auto;
+    .base-scroll {
+        .arco-scrollbar {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 4px;
+            left: 6px;
+            right: 6px;
+            bottom: 4px;
 
+            .scrollbar {
+                overflow: auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+            }
         }
     }
 
