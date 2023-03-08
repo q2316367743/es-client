@@ -163,6 +163,7 @@ import JsonView from "@/components/JsonView/index.vue";
 import {TableBorder, TableData, TableExpandable} from "@arco-design/web-vue";
 import DataBrowseComponent from "@/page/DataBrowse/component/DataBrowseComponent";
 import Sortable from "sortablejs";
+import {TableRowSelection} from "@arco-design/web-vue/es/table/interface";
 
 let sort: Sortable | undefined;
 
@@ -228,7 +229,7 @@ export default defineComponent({
                 type: 'checkbox',
                 showCheckedAll: true,
                 onlyCurrent: false,
-            },
+            } as TableRowSelection,
 
             // 对话框
             addConfig: {

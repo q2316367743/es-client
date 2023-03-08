@@ -39,7 +39,6 @@ export default defineComponent({
         content: '',
         isDark,
         id: `rest-client-${new Date().getTime()}`,
-        runFontSize: 16,
         runColor: '#0d7d6c'
     }),
     watch: {
@@ -81,7 +80,6 @@ export default defineComponent({
                 fontSize: useEditorSettingStore().getFontSize
             });
 
-            this.runFontSize = useEditorSettingStore().getRunFontSize;
             this.runColor = useEditorSettingStore().getRunColor;
 
             // 注册更新程序
@@ -93,7 +91,6 @@ export default defineComponent({
                     wordWrap: useEditorSettingStore().getWordWrap,
                     fontSize: useEditorSettingStore().getFontSize
                 });
-                this.runFontSize = useEditorSettingStore().getRunFontSize;
                 this.runColor = useEditorSettingStore().getRunColor;
             })
 
@@ -125,7 +122,6 @@ export default defineComponent({
 .es-rest-client-editor {
     .contentWidgets {
         a {
-            font-size: v-bind(runFontSize);
             color: v-bind(runColor);
         }
     }
