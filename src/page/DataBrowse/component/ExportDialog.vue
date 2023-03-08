@@ -10,6 +10,7 @@
                     <a-option :value="ExportType.JSON">JSON文件(*.json)</a-option>
                     <a-option :value="ExportType.YML">YML文件(*.yml)</a-option>
                     <a-option :value="ExportType.XML">XML文件(*.xml)</a-option>
+                    <a-option :value="ExportType.XLSX">表格(*.xlsx)</a-option>
                     <a-option :value="ExportType.HTML">网页(*.html)</a-option>
                     <a-option :value="ExportType.CSV">CSV(*.csv)</a-option>
                     <a-option :value="ExportType.TSV">管道分隔(*.txt)</a-option>
@@ -37,7 +38,9 @@
             </a-form-item>
         </a-form>
         <template #footer>
-            <a-button type="text" status="normal" @click="exportCopy">{{ $t('common.action.copy') }}</a-button>
+            <a-button type="text" status="normal" @click="exportCopy" :disabled="instance.type === ExportType.XLSX">
+                {{ $t('common.action.copy') }}
+            </a-button>
             <a-button @click="visible = false">取消</a-button>
             <a-button type="primary" @click="exportDownload">导出</a-button>
         </template>
@@ -102,6 +105,7 @@ export default defineComponent({
         'instance.type': {
             handler(newValue: ExportType) {
                 switch (newValue) {
+                    case ExportType.XLSX:
                     case ExportType.HTML:
                     case ExportType.CSV:
                     case ExportType.TSV:

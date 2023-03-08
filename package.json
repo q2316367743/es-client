@@ -54,7 +54,8 @@
         "vue-i18n": "^9.2.2",
         "vue-json-viewer": "3",
         "x2js": "^3.4.4",
-        "xe-utils": "^3.5.7"
+        "xe-utils": "^3.5.7",
+        "xlsx": "^0.18.5"
     },
     "devDependencies": {
         "@tauri-apps/api": "^1.2.0",

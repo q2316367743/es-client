@@ -2,6 +2,7 @@
 import x2js from 'x2js';
 import {Parser} from '@json2csv/plainjs';
 import jsYaml from 'js-yaml';
+import {utils, writeFile} from 'xlsx'
 
 import {nativeStrategyContext} from "@/global/BeanFactory";
 import {ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
@@ -60,7 +61,8 @@ function exportNoSql(config: ExportConfig, data: any): ExportContent | undefined
 function exportForHtml(config: ExportConfig, data: any): ExportContent {
     let {columns, records} = JsonToTableCompleteBuild(data, {
         common: config.source === ExportSource.HIT,
-        source: false
+        source: false,
+        separator: '.'
     });
     return {
         type: DownloadType.HTML,
@@ -101,7 +103,8 @@ function htmlTemplate(name: string, keys: Array<TableViewColumnData>, records: A
 function exportForCsv(config: ExportConfig, data: any): ExportContent {
     let {records} = JsonToTableCompleteBuild(data, {
         common: config.source === ExportSource.HIT,
-        source: false
+        source: false,
+        separator: '.'
     });
     return {
         type: DownloadType.CSV,
@@ -112,7 +115,8 @@ function exportForCsv(config: ExportConfig, data: any): ExportContent {
 function exportForTsv(config: ExportConfig, data: any): ExportContent {
     let {records} = JsonToTableCompleteBuild(data, {
         common: config.source === ExportSource.HIT,
-        source: false
+        source: false,
+        separator: '.'
     });
     return {
         type: DownloadType.TXT,
@@ -123,7 +127,8 @@ function exportForTsv(config: ExportConfig, data: any): ExportContent {
 function exportForTxt(config: ExportConfig, data: any): ExportContent {
     let {records} = JsonToTableCompleteBuild(data, {
         common: config.source === ExportSource.HIT,
-        source: false
+        source: false,
+        separator: '.'
     });
     const json2Txt = new Parser({
         delimiter: config.separator
@@ -132,6 +137,23 @@ function exportForTxt(config: ExportConfig, data: any): ExportContent {
         type: DownloadType.TXT,
         content: json2Txt.parse(records)
     }
+}
+
+function exportFotXlsx(config: ExportConfig, data: any) {
+    let {records} = JsonToTableCompleteBuild(data, {
+        common: config.source === ExportSource.HIT,
+        source: false,
+        separator: '.'
+    });
+
+    writeFile({
+        Sheets: {
+            "sheet1": utils.json_to_sheet(records)
+        },
+        SheetNames: ["sheet1"]
+    }, `${config.name}.xlsx`, {
+        type: "file", bookType: 'xlsx'
+    })
 }
 
 // ------------------------------------------------ 导出 ------------------------------------------------
@@ -173,6 +195,10 @@ export function exportData(config: ExportConfig, data: any): void {
                 case ExportType.TXT:
                     content = exportForTxt(config, data);
                     break;
+                case ExportType.XLSX:
+                    // 表格只能下载
+                    exportFotXlsx(config, data);
+                    return;
             }
             break;
     }

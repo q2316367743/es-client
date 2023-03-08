@@ -29,6 +29,11 @@ export interface BuildConfig {
      */
     source: boolean;
 
+    /**
+     * 分隔符
+     */
+    separator: string;
+
 }
 
 export interface TableViewColumnData {
@@ -75,7 +80,7 @@ export interface TableView {
  * @constructor
  */
 export function JsonToTableBuild(data: any, index?: IndexView): TableView {
-    return JsonToTableCompleteBuild(data, {common: true, source: true}, index);
+    return JsonToTableCompleteBuild(data, {common: true, source: true, separator: "-"}, index);
 }
 
 /**
@@ -85,7 +90,11 @@ export function JsonToTableBuild(data: any, index?: IndexView): TableView {
  * @param index 索引，如果有
  * @constructor
  */
-export function JsonToTableCompleteBuild(data: any, config: BuildConfig, index?: IndexView): TableView {
+export function JsonToTableCompleteBuild(
+    data: any,
+    config: BuildConfig,
+    index?: IndexView
+): TableView {
     // 当变化时，进行渲染
     let records = new Array<any>();
     let columnMap = new Map<string, TableViewColumnData>();
@@ -113,7 +122,7 @@ export function JsonToTableCompleteBuild(data: any, config: BuildConfig, index?:
             record['_score'] = item['_score'];
         }
         let _source = item['_source'];
-        renderObj(_source, columnMap, record, '');
+        renderObj(_source, columnMap, record, '', config.separator);
         if (config.source) {
             record['_source'] = item;
         }
@@ -134,12 +143,13 @@ export function renderObj(
     obj: Record<string, any>,
     columnMap: Map<string, TableViewColumnData>,
     record: Record<string, string>,
-    prefix: string
+    prefix: string,
+    separator: string
 ) {
     for (let key in obj) {
         // 基础值
         let source = obj[key];
-        let dataIndex = prefix === '' ? key : `${prefix}-${key}`;
+        let dataIndex = prefix === '' ? key : `${prefix}${separator}${key}`;
         let title = prefix === '' ? key : `${prefix}.${key}`;
         let width = 80;
         let value = '';
@@ -149,7 +159,7 @@ export function renderObj(
             if (source instanceof Array) {
                 value = JSON.stringify(source);
             } else {
-                renderObj(source, columnMap, record, title);
+                renderObj(source, columnMap, record, title, separator);
                 break;
             }
         } else {

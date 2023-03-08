@@ -41,7 +41,12 @@ export enum ExportType {
     /**
      * 指定分隔符
      */
-    TXT = 7
+    TXT = 7,
+
+    /**
+     * 表格
+     */
+    XLSX = 8
 
 }
 
