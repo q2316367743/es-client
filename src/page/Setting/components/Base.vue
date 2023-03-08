@@ -99,7 +99,7 @@
                         </a-tooltip>
                     </template>
                     <a-select v-model="instance.tableHeaderMode">
-                        <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING" />
+                        <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING" disabled/>
                         <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER" />
                     </a-select>
                 </a-form-item>
