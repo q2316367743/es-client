@@ -1,0 +1,13 @@
+{
+  "name": "es-client",
+  "version": "2.7.0",
+  "description": "elasticsearch查询客户端",
+  "main": "src/main.js",
+  "repository": "https://github.com/q2316367743/es-client",
+  "author": "Esion",
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "@types/chrome": "^0.0.220"
+  }
+}

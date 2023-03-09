@@ -35,9 +35,9 @@ stats.html
 /utools
 
 # 服务器
-src-server/dist
+/src-server/dist
 /src-server/public
-src-server/node_modules
+/src-server/node_modules
 /src-server/es-client.db
 
 # 想天浏览器
@@ -49,3 +49,6 @@ src-server/node_modules
 /src-vscode/.vscode-test-web
 /src-vscode/es-client
 *.vsix
+
+# 谷歌浏览器V3
+/src-chrome/node_modules
