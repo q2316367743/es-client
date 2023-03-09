@@ -9,17 +9,20 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "pinia";
-import { renderJSONTreeView } from "@/components/JsonTree";
+import {defineComponent} from "vue";
+import {mapState} from "pinia";
+import {renderJSONTreeView} from "@/components/JsonTree";
 
-import { highlight } from '@/global/BeanFactory';
+import {highlight} from '@/global/BeanFactory';
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import TableViewer from "@/components/TableViewer/index.vue";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 export default defineComponent({
     name: 'base-search-data-view',
+    components: {TableViewer},
     props: {
         view: Number,
         data: Object,
@@ -52,9 +55,11 @@ export default defineComponent({
         this.render();
     },
     methods: {
+        execCopy() {
+            BrowserUtil.copy(this.pretty);
+        },
         render() {
-            let value = JSON.stringify(this.data, null, 4);
-            this.pretty = value;
+            this.pretty = JSON.stringify(this.data, null, 4);
             if (this.pretty === '') {
                 this.pretty = '{}';
             }

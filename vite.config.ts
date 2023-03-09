@@ -34,7 +34,7 @@ function outDir() {
         case 'build:vscode':
             return 'src-vscode/es-client';
         default:
-            return 'dist';
+            return 'out';
     }
 }
 

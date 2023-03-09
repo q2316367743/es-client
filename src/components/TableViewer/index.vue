@@ -1,11 +1,12 @@
 <template>
     <div class="table-viewer" :id="id">
         <div class="table-view-toolbar">
-            <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[105, 3]">
+            <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[75, 3]">
                 <a-button type="outline" size="small">
                     <template #icon>
                         <icon-select-all/>
                     </template>
+                    {{ `${showColumns.length} / ${columns.length}`}}
                 </a-button>
                 <template #content>
                     <div class="table-view-trigger">

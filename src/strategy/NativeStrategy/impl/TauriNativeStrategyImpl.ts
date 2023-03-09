@@ -13,6 +13,7 @@ import Optional from "@/utils/Optional";
 import Constant from "@/global/Constant";
 import NativeStrategy from "@/strategy/NativeStrategy/NativeStrategy";
 import DownloadType from "../DownloadType";
+import BrowserUtil from "@/utils/BrowserUtil";
 
 export default class TauriNativeStrategyImpl implements NativeStrategy {
 
@@ -22,22 +23,24 @@ export default class TauriNativeStrategyImpl implements NativeStrategy {
 
     download(value: string, name: string, type: DownloadType): void {
         // 打开保存对话框
-        save({
-            title: '保存文件',
-            defaultPath: name,
-            filters: [{
-                name: `${type}文件`,
-                extensions: [type]
-            }, {
-                name: '任意文件',
-                extensions: ['*']
-            }]
-        }).then(result => {
-            if (result) {
-                writeTextFile(result, value)
-                    .then(() => MessageUtil.success('下载完成'));
-            }
-        })
+        // save({
+        //     title: '保存文件',
+        //     defaultPath: name,
+        //     filters: [{
+        //         name: `${type}文件`,
+        //         extensions: [type]
+        //     }, {
+        //         name: '任意文件',
+        //         extensions: ['*']
+        //     }]
+        // }).then(result => {
+        //     if (result) {
+        //         writeTextFile(result, value)
+        //             .then(() => MessageUtil.success('下载完成'));
+        //     }
+        // })
+        BrowserUtil.download(value, name, type);
+        MessageUtil.success('下载完成');
     }
 
     checkUpdate(): void {

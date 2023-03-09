@@ -20,7 +20,7 @@
     </ol>
     <div v-if="log?.doc">
         更多详细的更新信息与功能变化，请在
-        <a-link target="_blank" @click="open(log?.doc)">语雀</a-link>
+        <a-link target="_blank" @click="open(log?.doc)">此处</a-link>
         中查看
     </div>
 </template>

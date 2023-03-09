@@ -23,6 +23,11 @@ export interface Log {
      */
     doc?: string;
 
+    /**
+     * 描述、笨猪
+     */
+    remark: string;
+
 }
 
 export interface LogItem {

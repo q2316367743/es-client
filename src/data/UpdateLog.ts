@@ -2,6 +2,32 @@ import { Log, LogItemEnum } from "@/view/Data";
 
 export default [
     {
+        version: '2.7.0',
+        sign: 270,
+        time: '2023-03-09',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '基础查询与高级查询导出功能重构，可以导出更多格式',
+            txc: 'https://support.qq.com/products/489458/post/167757411610000064'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '表格视图改版，新支持列筛选、列拖拽',
+            txc: 'https://support.qq.com/products/489458/post/167653894259013579'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '修复数据浏览增删改查接口',
+            txc: 'https://support.qq.com/products/489458/post/167818262295914736'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: 'utools版本主题跟随utools设置'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '自定义高级查询执行按钮颜色',
+            txc: 'https://support.qq.com/products/489458/post/167824208025616352'
+        }],
+        doc: 'http://es-client.esion.xyz/article/270/'
+    },
+    {
         version: '2.6.2',
         sign: 262,
         time: '2023-03-03',
