@@ -21,6 +21,8 @@ function outDir() {
             return 'utools';
         case 'build:edge':
             return 'src-edge/es-client';
+        case 'build:chrome':
+            return 'src-chrome/es-client';
         case 'build:firefox':
             return 'src-firefox/es-client';
         case 'build:server':
