@@ -1,13 +1,5 @@
 # es-client
 
-[![star](https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white)](https://gitee.com/qiaoshengda/es-client)
-[![star](https://img.shields.io/github/stars/q2316367743/es-client?style=social)](https://github.com/q2316367743/es-client/)
-[![star](https://up.apps.vip/storeicon/w-bright.svg)](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)
-[![star](https://img.shields.io/badge/edge-v2.7.0-%230883d8)](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
-[![star](https://img.shields.io/badge/firefox-v2.7.0-%23ff3847)](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
-[![star](https://img.shields.io/badge/windows-v2.7.0-%2324c8db)](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
-[![OSCS Status](https://www.oscs1024.com/platform/badge/es-client.svg?size=small)](https://www.murphysec.com/accept?code=9a8096e0fd00acdcdb1901030f42d5d6&type=1&from=2)
-
 > elasticsearch查询客户端。
 >
 > elasticsearch的客户端比较出名的就是[elasticsearch head](https://github.com/mobz/elasticsearch-head)

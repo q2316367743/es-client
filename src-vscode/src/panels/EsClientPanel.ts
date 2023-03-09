@@ -1,9 +1,13 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn, workspace } from "vscode";
 import { getUri } from "../utils/getUri";
 
-const cssList = ['index-e1faed21.css'];
-const jsPath = 'index-e534212a.js';
-const moduleList = ['Optional-5aba4012.js', 'MessageUtil-1ade0a86.js', 'BrowserUtil-07f57a05.js', 'UrlStore-ddc6cccb.js'];
+const cssList = ['index-abd2aa3f.css'];
+const jsPath = 'index-c8266270.js';
+const moduleList = ['Optional-5aba4012.js',
+    'MessageUtil-1a8310f8.js',
+    'MessageBoxUtil-17823b88.js',
+    'BrowserUtil-32a14781.js',
+    'UrlStore-f8c8bcaf.js'];
 
 
 /**
