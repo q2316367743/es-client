@@ -18,6 +18,7 @@
     "scripts": {
         "dev": "vite --host",
         "dev:ts": "vite --host --mode=tsbrowser",
+        "dev:web": "vite --host --mode=web",
         "dev:utools": "vite --host --mode=utools",
         "dev:server": "vite --host --mode=server",
         "dev:tauri": "vite --host --mode=desktop_windows",

@@ -13,7 +13,12 @@ enum HttpTypeEnum {
     /**
      * 服务器模式
      */
-    SERVER = 'server'
+    SERVER = 'server',
+
+    /**
+     * web模式
+     */
+    WEB = 'web'
 
 }
 

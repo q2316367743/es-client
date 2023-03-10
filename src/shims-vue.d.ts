@@ -16,4 +16,4 @@ declare module '@json2csv/plainjs' {
         constructor(option?: Option);
         parse(data: any): string;
     }
-};
+}

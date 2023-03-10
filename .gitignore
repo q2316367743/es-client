@@ -54,4 +54,3 @@ pnpm-debug.log*
 # 谷歌浏览器V3
 /src-chrome/node_modules
 /src-chrome/dist
-/src-chrome/dist.pem

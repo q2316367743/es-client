@@ -84,9 +84,11 @@ function fetchHandler(
                         // 相应体内容
                         data: e
                     });
+                    console.error('解码错误，无法解码', message, e);
                 })
             })
         }).catch(reason => {
+            console.error('请求错误', message, reason);
             resolve({
                 // 是否成功
                 ok: false,

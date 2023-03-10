@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "es-client",
+    "name": "es-client-component",
     "version": "2.7.0",
-    "description": "elasticsearch管理客户端",
+    "description": "elasticsearch管理客户端 - 组件",
     "content_security_policy": {
         "script-src": "self",
         "object-src": "self"

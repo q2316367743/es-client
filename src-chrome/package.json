@@ -1,7 +1,7 @@
 {
-    "name": "es-client",
+    "name": "es-client-component",
     "version": "2.7.0",
-    "description": "elasticsearch查询客户端",
+    "description": "elasticsearch查询客户端 - 组件",
     "main": "dist/main.js",
     "repository": "https://github.com/q2316367743/es-client",
     "author": "Esion",

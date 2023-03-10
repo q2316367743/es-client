@@ -21,7 +21,7 @@
             ]
         },
         "types": [
-            "utools-api-types",
+            "utools-api-types"
         ]
     },
     "include": [

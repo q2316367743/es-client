@@ -4,21 +4,11 @@ import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import { Body, fetch, HttpVerb, Response } from '@tauri-apps/api/http';
 import Optional from "@/utils/Optional";
 import HttpStrategyError from "../HttpStrategyError";
+import {getUrl} from "@/strategy/HttpStrategy/HttpModeUtil";
 
 export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
     return new Promise((resolve, reject) => {
-        const baseUrl = Optional.ofNullable(config.baseURL).orElse("");
-        const url = `${baseUrl === '' ? '' : (baseUrl + '/')}${config.url}`;
-        if (config.auth) {
-            let authorization = btoa(`${config.auth.username}:${config.auth.password}`);
-            if (config.headers) {
-                config.headers['Authorization'] = `Basic ${authorization}`;
-            } else {
-                config.headers = {
-                    Authorization: `Basic ${authorization}`
-                }
-            }
-        }
+        const url = getUrl(config.baseURL, config.url);
         let timeout = 5;
         if (config.timeout) {
             timeout = Math.round(config.timeout / 1000);

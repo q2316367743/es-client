@@ -10,19 +10,23 @@ export default class HttpStrategyContext {
     private strategy?: HttpStrategy;
 
     async init() {
+        let fetchPacking;
         if (Constant.mode === HttpTypeEnum.BROWSER) {
-            let fetchPacking = await import('./mode/BrowserMode');
+            fetchPacking = await import('./mode/BrowserMode');
             this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
         } else if (Constant.mode === HttpTypeEnum.DESKTOP) {
-            let fetchPacking = await import('./mode/TauriMode');
+            fetchPacking = await import('./mode/TauriMode');
             this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
         } else if (Constant.mode === HttpTypeEnum.SERVER) {
-            let fetchPacking = await import('./mode/ServerMode');
+            fetchPacking = await import('./mode/ServerMode');
+            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+        } else if (Constant.mode === HttpTypeEnum.WEB) {
+            fetchPacking = await import('./mode/WebMode');
             this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
         } else {
-            let fetchPacking = await import('./mode/BrowserMode');
-            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+            fetchPacking = await import('./mode/BrowserMode');
         }
+        this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
     }
 
     getStrategy(): HttpStrategy {

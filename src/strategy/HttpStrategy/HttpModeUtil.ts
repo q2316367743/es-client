@@ -1,36 +1,16 @@
-import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
-import Constant from "@/global/Constant";
-import HttpTypeEnum from "@/enumeration/HttpTypeEnum";
+import Optional from "@/utils/Optional";
 
-class HttpModeManage {
-    private fetch?: (config: HttpStrategyConfig) => Promise<any>;
-
-    async init() {
-        if (Constant.mode === HttpTypeEnum.BROWSER) {
-            let fetchPacking = await import('./mode/BrowserMode');
-            this.fetch = fetchPacking.default<any>;
-        } else if (Constant.mode === HttpTypeEnum.DESKTOP) {
-            let fetchPacking = await import('./mode/TauriMode');
-            this.fetch = fetchPacking.default<any>;
-        } else {
-            let fetchPacking = await import('./mode/BrowserMode');
-            this.fetch = fetchPacking.default<any>;
-        }
+export function getUrl(baseURL: string | undefined, url: string): string {
+    baseURL = Optional.ofNullable(baseURL).orElse("");
+    if (baseURL === '') {
+        return url;
     }
-
-    getFetch(): (config: HttpStrategyConfig) => Promise<any> {
-        return this.fetch!;
+    url = Optional.ofNullable(url).orElse("");
+    if (baseURL.endsWith("/")) {
+        baseURL = baseURL.substring(0, baseURL.length - 1);
     }
-}
-
-const httpModeManage = new HttpModeManage();
-
-
-export default {
-    getHttpModeManage(): HttpModeManage {
-        return httpModeManage;
-    },
-    async getHttpMode<T>(): Promise<(config: HttpStrategyConfig) => Promise<T>> {
-        return httpModeManage.getFetch();
+    if (!url.startsWith("/")) {
+        url = `/${url}`;
     }
+    return baseURL + url
 }
