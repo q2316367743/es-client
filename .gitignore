@@ -29,7 +29,8 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-stats.html
+# 依赖分析
+/stats.html
 
 #utools
 /utools
@@ -52,3 +53,5 @@ stats.html
 
 # 谷歌浏览器V3
 /src-chrome/node_modules
+/src-chrome/dist
+/src-chrome/dist.pem

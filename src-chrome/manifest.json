@@ -12,7 +12,7 @@
         "default_icon": "icons/logo_200.png"
     },
     "background": {
-        "service_worker": "src/main.js",
+        "service_worker": "main.js",
         "type": "module"
     },
     "permissions": [
@@ -27,7 +27,7 @@
                 "*://*/*"
             ],
             "resources": [
-                "src/adapter.js"
+                "adapter.js"
             ]
         }
     ],
@@ -37,7 +37,7 @@
                 "*://*/*"
             ],
             "js": [
-                "src/runtime.js"
+                "runtime.js"
             ]
         }
     ]

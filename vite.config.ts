@@ -20,13 +20,13 @@ function outDir() {
         case 'build:utools':
             return 'utools';
         case 'build:edge':
-            return 'src-edge/es-client';
+            return 'dist-edge/es-client';
         case 'build:chrome':
-            return 'src-chrome/es-client';
+            return 'dist-chrome/es-client';
         case 'build:firefox':
-            return 'src-firefox/es-client';
+            return 'dist-firefox/es-client';
         case 'build:server':
-            return 'src-server/public';
+            return 'dist-server/public';
         case 'build:tauri:windows':
             return 'dist';
         case 'build:tauri:linux':
@@ -34,7 +34,7 @@ function outDir() {
         case 'build:tauri:macos':
             return 'dist';
         case 'build:vscode':
-            return 'src-vscode/es-client';
+            return 'dist-vscode/es-client';
         default:
             return 'out';
     }
