@@ -7,42 +7,45 @@ import EventTypeEnum from "./enumeration/EventTypeEnum";
 import Message from "./entity/Message";
 import FetchArgs from "./entity/FetchArgs";
 import MessageTypeEnum from "./enumeration/MessageTypeEnum";
+import EventResponse from "./entity/EventResponse";
 
+/**
+ * 发送消息
+ * @param args 参数
+ */
 function sendMessage(args: any): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        chrome.runtime.sendMessage({
-            type: MessageTypeEnum.FETCH,
-            args: args
-        } as Message<FetchArgs>, response => {
-            console.log('请求成功', response)
-            // 获得响应
-            if (!response) {
-                reject(chrome.runtime.lastError);
-                return;
-            }
-            resolve(response);
-        })
-    })
+    return chrome.runtime.sendMessage({
+        type: MessageTypeEnum.FETCH,
+        args: args
+    } as Message<FetchArgs>);
 }
 
+// 增加事件
 document.addEventListener(EventTypeEnum.FETCH_REQUEST, async e => {
     let detail = (e as CustomEvent).detail as FetchArgs;
     const responseEventType = `${EventTypeEnum.FETCH_RESPONSE}.${detail.id}`;
-    sendMessage(detail)
-        .then(response => {
-            document.dispatchEvent(new CustomEvent(responseEventType, {
-                detail: {
-                    success: true,
-                    response
-                }
-            }));
-        })
-        .catch(e => {
-            document.dispatchEvent(new CustomEvent(responseEventType, {
-                detail: {
-                    success: false,
-                    response: e
-                }
-            }));
-        });
+    try {
+        let response = await sendMessage(detail);
+        document.dispatchEvent(new CustomEvent<EventResponse>(responseEventType, {
+            detail: {
+                success: true,
+                response
+            }
+        }));
+    } catch (e) {
+        document.dispatchEvent(new CustomEvent<EventResponse>(responseEventType, {
+            detail: {
+                success: false,
+                response: e
+            }
+        }));
+    }
 });
+
+// 注入事件
+const scriptElement = document.createElement("script");
+scriptElement.src = chrome.runtime.getURL("adapter.js");
+scriptElement.onload = () => scriptElement.remove();
+(document.head || document.documentElement).appendChild(scriptElement);
+
+

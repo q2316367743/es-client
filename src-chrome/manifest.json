@@ -7,6 +7,10 @@
         "script-src": "self",
         "object-src": "self"
     },
+    "icons": {
+        "96": "icons/logo_200.png",
+        "128": "icons/logo_200.png"
+    },
     "action": {
         "default_title": "es-client",
         "default_icon": "icons/logo_200.png"
