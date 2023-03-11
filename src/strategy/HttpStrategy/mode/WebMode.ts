@@ -15,7 +15,7 @@ export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
                 "警告", {
                     confirmButtonText: "安装"
                 }).then(() => {
-                    nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web")
+                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web")
             });
         }
         return Promise.resolve();
@@ -49,6 +49,14 @@ export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
                     reason: '系统异常',
                     data: reason
                 } as HttpStrategyError)
+            });
+        } else {
+            MessageBoxUtil.alert(
+                "检测到您未安装插件，请安装插件后使用",
+                "警告", {
+                    confirmButtonText: "安装"
+                }).then(() => {
+                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web")
             });
         }
     });
