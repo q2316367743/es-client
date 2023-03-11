@@ -44,6 +44,9 @@ pnpm-debug.log*
 # 想天浏览器
 /dist-ts
 
+# web版
+/dist-web
+
 # vscode
 /src-vscode/node_modules
 /src-vscode/out
@@ -55,3 +58,4 @@ pnpm-debug.log*
 /src-chrome/node_modules
 /src-chrome/dist
 /src-chrome/dist.pem
+/src-chrome/dist.crx

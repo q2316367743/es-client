@@ -15,7 +15,7 @@ export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
                 "警告", {
                     confirmButtonText: "安装"
                 }).then(() => {
-                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web")
+                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web.html")
             });
         }
         return Promise.resolve();
@@ -56,7 +56,7 @@ export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
                 "警告", {
                     confirmButtonText: "安装"
                 }).then(() => {
-                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web")
+                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web.html")
             });
         }
     });
