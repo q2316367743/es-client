@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ArcoResolver } from 'unplugin-vue-components/resolvers';
+import { VitePWA } from 'vite-plugin-pwa'
 
 import path from 'path'
 
@@ -50,15 +51,31 @@ export default defineConfig({
             'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
         }
     },
-    plugins: [vue(), visualizer({ open: true }),
-    AutoImport({
-        resolvers: [ArcoResolver()],
-    }),
-    Components({
-        resolvers: [ArcoResolver({
-            sideEffect: true
-        })],
-    }),
+    plugins: [
+        vue(), 
+        visualizer({ open: true }),
+        AutoImport({
+            resolvers: [ArcoResolver()],
+        }),
+        Components({
+            resolvers: [ArcoResolver({
+                sideEffect: true
+            })],
+        }),
+        VitePWA({
+            // 只要不是web模式，禁用PWA
+            disable: process.env.npm_lifecycle_event !== 'build:web',
+            manifest: {
+                name: 'es-client',
+                short_name: 'es-client',
+                description: 'elasticsearch查询客户端',
+                background_color: '#165dff',
+                icons: [{
+                    "src": "./logo.png"
+                }],
+                lang: 'zh-CN',
+            }
+        })
     ],
     base: './',
     build: {

@@ -44,11 +44,5 @@
                 "runtime.js"
             ]
         }
-    ],
-    "applications": {
-        "gecko": {
-            "id": "es-client-component.esion.xyz",
-            "strict_min_version": "42.0"
-        }
-    }
+    ]
 }
