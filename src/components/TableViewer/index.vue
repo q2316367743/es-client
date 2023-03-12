@@ -4,9 +4,9 @@
             <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[75, 3]">
                 <a-button type="outline" size="small">
                     <template #icon>
-                        <icon-select-all/>
+                        <icon-select-all />
                     </template>
-                    {{ `${showColumns.length} / ${columns.length}`}}
+                    {{ `${showColumns.length} / ${columns.length}` }}
                 </a-button>
                 <template #content>
                     <div class="table-view-trigger">
@@ -27,20 +27,22 @@
             </a-trigger>
         </div>
         <div class="table-view-wrap">
-            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
-                     scrollbar :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"
-                     :draggable="draggable"/>
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
+                :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable" />
         </div>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, h, PropType} from "vue";
-import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
+import { defineComponent, h, PropType } from "vue";
+import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
-import {JsonToTableBuild} from "@/build/JsonToTableBuild";
+import { buildTableColumnData, JsonToTableBuild } from "@/build/JsonToTableBuild";
+import useSettingStore from "@/store/SettingStore";
+import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
+import useIndexStore from "@/store/IndexStore";
 
 let sort: Sortable | undefined;
 
@@ -54,7 +56,7 @@ export default defineComponent({
             default: ''
         }
     },
-    components: {JsonView},
+    components: { JsonView },
 
     data: () => {
         let now = new Date().getTime();
@@ -78,7 +80,7 @@ export default defineComponent({
                     });
                 }
             } as TableExpandable,
-            bordered: {wrapper: true, cell: true} as TableBorder,
+            bordered: { wrapper: true, cell: true } as TableBorder,
             scroll: {
                 x: '100%',
                 y: '100%'
@@ -110,7 +112,19 @@ export default defineComponent({
                 return;
             }
             // 数据处理
-            let {columns, records} = JsonToTableBuild(this.data);
+            let { columns, records } = JsonToTableBuild(this.data);
+            if (useSettingStore().getTableHeaderMode === TableHeaderModeEnum.MAPPING) {
+                // 如果表头模式是来自映射
+                if (this.index !== '') {
+                    // 如果存在索引
+                    let index = useIndexStore().map.get(this.index);
+                    if (index) {
+                        // 存在索引
+                        columns = index.fields.filter(field => field.dataIndex !== '')
+                            .map(field => buildTableColumnData(field.dataIndex, 100, field.name));
+                    }
+                }
+            }
             this.columns = columns;
             this.records = records;
             // 数据清空
@@ -168,7 +182,7 @@ export default defineComponent({
                 animation: 150,
                 delay: 0,
                 onUpdate: (evt: any) => {
-                    const {newIndex, oldIndex} = evt;
+                    const { newIndex, oldIndex } = evt;
                     if (newIndex == oldIndex) {
                         // 没有变位置，直接返回
                         return;

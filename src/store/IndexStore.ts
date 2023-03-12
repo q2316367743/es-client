@@ -1,9 +1,9 @@
 import IndexView from "@/view/index/IndexView";
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
-import {versionStrategyContext} from "@/global/BeanFactory";
+import { versionStrategyContext } from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
@@ -38,9 +38,11 @@ const useIndexStore = defineStore('index', {
         /**
          * 返回全部的链接
          */
-        list: (state) => {
-            return state.indices;
-        }
+        list: (state) => state.indices,
+        /**
+         * 索引映射
+         */
+        map: (state) => state.indicesMap
     },
     actions: {
         /**
@@ -90,7 +92,8 @@ const useIndexStore = defineStore('index', {
             if (indexView) {
                 return [{
                     name: '_id',
-                    type: 'text'
+                    type: 'text',
+                    dataIndex: '_id'
                 }, ...Array.from(indexView.fields)]
             }
             return new Array<Field>;

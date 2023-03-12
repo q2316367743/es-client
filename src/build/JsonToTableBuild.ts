@@ -3,7 +3,7 @@ import IndexView from "@/view/index/IndexView";
 
 const MAX_WIDTH = 600;
 
-function buildTableColumnData(dataIndex: string, width: number, title?: string, fixed: boolean = false): TableViewColumnData {
+export function buildTableColumnData(dataIndex: string, width: number, title?: string, fixed: boolean = false): TableViewColumnData {
     return {
         title: title ? title : dataIndex,
         dataIndex,

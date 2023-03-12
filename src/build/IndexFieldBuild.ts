@@ -1,5 +1,10 @@
 import Field from "@/view/Field";
 
+/**
+ * 索引字段映射
+ * @param mappings 映射
+ * @returns  字段
+ */
 export default function IndexFieldBuild(mappings: any): Array<Field> {
     let fields = new Array<Field>();
     let properties = {} as any;
@@ -18,19 +23,23 @@ export default function IndexFieldBuild(mappings: any): Array<Field> {
 }
 
 function buildField(name: string, field: any, fields: Array<Field>, prefix: string): void {
-    let realName = name
+    let realName = name;
+    let dataIndex = name;
     if (prefix !== '') {
         realName = prefix + '.' + name;
+        dataIndex = prefix + '-' + name;
     }
     if (field.fields) {
         // 如果存在`fields`字段，则代表这个字段是`text`类型+`keyword`类型
         fields.push({
             name: realName,
-            type: field.type
+            type: field.type,
+            dataIndex
         });
         fields.push({
             name: realName + '.keyword',
-            type: 'keyword'
+            type: 'keyword',
+            dataIndex: ''
         });
     } else if (field.properties) {
         for (let key in field.properties) {
@@ -39,7 +48,8 @@ function buildField(name: string, field: any, fields: Array<Field>, prefix: stri
     } else {
         fields.push({
             name: realName,
-            type: field.type
+            type: field.type,
+            dataIndex
         });
     }
 }
