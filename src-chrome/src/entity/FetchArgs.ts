@@ -1,9 +1,6 @@
-export default interface FetchArgs {
+import BaseArgs from "./BaseArgs";
 
-    /**
-     * ID，用于监听回调事件
-     */
-    id: number;
+export default interface FetchArgs extends BaseArgs{
 
     /**
      * 链接
