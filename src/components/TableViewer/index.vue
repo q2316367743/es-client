@@ -4,7 +4,7 @@
             <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[75, 3]">
                 <a-button type="outline" size="small">
                     <template #icon>
-                        <icon-select-all />
+                        <icon-select-all/>
                     </template>
                     {{ `${showColumns.length} / ${columns.length}` }}
                 </a-button>
@@ -25,24 +25,30 @@
                     </div>
                 </template>
             </a-trigger>
+            <a-select v-model="tableHeaderMode" :disable="index === ''">
+                <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING"/>
+                <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER"/>
+            </a-select>
         </div>
         <div class="table-view-wrap">
-            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
-                :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable" />
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
+                     scrollbar
+                     :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable"/>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, h, PropType } from "vue";
-import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
+import {defineComponent, h, PropType} from "vue";
+import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
-import { buildTableColumnData, JsonToTableBuild } from "@/build/JsonToTableBuild";
+import {buildTableColumnData, JsonToTableBuild, TableViewColumnData, widthCalc} from "@/build/JsonToTableBuild";
 import useSettingStore from "@/store/SettingStore";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import useIndexStore from "@/store/IndexStore";
+import {applicationLaunch} from "@/global/BeanFactory";
 
 let sort: Sortable | undefined;
 
@@ -56,11 +62,15 @@ export default defineComponent({
             default: ''
         }
     },
-    components: { JsonView },
+    components: {JsonView},
 
     data: () => {
         let now = new Date().getTime();
         return {
+            // 渲染表头
+            renderColumns: [] as Array<TableColumnData>,
+            // 映射表头
+            mappingColumns: [] as Array<TableColumnData>,
             records: [] as Array<TableData>,
             columns: [] as Array<TableColumnData>,
             showColumns: [] as Array<TableColumnData>,
@@ -80,7 +90,7 @@ export default defineComponent({
                     });
                 }
             } as TableExpandable,
-            bordered: { wrapper: true, cell: true } as TableBorder,
+            bordered: {wrapper: true, cell: true} as TableBorder,
             scroll: {
                 x: '100%',
                 y: '100%'
@@ -91,16 +101,32 @@ export default defineComponent({
 
             // 筛选
             checkItems: new Array<string>(),
-            allowUpdate: true
+            allowUpdate: true,
+            tableHeaderMode: TableHeaderModeEnum.RENDER as TableHeaderModeEnum,
+            TableHeaderModeEnum
         }
     },
     watch: {
         data() {
             this.render();
+        },
+        tableHeaderMode(newValue: TableHeaderModeEnum) {
+            if (newValue === TableHeaderModeEnum.MAPPING) {
+                this.columns = this.mappingColumns;
+            } else if (newValue === TableHeaderModeEnum.RENDER) {
+                this.columns = this.renderColumns
+            }
+            this.resetColumn();
         }
     },
     mounted() {
-        this.render();
+        applicationLaunch.register(() => {
+            // 启动时注册
+            this.tableHeaderMode = this.index === '' ? TableHeaderModeEnum.RENDER : useSettingStore().getTableHeaderMode;
+            // 注册够渲染
+            this.render();
+            return Promise.resolve();
+        })
     },
     methods: {
         render() {
@@ -112,18 +138,39 @@ export default defineComponent({
                 return;
             }
             // 数据处理
-            let { columns, records } = JsonToTableBuild(this.data);
-            if (useSettingStore().getTableHeaderMode === TableHeaderModeEnum.MAPPING) {
-                // 如果表头模式是来自映射
-                if (this.index !== '') {
-                    // 如果存在索引
-                    let index = useIndexStore().map.get(this.index);
-                    if (index) {
-                        // 存在索引
-                        columns = index.fields.filter(field => field.dataIndex !== '')
-                            .map(field => buildTableColumnData(field.dataIndex, 100, field.name));
-                    }
+            let {columns, records} = JsonToTableBuild(this.data);
+            // 渲染表头
+            this.renderColumns = columns;
+            // 映射表头
+            if (this.index !== '') {
+                // 如果存在索引
+                let index = useIndexStore().map.get(this.index);
+                let renderColumns = new Array<TableViewColumnData>();
+                // 只有全部才会加入基础对象
+                renderColumns.push({
+                    title: '_id',
+                    dataIndex: '_id',
+                    ellipsis: true,
+                    width: 110,
+                    tooltip: true,
+                    sortable: {
+                        sortDirections: ['ascend', 'descend']
+                    },
+                    cellClass: 'table-view-cell table-view-fixed'
+                });
+                ['_index', '_score'].forEach(key => renderColumns.push(buildTableColumnData(key, widthCalc(key))));
+                if (index) {
+                    // 存在索引
+                    index.fields.filter(field => field.dataIndex !== '')
+                        .map(field => buildTableColumnData(field.dataIndex, widthCalc(field.name), field.name))
+                        .forEach(column => renderColumns.push(column));
+                    this.mappingColumns = renderColumns;
                 }
+            }
+            if (this.tableHeaderMode === TableHeaderModeEnum.MAPPING) {
+                this.columns = this.mappingColumns;
+            } else if (this.tableHeaderMode === TableHeaderModeEnum.RENDER) {
+                this.columns = this.renderColumns
             }
             this.columns = columns;
             this.records = records;
@@ -182,7 +229,7 @@ export default defineComponent({
                 animation: 150,
                 delay: 0,
                 onUpdate: (evt: any) => {
-                    const { newIndex, oldIndex } = evt;
+                    const {newIndex, oldIndex} = evt;
                     if (newIndex == oldIndex) {
                         // 没有变位置，直接返回
                         return;
@@ -219,11 +266,21 @@ export default defineComponent({
 
     .table-view-toolbar {
         margin: 2px;
+        display: flex;
+
+        .arco-btn {
+            margin: 2px 0;
+        }
+
+        .arco-select {
+            width: 180px;
+            margin-left: 8px;
+        }
     }
 
     .table-view-wrap {
         position: absolute;
-        top: 34px;
+        top: 40px;
         left: 0;
         right: 0;
         bottom: 0;

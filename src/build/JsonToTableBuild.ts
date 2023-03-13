@@ -151,7 +151,6 @@ export function renderObj(
         let source = obj[key];
         let dataIndex = prefix === '' ? key : `${prefix}${separator}${key}`;
         let title = prefix === '' ? key : `${prefix}.${key}`;
-        let width = 80;
         let value = '';
         // 处理对象
         if (typeof source === 'object') {
@@ -167,8 +166,7 @@ export function renderObj(
             value = `${source}`;
         }
         // 计算宽度
-        width = Math.max(value.length * 10 + 80, title.length * 10 + 80);
-        width = Math.min(width, MAX_WIDTH);
+        let width = widthCalc(value, title);
         // 列
         let column = buildTableColumnData(dataIndex, width, title, typeof source === 'number');
 
@@ -187,4 +185,11 @@ export function renderObj(
         // 值
         record[dataIndex] = value;
     }
+}
+
+export function widthCalc(str: string, expand: string = ''): number {
+    return Math.min(
+        str.length * 10 + 80,
+        expand === '' ? MAX_WIDTH : expand.length * 10 + 80,
+        MAX_WIDTH);
 }
