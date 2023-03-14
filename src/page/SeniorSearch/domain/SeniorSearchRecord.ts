@@ -1,9 +1,9 @@
-import {Request} from "@/page/SeniorSearch/build/RequestBuild";
+import {Grammatical} from "@/algorithm/grammaticalAnalysis";
 
 /**
  * 临时记录
  * */
-export default interface SeniorSearchRecord extends Request{
+export default interface SeniorSearchRecord extends Grammatical{
 
     /**
      * 是否成功

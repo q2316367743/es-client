@@ -17,6 +17,8 @@ import Optional from "@/utils/Optional";
 import useEditorSettingStore from "@/store/EditorSettingStore";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import {URL_REGEX} from "@/data/EsUrl";
+import foldingRange from "@/module/RestClientEditor/foldingRange";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
@@ -64,6 +66,7 @@ export default defineComponent({
         monaco.languages.setMonarchTokensProvider('http', language);
         monaco.languages.setLanguageConfiguration('http', configuration);
         monaco.languages.registerCompletionItemProvider('http', provider);
+        monaco.languages.registerFoldingRangeProvider('http', foldingRange)
 
         applicationLaunch.register(() => {
             const container = this.$refs.container as HTMLElement;
@@ -108,12 +111,48 @@ export default defineComponent({
 
             monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
 
+            instance.addCommand(monaco.KeyCode.F9,
+                () => {
+                    let value = instance.getValue();
+                    let row = Optional.ofNullable(instance.getPosition()).attr("lineNumber").orElse(1);
+                    let numbers = this.renderValue(value);
+                    console.log(value, row, numbers)
+                    if (numbers.length === 0) {
+                        return;
+                    }
+                    let fail = true;
+                    for (let i = 0; i < numbers.length; i++) {
+                        if (numbers[i] > row) {
+                            fail = false;
+                            let target = i - 1;
+                            if (target < 0) {
+                                target = 0;
+                            }
+                            console.log(target)
+                            this.$emit('execute', target);
+                        }
+                    }
+                    if (fail) {
+                        this.$emit('execute', numbers.length - 1);
+                    }
+                });
+
             return Promise.resolve();
         })
     },
     methods: {
         getInstance(): monaco.editor.IStandaloneCodeEditor {
             return instance;
+        },
+        renderValue(value: string): Array<number> {
+            let lineNumbers = new Array<number>();
+            const lines = value.split("\n");
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].match(URL_REGEX)) {
+                    lineNumbers.push(i);
+                }
+            }
+            return lineNumbers;
         }
     }
 });

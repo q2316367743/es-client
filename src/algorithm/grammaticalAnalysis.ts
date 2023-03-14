@@ -1,11 +1,11 @@
-import * as monaco from "monaco-editor";
-import { Method } from "@/strategy/HttpStrategy/HttpStrategyConfig";
-import { BLANK_REGEX, COMMENT_REGEX, URL_REGEX } from "@/data/EsUrl";
+import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
+import {BLANK_REGEX, COMMENT_REGEX, URL_REGEX} from "@/data/EsUrl";
 
 /**
  * 请求
  */
-export interface Request {
+
+export interface Grammatical {
 
     /**
      * 请求方式
@@ -22,24 +22,34 @@ export interface Request {
      */
     params: string;
 
+    /**
+     * 所在行 - 开始
+     */
+    lineNumberStart: number;
+
+    /**
+     * 所在行 - 结束
+     */
+    lineNumberEnd: number;
+
+    /**
+     * 索引，第几个
+     */
+    index: number;
+
 }
 
-export function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Request | undefined {
-    let value = instance.getValue();
-    let position = instance.getPosition();
-    if (!position) {
-        return;
-    }
-    let list = grammaticalAnalysis(value);
-    if (list.length === 0) {
-        return;
-    }
-    return list[index];
-}
+interface Line {
 
-interface Grammatical extends Request {
+    /**
+     * 这一行的值
+     */
+    value: string;
 
-    number: number;
+    /**
+     * 行数
+     */
+    lineNumber: number;
 
 }
 
@@ -47,12 +57,12 @@ interface Grammatical extends Request {
  * 语法分析
  * @return 开始行数 => 请求
  */
-function grammaticalAnalysis(value: string): Array<Grammatical> {
+export function grammaticalAnalysis(value: string): Array<Grammatical> {
 
     // 全部的请求
-    const requests = new Array<Array<string>>();
+    const requests = new Array<Array<Line>>();
     // 单独的请求
-    let request = new Array<string>();
+    let request = new Array<Line>();
 
     // 多行
     let lines = value.split('\n');
@@ -71,10 +81,13 @@ function grammaticalAnalysis(value: string): Array<Grammatical> {
                 // 存在请求，加入到请求集合里
                 requests.push(request);
                 // 重置请求
-                request = new Array<string>();
+                request = new Array<Line>();
             }
         }
-        request.push(line);
+        request.push({
+            value: line,
+            lineNumber: i
+        });
     }
 
     if (request.length > 0) {
@@ -91,14 +104,16 @@ function grammaticalAnalysis(value: string): Array<Grammatical> {
     return grammaticalItems;
 }
 
-function renderGrammatical(lines: Array<string>, index: number): Grammatical | null {
-    let first = lines[0].match(URL_REGEX);
+function renderGrammatical(lines: Array<Line>, index: number): Grammatical | null {
+    let first = lines[0].value.match(URL_REGEX);
     if (first) {
         return {
             method: first[1] as Method,
             link: first[2],
-            number: index,
-            params: lines.slice(1).join('\n')
+            index,
+            params: lines.slice(1).map(e => e.value).join('\n'),
+            lineNumberStart: lines[0].lineNumber,
+            lineNumberEnd: lines[lines.length - 1].lineNumber
         }
     }
     return null;

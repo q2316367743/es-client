@@ -139,7 +139,6 @@ import NotificationUtil from "@/utils/NotificationUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
-import { requestBuild } from "@/page/SeniorSearch/build/RequestBuild";
 import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
 
 // 图标
@@ -152,6 +151,8 @@ import JsonIcon from "@/icon/JsonIcon.vue";
 import TableIcon from "@/icon/TableIcon.vue";
 import SeniorTabComponent from "./components/SeniorTabComponent";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import * as monaco from "monaco-editor";
+import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
 
 
 const seniorTabComponent = new SeniorTabComponent();
@@ -270,7 +271,7 @@ export default defineComponent({
                 return;
             }
             let restClientEditor = this.$refs.restClientEditor as any;
-            let request = requestBuild(restClientEditor.getInstance(), index);
+            let request = this.requestBuild(restClientEditor.getInstance(), index);
             if (!request) {
                 MessageUtil.error('请求块无法识别');
                 return;
@@ -311,9 +312,7 @@ export default defineComponent({
             }).finally(() => {
                 this.displayActive = 'result';
                 useSeniorSearchRecordStore().push({
-                    method: request!.method,
-                    link: request!.link!,
-                    params: request!.params!,
+                    ...request!,
                     success,
                     time: new Date().getTime() - now.getTime(),
                     date: now
@@ -378,6 +377,18 @@ export default defineComponent({
                 return;
             }
             this.exportDialog = true;
+        },
+        requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
+            let value = instance.getValue();
+            let position = instance.getPosition();
+            if (!position) {
+                return;
+            }
+            let list = grammaticalAnalysis(value);
+            if (list.length === 0) {
+                return;
+            }
+            return list[index];
         }
     },
 });

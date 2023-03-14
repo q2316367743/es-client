@@ -25,7 +25,7 @@
                     </div>
                 </template>
             </a-trigger>
-            <a-select v-model="tableHeaderMode" :disable="index === ''">
+            <a-select v-model="tableHeaderMode" :disabled="index === ''">
                 <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING"/>
                 <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER"/>
             </a-select>
