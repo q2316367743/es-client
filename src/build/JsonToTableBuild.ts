@@ -104,6 +104,7 @@ export function JsonToTableCompleteBuild(
             title: '_id',
             dataIndex: '_id',
             ellipsis: true,
+            tooltip: true,
             width: 110,
             sortable: {
                 sortDirections: ['ascend', 'descend']

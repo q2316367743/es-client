@@ -4,49 +4,48 @@
         <div class="option">
             <!-- 左侧条件 -->
             <div class="left">
-                <page-help :total="total" v-model:size="size" v-model:page="page"
-                           @page-update="executeQuery(false)"/>
+                <page-help :total="total" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)" />
                 <div class="sep"></div>
                 <db-simple-item :disable="!index" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
-                    <icon-refresh/>
+                    <icon-refresh />
                 </db-simple-item>
                 <div class="sep"></div>
                 <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
-                    <icon-plus/>
+                    <icon-plus />
                 </db-simple-item>
                 <db-simple-item :disable="selectedKeys.length === 0" :tip="$t('common.operation.delete')"
-                                @click="recordReduce">
-                    <icon-minus/>
+                    @click="recordReduce">
+                    <icon-minus />
                 </db-simple-item>
                 <db-simple-item :disable="selectedKeys.length !== 1" :tip="$t('common.operation.update')"
-                                @click="recordEdit">
-                    <icon-edit/>
+                    @click="recordEdit">
+                    <icon-edit />
                 </db-simple-item>
             </div>
             <!-- 右侧条件 -->
             <div class="right">
                 <!-- 选择索引 -->
-                <db-index-select @index-change="indexChange"/>
+                <db-index-select @index-change="indexChange" />
                 <!-- 打印 -->
                 <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
-                    <icon-printer/>
+                    <icon-printer />
                 </db-simple-item>
                 <!-- 索引结构 -->
                 <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
-                    <icon-nav/>
+                    <icon-nav />
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
-                    <icon-search/>
+                    <icon-search />
                 </db-simple-item>
                 <!-- 跳转到高级查询 -->
                 <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
-                    <icon-filter/>
+                    <icon-filter />
                 </db-simple-item>
                 <!-- 筛选 -->
                 <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[-85, 3]">
                     <div class="item">
-                        <icon-select-all/>
+                        <icon-select-all />
                     </div>
                     <template #content>
                         <div class="table-view-trigger">
@@ -68,12 +67,11 @@
                 <!-- 操作 -->
                 <a-dropdown trigger="click">
                     <div class="item">
-                        <icon-more-vertical/>
+                        <icon-more-vertical />
                     </div>
                     <template #content>
                         <a-doption>
-                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz"
-                                    target="_blank">帮助
+                            <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助
                             </a-link>
                         </a-doption>
                     </template>
@@ -81,30 +79,25 @@
             </div>
         </div>
         <!-- 输入条件 -->
-        <db-condition v-model:must-value="must" v-model:should-value="should"
-                      v-model:must-not-value="mustNot"
-                      v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)"/>
+        <db-condition v-model:must-value="must" v-model:should-value="should" v-model:must-not-value="mustNot"
+            v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)" />
         <!-- 数据表格 -->
         <div class="content-table">
-            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
-                     scrollbar v-model:selectedKeys="selectedKeys" :scroll="scroll" :loading="loading"
-                     :pagination="false" row-key="_id" :bordered="bordered" :row-selection="rowSelection" :id="id">
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
+                v-model:selectedKeys="selectedKeys" :scroll="scroll" :loading="loading" :pagination="false" row-key="_id"
+                :bordered="bordered" :row-selection="rowSelection" :id="id">
                 <template #empty>
                     <div class="data-browse-empty">{{ emptyText }}</div>
                 </template>
             </a-table>
         </div>
         <!-- 导出弹窗 -->
-        <export-dialog v-model="exportDialog" :index-name="indexName" :records="records"
-                       :result="result"/>
+        <export-dialog v-model="exportDialog" :index-name="indexName" :records="records" :result="result" />
         <!-- 新增对话框 -->
-        <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px"
-                 height="520px"
-                 draggable>
+        <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px" height="520px" draggable>
             <!-- @ts-ignore -->
-            <codemirror v-model="addConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }"
-                        :autofocus="true"
-                        :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
+            <codemirror v-model="addConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }" :autofocus="true"
+                :indent-with-tab="true" :tabSize="4" :extensions="extensions" />
             <template #footer>
                 <a-button type="text" @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
                 <a-button @click="addConfig.dialog = false">取消</a-button>
@@ -112,13 +105,11 @@
             </template>
         </a-modal>
         <!-- 修改对话框 -->
-        <a-modal v-model:visible="editConfig.dialog" :title="`在【${indexName}】中修改【${editConfig.id}】数据`"
-                 :resize="true"
-                 width="800px" height="520px" draggable>
+        <a-modal v-model:visible="editConfig.dialog" :title="`在【${indexName}】中修改【${editConfig.id}】数据`" :resize="true"
+            width="800px" height="520px" draggable>
             <!-- @ts-ignore -->
-            <codemirror v-model="editConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }"
-                        :autofocus="true"
-                        :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
+            <codemirror v-model="editConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }" :autofocus="true"
+                :indent-with-tab="true" :tabSize="4" :extensions="extensions" />
             <template #footer>
                 <a-button type="text" @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
                 <a-button @click="editConfig.dialog = false">取消</a-button>
@@ -128,10 +119,10 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, h, markRaw} from "vue";
-import {mapState} from 'pinia';
-import {Codemirror} from 'vue-codemirror';
-import {json} from '@codemirror/lang-json';
+import { defineComponent, h, markRaw } from "vue";
+import { mapState } from 'pinia';
+import { Codemirror } from 'vue-codemirror';
+import { json } from '@codemirror/lang-json';
 import XEUtils from 'xe-utils';
 
 import useIndexStore from "@/store/IndexStore";
@@ -160,10 +151,10 @@ import {
 import StructureIcon from "@/icon/StructureIcon.vue";
 
 import JsonView from "@/components/JsonView/index.vue";
-import {TableBorder, TableData, TableExpandable} from "@arco-design/web-vue";
+import { TableBorder, TableData, TableExpandable } from "@arco-design/web-vue";
 import DataBrowseComponent from "@/page/DataBrowse/component/DataBrowseComponent";
 import Sortable from "sortablejs";
-import {TableRowSelection} from "@arco-design/web-vue/es/table/interface";
+import { TableRowSelection } from "@arco-design/web-vue/es/table/interface";
 
 let sort: Sortable | undefined;
 
@@ -220,7 +211,7 @@ export default defineComponent({
                     });
                 }
             } as TableExpandable,
-            bordered: {wrapper: true, cell: true} as TableBorder,
+            bordered: { wrapper: true, cell: true } as TableBorder,
             scroll: {
                 x: '100%',
                 y: '100%'
@@ -390,7 +381,7 @@ export default defineComponent({
                 animation: 150,
                 delay: 0,
                 onUpdate: (evt: any) => {
-                    const {newIndex, oldIndex} = evt;
+                    const { newIndex, oldIndex } = evt;
                     if (newIndex == oldIndex) {
                         // 没有变位置，直接返回
                         return;

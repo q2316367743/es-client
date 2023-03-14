@@ -265,7 +265,11 @@ export default defineComponent({
             header: searchItem.header,
             current: searchItem.body,
 
-            fields: new Array<Field>(),
+            fields: [{
+                name: '_id',
+                dataIndex: '_id',
+                type: 'string'
+            }] as Array<Field>,
 
             loading: false,
             visibility: true,
@@ -319,9 +323,7 @@ export default defineComponent({
                 let aliasIndexMap = new Map<string, string>();
                 state.indices.forEach(index => {
                     aliasIndexMap.set(index.name, index.name);
-                    if (index.alias) {
-                        index.alias.forEach(alias => aliasIndexMap.set(alias, index.name));
-                    }
+                    [index.name, ...index.alias].forEach(alias => aliasIndexMap.set(alias, index.name));
                 });
                 return aliasIndexMap;
             }
@@ -367,11 +369,17 @@ export default defineComponent({
                         this.fields = useIndexStore().field(index).sort((a, b) => {
                             return a.name.localeCompare(b.name, "zh-CN");
                         });
+                        return;
                     }
                 }
                 if (newValue === '') {
                     this.clear();
                 }
+                this.fields = [{
+                    name: '_id',
+                    dataIndex: '_id',
+                    type: 'string'
+                }]
             }
         }
     },

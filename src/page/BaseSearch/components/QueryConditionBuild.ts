@@ -1,5 +1,6 @@
 import BaseQuery from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
+import MessageUtil from "@/utils/MessageUtil";
 
 /**
  * 获取基础查询请求体
@@ -36,6 +37,8 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
         query.condition === 'term' ||
         query.condition === 'wildcard') {
         expression[query.field] = query.value;
+    } else if (query.condition === 'terms') {
+        expression[query.field] = JSON.parse(query.value);
     } else if (query.condition === 'range_lt') {
         let value = {} as any;
         value['lt'] = query.value;
@@ -72,7 +75,7 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
         if (order.isEnable === false) {
             return;
         }
-        body.sort[order.field] = {order: order.type};
+        body.sort[order.field] = { order: order.type };
     }
 }
 
@@ -88,13 +91,19 @@ export default function QueryConditionBuild(queries: Array<BaseQuery>, page: num
     let must = [] as Array<any>;
     let must_not = [] as Array<any>;
     let should = [] as Array<any>;
+    let index = 0;
     for (let query of queries) {
-        if (query.type === 'must') {
-            buildQuery(query, must);
-        } else if (query.type === 'must_not') {
-            buildQuery(query, must_not);
-        } else if (query.type === 'should') {
-            buildQuery(query, should);
+        index += 1;
+        try {
+            if (query.type === 'must') {
+                buildQuery(query, must);
+            } else if (query.type === 'must_not') {
+                buildQuery(query, must_not);
+            } else if (query.type === 'should') {
+                buildQuery(query, should);
+            }
+        } catch (e) {
+            MessageUtil.warning(`第${index}个条件解析错误`, e);
         }
     }
     let body = getBaseBody(page, size);

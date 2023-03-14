@@ -1,5 +1,13 @@
-import {Message} from '@arco-design/web-vue';
+import { Message } from '@arco-design/web-vue';
 import Optional from "@/utils/Optional";
+
+function render(message: string, e?: any) {
+    if (typeof e === 'string') {
+        return Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
+    } else {
+        return Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
+    }
+}
 
 function success(message: any): void;
 function success(message: any, callback: () => void): void;
@@ -11,23 +19,24 @@ function success(message: any, callback?: () => void): void {
     callback && callback();
 }
 
+
+function warning(message: string, e?: any): void {
+    Message.warning({
+        closable: true,
+        content: render(message, e)
+    });
+    console.error(message, e);
+}
+
 function error(message: string): void;
 function error(message: string, e: any): void;
 function error(message: string, e: any, callback: () => void): void;
 function error(message: string, e?: any, callback?: () => void): void {
-    console.log(e, typeof e)
-    if (typeof e === 'string') {
-        Message.error({
-            closable: true,
-            content: Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
-        });
-    } else {
-        Message.error({
-            closable: true,
-            content: Optional.ofNullable(e).map(e => `${message}，${e}`).orElse(message)
-        });
-    }
-    console.error(e);
+    Message.error({
+        closable: true,
+        content: render(message, e)
+    });
+    console.error(message, e);
     callback && callback();
 }
 
@@ -40,11 +49,6 @@ export default {
             content: typeof message === 'string' ? message : JSON.stringify(message)
         });
     },
-    warning(message: string) {
-        Message.warning({
-            closable: true,
-            content: message + ''
-        });
-    },
+    warning,
     error
 }
