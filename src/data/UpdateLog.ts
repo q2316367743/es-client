@@ -2,6 +2,30 @@ import { Log, LogItemEnum } from "@/view/Data";
 
 export default [
     {
+        version: '2.7.1',
+        sign: 271,
+        time: '2023-03-15',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '高级查询结果页多标签'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '基础查询增加terms查询'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '增加表格视图表头模式'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: 'web版增加pwa'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: 'JSON视图可以换行'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '基础查询切换索引重置分页'
+        }]
+    },
+    {
         version: '2.7.0',
         sign: 270,
         time: '2023-03-09',
