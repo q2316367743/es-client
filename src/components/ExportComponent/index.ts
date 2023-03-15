@@ -10,7 +10,7 @@ import Assert from "@/utils/Assert";
 import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 import {toRaw} from "vue";
 import MessageUtil from '@/utils/MessageUtil';
-import {JsonToTableCompleteBuild, TableViewColumnData} from "@/build/JsonToTableBuild";
+import {jsonToTableComplete, TableViewColumnData} from "@/algorithm/jsonToTable";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -59,7 +59,7 @@ function exportNoSql(config: ExportConfig, data: any): ExportContent | undefined
 // ------------------------------------------------ 结构化导出 ------------------------------------------------
 
 function exportForHtml(config: ExportConfig, data: any): ExportContent {
-    let {columns, records} = JsonToTableCompleteBuild(data, {
+    let {columns, records} = jsonToTableComplete(data, {
         common: config.source === ExportSource.HIT,
         source: false,
         separator: '.'
@@ -101,7 +101,7 @@ function htmlTemplate(name: string, keys: Array<TableViewColumnData>, records: A
 }
 
 function exportForCsv(config: ExportConfig, data: any): ExportContent {
-    let {records} = JsonToTableCompleteBuild(data, {
+    let {records} = jsonToTableComplete(data, {
         common: config.source === ExportSource.HIT,
         source: false,
         separator: '.'
@@ -113,7 +113,7 @@ function exportForCsv(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportForTsv(config: ExportConfig, data: any): ExportContent {
-    let {records} = JsonToTableCompleteBuild(data, {
+    let {records} = jsonToTableComplete(data, {
         common: config.source === ExportSource.HIT,
         source: false,
         separator: '.'
@@ -125,7 +125,7 @@ function exportForTsv(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportForTxt(config: ExportConfig, data: any): ExportContent {
-    let {records} = JsonToTableCompleteBuild(data, {
+    let {records} = jsonToTableComplete(data, {
         common: config.source === ExportSource.HIT,
         source: false,
         separator: '.'
@@ -140,7 +140,7 @@ function exportForTxt(config: ExportConfig, data: any): ExportContent {
 }
 
 function exportFotXlsx(config: ExportConfig, data: any) {
-    let {records} = JsonToTableCompleteBuild(data, {
+    let {records} = jsonToTableComplete(data, {
         common: config.source === ExportSource.HIT,
         source: false,
         separator: '.'

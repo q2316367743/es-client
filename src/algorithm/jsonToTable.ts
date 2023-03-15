@@ -11,9 +11,6 @@ export function buildTableColumnData(dataIndex: string, width: number, title?: s
         tooltip: width === MAX_WIDTH,
         width,
         cellClass: fixed ? 'table-view-cell table-view-fixed' : 'table-view-cell',
-        sortable: fixed ? {
-            sortDirections: ["ascend", "descend"]
-        } : undefined
     }
 }
 
@@ -79,8 +76,8 @@ export interface TableView {
  * @param index 索引，如果有
  * @constructor
  */
-export function JsonToTableBuild(data: any, index?: IndexView): TableView {
-    return JsonToTableCompleteBuild(data, {common: true, source: true, separator: "-"}, index);
+export function jsonToTable(data: any, index?: IndexView): TableView {
+    return jsonToTableComplete(data, {common: true, source: true, separator: "-"}, index);
 }
 
 /**
@@ -90,7 +87,7 @@ export function JsonToTableBuild(data: any, index?: IndexView): TableView {
  * @param index 索引，如果有
  * @constructor
  */
-export function JsonToTableCompleteBuild(
+export function jsonToTableComplete(
     data: any,
     config: BuildConfig,
     index?: IndexView
@@ -190,7 +187,7 @@ export function renderObj(
 
 export function widthCalc(str: string, expand: string = ''): number {
     return Math.min(
-        str.length * 10 + 80,
-        expand === '' ? MAX_WIDTH : expand.length * 10 + 80,
+        Math.max(str.length * 10 + 80,
+            expand === '' ? 0 : expand.length * 10 + 80),
         MAX_WIDTH);
 }

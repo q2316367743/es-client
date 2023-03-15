@@ -43,7 +43,7 @@ import Sortable from 'sortablejs';
 
 import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
-import { buildTableColumnData, JsonToTableBuild, TableViewColumnData, widthCalc } from "@/build/JsonToTableBuild";
+import { buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc } from "@/algorithm/jsonToTable";
 import useSettingStore from "@/store/SettingStore";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import useIndexStore from "@/store/IndexStore";
@@ -137,7 +137,7 @@ export default defineComponent({
                 return;
             }
             // 数据处理
-            let { columns, records } = JsonToTableBuild(this.data);
+            let { columns, records } = jsonToTable(this.data);
             // 渲染表头
             this.renderColumns = columns;
             // 映射表头

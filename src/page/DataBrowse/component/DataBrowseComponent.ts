@@ -14,7 +14,7 @@ import {ref, Ref} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseOrder from "@/entity/BaseOrder";
-import {JsonToTableBuild, TableViewColumnData} from "@/build/JsonToTableBuild";
+import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
 import Optional from "@/utils/Optional";
 
 export default class DataBrowseComponent {
@@ -66,7 +66,7 @@ export default class DataBrowseComponent {
             )
                 .then(result => {
                     this.result.value = result;
-                    let {columns, records, total} = JsonToTableBuild(result, this.index.value!);
+                    let {columns, records, total} = jsonToTable(result, this.index.value!);
                     this.columns.value = columns;
                     if (renderHeader) {
                         this.showColumns.value = columns;

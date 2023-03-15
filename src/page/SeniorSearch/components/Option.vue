@@ -74,7 +74,7 @@ export default defineComponent({
     emits: ['save', 'formatDocument', 'clearBody', 'select', 'setting', 'exportData'],
     props: {
         relationId: Number,
-        view: Object as PropType<ViewTypeEnum>
+        view: Number
     },
     data: () => ({
         ViewTypeEnum
