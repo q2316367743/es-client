@@ -2,15 +2,15 @@
     <div class="senior-search-data-view hljs">
         <div class="tabs">
             <div class="tab fix" v-for="(item, index) in items" :class="itemActive === index ? 'active' : ''"
-                 @click="itemActive = index">
+                @click="itemActive = index">
                 <a-tooltip content="取消后将会关闭">
-                    <icon-subscribe @click.stop="fixDelete(index)"/>
+                    <icon-subscribe @click.stop="fixDelete(index)" />
                 </a-tooltip>
                 <span class="ssd-v-title">结果{{ item.title }}</span>
             </div>
             <div class="tab" :class="itemActive === -1 ? 'active' : ''" @click="itemActive = -1">
                 <a-tooltip content="固定">
-                    <icon-subscribe-add @click.stop="fixAdd"/>
+                    <icon-subscribe-add @click.stop="fixAdd" />
                 </a-tooltip>
                 <span class="ssd-v-title">结果</span>
             </div>
@@ -18,39 +18,37 @@
         <div class="base-scroll" :class="instance.jsonWrap ? 'json-wrap' : ''">
             <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
                 <a-scrollbar class="scrollbar"
-                             :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+                    :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="item.view === ViewTypeEnum.BASE">{{ item.pretty }}</pre>
                     <pre v-else-if="item.view === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                         v-html="item.value"/>
+                        v-html="item.value" />
                     <div v-else-if="item.view === ViewTypeEnum.JSON_TREE" :ref="`jsonTree${item.title}`"
-                         class="data-scroll hljs CompCssDJsonViewTree" v-html="item.value"/>
+                        class="data-scroll hljs CompCssDJsonViewTree" v-html="item.value" />
                 </a-scrollbar>
-                <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :data="item.data"/>
+                <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :data="item.data" />
             </div>
             <div class="current-scroll" v-show="itemActive === -1">
                 <a-scrollbar class="scrollbar"
-                             :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+                    :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
-                    <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                         v-html="value"/>
-                    <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
+                    <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
+                    <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
                 </a-scrollbar>
-                <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="data"/>
+                <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="data" />
             </div>
         </div>
-        <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE"
-                  @click="execCopy">复制
+        <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy">复制
         </a-button>
-        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container"/>
+        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container" />
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
-import {mapState} from "pinia";
-import {renderJSONTreeView} from "@/components/JsonTree";
+import { defineComponent, PropType } from "vue";
+import { mapState } from "pinia";
+import { renderJSONTreeView } from "@/components/JsonTree";
 import useSettingStore from "@/store/SettingStore";
 
-import {highlight} from '@/global/BeanFactory';
+import { highlight } from '@/global/BeanFactory';
 // 工具
 import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";
@@ -92,7 +90,7 @@ interface Item {
 
 export default defineComponent({
     name: 'senior-search-data-view',
-    components: {TableViewer},
+    components: { TableViewer },
     props: {
         view: Number,
         data: Object as PropType<Record<string, any> | string>,
@@ -101,7 +99,7 @@ export default defineComponent({
         jsonTreeId: 'json-tree-view-' + new Date().getTime(),
         value: '',
         pretty: '',
-        copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
+        copyable: { copyText: "复制", copiedText: "复制成功", timeout: 2000 },
         Optional,
         ViewTypeEnum,
         show: ViewTypeEnum.JSON as ViewTypeEnum,
@@ -197,7 +195,7 @@ export default defineComponent({
 
     .tabs {
         position: absolute;
-        top: 0;
+        top: 3px;
         left: 6px;
         right: 6px;
         height: 26px;
@@ -252,11 +250,16 @@ export default defineComponent({
                     flex-flow: wrap;
                 }
             }
+
             pre.hljs {
-                white-space: pre-wrap;       /* css-3 */
-                white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-                white-space: -o-pre-wrap;    /* Opera 7 */
-                word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                white-space: pre-wrap;
+                /* css-3 */
+                white-space: -moz-pre-wrap;
+                /* Mozilla, since 1999 */
+                white-space: -o-pre-wrap;
+                /* Opera 7 */
+                word-wrap: break-word;
+                /* Internet Explorer 5.5+ */
                 word-break: break-all;
             }
         }
@@ -303,5 +306,4 @@ export default defineComponent({
         top: 0;
         right: 15px;
     }
-}
-</style>
+}</style>
