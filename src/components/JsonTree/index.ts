@@ -40,8 +40,7 @@ type JSONTreeNode = {
  * @export
  * @param {Object} jsonObj 輸入Json物件
  * @param {Element} rootElem 輸入初始化元素
- * @param {Object} [option={}] 輸入設定物件，預設為空物件
- * @param {Boolean} [option.expanded=false] 輸入是否預先展開，預設為false
+ * @param options 选项
  */
 export function renderJSONTreeView(
     jsonObj: JsonObject,
