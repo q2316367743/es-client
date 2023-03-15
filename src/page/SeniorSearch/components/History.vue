@@ -179,8 +179,8 @@ export default defineComponent({
 .hm-history {
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
+    left: 4px;
+    right: 4px;
     bottom: 0;
 
     .hm-history-toolbar {

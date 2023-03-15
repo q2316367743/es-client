@@ -1,0 +1,120 @@
+<template>
+    <div class="option">
+        <a-tooltip
+            :content="relationId ? $t('common.operation.update') : $t('common.operation.save')"
+            position="right">
+            <a-button type="text" :status="relationId ? 'danger' : 'success'" @click="save">
+                <template #icon>
+                    <icon-save :size="18"/>
+                </template>
+            </a-button>
+        </a-tooltip>
+        <a-tooltip :content="$t('common.operation.format')" position="right">
+            <a-button type="text" status="normal" @click="formatDocument">
+                <template #icon>
+                    <icon-code/>
+                </template>
+            </a-button>
+        </a-tooltip>
+        <a-tooltip content="清空" position="right">
+            <a-button type="text" status="normal" @click="clearBody">
+                <template #icon>
+                    <format-icon/>
+                </template>
+            </a-button>
+        </a-tooltip>
+        <a-dropdown position="bl" @select="select">
+            <a-button type="text" status="normal">
+                <template #icon>
+                    <icon-code :size="18" v-if="view === ViewTypeEnum.BASE"/>
+                    <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON"/>
+                    <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE"/>
+                    <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE"/>
+                </template>
+            </a-button>
+            <template #content>
+                <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
+                <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
+                <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
+                <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
+            </template>
+        </a-dropdown>
+        <a-tooltip content="编辑器设置" position="right">
+            <a-button type="text" status="normal" @click="setting">
+                <template #icon>
+                    <icon-settings :size="18"/>
+                </template>
+            </a-button>
+        </a-tooltip>
+        <a-tooltip content="导出" position="right">
+            <a-button type="text" status="warning" @click="exportData">
+                <template #icon>
+                    <icon-launch :size="18"/>
+                </template>
+            </a-button>
+        </a-tooltip>
+        <a-tooltip content="帮助" position="right">
+            <a-button type="text" status="normal" @click="openHelp">
+                <template #icon>
+                    <icon-question-circle :size="18"/>
+                </template>
+            </a-button>
+        </a-tooltip>
+    </div>
+</template>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
+import FormatIcon from "@/icon/FormatIcon.vue";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import {nativeStrategyContext} from "@/global/BeanFactory";
+
+export default defineComponent({
+    name: 'senior-search-option',
+    components: {FormatIcon},
+    emits: ['save', 'formatDocument', 'clearBody', 'select', 'setting', 'exportData'],
+    props: {
+        relationId: Number,
+        view: Object as PropType<ViewTypeEnum>
+    },
+    data: () => ({
+        ViewTypeEnum
+    }),
+    methods: {
+        save() {
+            this.$emit('save')
+        },
+        formatDocument() {
+            this.$emit('formatDocument')
+        },
+        clearBody() {
+            this.$emit('clearBody')
+        },
+        select(command: any) {
+            this.$emit('select', command)
+        },
+        setting() {
+
+            this.$emit('setting')
+        },
+        exportData() {
+
+            this.$emit('exportData')
+        },
+        openHelp() {
+            nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
+        }
+    }
+});
+</script>
+<style scoped lang="less">
+.senior-search {
+    .option {
+        display: block;
+        width: 32px;
+
+        .arco-btn {
+            margin-left: 0;
+        }
+    }
+}
+</style>

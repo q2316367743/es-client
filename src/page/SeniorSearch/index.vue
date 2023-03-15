@@ -2,113 +2,42 @@
     <a-spin :loading="loading" tip="数据查询中">
         <div class="senior-search">
             <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab" />
+                      v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab"/>
             <!-- 下半部分 -->
             <!-- 左面查询条件 -->
-            <a-split class="senior-main" min="42px" :style="{ top: instance.showTab ? '40px' : '0' }" default-size="400px">
+            <a-split class="senior-main" min="42px" :max="0.9" :style="{ top: instance.showTab ? '40px' : '0' }"
+                     default-size="400px">
                 <template #first>
                     <div class="side">
-                        <div class="option">
-                            <a-tooltip
-                                :content="header.relationId ? $t('common.operation.update') : $t('common.operation.save')"
-                                position="right">
-                                <a-button type="text" :status="header.relationId ? 'danger' : 'success'" @click="save">
-                                    <template #icon>
-                                        <icon-save :size="18" />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                            <a-tooltip :content="$t('common.operation.format')" position="right">
-                                <a-button type="text" status="normal" @click="formatDocument">
-                                    <template #icon>
-                                        <icon-code />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                            <a-tooltip content="清空" position="right">
-                                <a-button type="text" status="normal" @click="clearBody">
-                                    <template #icon>
-                                        <format-icon />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                            <a-dropdown position="bl" @select="(command: any) => view = command">
-                                <a-button type="text" status="normal">
-                                    <template #icon>
-                                        <icon-code :size="18" v-if="view === ViewTypeEnum.BASE" />
-                                        <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON" />
-                                        <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE" />
-                                        <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE" />
-                                    </template>
-                                </a-button>
-                                <template #content>
-                                    <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
-                                    <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
-                                    <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
-                                    <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
-                                </template>
-                            </a-dropdown>
-                            <a-tooltip content="编辑器设置" position="right">
-                                <a-button type="text" status="normal" @click="settingDialog = true">
-                                    <template #icon>
-                                        <icon-settings :size="18" />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                            <a-tooltip content="导出" position="right">
-                                <a-button type="text" status="warning" @click="exportData">
-                                    <template #icon>
-                                        <icon-launch :size="18" />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                            <a-tooltip content="帮助" position="right">
-                                <a-button type="text" status="normal" @click="openHelp">
-                                    <template #icon>
-                                        <icon-question-circle :size="18" />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                        </div>
+                        <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
+                                              @format-document="formatDocument" @clear-body="clearBody"
+                                              @select="(command) => view = command" @setting="settingDialog = true"
+                                              @export-data="exportData"/>
                         <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
-                            @execute="execute" />
+                                            @execute="execute"/>
                     </div>
                 </template>
                 <template #second>
-                    <div class="senior-display">
-                        <a-tabs v-model:active-key="displayActive" class="senior-display-tabs">
-                            <a-tab-pane title="结果" key="result" />
-                            <a-tab-pane title="请求记录" key="search" />
-                            <a-tab-pane title="历史记录" key="history" />
-                        </a-tabs>
-                        <div class="senior-display-content">
-                            <!-- 结果集渲染 -->
-                            <senior-search-data-view v-show="displayActive === 'result'" :view="view"
-                                :data="current.result" />
-                            <!-- 请求记录 -->
-                            <senior-search-record v-show="displayActive === 'search'" />
-                            <!-- 历史记录 -->
-                            <senior-search-history v-show="displayActive === 'history'" />
-                        </div>
-                    </div>
-                    <a-back-top target-container=".senior-content .el-scrollbar__wrap" v-show="showTop" />
+                    <senior-search-display :view="view" :data="current.result" />
                 </template>
             </a-split>
         </div>
-        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body width="600px"
-            :footer="false">
-            <senior-search-setting @close="settingDialog = false" />
+        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body
+                 width="600px"
+                 :footer="false">
+            <senior-search-setting @close="settingDialog = false"/>
         </a-modal>
-        <senior-search-export-dialog v-model="exportDialog" :result="current.result" />
+        <senior-search-export-dialog v-model="exportDialog" :result="current.result"/>
     </a-spin>
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from "vue";
-import { mapState } from "pinia";
+import {defineAsyncComponent, defineComponent} from "vue";
+import {mapState} from "pinia";
+import * as monaco from "monaco-editor";
 
 import './index.less';
-import { SeniorSearchItem } from './domain/SeniorSearchItem';
+import {SeniorSearchItem} from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 
@@ -116,9 +45,11 @@ import useUrlStore from "@/store/UrlStore";
 import useSettingStore from "@/store/SettingStore";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
+// 枚举
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 import {
     applicationLaunch,
@@ -132,26 +63,16 @@ import {
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 
 // 组件
+import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
+import SeniorTabComponent from "@/page/SeniorSearch/components/SeniorTabComponent";
 // 工具类
 import NotificationUtil from "@/utils/NotificationUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
-import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
 
-// 图标
-import RunIcon from "@/icon/RunIcon.vue";
-import SaveIcon from "@/icon/SaveIcon.vue";
-import FormatIcon from "@/icon/FormatIcon.vue";
-import ViewIcon from "@/icon/ViewIcon.vue";
-import TagIcon from "@/icon/TagIcon.vue";
-import JsonIcon from "@/icon/JsonIcon.vue";
-import TableIcon from "@/icon/TableIcon.vue";
-import SeniorTabComponent from "./components/SeniorTabComponent";
-import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import * as monaco from "monaco-editor";
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
 
 
@@ -160,13 +81,11 @@ const seniorTabComponent = new SeniorTabComponent();
 export default defineComponent({
     name: 'SeniorSearch',
     components: {
-        TableIcon, JsonIcon, TagIcon, ViewIcon, FormatIcon, SaveIcon, RunIcon,
+        SeniorSearchOption: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Option.vue')),
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
-        SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Search.vue')),
-        SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/components/History.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Setting.vue')),
-        SeniorSearchDataView: defineAsyncComponent(() => import('@/page/SeniorSearch/components/DataView/index.vue')),
         SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/SeniorSearch/components/ExportDialog.vue')),
+        SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display.vue')),
         TabMenu
     },
     data: () => {
