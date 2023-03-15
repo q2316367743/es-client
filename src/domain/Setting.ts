@@ -90,6 +90,11 @@ export default interface Setting {
     jsonFontSize: number;
 
     /**
+     * JSON是否自动换行
+     */
+    jsonWrap: boolean;
+
+    /**
      * JSON主题 - 白天
      */
     jsonThemeByLight: string;

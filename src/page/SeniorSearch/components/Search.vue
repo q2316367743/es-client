@@ -36,6 +36,7 @@ import XEUtils from "xe-utils";
 import {useSeniorSearchEvent} from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";
 import {TableData, TableExpandable} from "@arco-design/web-vue/es/table/interface";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'senior-search-record',
@@ -45,9 +46,13 @@ export default defineComponent({
             title: '请求体',
             width: 80,
             expandedRowRender: (record: TableData) => {
-                return h(JsonView, {
-                    data: record.params && record.params != '' ? JSON.parse(record.params) : {}
-                })
+                try {
+                    return h(JsonView, {
+                        data: JSON.parse(record.params)
+                    });
+                }catch (e) {
+                    return h('pre', {}, record.params);
+                }
             }
         } as TableExpandable
     }),

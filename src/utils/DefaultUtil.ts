@@ -28,6 +28,7 @@ export default {
             pageSize: 20,
             defaultViewer: 2,
             jsonFontSize: 16,
+            jsonWrap: false,
             jsonThemeByLight: 'github',
             jsonThemeByDark: 'github-dark',
             tableHeaderMode: TableHeaderModeEnum.RENDER,

@@ -81,6 +81,12 @@
                 <a-form-item label="JSON视图 - 字体大小">
                     <a-input-number controls-position="right" v-model="instance.jsonFontSize"></a-input-number>
                 </a-form-item>
+                <a-form-item label="JSON视图 - 换行">
+                    <a-switch v-model="instance.jsonWrap" :checked-value="true" :unchecked-value="false" type="round">
+                        <template #checked>换行</template>
+                        <template #unchecked>不换行</template>
+                    </a-switch>
+                </a-form-item>
                 <a-form-item :label="$t('setting.base.display.jsonViewThemeLight')">
                     <a-select v-model="instance.jsonThemeByLight">
                         <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme" />

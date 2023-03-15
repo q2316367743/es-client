@@ -39,7 +39,8 @@ const useSettingStore = defineStore('setting', {
         getTabMaxCount: (state): number => Optional.ofNullable(state.instance.tabMaxCount).orElse(10),
         getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT),
         getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.instance.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),
-        getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false)
+        getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false),
+        getJsonWarp: (state): boolean => Optional.ofNullable(state.instance.jsonWrap).orElse(false)
     },
     actions: {
         async init() {

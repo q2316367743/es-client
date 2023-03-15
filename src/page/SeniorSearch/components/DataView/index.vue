@@ -15,13 +15,13 @@
                 <span class="ssd-v-title">结果</span>
             </div>
         </div>
-        <div class="base-scroll">
+        <div class="base-scroll" :class="instance.jsonWrap ? 'json-wrap' : ''">
             <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
                 <a-scrollbar class="scrollbar"
                              :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="item.view === ViewTypeEnum.BASE">{{ item.pretty }}</pre>
                     <pre v-else-if="item.view === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                         v-html="item.value" />
+                         v-html="item.value"/>
                     <div v-else-if="item.view === ViewTypeEnum.JSON_TREE" :ref="`jsonTree${item.title}`"
                          class="data-scroll hljs CompCssDJsonViewTree" v-html="item.value"/>
                 </a-scrollbar>
@@ -32,7 +32,7 @@
                              :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
                     <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                         v-html="value" />
+                         v-html="value"/>
                     <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
                 </a-scrollbar>
                 <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="data"/>
@@ -245,6 +245,21 @@ export default defineComponent({
         left: 6px;
         right: 6px;
         bottom: 4px;
+
+        &.json-wrap {
+            .CompCssDJsonViewTree {
+                .wjv-line {
+                    flex-flow: wrap;
+                }
+            }
+            pre.hljs {
+                white-space: pre-wrap;       /* css-3 */
+                white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                white-space: -o-pre-wrap;    /* Opera 7 */
+                word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                word-break: break-all;
+            }
+        }
 
         .fix-scroll {
             position: absolute;

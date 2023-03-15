@@ -1,5 +1,5 @@
 <template>
-    <div class="base-search-data-view hljs" :class="view === ViewTypeEnum.TABLE ? 'table-viewer-show' : ''"
+    <div class="base-search-data-view hljs" :class="mainClass"
         :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
         <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="view === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
@@ -41,7 +41,17 @@ export default defineComponent({
         ViewTypeEnum
     }),
     computed: {
-        ...mapState(useSettingStore, ['instance'])
+        ...mapState(useSettingStore, ['instance']),
+        mainClass() {
+            let classItem = new Array<string>();
+            if (this.view === ViewTypeEnum.TABLE) {
+                classItem.push('table-viewer-show')
+            }
+            if (this.instance.jsonWrap) {
+                classItem.push('json-wrap')
+            }
+            return classItem.join(' ')
+        }
     },
     watch: {
         data() {
@@ -95,6 +105,21 @@ export default defineComponent({
     border-right: 1px solid var(--color-border-2);
     border-top: 1px solid var(--color-border-2);
     overflow-x: auto;
+
+    &.json-wrap {
+        .CompCssDJsonViewTree {
+            .wjv-line {
+                flex-flow: wrap;
+            }
+        }
+        pre.hljs {
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            word-break: break-all;
+        }
+    }
 
     .json-view-copy {
         position: absolute;
