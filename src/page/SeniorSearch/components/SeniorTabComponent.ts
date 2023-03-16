@@ -7,7 +7,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 import { Ref, ref } from "vue";
-import { SeniorSearchItem, SeniorSearchItemBody } from "../domain/SeniorSearchItem";
+import { SeniorSearchItem } from "../domain/SeniorSearchItem";
 
 export default class SeniorTabComponent {
 
@@ -15,7 +15,7 @@ export default class SeniorTabComponent {
     searchHeader: Ref<Array<TabMenuItem>>;
     searchId: Ref<number>;
     header: Ref<TabMenuItem>;
-    body: Ref<SeniorSearchItemBody>;
+    body: Ref<string>;
 
     constructor() {
         let searchMap = new Map<number, SeniorSearchItem>();
@@ -25,37 +25,51 @@ export default class SeniorTabComponent {
                 id: searchId,
                 name: '高级查询'
             },
-            body: {
-                body: '',
-                result: {}
-            } as SeniorSearchItemBody
+            body: ''
         } as SeniorSearchItem;
         searchMap.set(searchId, searchItem);
         this.searchMap = ref<Map<number, SeniorSearchItem>>(searchMap);
         this.searchId = ref<number>(searchId);
         this.searchHeader = ref<Array<TabMenuItem>>([searchItem.header]);
         this.header = ref<TabMenuItem>(searchItem.header);
-        this.body = ref<SeniorSearchItemBody>(searchItem.body);
+        this.body = ref<string>(searchItem.body);
     }
 
     private _sync(): void {
         let searchItem = this.searchMap.value.get(this.searchId.value);
         if (!searchItem) {
-            // 重新创建
-            searchItem = this.add();
+            if (this.searchMap.value.size === 0) {
+                // 重新创建
+                searchItem = this.add();
+            }else {
+                // 指向第一个
+                this.searchId.value = this.searchMap.value.keys().next().value;
+                this._sync();
+                return;
+            }
         }
         this.header.value = searchItem.header;
         this.body.value = searchItem.body;
         this.searchHeader.value = Array.from(this.searchMap.value.values()).map(e => e.header);
     }
 
+    sync(body: string) {
+        let searchItem = this.searchMap.value.get(this.searchId.value);
+        if (searchItem) {
+            searchItem.body = body;
+        }else {
+            MessageUtil.warning('当前编辑器未正确关联标签页，切换标签页内容将会丢失！');
+        }
+    }
+
     /**
      * 根据ID切换当前
      * @param id ID
      */
-    choose(id: number): void {
+    choose(id: number): SeniorSearchItem {
         this.searchId.value = id;
         this._sync();
+        return this.searchMap.value.get(this.searchId.value)!
     }
 
     /**
@@ -114,7 +128,7 @@ export default class SeniorTabComponent {
                 seniorSearchHistoryService.save({
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
                     name: value,
-                    body: this.body.value.body,
+                    body: this.body.value,
                 })
                     .then(id => {
                         // 发送消息
@@ -138,7 +152,7 @@ export default class SeniorTabComponent {
             seniorSearchHistoryService.update({
                 id: this.header.value.relationId,
                 name: this.header.value.name,
-                body: this.body.value.body,
+                body: this.body.value,
             })
                 .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
                 .catch(e => MessageUtil.error('更新失败', e));
@@ -153,8 +167,7 @@ export default class SeniorTabComponent {
     clear() {
         this.header.value.relationId = undefined;
         this.header.value.name = '高级查询';
-        this.body.value.body = '';
-        this.body.value.result = {};
+        this.body.value = '';
     }
 
     /**
@@ -168,12 +181,7 @@ export default class SeniorTabComponent {
                 id: searchId,
                 name: '高级查询'
             },
-            body: {
-                method: 'POST',
-                url: '',
-                body: '',
-                result: {}
-            } as SeniorSearchItemBody
+            body: ''
         } as SeniorSearchItem;
         this.searchMap.value.set(searchId, searchItem);
         this.searchId.value = searchId;

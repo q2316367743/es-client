@@ -4,6 +4,7 @@ import {useTitle} from "@vueuse/core";
 import Url from "@/entity/Url";
 
 import {urlService} from "@/global/BeanFactory";
+import ArrayUtil from "@/utils/ArrayUtil";
 
 const title = useTitle();
 
@@ -12,6 +13,7 @@ const useUrlStore = defineStore('url', {
         return {
             // 全部的链接
             urls: new Array<Url>(),
+            urlMap: new Map<number, Url>(),
             // 当前选中的链接
             url: undefined as Url | undefined
         }
@@ -37,6 +39,7 @@ const useUrlStore = defineStore('url', {
         reset(callback?: () => void) {
             urlService.list().then(urls => {
                 this.urls = urls.sort((a, b) => b.sequence!- a.sequence!);
+                this.urlMap = ArrayUtil.map(urls, 'id');
                 if (callback) {
                     callback()
                 }

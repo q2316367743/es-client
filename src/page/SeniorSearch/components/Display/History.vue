@@ -1,65 +1,21 @@
 <template>
     <div class="hm-history">
         <div class="hm-history-toolbar">
-            <div>
-                <a-input v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
-                         @input="search"></a-input>
-                <a-button type="primary" @click="search">
-                    <template #icon>
-                        <icon-refresh/>
-                    </template>
-                </a-button>
-                <a-switch active-text="当前链接" inactive-text="全部" v-model="onlyCurrent" @change="search"
-                          style="margin-left: 12px;" type="round">
-                    <template #checked>当前链接</template>
-                    <template #unchecked>全部</template>
-                </a-switch>
-            </div>
-            <div>
-                <a-button type="primary" style="margin-right: 12px;" @click="addOpen">
-                    <template #icon>
-                        <icon-plus/>
-                    </template>
-                </a-button>
-            </div>
+            <a-input-search v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
+                            @search="search" style="width: 240px"/>
         </div>
         <div class="hm-history-body">
-            <a-table :data="histories" style="height: 100%;">
-                <template #columns>
-                    <a-table-column data-index="name" :title="$t('common.keyword.name')"></a-table-column>
-                    <a-table-column :title="$t('common.keyword.operation')" :width="250" fixed="right">
-                        <template #cell="{ record }">
-                            <a-button type="primary" status="success" size="small" @click="load(record)">{{
-                                    $t('common.operation.load')
-                                }}
-                            </a-button>
-                            <a-button type="primary" size="small" @click="updateOpen(record)">{{
-                                    $t('common.operation.update')
-                                }}
-                            </a-button>
-                            <a-popconfirm content="确认删除此条记录？" :ok-text="$t('common.operation.delete')"
-                                          :cancel-text="$t('common.operation.cancel')" @ok="removeById(record.id)">
-                                <a-button type="primary" status="danger" size="small">{{
-                                        $t('common.operation.delete')
-                                    }}
-                                </a-button>
-                            </a-popconfirm>
-                        </template>
-                    </a-table-column>
+            <a-tree blockNode :data="nodeItems">
+                <template #title="nodeData">
+                    <span @dblclick="load(nodeData.key, nodeData.draggable)">{{ nodeData.title }}</span>
                 </template>
-            </a-table>
+            </a-tree>
         </div>
-        <a-modal v-model:visible="dialog.show" :title="(dialog.data.id === 0 ? '新增' : '修改') + '历史记录'"
-                 render-to-body
-                 unmount-on-close draggable width="50%" @ok="submit" ok-text="修改">
-            <history-save-and-update v-model="dialog.data"/>
-        </a-modal>
     </div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
 import {toDateString} from "xe-utils";
-import {mapState} from "pinia";
 
 // 工具类
 import BrowserUtil from "@/utils/BrowserUtil";
@@ -69,29 +25,49 @@ import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
 import {seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import {TreeNodeData} from "@arco-design/web-vue";
+import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
-import HistorySaveAndUpdate from "@/page/SeniorSearch/components/HistorySaveAndUpdate.vue";
+import Optional from "@/utils/Optional";
+import ArrayUtil from "@/utils/ArrayUtil";
 
 export default defineComponent({
     name: 'senior-search-history',
-    components: {HistorySaveAndUpdate},
     emits: ['load'],
     data: () => ({
         histories: new Array<SeniorSearchHistory>(),
         name: '',
-        onlyCurrent: true,
-        dialog: {
-            show: false,
-            data: {
-                id: 0,
-                name: '',
-                urlId: 0,
-                body: ''
-            } as SeniorSearchHistory
-        }
     }),
     computed: {
-        ...mapState(useUrlStore, ['current'])
+        ...mapState(useUrlStore, ['urlMap']),
+        historyMap(): Map<number, SeniorSearchHistory> {
+            return ArrayUtil.map(this.histories, 'id');
+        },
+        nodeItems(): Array<TreeNodeData> {
+            let parentItemMap = new Map<number, TreeNodeData>();
+            for (let history of this.histories) {
+                if (parentItemMap.has(history.urlId || 0)) {
+                    parentItemMap.get(history.urlId || 0)!.children!.push({
+                        title: history.name,
+                        key: history.id,
+                        draggable: true
+                    });
+                } else {
+                    let url = this.urlMap.get(history.urlId || 0);
+                    parentItemMap.set(history.urlId || 0, {
+                        title: Optional.ofNullable(url).attr('name').orElse('未知链接'),
+                        key: history.urlId || new Date().getTime(),
+                        draggable: false,
+                        children: [{
+                            title: history.name,
+                            key: history.id,
+                            draggable: true
+                        }] as Array<TreeNodeData>
+                    });
+                }
+            }
+            return Array.from(parentItemMap.values());
+        }
     },
     mounted() {
         // 数据查询
@@ -100,11 +76,7 @@ export default defineComponent({
     },
     methods: {
         search() {
-            if (!useUrlStore().id && this.onlyCurrent) {
-                this.histories = new Array<SeniorSearchHistory>();
-                return;
-            }
-            seniorSearchHistoryService.list(this.onlyCurrent ? useUrlStore().id : undefined)
+            seniorSearchHistoryService.list()
                 .then(histories => this.histories = histories.filter(e => stringContain(e.name!, this.name)));
         },
         prettyDate(params: Date) {
@@ -113,68 +85,30 @@ export default defineComponent({
         execCopy(url: string) {
             BrowserUtil.copy(url);
         },
-        load(history: SeniorSearchHistory) {
-            useSeniorSearchEvent.emit({
-                id: history.id,
-                name: history.name,
-                body: history.body
-            });
+        load(id: number, draggable: boolean) {
+            if (!draggable) {
+                return;
+            }
+            let history = this.historyMap.get(id);
+            if (history) {
+                useSeniorSearchEvent.emit({
+                    id: history.id,
+                    name: history.name,
+                    body: history.body
+                });
+            } else {
+                MessageUtil.error('错误，未找到指定历史记录，请刷新历史记录后重试！');
+            }
         },
         removeById(id: number) {
             seniorSearchHistoryService.removeById(id)
                 .then(() => MessageUtil.success('删除成功', this.search))
                 .catch(e => MessageUtil.error('删除失败', e));
         },
-        addOpen() {
-            this.dialog = {
-                show: true,
-                data: {
-                    id: 0,
-                    name: '',
-                    urlId: 0,
-                    body: ''
-                } as SeniorSearchHistory
-            }
-        },
-        updateOpen(historyEntity: SeniorSearchHistory) {
-            this.dialog = {
-                show: true,
-                data: historyEntity
-            }
-        },
-        submit() {
-            if (this.dialog.data.id === 0) {
-                // 新增
-                seniorSearchHistoryService.save(this.dialog.data)
-                    .then(() => MessageUtil.success('新增成功', () => {
-                        this.search();
-                        this.dialog.show = false;
-                    }))
-                    .catch(e => MessageUtil.error('新增失败', e));
-            } else {
-                // 修改
-                console.log(this.dialog.data)
-                seniorSearchHistoryService.update(this.dialog.data)
-                    .then(() => MessageUtil.success('修改成功', () => {
-                        this.search();
-                        this.dialog.show = false;
-                    }))
-                    .catch(e => MessageUtil.error('修改失败', e));
-            }
-        }
     }
 });
 </script>
 <style lang="less">
-@media (max-width: 1200px) {
-    .hm-history {
-        .hm-history-toolbar {
-            .hm-history-toolbar-name {
-                width: 100px !important;
-            }
-        }
-    }
-}
 
 .hm-history {
     position: absolute;
@@ -186,9 +120,6 @@ export default defineComponent({
     .hm-history-toolbar {
         display: flex;
         justify-content: space-between;
-        .hm-history-toolbar-name {
-            width: 200px;
-        }
     }
 
     .hm-history-body {
@@ -198,16 +129,6 @@ export default defineComponent({
         right: 0;
         bottom: 0;
 
-        .hm-history-params {
-            display: flex;
-
-            .hm-history-params-value {
-                width: 200px;
-                overflow: hidden;
-                white-space: nowrap; //不折行
-                text-overflow: ellipsis; //溢出显示省略号
-            }
-        }
     }
 }
 </style>

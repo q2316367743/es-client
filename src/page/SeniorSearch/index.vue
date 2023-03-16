@@ -1,24 +1,25 @@
 <template>
     <a-spin :loading="loading" tip="数据查询中">
         <div class="senior-search">
-            <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                      v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab"/>
-            <!-- 下半部分 -->
             <!-- 左面查询条件 -->
-            <a-split class="senior-main" min="42px" :max="0.9" :style="{ top: instance.showTab ? '40px' : '0' }"
+            <a-split class="senior-main" min="42px" :max="0.9"
                      default-size="400px">
                 <template #first>
-                    <div class="side">
-                        <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
-                                              @format-document="formatDocument" @clear-body="clearBody"
-                                              @select="(command) => view = command" @setting="settingDialog = true"
-                                              @export-data="exportData"/>
-                        <rest-client-editor ref="restClientEditor" v-model="current.body" class="editor"
-                                            @execute="execute"/>
+                    <div class="senior-search-side" :class="instance.showTab ? 'show-tab':''">
+                        <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
+                                  v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab"/>
+                        <div class="senior-search-editor">
+                            <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
+                                                  @format-document="formatDocument" @clear-body="clearBody"
+                                                  @select="(command) => view = command" @setting="settingDialog = true"
+                                                  @export-data="exportData"/>
+                            <rest-client-editor ref="restClientEditor" v-model="current" class="editor"
+                                                @execute="execute"/>
+                        </div>
                     </div>
                 </template>
                 <template #second>
-                    <senior-search-display :view="view" :data="current.result" />
+                    <senior-search-display :view="view" :data="result"/>
                 </template>
             </a-split>
         </div>
@@ -27,7 +28,7 @@
                  :footer="false">
             <senior-search-setting @close="settingDialog = false"/>
         </a-modal>
-        <senior-search-export-dialog v-model="exportDialog" :result="current.result"/>
+        <senior-search-export-dialog v-model="exportDialog" :result="result"/>
     </a-spin>
 </template>
 
@@ -90,16 +91,16 @@ export default defineComponent({
     },
     data: () => {
         return {
-            // 标签信息
-            header: seniorTabComponent.header,
-            // 展示数据
-            current: seniorTabComponent.body,
             // 查询map
             searchMap: seniorTabComponent.searchMap,
             // 当前显示的ID
             searchId: seniorTabComponent.searchId,
-            // 语法提示
-            suggestions: [],
+            // 标签信息
+            header: seniorTabComponent.header,
+            // 当前编辑器内容
+            current: '',
+            // 当前结果
+            result: {} as any,
             // 相关数据
             view: ViewTypeEnum.JSON,
             showTop: true,
@@ -121,12 +122,16 @@ export default defineComponent({
     watch: {
         link(newValue) {
             if (newValue === '') {
-                this.current.result = {};
+                this.result = {};
             }
         },
         searchId(newValue: number) {
-            seniorTabComponent.choose(newValue);
+            let seniorSearchItem = seniorTabComponent.choose(newValue);
+            this.current = seniorSearchItem.body;
         },
+        current(newValue: string) {
+            seniorTabComponent.sync(newValue);
+        }
     },
     mounted() {
         mitt.on(MessageEventEnum.PAGE_ACTIVE, (index) => {
@@ -140,10 +145,7 @@ export default defineComponent({
                     name: Optional.ofNullable(param.name).orElse(searchId.toString()),
                     relationId: Optional.ofNullable(param.id).orElse(0)
                 },
-                body: {
-                    body: param.body ? param.body : `${param.method} ${param.link}\r\n${param.params}`,
-                    result: {}
-                }
+                body: param.body ? param.body : `${param.method} ${param.link}\r\n${param.params}`
             } as SeniorSearchItem;
 
             // 显示标签页
@@ -158,7 +160,7 @@ export default defineComponent({
                     this.searchId = searchId;
                 } else {
                     // 当前标签页
-                    this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
+                    this.current += (this.current !== '' ? '\n\n' : '') + searchItem.body;
                 }
             } else {
                 // 头部
@@ -166,9 +168,9 @@ export default defineComponent({
                 this.header.relationId = searchItem.header.relationId;
                 // 隐藏标签页，插入到当前标签页
                 if (useSettingStore().getTabLoadMode === TabLoadModeEnum.APPEND) {
-                    this.current.body += (this.current.body !== '' ? '\n\n' : '') + searchItem.body.body;
+                    this.current += (this.current !== '' ? '\n\n' : '') + searchItem.body;
                 } else if (useSettingStore().getTabLoadMode === TabLoadModeEnum.COVER) {
-                    this.current.body = searchItem.body.body;
+                    this.current = searchItem.body;
                 } else {
                     MessageUtil.error("标签载入模式错误")
                 }
@@ -214,7 +216,7 @@ export default defineComponent({
             }
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
-                this.current.result = {};
+                this.result = {};
                 NotificationUtil.warning('新增文档，但没有参数', '警告');
                 return;
             }
@@ -224,9 +226,9 @@ export default defineComponent({
                 data: data,
                 hidden: true
             }).then((response) => {
-                this.current.result = response;
+                this.result = response;
             }).catch((e) => {
-                this.current.result = e.data
+                this.result = e.data
                 success = false
             }).finally(() => {
                 this.displayActive = 'result';
@@ -242,7 +244,7 @@ export default defineComponent({
         formatDocument() {
             try {
                 let restClientEditor = this.$refs.restClientEditor as any;
-                this.current.body = formatBuild(restClientEditor.getInstance());
+                this.current = formatBuild(restClientEditor.getInstance());
             } catch (e: any) {
                 MessageUtil.error('格式化失败', e);
             }
@@ -289,9 +291,11 @@ export default defineComponent({
         },
         clearBody() {
             seniorTabComponent.clear();
+            this.current = '';
+            this.result = {};
         },
         exportData() {
-            if (Object.keys(this.current.result).length === 0) {
+            if (Object.keys(this.result).length === 0) {
                 MessageUtil.error('请先执行查询');
                 return;
             }

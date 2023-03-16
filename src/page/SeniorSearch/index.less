@@ -19,20 +19,35 @@
 
     .senior-main {
         position: absolute;
-        top: 48px;
+        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
 
-        .side {
-            display: flex;
+        .senior-search-side{
             height: 100%;
-
-            .editor {
-                width: calc(100% - 32px);
+            .senior-search-tab {
+                display: none;
+            }
+            .senior-search-editor {
+                display: flex;
                 height: 100%;
+                .editor {
+                    width: calc(100% - 32px);
+                    height: 100%;
+                }
+            }
+            &.show-tab {
+                .senior-search-tab {
+                    display: block;
+                }
+                .senior-search-editor {
+                    margin-top: 8px;
+                    height: calc(100% - 48px)
+                }
             }
         }
+
 
     }
 
