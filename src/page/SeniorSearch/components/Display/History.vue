@@ -2,34 +2,56 @@
     <div class="hm-history">
         <div class="hm-history-toolbar">
             <a-input-search v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
-                            @search="search" style="width: 240px"/>
+                @search="search" style="width: 240px" />
         </div>
         <div class="hm-history-body">
-            <a-tree blockNode :data="nodeItems">
+            <a-tree :data="nodeItems" block-node show-line @drop="drop">
                 <template #title="nodeData">
                     <span @dblclick="load(nodeData.key, nodeData.draggable)">{{ nodeData.title }}</span>
+                </template>
+                <template #extra="nodeData">
+                    <a-button type="text" status="normal" :disabled="!nodeData.history"
+                        @click="updateById(nodeData.key)">修改</a-button>
+                    <a-popconfirm content="确认要删除此记录" @ok="removeById(nodeData.key)">
+                        <a-button type="text" status="danger" :disabled="!nodeData.history">删除</a-button>
+                    </a-popconfirm>
                 </template>
             </a-tree>
         </div>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {toDateString} from "xe-utils";
+import { defineComponent } from "vue";
+import { toDateString } from "xe-utils";
 
 // 工具类
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
-import {stringContain} from "@/utils/SearchUtil";
+import { stringContain } from "@/utils/SearchUtil";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import {seniorSearchHistoryService, useSeniorSearchEvent} from "@/global/BeanFactory";
+import { seniorSearchHistoryService, useSeniorSearchEvent } from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import {TreeNodeData} from "@arco-design/web-vue";
-import {mapState} from "pinia";
+import { TreeNodeData } from "@arco-design/web-vue";
+import { mapState } from "pinia";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
 import ArrayUtil from "@/utils/ArrayUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
+
+interface NodeData extends TreeNodeData {
+
+    /**
+     * 是否是历史
+     */
+    history: boolean;
+
+    /**
+     * 子节点
+     */
+    children?: NodeData[];
+
+}
 
 export default defineComponent({
     name: 'senior-search-history',
@@ -43,26 +65,36 @@ export default defineComponent({
         historyMap(): Map<number, SeniorSearchHistory> {
             return ArrayUtil.map(this.histories, 'id');
         },
-        nodeItems(): Array<TreeNodeData> {
-            let parentItemMap = new Map<number, TreeNodeData>();
+        nodeItems(): Array<NodeData> {
+            let parentItemMap = new Map<number, NodeData>();
+            parentItemMap.set(0, {
+                title: '未知链接',
+                key: new Date().getTime() - 1000,
+                draggable: true,
+                children: new Array<NodeData>(),
+                history: false
+            });
             for (let history of this.histories) {
                 if (parentItemMap.has(history.urlId || 0)) {
                     parentItemMap.get(history.urlId || 0)!.children!.push({
                         title: history.name,
                         key: history.id,
-                        draggable: true
+                        draggable: true,
+                        history: true
                     });
                 } else {
                     let url = this.urlMap.get(history.urlId || 0);
                     parentItemMap.set(history.urlId || 0, {
                         title: Optional.ofNullable(url).attr('name').orElse('未知链接'),
                         key: history.urlId || new Date().getTime(),
-                        draggable: false,
+                        draggable: true,
+                        history: false,
                         children: [{
                             title: history.name,
                             key: history.id,
-                            draggable: true
-                        }] as Array<TreeNodeData>
+                            draggable: true,
+                            history: true
+                        }] as Array<NodeData>
                     });
                 }
             }
@@ -105,11 +137,31 @@ export default defineComponent({
                 .then(() => MessageUtil.success('删除成功', this.search))
                 .catch(e => MessageUtil.error('删除失败', e));
         },
+        updateById(id: number) {
+            let history = this.historyMap.get(id);
+            if (history) {
+                MessageBoxUtil.prompt('请输入新的名称', '修改名称', {
+                    inputValue: history.name
+                }).then(value => {
+                    seniorSearchHistoryService.update({
+                        id,
+                        name: value,
+                        body: history?.body
+                    })
+                        .then(() => MessageUtil.success('更新成功', () => this.search()))
+                        .catch(e => MessageUtil.error('更新失败', e));
+                }).catch(() => console.debug('取消删除'));
+            } else {
+                MessageUtil.error('错误，未找到指定历史记录，请刷新历史记录后重试！');
+            }
+        },
+        drop(data: { e: DragEvent; dragNode: TreeNodeData; dropNode: TreeNodeData; dropPosition: number; }) {
+            console.log(data)
+        }
     }
 });
 </script>
 <style lang="less">
-
 .hm-history {
     position: absolute;
     top: 0;

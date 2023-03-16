@@ -2,43 +2,41 @@
     <a-spin :loading="loading" tip="数据查询中">
         <div class="senior-search">
             <!-- 左面查询条件 -->
-            <a-split class="senior-main" min="42px" :max="0.9"
-                     default-size="400px">
+            <a-split class="senior-main" min="42px" :max="0.9" default-size="400px">
                 <template #first>
-                    <div class="senior-search-side" :class="instance.showTab ? 'show-tab':''">
+                    <div class="senior-search-side" :class="instance.showTab ? 'show-tab' : ''">
                         <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                                  v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab"/>
+                            v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab" />
                         <div class="senior-search-editor">
                             <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
-                                                  @format-document="formatDocument" @clear-body="clearBody"
-                                                  @select="(command) => view = command" @setting="settingDialog = true"
-                                                  @export-data="exportData"/>
+                                @format-document="formatDocument" @clear-body="clearBody"
+                                @select="(command) => view = command" @setting="settingDialog = true"
+                                @export-data="exportData" />
                             <rest-client-editor ref="restClientEditor" v-model="current" class="editor"
-                                                @execute="execute"/>
+                                @execute="execute" />
                         </div>
                     </div>
                 </template>
                 <template #second>
-                    <senior-search-display :view="view" :data="result"/>
+                    <senior-search-display :view="view" :data="result" />
                 </template>
             </a-split>
         </div>
-        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body
-                 width="600px"
-                 :footer="false">
-            <senior-search-setting @close="settingDialog = false"/>
+        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body width="600px"
+            :footer="false">
+            <senior-search-setting @close="settingDialog = false" />
         </a-modal>
-        <senior-search-export-dialog v-model="exportDialog" :result="result"/>
+        <senior-search-export-dialog v-model="exportDialog" :result="result" />
     </a-spin>
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, defineComponent} from "vue";
-import {mapState} from "pinia";
+import { defineAsyncComponent, defineComponent } from "vue";
+import { mapState } from "pinia";
 import * as monaco from "monaco-editor";
 
 import './index.less';
-import {SeniorSearchItem} from './domain/SeniorSearchItem';
+import { SeniorSearchItem } from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 
@@ -74,7 +72,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
 
-import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
+import { Grammatical, grammaticalAnalysis } from "@/algorithm/grammaticalAnalysis";
 
 
 const seniorTabComponent = new SeniorTabComponent();
@@ -145,7 +143,7 @@ export default defineComponent({
                     name: Optional.ofNullable(param.name).orElse(searchId.toString()),
                     relationId: Optional.ofNullable(param.id).orElse(0)
                 },
-                body: param.body ? param.body : `${param.method} ${param.link}\r\n${param.params}`
+                body: param.body ? param.body : `${param.method || ''} ${param.link || ''}\r\n${param.params || ''}`
             } as SeniorSearchItem;
 
             // 显示标签页

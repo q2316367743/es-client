@@ -15,7 +15,6 @@ export default class SeniorTabComponent {
     searchHeader: Ref<Array<TabMenuItem>>;
     searchId: Ref<number>;
     header: Ref<TabMenuItem>;
-    body: Ref<string>;
 
     constructor() {
         let searchMap = new Map<number, SeniorSearchItem>();
@@ -32,7 +31,6 @@ export default class SeniorTabComponent {
         this.searchId = ref<number>(searchId);
         this.searchHeader = ref<Array<TabMenuItem>>([searchItem.header]);
         this.header = ref<TabMenuItem>(searchItem.header);
-        this.body = ref<string>(searchItem.body);
     }
 
     private _sync(): void {
@@ -41,7 +39,7 @@ export default class SeniorTabComponent {
             if (this.searchMap.value.size === 0) {
                 // 重新创建
                 searchItem = this.add();
-            }else {
+            } else {
                 // 指向第一个
                 this.searchId.value = this.searchMap.value.keys().next().value;
                 this._sync();
@@ -49,7 +47,6 @@ export default class SeniorTabComponent {
             }
         }
         this.header.value = searchItem.header;
-        this.body.value = searchItem.body;
         this.searchHeader.value = Array.from(this.searchMap.value.values()).map(e => e.header);
     }
 
@@ -57,7 +54,7 @@ export default class SeniorTabComponent {
         let searchItem = this.searchMap.value.get(this.searchId.value);
         if (searchItem) {
             searchItem.body = body;
-        }else {
+        } else {
             MessageUtil.warning('当前编辑器未正确关联标签页，切换标签页内容将会丢失！');
         }
     }
@@ -117,6 +114,11 @@ export default class SeniorTabComponent {
      * 将当前标签保存到历史
      */
     save(): void {
+        let searchItem = this.searchMap.value.get(this.searchId.value);
+        if (!searchItem) {
+            MessageUtil.warning('当前编辑器未正确关联标签页，切换标签页内容将会丢失！');
+            return;
+        }
         MessageBoxUtil.prompt('请输入记录名字', '新增记录', {
             confirmButtonText: '新增',
             cancelButtonText: '取消',
@@ -128,7 +130,7 @@ export default class SeniorTabComponent {
                 seniorSearchHistoryService.save({
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
                     name: value,
-                    body: this.body.value,
+                    body: searchItem?.body,
                 })
                     .then(id => {
                         // 发送消息
@@ -148,15 +150,20 @@ export default class SeniorTabComponent {
      * 更新当前链接
      */
     update(): void {
+        let searchItem = this.searchMap.value.get(this.searchId.value);
+        if (!searchItem) {
+            MessageUtil.warning('当前编辑器未正确关联标签页，切换标签页内容将会丢失！');
+            return;
+        }
         if (this.header.value.relationId) {
             seniorSearchHistoryService.update({
                 id: this.header.value.relationId,
                 name: this.header.value.name,
-                body: this.body.value,
+                body: searchItem.body,
             })
                 .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
                 .catch(e => MessageUtil.error('更新失败', e));
-        }else {
+        } else {
             this.save();
         }
     }
@@ -167,7 +174,6 @@ export default class SeniorTabComponent {
     clear() {
         this.header.value.relationId = undefined;
         this.header.value.name = '高级查询';
-        this.body.value = '';
     }
 
     /**

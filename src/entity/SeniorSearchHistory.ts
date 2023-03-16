@@ -29,6 +29,6 @@ export default interface SeniorSearchHistory extends Base{
     /**
      * 参数
      */
-    body: string;
+    body?: string;
 
 }
