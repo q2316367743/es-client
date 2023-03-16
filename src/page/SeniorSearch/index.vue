@@ -85,7 +85,7 @@ export default defineComponent({
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Setting.vue')),
         SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/SeniorSearch/components/ExportDialog.vue')),
-        SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display.vue')),
+        SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/index.vue')),
         TabMenu
     },
     data: () => {

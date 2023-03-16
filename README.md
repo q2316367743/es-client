@@ -104,6 +104,8 @@ yarn dev
 - 语法提示与高亮
 - 。。。
 
-## 鸣谢
+## 特别感谢JetBrains对开源项目支持
 
-感谢JetBrains提供的许可证使本项目能更好的开发下去
+<a href="https://www.jetbrains.com.cn/community/opensource/#support">
+  <img src="https://static.esion.xyz/cdn/static/JetBrains.png" align="left" height="100" width="100" alt="JetBrains" />
+</a>

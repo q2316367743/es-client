@@ -1,10 +1,10 @@
 <template>
     <div class="senior-search-data-view hljs">
         <div class="tabs">
-            <div class="tab fix" v-for="(item, index) in items" :class="itemActive === index ? 'active' : ''"
-                @click="itemActive = index">
+            <div class="tab fix" v-for="(item, index) in items" :class="itemActive === DataView ? 'active' : ''"
+                @click="itemActive = DataView">
                 <a-tooltip content="取消后将会关闭">
-                    <icon-subscribe @click.stop="fixDelete(index)" />
+                    <icon-subscribe @click.stop="fixDelete(DataView)" />
                 </a-tooltip>
                 <span class="ssd-v-title">结果{{ item.title }}</span>
             </div>
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="base-scroll" :class="instance.jsonWrap ? 'json-wrap' : ''">
-            <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
+            <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === DataView">
                 <a-scrollbar class="scrollbar"
                     :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="item.view === ViewTypeEnum.BASE">{{ item.pretty }}</pre>
@@ -179,8 +179,8 @@ export default defineComponent({
             this.items.push(item);
         },
         fixDelete(index: number) {
-            this.items.splice(index, 1);
-            if (index === this.itemActive) {
+            this.items.splice(DataView, 1);
+            if (DataView === this.itemActive) {
                 this.itemActive = -1;
             }
         }
