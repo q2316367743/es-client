@@ -202,7 +202,7 @@ export default defineComponent({
             this.loading = true;
             let now = new Date();
             let success = true;
-            let data = {} as any;
+            let data = undefined as any;
             if (request.params != '') {
                 try {
                     data = JSON.parse(request.params);
