@@ -98,7 +98,7 @@ export default defineComponent({
             // 当前编辑器内容
             current: '',
             // 当前结果
-            result: {} as any,
+            result: '',
             // 相关数据
             view: ViewTypeEnum.JSON,
             showTop: true,
@@ -120,7 +120,7 @@ export default defineComponent({
     watch: {
         link(newValue) {
             if (newValue === '') {
-                this.result = {};
+                this.result = "{}";
             }
         },
         searchId(newValue: number) {
@@ -214,15 +214,16 @@ export default defineComponent({
             }
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
-                this.result = {};
+                this.result = "{}";
                 NotificationUtil.warning('新增文档，但没有参数', '警告');
                 return;
             }
-            httpStrategyContext.getStrategy().es<any>({
+            httpStrategyContext.getStrategy().es<string>({
                 url: request.link,
                 method: request.method,
                 data: data,
-                hidden: true
+                hidden: true,
+                responseType: 'text'
             }).then((response) => {
                 this.result = response;
             }).catch((e) => {
@@ -290,7 +291,7 @@ export default defineComponent({
         clearBody() {
             seniorTabComponent.clear();
             this.current = '';
-            this.result = {};
+            this.result = "{}";
         },
         exportData() {
             if (Object.keys(this.result).length === 0) {

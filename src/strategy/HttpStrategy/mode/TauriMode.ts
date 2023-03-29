@@ -1,7 +1,7 @@
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
 // 引入tauri
-import { Body, fetch, HttpVerb, Response } from '@tauri-apps/api/http';
+import { Body, fetch, HttpVerb, Response, ResponseType } from '@tauri-apps/api/http';
 import Optional from "@/utils/Optional";
 import HttpStrategyError from "../HttpStrategyError";
 import {getUrl} from "@/strategy/HttpStrategy/HttpModeUtil";
@@ -13,12 +13,17 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
         if (config.timeout) {
             timeout = Math.round(config.timeout / 1000);
         }
+        // 默认JSON
+        let responseType = ResponseType.JSON;
+        if (config.responseType === 'text') {
+            responseType = ResponseType.Text;
+        }
         fetch<T>(url, {
             method: config.method?.toUpperCase() as HttpVerb,
             headers: config.headers,
             body: config.data ? Body.json(config.data) : undefined,
             timeout: timeout,
-            responseType: 1,
+            responseType,
             query: config.params
         }).then((response: Response<T>) => {
             if (response.data) {

@@ -29,7 +29,7 @@ export default defineComponent({
         SeniorSearchDataView: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/DataView.vue')),
     },
     props: {
-        data: Object,
+        data: String,
         view: Number
     },
     data: () => ({
