@@ -11,9 +11,44 @@
                             <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
                                 @format-document="formatDocument" @clear-body="clearBody"
                                 @select="(command) => view = command" @setting="settingDialog = true"
-                                @export-data="exportData" />
-                            <rest-client-editor ref="restClientEditor" v-model="current" class="editor"
-                                @execute="execute" />
+                                @export-data="exportData">
+                                <template #footer>
+                                    <a-tooltip content="请求" position="right">
+                                        <a-button :type="editor ? 'primary' : 'text'" status="normal"
+                                            @click="editor = true">
+                                            <template #icon>
+                                                <icon-list :size="18" />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <a-tooltip content="过滤" position="right">
+                                        <a-button :type="editor ? 'text' : 'primary'" status="normal"
+                                            @click="editor = false">
+                                            <template #icon>
+                                                <icon-bug :size="18" />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                </template>
+                            </senior-search-option>
+                            <rest-client-editor ref="restClientEditor" v-model="current" class="editor" @execute="execute"
+                                v-show="editor" />
+                            <div class="editor" v-show="!editor">
+                                <div class="js-option">
+                                    <a-switch v-model="IsEnableFilter">
+                                        <template #checked>
+                                            启用
+                                        </template>
+                                        <template #unchecked>
+                                            禁用
+                                        </template>
+                                    </a-switch>
+                                    <a-button type="primary" @click="execFilter">过滤</a-button>
+                                </div>
+                                <div class="js-editor-wrapper">
+                                    <javascript-editor v-model="filter" class="js-editor" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -73,15 +108,18 @@ import Optional from "@/utils/Optional";
 
 
 import { Grammatical, grammaticalAnalysis } from "@/algorithm/grammaticalAnalysis";
+import { jsonFormat } from "@/algorithm/jsonFormat";
 
 
 const seniorTabComponent = new SeniorTabComponent();
+let json = {} as any;
 
 export default defineComponent({
     name: 'SeniorSearch',
     components: {
         SeniorSearchOption: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Option.vue')),
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
+        JavascriptEditor: defineAsyncComponent(() => import('@/module/JsEditor/index.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Setting.vue')),
         SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/SeniorSearch/components/ExportDialog.vue')),
         SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/index.vue')),
@@ -101,8 +139,11 @@ export default defineComponent({
             result: '',
             // 真正展示的
             show: '',
+            IsEnableFilter: false,
+            filter: 'return $;',
             // 相关数据
             view: ViewTypeEnum.JSON,
+            editor: true,
             showTop: true,
             isDark,
             displayActive: 'result',
@@ -131,7 +172,13 @@ export default defineComponent({
             this.current = seniorSearchItem.body;
         },
         current(newValue: string) {
-            seniorTabComponent.sync(newValue);
+            seniorTabComponent.sync(newValue, this.IsEnableFilter, this.filter);
+        },
+        IsEnableFilter(newValue: boolean) {
+            seniorTabComponent.sync(this.current, newValue, this.filter);
+        },
+        filter(newValue: string) {
+            seniorTabComponent.sync(this.current, this.IsEnableFilter, newValue);
         }
     },
     mounted() {
@@ -230,7 +277,12 @@ export default defineComponent({
                 responseType: 'text'
             }).then((response) => {
                 this.result = response;
-                this.show = this.result;
+                try {
+                    json = JSON.parse(this.result);
+                } catch (e) {
+                    json = {};
+                }
+                this.execFilter();
             }).catch((e) => {
                 this.result = e.data;
                 this.show = this.result;
@@ -245,6 +297,25 @@ export default defineComponent({
                 });
                 this.loading = false;
             })
+        },
+        execFilter() {
+            if (this.IsEnableFilter) {
+                try {
+                    // 使用过滤
+                    let filterFunc = new Function('$', this.filter);
+                    let resultJson = filterFunc(json);
+                    if (typeof resultJson === 'object') {
+                        this.show = jsonFormat(resultJson);
+                    }else {
+                        this.show = `${resultJson}`;
+                    }
+                } catch (e) {
+                    MessageUtil.error("结果集不是JSON，无法过滤");
+                    this.show = this.result;
+                }
+            } else {
+                this.show = this.result;
+            }
         },
         formatDocument() {
             try {

@@ -26,7 +26,9 @@ export class SeniorSearchHistoryService {
             createTime: new Date(),
             updateTime: new Date(),
             name: record.name,
-            body: record.body
+            body: record.body,
+            isEnableFilter: record.isEnableFilter,
+            filter: record.filter
         });
     }
 

@@ -1,5 +1,5 @@
 <template>
-    <div ref="container" :id="id" class="es-rest-client-editor"></div>
+    <div ref="container" :id="id" class="es-javascript-editor"></div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -7,22 +7,43 @@ import {applicationLaunch, isDark} from "@/global/BeanFactory";
 
 import * as monaco from 'monaco-editor';
 
-import language from "@/module/RestClientEditor/language";
-import configuration from "@/module/RestClientEditor/configuration";
-import provider from "@/module/RestClientEditor/provider";
-import codelens from "@/module/RestClientEditor/codelens";
-import Optional from "@/utils/Optional";
 import useEditorSettingStore from "@/store/EditorSettingStore";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import {URL_REGEX} from "@/data/EsUrl";
-import foldingRange from "@/module/RestClientEditor/foldingRange";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
+// Add additional d.ts files to the JavaScript language service and change.
+// Also change the default compilation options.
+// The sample below shows how a class Facts is declared and introduced
+// to the system and how the compiler is told to use ES6 (target=2).
+
+// validation settings
+monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+	noSemanticValidation: true,
+	noSyntaxValidation: false,
+});
+
+// compiler options
+monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+	target: monaco.languages.typescript.ScriptTarget.ES2015,
+	allowNonTsExtensions: true,
+});
+
+// extra libraries
+var libSource = `/**
+ * es查询结果集
+ */
+declare var $;`;
+var libUri = "ts:es.d.ts";
+monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
+// When resolving definitions and references, the editor will try to use created models.
+// Creating a model for the library allows "peek definition/references" commands to work with the library.
+monaco.editor.createModel(libSource, "typescript", monaco.Uri.parse(libUri));
 
 export default defineComponent({
-    name: 'rest-client-editor',
+    name: 'javascript-editor',
     props: {
         modelValue: String
     },
@@ -30,7 +51,7 @@ export default defineComponent({
     data: () => ({
         content: '',
         isDark,
-        id: `rest-client-${new Date().getTime()}`,
+        id: `javascript-${new Date().getTime()}`,
         runColor: '#0d7d6c'
     }),
     watch: {
@@ -51,18 +72,11 @@ export default defineComponent({
     },
     mounted() {
 
-        // 注册语言服务器
-        monaco.languages.register({id: 'http'});
-        monaco.languages.setMonarchTokensProvider('http', language);
-        monaco.languages.setLanguageConfiguration('http', configuration);
-        monaco.languages.registerCompletionItemProvider('http', provider);
-        monaco.languages.registerFoldingRangeProvider('http', foldingRange)
-
         applicationLaunch.register(() => {
             const container = this.$refs.container as HTMLElement;
             instance = monaco.editor.create(container, {
                 value: this.modelValue,
-                language: 'http',
+                language: 'javascript',
                 automaticLayout: true,
                 theme: this.isDark as boolean ? 'vs-dark' : 'vs',
                 minimap: {
@@ -94,38 +108,6 @@ export default defineComponent({
                 }
                 return true;
             });
-
-            let commandId = instance.addCommand(0, (...args: any[]) => {
-                this.$emit('execute', args[1])
-            });
-
-            monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
-
-            instance.addCommand(monaco.KeyCode.F9,
-                () => {
-                    let value = instance.getValue();
-                    let row = Optional.ofNullable(instance.getPosition()).attr("lineNumber").orElse(1);
-                    let numbers = this.renderValue(value);
-                    console.log(value, row, numbers)
-                    if (numbers.length === 0) {
-                        return;
-                    }
-                    let fail = true;
-                    for (let i = 0; i < numbers.length; i++) {
-                        if (numbers[i] > row) {
-                            fail = false;
-                            let target = i - 1;
-                            if (target < 0) {
-                                target = 0;
-                            }
-                            console.log(target)
-                            this.$emit('execute', target);
-                        }
-                    }
-                    if (fail) {
-                        this.$emit('execute', numbers.length - 1);
-                    }
-                });
 
             return Promise.resolve();
         })

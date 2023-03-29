@@ -57,6 +57,7 @@ declare module '@vue/runtime-core' {
     ATooltip: typeof import('@arco-design/web-vue')['Tooltip']
     ATree: typeof import('@arco-design/web-vue')['Tree']
     ATrigger: typeof import('@arco-design/web-vue')['Trigger']
+    ATypographyParagraph: typeof import('@arco-design/web-vue')['TypographyParagraph']
     Bsd: typeof import('./src/components/License/Bsd.vue')['default']
     IndexMapping: typeof import('./src/components/IndexMapping/index.vue')['default']
     JsonDialog: typeof import('./src/components/JsonDialog.vue')['default']

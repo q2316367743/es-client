@@ -31,4 +31,14 @@ export default interface SeniorSearchHistory extends Base{
      */
     body?: string;
 
+    /**
+     * 是否启用过滤器
+     */
+    isEnableFilter?: boolean;
+
+    /**
+     * 过滤器
+     */
+    filter?: string;
+
 }

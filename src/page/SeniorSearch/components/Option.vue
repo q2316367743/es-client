@@ -1,76 +1,79 @@
 <template>
     <div class="option">
-        <a-tooltip
-            :content="relationId ? $t('common.operation.update') : $t('common.operation.save')"
-            position="right">
-            <a-button type="text" :status="relationId ? 'danger' : 'success'" @click="save">
-                <template #icon>
-                    <icon-save :size="18"/>
+        <div>
+            <a-tooltip :content="relationId ? $t('common.operation.update') : $t('common.operation.save')" position="right">
+                <a-button type="text" :status="relationId ? 'danger' : 'success'" @click="save">
+                    <template #icon>
+                        <icon-save :size="18" />
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip :content="$t('common.operation.format')" position="right">
+                <a-button type="text" status="normal" @click="formatDocument">
+                    <template #icon>
+                        <icon-code />
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip content="清空" position="right">
+                <a-button type="text" status="normal" @click="clearBody">
+                    <template #icon>
+                        <format-icon />
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-dropdown position="bl" @select="select">
+                <a-button type="text" status="normal">
+                    <template #icon>
+                        <icon-code :size="18" v-if="view === ViewTypeEnum.BASE" />
+                        <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON" />
+                        <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE" />
+                        <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE" />
+                    </template>
+                </a-button>
+                <template #content>
+                    <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
+                    <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
+                    <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
+                    <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
                 </template>
-            </a-button>
-        </a-tooltip>
-        <a-tooltip :content="$t('common.operation.format')" position="right">
-            <a-button type="text" status="normal" @click="formatDocument">
-                <template #icon>
-                    <icon-code/>
-                </template>
-            </a-button>
-        </a-tooltip>
-        <a-tooltip content="清空" position="right">
-            <a-button type="text" status="normal" @click="clearBody">
-                <template #icon>
-                    <format-icon/>
-                </template>
-            </a-button>
-        </a-tooltip>
-        <a-dropdown position="bl" @select="select">
-            <a-button type="text" status="normal">
-                <template #icon>
-                    <icon-code :size="18" v-if="view === ViewTypeEnum.BASE"/>
-                    <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON"/>
-                    <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE"/>
-                    <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE"/>
-                </template>
-            </a-button>
-            <template #content>
-                <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
-                <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
-                <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
-                <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
-            </template>
-        </a-dropdown>
-        <a-tooltip content="编辑器设置" position="right">
-            <a-button type="text" status="normal" @click="setting">
-                <template #icon>
-                    <icon-settings :size="18"/>
-                </template>
-            </a-button>
-        </a-tooltip>
-        <a-tooltip content="导出" position="right">
-            <a-button type="text" status="warning" @click="exportData">
-                <template #icon>
-                    <icon-launch :size="18"/>
-                </template>
-            </a-button>
-        </a-tooltip>
-        <a-tooltip content="帮助" position="right">
-            <a-button type="text" status="normal" @click="openHelp">
-                <template #icon>
-                    <icon-question-circle :size="18"/>
-                </template>
-            </a-button>
-        </a-tooltip>
+            </a-dropdown>
+            <a-tooltip content="编辑器设置" position="right">
+                <a-button type="text" status="normal" @click="setting">
+                    <template #icon>
+                        <icon-settings :size="18" />
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip content="导出" position="right">
+                <a-button type="text" status="warning" @click="exportData">
+                    <template #icon>
+                        <icon-launch :size="18" />
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip content="帮助" position="right">
+                <a-button type="text" status="normal" @click="openHelp">
+                    <template #icon>
+                        <icon-question-circle :size="18" />
+                    </template>
+                </a-button>
+            </a-tooltip>
+        </div>
+        <div>
+            <slot name="footer" />
+        </div>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import {nativeStrategyContext} from "@/global/BeanFactory";
+import { nativeStrategyContext } from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'senior-search-option',
-    components: {FormatIcon},
+    components: { FormatIcon },
     emits: ['save', 'formatDocument', 'clearBody', 'select', 'setting', 'exportData'],
     props: {
         relationId: Number,
@@ -106,10 +109,12 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped lang="less">
+<style lang="less">
 .senior-search {
     .option {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         width: 32px;
 
         .arco-btn {

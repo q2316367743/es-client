@@ -24,23 +24,62 @@
         right: 0;
         bottom: 0;
 
-        .senior-search-side{
+        .senior-search-side {
             height: 100%;
+
             .senior-search-tab {
                 display: none;
             }
+
             .senior-search-editor {
                 display: flex;
                 height: 100%;
+
                 .editor {
                     width: calc(100% - 32px);
                     height: 100%;
+                    position: relative;
+
+                    .js-option {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        right: 0;
+                        height: 40px;
+                        padding-left: 64px;
+                        display: flex;
+                        justify-content: space-between;
+                        .arco-switch {
+                            margin: 8px;
+                        }
+                        .arco-btn {
+                            margin: 4px 8px;
+                        }
+                    }
+
+                    .js-editor-wrapper {
+                        position: absolute;
+                        top: 40px;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+
+                        .js-editor {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                        }
+                    }
                 }
             }
+
             &.show-tab {
                 .senior-search-tab {
                     display: block;
                 }
+
                 .senior-search-editor {
                     margin-top: 8px;
                     height: calc(100% - 48px)
@@ -58,6 +97,7 @@
         margin: 0 15px;
         position: relative;
         overflow: hidden;
+
         .senior-display-content {
             position: absolute;
             top: 48px;

@@ -1,8 +1,8 @@
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 import store from "@/store";
 import App from './App.vue';
 import i18n from '@/i18n';
-import {applicationLaunch} from "@/global/BeanFactory";
+import { applicationLaunch } from "@/global/BeanFactory";
 
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
@@ -26,9 +26,23 @@ if (window.utools) {
     });
 }
 
+// @ts-ignore
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+// @ts-ignore
+import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+// @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
+self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
+    getWorker(_: any, value: string) {
+        if (value === 'javascript') {
+            return new TsWorker();
+        }
+        return new EditorWorker(); // 基础功能文件， 提供了所有语言通用功能 无论使用什么语言，monaco都会去加载他。
+    }
+};
+
 window.addEventListener('message', event => {
-	const message = event.data;
-    if(message['type'] === 'url-open') {
+    const message = event.data;
+    if (message['type'] === 'url-open') {
         sessionStorage.setItem('action', message['content']);
     }
 });

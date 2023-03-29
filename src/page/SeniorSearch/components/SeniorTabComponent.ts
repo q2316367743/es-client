@@ -50,10 +50,12 @@ export default class SeniorTabComponent {
         this.searchHeader.value = Array.from(this.searchMap.value.values()).map(e => e.header);
     }
 
-    sync(body: string) {
+    sync(body: string, isEnableFilter: boolean, filter: string) {
         let searchItem = this.searchMap.value.get(this.searchId.value);
         if (searchItem) {
             searchItem.body = body;
+            searchItem.isEnableFilter = isEnableFilter;
+            searchItem.filter = filter;
         } else {
             MessageUtil.warning('当前编辑器未正确关联标签页，切换标签页内容将会丢失！');
         }
@@ -131,6 +133,8 @@ export default class SeniorTabComponent {
                     urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
                     name: value,
                     body: searchItem?.body,
+                    isEnableFilter: searchItem?.isEnableFilter,
+                    filter: searchItem?.filter,
                 })
                     .then(id => {
                         // 发送消息
@@ -160,6 +164,8 @@ export default class SeniorTabComponent {
                 id: this.header.value.relationId,
                 name: this.header.value.name,
                 body: searchItem.body,
+                isEnableFilter: searchItem.isEnableFilter,
+                filter: searchItem.filter,
             })
                 .then(() => MessageUtil.success('更新成功', () => emitter.emit(MessageEventEnum.SENIOR_HISTORY_UPDATE)))
                 .catch(e => MessageUtil.error('更新失败', e));
