@@ -50,7 +50,8 @@
         </div>
         <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy">复制
         </a-button>
-        <a-back-top target-container=".senior-search-data-view .arco-scrollbar-container" />
+        <a-back-top target-container=".json-scroll .arco-scrollbar-container" v-show="itemActive === -1"/>
+        <a-back-top target-container=".fix-scroll .arco-scrollbar-container" v-show="itemActive !== -1"/>
     </div>
 </template>
 <script lang="ts">
@@ -291,6 +292,24 @@ export default defineComponent({
             left: 0;
             right: 0;
             bottom: 0;
+
+            .arco-scrollbar {
+                position: absolute;
+                top: 4px;
+                left: 6px;
+                right: 6px;
+                bottom: 4px;
+
+                .scrollbar {
+                    overflow: auto;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+
+                }
+            }
         }
 
         .current-scroll {

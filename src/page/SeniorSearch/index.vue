@@ -18,7 +18,7 @@
                     </div>
                 </template>
                 <template #second>
-                    <senior-search-display :view="view" :data="result" />
+                    <senior-search-display :view="view" :data="show" />
                 </template>
             </a-split>
         </div>
@@ -99,6 +99,8 @@ export default defineComponent({
             current: '',
             // 当前结果
             result: '',
+            // 真正展示的
+            show: '',
             // 相关数据
             view: ViewTypeEnum.JSON,
             showTop: true,
@@ -121,6 +123,7 @@ export default defineComponent({
         link(newValue) {
             if (newValue === '') {
                 this.result = "{}";
+                this.show = this.result;
             }
         },
         searchId(newValue: number) {
@@ -215,6 +218,7 @@ export default defineComponent({
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
                 this.result = "{}";
+                this.show = "{}"
                 NotificationUtil.warning('新增文档，但没有参数', '警告');
                 return;
             }
@@ -226,8 +230,10 @@ export default defineComponent({
                 responseType: 'text'
             }).then((response) => {
                 this.result = response;
+                this.show = this.result;
             }).catch((e) => {
-                this.result = e.data
+                this.result = e.data;
+                this.show = this.result;
                 success = false
             }).finally(() => {
                 this.displayActive = 'result';
@@ -292,9 +298,10 @@ export default defineComponent({
             seniorTabComponent.clear();
             this.current = '';
             this.result = "{}";
+            this.show = this.result;
         },
         exportData() {
-            if (Object.keys(this.result).length === 0) {
+            if (this.result === '' || this.result === '{}') {
                 MessageUtil.error('请先执行查询');
                 return;
             }

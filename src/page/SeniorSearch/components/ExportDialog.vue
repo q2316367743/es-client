@@ -1,9 +1,8 @@
 <template>
-    <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false"
-             draggable>
+    <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false" draggable>
         <a-form :model="instance" layout="vertical">
             <a-form-item label=文件名>
-                <a-input v-model="instance.name"/>
+                <a-input v-model="instance.name" />
             </a-form-item>
             <a-form-item label="文件类型">
                 <a-select v-model="instance.type">
@@ -18,7 +17,7 @@
                 </a-select>
             </a-form-item>
             <a-form-item label="分隔符" v-if="instance.type === ExportType.TXT">
-                <a-input v-model="instance.separator"/>
+                <a-input v-model="instance.separator" />
             </a-form-item>
             <a-form-item label="导出范围">
                 <a-select v-model="instance.scope">
@@ -28,7 +27,7 @@
             <a-form-item label="来源">
                 <a-select v-model="instance.source">
                     <a-option :value="ExportSource.ALL"
-                              :disabled="![ExportType.JSON, ExportType.YML, ExportType.XML].includes(instance.type)">全部
+                        :disabled="![ExportType.JSON, ExportType.YML, ExportType.XML].includes(instance.type)">全部
                     </a-option>
                     <a-option :value="ExportSource.HIT">只导出hits</a-option>
                     <a-option :value="ExportSource.SOURCE">只导出_source内容</a-option>
@@ -45,7 +44,7 @@
     </a-modal>
 </template>
 <script lang="ts">
-import {exportData} from "@/components/ExportComponent";
+import { exportData } from "@/components/ExportComponent";
 import {
     ExportConfig,
     ExportScope,
@@ -55,17 +54,27 @@ import {
 } from "@/components/ExportComponent/domain";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
     name: 'senior-search-export-dialog',
     emits: ['update:modelValue'],
     props: {
         result: {
-            type: Object as PropType<any>,
+            type: String,
             required: true
         },
         modelValue: Boolean
+    },
+    computed: {
+        json() {
+            try {
+                return JSON.parse(this.result);
+            } catch (e) {
+                console.error(e);
+                return {};
+            }
+        }
     },
     data: () => ({
         visible: false,
@@ -121,7 +130,7 @@ export default defineComponent({
         execute() {
             try {
                 useLoadingStore().start('开始导出');
-                exportData(this.instance, this.result);
+                exportData(this.instance, this.json);
                 this.visible = false;
             } catch (e) {
                 MessageUtil.error('导出失败', e);
