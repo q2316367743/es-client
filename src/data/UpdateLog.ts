@@ -22,7 +22,19 @@ export default [
             content: 'web版增加pwa'
         }, {
             label: LogItemEnum.OPTIMIZATION,
-            content: 'JSON视图可以换行'
+            content: '高级查询不会默认增加请求体',
+            txc: 'https://support.qq.com/products/489458/post/167955607788497292/'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '更换高级查询格式化算法，以解决long精度丢失问题',
+            txc: 'https://support.qq.com/products/489458/post/167963038032084087/'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: 'JSON视图可以换行',
+            gitee: {
+                title: '高级搜索能否添加自动换行',
+                content: 'https://gitee.com/qiaoshengda/es-client/issues/I6NAW6'
+            }
         }, {
             label: LogItemEnum.REPAIR,
             content: '基础查询切换索引重置分页'
