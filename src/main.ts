@@ -29,12 +29,12 @@ if (window.utools) {
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 // @ts-ignore
-import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 // @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
 self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
     getWorker(_: any, value: string) {
-        if (value === 'javascript') {
-            return new TsWorker();
+        if (['typescript', 'javascript'].includes(value)) {
+            return new tsWorker()
         }
         return new EditorWorker(); // 基础功能文件， 提供了所有语言通用功能 无论使用什么语言，monaco都会去加载他。
     }

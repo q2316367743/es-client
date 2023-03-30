@@ -35,7 +35,7 @@
                                 v-show="editor" />
                             <div class="editor" v-show="!editor">
                                 <div class="js-option">
-                                    <a-switch v-model="IsEnableFilter">
+                                    <a-switch v-model="isEnableFilter">
                                         <template #checked>
                                             启用
                                         </template>
@@ -139,7 +139,7 @@ export default defineComponent({
             result: '',
             // 真正展示的
             show: '',
-            IsEnableFilter: false,
+            isEnableFilter: false,
             filter: 'return $;',
             // 相关数据
             view: ViewTypeEnum.JSON,
@@ -172,13 +172,13 @@ export default defineComponent({
             this.current = seniorSearchItem.body;
         },
         current(newValue: string) {
-            seniorTabComponent.sync(newValue, this.IsEnableFilter, this.filter);
+            seniorTabComponent.sync(newValue, this.isEnableFilter, this.filter);
         },
-        IsEnableFilter(newValue: boolean) {
+        isEnableFilter(newValue: boolean) {
             seniorTabComponent.sync(this.current, newValue, this.filter);
         },
         filter(newValue: string) {
-            seniorTabComponent.sync(this.current, this.IsEnableFilter, newValue);
+            seniorTabComponent.sync(this.current, this.isEnableFilter, newValue);
         }
     },
     mounted() {
@@ -223,12 +223,12 @@ export default defineComponent({
                     MessageUtil.error("标签载入模式错误")
                 }
             }
-
-
         });
 
         applicationLaunch.register(() => {
             this.view = useSettingStore().getDefaultViewer;
+            // 是否启用过滤
+            this.isEnableFilter = useSettingStore().getSeniorFilter;
             return Promise.resolve();
         });
 
@@ -299,7 +299,7 @@ export default defineComponent({
             })
         },
         execFilter() {
-            if (this.IsEnableFilter) {
+            if (this.isEnableFilter) {
                 try {
                     // 使用过滤
                     let filterFunc = new Function('$', this.filter);
@@ -370,6 +370,7 @@ export default defineComponent({
             this.current = '';
             this.result = "{}";
             this.show = this.result;
+            this.filter = "return $;"
         },
         exportData() {
             if (this.result === '' || this.result === '{}') {

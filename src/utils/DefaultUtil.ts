@@ -41,7 +41,8 @@ export default {
 
             // 其他设置
             autoFullScreen: false,
-            lastUrl: false
+            lastUrl: false,
+            seniorFilter: false
         };
     },
     getDefaultEditorSettingValue(): EditorSetting {

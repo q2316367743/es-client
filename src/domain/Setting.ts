@@ -121,4 +121,9 @@ export default interface Setting {
      */
     lastUrl: boolean;
 
+    /**
+     * 高级查询默认过滤
+     */
+    seniorFilter: boolean;
+
 }

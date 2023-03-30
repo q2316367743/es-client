@@ -40,7 +40,8 @@ const useSettingStore = defineStore('setting', {
         getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.instance.tabCloseMode).orElse(TabCloseModeEnum.ALERT),
         getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.instance.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),
         getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false),
-        getJsonWarp: (state): boolean => Optional.ofNullable(state.instance.jsonWrap).orElse(false)
+        getJsonWarp: (state): boolean => Optional.ofNullable(state.instance.jsonWrap).orElse(false),
+        getSeniorFilter: (state): boolean => Optional.ofNullable(state.instance.seniorFilter).orElse(false)
     },
     actions: {
         async init() {

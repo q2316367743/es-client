@@ -173,6 +173,12 @@
                         <template #unchecked>忽略</template>
                     </a-switch>
                 </a-form-item>
+                <a-form-item label="高级查询是否默认启用过滤">
+                    <a-switch v-model="instance.seniorFilter" :checked-value="true" :unchecked-value="false" type="round">
+                        <template #checked>{{ $t('common.operation.open') }}</template>
+                        <template #unchecked>{{ $t('common.operation.close') }}</template>
+                    </a-switch>
+                </a-form-item>
                 <a-form-item label="备份">
                     <a-button type="primary" @click="backup">下载</a-button>
                 </a-form-item>

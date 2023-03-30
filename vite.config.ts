@@ -52,7 +52,7 @@ export default defineConfig({
         }
     },
     plugins: [
-        vue(), 
+        vue(),
         visualizer({ open: true }),
         AutoImport({
             resolvers: [ArcoResolver()],
@@ -80,5 +80,12 @@ export default defineConfig({
     base: './',
     build: {
         outDir: outDir()
-    }
+    },
+    // 强制预构建插件包
+    optimizeDeps: {
+        include: [
+            `monaco-editor/esm/vs/language/typescript/ts.worker`,
+            `monaco-editor/esm/vs/editor/editor.worker`
+        ],
+    },
 })
