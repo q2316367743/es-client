@@ -53,6 +53,25 @@
                         新增索引
                     </a-button>
                 </a-form-item>
+                <a-form-item>
+                    <template #label>
+                        <span>显示指定索引</span>
+                        <a-tooltip content="支持正则表达式" placement="top" effect="light">
+                            <icon-question-circle style="margin-left: 5px;" />
+                        </a-tooltip>
+                    </template>
+                    <a-tag v-for="index in instance.homeIncludeIndices" :key="index" closable color="blue"
+                        :disable-transitions="false" @close="removeHomeIncludeIndex(index)" class="home-exclude-index">
+                        {{ index }}
+                    </a-tag>
+                    <a-input v-if="homeIncludeIndicesConfig.input" ref="homeIncludeIndexInput"
+                        v-model="homeIncludeIndicesConfig.value" size="small" @keyup.enter="addHomeIncludeIndex"
+                        @blur="addHomeIncludeIndex" style="width: 72px;" class="home-exclude-item" />
+                    <a-button type="primary" v-else size="small" @click="addHomeIncludeIndexClick"
+                        class="home-exclude-item">
+                        新增索引
+                    </a-button>
+                </a-form-item>
             </a-collapse-item>
             <!-- 时间设置 -->
             <a-collapse-item :header="$t('setting.base.time.title')" key="4">
@@ -228,6 +247,10 @@ export default defineComponent({
             input: false,
             value: ''
         },
+        homeIncludeIndicesConfig: {
+            input: false,
+            value: ''
+        },
         actives: [''],
         LayoutModeEnum,
         TabCloseModeEnum,
@@ -280,6 +303,28 @@ export default defineComponent({
             if (this.homeExcludeIndicesConfig.value !== '') {
                 useSettingStore().addHomeExcludeIndex(this.homeExcludeIndicesConfig.value);
                 this.homeExcludeIndicesConfig = {
+                    input: false,
+                    value: ''
+                }
+                emitter.emit(MessageEventEnum.URL_REFRESH);
+            }
+        },
+        removeHomeIncludeIndex(index: string) {
+            useSettingStore().removeHomeIncludeIndex(index);
+            emitter.emit(MessageEventEnum.URL_REFRESH);
+        },
+        addHomeIncludeIndexClick() {
+            this.homeIncludeIndicesConfig.input = true;
+            this.$nextTick(() => {
+                let homeIncludeIndexInput = this.$refs['homeIncludeIndexInput'] as HTMLInputElement;
+                homeIncludeIndexInput.focus()
+            })
+        },
+        addHomeIncludeIndex() {
+            this.homeIncludeIndicesConfig.input = false;
+            if (this.homeIncludeIndicesConfig.value !== '') {
+                useSettingStore().addHomeIncludeIndex(this.homeIncludeIndicesConfig.value);
+                this.homeIncludeIndicesConfig = {
                     input: false,
                     value: ''
                 }

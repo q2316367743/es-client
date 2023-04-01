@@ -50,6 +50,11 @@ export default interface Setting {
      */
     homeExcludeIndices: Array<string>;
 
+    /**
+     * 概览 => 搜索 => 显示的索引
+     */
+    homeIncludeIndices: Array<string>;
+
     /*--------------------------------- 标签栏设置 ---------------------------------*/
 
     /**
