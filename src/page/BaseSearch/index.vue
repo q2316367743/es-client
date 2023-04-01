@@ -3,7 +3,7 @@
         <div class="base-search">
             <!-- 标签页 -->
             <div class="base-search-tab" v-if="instance.showTab">
-                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"/>
+                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs" />
             </div>
             <!-- 主要显示区域 -->
             <div class="base-search-main" :class="instance.showTab ? '' : 'full-screen'">
@@ -11,18 +11,18 @@
                 <div class="base-option">
                     <div class="left">
                         <div class="base-extra-button" :class="extra ? 'open' : ''" @click="extra = !extra">
-                            <icon-right/>
+                            <icon-right />
                         </div>
                         <!-- 索引选择 -->
                         <a-select v-model="current.index" style="width: 260px;" allow-search allow-clear
-                                  :placeholder="$t('baseSearch.placeholder.selectIndex')">
+                            :placeholder="$t('baseSearch.placeholder.selectIndex')">
                             <a-option v-for="index in indices" :key="index.label" :label="index.label"
-                                      :value="index.value"/>
+                                :value="index.value" />
                         </a-select>
                         <!-- 搜索 -->
                         <a-button type="primary" status="success" @click="search" :disabled="current.index === ''">{{
-                                $t('common.operation.search')
-                            }}
+                            $t('common.operation.search')
+                        }}
                         </a-button>
                         <!-- 历史 -->
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
@@ -30,10 +30,10 @@
                     </div>
                     <div class="right">
                         <a-select v-model="view" style="margin-left: 8px;width: 140px;">
-                            <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
-                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
-                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
-                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
+                            <a-option label="基础视图" :value="ViewTypeEnum.BASE" />
+                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON" />
+                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE" />
+                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE" />
                         </a-select>
                     </div>
                 </div>
@@ -45,13 +45,13 @@
                         <!-- 标签编辑 -->
                         <a-button-group>
                             <a-button type="outline" :status="header.relationId ? 'danger' : 'success'"
-                                      @click="optionTab('rename')">
+                                @click="optionTab('rename')">
                                 {{ header.name }}
                             </a-button>
                             <a-dropdown @select="optionTab">
                                 <a-button type="outline">
                                     <template #icon>
-                                        <icon-down/>
+                                        <icon-down />
                                     </template>
                                 </a-button>
                                 <template #content>
@@ -77,30 +77,30 @@
                     <!-- 查询条件 -->
                     <div class="base-condition" ref="baseCondition">
                         <a-form :model="current" layout="vertical" label-width="80px"
-                                style="overflow-x: auto;overflow-y: hidden;">
+                            style="overflow-x: auto;overflow-y: hidden;">
                             <!-- 条件 -->
                             <a-form-item :label="$t('baseSearch.form.condition')">
-                                <field-condition-container v-model="current.conditions" :fields="fields"/>
+                                <field-condition-container v-model="current.conditions" :fields="fields" />
                             </a-form-item>
                             <!-- 排序 -->
                             <a-form-item :label="$t('baseSearch.form.order')">
-                                <field-order-container v-model="current.orders" :fields="fields"/>
+                                <field-order-container v-model="current.orders" :fields="fields" />
                             </a-form-item>
                             <div class="base-condition-pagination">
                                 <a-pagination :total="current.total" v-model:current="current.page"
-                                              :page-size="current.size" show-total/>
-                                <a-input-number v-model="current.size" style="width: 70px"/>
+                                    :page-size="current.size" show-total />
+                                <a-input-number v-model="current.size" style="width: 70px" />
                             </div>
                         </a-form>
                     </div>
                     <!-- 查询结果 -->
                     <div class="base-content hljs" ref="baseContent">
                         <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result"
-                                               :index="current.index"/>
+                            :index="current.index" />
                     </div>
-                    <a-back-top target-container=".base-display"/>
+                    <a-back-top target-container=".base-display" />
                 </div>
-                <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
+                <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
                 <div class="base-search-condition-sentence" :style="`top: ${extra ? '82' : '42'}px`">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
@@ -114,42 +114,42 @@
                 </div>
             </div>
             <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                     render-to-body class="es-dialog" :mask-closable="false">
-                <json-view :data="condition.data"/>
+                render-to-body class="es-dialog" :mask-closable="false">
+                <json-view :data="condition.data" />
             </a-modal>
-            <bsh-manage v-model="historyDialog"/>
+            <bsh-manage v-model="historyDialog" />
             <a-modal title="导出" v-model:visible="download.dialog" width="600px" render-to-body unmount-on-close
-                     :mask-closable="false" draggable ok-text="导出" @ok="clickDownload">
+                :mask-closable="false" draggable ok-text="导出" @ok="clickDownload">
                 <a-form :model="download" layout="vertical">
                     <a-form-item label="文件名">
-                        <a-input v-model="download.name"/>
+                        <a-input v-model="download.name" />
                     </a-form-item>
                     <a-form-item label="导出数量">
                         <a-select v-model="download.count">
-                            <a-option label="当前页面" :value="1"/>
-                            <a-option label="指定范围" :value="2"/>
-                            <a-option label="全部" :value="3"/>
+                            <a-option label="当前页面" :value="1" />
+                            <a-option label="指定范围" :value="2" />
+                            <a-option label="全部" :value="3" />
                         </a-select>
                     </a-form-item>
                     <a-form-item label="范围" v-if="download.count === 2">
-                        <a-input-number v-model="download.customStart" placeholder="从0开始"/>
+                        <a-input-number v-model="download.customStart" placeholder="从0开始" />
                         <span>-</span>
-                        <a-input-number v-model="download.customEnd" placeholder="-1代表不限制"/>
+                        <a-input-number v-model="download.customEnd" placeholder="-1代表不限制" />
                     </a-form-item>
                     <a-form-item label="导出内容类型">
                         <a-select v-model="download.content">
-                            <a-option label="原始结果集" :value="1"/>
-                            <a-option label="只导出_source" :value="2"/>
+                            <a-option label="原始结果集" :value="1" />
+                            <a-option label="只导出_source" :value="2" />
                         </a-select>
                     </a-form-item>
                     <a-form-item>
                         <template #label>
                             每次分页查询数量
                             <a-tooltip content="数量太大可能造成浏览器卡顿" placement="top" effect="light">
-                                <icon-question-circle style="margin-left: 5px;"/>
+                                <icon-question-circle style="margin-left: 5px;" />
                             </a-tooltip>
                         </template>
-                        <a-input-number v-model="download.size" :disabled="download.count === 1"/>
+                        <a-input-number v-model="download.size" :disabled="download.count === 1" />
                     </a-form-item>
                 </a-form>
             </a-modal>
@@ -158,9 +158,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, toRaw} from "vue";
-import {mapState} from "pinia";
-import {SelectOptionData} from "@arco-design/web-vue";
+import { defineComponent, toRaw } from "vue";
+import { mapState } from "pinia";
+import { SelectOptionData } from "@arco-design/web-vue";
 
 // 自定义组件
 import TabMenu from "@/components/TabMenu/index.vue";
@@ -187,7 +187,7 @@ import '@/page/BaseSearch/index.less';
 import QueryConditionBuild from '@/page/BaseSearch/components/QueryConditionBuild';
 import exportBuild from "@/page/BaseSearch/components/ExportBuild";
 
-import {BaseSearchItem} from "@/page/BaseSearch/domain/BaseSearchItem";
+import { BaseSearchItem } from "@/page/BaseSearch/domain/BaseSearchItem";
 import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
 
 import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
@@ -298,20 +298,20 @@ export default defineComponent({
                 let names = new Set<string>();
                 let indices = state.indices;
                 indices.forEach(e => {
-                    if (!names.has(e.name)) {
-                        options.push({
-                            label: e.name,
-                            value: e.name,
-                            index: e.name
-                        });
-                    }
+                    // 索引
+                    options.push({
+                        label: e.name,
+                        value: e.name,
+                        index: e.name
+                    });
+                    // 别名
                     e.alias.forEach(a => {
                         if (!names.has(a)) {
                             options.push({
                                 label: a,
-                                value: a,
-                                index: e.name
+                                value: a
                             })
+                            names.add(a);
                         }
                     })
                 });
