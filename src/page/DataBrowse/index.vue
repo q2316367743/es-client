@@ -6,11 +6,11 @@
             <div class="left">
                 <page-help :total="total" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)" />
                 <div class="sep"></div>
-                <db-simple-item :disable="!index" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
+                <db-simple-item :disable="type === ''" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
                     <icon-refresh />
                 </db-simple-item>
                 <div class="sep"></div>
-                <db-simple-item :disable="!index || type !== 'index'" :tip="$t('common.operation.add')" @click="recordAdd">
+                <db-simple-item :disable="type !== 'index'" :tip="$t('common.operation.add')" @click="recordAdd">
                     <icon-plus />
                 </db-simple-item>
                 <db-simple-item :disable="selectedKeys.length === 0 || type !== 'index'" :tip="$t('common.operation.delete')"
@@ -31,15 +31,15 @@
                     <icon-printer />
                 </db-simple-item>
                 <!-- 索引结构 -->
-                <db-simple-item :disable="!index" tip="索引结构" @click="openMappingDrawer">
+                <db-simple-item :disable="type !== 'index'" tip="索引结构" @click="openMappingDrawer">
                     <icon-nav />
                 </db-simple-item>
                 <!-- 跳转到基础查询 -->
-                <db-simple-item :disable="!index" tip="跳转到 基础查询" @click="jumpToBaseSearch">
+                <db-simple-item :disable="type === ''" tip="跳转到 基础查询" @click="jumpToBaseSearch">
                     <icon-search />
                 </db-simple-item>
                 <!-- 跳转到高级查询 -->
-                <db-simple-item :disable="!index" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
+                <db-simple-item :disable="type === ''" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
                     <icon-filter />
                 </db-simple-item>
                 <!-- 筛选 -->

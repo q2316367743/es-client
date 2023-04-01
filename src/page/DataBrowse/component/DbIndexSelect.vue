@@ -42,7 +42,7 @@ interface Item {
 
     type: 'index' | 'alias';
 
-    index: IndexView;
+    index?: IndexView | undefined;
 
 }
 
@@ -58,11 +58,13 @@ export default defineComponent({
         ...mapState(useIndexStore, ['indices']),
         indicesShow(): Array<Item> {
             let items = new Set<Item>();
+            let names = new Set<string>();
             if (this.indices.length === 0) {
                 return Array.from(items);
             }
             let indices = this.indices.filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter));
             for (let index of indices) {
+                // 索引不会重名
                 items.add({
                     name: index.name,
                     type: 'index',
@@ -70,11 +72,14 @@ export default defineComponent({
                 });
                 if (index.alias) {
                     for (let alias of index.alias) {
-                        items.add({
-                            name: alias,
-                            type: 'alias',
-                            index
-                        });
+                        // 别名可能重复
+                        if (!names.has(alias)) {
+                            names.add(alias);
+                            items.add({
+                                name: alias,
+                                type: 'alias'
+                            });
+                        }
                     }
                 }
             }
@@ -103,7 +108,7 @@ export default defineComponent({
                 });
             }
         },
-        indexChange(name: string, type: string, index: IndexView) {
+        indexChange(name: string, type: string, index?: IndexView) {
             this.index = name;
             this.show = false;
             this.$emit('indexChange', {

@@ -60,7 +60,7 @@ export default class DataBrowseComponent {
 
     executeQuery(renderHeader: boolean = true): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (!this.index.value) {
+            if (!this.name) {
                 reject();
                 return;
             }
@@ -70,7 +70,7 @@ export default class DataBrowseComponent {
             )
                 .then(result => {
                     this.result.value = result;
-                    let { columns, records, total } = jsonToTable(result, this.index.value!);
+                    let { columns, records, total } = jsonToTable(result, this.index.value);
                     this.columns.value = columns;
                     if (renderHeader) {
                         this.showColumns.value = columns;
@@ -136,10 +136,10 @@ export default class DataBrowseComponent {
      */
     add(data: string): Promise<void> {
         if (this.type.value === '') {
-            MessageUtil.error("类型未知，无法新增");
+            MessageUtil.warning("类型未知，无法新增");
             return Promise.reject();
         }else if (this.type.value === 'alias') {
-            MessageUtil.error("当前选择项为别名，无法新增");
+            MessageUtil.warning("当前选择项为别名，无法新增");
             return Promise.reject();
         }
         let record = {};
@@ -177,10 +177,10 @@ export default class DataBrowseComponent {
      */
     reduce(deleteRow?: Array<string>): Promise<void> {
         if (this.type.value === '') {
-            MessageUtil.error("类型未知，无法删除");
+            MessageUtil.warning("类型未知，无法删除");
             return Promise.reject();
         }else if (this.type.value === 'alias') {
-            MessageUtil.error("当前选择项为别名，无法删除");
+            MessageUtil.warning("当前选择项为别名，无法删除");
             return Promise.reject();
         }
         if (this.index.value === undefined) {
@@ -239,10 +239,10 @@ export default class DataBrowseComponent {
      */
     update(id: string, data: string): Promise<void> {
         if (this.type.value === '') {
-            MessageUtil.error("类型未知，无法更新");
+            MessageUtil.warning("类型未知，无法更新");
             return Promise.reject();
         }else if (this.type.value === 'alias') {
-            MessageUtil.error("当前选择项为别名，无法更新");
+            MessageUtil.warning("当前选择项为别名，无法更新");
             return Promise.reject();
         }
         let record = {};
@@ -306,6 +306,13 @@ export default class DataBrowseComponent {
     // ----------------------------------------- 业务方法 -----------------------------------------
 
     openMappingDrawer() {
+        if (this.type.value === '') {
+            MessageUtil.warning("类型未知，无法打开索引结构");
+            return Promise.reject();
+        }else if (this.type.value === 'alias') {
+            MessageUtil.warning("当前选择项为别名，无法打开索引结构");
+            return Promise.reject();
+        }
         if (!this.index.value) {
             return;
         }
@@ -319,7 +326,7 @@ export default class DataBrowseComponent {
     }
 
     jumpToBaseSearch() {
-        if (!this.index.value) {
+        if (this.type.value === '') {
             return;
         }
         // 页面跳转
@@ -340,23 +347,23 @@ export default class DataBrowseComponent {
         }
         useBaseSearchEvent.emit({
             execute: true,
-            name: this.index.value.name,
-            index: this.index.value.name,
+            name: this.name,
+            index: this.name,
             conditions: [],
             orders
         });
     }
 
     jumpToSeniorSearch() {
-        if (!this.index.value) {
+        if (this.type.value === '') {
             return;
         }
         // 跳转页面
         usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
         // 填充数据
         useSeniorSearchEvent.emit({
-            name: this.index.value.name,
-            link: `/${this.index.value.name}/_search`,
+            name: this.name,
+            link: `/${this.name}/_search`,
             method: 'POST',
             params: JSON.stringify(this.conditionBuild(), null, 4)
         })

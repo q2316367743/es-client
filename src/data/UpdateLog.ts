@@ -36,6 +36,9 @@ export default [
                 content: 'https://gitee.com/qiaoshengda/es-client/issues/I6NAW6'
             }
         }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '高级查询历史记录树形展示，双击名称载入'
+        }, {
             label: LogItemEnum.REPAIR,
             content: '基础查询切换索引重置分页'
         }, {
