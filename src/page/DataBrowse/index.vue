@@ -10,14 +10,14 @@
                     <icon-refresh />
                 </db-simple-item>
                 <div class="sep"></div>
-                <db-simple-item :disable="!index" :tip="$t('common.operation.add')" @click="recordAdd">
+                <db-simple-item :disable="!index || type !== 'index'" :tip="$t('common.operation.add')" @click="recordAdd">
                     <icon-plus />
                 </db-simple-item>
-                <db-simple-item :disable="selectedKeys.length === 0" :tip="$t('common.operation.delete')"
+                <db-simple-item :disable="selectedKeys.length === 0 || type !== 'index'" :tip="$t('common.operation.delete')"
                     @click="recordReduce">
                     <icon-minus />
                 </db-simple-item>
-                <db-simple-item :disable="selectedKeys.length !== 1" :tip="$t('common.operation.update')"
+                <db-simple-item :disable="selectedKeys.length !== 1 || type !== 'index'" :tip="$t('common.operation.update')"
                     @click="recordEdit">
                     <icon-edit />
                 </db-simple-item>
@@ -179,6 +179,7 @@ export default defineComponent({
 
             loading: dataBrowseComponent.loading,
 
+            type: dataBrowseComponent.type,
             page: dataBrowseComponent.page,
             size: dataBrowseComponent.size,
             total: dataBrowseComponent.total,
@@ -326,8 +327,12 @@ export default defineComponent({
         },
 
         // 右侧
-        indexChange(index: IndexView) {
-            this.dataBrowseComponent.indexChange(index)
+        indexChange(data: {
+            name: string,
+            type: string,
+            index: IndexView | undefined
+        }) {
+            this.dataBrowseComponent.indexChange(data)
                 .then(() => this.addSortable());
         },
         openMappingDrawer() {

@@ -4,7 +4,7 @@ export default [
     {
         version: '2.8.0',
         sign: 280,
-        time: '2023-03-31',
+        time: '2023-04-01',
         items: [{
             label: LogItemEnum.UPDATE,
             content: '高级查询结果页多标签'
@@ -40,7 +40,11 @@ export default [
             content: '基础查询切换索引重置分页'
         }, {
             label: LogItemEnum.REPAIR,
-            content: '基础查询切换索引重置分页'
+            content: '数据浏览页面，选择别名，将使用别名查询，但不能进行增删改',
+            gitee: {
+                title: '数据浏览页面，选择 别名，实际使用了 索引名称查询',
+                content: 'https://gitee.com/qiaoshengda/es-client/issues/I6S2N7'
+            }
         }]
     },
     {

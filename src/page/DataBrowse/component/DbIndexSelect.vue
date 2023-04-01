@@ -17,7 +17,7 @@
                         <div>
                             <div v-for="item in indicesShow" class="data-browse-list-item"
                                 :class="item.name === index ? 'data-browse-list-item-this' : ''"
-                                @click="indexChange(item.name, item.index)">
+                                @click="indexChange(item.name, item.type, item.index)">
                                 <span>{{ item.name }}</span>
                                 <a-tag color="blue" v-if="item.type === 'index'">索引</a-tag>
                                 <a-tag color="green" v-else-if="item.type === 'alias'">别名</a-tag>
@@ -103,10 +103,14 @@ export default defineComponent({
                 });
             }
         },
-        indexChange(name: string, index: IndexView) {
+        indexChange(name: string, type: string, index: IndexView) {
             this.index = name;
             this.show = false;
-            this.$emit('indexChange', index);
+            this.$emit('indexChange', {
+                name,
+                type,
+                index
+            });
         }
     }
 });

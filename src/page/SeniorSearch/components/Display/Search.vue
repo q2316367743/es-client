@@ -36,7 +36,6 @@ import XEUtils from "xe-utils";
 import {useSeniorSearchEvent} from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";
 import {TableData, TableExpandable} from "@arco-design/web-vue/es/table/interface";
-import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'senior-search-record',

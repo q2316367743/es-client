@@ -10,11 +10,11 @@ import IndexView from "@/view/index/IndexView";
 import DocumentApi from "@/api/DocumentApi";
 import conditionBuild from "@/page/DataBrowse/build/ConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
-import {ref, Ref} from "vue";
+import { ref, Ref } from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseOrder from "@/entity/BaseOrder";
-import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
+import { jsonToTable, TableViewColumnData } from "@/algorithm/jsonToTable";
 import Optional from "@/utils/Optional";
 
 export default class DataBrowseComponent {
@@ -34,8 +34,12 @@ export default class DataBrowseComponent {
     mustNot: Ref<string> = ref<string>('');
     orderBy: Ref<string> = ref<string>('');
 
-    // 当前的索引
+    // 当前的索引，别名是此处未空
     index: Ref<IndexView | undefined> = ref<IndexView | undefined>(undefined);
+    // 当前查询的索引的名字，可能是索引，也可能是别名；
+    name: string = '';
+    // 当前查询的类型
+    type: Ref<string> = ref<string>('');
     // 展示数据
     columns: Ref<Array<TableViewColumnData>> = ref([]);
     // 展示数据
@@ -61,12 +65,12 @@ export default class DataBrowseComponent {
                 return;
             }
             this.loading.value = true;
-            DocumentApi(this.index.value.name)._search(
+            DocumentApi(this.name)._search(
                 conditionBuild(this.must.value, this.should.value, this.mustNot.value, this.orderBy.value, this.page.value, this.size.value)
             )
                 .then(result => {
                     this.result.value = result;
-                    let {columns, records, total} = jsonToTable(result, this.index.value!);
+                    let { columns, records, total } = jsonToTable(result, this.index.value!);
                     this.columns.value = columns;
                     if (renderHeader) {
                         this.showColumns.value = columns;
@@ -86,8 +90,14 @@ export default class DataBrowseComponent {
         })
     }
 
-    indexChange(index: IndexView): Promise<void> {
-        this.index.value = index;
+    indexChange(data: {
+        name: string,
+        type: string,
+        index: IndexView | undefined
+    }): Promise<void> {
+        this.name = data.name;
+        this.type.value = data.type;
+        this.index.value = data.index;
         this.page.value = 1;
         this.size.value = useSettingStore().getPageSize;
         this.must.value = '';
@@ -101,6 +111,8 @@ export default class DataBrowseComponent {
         if (!this.index) {
             return;
         }
+        this.name = '';
+        this.type.value = '';
         this.index.value = undefined;
         this.must.value = '';
         this.should.value = '';
@@ -123,6 +135,13 @@ export default class DataBrowseComponent {
      * @param data 记录内容
      */
     add(data: string): Promise<void> {
+        if (this.type.value === '') {
+            MessageUtil.error("类型未知，无法新增");
+            return Promise.reject();
+        }else if (this.type.value === 'alias') {
+            MessageUtil.error("当前选择项为别名，无法新增");
+            return Promise.reject();
+        }
         let record = {};
         try {
             record = JSON.parse(data);
@@ -157,6 +176,13 @@ export default class DataBrowseComponent {
      * @param deleteRow 记录ID
      */
     reduce(deleteRow?: Array<string>): Promise<void> {
+        if (this.type.value === '') {
+            MessageUtil.error("类型未知，无法删除");
+            return Promise.reject();
+        }else if (this.type.value === 'alias') {
+            MessageUtil.error("当前选择项为别名，无法删除");
+            return Promise.reject();
+        }
         if (this.index.value === undefined) {
             MessageUtil.error("请先选择索引");
             return Promise.reject();
@@ -212,6 +238,13 @@ export default class DataBrowseComponent {
      * @param data 新的数据
      */
     update(id: string, data: string): Promise<void> {
+        if (this.type.value === '') {
+            MessageUtil.error("类型未知，无法更新");
+            return Promise.reject();
+        }else if (this.type.value === 'alias') {
+            MessageUtil.error("当前选择项为别名，无法更新");
+            return Promise.reject();
+        }
         let record = {};
         try {
             record = JSON.parse(data);
