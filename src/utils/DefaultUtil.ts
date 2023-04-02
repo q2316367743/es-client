@@ -23,6 +23,7 @@ export default {
             // 全局索引查询条件
             homeSearchState: 0,
             homeExcludeIndices: new Array<string>(),
+            homeIncludeIndices: new Array<string>(),
 
             // 显示设置
             pageSize: 20,

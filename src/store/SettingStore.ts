@@ -34,6 +34,7 @@ const useSettingStore = defineStore('setting', {
         getAutoFullScreen: (state): boolean => state.instance.autoFullScreen,
         getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.instance.homeSearchState) ? state.instance.homeSearchState : 0,
         getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeExcludeIndices).orElse(new Array<string>()),
+        getHomeIncludeIndices: (state): Array<string> => Optional.ofNullable(state.instance.homeIncludeIndices).orElse(new Array<string>()),
         getShowTab: (state): boolean => Optional.ofNullable(state.instance.showTab).orElse(true),
         getTabLoadMode: (state): TabLoadModeEnum => Optional.ofNullable(state.instance.tabLoadMode).orElse(TabLoadModeEnum.APPEND),
         getTabMaxCount: (state): number => Optional.ofNullable(state.instance.tabMaxCount).orElse(10),
@@ -71,6 +72,21 @@ const useSettingStore = defineStore('setting', {
                 return;
             }
             this.instance.homeExcludeIndices.splice(this.instance.homeExcludeIndices.indexOf(index), 1);
+            this.sync();
+        },
+        addHomeIncludeIndex(index: string): void {
+            if (!this.instance.homeIncludeIndices) {
+                this.instance.homeIncludeIndices = new Array<string>();
+            }
+            this.instance.homeIncludeIndices.push(index);
+            this.sync();
+        },
+        removeHomeIncludeIndex(index: string): void {
+            if (!this.instance.homeIncludeIndices) {
+                this.instance.homeIncludeIndices = new Array<string>();
+                return;
+            }
+            this.instance.homeIncludeIndices.splice(this.instance.homeIncludeIndices.indexOf(index), 1);
             this.sync();
         },
         getDefaultValue: DefaultUtil.getDefaultSettingValue,
