@@ -182,7 +182,7 @@ export default defineComponent({
             // 判断是否满足
             if (!(this.wrapper.hits && this.wrapper.hits.hits)) {
                 this.show = ViewTypeEnum.BASE;
-                MessageUtil.warning("结果数据不满足结构，使用基础视图展示");
+                // MessageUtil.warning("结果数据不满足结构，使用基础视图展示");
             }
         },
         fixAdd() {
