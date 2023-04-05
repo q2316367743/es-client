@@ -17,7 +17,7 @@
                         <div class="condition-item">
                             <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
                             <input type="text" v-model="should" class="input" @keydown.enter="executeQuery()"
-                                title="field1='str',field2=num" />
+                            placeholder="field1='str',field2=num" />
                             <div class="clear" v-show="should !== ''" @click="clear('shouldValue')">
                                 <icon-close-circle />
                             </div>
