@@ -36,6 +36,8 @@
         <p>
             <a-link type="primary" @click="licenseDialog = true">开源许可证</a-link>
         </p>
+        <div class="title-2">QQ频道</div>
+        <a-image src="pinDao.jpeg" alt="QQ频道"/>
         <div class="title-2">相关资源</div>
         <p>
             <span>仓库：</span>
@@ -49,12 +51,12 @@
             <a-link target="_blank" @click="open(data.docUrl)">语雀</a-link>
         </p>
         <div class="title-2">建议反馈</div>
-        <feedback-module/>
+        <feedback-module />
         <a-modal title="Apache2.0" v-model:visible="licenseDialog" render-to-body :mask-closable="false" draggable
-                   unmount-on-close width="700px">
+            unmount-on-close width="700px">
             <div style="height: calc(80vh - 60px - 54px)">
                 <a-scrollbar>
-                    <license-apache2_0/>
+                    <license-apache2_0 />
                 </a-scrollbar>
             </div>
         </a-modal>
@@ -62,16 +64,16 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue"
+import { defineComponent } from "vue"
 
 import Constant from "@/global/Constant";
 import LicenseApache2_0 from "@/components/License/Apache2_0.vue";
 import FeedbackModule from '@/module/Feedback/index.vue';
-import {nativeStrategyContext} from "@/global/BeanFactory";
+import { nativeStrategyContext } from "@/global/BeanFactory";
 
 export default defineComponent({
     name: "setting-about",
-    components: {LicenseApache2_0, FeedbackModule},
+    components: { LicenseApache2_0, FeedbackModule },
     data: () => ({
         data: Constant,
         licenseDialog: false,

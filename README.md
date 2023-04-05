@@ -31,7 +31,8 @@
 	👉 
     <a target="_blank" href="http://es-client.esion.xyz">官网</a> - 
     <a target="_blank" href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r">语雀</a> - 
-    <a target="_blank" href="https://support.qq.com/products/489458">兔小巢</a>  👈
+    <a target="_blank" href="https://support.qq.com/products/489458">兔小巢</a> - 
+    <a target="_blank" href="https://pd.qq.com/s/el40mqjvg">QQ频道</a>  👈
 </p>
 
 ---
@@ -62,24 +63,11 @@
 
 ## 开发
 
-```bash
-git clone https://gitee.com/qiaoshengda/es-client.git
-yarn install
-yarn dev
-# open http://localhost:5173
-```
+具体请前往[文档](https://www.yuque.com/baozhiyige-tewwf/ygxv4r)
 
-## 自行打包
+## QQ频道
 
-本项目推荐使用`yarn`
-
-1. 安装依赖：`yarn install`
-2. 构建浏览器版本：`yarn build`
-3. 构建Chrome插件：`yarn build:edge`
-4. 构建Firefox插件：`yarn build:firefox`
-5. 构建想天浏览器：`yarn build:ts`
-6. 构建vscode：`yarn build:vscode`
-7. 构建桌面客户端：`yarn tauri build`
+![QQ频道](public/pinDao.jpeg)
 
 ## 项目预览
 
