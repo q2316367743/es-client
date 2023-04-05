@@ -2,7 +2,7 @@
     "name": "es-client",
     "displayName": "es-client",
     "description": "elasticsearch客户端",
-    "version": "2.7.0",
+    "version": "2.8.0",
     "engines": {
         "vscode": "^1.46.0"
     },
