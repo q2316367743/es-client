@@ -24,6 +24,11 @@ export default async function Builder(): Promise<Array<IndexView>> {
                 continue;
             }
         }
+        if (useSettingStore().getHomeIncludeIndices.length > 0) {
+            if (!StrUtil.matchAll(key, useSettingStore().getHomeIncludeIndices)) {
+                continue;
+            }
+        }
         let indexStats = statsIndices[key];
         let indexInfo = metaIndices[key];
         let size = 0;
