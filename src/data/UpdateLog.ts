@@ -18,6 +18,13 @@ export default [
             label: LogItemEnum.ADD,
             content: '高级查询增加JavaScript过滤'
         }, {
+            label: LogItemEnum.ADD,
+            content: '新增只显示指定索引',
+            pull: {
+                name: 'javalover123',
+                url: 'https://gitee.com/javalover123'
+            }
+        }, {
             label: LogItemEnum.OPTIMIZATION,
             content: 'web版增加pwa'
         }, {

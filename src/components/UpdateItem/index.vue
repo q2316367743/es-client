@@ -15,6 +15,11 @@
                 <span style="margin-left:5px;">{{ item.content }}</span>
                 <span v-if="item.txc"><a-link @click="open(item.txc)">@兔小巢</a-link></span>
                 <span v-if="item.gitee"><a-link @click="open(item.gitee?.content)">#{{ item.gitee?.title }}</a-link></span>
+                <span v-if="item.pull">
+                    <a-tooltip content="贡献者">
+                        <a-link status="success" @click="open(item.pull?.url)">@ {{ item.pull?.name }}</a-link>
+                    </a-tooltip>
+                </span>
             </li>
         </template>
     </ol>

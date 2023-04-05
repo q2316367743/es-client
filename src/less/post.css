@@ -244,31 +244,6 @@
     vertical-align: text-bottom
 }
 
-.entry a {
-    padding-bottom: .025em;
-    color: #409EFF;
-    text-decoration: none;
-    border-bottom-color: #409EFF
-}
-
-.entry a:focus {
-    outline: thin dotted
-}
-
-.entry a:visited {
-    color: #069;
-    border-bottom-color: #069
-}
-
-.entry a:hover {
-    border-bottom-width: 1px;
-    border-bottom-style: solid
-}
-
-.entry a:hover, .entry a:active {
-    outline: 0
-}
-
 .entry b, .entry strong {
     font-weight: bold
 }

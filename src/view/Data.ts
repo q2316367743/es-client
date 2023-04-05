@@ -24,7 +24,7 @@ export interface Log {
     doc?: string;
 
     /**
-     * 描述、笨猪
+     * 描述
      */
     remark: string;
 
@@ -49,6 +49,16 @@ export interface LogItem {
         title: string;
 
         content: string;
+    }
+
+    /**
+     * pull request
+     */
+    pull?: {
+
+        name: string;
+
+        url: string;
     }
 
 }
