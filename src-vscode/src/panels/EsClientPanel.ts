@@ -2,12 +2,12 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn, workspace }
 import { getUri } from "../utils/getUri";
 
 const cssList = ['index-e5b656aa.css'];
-const jsPath = 'index-ed9149a3.js';
+const jsPath = 'index-83afa9b6.js';
 const moduleList = ['Optional-5aba4012.js',
     'MessageUtil-33058abc.js',
-    'MessageBoxUtil-1aaded72.js',
+    'MessageBoxUtil-6ffabe7d.js',
     'BrowserUtil-d66fde57.js',
-    'UrlStore-ef9242b5.js'];
+    'UrlStore-a1c26381.js'];
 
 
 /**
