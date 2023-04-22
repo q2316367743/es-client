@@ -2,6 +2,29 @@ import { Log, LogItemEnum } from "@/view/Data";
 
 export default [
     {
+        version: '2.8.1',
+        sign: 281,
+        time: '2023-04-22',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '高级查询支持通配符',
+            gitee: {
+                content: 'https://gitee.com/qiaoshengda/es-client/issues/I6VQ24',
+                title: '【BUG】请求不支持通配符'
+            }
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '删除索引后在索引框还显示。',
+            gitee: {
+                title: '删除索引后在索引框还显示。',
+                content: 'https://gitee.com/qiaoshengda/es-client/issues/I6R7LN'
+            }
+        }, {
+            label: LogItemEnum.ADD,
+            content: '增加多种认证方式'
+        }]
+    },
+    {
         version: '2.8.0',
         sign: 280,
         time: '2023-04-01',

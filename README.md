@@ -15,13 +15,13 @@
 </p>
 <p align="center">
 	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v2.8.0-%230883d8' alt='edge插件'/>
+        <img src='https://img.shields.io/badge/edge-v2.8.1-%230883d8' alt='edge插件'/>
     </a>
  	<a target="_blank" href="https://addons.mozilla.org/zh-CN/firefox/addon/es-client">
-		<img src="https://img.shields.io/badge/firefox-v2.8.0-%23ff3847" alt="火狐插件"/>
+		<img src="https://img.shields.io/badge/firefox-v2.8.1-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://www.aliyundrive.com/s/wRg2ZS2K6ME">
-        <img src='https://img.shields.io/badge/windows-v2.8.0-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v2.8.1-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
