@@ -7,7 +7,9 @@
                     <div class="senior-search-side" :class="instance.showTab ? 'show-tab' : ''">
                         <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
                             v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab" />
+                        <!-- 编辑器 -->
                         <div class="senior-search-editor">
+                            <!-- 操作栏 -->
                             <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
                                 @format-document="formatDocument" @clear-body="clearBody"
                                 @select="(command) => view = command" @setting="settingDialog = true"
@@ -31,9 +33,11 @@
                                     </a-tooltip>
                                 </template>
                             </senior-search-option>
+                            <!-- rest客户端编辑器 -->
                             <rest-client-editor ref="restClientEditor" v-model="current" class="editor" @execute="execute"
                                 v-show="editor" />
                             <div class="editor" v-show="!editor">
+                                <!-- 过滤器 -->
                                 <div class="js-option">
                                     <a-switch v-model="isEnableFilter">
                                         <template #checked>
@@ -46,7 +50,10 @@
                                     <a-button type="primary" @click="execFilter">过滤</a-button>
                                 </div>
                                 <div class="js-editor-wrapper">
-                                    <javascript-editor v-model="filter" class="js-editor" />
+                                    <!-- 过滤编辑器 -->
+                                    <codemirror v-model="filter" placeholder="$为结果对象" :style="{ height: '100%' }"
+                                        class="js-editor" :autofocus="true" :indent-with-tab="true" :tabSize="4"
+                                        :extensions="extensions" />
                                 </div>
                             </div>
                         </div>
@@ -69,6 +76,8 @@
 import { defineAsyncComponent, defineComponent } from "vue";
 import { mapState } from "pinia";
 import * as monaco from "monaco-editor";
+import { Codemirror } from 'vue-codemirror';
+import { javascript } from "@codemirror/lang-javascript";
 
 import './index.less';
 import { SeniorSearchItem } from './domain/SeniorSearchItem';
@@ -119,11 +128,10 @@ export default defineComponent({
     components: {
         SeniorSearchOption: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Option.vue')),
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
-        JavascriptEditor: defineAsyncComponent(() => import('@/module/JsEditor/index.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Setting.vue')),
         SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/SeniorSearch/components/ExportDialog.vue')),
         SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/index.vue')),
-        TabMenu
+        TabMenu, Codemirror
     },
     data: () => {
         return {
@@ -150,7 +158,8 @@ export default defineComponent({
             loading: false,
             settingDialog: false,
             exportDialog: false,
-            ViewTypeEnum
+            ViewTypeEnum,
+            extensions: [javascript()] as Array<any>
         }
     },
     computed: {
@@ -306,7 +315,7 @@ export default defineComponent({
                     let resultJson = filterFunc(json);
                     if (typeof resultJson === 'object') {
                         this.show = jsonFormat(resultJson);
-                    }else {
+                    } else {
                         this.show = `${resultJson}`;
                     }
                 } catch (e) {
