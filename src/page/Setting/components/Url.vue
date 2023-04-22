@@ -58,6 +58,7 @@ import { nativeStrategyContext, urlService, useUrlEditEvent } from "@/global/Bea
 import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 
 export default defineComponent({
     name: 'setting-url',
@@ -72,6 +73,7 @@ export default defineComponent({
             value: 'http://',
             sequence: 0,
             isAuth: false,
+            authType: UrlAuthTypeEnum.BASIC,
             authUser: '',
             authPassword: '',
             version: ''

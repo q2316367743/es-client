@@ -19,10 +19,17 @@
             <a-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
                 <a-switch v-model="url.isAuth" active-text="true" inactive-text="false" />
             </a-form-item>
-            <a-form-item :label="$t('setting.link.form.authUser')" prop="authUser" v-if="url.isAuth">
+            <a-form-item label="认证方式" v-if="url.isAuth">
+                <a-radio-group v-model="url.authType">
+                    <a-radio :value="UrlAuthTypeEnum.BASIC">基础认证</a-radio>
+                    <a-radio :value="UrlAuthTypeEnum.HEADER">请求头认证</a-radio>
+                    <a-radio :value="UrlAuthTypeEnum.COOKIE" disabled>Cookie认证</a-radio>
+                </a-radio-group>
+            </a-form-item>
+            <a-form-item :label="authKey" prop="authUser" v-if="url.isAuth && url.authType !== UrlAuthTypeEnum.COOKIE">
                 <a-input v-model="url.authUser" size="large" />
             </a-form-item>
-            <a-form-item :label="$t('setting.link.form.authPassword')" prop="authPassword" v-if="url.isAuth">
+            <a-form-item :label="authValue" prop="authPassword" v-if="url.isAuth">
                 <a-input v-model="url.authPassword" size="large" />
             </a-form-item>
         </a-form>
@@ -57,15 +64,19 @@ import Url from '@/entity/Url';
 import { httpStrategyContext, urlService, useUrlEditEvent } from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import MessageUtil from "@/utils/MessageUtil";
+import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
+import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
     data: () => ({
+        UrlAuthTypeEnum,
         url: {
             name: '',
             value: 'http://',
             sequence: 0,
             isAuth: false,
+            authType: UrlAuthTypeEnum.BASIC as UrlAuthTypeEnum,
             authUser: '',
             authPassword: ''
         } as Url,
@@ -80,12 +91,39 @@ export default defineComponent({
             luceneVersion: ''
         }
     }),
+    computed: {
+        authKey() {
+            if (this.url.authType === UrlAuthTypeEnum.HEADER) {
+                return "请求头健"
+            } else {
+                return this.$t('setting.link.form.authUser');
+            }
+        },
+        authValue() {
+            if (this.url.authType === UrlAuthTypeEnum.HEADER) {
+                return "请求头值"
+            } else if (this.url.authType === UrlAuthTypeEnum.COOKIE) {
+                return "Cookie值"
+            } else {
+                return this.$t('setting.link.form.authPassword');
+            }
+
+        }
+    },
     created() {
         useUrlEditEvent.on(url => {
             this.dialog = true;
             if (url) {
                 this.isSave = false;
-                this.url = url;
+                this.url = Object.assign({
+                    name: '',
+                    value: 'http://',
+                    sequence: 0,
+                    isAuth: false,
+                    authType: UrlAuthTypeEnum.BASIC,
+                    authUser: '',
+                    authPassword: ''
+                }, url);
             } else {
                 this.isSave = true;
                 this.url = {
@@ -93,6 +131,7 @@ export default defineComponent({
                     value: 'http://',
                     sequence: 0,
                     isAuth: false,
+                    authType: UrlAuthTypeEnum.BASIC,
                     authUser: '',
                     authPassword: ''
                 } as Url;
@@ -109,6 +148,7 @@ export default defineComponent({
                     value: this.url.value,
                     sequence: this.url.sequence,
                     isAuth: this.url.isAuth,
+                    authType: this.url.authType,
                     authUser: this.url.authUser,
                     authPassword: this.url.authPassword,
                     version: this.url.version
@@ -125,6 +165,7 @@ export default defineComponent({
                     sequence: this.url.sequence,
                     createTime: this.url.createTime || new Date(),
                     isAuth: this.url.isAuth,
+                    authType: this.url.authType,
                     authUser: this.url.authUser,
                     authPassword: this.url.authPassword,
                     version: this.url.version
@@ -140,6 +181,7 @@ export default defineComponent({
                 value: 'http://',
                 sequence: 0,
                 isAuth: false,
+                authType: UrlAuthTypeEnum.BASIC,
                 authUser: '',
                 authPassword: ''
             } as Url;
@@ -161,34 +203,46 @@ export default defineComponent({
                 version: '',
                 luceneVersion: ''
             };
-            httpStrategyContext.getStrategy().fetch<any>({
+            let config = {
                 baseURL: this.url.value,
                 url: '/',
                 method: 'GET',
-                auth: this.url.isAuth ? {
-                    username: this.url.authUser!,
-                    password: this.url.authPassword!
-                } : undefined
-            }).then((response) => {
-                this.testData = {
-                    icon: 'success',
-                    title: '链接成功',
-                    name: response.name,
-                    version: response.version.number,
-                    luceneVersion: response.version.lucene_version
+
+            } as HttpStrategyConfig;
+            if (this.url.isAuth) {
+                if (this.url.authType === UrlAuthTypeEnum.BASIC) {
+                    config.auth = {
+                        username: this.url.authUser!,
+                        password: this.url.authPassword!
+                    }
+                } else if (this.url.authType === UrlAuthTypeEnum.HEADER) {
+                    if (this.url.authUser) {
+                        config.headers = {};
+                        config.headers[this.url.authUser] = this.url.authPassword;
+                    }
                 }
-                this.url.version = `${response.version.number}`;
-            }).catch(() => {
-                this.testData = {
-                    icon: 'error',
-                    title: '链接不可用',
-                    name: '',
-                    version: '',
-                    luceneVersion: ''
-                }
-            }).finally(() => {
-                this.loading = false;
-            });
+            }
+            httpStrategyContext.getStrategy().fetch<any>(config)
+                .then((response) => {
+                    this.testData = {
+                        icon: 'success',
+                        title: '链接成功',
+                        name: response.name,
+                        version: response.version.number,
+                        luceneVersion: response.version.lucene_version
+                    }
+                    this.url.version = `${response.version.number}`;
+                }).catch(() => {
+                    this.testData = {
+                        icon: 'error',
+                        title: '链接不可用',
+                        name: '',
+                        version: '',
+                        luceneVersion: ''
+                    }
+                }).finally(() => {
+                    this.loading = false;
+                });
         },
     }
 });

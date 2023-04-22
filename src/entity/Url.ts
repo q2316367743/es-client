@@ -1,4 +1,5 @@
 import Base from "@/entity/Base";
+import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 
 export default interface Url extends Base {
 
@@ -31,6 +32,11 @@ export default interface Url extends Base {
      * 是否需要认证
      */
     isAuth?: boolean;
+
+    /**
+     * 认证类型那个，默认Basic认证
+     */
+    authType?: UrlAuthTypeEnum;
 
     /**
      * 用户名

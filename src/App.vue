@@ -148,21 +148,26 @@
         </div>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url />
+        <!-- 索引管理 -->
         <index-manage />
+        <!-- 版本更新 -->
         <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')" mask-closable draggable lock-scroll
             width="600px">
             <version-update v-if="updateDialog" />
         </a-modal>
+        <!-- 欢迎新用户 -->
         <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog" mask-closable render-to-body
             draggable top="5vh" width="600px">
             <a-scrollbar height="calc(80vh - 54px)">
                 <setting-about v-if="newDialog" />
             </a-scrollbar>
         </a-modal>
+        <!-- 问题反馈 -->
         <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh" :close-on-click-modal="false"
             render-to-body draggable unmount-on-close>
             <feedback-module v-if="feedbackDialog" />
         </a-modal>
+        <!-- 通知管理 -->
         <notification-manage v-model="notificationDrawer" />
     </a-config-provider>
 </template>

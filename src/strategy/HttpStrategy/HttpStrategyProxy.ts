@@ -1,10 +1,11 @@
-import HttpStrategyConfig, {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
+import HttpStrategyConfig, { Method } from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import useUrlStore from "@/store/UrlStore";
 import i18n from "@/i18n";
 import useSettingStore from "@/store/SettingStore";
 import useNotificationStore from "@/store/NotificationStore";
 import HttpStrategyError from "./HttpStrategyError";
 import MessageUtil from "@/utils/MessageUtil";
+import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 
 export default class HttpStrategyProxy {
 
@@ -30,12 +31,22 @@ export default class HttpStrategyProxy {
 
         // 如果有密码应该追加密码
         let url = useUrlStore().url;
-        if (url && url.isAuth && url.authUser && url.authPassword) {
-            config.auth = {
-                username: url.authUser,
-                password: url.authPassword
+        if (url) {
+            if (url.isAuth) {
+                if (url.authType === UrlAuthTypeEnum.HEADER) {
+                    if (url.authUser) {
+                        config.headers = {};
+                        config.headers[url.authUser] = url.authPassword;
+                    }
+                } else {
+                    config.auth = {
+                        username: url.authUser!,
+                        password: url.authPassword!
+                    }
+                }
             }
         }
+
         // 设置超时时间
         config.timeout = useSettingStore().getTimeout
         if (config.headers) {
@@ -63,7 +74,7 @@ export default class HttpStrategyProxy {
                 if (config.hidden !== true) {
                     useNotificationStore().http(config, reason);
                 }
-                if(reason.code === 401) {
+                if (reason.code === 401) {
                     console.log('401异常')
                 }
                 reject(reason);
