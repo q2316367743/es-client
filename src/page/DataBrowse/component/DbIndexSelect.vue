@@ -35,6 +35,8 @@ import IndexView from "@/view/index/IndexView";
 import { mapState } from "pinia";
 import useIndexStore from "@/store/IndexStore";
 import { stringContain } from "@/utils/SearchUtil";
+import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import mitt from "@/plugins/mitt";
 
 interface Item {
 
@@ -88,6 +90,11 @@ export default defineComponent({
                 return e1.name.localeCompare(e2.name, 'zh');
             });
         },
+    },
+    created() {
+        mitt.on(MessageEventEnum.URL_UPDATE, () => {
+            this.index = '';
+        });
     },
     methods: {
         showIndex() {
