@@ -88,4 +88,5 @@ export default defineConfig({
             `monaco-editor/esm/vs/editor/editor.worker`
         ],
     },
+    envDir: 'env'
 })

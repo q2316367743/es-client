@@ -2,8 +2,6 @@
 import { open } from "@tauri-apps/api/shell"
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
 import { writeText } from '@tauri-apps/api/clipboard';
-import { save } from '@tauri-apps/api/dialog';
-import { writeTextFile } from '@tauri-apps/api/fs';
 
 // 工具类
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
