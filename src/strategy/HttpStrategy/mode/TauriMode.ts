@@ -4,7 +4,7 @@ import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import { Body, fetch, HttpVerb, Response, ResponseType } from '@tauri-apps/api/http';
 import Optional from "@/utils/Optional";
 import HttpStrategyError from "../HttpStrategyError";
-import {getUrl} from "@/strategy/HttpStrategy/HttpModeUtil";
+import { getUrl } from "@/strategy/HttpStrategy/HttpModeUtil";
 
 export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -18,8 +18,14 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
         if (config.responseType === 'text') {
             responseType = ResponseType.Text;
         }
-        if(config.auth && config.headers) {
-            config.headers['Authorization'] = 'Basic ' + btoa(config.auth.username +':' + config.auth.password)
+        if (config.auth) {
+            if (config.headers) {
+                config.headers['Authorization'] = 'Basic ' + btoa(config.auth.username + ':' + config.auth.password)
+            } else {
+                config.headers = {
+                    Authorization: 'Basic ' + btoa(config.auth.username + ':' + config.auth.password)
+                };
+            }
         }
         fetch<T>(url, {
             method: config.method?.toUpperCase() as HttpVerb,
