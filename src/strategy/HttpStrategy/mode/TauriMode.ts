@@ -18,6 +18,9 @@ export default function fetchSelf<T>(config: HttpStrategyConfig): Promise<T> {
         if (config.responseType === 'text') {
             responseType = ResponseType.Text;
         }
+        if(config.auth && config.headers) {
+            config.headers['Authorization'] = 'Basic ' + btoa(config.auth.username +':' + config.auth.password)
+        }
         fetch<T>(url, {
             method: config.method?.toUpperCase() as HttpVerb,
             headers: config.headers,
