@@ -25,7 +25,6 @@
         "build": "vue-tsc --noEmit && vite build",
         "build:web": "vue-tsc --noEmit && vite build --mode=web",
         "build:edge": "vue-tsc --noEmit && vite build --mode=edge",
-        "build:chrome": "vue-tsc --noEmit && vite build --mode=chrome",
         "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
         "build:ts": "vue-tsc --noEmit && vite build --mode=tsbrowser",
         "build:utools": "vue-tsc --noEmit && vite build --mode=utools",
