@@ -7,8 +7,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 import path from 'path'
 
-// 插件
-import { visualizer } from 'rollup-plugin-visualizer';
 
 function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
@@ -51,7 +49,6 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        visualizer({ open: true }),
         AutoImport({
             resolvers: [ArcoResolver()],
         }),
