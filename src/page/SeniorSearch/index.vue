@@ -261,16 +261,6 @@ export default defineComponent({
             this.loading = true;
             let now = new Date();
             let success = true;
-            let data = undefined as any;
-            if (request.params != '') {
-                try {
-                    data = JSON.parse(request.params);
-                } catch (e: any) {
-                    console.error(e);
-                    // 不必强行校验json格式
-                    data = request.params;
-                }
-            }
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
                 this.result = "{}";
@@ -281,11 +271,15 @@ export default defineComponent({
             httpStrategyContext.getStrategy().es<string>({
                 url: request.link,
                 method: request.method,
-                data: data,
+                data: request.params,
                 hidden: true,
-                responseType: 'text'
+                responseType: 'text',
+                headers: {
+                    'content-type': 'application/json'
+                }
             }).then((response) => {
                 this.result = response;
+                this.show = response;
                 try {
                     json = JSON.parse(this.result);
                 } catch (e) {
@@ -322,8 +316,6 @@ export default defineComponent({
                     MessageUtil.error("结果集不是JSON，无法过滤");
                     this.show = this.result;
                 }
-            } else {
-                this.show = this.result;
             }
         },
         formatDocument() {
