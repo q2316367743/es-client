@@ -54,6 +54,7 @@
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
 - [utools](https://www.u.tools/)
 - [vscode](https://marketplace.visualstudio.com/items?itemName=m17762618644.es-client)
+- [IDEA](https://plugins.jetbrains.com/plugin/21804-es-client)（第三方提供：[es-client](https://gitee.com/shenmk/es-client)）
 
 ### 存储
 

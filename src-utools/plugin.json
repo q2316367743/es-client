@@ -1,5 +1,5 @@
 {
-    "main": "index.html",
+    "main": "./dist/index.html",
     "logo": "public/logo.png",
     "platform": [
         "win32",
@@ -24,7 +24,9 @@
                 "linux"
             ],
             "cmds": [
-                "es-client"
+                "es-client",
+                "es",
+                "elasticsearch"
             ]
         }
     ]
