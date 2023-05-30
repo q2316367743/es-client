@@ -2,6 +2,19 @@ import { Log, LogItemEnum } from "@/view/Data";
 
 export default [
     {
+        version: '2.8.2',
+        sign: 282,
+        time: '2023-05-30',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '修复Long太长导致进度丢失问题',
+            gitee: {
+                content: 'https://github.com/q2316367743/es-client/issues/1',
+                title: 'Long型数据精度丢失'
+            }
+        }]
+    },
+    {
         version: '2.8.1',
         sign: 281,
         time: '2023-04-22',

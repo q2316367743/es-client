@@ -55,7 +55,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
 import { mapState } from "pinia";
 import { renderJSONTreeView } from "@/components/JsonTree";
 import useSettingStore from "@/store/SettingStore";
