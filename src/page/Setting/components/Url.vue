@@ -7,27 +7,20 @@
         </div>
         <a-table ref="urlTable" :data="showUrls" class="data" sticky-header style="height: 100%;">
             <template #columns>
-                <a-table-column data-index="name" :title="$t('common.keyword.name')" :width="180"
+                <a-table-column data-index="name" :title="$t('common.keyword.name')" :width="120"
                     fixed="left"></a-table-column>
-                <a-table-column data-index="value" :title="$t('common.keyword.url')">
+                <a-table-column data-index="value" :title="$t('common.keyword.url')" :width="260">
                     <template #cell="{ record }">
                         <a-link @click="open(record.value)" type="primary" target="_blank">{{ record.value }}</a-link>
                         <div class="url-copy" @click="execCopy(record.value)">{{ $t('common.operation.copy') }}</div>
                     </template>
                 </a-table-column>
-                <a-table-column data-index="version" title="版本" :width="180" />
-                <a-table-column :title="$t('setting.link.form.updateTime')" :width="200">
-                    <template #cell="{ record }">
-                        {{ prettyDate(record.updateTime) }}
-                    </template>
-                </a-table-column>
-                <a-table-column :title="$t('setting.link.form.isAuth')" :width="120">
+                <a-table-column data-index="version" title="版本" :width="100" />
+                <a-table-column :title="$t('setting.link.form.isAuth')" :width="100">
                     <template #cell="{ record }">
                         {{ prettyAuth(record.isAuth) }}
                     </template>
                 </a-table-column>
-                <a-table-column data-index="authUser" :title="$t('setting.link.form.authUser')" :width="120" />
-                <a-table-column data-index="authPassword" :title="$t('setting.link.form.authPassword')" :width="120" />
                 <a-table-column :title="$t('common.keyword.operation')" :width="160" fixed="right">
                     <template #cell="{ record }">
                         <a-button type="primary" size="small" @click="editOpen(record)">{{ $t('common.operation.edit') }}
@@ -45,7 +38,6 @@
 <script lang="ts">
 import { defineComponent, toRaw } from "vue";
 import { mapState } from "pinia";
-import { toDateString } from "xe-utils";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -86,9 +78,6 @@ export default defineComponent({
         }
     },
     methods: {
-        prettyDate(params: Date) {
-            return toDateString(params, "yyyy-MM-dd HH:mm:ss");
-        },
         prettyAuth(params: boolean) {
             return params ? this.$t('setting.link.form.needAuth') : this.$t('setting.link.form.notAuth');
         },

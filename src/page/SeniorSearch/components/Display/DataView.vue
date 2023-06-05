@@ -68,7 +68,6 @@ import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
 import { jsonFormat } from "@/algorithm/jsonFormat";
-import MessageUtil from "@/utils/MessageUtil";
 
 /**
  * 每一项

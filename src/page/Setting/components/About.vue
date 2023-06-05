@@ -53,7 +53,7 @@
         <div class="title-2">建议反馈</div>
         <feedback-module />
         <a-modal title="Apache2.0" v-model:visible="licenseDialog" render-to-body :mask-closable="false" draggable
-            unmount-on-close width="700px">
+            unmount-on-close width="700px" :footer="false">
             <div style="height: calc(80vh - 60px - 54px)">
                 <a-scrollbar>
                     <license-apache2_0 />
