@@ -23,7 +23,7 @@ export default interface BaseQuery {
      * 条件 <br />
      * ['match', 'wildcard', 'prefix', 'range', 'fuzzy', 'query_string', 'text', 'missing']
      */
-    condition: string;
+    condition: 'match' | 'term' | 'terms' | 'exists' | 'wildcard' | 'range_lt' | 'range_lte' | 'range_gt' | 'range_gte';
 
     /**
      * 值

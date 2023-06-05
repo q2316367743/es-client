@@ -23,7 +23,7 @@ function getBaseBody(page: number, size: number): any {
 }
 
 function buildQuery(query: BaseQuery, array: Array<any>): void {
-    if (!query.field || query.field === '') {
+    if ((!query.field || query.field === '') && query.condition !== 'exists') {
         return;
     }
     if (query.isEnable === false) {
@@ -31,7 +31,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     }
     let condition = {} as any;
     let expression = {} as any;
-    let cod = query.condition;
+    let cod: string = query.condition;
     // 不同的条件，查询方式和表达式不同
     if (query.condition === 'match' ||
         query.condition === 'term' ||
@@ -39,6 +39,8 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
         expression[query.field] = query.value;
     } else if (query.condition === 'terms') {
         expression[query.field] = JSON.parse(query.value);
+    } else if (query.condition === 'exists') {
+        expression["field"] = query.value;
     } else if (query.condition === 'range_lt') {
         let value = {} as any;
         value['lt'] = query.value;
@@ -63,6 +65,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
         throw new Error('查询条件不支持')
     }
     condition[cod] = expression;
+    console.log(condition)
     array.push(condition);
 }
 

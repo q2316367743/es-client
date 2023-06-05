@@ -1,6 +1,6 @@
 import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
 import {BaseSearchItemBody} from "@/page/BaseSearch/domain/BaseSearchItem";
-import QueryConditionBuild from "@/page/BaseSearch/components/QueryConditionBuild";
+import QueryConditionBuild from "./QueryConditionBuild";
 import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";

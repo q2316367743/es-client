@@ -182,18 +182,18 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 // 内部组件
-import '@/page/BaseSearch/index.less';
+import './index.less';
 
-import QueryConditionBuild from '@/page/BaseSearch/components/QueryConditionBuild';
-import exportBuild from "@/page/BaseSearch/components/ExportBuild";
+import QueryConditionBuild from './algorithm/QueryConditionBuild';
+import exportBuild from "./algorithm/ExportBuild";
 
-import { BaseSearchItem } from "@/page/BaseSearch/domain/BaseSearchItem";
-import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
+import { BaseSearchItem } from "./domain/BaseSearchItem";
+import ExportConfig from "./domain/ExportConfig";
 
-import FieldOrderContainer from "@/page/BaseSearch/FiledOrder/FieldOrderContainer.vue";
-import FieldConditionContainer from "@/page/BaseSearch/FieldCondition/FieldConditionContainer.vue";
-import BshManage from "@/page/BaseSearch/History/index.vue";
-import BaseSearchDataView from "@/page/BaseSearch/DataView/index.vue";
+import FieldOrderContainer from "./components/FiledOrder/FieldOrderContainer.vue";
+import FieldConditionContainer from "./components/FieldCondition/FieldConditionContainer.vue";
+import BshManage from "./components/History/index.vue";
+import BaseSearchDataView from "./components/DataView/index.vue";
 
 
 import Field from "@/view/Field";

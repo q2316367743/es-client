@@ -17,8 +17,8 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import BshTempRecord from "@/page/BaseSearch/History/TempRecord.vue";
-import BshHistory from "@/page/BaseSearch/History/History.vue";
+import BshTempRecord from "./TempRecord.vue";
+import BshHistory from "./History.vue";
 
 
 export default defineComponent({

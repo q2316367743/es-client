@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import FieldOrderItem from "@/page/BaseSearch/FiledOrder/FieldOrderItem.vue";
+import FieldOrderItem from "./FieldOrderItem.vue";
 import Field from "@/view/Field";
 import BaseOrder from "@/entity/BaseOrder";
 

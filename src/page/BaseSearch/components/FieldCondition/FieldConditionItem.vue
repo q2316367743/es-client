@@ -15,7 +15,7 @@
         </a-select>
         <!-- 选择查询字段 -->
         <a-select v-model="condition.field" allow-search :placeholder="$t('baseSearch.placeholder.field')"
-            style="margin-left: 10px;width: 250px;">
+            :disabled="condition.condition === 'exists'" style="margin-left: 10px;width: 250px;">
             <a-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name" />
         </a-select>
         <!-- 选择查询条件 -->
@@ -28,6 +28,8 @@
             <a-option label="term" value="term" />
             <!-- 可以搜索多个值 -->
             <a-option label="terms" value="terms" />
+            <!-- 是否存在 -->
+            <a-option label="exists" value="exists" />
             <!-- 通配符查询 -->
             <a-option label="wildcard" value="wildcard" />
             <a-option label="range lt" value="range_lt" />

@@ -21,7 +21,7 @@ import { defineComponent, PropType } from "vue";
 import { Codemirror } from 'vue-codemirror';
 import { json } from '@codemirror/lang-json';
 
-import FieldConditionItem from "@/page/BaseSearch/FieldCondition/FieldConditionItem.vue";
+import FieldConditionItem from "./FieldConditionItem.vue";
 import BaseQuery from "@/entity/BaseQuery";
 import Field from "@/view/Field";
 
