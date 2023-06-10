@@ -1,5 +1,6 @@
 {
     "main": "./dist/index.html",
+    "preload": "preload.js",
     "logo": "public/logo.png",
     "platform": [
         "win32",

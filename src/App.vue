@@ -1,18 +1,11 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
     <a-config-provider :locale="locale" size="medium" global>
-        <div id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
+        <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
             <!-- 顶部菜单栏 -->
-            <header id="header" data-tauri-drag-region @click="closeNotification">
+            <a-layout-header id="header" data-tauri-drag-region @click="closeNotification">
                 <div class="left">
                     <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
-                    <a-button type="text" status="normal" class="full-screen" @click="collapsed = !collapsed"
-                        :disabled="loading">
-                        <template #icon>
-                            <icon-menu-unfold v-if="collapsed" />
-                            <icon-menu-fold v-else />
-                        </template>
-                    </a-button>
                     <!-- 索引服务器选择 -->
                     <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search allow-clear
                         @change="selectUrl" class="url-select" :loading="urlSelectLoading || loading"
@@ -97,55 +90,55 @@
                         </template>
                     </a-button>
                 </div>
-            </header>
-            <a-spin :loading="loading" :tip="text" class="global-spin">
-                <!-- 主页面 -->
-                <div id="main">
-                    <div id="navigation" :style="{ width: collapsed ? '50px' : '184px' }">
-                        <a-menu :collapsed="collapsed" v-model:selected-keys="selectedKeys" breakpoint="x1">
-                            <a-menu-item :key="PageNameEnum.HOME">
-                                <template #icon>
-                                    <icon-home />
-                                </template>
-                                {{ $t('menu.home') }}
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.DATA_BROWSER">
-                                <template #icon>
-                                    <icon-apps />
-                                </template>
-                                {{ $t('menu.dataBrowser') }}
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.BASE_SEARCH">
-                                <template #icon>
-                                    <icon-search />
-                                </template>
-                                {{ $t('menu.baseSearch') }}
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
-                                <template #icon>
-                                    <icon-filter />
-                                </template>
-                                {{ $t('menu.seniorSearch') }}
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SETTING">
-                                <template #icon>
-                                    <icon-settings />
-                                </template>
-                                {{ $t('menu.setting') }}
-                            </a-menu-item>
-                        </a-menu>
-                    </div>
-                    <!-- 内容-->
-                    <div id="container">
+            </a-layout-header>
+            <!-- 主页面 -->
+            <a-layout id="main">
+                <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
+                    <a-menu v-model:collapsed="collapsed" v-model:selected-keys="selectedKeys" show-collapse-button>
+                        <a-menu-item :key="PageNameEnum.HOME">
+                            <template #icon>
+                                <icon-home />
+                            </template>
+                            {{ $t('menu.home') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.DATA_BROWSER">
+                            <template #icon>
+                                <icon-apps />
+                            </template>
+                            {{ $t('menu.dataBrowser') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.BASE_SEARCH">
+                            <template #icon>
+                                <icon-search />
+                            </template>
+                            {{ $t('menu.baseSearch') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
+                            <template #icon>
+                                <icon-filter />
+                            </template>
+                            {{ $t('menu.seniorSearch') }}
+                        </a-menu-item>
+                        <a-menu-item :key="PageNameEnum.SETTING">
+                            <template #icon>
+                                <icon-settings />
+                            </template>
+                            {{ $t('menu.setting') }}
+                        </a-menu-item>
+                    </a-menu>
+                </a-layout-sider>
+                <!-- 内容-->
+                <a-layout-content>
+                    <a-spin :loading="loading" :tip="text">
                         <home v-show="selectedKeys[0] === PageNameEnum.HOME"></home>
                         <data-browse v-show="selectedKeys[0] === PageNameEnum.DATA_BROWSER"></data-browse>
                         <base-search v-show="selectedKeys[0] === PageNameEnum.BASE_SEARCH"></base-search>
                         <senior-search v-show="selectedKeys[0] === PageNameEnum.SENIOR_SEARCH"></senior-search>
                         <setting v-show="selectedKeys[0] === PageNameEnum.SETTING"></setting>
-                    </div>
-                </div>
-            </a-spin>
-        </div>
+                    </a-spin>
+                </a-layout-content>
+            </a-layout>
+        </a-layout>
         <!-- 保存或新增URL弹窗 -->
         <save-or-update-url />
         <!-- 索引管理 -->
@@ -240,7 +233,7 @@ export default defineComponent({
             updateDialog: false,
             newDialog: false,
             feedbackDialog: false,
-            collapsed: false,
+            collapsed: true,
             selectedKeys: new Array<PageNameEnum>(),
             // 窗口操作展示
             optionShow: WindowStrategyUtil(),

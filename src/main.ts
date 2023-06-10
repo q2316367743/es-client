@@ -3,8 +3,10 @@ import store from "@/store";
 import App from './App.vue';
 import i18n from '@/i18n';
 import { applicationLaunch } from "@/global/BeanFactory";
+import { utools } from './plugins/utools';
 
 // 额外引入图标库
+import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 
 // 引入样式
@@ -15,15 +17,17 @@ import '@/less/customer.less';
 import '@/components/JsonTree/index.less';
 
 // arco样式
-import '@arco-design/web-vue/es/spin/style/css.js';
-import '@arco-design/web-vue/es/message/style/css.js';
-import '@arco-design/web-vue/es/notification/style/css.js';
+import '@arco-design/web-vue/dist/arco.css';
 
 // @ts-ignore
 if (window.utools) {
     utools.onPluginEnter(action => {
         sessionStorage.setItem('action', action.code);
     });
+} else {
+    // web环境
+    // @ts-ignore
+    window.utools = utools
 }
 
 // @ts-ignore
@@ -44,6 +48,7 @@ window.addEventListener('message', event => {
 
 // 插件
 createApp(App)
+    .use(ArcoVue)
     .use(store)
     .use(i18n)
     .use(ArcoVueIcon)

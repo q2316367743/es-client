@@ -17,3 +17,10 @@ declare module '@json2csv/plainjs' {
         parse(data: any): string;
     }
 }
+
+interface Window {
+    preload: {
+        axios: any,
+        iconv(content: any, charset: string): string,
+    }
+}

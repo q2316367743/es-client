@@ -1,0 +1,16 @@
+{
+  "name": "rain-api",
+  "version": "1.0.2",
+  "description": "他朝若是同淋雪，此生也算共白头。",
+  "main": "preload.js",
+  "author": "落雨不悔",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "follow-redirects": "^1.15.2",
+    "form-data": "^4.0.0",
+    "iconv-lite": "^0.6.3",
+    "proxy-from-env": "^1.1.0",
+    "zlib": "^1.0.5"
+  }
+}
