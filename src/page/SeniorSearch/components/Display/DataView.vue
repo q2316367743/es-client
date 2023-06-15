@@ -62,7 +62,6 @@ import useSettingStore from "@/store/SettingStore";
 
 import { highlight } from '@/global/BeanFactory';
 // 工具
-import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";
 // 枚举
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
@@ -138,7 +137,7 @@ export default defineComponent({
     },
     methods: {
         execCopy() {
-            BrowserUtil.copy(this.pretty);
+            utools.copyText(this.pretty);
         },
         render() {
             // 渲染后的视图

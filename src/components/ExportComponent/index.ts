@@ -4,13 +4,13 @@ import {Parser} from '@json2csv/plainjs';
 import jsYaml from 'js-yaml';
 import {utils, writeFile} from 'xlsx'
 
-import {nativeStrategyContext} from "@/global/BeanFactory";
 import {ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
 import Assert from "@/utils/Assert";
-import DownloadType from "@/strategy/NativeStrategy/DownloadType";
 import {toRaw} from "vue";
 import MessageUtil from '@/utils/MessageUtil';
 import {jsonToTableComplete, TableViewColumnData} from "@/algorithm/jsonToTable";
+import { download } from '@/utils/BrowserUtil';
+import DownloadTypeEnum from '@/enumeration/DownloadTypeEnum';
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -40,17 +40,17 @@ function exportNoSql(config: ExportConfig, data: any): ExportContent | undefined
     }
     if (config.type === ExportType.JSON) {
         return {
-            type: DownloadType.JSON,
+            type: DownloadTypeEnum.JSON,
             content: JSON.stringify(obj)
         };
     } else if (config.type === ExportType.XML) {
         return {
-            type: DownloadType.XML,
+            type: DownloadTypeEnum.XML,
             content: json2xml.js2xml(obj)
         };
     } else if (config.type === ExportType.YML) {
         return {
-            type: DownloadType.YML,
+            type: DownloadTypeEnum.YML,
             content: jsYaml.dump(obj)
         };
     }
@@ -65,7 +65,7 @@ function exportForHtml(config: ExportConfig, data: any): ExportContent {
         separator: '.'
     });
     return {
-        type: DownloadType.HTML,
+        type: DownloadTypeEnum.HTML,
         content: htmlTemplate(config.name, columns, records)
     }
 }
@@ -107,7 +107,7 @@ function exportForCsv(config: ExportConfig, data: any): ExportContent {
         separator: '.'
     });
     return {
-        type: DownloadType.CSV,
+        type: DownloadTypeEnum.CSV,
         content: json2Csv.parse(records)
     }
 }
@@ -119,7 +119,7 @@ function exportForTsv(config: ExportConfig, data: any): ExportContent {
         separator: '.'
     });
     return {
-        type: DownloadType.TXT,
+        type: DownloadTypeEnum.TXT,
         content: json2Tsv.parse(records)
     }
 }
@@ -134,7 +134,7 @@ function exportForTxt(config: ExportConfig, data: any): ExportContent {
         delimiter: config.separator
     });
     return {
-        type: DownloadType.TXT,
+        type: DownloadTypeEnum.TXT,
         content: json2Txt.parse(records)
     }
 }
@@ -160,7 +160,7 @@ function exportFotXlsx(config: ExportConfig, data: any) {
 
 interface ExportContent {
 
-    type: DownloadType;
+    type: DownloadTypeEnum;
 
     content: string;
 
@@ -204,11 +204,11 @@ export function exportData(config: ExportConfig, data: any): void {
     }
     if (content) {
         if (config.mode === ExportMode.DOWNLOAD) {
-            nativeStrategyContext.getStrategy().download(content.content,
+            download(content.content,
                 config.name + '.' + content.type,
                 content.type);
         } else if (config.mode === ExportMode.COPY) {
-            nativeStrategyContext.getStrategy().copy(content.content)
+            utools.copyText(content.content);
         }
     } else {
         MessageUtil.error('导出异常，无法获取导出内容');

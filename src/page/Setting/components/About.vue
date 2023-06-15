@@ -69,7 +69,6 @@ import { defineComponent } from "vue"
 import Constant from "@/global/Constant";
 import LicenseApache2_0 from "@/components/License/Apache2_0.vue";
 import FeedbackModule from '@/module/Feedback/index.vue';
-import { nativeStrategyContext } from "@/global/BeanFactory";
 
 export default defineComponent({
     name: "setting-about",
@@ -80,7 +79,7 @@ export default defineComponent({
     }),
     methods: {
         open(url: string) {
-            nativeStrategyContext.getStrategy().openLink(url);
+            utools.shellOpenExternal(url);
         }
     }
 });

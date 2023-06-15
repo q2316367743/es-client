@@ -216,7 +216,6 @@ import {
     applicationLaunch,
     baseSearchHistoryService,
     lodisStrategyContext,
-    nativeStrategyContext,
     seniorSearchHistoryService,
     urlService
 } from "@/global/BeanFactory";
@@ -234,7 +233,8 @@ import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 
 import Setting from "@/domain/Setting";
 import MessageUtil from "@/utils/MessageUtil";
-import DownloadType from "@/strategy/NativeStrategy/DownloadType";
+import { download } from "@/utils/BrowserUtil";
+import DownloadTypeEnum from "@/enumeration/DownloadTypeEnum";
 
 let isInit = false;
 let isFirst = true;
@@ -345,7 +345,7 @@ export default defineComponent({
                 let setting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.SETTING);
                 let editorSetting = await lodisStrategyContext.getStrategy().get(LocalStorageKeyEnum.EDITOR_SETTING);
                 useLoadingStore().setText('开始下载');
-                nativeStrategyContext.getStrategy().download(JSON.stringify({
+                download(JSON.stringify({
                     version: Constant.version,
                     time: XEUtils.toDateString(new Date(), 'yyyy-MM-dd HH:ss:mm'),
                     url, baseSearchHistory, seniorSearchHistory,
@@ -354,7 +354,7 @@ export default defineComponent({
                         setting,
                         editorSetting
                     }
-                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, DownloadType.JSON);
+                }, null, 4), `数据备份下载-${new Date().getTime()}.json`, DownloadTypeEnum.JSON);
             } catch (e: any) {
                 MessageUtil.error('下载失败', e);
             } finally {

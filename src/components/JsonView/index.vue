@@ -7,7 +7,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { highlight } from '@/global/BeanFactory';
-import BrowserUtil from "@/utils/BrowserUtil";
 import { mapState } from "pinia";
 import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
@@ -58,7 +57,7 @@ export default defineComponent({
     },
     methods: {
         execCopy() {
-            BrowserUtil.copy(this.pretty);
+            utools.copyText(this.pretty);
         }
     }
 });

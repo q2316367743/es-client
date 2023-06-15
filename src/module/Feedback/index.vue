@@ -45,7 +45,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Constant from "@/global/Constant";
-import {nativeStrategyContext} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'feedback-module',
@@ -54,7 +53,7 @@ export default defineComponent({
     }),
     methods: {
         open(url: string) {
-            nativeStrategyContext.getStrategy().openLink(url);
+            utools.shellOpenExternal(url);
         }
     }
 });

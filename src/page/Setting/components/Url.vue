@@ -46,8 +46,7 @@ import Url from "@/entity/Url";
 // 组件
 import JsonDialog from "@/components/JsonDialog.vue";
 
-import { nativeStrategyContext, urlService, useUrlEditEvent } from "@/global/BeanFactory";
-import BrowserUtil from "@/utils/BrowserUtil";
+import { urlService, useUrlEditEvent } from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
@@ -121,9 +120,9 @@ export default defineComponent({
                 useUrlEditEvent.emit();
             }
         },
-        execCopy: BrowserUtil.copy,
+        execCopy: utools.copyText,
         open(url: string) {
-            nativeStrategyContext.getStrategy().openLink(url);
+            utools.shellOpenExternal(url);
         }
     }
 });

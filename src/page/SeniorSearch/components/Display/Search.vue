@@ -7,7 +7,7 @@
             <a-table-column data-index="success" :width="100" title="查询状态">
                 <template #cell="{ record }">
                     <div style="display: flex;">
-                        <div class="dot" :style="{ backgroundColor: record.success ? 'green' : 'red' }"/>
+                        <div class="dot" :style="{ backgroundColor: record.success ? 'green' : 'red' }" />
                         <div>{{ record.success ? '成功' : '失败' }}</div>
                     </div>
                 </template>
@@ -17,8 +17,8 @@
                     {{ record.time }}ms
                 </template>
             </a-table-column>
-            <a-table-column data-index="method" :width="100" title="请求方式"/>
-            <a-table-column data-index="link" :width="150" title="请求连接"/>
+            <a-table-column data-index="method" :width="100" title="请求方式" />
+            <a-table-column data-index="link" :width="150" title="请求连接" />
             <a-table-column :width="85" title="操作" fixed="right">
                 <template #cell="{ record }">
                     <a-button type="primary" @click="load(record)">载入</a-button>
@@ -28,18 +28,18 @@
     </a-table>
 </template>
 <script lang="ts">
-import {defineComponent, h} from "vue";
-import {mapState} from "pinia";
+import { defineComponent, h } from "vue";
+import { mapState } from "pinia";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
 import XEUtils from "xe-utils";
-import {useSeniorSearchEvent} from "@/global/BeanFactory";
+import { useSeniorSearchEvent } from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";
-import {TableData, TableExpandable} from "@arco-design/web-vue/es/table/interface";
+import { TableData, TableExpandable } from "@arco-design/web-vue";
 
 export default defineComponent({
     name: 'senior-search-record',
-    components: {JsonView},
+    components: { JsonView },
     data: () => ({
         expandable: {
             title: '请求体',
@@ -49,7 +49,7 @@ export default defineComponent({
                     return h(JsonView, {
                         data: JSON.parse(record.params)
                     });
-                }catch (e) {
+                } catch (e) {
                     return h('pre', {}, record.params);
                 }
             }

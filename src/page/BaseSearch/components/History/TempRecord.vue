@@ -52,7 +52,6 @@
 import {defineComponent, toRaw} from "vue";
 
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
-import BrowserUtil from "@/utils/BrowserUtil";
 import {baseSearchHistoryService, useBaseSearchEvent} from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
@@ -104,7 +103,7 @@ export default defineComponent({
             showTempRecords = this.tempRecords.sort((e1, e2) => e2.id! - e1.id!);
         },
         execCopy(url: string) {
-            BrowserUtil.copy(url);
+            utools.copyText(url);
         },
         load(history: BaseSearchHistory) {
             this.$emit('load');

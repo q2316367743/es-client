@@ -1,9 +1,7 @@
 import Constant from "@/global/Constant";
 import useSettingStore from "@/store/SettingStore";
 import {
-    httpStrategyContext,
     lodisStrategyContext,
-    nativeStrategyContext,
     seniorSearchHistoryService
 } from "@/global/BeanFactory";
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
@@ -12,7 +10,6 @@ import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Optional from "@/utils/Optional";
-import BrowserUtil from "@/utils/BrowserUtil";
 import Setting from "@/domain/Setting";
 
 export default class VersionManage {
@@ -101,7 +98,7 @@ export default class VersionManage {
             MessageBoxUtil.alert(`设置信息：\n${json}`, "设置信息", {
                 confirmButtonText: "复制到剪切板"
             }).then(() => {
-                BrowserUtil.copy(json);
+                utools.copyText(json);
             })
         })
     }

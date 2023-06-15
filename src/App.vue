@@ -193,7 +193,6 @@ import {
     applicationLaunch,
     isDark,
     lodisStrategyContext,
-    nativeStrategyContext,
     toggleDark,
     usePageJumpEvent,
     useUrlEditEvent,
@@ -434,7 +433,7 @@ export default defineComponent({
                     emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'update');
                     break;
                 case 'update':
-                    nativeStrategyContext.getStrategy().checkUpdate();
+                    alert('检查更新')
                     break;
                 case 'feedback':
                     this.feedbackDialog = true;

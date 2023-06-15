@@ -1,4 +1,4 @@
-enum DownloadType {
+enum DownloadTypeEnum {
 
     JSON = 'json',
 
@@ -14,4 +14,4 @@ enum DownloadType {
 
 }
 
-export default DownloadType;
+export default DownloadTypeEnum;

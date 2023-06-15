@@ -41,7 +41,6 @@ import { defineComponent, h, PropType } from "vue";
 import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
-import BrowserUtil from "@/utils/BrowserUtil";
 import JsonView from "@/components/JsonView/index.vue";
 import { buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc } from "@/algorithm/jsonToTable";
 import useSettingStore from "@/store/SettingStore";
@@ -204,7 +203,7 @@ export default defineComponent({
 
         },
         copy(value: any) {
-            BrowserUtil.copy(JSON.stringify(value, null, 4));
+            utools.copyText(JSON.stringify(value, null, 4));
         },
         handleChange(values: any[]) {
             this.showColumns = this.columns.filter(column => values.includes(column.dataIndex));

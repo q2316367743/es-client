@@ -25,7 +25,6 @@ import { defineComponent } from "vue";
 import { toDateString } from "xe-utils";
 
 // 工具类
-import BrowserUtil from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import { stringContain } from "@/utils/SearchUtil";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
@@ -115,7 +114,7 @@ export default defineComponent({
             return toDateString(params, "yyyy-MM-dd HH:mm:ss");
         },
         execCopy(url: string) {
-            BrowserUtil.copy(url);
+            utools.copyText(url);
         },
         load(id: number, draggable: boolean) {
             if (!draggable) {

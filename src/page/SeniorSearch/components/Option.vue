@@ -66,10 +66,9 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import { nativeStrategyContext } from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'senior-search-option',
@@ -104,7 +103,7 @@ export default defineComponent({
             this.$emit('exportData')
         },
         openHelp() {
-            nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
+            utools.shellOpenExternal('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
         }
     }
 });

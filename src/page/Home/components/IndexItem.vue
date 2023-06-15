@@ -80,7 +80,6 @@ import { defineComponent, PropType } from "vue";
 
 import IndexApi from '@/api/IndexApi'
 
-import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
@@ -197,7 +196,7 @@ export default defineComponent({
             emitter.emit(MessageEventEnum.REFRESH_URL);
         },
         execCopy(url?: string) {
-            BrowserUtil.copy(Optional.ofNullable(url).orElse(''));
+            utools.copyText(Optional.ofNullable(url).orElse(''));
         },
         jumpToBaseSearch() {
             if (this.index) {

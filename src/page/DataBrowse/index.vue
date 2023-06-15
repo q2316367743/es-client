@@ -134,7 +134,6 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
-import BrowserUtil from "@/utils/BrowserUtil";
 
 import PageHelp from "@/page/DataBrowse/component/PageHelp.vue";
 import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
@@ -154,7 +153,7 @@ import JsonView from "@/components/JsonView/index.vue";
 import { TableBorder, TableData, TableExpandable } from "@arco-design/web-vue";
 import DataBrowseComponent from "@/page/DataBrowse/component/DataBrowseComponent";
 import Sortable from "sortablejs";
-import { TableRowSelection } from "@arco-design/web-vue/es/table/interface";
+import { TableRowSelection } from "@arco-design/web-vue";
 
 let sort: Sortable | undefined;
 
@@ -360,7 +359,7 @@ export default defineComponent({
         // <----------------------------------------- 上面按钮 -----------------------------------------<
 
         // >----------------------------------------- 功能 ----------------------------------------->
-        copy: (value: any) => BrowserUtil.copy(JSON.stringify(value, null, 4)),
+        copy: (value: any) => utools.copyText(JSON.stringify(value, null, 4)),
         jumpToSeniorSearchByInsert() {
             this.dataBrowseComponent.jumpToSeniorSearchByInsert(this.addConfig.data)
                 .then(() => {

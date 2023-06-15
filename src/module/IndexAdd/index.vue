@@ -38,7 +38,6 @@ import useSettingStore from "@/store/SettingStore";
 import {IndexInstance, Property} from "@/domain/IndexInstance";
 import indexApi from "@/api/IndexApi";
 import useIndexStore from "@/store/IndexStore";
-import BrowserUtil from "@/utils/BrowserUtil";
 import {usePageJumpEvent, useSeniorSearchEvent, versionStrategyContext} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
@@ -104,7 +103,7 @@ export default defineComponent({
         },
         copyIndex() {
             // 执行拷贝
-            BrowserUtil.copy(JSON.stringify(versionStrategyContext.getStrategy().indexCreateBuild(this.index), null, 4));
+            utools.copyText(JSON.stringify(versionStrategyContext.getStrategy().indexCreateBuild(this.index), null, 4));
             // 关闭弹框
             this.dialog = false;
         },

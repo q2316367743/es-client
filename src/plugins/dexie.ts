@@ -1,6 +1,5 @@
 import Dexie from 'dexie';
 import Url from '@/entity/Url';
-import BrowserUtil from "@/utils/BrowserUtil";
 import {usePageJumpEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
@@ -24,7 +23,7 @@ export default class DexieInstance extends Dexie {
                 MessageBoxUtil.alert(`版本升级，历史url数据：${JSON.stringify(list)}，请注意数据丢失。`, null, {
                     confirmButtonText: '复制到剪切板'
                 }).then(() => {
-                    BrowserUtil.copy(JSON.stringify(list, null, 4));
+                    utools.copyText(JSON.stringify(list, null, 4));
                 }).catch(() => {});
                 // 处理url
                 // 删除全部

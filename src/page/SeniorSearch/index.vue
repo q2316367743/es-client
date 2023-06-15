@@ -98,7 +98,6 @@ import {
     applicationLaunch,
     httpStrategyContext,
     isDark,
-    nativeStrategyContext,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
@@ -364,7 +363,7 @@ export default defineComponent({
             }
         },
         openHelp() {
-            nativeStrategyContext.getStrategy().openLink('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
+            utools.shellOpenExternal('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
         },
         clearBody() {
             seniorTabComponent.clear();

@@ -24,3 +24,7 @@ interface Window {
         iconv(content: any, charset: string): string,
     }
 }
+
+declare var rain = {
+    env: string
+}

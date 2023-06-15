@@ -32,7 +32,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Log, LogItemEnum } from "@/view/Data";
-import { nativeStrategyContext } from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'update-item',
@@ -71,7 +70,7 @@ export default defineComponent({
         },
         open(url?: string) {
             if (url) {
-                nativeStrategyContext.getStrategy().openLink(url);
+                utools.shellOpenExternal(url);
             }
         }
     }

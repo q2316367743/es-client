@@ -1,7 +1,8 @@
 import MessageUtil from '@/utils/MessageUtil';
 import { get, set, del, keys, getMany } from 'idb-keyval';
-// 模拟utools声明
+import { copy } from '@/utils/BrowserUtil';
 
+// 模拟utools声明
 export interface DbDoc {
     _id: string,
     _rev?: string,
@@ -16,6 +17,16 @@ export interface DbReturn {
     name?: string,
     message?: string
 }
+
+function generateUUID(): string {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+};
 
 export const utools = {
     db: {
@@ -129,5 +140,28 @@ export const utools = {
     showOpenDialog(options: any): (string[]) | (undefined) {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
         return [];
+    },
+    fetchUserPayments(): Promise<any[]> {
+        return Promise.resolve([]);
+    },
+    getUser() {
+        return { avatar: "", nickname: "web用户", type: "" };
+    },
+    fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
+        let token = localStorage.getItem("token");
+        if (!token) {
+            token = generateUUID();
+            localStorage.setItem("token", token);
+        }
+        return Promise.resolve({
+            token,
+            expiredAt: 999999999
+        })
+    },
+    isDev(): boolean {
+        return false;
+    },
+    copyText(text: string) {
+        copy(text);
     }
 }

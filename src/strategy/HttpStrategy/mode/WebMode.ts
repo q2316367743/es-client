@@ -1,9 +1,9 @@
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
-import {applicationLaunch, nativeStrategyContext} from "@/global/BeanFactory";
+import { applicationLaunch } from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import HttpStrategyError from "@/strategy/HttpStrategy/HttpStrategyError";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {getUrl} from "@/strategy/HttpStrategy/HttpModeUtil";
+import { getUrl } from "@/strategy/HttpStrategy/HttpModeUtil";
 
 export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
     // 判断是否可以
@@ -13,9 +13,9 @@ export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
             MessageBoxUtil.alert(
                 "检测到您未安装插件，请安装插件后使用",
                 "警告", {
-                    confirmButtonText: "安装"
-                }).then(() => {
-                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web.html")
+                confirmButtonText: "安装"
+            }).then(() => {
+                utools.shellOpenExternal("https://es-client.esion.xyz/docs/install/web.html")
             });
         }
         return Promise.resolve();
@@ -54,9 +54,9 @@ export default function fetch<T>(config: HttpStrategyConfig): Promise<T> {
             MessageBoxUtil.alert(
                 "检测到您未安装插件，请安装插件后使用",
                 "警告", {
-                    confirmButtonText: "安装"
-                }).then(() => {
-                nativeStrategyContext.getStrategy().openLink("https://es-client.esion.xyz/docs/install/web.html")
+                confirmButtonText: "安装"
+            }).then(() => {
+                utools.shellOpenExternal("https://es-client.esion.xyz/docs/install/web.html")
             });
         }
     });

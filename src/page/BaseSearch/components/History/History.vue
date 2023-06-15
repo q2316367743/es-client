@@ -46,7 +46,6 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 // 工具类
 import MessageUtil from "@/utils/MessageUtil";
-import BrowserUtil from "@/utils/BrowserUtil";
 import Optional from "@/utils/Optional";
 import { stringContain } from "@/utils/SearchUtil";
 
@@ -67,7 +66,7 @@ export default defineComponent({
     },
     methods: {
         execCopy(url: string) {
-            BrowserUtil.copy(url);
+            utools.copyText(url);
         },
         load(history: BaseSearchHistory) {
             this.$emit('load');

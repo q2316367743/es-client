@@ -18,7 +18,6 @@ import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
-import BrowserUtil from "@/utils/BrowserUtil";
 
 export default defineComponent({
     name: 'base-search-data-view',
@@ -66,7 +65,7 @@ export default defineComponent({
     },
     methods: {
         execCopy() {
-            BrowserUtil.copy(this.pretty);
+            utools.copyText(this.pretty);
         },
         render() {
             this.pretty = JSON.stringify(this.data, null, 4);

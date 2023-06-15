@@ -4,6 +4,7 @@ import App from './App.vue';
 import i18n from '@/i18n';
 import { applicationLaunch } from "@/global/BeanFactory";
 import { utools } from './plugins/utools';
+import { preload } from './plugins/preload';
 
 // 额外引入图标库
 import ArcoVue from '@arco-design/web-vue';
@@ -19,6 +20,9 @@ import '@/components/JsonTree/index.less';
 // arco样式
 import '@arco-design/web-vue/dist/arco.css';
 
+window.rain = {
+    env: window.utools ? 'utools' : 'web'
+}
 // @ts-ignore
 if (window.utools) {
     utools.onPluginEnter(action => {
@@ -27,7 +31,9 @@ if (window.utools) {
 } else {
     // web环境
     // @ts-ignore
-    window.utools = utools
+    window.utools = utools;
+    // @ts-ignore
+    window.preload = preload;
 }
 
 // @ts-ignore
