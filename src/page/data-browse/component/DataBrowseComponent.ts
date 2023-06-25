@@ -8,7 +8,7 @@ import {
 import useSettingStore from "@/store/SettingStore";
 import IndexView from "@/view/index/IndexView";
 import DocumentApi from "@/api/DocumentApi";
-import conditionBuild from "@/page/DataBrowse/build/ConditionBuild";
+import conditionBuild from "@/page/data-browse/build/ConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
 import { ref, Ref } from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";

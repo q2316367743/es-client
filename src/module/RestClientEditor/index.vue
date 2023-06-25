@@ -3,7 +3,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {applicationLaunch, isDark} from "@/global/BeanFactory";
+import {applicationLaunch} from "@/global/BeanFactory";
 
 import * as monaco from 'monaco-editor';
 
@@ -17,6 +17,8 @@ import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import {URL_REGEX} from "@/data/EsUrl";
 import foldingRange from "@/module/RestClientEditor/foldingRange";
+import {mapState} from "pinia";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
@@ -29,10 +31,12 @@ export default defineComponent({
     emits: ['execute', 'update:modelValue'],
     data: () => ({
         content: '',
-        isDark,
         id: `rest-client-${new Date().getTime()}`,
         runColor: '#0d7d6c'
     }),
+    computed: {
+        ...mapState(useGlobalStore, ['isDark'])
+    },
     watch: {
         modelValue(newValue) {
             if (newValue !== instance.getValue()) {
@@ -149,10 +153,10 @@ export default defineComponent({
 </script>
 <style lang="less">
 .es-rest-client-editor {
-    .contentWidgets {
-        a {
-            color: v-bind(runColor);
-        }
+  .contentWidgets {
+    a {
+      color: v-bind(runColor);
     }
+  }
 }
 </style>

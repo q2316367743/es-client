@@ -86,27 +86,29 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import emitter from "@/plugins/mitt";
-import { isDark, useBaseSearchEvent, usePageJumpEvent } from "@/global/BeanFactory";
-import IndexItemView from "@/view/IndexItemView";
+import { useBaseSearchEvent, usePageJumpEvent } from "@/global/BeanFactory";
 
 import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {mapState} from "pinia";
+import {useGlobalStore} from "@/store/GlobalStore";
+import IndexView from "@/view/index/IndexView";
 
 export default defineComponent({
     name: 'IndexItem',
     props: {
-        index: Object as PropType<IndexItemView>
+        index: Object as PropType<IndexView>
     },
     emits: ['openDialog', 'openManage'],
     data: () => ({
         state: false,
         showExpand: false,
         open: true,
-        isDark,
     }),
     computed: {
+        ...mapState(useGlobalStore, ['isDark']),
         indexStateBtn(): 'danger' | 'success' | 'normal' {
             if (this.index?.state === 'open') {
                 return 'danger';
@@ -215,7 +217,7 @@ export default defineComponent({
 </script>
 <style lang="less">
 .home-index-card {
-    margin: 5px 0;
+    margin: 0;
     padding: 10px;
     border: var(--color-border-2) solid 1px;
     border-radius: 5px;

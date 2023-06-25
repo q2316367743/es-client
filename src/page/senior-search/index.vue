@@ -97,7 +97,6 @@ import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {
     applicationLaunch,
     httpStrategyContext,
-    isDark,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
@@ -105,10 +104,10 @@ import {
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 
 // 组件
-import formatBuild from "@/page/SeniorSearch/build/FormatBuild";
+import formatBuild from "@/page/senior-search/build/FormatBuild";
 import TabMenu from "@/components/TabMenu/index.vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
-import SeniorTabComponent from "@/page/SeniorSearch/components/SeniorTabComponent";
+import SeniorTabComponent from "@/page/senior-search/components/SeniorTabComponent";
 // 工具类
 import NotificationUtil from "@/utils/NotificationUtil";
 import MessageUtil from "@/utils/MessageUtil";
@@ -125,11 +124,11 @@ let json = {} as any;
 export default defineComponent({
     name: 'SeniorSearch',
     components: {
-        SeniorSearchOption: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Option.vue')),
+        SeniorSearchOption: defineAsyncComponent(() => import('@/page/senior-search/components/Option.vue')),
         RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
-        SeniorSearchSetting: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Setting.vue')),
-        SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/SeniorSearch/components/ExportDialog.vue')),
-        SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/index.vue')),
+        SeniorSearchSetting: defineAsyncComponent(() => import('@/page/senior-search/components/Setting.vue')),
+        SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/senior-search/components/ExportDialog.vue')),
+        SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/senior-search/components/Display/index.vue')),
         TabMenu, Codemirror
     },
     data: () => {
@@ -152,7 +151,6 @@ export default defineComponent({
             view: ViewTypeEnum.JSON,
             editor: true,
             showTop: true,
-            isDark,
             displayActive: 'result',
             loading: false,
             settingDialog: false,

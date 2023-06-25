@@ -1,4 +1,4 @@
-import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
+import SeniorSearchRecord from "@/page/senior-search/domain/SeniorSearchRecord";
 import {defineStore} from "pinia";
 
 const useSeniorSearchRecordStore = defineStore('senior-search-record',{

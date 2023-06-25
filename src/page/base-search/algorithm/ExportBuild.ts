@@ -1,5 +1,5 @@
-import ExportConfig from "@/page/BaseSearch/domain/ExportConfig";
-import {BaseSearchItemBody} from "@/page/BaseSearch/domain/BaseSearchItem";
+import ExportConfig from "@/page/base-search/domain/ExportConfig";
+import {BaseSearchItemBody} from "@/page/base-search/domain/BaseSearchItem";
 import QueryConditionBuild from "./QueryConditionBuild";
 import DocumentApi from "@/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";

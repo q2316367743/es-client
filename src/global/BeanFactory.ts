@@ -1,5 +1,5 @@
 import x2js from 'x2js';
-import {useDark, useEventBus, useToggle} from "@vueuse/core";
+import { useEventBus, useToggle} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
 
@@ -57,15 +57,6 @@ export const json2xml = new x2js({
     escapeMode: false
 });
 
-// 黑夜模式
-export const isDark = useDark({
-    initialValue: "light",
-    selector: 'body',
-    attribute: 'arco-theme',
-    valueDark: 'dark',
-    valueLight: 'light',
-});
-export const toggleDark = useToggle(isDark);
 
 // 事件总线
 // 基础查询

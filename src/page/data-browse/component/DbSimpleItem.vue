@@ -1,5 +1,5 @@
 <template>
-    <a-tooltip :content="tip" placement="bottom" :effect="isDark ? 'dark' : 'light'">
+    <a-tooltip :content="tip" placement="bottom">
         <div class="item" :class="disable ? 'disable' : ''" @click="click">
             <slot/>
         </div>
@@ -7,7 +7,6 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {isDark} from '@/global/BeanFactory';
 
 export default defineComponent({
     name: 'db-simple-item',
@@ -25,7 +24,6 @@ export default defineComponent({
         }
     },
     data: () => ({
-        isDark
     }),
     methods: {
         click() {

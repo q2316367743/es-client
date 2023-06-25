@@ -31,7 +31,7 @@
 import { defineComponent, h } from "vue";
 import { mapState } from "pinia";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
-import SeniorSearchRecord from "@/page/SeniorSearch/domain/SeniorSearchRecord";
+import SeniorSearchRecord from "@/page/senior-search/domain/SeniorSearchRecord";
 import XEUtils from "xe-utils";
 import { useSeniorSearchEvent } from "@/global/BeanFactory";
 import JsonView from "@/components/JsonView/index.vue";

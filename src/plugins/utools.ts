@@ -1,8 +1,9 @@
 import MessageUtil from '@/utils/MessageUtil';
-import { get, set, del, keys, getMany } from 'idb-keyval';
-import { copy } from '@/utils/BrowserUtil';
+import {copy, generateUUID} from "@/utils/BrowserUtil";
+import {del, get, getMany, keys, set} from 'idb-keyval';
 
 // 模拟utools声明
+
 export interface DbDoc {
     _id: string,
     _rev?: string,
@@ -18,15 +19,13 @@ export interface DbReturn {
     message?: string
 }
 
-function generateUUID(): string {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return uuid;
-};
+function isMacOS(): boolean{
+    return /macintosh|mac os x/i.test(navigator.userAgent);
+}
+function isWindows(): boolean{
+    let agent = navigator.userAgent.toLowerCase();
+    return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
+}
 
 export const utools = {
     db: {
@@ -93,42 +92,35 @@ export const utools = {
             },
             /**
               * 存储附件到新文档
-              * @param docId 文档ID
-              * @param attachment 附件 buffer
-              * @param type 附件类型，示例：image/png, text/plain
               */
-            postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
-                return Promise.resolve({
-                    id: ''
-                })
+            postAttachment(): Promise<DbReturn> {
+                return Promise.reject("Web不支持保存附件")
             },
             /**
               * 获取附件
-              * @param docId 文档ID
               */
-            getAttachment(docId: string): Promise<Uint8Array | null> {
-                return Promise.resolve(null);
+            getAttachment(): Promise<Uint8Array | null> {
+                return Promise.reject("Web不支持获取附件")
             },
             /**
               * 获取附件类型
-              * @param docId 文档ID
               */
-            getAttachmentType(docId: string): Promise<string | null> {
-                return Promise.resolve(null);
+            getAttachmentType(): Promise<string | null> {
+                return Promise.reject("Web不支持获取附件类型")
             }
         }
     },
-    getPath(path: string): string {
+    getPath(): string {
         return '';
     },
     shellOpenExternal(url: string): void {
         window.open(url);
     },
-    redirect(name: string, action: any) {
+    redirect() {
         MessageUtil.warning("web环境不支持utools");
         window.open("https://u.tools");
     },
-    setFeature(feature: any) {
+    setFeature() {
         MessageUtil.warning("web环境不支持设置feature，请使用utools版本");
     },
     isDarkColors(): boolean {
@@ -137,9 +129,15 @@ export const utools = {
     onPluginEnter(callback: (action: { code: string, type: string, payload: any }) => void): void {
         document.addEventListener('load', () => callback({ code: 'application', type: '', payload: {} }));
     },
-    showOpenDialog(options: any): (string[]) | (undefined) {
+    showOpenDialog(): [] {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
         return [];
+    },
+    setSubInput() {
+        console.warn("web环境不支持子输入框事件");
+    },
+    setSubInputValue() {
+        console.warn("web环境不支持子输入框事件");
     },
     fetchUserPayments(): Promise<any[]> {
         return Promise.resolve([]);
@@ -159,9 +157,16 @@ export const utools = {
         })
     },
     isDev(): boolean {
-        return false;
+        // @ts-ignore
+        return import.meta.env.DEV || true;
+    },
+    isMacOS,
+    isWindows,
+    isLinux(): boolean {
+        return !isMacOS() && !isWindows();
     },
     copyText(text: string) {
         copy(text);
     }
+
 }

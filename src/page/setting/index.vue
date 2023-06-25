@@ -29,10 +29,10 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 export default defineComponent({
     name: 'setting',
     components: {
-        SettingAbout: defineAsyncComponent(() => import("@/page/Setting/components/About.vue")),
-        SettingUpdate: defineAsyncComponent(() => import("@/page/Setting/components/Update.vue")),
-        SettingUrl: defineAsyncComponent(() => import("@/page/Setting/components/Url.vue")),
-        SettingBase: defineAsyncComponent(() => import("@/page/Setting/components/Base.vue"))
+        SettingAbout: defineAsyncComponent(() => import("@/page/setting/components/About.vue")),
+        SettingUpdate: defineAsyncComponent(() => import("@/page/setting/components/Update.vue")),
+        SettingUrl: defineAsyncComponent(() => import("@/page/setting/components/Url.vue")),
+        SettingBase: defineAsyncComponent(() => import("@/page/setting/components/Base.vue"))
     },
     data: () => {
         return {

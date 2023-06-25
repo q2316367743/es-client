@@ -10,9 +10,6 @@ import {Info} from "@/es/Info";
 export default {
     /**
      * 集群基本信息
-     * 
-     * @param success 成功回调
-     * @param error 失败回调
      */
     info(): Promise<Info> {
         return httpStrategyContext.getStrategy().es<any>({
@@ -22,7 +19,6 @@ export default {
     },
     /**
      * _cluster_state
-     * 
      */
     _cluster_state(): Promise<ClusterState> {
         return httpStrategyContext.getStrategy().es<ClusterState>({
@@ -32,7 +28,6 @@ export default {
     },
     /**
      * _stats
-     * 
      */
     _stats(): Promise<Stats> {
         return httpStrategyContext.getStrategy().es<Stats>({

@@ -24,9 +24,9 @@ import { defineAsyncComponent, defineComponent } from "vue";
 export default defineComponent({
     name: 'senior-search-display',
     components: {
-        SeniorSearchRecord: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/Search.vue')),
-        SeniorSearchHistory: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/History.vue')),
-        SeniorSearchDataView: defineAsyncComponent(() => import('@/page/SeniorSearch/components/Display/DataView.vue')),
+        SeniorSearchRecord: defineAsyncComponent(() => import('@/page/senior-search/components/Display/Search.vue')),
+        SeniorSearchHistory: defineAsyncComponent(() => import('@/page/senior-search/components/Display/History.vue')),
+        SeniorSearchDataView: defineAsyncComponent(() => import('@/page/senior-search/components/Display/DataView.vue')),
     },
     props: {
         data: String,

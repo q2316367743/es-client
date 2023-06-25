@@ -135,23 +135,20 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
 
-import PageHelp from "@/page/DataBrowse/component/PageHelp.vue";
-import ExportDialog from "@/page/DataBrowse/component/ExportDialog.vue";
-import DbCondition from "@/page/DataBrowse/component/DbCondition.vue";
-import DbIndexSelect from "@/page/DataBrowse/component/DbIndexSelect.vue";
-import DbSimpleItem from "@/page/DataBrowse/component/DbSimpleItem.vue";
-import DataBuild from "@/page/DataBrowse/build/DataBuild";
-import '@/page/DataBrowse/index.less';
+import PageHelp from "@/page/data-browse/component/PageHelp.vue";
+import ExportDialog from "@/page/data-browse/component/ExportDialog.vue";
+import DbCondition from "@/page/data-browse/component/DbCondition.vue";
+import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
+import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
+import DataBuild from "@/page/data-browse/build/DataBuild";
+import '@/page/data-browse/index.less';
 
 import mitt from "@/plugins/mitt";
-import {
-    isDark,
-} from "@/global/BeanFactory";
 import StructureIcon from "@/icon/StructureIcon.vue";
 
 import JsonView from "@/components/JsonView/index.vue";
 import { TableBorder, TableData, TableExpandable } from "@arco-design/web-vue";
-import DataBrowseComponent from "@/page/DataBrowse/component/DataBrowseComponent";
+import DataBrowseComponent from "@/page/data-browse/component/DataBrowseComponent";
 import Sortable from "sortablejs";
 import { TableRowSelection } from "@arco-design/web-vue";
 
@@ -172,7 +169,6 @@ export default defineComponent({
     data: () => {
         const dataBrowseComponent = new DataBrowseComponent();
         return {
-            isDark,
             dataBrowseComponent: markRaw(dataBrowseComponent),
             id: dataBrowseComponent.id,
 
