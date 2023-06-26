@@ -10,9 +10,6 @@
                 <!-- 顶部菜单栏 -->
                 <div class="base-option">
                     <div class="left">
-                        <div class="base-extra-button" :class="extra ? 'open' : ''" @click="extra = !extra">
-                            <icon-right />
-                        </div>
                         <!-- 索引选择 -->
                         <a-select v-model="current.index" style="width: 260px;" allow-search allow-clear
                             :placeholder="$t('baseSearch.placeholder.selectIndex')">
@@ -26,7 +23,10 @@
                         </a-button>
                         <!-- 历史 -->
                         <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
-
+                        <!-- 索引管理 -->
+                        <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">
+                            管理
+                        </a-button>
                     </div>
                     <div class="right">
                         <a-select v-model="view" style="margin-left: 8px;width: 140px;">
@@ -37,43 +37,8 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="base-extra" v-if="extra">
-                    <div class="left">
-                        <!-- 索引管理 -->
-                        <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">管理
-                        </a-button>
-                        <!-- 标签编辑 -->
-                        <a-button-group>
-                            <a-button type="outline" :status="header.relationId ? 'danger' : 'success'"
-                                @click="optionTab('rename')">
-                                {{ header.name }}
-                            </a-button>
-                            <a-dropdown @select="optionTab">
-                                <a-button type="outline">
-                                    <template #icon>
-                                        <icon-down />
-                                    </template>
-                                </a-button>
-                                <template #content>
-                                    <a-doption value="update" v-if="header.relationId">更新</a-doption>
-                                    <a-doption value="save" v-else>保存</a-doption>
-                                    <a-doption value="save" v-if="header.relationId">保存到新的历史</a-doption>
-                                    <a-doption value="rename">重命名</a-doption>
-                                    <a-doption value="close-one" v-if="instance.showTab">关闭</a-doption>
-                                    <a-doption value="close-other" v-if="instance.showTab">关闭其他</a-doption>
-                                    <a-doption value="close-all" v-if="instance.showTab">关闭全部</a-doption>
-                                    <a-doption value="cancel" v-if="header.relationId">取消关联</a-doption>
-                                </template>
-                            </a-dropdown>
-                        </a-button-group>
-                    </div>
-                    <div class="right">
-                        <a-button type="primary" :disabled="current.index === ''" @click="openDownload">导出
-                        </a-button>
-                    </div>
-                </div>
                 <!-- 核心查询区 -->
-                <div class="base-display" ref="baseDisplay" :style="`top: ${extra ? '80' : '40'}px`">
+                <div class="base-display" ref="baseDisplay">
                     <!-- 查询条件 -->
                     <div class="base-condition" ref="baseCondition">
                         <a-form :model="current" layout="vertical" label-width="80px"
@@ -101,7 +66,7 @@
                     <a-back-top target-container=".base-display" />
                 </div>
                 <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
-                <div class="base-search-condition-sentence" :style="`top: ${extra ? '82' : '42'}px`">
+                <div class="base-search-condition-sentence">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
                     </a-button>
@@ -118,41 +83,6 @@
                 <json-view :data="condition.data" />
             </a-modal>
             <bsh-manage v-model="historyDialog" />
-            <a-modal title="导出" v-model:visible="download.dialog" width="600px" render-to-body unmount-on-close
-                :mask-closable="false" draggable ok-text="导出" @ok="clickDownload">
-                <a-form :model="download" layout="vertical">
-                    <a-form-item label="文件名">
-                        <a-input v-model="download.name" />
-                    </a-form-item>
-                    <a-form-item label="导出数量">
-                        <a-select v-model="download.count">
-                            <a-option label="当前页面" :value="1" />
-                            <a-option label="指定范围" :value="2" />
-                            <a-option label="全部" :value="3" />
-                        </a-select>
-                    </a-form-item>
-                    <a-form-item label="范围" v-if="download.count === 2">
-                        <a-input-number v-model="download.customStart" placeholder="从0开始" />
-                        <span>-</span>
-                        <a-input-number v-model="download.customEnd" placeholder="-1代表不限制" />
-                    </a-form-item>
-                    <a-form-item label="导出内容类型">
-                        <a-select v-model="download.content">
-                            <a-option label="原始结果集" :value="1" />
-                            <a-option label="只导出_source" :value="2" />
-                        </a-select>
-                    </a-form-item>
-                    <a-form-item>
-                        <template #label>
-                            每次分页查询数量
-                            <a-tooltip content="数量太大可能造成浏览器卡顿" placement="top" effect="light">
-                                <icon-question-circle style="margin-left: 5px;" />
-                            </a-tooltip>
-                        </template>
-                        <a-input-number v-model="download.size" :disabled="download.count === 1" />
-                    </a-form-item>
-                </a-form>
-            </a-modal>
         </div>
     </a-spin>
 </template>
@@ -180,20 +110,17 @@ import BaseOrder from "@/entity/BaseOrder";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 // 内部组件
-import './index.less';
-
 import QueryConditionBuild from './algorithm/QueryConditionBuild';
-import exportBuild from "./algorithm/ExportBuild";
 
 import { BaseSearchItem } from "./domain/BaseSearchItem";
-import ExportConfig from "./domain/ExportConfig";
 
 import FieldOrderContainer from "./components/FiledOrder/FieldOrderContainer.vue";
 import FieldConditionContainer from "./components/FieldCondition/FieldConditionContainer.vue";
 import BshManage from "./components/History/index.vue";
-import BaseSearchDataView from "./components/DataView/index.vue";
+import BaseSearchDataView from "./components/data-view/index.vue";
 
 
 import Field from "@/view/Field";
@@ -210,24 +137,7 @@ import {
 } from "@/global/BeanFactory";
 import Optional from "@/utils/Optional";
 import DocumentApi from "@/api/DocumentApi";
-import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
-function buildDefaultDownload(name: string, dialog: boolean = false): ExportConfig {
-    return {
-        // 导出对话框
-        dialog,
-        // 导出文件名
-        name,
-        // 导出类型：1【当前分页】，2【指定数量】，3【全部】
-        count: 1,
-        customStart: 0,
-        customEnd: -1,
-        // 导出内容类型：1【原始结果集】，2【只导出_source】
-        content: 1,
-        // 每次分页查询的数量
-        size: 1000
-    };
-}
 
 export default defineComponent({
     name: 'base-search',
@@ -273,7 +183,6 @@ export default defineComponent({
 
             loading: false,
             visibility: true,
-            extra: false,
 
             // 条件对话框
             condition: {
@@ -281,8 +190,6 @@ export default defineComponent({
                 data: {}
             },
             historyDialog: false,
-
-            download: buildDefaultDownload(''),
 
             // 视图
             view: ViewTypeEnum.JSON,
@@ -630,15 +537,6 @@ export default defineComponent({
                 MessageUtil.warning(`索引【${this.current.index}】未找到`)
             }
         },
-        openDownload() {
-            this.download = buildDefaultDownload(this.current.index + '.json', true);
-        },
-        clickDownload() {
-            exportBuild(this.download, this.current)
-                .then(() => MessageUtil.success("导出成功"))
-                .catch((e: any) => MessageUtil.error("导出失败", e))
-                .finally(() => this.download.dialog = false);
-        },
         execCopy() {
             (this.$refs['baseSearchDataView'] as any).execCopy()
         }
@@ -646,4 +544,6 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+@import url(./index.less);
+</style>

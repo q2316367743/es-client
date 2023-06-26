@@ -36,7 +36,7 @@
                                     $t('common.operation.load')
                                 }}
                             </a-button>
-                            <a-button type="primary" size="small" @click="appendToHistory(record)">新增到历史记录
+                            <a-button type="primary" size="small" @click="appendToHistory(record)">新增
                             </a-button>
                             <a-button type="primary" status="danger" size="small" @click="removeById(record.id)">
                                 {{ $t('common.operation.delete') }}
