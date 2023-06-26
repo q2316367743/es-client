@@ -1,5 +1,5 @@
 <template>
-    <a-drawer :title="index" class="index-manage-drawer" v-model:visible="drawer" width="60%" render-to-body
+    <a-drawer :title="index" class="index-manage-drawer" v-model:visible="drawer" :width="600" render-to-body
               unmount-on-close popup-container="#main">
         <div class="index-manage">
             <a-tabs v-model:active-key="active" class="tab">
@@ -43,7 +43,7 @@ import JsonView from "@/components/JsonView/index.vue";
 import ArrayUtil from "@/utils/ArrayUtil";
 import IndexApi from "@/api/IndexApi";
 import Assert from "@/utils/Assert";
-import IndexManageSummary from "@/module/IndexManage/summary.vue";
+import IndexManageSummary from "@/module/index-manage/summary.vue";
 import MessageUtil from "@/utils/MessageUtil";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";

@@ -3,9 +3,9 @@
     <a-config-provider :locale="locale" size="medium" global>
         <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
             <!-- 顶部菜单栏 -->
-            <a-layout-header id="header" data-tauri-drag-region @click="closeNotification">
+            <a-layout-header id="header" @click="closeNotification">
                 <div class="left">
-                    <div class="logo" data-tauri-drag-region>{{ $t('app.name') }}</div>
+                    <div class="logo">{{ $t('app.name') }}</div>
                     <!-- 索引服务器选择 -->
                     <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
                               allow-clear
@@ -124,10 +124,7 @@
         <!-- 索引管理 -->
         <index-manage/>
         <!-- 版本更新 -->
-        <a-modal v-model:visible="updateDialog" :title="$t('app.versionUpdate')" mask-closable draggable lock-scroll
-                 width="600px">
-            <version-update v-if="updateDialog"/>
-        </a-modal>
+        <version-update v-model:visible="updateDialog"/>
         <!-- 欢迎新用户 -->
         <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog" mask-closable render-to-body
                  draggable top="5vh" width="600px">
@@ -196,7 +193,7 @@ export default defineComponent({
         VersionUpdate: defineAsyncComponent(() => import("@/module/VersionUpdate/index.vue")),
         FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
         SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue")),
-        IndexManage: defineAsyncComponent(() => import('@/module/IndexManage/index.vue')),
+        IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
         NotificationManage: defineAsyncComponent(() => import('@/module/NotificationManage/index.vue')),
     },
     data: () => {
