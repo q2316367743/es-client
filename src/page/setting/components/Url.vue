@@ -44,7 +44,7 @@ import useIndexStore from "@/store/IndexStore";
 import Url from "@/entity/Url";
 
 // 组件
-import JsonDialog from "@/components/JsonDialog.vue";
+import JsonDialog from "@/components/json-dialog/index.vue";
 
 import { urlService, useUrlEditEvent } from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";

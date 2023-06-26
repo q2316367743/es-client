@@ -1,6 +1,6 @@
 <template>
-    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="850px" draggable
-             class="home-index-add" render-to-body unmount-on-close>
+    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="850px" draggable class="home-index-add"
+        render-to-body unmount-on-close>
         <a-form :model="index" layout="vertical">
             <a-form-item :label="$t('common.keyword.name')">
                 <a-input v-model="index.name" style="width: 300px;"></a-input>
@@ -20,7 +20,7 @@
                 </a-form>
             </a-tab-pane>
             <a-tab-pane :title="$t('home.newIndex.mappingSetting')" key="2">
-                <index-mapping style="position: relative" ref="indexMapping" overflow/>
+                <index-mapping style="position: relative" ref="indexMapping" overflow />
             </a-tab-pane>
         </a-tabs>
         <template #footer>
@@ -32,22 +32,26 @@
     </a-modal>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import Optional from "@/utils/Optional";
-import useSettingStore from "@/store/SettingStore";
-import {IndexInstance, Property} from "@/domain/IndexInstance";
+import { defineComponent } from "vue";
+import { usePageJumpEvent, useSeniorSearchEvent, versionStrategyContext } from "@/global/BeanFactory";
+import { IndexInstance, Property } from "@/domain/IndexInstance";
 import indexApi from "@/api/IndexApi";
-import useIndexStore from "@/store/IndexStore";
-import {usePageJumpEvent, useSeniorSearchEvent, versionStrategyContext} from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 import emitter from "@/plugins/mitt";
+
+import useSettingStore from "@/store/SettingStore";
+import useIndexStore from "@/store/IndexStore";
+
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
 import MessageUtil from "@/utils/MessageUtil";
+import Optional from "@/utils/Optional";
+
 import IndexMapping from "@/components/IndexMapping/index.vue";
 
 export default defineComponent({
     name: 'index-add',
-    components: {IndexMapping},
+    components: { IndexMapping },
     emits: ['update:modelValue'],
     props: {
         modelValue: Boolean

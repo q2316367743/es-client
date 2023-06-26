@@ -24,7 +24,7 @@ import clusterApi from "@/api/ClusterApi";
 
 import {defineComponent} from "vue";
 
-import JsonDialog from "@/components/JsonDialog.vue";
+import JsonDialog from "@/components/json-dialog/index.vue";
 import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
 

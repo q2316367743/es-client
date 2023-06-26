@@ -18,6 +18,7 @@ import {defineComponent} from "vue";
 import JsonView from "@/components/JsonView/index.vue";
 
 export default defineComponent({
+    name: 'json-dialog',
     components: {JsonView},
     props: {
         value: Boolean,

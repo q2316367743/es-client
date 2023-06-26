@@ -25,7 +25,7 @@
 import {defineComponent, PropType} from "vue";
 import JsonView from "@/components/JsonView/index.vue";
 import {HttpMode} from "@/domain/NotificationItem";
-import JsonDialog from "@/components/JsonDialog.vue";
+import JsonDialog from "@/components/json-dialog/index.vue";
 
 export default defineComponent({
     name: 'notification-item-http',
