@@ -8,49 +8,9 @@
             <!-- 主要显示区域 -->
             <div class="base-search-main" :class="showTab ? '' : 'full-screen'">
                 <!-- 顶部菜单栏 -->
-                <div class="base-option">
-                    <div class="left">
-                        <!-- 索引选择 -->
-                        <a-select v-model="current.index" style="width: 260px;" allow-search allow-clear
-                                  :placeholder="$t('baseSearch.placeholder.selectIndex')">
-                            <a-option v-for="index in indices" :key="index.label" :label="index.label"
-                                      :value="index.value"/>
-                        </a-select>
-                        <!-- 搜索 -->
-                        <a-button type="primary" status="success" @click="search" :disabled="current.index === ''"
-                                  title="搜索">
-                            <template #icon>
-                                <icon-search/>
-                            </template>
-                        </a-button>
-                        <!-- 索引管理 -->
-                        <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage" title="管理">
-                            <template #icon>
-                                <icon-info/>
-                            </template>
-                        </a-button>
-                    </div>
-                    <div class="right">
-                        <!-- 历史 -->
-                        <a-button type="primary" status="warning" @click="historyDialog = true" title="历史">
-                            <template #icon>
-                                <icon-history/>
-                            </template>
-                        </a-button>
-                        <!-- 设置 -->
-                        <a-button type="primary" title="设置">
-                            <template #icon>
-                                <icon-settings/>
-                            </template>
-                        </a-button>
-                        <a-select v-model="view" style="margin-left: 8px;width: 140px;">
-                            <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
-                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
-                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
-                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
-                        </a-select>
-                    </div>
-                </div>
+                <base-search-header v-model:current-index="current.index" v-model:view="view"
+                                    @open-history-dialog="historyDialog = true" @open-index-manage="openIndexManage"
+                                    @search="search"/>
                 <!-- 核心查询区 -->
                 <div class="base-display" ref="baseDisplay">
                     <!-- 查询条件 -->
@@ -104,7 +64,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
-import {SelectOptionData} from "@arco-design/web-vue";
 
 // 自定义组件
 import TabMenu from "@/components/TabMenu/index.vue";
@@ -136,6 +95,7 @@ import FieldOrderContainer from "@/page/base-search/components/filed-order/conta
 import FieldConditionContainer from "@/page/base-search/components/field-condition/container.vue";
 import BshManage from "./components/History/index.vue";
 import BaseSearchDataView from "./components/data-view/index.vue";
+import BaseSearchHeader from './components/header/index.vue';
 
 
 import Field from "@/view/Field";
@@ -163,6 +123,7 @@ export default defineComponent({
         FieldConditionContainer,
         FieldOrderContainer,
         TabMenu,
+        BaseSearchHeader
     },
     data: () => ({
         searchMap: new Map<number, BaseSearchItem>(),
@@ -206,32 +167,6 @@ export default defineComponent({
     computed: {
         // 索引
         ...mapState(useIndexStore, {
-            indices: (state): SelectOptionData[] => {
-                let options = new Array<SelectOptionData>();
-                let names = new Set<string>();
-                let indices = state.indices;
-                indices.forEach(e => {
-                    // 索引
-                    options.push({
-                        label: e.name,
-                        value: e.name,
-                        index: e.name
-                    });
-                    // 别名
-                    e.alias.forEach(a => {
-                        if (!names.has(a)) {
-                            options.push({
-                                label: a,
-                                value: a
-                            })
-                            names.add(a);
-                        }
-                    })
-                });
-                return options.sort((a, b) => {
-                    return a.label!.localeCompare(b.label!, "zh-CN");
-                });
-            },
             indexAliasMap: (state): Map<string, string> => {
                 let aliasIndexMap = new Map<string, string>();
                 state.indices.forEach(index => {
