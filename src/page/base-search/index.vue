@@ -2,11 +2,11 @@
     <a-spin :loading="loading" :tip="$t('common.loading.search')" class="base-spin">
         <div class="base-search">
             <!-- 标签页 -->
-            <div class="base-search-tab" v-if="instance.showTab">
+            <div class="base-search-tab" v-if="showTab">
                 <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs" />
             </div>
             <!-- 主要显示区域 -->
-            <div class="base-search-main" :class="instance.showTab ? '' : 'full-screen'">
+            <div class="base-search-main" :class="showTab ? '' : 'full-screen'">
                 <!-- 顶部菜单栏 -->
                 <div class="base-option">
                     <div class="left">
@@ -17,18 +17,32 @@
                                 :value="index.value" />
                         </a-select>
                         <!-- 搜索 -->
-                        <a-button type="primary" status="success" @click="search" :disabled="current.index === ''">{{
-                            $t('common.operation.search')
-                        }}
+                        <a-button type="primary" status="success" @click="search" :disabled="current.index === ''"
+                            title="搜索">
+                            <template #icon>
+                                <icon-search />
+                            </template>
                         </a-button>
-                        <!-- 历史 -->
-                        <a-button @click="historyDialog = true">{{ $t('common.operation.history') }}</a-button>
                         <!-- 索引管理 -->
-                        <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage">
-                            管理
+                        <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage" title="管理">
+                            <template #icon>
+                                <icon-info />
+                            </template>
                         </a-button>
                     </div>
                     <div class="right">
+                        <!-- 历史 -->
+                        <a-button type="primary" status="warning" @click="historyDialog = true" title="历史">
+                            <template #icon>
+                                <icon-history />
+                            </template>
+                        </a-button>
+                        <!-- 设置 -->
+                        <a-button type="primary" title="设置">
+                            <template #icon>
+                                <icon-settings />
+                            </template>
+                        </a-button>
                         <a-select v-model="view" style="margin-left: 8px;width: 140px;">
                             <a-option label="基础视图" :value="ViewTypeEnum.BASE" />
                             <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON" />
@@ -88,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRaw } from "vue";
+import { defineComponent } from "vue";
 import { mapState } from "pinia";
 import { SelectOptionData } from "@arco-design/web-vue";
 
@@ -103,7 +117,6 @@ import emitter from '@/plugins/mitt';
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
 import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
-import useUrlStore from "@/store/UrlStore";
 
 import BaseQuery from '@/entity/BaseQuery';
 import BaseOrder from "@/entity/BaseOrder";
@@ -129,7 +142,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {
     applicationLaunch,
-    baseSearchHistoryService,
     useBaseSearchEvent,
     useIndexManageEvent,
     usePageJumpEvent,
@@ -149,54 +161,45 @@ export default defineComponent({
         FieldOrderContainer,
         TabMenu,
     },
-    data: () => {
-        let searchMap = new Map<number, BaseSearchItem>();
-        let searchId = new Date().getTime();
-        let searchItem = {
-            header: {
-                id: searchId,
-                name: '基础查询'
-            },
-            body: {
-                index: '',
-                conditions: new Array<BaseQuery>(),
-                orders: new Array<BaseOrder>(),
-                page: 1,
-                size: useSettingStore().getPageSize,
-                total: 0,
-                result: {} as any
-            }
-        } as BaseSearchItem;
-        searchMap.set(searchId, searchItem);
-        return {
-            searchMap,
-            searchId,
+    data: () => ({
+        searchMap: new Map<number, BaseSearchItem>(),
+        searchId: 0,
 
-            header: searchItem.header,
-            current: searchItem.body,
+        header: {
+            id: 0,
+            name: '基础查询'
+        } as TabMenuItem,
+        current: {
+            index: '',
+            conditions: new Array<BaseQuery>(),
+            orders: new Array<BaseOrder>(),
+            page: 1,
+            size: 20,
+            total: 0,
+            result: {}
+        },
 
-            fields: [{
-                name: '_id',
-                dataIndex: '_id',
-                type: 'string'
-            }] as Array<Field>,
+        fields: [{
+            name: '_id',
+            dataIndex: '_id',
+            type: 'string'
+        }] as Array<Field>,
 
-            loading: false,
-            visibility: true,
+        loading: false,
+        visibility: true,
 
-            // 条件对话框
-            condition: {
-                dialog: false,
-                data: {}
-            },
-            historyDialog: false,
+        // 条件对话框
+        condition: {
+            dialog: false,
+            data: {}
+        },
+        historyDialog: false,
 
-            // 视图
-            view: ViewTypeEnum.JSON,
-            showTop: true,
-            ViewTypeEnum
-        };
-    },
+        // 视图
+        view: ViewTypeEnum.JSON,
+        showTop: true,
+        ViewTypeEnum
+    }),
     computed: {
         // 索引
         ...mapState(useIndexStore, {
@@ -235,7 +238,7 @@ export default defineComponent({
                 return aliasIndexMap;
             }
         }),
-        ...mapState(useSettingStore, ['instance']),
+        ...mapState(useSettingStore, ['showTab', 'pageSize', 'defaultViewer']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },
@@ -275,7 +278,7 @@ export default defineComponent({
                         return a.name.localeCompare(b.name, "zh-CN");
                     });
                     this.current.page = 1;
-                    this.current.size = useSettingStore().getPageSize;
+                    this.current.size = this.pageSize;
                     return;
                 }
                 if (newValue === '') {
@@ -290,6 +293,7 @@ export default defineComponent({
         }
     },
     created() {
+        this.clearAfter();
         emitter.on(MessageEventEnum.URL_UPDATE, () => {
             // 重置条件
             this.clear(true);
@@ -310,12 +314,12 @@ export default defineComponent({
                     conditions: event.conditions,
                     orders: event.orders,
                     page: 1,
-                    size: useSettingStore().getPageSize,
+                    size: this.pageSize,
                     total: 0,
                     result: {}
                 }
             } as BaseSearchItem
-            if (useSettingStore().getShowTab) {
+            if (this.showTab) {
                 // 显示标签栏
                 this.searchMap.set(searchId, searchItem);
                 this.searchId = searchId;
@@ -333,7 +337,7 @@ export default defineComponent({
             })
         });
         applicationLaunch.register(() => {
-            this.view = useSettingStore().getDefaultViewer
+            this.view = this.defaultViewer
             return Promise.resolve()
         });
     },
@@ -359,13 +363,13 @@ export default defineComponent({
                     QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
                 ).then((response) => {
                     // 结果
-                    this.current.result = response;
+                    this.current.result = response as Record<string, any>;
                     // 解析总数
-                    if (this.current.result.hits) {
-                        if (parseInt(this.current.result.hits.total)) {
-                            this.current.total = parseInt(this.current.result.hits.total)
-                        } else if (parseInt(this.current.result.hits.total.value)) {
-                            this.current.total = parseInt(this.current.result.hits.total.value);
+                    if (response.hits) {
+                        if (parseInt(response.hits.total)) {
+                            this.current.total = parseInt(response.hits.total)
+                        } else if (parseInt(response.hits.total.value)) {
+                            this.current.total = parseInt(response.hits.total.value);
                         } else {
                             this.current.total = 0;
                         }
@@ -391,7 +395,7 @@ export default defineComponent({
         },
         clear(clear_index: boolean = false) {
             this.current.page = 1;
-            this.current.size = useSettingStore().getPageSize;
+            this.current.size = this.pageSize;
             this.current.total = 0;
             this.current.conditions = new Array<BaseQuery>();
             this.current.orders = new Array<BaseOrder>();
@@ -435,76 +439,6 @@ export default defineComponent({
                 }
             }
         },
-        optionTab(command: any) {
-            switch (command) {
-                case 'save':
-                    // 保存到历史
-                    baseSearchHistoryService.save({
-                        urlId: Optional.ofNullable(useUrlStore().id).orElse(0),
-                        name: this.header.name,
-                        index: this.current.index,
-                        conditions: toRaw(this.current.conditions),
-                        orders: toRaw(this.current.orders)
-                    })
-                        .then(id => {
-                            MessageUtil.success('新增成功');
-                            this.header.relationId = id;
-                        })
-                        .catch(e => MessageUtil.error('新增失败', e));
-                    break;
-                case 'update':
-                    baseSearchHistoryService.update({
-                        id: this.header.relationId,
-                        name: this.header.name,
-                        index: this.current.index,
-                        conditions: toRaw(this.current.conditions),
-                        orders: toRaw(this.current.orders)
-                    })
-                        .then(() => MessageUtil.success(
-                            '更新成功',
-                            () => emitter.emit(MessageEventEnum.BASE_HISTORY_UPDATE)))
-                        .catch(e => MessageUtil.error('更新失败', e));
-                    break;
-                case 'rename':
-                    MessageBoxUtil.prompt("请输入新的标签名字", "修改标签名", {
-                        confirmButtonText: '修改',
-                        cancelButtonText: '取消',
-                        inputValue: this.header.name,
-                        inputPattern: /.+/,
-                        inputErrorMessage: '必须输入标签名'
-                    }).then((value) => {
-                        this.header.name = value;
-                    }).catch(() => {
-                        console.error('取消修改');
-                    });
-                    break;
-                case 'close-one':
-                    this.searchMap.delete(this.searchId);
-                    if (this.searchMap.size > 0) {
-                        this.searchId = this.searchMap.keys().next().value
-                    }
-                    break;
-                case 'close-other':
-                    // 移除其他
-                    Array.from(this.searchMap.keys()).forEach(e => {
-                        if (e !== this.searchId) {
-                            this.searchMap.delete(e);
-                        }
-                    })
-                    break;
-                case 'close-all':
-                    this.searchMap.clear();
-                    break;
-                case 'cancel':
-                    this.header.relationId = undefined;
-                    break;
-
-            }
-            // 全部关闭了
-            if (this.searchMap.size === 0) {
-                this.clearAfter();
-            }
-        },
         clearAfter() {
             let searchId = new Date().getTime();
             let searchItem = {
@@ -517,7 +451,7 @@ export default defineComponent({
                     conditions: new Array<BaseQuery>(),
                     orders: new Array<BaseOrder>(),
                     page: 1,
-                    size: useSettingStore().getPageSize,
+                    size: this.pageSize,
                     total: 0,
                     result: {}
                 }

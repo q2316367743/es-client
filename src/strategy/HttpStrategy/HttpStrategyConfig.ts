@@ -36,5 +36,7 @@ export default interface HttpStrategyConfig extends AxiosRequestConfig{
      * 是否隐藏
      */
     hidden?: boolean;
+
+    responseType?: 'json' | 'text' | 'blob' | 'document' | 'arraybuffer';
     
 }

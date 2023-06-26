@@ -42,7 +42,11 @@ const useSettingStore = defineStore('setting', {
         getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.instance.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),
         getLastUrl: (state): boolean => Optional.ofNullable(state.instance.lastUrl).orElse(false),
         getJsonWarp: (state): boolean => Optional.ofNullable(state.instance.jsonWrap).orElse(false),
-        getSeniorFilter: (state): boolean => Optional.ofNullable(state.instance.seniorFilter).orElse(false)
+        getSeniorFilter: (state): boolean => Optional.ofNullable(state.instance.seniorFilter).orElse(false),
+
+        showTab: (state): boolean => Optional.ofNullable(state.instance.showTab).orElse(true),
+        pageSize: (state): number => Optional.ofNullable(state.instance.pageSize).orElse(20),
+        defaultViewer: (state): ViewTypeEnum => Optional.ofNullable(state.instance.defaultViewer).orElse(ViewTypeEnum.JSON),
     },
     actions: {
         async init() {
