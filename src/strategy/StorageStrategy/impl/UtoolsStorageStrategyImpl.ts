@@ -77,21 +77,21 @@ export default class UtoolsStorageStrategyImpl implements StorageStrategy {
         });
     }
 
-    delete<T extends Base>(name: TableNameEnum, id: number): Promise<void> {
+    async delete<T extends Base>(name: TableNameEnum, id: number): Promise<void> {
         // 删除
         if (name === TableNameEnum.URL) {
             utools.removeFeature(id + '');
         }
-        let dbReturn = utools.db.remove(`${name}-${id}`);
+        let dbReturn = await utools.db.promises.remove(`${name}-${id}`);
         if (dbReturn.ok) {
             return Promise.resolve();
         }
         return Promise.reject(dbReturn.message)
     }
 
-    insert<T extends Base>(name: TableNameEnum, record: T): Promise<number> {
+    async insert<T extends Base>(name: TableNameEnum, record: T): Promise<number> {
         record.id = new Date().getTime();
-        let dbReturn = utools.db.put({
+        let dbReturn = await utools.db.promises.put({
             _id: `${name}-${record.id}`,
             value: record
         });
@@ -113,8 +113,8 @@ export default class UtoolsStorageStrategyImpl implements StorageStrategy {
         return Promise.reject(dbReturn.message);
     }
 
-    list<T extends Base>(name: TableNameEnum, condition?: Partial<T>): Promise<Array<T>> {
-        let dbDocs = utools.db.allDocs(name) as Array<Record<T>>;
+    async list<T extends Base>(name: TableNameEnum, condition?: Partial<T>): Promise<Array<T>> {
+        let dbDocs = await utools.db.promises.allDocs(name);
         let records = new Array<T>();
         for (let dbDoc of dbDocs) {
             if (condition) {
@@ -134,16 +134,21 @@ export default class UtoolsStorageStrategyImpl implements StorageStrategy {
         return Promise.resolve(records);
     }
 
-    one<T extends Base>(name: TableNameEnum, id: number): Promise<T | undefined> {
-        let dbDoc = utools.db.get(`${name}-${id}`) as Record<T>;
-
+    async one<T extends Base>(name: TableNameEnum, id: number): Promise<T | undefined> {
+        let dbDoc = await utools.db.promises.get(`${name}-${id}`) as Record<T>;
         return Promise.resolve(dbDoc ? dbDoc.value : undefined);
     }
 
-    update<T extends Base>(name: TableNameEnum, id: number, record: T): Promise<void> {
-        let dbReturn = utools.db.put({
+    async update<T extends Base>(name: TableNameEnum, id: number, record: T): Promise<void> {
+        // 获取数据
+        let _rev = undefined as string | undefined;
+        const old = await utools.db.promises.get(`${name}-${id}`);
+        if (old) {
+            _rev = old._rev;
+        }
+        let dbReturn = await utools.db.promises.put({
             _id: `${name}-${id}`,
-            _rev: new Date().getTime() + '',
+            _rev,
             value: record
         });
         if (dbReturn.ok) {
