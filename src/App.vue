@@ -190,7 +190,7 @@ export default defineComponent({
         // 组件
         Info,
         SettingAbout: defineAsyncComponent(() => import("@/page/setting/components/About.vue")),
-        VersionUpdate: defineAsyncComponent(() => import("@/module/VersionUpdate/index.vue")),
+        VersionUpdate: defineAsyncComponent(() => import("@/module/version-update/index.vue")),
         FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
         SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue")),
         IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
