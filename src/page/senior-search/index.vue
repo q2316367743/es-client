@@ -6,36 +6,37 @@
                 <template #first>
                     <div class="senior-search-side" :class="instance.showTab ? 'show-tab' : ''">
                         <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                            v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab" />
+                                  v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab"/>
                         <!-- 编辑器 -->
                         <div class="senior-search-editor">
                             <!-- 操作栏 -->
                             <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
-                                @format-document="formatDocument" @clear-body="clearBody"
-                                @select="(command) => view = command" @setting="settingDialog = true"
-                                @export-data="exportData">
+                                                  @format-document="formatDocument" @clear-body="clearBody"
+                                                  @select="(command) => view = command" @setting="settingDialog = true"
+                                                  @export-data="exportData">
                                 <template #footer>
                                     <a-tooltip content="请求" position="right">
                                         <a-button :type="editor ? 'primary' : 'text'" status="normal"
-                                            @click="editor = true">
+                                                  @click="editor = true">
                                             <template #icon>
-                                                <icon-list :size="18" />
+                                                <icon-list :size="18"/>
                                             </template>
                                         </a-button>
                                     </a-tooltip>
                                     <a-tooltip content="过滤" position="right">
                                         <a-button :type="editor ? 'text' : 'primary'" status="normal"
-                                            @click="editor = false">
+                                                  @click="editor = false">
                                             <template #icon>
-                                                <icon-bug :size="18" />
+                                                <icon-bug :size="18"/>
                                             </template>
                                         </a-button>
                                     </a-tooltip>
                                 </template>
                             </senior-search-option>
                             <!-- rest客户端编辑器 -->
-                            <rest-client-editor ref="restClientEditor" v-model="current" class="editor" @execute="execute"
-                                v-show="editor" />
+                            <rest-client-editor ref="restClientEditor" v-model="current" class="editor"
+                                                @execute="execute"
+                                                v-show="editor"/>
                             <div class="editor" v-show="!editor">
                                 <!-- 过滤器 -->
                                 <div class="js-option">
@@ -52,35 +53,36 @@
                                 <div class="js-editor-wrapper">
                                     <!-- 过滤编辑器 -->
                                     <codemirror v-model="filter" placeholder="$为结果对象" :style="{ height: '100%' }"
-                                        class="js-editor" :autofocus="true" :indent-with-tab="true" :tabSize="4"
-                                        :extensions="extensions" />
+                                                class="js-editor" :autofocus="true" :indent-with-tab="true" :tabSize="4"
+                                                :extensions="extensions"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </template>
                 <template #second>
-                    <senior-search-display :view="view" :data="show" />
+                    <senior-search-display :view="view" :data="show"/>
                 </template>
             </a-split>
         </div>
-        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body width="600px"
-            :footer="false">
-            <senior-search-setting @close="settingDialog = false" />
+        <a-modal v-model:visible="settingDialog" title="编辑器设置" draggable unmount-on-close render-to-body
+                 width="600px"
+                 :footer="false">
+            <senior-search-setting @close="settingDialog = false"/>
         </a-modal>
-        <senior-search-export-dialog v-model="exportDialog" :result="result" />
+        <senior-search-export-dialog v-model="exportDialog" :result="result"/>
     </a-spin>
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from "vue";
-import { mapState } from "pinia";
+import {defineAsyncComponent, defineComponent} from "vue";
+import {mapState} from "pinia";
 import * as monaco from "monaco-editor";
-import { Codemirror } from 'vue-codemirror';
-import { javascript } from "@codemirror/lang-javascript";
+import {Codemirror} from 'vue-codemirror';
+import {javascript} from "@codemirror/lang-javascript";
 
 import './index.less';
-import { SeniorSearchItem } from './domain/SeniorSearchItem';
+import {SeniorSearchItem} from './domain/SeniorSearchItem';
 
 import mitt from '@/plugins/mitt';
 
@@ -114,8 +116,8 @@ import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
 
-import { Grammatical, grammaticalAnalysis } from "@/algorithm/grammaticalAnalysis";
-import { jsonFormat } from "@/algorithm/jsonFormat";
+import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
+import {jsonFormat} from "@/algorithm/jsonFormat";
 
 
 const seniorTabComponent = new SeniorTabComponent();

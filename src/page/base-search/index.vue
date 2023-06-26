@@ -3,7 +3,7 @@
         <div class="base-search">
             <!-- 标签页 -->
             <div class="base-search-tab" v-if="showTab">
-                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs" />
+                <tab-menu v-model="searchId" v-model:search-item-headers="searchItemHeaders" @edit-tabs="editTabs"/>
             </div>
             <!-- 主要显示区域 -->
             <div class="base-search-main" :class="showTab ? '' : 'full-screen'">
@@ -12,21 +12,21 @@
                     <div class="left">
                         <!-- 索引选择 -->
                         <a-select v-model="current.index" style="width: 260px;" allow-search allow-clear
-                            :placeholder="$t('baseSearch.placeholder.selectIndex')">
+                                  :placeholder="$t('baseSearch.placeholder.selectIndex')">
                             <a-option v-for="index in indices" :key="index.label" :label="index.label"
-                                :value="index.value" />
+                                      :value="index.value"/>
                         </a-select>
                         <!-- 搜索 -->
                         <a-button type="primary" status="success" @click="search" :disabled="current.index === ''"
-                            title="搜索">
+                                  title="搜索">
                             <template #icon>
-                                <icon-search />
+                                <icon-search/>
                             </template>
                         </a-button>
                         <!-- 索引管理 -->
                         <a-button type="primary" :disabled="current.index === ''" @click="openIndexManage" title="管理">
                             <template #icon>
-                                <icon-info />
+                                <icon-info/>
                             </template>
                         </a-button>
                     </div>
@@ -34,20 +34,20 @@
                         <!-- 历史 -->
                         <a-button type="primary" status="warning" @click="historyDialog = true" title="历史">
                             <template #icon>
-                                <icon-history />
+                                <icon-history/>
                             </template>
                         </a-button>
                         <!-- 设置 -->
                         <a-button type="primary" title="设置">
                             <template #icon>
-                                <icon-settings />
+                                <icon-settings/>
                             </template>
                         </a-button>
                         <a-select v-model="view" style="margin-left: 8px;width: 140px;">
-                            <a-option label="基础视图" :value="ViewTypeEnum.BASE" />
-                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON" />
-                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE" />
-                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE" />
+                            <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
+                            <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
+                            <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
+                            <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
                         </a-select>
                     </div>
                 </div>
@@ -56,30 +56,30 @@
                     <!-- 查询条件 -->
                     <div class="base-condition" ref="baseCondition">
                         <a-form :model="current" layout="vertical" label-width="80px"
-                            style="overflow-x: auto;overflow-y: hidden;">
+                                style="overflow-x: auto;overflow-y: hidden;">
                             <!-- 条件 -->
                             <a-form-item :label="$t('baseSearch.form.condition')">
-                                <field-condition-container v-model="current.conditions" :fields="fields" />
+                                <field-condition-container v-model="current.conditions" :fields="fields"/>
                             </a-form-item>
                             <!-- 排序 -->
                             <a-form-item :label="$t('baseSearch.form.order')">
-                                <field-order-container v-model="current.orders" :fields="fields" />
+                                <field-order-container v-model="current.orders" :fields="fields"/>
                             </a-form-item>
                             <div class="base-condition-pagination">
                                 <a-pagination :total="current.total" v-model:current="current.page"
-                                    :page-size="current.size" show-total />
-                                <a-input-number v-model="current.size" style="width: 70px" />
+                                              :page-size="current.size" show-total/>
+                                <a-input-number v-model="current.size" style="width: 70px"/>
                             </div>
                         </a-form>
                     </div>
                     <!-- 查询结果 -->
                     <div class="base-content hljs" ref="baseContent">
                         <base-search-data-view ref="baseSearchDataView" :view="view" :data="current.result"
-                            :index="current.index" />
+                                               :index="current.index"/>
                     </div>
-                    <a-back-top target-container=".base-display" />
+                    <a-back-top target-container=".base-display"/>
                 </div>
-                <a-back-top target-container=".arco-scrollbar-container" v-show="showTop" />
+                <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
                 <div class="base-search-condition-sentence">
                     <a-button type="text" @click="showBody">
                         {{ $t('baseSearch.form.displayQueryStatement') }}
@@ -93,18 +93,18 @@
                 </div>
             </div>
             <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                render-to-body class="es-dialog" :mask-closable="false">
-                <json-view :data="condition.data" />
+                     render-to-body class="es-dialog" :mask-closable="false">
+                <json-view :data="condition.data"/>
             </a-modal>
-            <bsh-manage v-model="historyDialog" />
+            <bsh-manage v-model="historyDialog"/>
         </div>
     </a-spin>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "pinia";
-import { SelectOptionData } from "@arco-design/web-vue";
+import {defineComponent} from "vue";
+import {mapState} from "pinia";
+import {SelectOptionData} from "@arco-design/web-vue";
 
 // 自定义组件
 import TabMenu from "@/components/TabMenu/index.vue";
@@ -121,23 +121,26 @@ import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
 import BaseQuery from '@/entity/BaseQuery';
 import BaseOrder from "@/entity/BaseOrder";
 
+// 枚举
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
-// 内部组件
+// 核心算法
 import QueryConditionBuild from './algorithm/QueryConditionBuild';
 
-import { BaseSearchItem } from "./domain/BaseSearchItem";
+import {BaseSearchItem} from "./domain/BaseSearchItem";
 
-import FieldOrderContainer from "./components/FiledOrder/FieldOrderContainer.vue";
-import FieldConditionContainer from "./components/FieldCondition/FieldConditionContainer.vue";
+// 内部组件
+import FieldOrderContainer from "@/page/base-search/components/filed-order/container.vue";
+import FieldConditionContainer from "@/page/base-search/components/field-condition/container.vue";
 import BshManage from "./components/History/index.vue";
 import BaseSearchDataView from "./components/data-view/index.vue";
 
 
 import Field from "@/view/Field";
 
+// 使用的工具类
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {
@@ -360,7 +363,7 @@ export default defineComponent({
             this.loading = true;
             try {
                 DocumentApi(this.current.index)._search(
-                    QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
+                        QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
                 ).then((response) => {
                     // 结果
                     this.current.result = response as Record<string, any>;
@@ -417,9 +420,9 @@ export default defineComponent({
                     link: `/${this.current.index}/_search`,
                     method: 'POST',
                     params: JSON.stringify(
-                        QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders),
-                        null,
-                        4)
+                            QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders),
+                            null,
+                            4)
                 });
             } catch (e) {
                 MessageUtil.error('条件构造错误', e);
