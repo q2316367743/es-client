@@ -50,18 +50,18 @@ export default defineComponent({
 <style lang="less">
 .setting {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    padding: 10px;
+    top: 0;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    padding: 0;
 
     .setting-main {
         position: absolute;
         top: 50px;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
         padding: 0;
     }
 }

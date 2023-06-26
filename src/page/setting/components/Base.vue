@@ -24,7 +24,7 @@
             <a-collapse-item key="3">
                 <template #header>
                     全局索引查询条件（修改后请
-                    <span class="like-link">刷新</span>
+                    <span class="like-red">刷新</span>
                     索引）
                 </template>
                 <a-form-item label="状态">
@@ -378,8 +378,8 @@ export default defineComponent({
     margin-left: 5px;
 }
 
-.like-link {
-    color: rgb(var(--arcoblue-6));
+.like-red {
+    color: rgb(var(--orange-6));
 }
 
 .setting-base {
