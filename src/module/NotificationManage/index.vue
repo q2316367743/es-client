@@ -4,14 +4,14 @@
         <template #title>
             <div class="notification-manage-title">
                 <div>通知中心</div>
-                <a-button type="primary" status="danger" @click="clear">清空</a-button>
+                <a-button type="primary" status="danger" @click="clear()">清空</a-button>
             </div>
         </template>
         <div class="notification-manage">
             <a-card v-for="item in items" :key="item.id" class="notification-item">
                 <template #title>{{ item.title }}</template>
                 <template #extra> {{ format(item.time) }}</template>
-                <notification-item-http v-if="item.type === 'http'" :data="item.httpMode" />
+                <notification-manage-item v-if="item.type === 'http'" :data="item.httpMode" />
             </a-card>
         </div>
     </a-drawer>
@@ -22,11 +22,11 @@ import { mapState } from "pinia";
 import useNotificationStore from "@/store/NotificationStore";
 import XEUtils from "xe-utils";
 import JsonView from "@/components/JsonView/index.vue";
-import NotificationItemHttp from "@/module/NotificationManage/HttpMode.vue";
+import NotificationManageItem from "@/module/NotificationManage/item.vue";
 
 export default defineComponent({
     name: 'notification-manage',
-    components: { NotificationItemHttp, JsonView },
+    components: { NotificationManageItem, JsonView },
     emits: ['update:modelValue'],
     props: {
         modelValue: Boolean
