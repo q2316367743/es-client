@@ -124,6 +124,8 @@ import { mapState } from 'pinia';
 import { Codemirror } from 'vue-codemirror';
 import { json } from '@codemirror/lang-json';
 import XEUtils from 'xe-utils';
+import { TableRowSelection, TableBorder, TableData, TableExpandable } from "@arco-design/web-vue";
+import Sortable from "sortablejs";
 
 import useIndexStore from "@/store/IndexStore";
 import useUrlStore from "@/store/UrlStore";
@@ -141,16 +143,12 @@ import DbCondition from "@/page/data-browse/component/DbCondition.vue";
 import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
 import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
 import DataBuild from "@/page/data-browse/build/DataBuild";
-import '@/page/data-browse/index.less';
 
 import mitt from "@/plugins/mitt";
 import StructureIcon from "@/icon/StructureIcon.vue";
 
 import JsonView from "@/components/JsonView/index.vue";
-import { TableBorder, TableData, TableExpandable } from "@arco-design/web-vue";
 import DataBrowseComponent from "@/page/data-browse/component/DataBrowseComponent";
-import Sortable from "sortablejs";
-import { TableRowSelection } from "@arco-design/web-vue";
 
 let sort: Sortable | undefined;
 
@@ -416,4 +414,6 @@ export default defineComponent({
     }
 });
 </script>
-<style lang="less"></style>
+<style lang="less">
+@import url(./index.less);
+</style>
