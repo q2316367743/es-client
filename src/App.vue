@@ -69,29 +69,6 @@
                             <a-doption value="about">{{ $t('app.about') }}</a-doption>
                         </template>
                     </a-dropdown>
-                    <!-- 最小化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.min || urlSelectLoading"
-                              v-if="optionShow.visibility"
-                              @click="toMin()">
-                        <template #icon>
-                            <icon-minus/>
-                        </template>
-                    </a-button>
-                    <!-- 最大化 -->
-                    <a-button class="menu-item" :disabled="!optionShow.max || urlSelectLoading"
-                              v-if="optionShow.visibility"
-                              @click="toMax()">
-                        <template #icon>
-                            <icon-copy/>
-                        </template>
-                    </a-button>
-                    <!-- 关闭 -->
-                    <a-button class="menu-item" :disabled="!optionShow.close || urlSelectLoading"
-                              v-if="optionShow.visibility" @click="toClose()">
-                        <template #icon>
-                            <icon-close/>
-                        </template>
-                    </a-button>
                 </div>
             </a-layout-header>
             <!-- 主页面 -->
@@ -173,6 +150,9 @@
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useSettingStore from "@/store/SettingStore";
+import useLoadingStore from "@/store/LoadingStore";
+import useNotificationStore from "@/store/NotificationStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 // 引入框架
 import {defineAsyncComponent, defineComponent} from 'vue';
 import {mapState} from "pinia";
@@ -186,12 +166,13 @@ import Home from '@/page/home/index.vue';
 import emitter from '@/plugins/mitt';
 // 枚举
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
 import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
-
 import {
     applicationLaunch,
     lodisStrategyContext,
@@ -199,14 +180,7 @@ import {
     useUrlEditEvent,
     useUrlSelectEvent,
     versionManage,
-    windowStrategyContext
 } from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
-import useLoadingStore from "@/store/LoadingStore";
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
-import WindowStrategyUtil from "@/strategy/WindowStrategy/WindowStrategyUtil";
-import useNotificationStore from "@/store/NotificationStore";
-import {useGlobalStore} from "@/store/GlobalStore";
 
 export default defineComponent({
     components: {
@@ -236,7 +210,6 @@ export default defineComponent({
             collapsed: true,
             selectedKeys: new Array<PageNameEnum>(),
             // 窗口操作展示
-            optionShow: WindowStrategyUtil(),
             urlSelectLoading: true,
             notificationDrawer: false,
             PageNameEnum,
@@ -447,9 +420,6 @@ export default defineComponent({
                     break;
             }
         },
-        toMin: () => windowStrategyContext.getStrategy().min(),
-        toMax: () => windowStrategyContext.getStrategy().max(),
-        toClose: () => windowStrategyContext.getStrategy().close(),
         openNotification() {
             this.notificationDrawer = true;
             useNotificationStore().read();

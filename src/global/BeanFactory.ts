@@ -23,7 +23,6 @@ import highlightJson from "highlight.js/lib/languages/json";
 
 import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
-import WindowStrategyContext from "@/strategy/WindowStrategy/WindowStrategyContext";
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
@@ -42,7 +41,6 @@ export const httpStrategyContext = new HttpStrategyContext();
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
-export const windowStrategyContext = new WindowStrategyContext();
 export const versionStrategyContext = new VersionStrategyContext();
 versionStrategyContext.register(new V6VersionStrategyImpl());
 versionStrategyContext.register(new V7VersionStrategyImpl());
@@ -50,7 +48,7 @@ versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 应用启动器
 export const applicationLaunch = new ApplicationLaunch(
-    lodisStrategyContext, storageStrategyContext, httpStrategyContext, windowStrategyContext);
+    lodisStrategyContext, storageStrategyContext, httpStrategyContext);
 
 export const json2xml = new x2js({
     selfClosingElements: false,
