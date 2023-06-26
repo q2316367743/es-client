@@ -5,11 +5,11 @@
             <div style="display: flex">
                 <!-- 输入框 -->
                 <a-input v-model="condition.name" :placeholder="$t('home.placeholder.index')"
-                    style="width: 250px;height: 32px;" @input="search()" @clear="search()" allow-clear></a-input>
+                         style="width: 250px;height: 32px;" @input="search()" @clear="search()" allow-clear></a-input>
                 <a-button style="margin-left: 5px" @click="condition.dialog = true">{{ $t('common.operation.more') }}
                 </a-button>
                 <a-button type="primary" style="margin-left: 5px" @click="search()">
-                {{ $t('common.operation.search') }}
+                    {{ $t('common.operation.search') }}
                 </a-button>
             </div>
             <a-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">
@@ -18,18 +18,19 @@
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
-            <a-list class="home-index-items" :data="showIndices" :virtual-list-props="virtualListProps" :scrollbar="true"
-                :bordered="false" :split="false">
+            <a-list class="home-index-items" :data="showIndices" :virtual-list-props="virtualListProps"
+                    :scrollbar="true"
+                    :bordered="false" :split="false">
                 <template #item="{ item }">
                     <a-list-item>
-                        <index-item :index="item" @open-dialog="indexOpenDialog" @open-manage="indexOpenManage" />
+                        <index-item :index="item" @open-dialog="indexOpenDialog" @open-manage="indexOpenManage"/>
                     </a-list-item>
                 </template>
                 <template #empty>
-                    <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 20%" />
+                    <a-empty v-if="showIndices.length === 0" description="空空如也" style="margin-top: 20%"/>
                 </template>
             </a-list>
-            <a-back-top target-container=".home-container .arco-scrollbar-container" />
+            <a-back-top target-container=".home-container .arco-scrollbar-container"/>
         </div>
         <!-- 统计数据 -->
         <div class="home-statistics" v-if="url">
@@ -51,9 +52,9 @@
             </div>
         </div>
         <!-- 新增索引 -->
-        <home-index-add v-model="indexAddDialog" />
+        <home-index-add v-model="indexAddDialog"/>
         <!-- 数据展示 -->
-        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model:value="indexItem.dialog" />
+        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model:value="indexItem.dialog"/>
         <!-- 更多查询条件 -->
         <a-modal v-model:visible="condition.dialog" unmount-on-close render-to-body title="更多查询条件" draggable>
             <a-form :model="condition" label-width="80px" label-position="left">
@@ -70,20 +71,21 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import {defineAsyncComponent, defineComponent, markRaw, toRaw} from 'vue';
+import {mapState} from 'pinia';
 import Fuse from "fuse.js";
+import {cloneDeep} from 'lodash-es';
 
 import useUrlStore from '@/store/UrlStore';
 import useIndexStore from '@/store/IndexStore';
-import { useGlobalStore } from "@/store/GlobalStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 import IndexItem from "./components/index-item.vue";
 import JsonDialog from "@/components/json-dialog/index.vue";
 
 import mitt from '@/plugins/mitt';
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import { useIndexManageEvent } from "@/global/BeanFactory";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 import IndexView from "@/view/index/IndexView";
 
 export default defineComponent({
@@ -154,25 +156,17 @@ export default defineComponent({
                 title: '',
                 data: {} as any,
             };
-            this.fuse = new Fuse(this.indices, {
+            this.fuse = markRaw(new Fuse<IndexView>(cloneDeep(toRaw(this.indices)), {
                 shouldSort: true,
                 threshold: 0.3,
                 includeScore: true,
+                includeMatches: true,
                 keys: [
-                    { name: 'name', weight: 0.9 },
-                    { name: 'alias', weight: 0.3 }
+                    {name: 'name', weight: 0.9, getFn: e => e.name},
+                    {name: 'alias', weight: 0.3, getFn: e => e.alias}
                 ],
-            });
+            }));
             this.search();
-        });
-        this.fuse = new Fuse(this.indices, {
-            shouldSort: true,
-            threshold: 0.3,
-            includeScore: true,
-            keys: [
-                { name: 'name', weight: 0.9 },
-                { name: 'alias', weight: 0.3 }
-            ],
         });
     },
     methods: {
@@ -185,7 +179,7 @@ export default defineComponent({
             if (this.condition.name.trim() !== '') {
                 if (this.fuse) {
                     showIndices = this.fuse.search(this.condition.name)
-                        .map(e => e.item);
+                            .map(e => e.item);
                 }
             } else {
                 showIndices = showIndices.sort((a, b) => {

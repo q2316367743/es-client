@@ -68,9 +68,6 @@ const useIndexStore = defineStore('index', {
                     this.status = health.status;
                 }).catch(e => useNotificationStore().send(e, '获取索引健康值失败'));
 
-                // 设置当前版本
-                versionStrategyContext.setVersion();
-
                 return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();
