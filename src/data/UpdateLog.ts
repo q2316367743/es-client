@@ -1,6 +1,22 @@
-import { Log, LogItemEnum } from "@/view/Data";
+import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
+    {
+        version: '2.8.3',
+        sign: 283,
+        time: '2023-06-27',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '增加基础搜索设置，可以设置自定义参数',
+            txc: 'https://support.qq.com/products/489458/post/168664481549600465/'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '优化首页搜索，使用fuse.js进行模糊搜索，更加智能'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '优化首页列表，使用虚拟列表，索引更多任然不卡'
+        }]
+    },
     {
         version: '2.8.2',
         sign: 282,
