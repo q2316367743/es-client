@@ -10,7 +10,7 @@
                 <!-- 顶部菜单栏 -->
                 <base-search-header v-model:current-index="current.index" v-model:view="view"
                                     @open-history-dialog="historyDialog = true" @open-index-manage="openIndexManage"
-                                    @search="search"/>
+                                    @open-setting="settingDialog = true" @search="search"/>
                 <!-- 核心查询区 -->
                 <div class="base-display" ref="baseDisplay">
                     <!-- 查询条件 -->
@@ -52,12 +52,13 @@
                     </a-button>
                 </div>
             </div>
-            <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                     render-to-body class="es-dialog" :mask-closable="false">
-                <json-view :data="condition.data"/>
-            </a-modal>
-            <bsh-manage v-model="historyDialog"/>
         </div>
+        <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
+                 render-to-body class="es-dialog" :mask-closable="false">
+            <json-view :data="condition.data"/>
+        </a-modal>
+        <bsh-manage v-model="historyDialog"/>
+        <base-search-setting v-model:visible="settingDialog"/>
     </a-spin>
 </template>
 
@@ -96,6 +97,7 @@ import FieldConditionContainer from "@/page/base-search/components/field-conditi
 import BshManage from "./components/History/index.vue";
 import BaseSearchDataView from "./components/data-view/index.vue";
 import BaseSearchHeader from './components/header/index.vue';
+import BaseSearchSetting from './components/setting/index.vue';
 
 
 import Field from "@/view/Field";
@@ -123,7 +125,8 @@ export default defineComponent({
         FieldConditionContainer,
         FieldOrderContainer,
         TabMenu,
-        BaseSearchHeader
+        BaseSearchHeader,
+        BaseSearchSetting
     },
     data: () => ({
         searchMap: new Map<number, BaseSearchItem>(),
@@ -158,6 +161,7 @@ export default defineComponent({
             data: {}
         },
         historyDialog: false,
+        settingDialog: false,
 
         // 视图
         view: ViewTypeEnum.JSON,
@@ -165,7 +169,7 @@ export default defineComponent({
         ViewTypeEnum
     }),
     computed: {
-        // 索引
+        ...mapState(useSettingStore, ['showTab', 'pageSize', 'defaultViewer']),
         ...mapState(useIndexStore, {
             indexAliasMap: (state): Map<string, string> => {
                 let aliasIndexMap = new Map<string, string>();
@@ -176,7 +180,6 @@ export default defineComponent({
                 return aliasIndexMap;
             }
         }),
-        ...mapState(useSettingStore, ['showTab', 'pageSize', 'defaultViewer']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
         },

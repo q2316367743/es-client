@@ -27,7 +27,7 @@
                     </a-select>
                     <!-- 刷新按钮 -->
                     <a-button class="refresh" @click="refresh()" :disabled="loading || !urlId || urlId === ''">{{
-                        $t('common.operation.refresh')
+                            $t('common.operation.refresh')
                         }}
                     </a-button>
                 </div>
@@ -59,7 +59,7 @@
                     <!-- 版本 -->
                     <a-dropdown @select="versionCommand">
                         <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
-                            Constant.version
+                                Constant.version
                             }}
                         </a-button>
                         <template #content>
@@ -178,6 +178,8 @@ import {
     useUrlSelectEvent,
     versionManage,
 } from "@/global/BeanFactory";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     components: {
@@ -242,8 +244,12 @@ export default defineComponent({
         }
     },
     created() {
+        // 初始化基础搜索设置
+        useBaseSearchSettingStore().init()
+                .then(() => console.log("初始化基础搜索设置成功"))
+                .catch(e => MessageUtil.error("初始化基础搜索设置失败", e));
         applicationLaunch.register(async () => {
-            console.log('开始执行应用启动后任务')
+            console.log('开始执行应用启动后任务');
             // 刷新索引列表
             useUrlStore().reset(() => {
                 // url渲染成功
@@ -261,14 +267,14 @@ export default defineComponent({
                     // 如果展示历史
                     if (useSettingStore().getLastUrl) {
                         lodisStrategyContext.getStrategy().get<string>(LocalStorageKeyEnum.LAST_URL)
-                            .then(value => {
-                                if (value) {
-                                    let id = parseInt(value);
-                                    if (Number.isInteger(id)) {
-                                        this.selectUrl(id);
+                                .then(value => {
+                                    if (value) {
+                                        let id = parseInt(value);
+                                        if (Number.isInteger(id)) {
+                                            this.selectUrl(id);
+                                        }
                                     }
-                                }
-                            });
+                                });
                     }
                 }
                 // 删除sessionStorage
@@ -430,8 +436,8 @@ export default defineComponent({
 
 <style lang="less">
 .app-feedback {
-  width: calc(100vw - 40px);
-  height: calc(100vh - 58px - 60px);
-  border: none;
+    width: calc(100vw - 40px);
+    height: calc(100vh - 58px - 60px);
+    border: none;
 }
 </style>

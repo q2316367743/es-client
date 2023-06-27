@@ -29,7 +29,7 @@
                 </template>
             </a-button>
             <!-- 设置 -->
-            <a-button type="primary" title="设置">
+            <a-button type="primary" title="设置" @click="$emit('open-setting')">
                 <template #icon>
                     <icon-settings/>
                 </template>
@@ -52,7 +52,7 @@ import {SelectOptionData} from "@arco-design/web-vue";
 
 export default defineComponent({
     name: 'base-search-header',
-    emits: ['update:view', 'update:current-index', 'open-index-manage', 'open-history-dialog', 'search'],
+    emits: ['update:view', 'update:current-index', 'open-index-manage', 'open-history-dialog', 'open-setting', 'search'],
     props: {
         view: Number,
         currentIndex: String

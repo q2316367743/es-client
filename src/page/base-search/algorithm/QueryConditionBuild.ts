@@ -1,6 +1,7 @@
 import BaseQuery from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import MessageUtil from "@/utils/MessageUtil";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
 
 /**
  * 获取基础查询请求体
@@ -78,7 +79,7 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
         if (order.isEnable === false) {
             return;
         }
-        body.sort[order.field] = { order: order.type };
+        body.sort[order.field] = {order: order.type};
     }
 }
 
@@ -90,7 +91,12 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
  * @param size 每页数目
  * @param orders 排序
  */
-export default function QueryConditionBuild(queries: Array<BaseQuery>, page: number, size: number, orders: Array<BaseOrder>): any {
+export default function QueryConditionBuild(
+    queries: Array<BaseQuery>,
+    page: number,
+    size: number,
+    orders: Array<BaseOrder>
+): any {
     let must = [] as Array<any>;
     let must_not = [] as Array<any>;
     let should = [] as Array<any>;
@@ -116,5 +122,9 @@ export default function QueryConditionBuild(queries: Array<BaseQuery>, page: num
     if (orders.length > 0) {
         buildOrder(orders, body);
     }
-    return body;
+    return {
+        ...body,
+        track_total_hits: useBaseSearchSettingStore().enableTrackTotalHits,
+        ...useBaseSearchSettingStore().defaultParams
+    };
 }
