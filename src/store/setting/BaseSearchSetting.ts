@@ -6,7 +6,7 @@ import {state} from "vue-tsc/out/shared";
 export function getDefaultBaseSearchSetting(): BaseSearchSetting {
     return {
         defaultParams: "",
-        enableTrackTotalHits: false
+        enableTrackTotalHits: true
     }
 }
 
