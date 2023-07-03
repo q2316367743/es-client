@@ -2,6 +2,15 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.8.4',
+        sign: 284,
+        time: '2023-07-03',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '基础查询设置增加是否启用'
+        }]
+    },
+    {
         version: '2.8.3',
         sign: 283,
         time: '2023-06-27',

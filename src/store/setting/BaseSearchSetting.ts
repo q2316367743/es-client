@@ -6,7 +6,8 @@ import {state} from "vue-tsc/out/shared";
 export function getDefaultBaseSearchSetting(): BaseSearchSetting {
     return {
         defaultParams: "",
-        enableTrackTotalHits: true
+        enableTrackTotalHits: true,
+        trackTotalHits: true
     }
 }
 
@@ -27,7 +28,8 @@ export const useBaseSearchSettingStore = defineStore('base-search-setting', {
             }
             return params;
         },
-        enableTrackTotalHits: state => state.baseSearchSetting.enableTrackTotalHits
+        enableTrackTotalHits: state => state.baseSearchSetting.enableTrackTotalHits,
+        trackTotalHits: state => state.baseSearchSetting.trackTotalHits
     },
     actions: {
         async init() {

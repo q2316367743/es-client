@@ -122,9 +122,13 @@ export default function QueryConditionBuild(
     if (orders.length > 0) {
         buildOrder(orders, body);
     }
+    let customerOption = {} as Record<string, any>;
+    if (useBaseSearchSettingStore().enableTrackTotalHits) {
+        customerOption['track_total_hits'] = useBaseSearchSettingStore().trackTotalHits
+    }
     return {
         ...body,
-        track_total_hits: useBaseSearchSettingStore().enableTrackTotalHits,
+        ...customerOption,
         ...useBaseSearchSettingStore().defaultParams
     };
 }

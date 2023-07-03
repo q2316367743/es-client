@@ -10,4 +10,9 @@ export default interface BaseSearchSetting {
      */
     enableTrackTotalHits: boolean;
 
+    /**
+     * track_total_hits
+     */
+    trackTotalHits: boolean;
+
 }

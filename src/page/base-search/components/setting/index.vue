@@ -1,5 +1,6 @@
 <template>
-    <a-drawer v-model:visible="show" title="基础搜索设置" class="base-search-setting" :width="600" ok-text="保存" @ok="save">
+    <a-drawer v-model:visible="show" title="基础搜索设置" class="base-search-setting" :width="600" ok-text="保存"
+              @ok="save">
         <a-form :model="setting" layout="vertical">
             <a-form-item label="默认查询参数">
                 <codemirror v-model.trim="setting.defaultParams" placeholder="请在这里输入默认查询参数"
@@ -9,8 +10,32 @@
                     此处需要一个JSON字符串，可以覆盖下面的参数
                 </template>
             </a-form-item>
-            <a-form-item label="track_total_hits">
-                <a-switch v-model="setting.enableTrackTotalHits"/>
+            <a-form-item label="快捷设置">
+                <table class="arco-table">
+                    <colgroup>
+                        <col width="200px">
+                        <col width="150px">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr class="arco-table-tr">
+                        <th class="arco-table-th">参数</th>
+                        <th class="arco-table-th">是否启用</th>
+                        <th class="arco-table-th">值</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="arco-table-tr">
+                        <td class="arco-table-td">track_total_hits</td>
+                        <td class="arco-table-td">
+                            <a-switch type="line" v-model="setting.enableTrackTotalHits"></a-switch>
+                        </td>
+                        <td class="arco-table-td">
+                            <a-switch v-model="setting.trackTotalHits"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </a-form-item>
         </a-form>
     </a-drawer>
@@ -59,5 +84,14 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-
+.arco-table {
+    border: 1px solid var(--color-neutral-3);
+}
+.arco-table-th {
+    background-color: var(--color-neutral-2);
+    text-align: center
+}
+.arco-table-td {
+    padding: 5px
+}
 </style>
