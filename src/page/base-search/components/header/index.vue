@@ -2,20 +2,20 @@
     <div class="base-search-header">
         <div class="left">
             <!-- 索引选择 -->
-            <a-select v-model="indexWrap" style="width: 260px;" allow-search allow-clear
+            <a-select v-model="index" style="width: 260px;" allow-search allow-clear
                       :placeholder="$t('baseSearch.placeholder.selectIndex')">
                 <a-option v-for="index in indices" :key="index.label" :label="index.label"
                           :value="index.value"/>
             </a-select>
             <!-- 搜索 -->
-            <a-button type="primary" status="success" @click="$emit('search')" :disabled="indexWrap === ''"
+            <a-button type="primary" status="success" @click="search()" :disabled="index === ''"
                       title="搜索">
                 <template #icon>
                     <icon-search/>
                 </template>
             </a-button>
             <!-- 索引管理 -->
-            <a-button type="primary" :disabled="indexWrap === ''" @click="$emit('open-index-manage')" title="管理">
+            <a-button type="primary" :disabled="index === ''" @click="openIndexManage()" title="管理">
                 <template #icon>
                     <icon-info/>
                 </template>
@@ -29,12 +29,8 @@
                 </template>
             </a-button>
             <!-- 设置 -->
-            <a-button type="primary" title="设置" @click="$emit('open-setting')">
-                <template #icon>
-                    <icon-settings/>
-                </template>
-            </a-button>
-            <a-select v-model="viewWrap" style="margin-left: 8px;width: 140px;">
+            <base-search-setting/>
+            <a-select v-model="view" style="margin-left: 8px;width: 140px;">
                 <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
                 <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
                 <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
@@ -44,39 +40,37 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {mapState} from "pinia";
 import useIndexStore from "@/store/IndexStore";
 import {SelectOptionData} from "@arco-design/web-vue";
+import BshManage from "@/page/base-search/components/History/index.vue";
+import BaseSearchSetting from "@/page/base-search/components/setting/index.vue";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'base-search-header',
-    emits: ['update:view', 'update:current-index', 'open-index-manage', 'open-history-dialog', 'open-setting', 'search'],
-    props: {
-        view: Number,
-        currentIndex: String
-    },
+    components: {BaseSearchSetting, BshManage},
+    emits: ['open-history-dialog', 'open-setting'],
     data: () => ({
         ViewTypeEnum,
-        viewWrap: ViewTypeEnum.JSON_TREE,
-        indexWrap: ''
+        view: ViewTypeEnum.JSON_TREE,
+        index: ''
     }),
     watch: {
         view(newValue) {
-            this.viewWrap = newValue;
+            useBaseSearchStore().setView(newValue);
         },
-        viewWrap(newValue) {
-            this.$emit('update:view', newValue);
+        index(newValue) {
+            useBaseSearchStore().setCurrentIndex(newValue);
         },
-        indexWrap(newValue) {
-            this.$emit('update:current-index', newValue);
-        },
-        currentIndex(newValue) {
-            this.indexWrap = newValue;
+        'current.index'(newValue) {
+            this.index = newValue;
         }
     },
     computed: {
+        ...mapState(useBaseSearchStore, ['current']),
         ...mapState(useIndexStore, {
             indices: (state): SelectOptionData[] => {
                 let options = new Array<SelectOptionData>();
@@ -105,11 +99,19 @@ export default defineComponent({
                 });
             }
         }),
+    },
+    methods: {
+        search() {
+            useBaseSearchStore().search()
+        },
+        openIndexManage() {
+            useBaseSearchStore().openIndexManage()
+        }
     }
 });
 </script>
 <style scoped lang="less">
-.base-search-header{
+.base-search-header {
     display: flex;
     justify-content: space-between;
 }

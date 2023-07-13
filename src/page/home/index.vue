@@ -119,7 +119,6 @@ export default defineComponent({
                 title: '',
                 data: {} as any,
             },
-            showTop: true,
             indexAddDialog: false,
             fuse: undefined as Fuse<IndexView> | undefined,
         };

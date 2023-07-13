@@ -41,6 +41,7 @@
         "@codemirror/lang-json": "^6.0.1",
         "@json2csv/plainjs": "^6.1.2",
         "@vueuse/core": "^9.9.0",
+        "@vueuse/integrations": "^10.2.1",
         "axios": "^1.2.2",
         "codemirror": "^6.0.1",
         "dexie": "^3.2.2",

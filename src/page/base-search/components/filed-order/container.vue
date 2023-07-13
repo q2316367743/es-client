@@ -4,36 +4,32 @@
             <a-button type="primary" @click="add">{{ $t('common.operation.add') }}
             </a-button>
         </div>
-        <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(order, idx) in orders" :key="idx">
+        <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(_order, idx) in orders" :key="idx">
             <field-order-item v-model="orders[idx]" :fields="fields" @add="add" @remove="remove" />
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
 import FieldOrderItem from "./item.vue";
-import Field from "@/view/Field";
 import BaseOrder from "@/entity/BaseOrder";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {mapState} from "pinia";
 
-let increnment = 0;
 
 export default defineComponent({
     name: 'field-order-container',
     components: { FieldOrderItem },
-    props: {
-        modelValue: Object as PropType<Array<BaseOrder>>,
-        fields: Object as PropType<Array<Field>>
-    },
     data: () => ({
         orders: new Array<BaseOrder>()
     }),
+    computed: {
+        ...mapState(useBaseSearchStore, ['fields'])
+    },
     watch: {
-        modelValue(newValue: Array<BaseOrder>) {
-            this.orders = newValue;
-        },
         orders: {
             handler(newValue: Array<BaseOrder>) {
-                this.$emit('update:modelValue', newValue);
+                useBaseSearchStore().setCurrentOrders(newValue);
             },
             deep: true
         }
@@ -41,12 +37,11 @@ export default defineComponent({
     methods: {
         add() {
             this.orders.push({
-                id: increnment,
+                id: new Date().getTime(),
                 field: '',
                 type: 'asc',
                 isEnable: true
             });
-            increnment += 1;
         },
         remove(id: number) {
             if (this.orders.length === 0) {

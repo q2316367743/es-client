@@ -1,5 +1,10 @@
 <template>
-    <a-drawer v-model:visible="show" title="基础搜索设置" class="base-search-setting" :width="600" ok-text="保存"
+    <a-button type="primary" title="设置" @click="visible= true">
+        <template #icon>
+            <icon-settings/>
+        </template>
+    </a-button>
+    <a-drawer v-model:visible="visible" title="基础搜索设置" class="base-search-setting" :width="600" ok-text="保存"
               @ok="save">
         <a-form :model="setting" layout="vertical">
             <a-form-item label="默认查询参数">
@@ -51,25 +56,13 @@ import MessageUtil from "@/utils/MessageUtil";
 export default defineComponent({
     name: 'base-search-setting',
     components: {Codemirror},
-    emits: ['update:visible'],
-    props: {
-        visible: Boolean
-    },
     data: () => ({
-        show: false,
+        visible: false,
         extensions: [json()] as Array<any>,
         setting: getDefaultBaseSearchSetting()
     }),
     computed: {
         ...mapState(useBaseSearchSettingStore, ['baseSearchSetting'])
-    },
-    watch: {
-        visible(newValue) {
-            this.show = newValue;
-        },
-        show(newValue) {
-            this.$emit('update:visible', newValue);
-        }
     },
     created() {
         this.setting = Object.assign(this.setting, this.baseSearchSetting);
@@ -87,10 +80,12 @@ export default defineComponent({
 .arco-table {
     border: 1px solid var(--color-neutral-3);
 }
+
 .arco-table-th {
     background-color: var(--color-neutral-2);
     text-align: center
 }
+
 .arco-table-td {
     padding: 5px
 }

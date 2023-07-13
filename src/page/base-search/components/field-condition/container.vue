@@ -1,7 +1,7 @@
 <template>
     <div class="field-condition-container">
         <div v-if="conditions.length === 0">
-            <a-button type="primary" @click="init">{{ $t('common.operation.add') }}
+            <a-button type="primary" @click="add">{{ $t('common.operation.add') }}
             </a-button>
         </div>
         <div v-for="(_item, idx) in conditions" :key="idx" style="margin-bottom: 10px;">
@@ -18,21 +18,18 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import {defineComponent} from "vue";
 import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 
 import FieldConditionItem from "./item.vue";
 import BaseQuery from "@/entity/BaseQuery";
-import Field from "@/view/Field";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {mapState} from "pinia";
 
 export default defineComponent({
     name: 'field-condition-container',
     components: {FieldConditionItem, Codemirror},
-    props: {
-        modelValue: Object as PropType<Array<BaseQuery>>,
-        fields: Object as PropType<Array<Field>>
-    },
     data: () => ({
         conditions: new Array<BaseQuery>,
         condition: {
@@ -41,28 +38,18 @@ export default defineComponent({
         },
         extensions: [json()] as Array<any>
     }),
+    computed: {
+        ...mapState(useBaseSearchStore, ['fields'])
+    },
     watch: {
-        modelValue(newValue: Array<BaseQuery>) {
-            this.conditions = newValue;
-        },
         conditions: {
             handler(newValue: Array<BaseQuery>) {
-                this.$emit('update:modelValue', newValue);
+                useBaseSearchStore().setCurrentCondition(newValue);
             },
             deep: true
         }
     },
     methods: {
-        init() {
-            this.conditions.push({
-                id: new Date().getTime(),
-                type: 'must',
-                field: '',
-                condition: 'term',
-                value: '',
-                isEnable: true
-            });
-        },
         add() {
             this.conditions.push({
                 id: new Date().getTime(),

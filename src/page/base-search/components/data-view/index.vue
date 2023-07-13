@@ -3,7 +3,7 @@
         :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
         <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="view === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
-        <table-viewer v-else-if="view === ViewTypeEnum.TABLE" :data="data" :index="index" />
+        <table-viewer v-else-if="view === ViewTypeEnum.TABLE" :data="current.result" :index="current.index" />
         <div v-show="view === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
         <a-back-top target-container=".base-search-data-view .arco-scrollbar-container" />
     </div>
@@ -18,19 +18,11 @@ import useSettingStore from "@/store/SettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'base-search-data-view',
     components: {TableViewer},
-    props: {
-        view: Number,
-        data: Object,
-        index: {
-            type: String,
-            required: false,
-            default: ''
-        }
-    },
     data: () => ({
         jsonTreeId: 'json-tree-view-' + new Date().getTime(),
         value: '',
@@ -41,6 +33,7 @@ export default defineComponent({
     }),
     computed: {
         ...mapState(useSettingStore, ['instance']),
+        ...mapState(useBaseSearchStore, ['view', 'current']),
         mainClass() {
             let classItem = new Array<string>();
             if (this.view === ViewTypeEnum.TABLE) {
@@ -53,7 +46,7 @@ export default defineComponent({
         }
     },
     watch: {
-        data() {
+        'current.result'() {
             this.render();
         },
         view() {
@@ -68,7 +61,7 @@ export default defineComponent({
             utools.copyText(this.pretty);
         },
         render() {
-            this.pretty = JSON.stringify(this.data, null, 4);
+            this.pretty = JSON.stringify(this.current.result, null, 4);
             if (this.pretty === '') {
                 this.pretty = '{}';
             }
@@ -87,7 +80,7 @@ export default defineComponent({
             });
         },
         renderJsonTreeView() {
-            renderJSONTreeView(this.data!, document.getElementById(this.jsonTreeId)!, {
+            renderJSONTreeView(this.current.result, document.getElementById(this.jsonTreeId)!, {
                 expanded: true
             })
         }

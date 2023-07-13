@@ -27,7 +27,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     if ((!query.field || query.field === '') && query.condition !== 'exists') {
         return;
     }
-    if (query.isEnable === false) {
+    if (!query.isEnable) {
         return;
     }
     let condition = {} as any;
@@ -66,7 +66,6 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
         throw new Error('查询条件不支持')
     }
     condition[cod] = expression;
-    console.log(condition)
     array.push(condition);
 }
 
@@ -76,7 +75,7 @@ function buildOrder(orders: Array<BaseOrder>, body: any) {
         if (order.field === '' || order.type === null) {
             continue;
         }
-        if (order.isEnable === false) {
+        if (!order.isEnable) {
             return;
         }
         body.sort[order.field] = {order: order.type};

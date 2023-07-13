@@ -1,9 +1,9 @@
 import IndexView from "@/view/index/IndexView";
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import indexListBuild from '@/build/IndexListBuild';
 import clusterApi from '@/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
-import { versionStrategyContext } from "@/global/BeanFactory";
+import {versionStrategyContext} from "@/global/BeanFactory";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
 import useNotificationStore from "@/store/NotificationStore";
@@ -40,7 +40,15 @@ const useIndexStore = defineStore('index', {
         /**
          * 索引映射
          */
-        map: (state) => state.indicesMap
+        map: (state) => state.indicesMap,
+        indexAliasMap: (state): Map<string, string> => {
+            let aliasIndexMap = new Map<string, string>();
+            state.indices.forEach(index => {
+                aliasIndexMap.set(index.name, index.name);
+                [index.name, ...index.alias].forEach(alias => aliasIndexMap.set(alias, index.name));
+            });
+            return aliasIndexMap;
+        }
     },
     actions: {
         /**
