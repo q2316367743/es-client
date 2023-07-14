@@ -172,7 +172,7 @@ import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
 import {
     applicationLaunch,
-    lodisStrategyContext,
+    lodisStrategyContext, statistics,
     usePageJumpEvent,
     useUrlEditEvent,
     useUrlSelectEvent,
@@ -236,6 +236,7 @@ export default defineComponent({
         },
         selectedKeys(newValue: any[]) {
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, newValue[0]);
+            statistics.access(newValue[0]);
         },
         urlId(newValue) {
             if (newValue && typeof newValue === 'number') {

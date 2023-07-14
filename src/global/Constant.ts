@@ -3,6 +3,7 @@ import UpdateLog from '@/data/UpdateLog'
 
 
 export default {
+    uid: "z1f3vu4k",
     name: "es-client",
     version: UpdateLog[0].version,
     sign: UpdateLog[0].sign,
@@ -19,6 +20,7 @@ export default {
     feedback: import.meta.env.VITE_FEEDBACK_URL,
     homeUrl: 'https://blog.esion.xyz',
     docUrl: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r',
+    statistics: "http://project-esion.nat300.top",
     repositories: [{
         name: "Gitee",
         url: "https://gitee.com/qiaoshengda/es-client"

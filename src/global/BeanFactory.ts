@@ -1,5 +1,5 @@
 import x2js from 'x2js';
-import { useEventBus, useToggle} from "@vueuse/core";
+import { useEventBus} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
 
@@ -27,6 +27,7 @@ import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyCo
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
 import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStrategyImpl";
+import Statistics from "@/plugins/Statistics";
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
@@ -71,3 +72,7 @@ export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE
 // 代码高亮
 highlight.registerLanguage('json', highlightJson);
 export {highlight};
+
+export const statistics = new Statistics();
+statistics.init();
+statistics.open()
