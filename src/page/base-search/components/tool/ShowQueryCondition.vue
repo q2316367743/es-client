@@ -2,17 +2,14 @@
     <a-button type="text" @click="showBody">
         {{ $t('baseSearch.form.displayQueryStatement') }}
     </a-button>
-    <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-             render-to-body class="es-dialog" :mask-closable="false">
-        <json-view :data="condition.data"/>
-    </a-modal>
+    <json-dialog v-model:value="condition.dialog" :title="$t('baseSearch.dialog.statement')" :json="condition.data"/>
 </template>
 <script lang="ts" setup>
-import JsonView from "@/components/JsonView/index.vue";
 import {ref} from "vue";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import MessageUtil from "@/utils/MessageUtil";
+import JsonDialog from "@/components/json-dialog/index.vue";
 
 const condition = ref({
     dialog: false,

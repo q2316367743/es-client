@@ -1,0 +1,56 @@
+<template>
+    <!-- 核心查询区 -->
+    <div class="base-display">
+        <!-- 查询条件 -->
+        <div class="base-condition" ref="baseCondition">
+            <a-form :model="current" layout="vertical" label-width="80px"
+                    style="overflow-x: auto;overflow-y: hidden;">
+                <!-- 条件 -->
+                <a-form-item :label="$t('baseSearch.form.condition')">
+                    <field-condition-container/>
+                </a-form-item>
+                <!-- 排序 -->
+                <a-form-item :label="$t('baseSearch.form.order')">
+                    <field-order-container/>
+                </a-form-item>
+                <div class="base-condition-pagination">
+                    <a-pagination :total="current.total" :current="current.page"
+                                  :page-size="current.size" show-total @change="pageChange"/>
+                    <a-input-number v-model="current.size" style="width: 70px"/>
+                </div>
+            </a-form>
+        </div>
+        <!-- 查询结果 -->
+        <div class="base-content">
+            <base-search-data-view/>
+        </div>
+        <a-back-top target-container=".base-display"/>
+    </div>
+</template>
+<script lang="ts">
+import { defineComponent } from "vue";
+import BaseSearchDataView from "@/page/base-search/components/data-view/index.vue";
+import FieldOrderContainer from "@/page/base-search/components/filed-order/container.vue";
+import FieldConditionContainer from "@/page/base-search/components/field-condition/container.vue";
+import {mapState} from "pinia";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+
+export default defineComponent({
+    name: 'base-search-display',
+    components: {FieldConditionContainer, FieldOrderContainer, BaseSearchDataView},
+    data: () => ({
+
+    }),
+    computed: {
+        ...mapState(useBaseSearchStore, ['current'])
+    },
+    methods: {
+        pageChange(page: number) {
+            useBaseSearchStore().setCurrentPage(page);
+        }
+    }
+});
+</script>
+<style scoped>
+
+</style>
