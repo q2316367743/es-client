@@ -7,7 +7,7 @@
     <a-drawer v-model:visible="visible" title="基础搜索设置" class="base-search-setting" :width="600" ok-text="保存"
               @ok="save">
         <a-form :model="setting" layout="vertical">
-            <a-form-item lable="默认视图">
+            <a-form-item label="默认视图">
                 <a-select v-model="setting.defaultView" style="margin-left: 8px;width: 140px;">
                     <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
                     <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>

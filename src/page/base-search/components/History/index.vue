@@ -1,4 +1,9 @@
 <template>
+    <a-button type="primary" status="warning" @click="dialog= true" title="历史">
+        <template #icon>
+            <icon-history/>
+        </template>
+    </a-button>
     <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close :footer="false"
               :header="false" popup-container="#main">
         <div class="bsh-manage">
@@ -25,21 +30,10 @@ export default defineComponent({
     name: 'bsh-manage',
     components: {BshHistory, BshTempRecord},
     emits: ['update:modelValue'],
-    props: {
-        modelValue: Boolean
-    },
     data: () => ({
         active: 'temp',
         dialog: false
     }),
-    watch: {
-        modelValue(newValue: boolean) {
-            this.dialog = newValue;
-        },
-        dialog(newValue: boolean) {
-            this.$emit('update:modelValue', newValue);
-        }
-    },
     methods: {
         load() {
             this.dialog = false;

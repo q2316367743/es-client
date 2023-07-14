@@ -22,12 +22,7 @@
             </a-button>
         </div>
         <div class="right">
-            <!-- 历史 -->
-            <a-button type="primary" status="warning" @click="$emit('open-history-dialog')" title="历史">
-                <template #icon>
-                    <icon-history/>
-                </template>
-            </a-button>
+            <bsh-manage/>
             <!-- 设置 -->
             <base-search-setting/>
         </div>
@@ -45,7 +40,6 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 export default defineComponent({
     name: 'base-search-header',
     components: {BaseSearchSetting, BshManage},
-    emits: ['open-history-dialog', 'open-setting'],
     data: () => ({
         index: ''
     }),

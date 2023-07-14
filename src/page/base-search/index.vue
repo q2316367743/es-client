@@ -1,11 +1,10 @@
 <template>
     <a-spin :loading="loading" :tip="$t('common.loading.search')" class="base-spin">
         <div class="base-search">
-            <!-- 标签页 -->
             <!-- 主要显示区域 -->
             <div class="base-search-main full-screen">
                 <!-- 顶部菜单栏 -->
-                <base-search-header @open-history-dialog="historyDialog = true" @open-setting="settingDialog = true"/>
+                <base-search-header @open-history-dialog="historyDialog = true"/>
                 <!-- 核心查询区 -->
                 <div class="base-display" ref="baseDisplay">
                     <!-- 查询条件 -->
@@ -45,7 +44,6 @@
                 </div>
             </div>
         </div>
-        <bsh-manage v-model="historyDialog"/>
     </a-spin>
 </template>
 
@@ -109,7 +107,6 @@ export default defineComponent({
     },
     data: () => ({
         historyDialog: false,
-        settingDialog: false,
         showTop: true,
 
     }),

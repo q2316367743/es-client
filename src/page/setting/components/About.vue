@@ -36,8 +36,6 @@
         <p>
             <a-link type="primary" @click="licenseDialog = true">开源许可证</a-link>
         </p>
-        <div class="title-2">QQ频道</div>
-        <a-image src="pinDao.jpeg" alt="QQ频道"/>
         <div class="title-2">相关资源</div>
         <p>
             <span>仓库：</span>
