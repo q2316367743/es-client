@@ -127,14 +127,14 @@
         <version-update v-model:visible="updateDialog"/>
         <!-- 欢迎新用户 -->
         <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog" mask-closable render-to-body
-                 draggable top="5vh" width="600px">
+                 draggable top="5vh" width="600px" :footer="false">
             <a-scrollbar height="calc(80vh - 54px)">
                 <setting-about v-if="newDialog"/>
             </a-scrollbar>
         </a-modal>
         <!-- 问题反馈 -->
         <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh" :close-on-click-modal="false"
-                 render-to-body draggable unmount-on-close>
+                 render-to-body draggable unmount-on-close :footer="false">
             <feedback-module v-if="feedbackDialog"/>
         </a-modal>
         <!-- 通知管理 -->
@@ -236,7 +236,25 @@ export default defineComponent({
         },
         selectedKeys(newValue: any[]) {
             emitter.emit(MessageEventEnum.PAGE_ACTIVE, newValue[0]);
-            statistics.access(newValue[0]);
+            let page = newValue[0];
+            switch (page){
+                case PageNameEnum.HOME:
+                    page = "首页";
+                    break;
+                case PageNameEnum.BASE_SEARCH:
+                    page = "基础搜索";
+                    break;
+                case PageNameEnum.DATA_BROWSER:
+                    page = "数据浏览";
+                    break;
+                case PageNameEnum.SENIOR_SEARCH:
+                    page = "高级搜索";
+                    break;
+                case PageNameEnum.SETTING:
+                    page = "设置";
+                    break;
+            }
+            statistics.access(page);
         },
         urlId(newValue) {
             if (newValue && typeof newValue === 'number') {
