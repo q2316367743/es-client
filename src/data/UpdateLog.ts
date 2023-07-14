@@ -2,6 +2,18 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.8.5',
+        sign: 285,
+        time: '2023-07-15',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '优化系统BUG'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '提高系统流畅度'
+        }]
+    },
+    {
         version: '2.8.4',
         sign: 284,
         time: '2023-07-03',
