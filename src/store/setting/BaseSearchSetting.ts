@@ -1,13 +1,14 @@
 import BaseSearchSetting from "@/entity/setting/BaseSearchSetting";
 import {defineStore} from "pinia";
 import {toRaw} from "vue";
-import {state} from "vue-tsc/out/shared";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 export function getDefaultBaseSearchSetting(): BaseSearchSetting {
     return {
         defaultParams: "",
         enableTrackTotalHits: true,
-        trackTotalHits: true
+        trackTotalHits: true,
+        defaultView: ViewTypeEnum.JSON
     }
 }
 
@@ -29,7 +30,8 @@ export const useBaseSearchSettingStore = defineStore('base-search-setting', {
             return params;
         },
         enableTrackTotalHits: state => state.baseSearchSetting.enableTrackTotalHits,
-        trackTotalHits: state => state.baseSearchSetting.trackTotalHits
+        trackTotalHits: state => state.baseSearchSetting.trackTotalHits,
+        defaultView: state => state.baseSearchSetting.defaultView
     },
     actions: {
         async init() {

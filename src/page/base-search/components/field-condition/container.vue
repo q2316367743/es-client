@@ -5,7 +5,7 @@
             </a-button>
         </div>
         <div v-for="(_item, idx) in conditions" :key="idx" style="margin-bottom: 10px;">
-            <field-condition-item v-model="conditions[idx]" :fields="fields" :index="idx" @add="add" @remove="remove"
+            <field-condition-item v-model="conditions[idx]" :index="idx" @add="add" @remove="remove"
                                   @edit-text-area="editTextArea"/>
         </div>
         <a-modal v-model:visible="condition.dialog" title="请输入terms条件" render-to-body unmount-on-close draggable
@@ -25,7 +25,6 @@ import {json} from '@codemirror/lang-json';
 import FieldConditionItem from "./item.vue";
 import BaseQuery from "@/entity/BaseQuery";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
-import {mapState} from "pinia";
 
 export default defineComponent({
     name: 'field-condition-container',
@@ -38,9 +37,6 @@ export default defineComponent({
         },
         extensions: [json()] as Array<any>
     }),
-    computed: {
-        ...mapState(useBaseSearchStore, ['fields'])
-    },
     watch: {
         conditions: {
             handler(newValue: Array<BaseQuery>) {

@@ -30,18 +30,11 @@
             </a-button>
             <!-- 设置 -->
             <base-search-setting/>
-            <a-select v-model="view" style="margin-left: 8px;width: 140px;">
-                <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
-                <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
-                <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
-                <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
-            </a-select>
         </div>
     </div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {mapState} from "pinia";
 import useIndexStore from "@/store/IndexStore";
 import {SelectOptionData} from "@arco-design/web-vue";
@@ -54,14 +47,9 @@ export default defineComponent({
     components: {BaseSearchSetting, BshManage},
     emits: ['open-history-dialog', 'open-setting'],
     data: () => ({
-        ViewTypeEnum,
-        view: ViewTypeEnum.JSON_TREE,
         index: ''
     }),
     watch: {
-        view(newValue) {
-            useBaseSearchStore().setView(newValue);
-        },
         index(newValue) {
             useBaseSearchStore().setCurrentIndex(newValue);
         },

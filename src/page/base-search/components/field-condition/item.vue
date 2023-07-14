@@ -2,75 +2,76 @@
     <div class="field-condition-item">
         <!-- 是否启用 -->
         <a-switch :checked-value="true" :unchecked-value="false" type="circle" v-model="condition.isEnable"
-            checked-color="rgb(var(--green-6))" unchecked-color="var(--color-fill-4)" style="margin: 4px 10px 4px 0;">
+                  checked-color="rgb(var(--green-6))" unchecked-color="var(--color-fill-4)"
+                  style="margin: 4px 10px 4px 0;">
             <template #checked>启用</template>
             <template #unchecked>禁用</template>
         </a-switch>
         <!-- 选择查询模式 -->
         <a-select v-model="condition.type" filterable :placeholder="$t('baseSearch.placeholder.condition')"
-            style="width: 110px;">
-            <a-option label="must" value="must" />
-            <a-option label="must_not" value="must_not" />
-            <a-option label="should" value="should" />
+                  style="width: 110px;">
+            <a-option label="must" value="must"/>
+            <a-option label="must_not" value="must_not"/>
+            <a-option label="should" value="should"/>
         </a-select>
         <!-- 选择查询字段 -->
-        <a-select v-model="condition.field" allow-search :placeholder="$t('baseSearch.placeholder.field')"
-            :disabled="condition.condition === 'exists'" style="margin-left: 10px;width: 250px;">
-            <a-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name" />
+        <a-select v-model="condition.field" allow-search allow-create :placeholder="$t('baseSearch.placeholder.field')"
+                  :disabled="condition.condition === 'exists'" style="margin-left: 10px;width: 250px;">
+            <a-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name"/>
         </a-select>
         <!-- 选择查询条件 -->
         <!-- TODO: 此处还需处理，对于不同类型，需要不同查询条件 -->
         <a-select v-model="condition.condition" filterable :placeholder="$t('baseSearch.placeholder.condition')"
-            style="margin-left: 10px;width: 110px;">
+                  style="margin-left: 10px;width: 110px;">
             <!-- 分词查询 -->
-            <a-option label="match" value="match" />
+            <a-option label="match" value="match"/>
             <!-- 精准查询 -->
-            <a-option label="term" value="term" />
+            <a-option label="term" value="term"/>
             <!-- 可以搜索多个值 -->
-            <a-option label="terms" value="terms" />
+            <a-option label="terms" value="terms"/>
             <!-- 是否存在 -->
-            <a-option label="exists" value="exists" />
+            <a-option label="exists" value="exists"/>
             <!-- 通配符查询 -->
-            <a-option label="wildcard" value="wildcard" />
-            <a-option label="range lt" value="range_lt" />
-            <a-option label="range lte" value="range_lte" />
-            <a-option label="range gt" value="range_gt" />
-            <a-option label="range gte" value="range_gte" />
+            <a-option label="wildcard" value="wildcard"/>
+            <a-option label="range lt" value="range_lt"/>
+            <a-option label="range lte" value="range_lte"/>
+            <a-option label="range gt" value="range_gt"/>
+            <a-option label="range gte" value="range_gte"/>
         </a-select>
         <div class="condition-terms" v-if="condition.condition === 'terms'" @click="textArea">
             {{ condition.value }}
         </div>
-        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;" v-else />
+        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;" v-else/>
         <!-- 操作 -->
         <a-button type="primary" style="margin-left: 10px" @click="add">{{
-            $t('common.operation.add')
-        }}
+                $t('common.operation.add')
+            }}
         </a-button>
         <a-button type="primary" status="danger" @click="remove(condition.id)">{{
-            $t('common.operation.delete')
-        }}
+                $t('common.operation.delete')
+            }}
         </a-button>
     </div>
 </template>
 <script lang="ts">
 import BaseQuery from "@/entity/BaseQuery";
-import Field from "@/view/Field";
-import { defineComponent, PropType } from "vue";
+import {defineComponent, PropType} from "vue";
+import {mapState} from "pinia";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'field-condition-item',
     props: {
         modelValue: Object as PropType<BaseQuery>,
-        fields: {
-            type: Array as PropType<Array<Field>>,
-            default: () => [] as Array<Field>
-        },
         index: Number
     },
     emits: ['add', 'remove', 'editTextArea', 'update:modelValue'],
     data: () => ({
         condition: {} as BaseQuery
     }),
+    computed: {
+        ...mapState(useBaseSearchStore, ['fields'])
+    },
     created() {
         this.condition = this.modelValue!;
     },

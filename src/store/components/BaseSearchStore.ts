@@ -47,14 +47,10 @@ export const useBaseSearchStore = defineStore('base-search', {
         settingDialog: false,
 
         // 视图
-        view: ViewTypeEnum.JSON as ViewTypeEnum,
         showTop: true,
 
     }),
     actions: {
-        setView(view: ViewTypeEnum) {
-            this.view = view;
-        },
         setCurrentIndex(index: string) {
             this.current.index = index;
             if (index.length > 0) {

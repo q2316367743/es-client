@@ -5,7 +5,7 @@
             </a-button>
         </div>
         <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(_order, idx) in orders" :key="idx">
-            <field-order-item v-model="orders[idx]" :fields="fields" @add="add" @remove="remove" />
+            <field-order-item v-model="orders[idx]" @add="add" @remove="remove" />
         </div>
     </div>
 </template>
@@ -14,7 +14,6 @@ import { defineComponent } from "vue";
 import FieldOrderItem from "./item.vue";
 import BaseOrder from "@/entity/BaseOrder";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
-import {mapState} from "pinia";
 
 
 export default defineComponent({
@@ -23,9 +22,6 @@ export default defineComponent({
     data: () => ({
         orders: new Array<BaseOrder>()
     }),
-    computed: {
-        ...mapState(useBaseSearchStore, ['fields'])
-    },
     watch: {
         orders: {
             handler(newValue: Array<BaseOrder>) {

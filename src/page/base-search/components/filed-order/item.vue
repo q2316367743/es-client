@@ -26,14 +26,14 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import BaseOrder from "@/entity/BaseOrder";
-import Field from "@/view/Field";
+import {mapState} from "pinia";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'field-order-item',
     emits: ['update:modelValue', 'add', 'remove'],
     props: {
         modelValue: Object as PropType<BaseOrder>,
-        fields: Array<Field>
     },
     data: () => ({
         order: {
@@ -42,6 +42,9 @@ export default defineComponent({
             type: ''
         } as BaseOrder
     }),
+    computed: {
+        ...mapState(useBaseSearchStore, ['fields'])
+    },
     created() {
         if (this.modelValue) {
             this.order = this.modelValue;

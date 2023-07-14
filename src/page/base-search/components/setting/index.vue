@@ -7,6 +7,14 @@
     <a-drawer v-model:visible="visible" title="基础搜索设置" class="base-search-setting" :width="600" ok-text="保存"
               @ok="save">
         <a-form :model="setting" layout="vertical">
+            <a-form-item lable="默认视图">
+                <a-select v-model="setting.defaultView" style="margin-left: 8px;width: 140px;">
+                    <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
+                    <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
+                    <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
+                    <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
+                </a-select>
+            </a-form-item>
             <a-form-item label="默认查询参数">
                 <codemirror v-model.trim="setting.defaultParams" placeholder="请在这里输入默认查询参数"
                             :style="{ height: '200px',width: '568px' }" :autofocus="true"
@@ -52,11 +60,13 @@ import {json} from '@codemirror/lang-json';
 import {mapState} from "pinia";
 import {getDefaultBaseSearchSetting, useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
 import MessageUtil from "@/utils/MessageUtil";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 export default defineComponent({
     name: 'base-search-setting',
     components: {Codemirror},
     data: () => ({
+        ViewTypeEnum,
         visible: false,
         extensions: [json()] as Array<any>,
         setting: getDefaultBaseSearchSetting()

@@ -1,10 +1,10 @@
 <template>
     <div class="base-search-data-view hljs" :class="mainClass"
         :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
-        <pre v-if="view === ViewTypeEnum.BASE">{{ pretty }}</pre>
-        <pre v-else-if="view === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
-        <table-viewer v-else-if="view === ViewTypeEnum.TABLE" :data="current.result" :index="current.index" />
-        <div v-show="view === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
+        <pre v-if="defaultView === ViewTypeEnum.BASE">{{ pretty }}</pre>
+        <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
+        <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index" />
+        <div v-show="defaultView === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
         <a-back-top target-container=".base-search-data-view .arco-scrollbar-container" />
     </div>
 </template>
@@ -19,6 +19,7 @@ import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
 
 export default defineComponent({
     name: 'base-search-data-view',
@@ -33,10 +34,11 @@ export default defineComponent({
     }),
     computed: {
         ...mapState(useSettingStore, ['instance']),
-        ...mapState(useBaseSearchStore, ['view', 'current']),
+        ...mapState(useBaseSearchSettingStore, ['defaultView']),
+        ...mapState(useBaseSearchStore, ['current']),
         mainClass() {
             let classItem = new Array<string>();
-            if (this.view === ViewTypeEnum.TABLE) {
+            if (this.defaultView === ViewTypeEnum.TABLE) {
                 classItem.push('table-viewer-show')
             }
             if (this.instance.jsonWrap) {
@@ -65,9 +67,9 @@ export default defineComponent({
             if (this.pretty === '') {
                 this.pretty = '{}';
             }
-            if (this.view === ViewTypeEnum.JSON) {
+            if (this.defaultView === ViewTypeEnum.JSON) {
                 this.renderJsonView()
-            } else if (this.view === ViewTypeEnum.JSON_TREE) {
+            } else if (this.defaultView === ViewTypeEnum.JSON_TREE) {
                 this.renderJsonTreeView();
             }
         },

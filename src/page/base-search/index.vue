@@ -35,9 +35,7 @@
                 </div>
                 <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
                 <div class="base-search-condition-sentence">
-                    <a-button type="text" @click="showBody">
-                        {{ $t('baseSearch.form.displayQueryStatement') }}
-                    </a-button>
+                    <show-query-condition />
                     <a-button type="text" @click="jumpToSeniorSearch">
                         {{ $t('common.action.jumpToSeniorSearch') }}
                     </a-button>
@@ -47,10 +45,6 @@
                 </div>
             </div>
         </div>
-        <a-modal :title="$t('baseSearch.dialog.statement')" v-model:visible="condition.dialog" width="70%"
-                 render-to-body class="es-dialog" :mask-closable="false">
-            <json-view :data="condition.data"/>
-        </a-modal>
         <bsh-manage v-model="historyDialog"/>
     </a-spin>
 </template>
@@ -97,11 +91,13 @@ import {
 } from "@/global/BeanFactory";
 import DocumentApi from "@/api/DocumentApi";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import ShowQueryCondition from "@/page/base-search/components/tool/ShowQueryCondition.vue";
 
 
 export default defineComponent({
     name: 'base-search',
     components: {
+        ShowQueryCondition,
         BaseSearchDataView,
         BshManage,
         JsonView,
@@ -115,10 +111,6 @@ export default defineComponent({
         historyDialog: false,
         settingDialog: false,
         showTop: true,
-        condition: {
-            dialog: false,
-            data: {}
-        },
 
     }),
     computed: {
@@ -158,19 +150,6 @@ export default defineComponent({
         });
     },
     methods: {
-        showBody() {
-            try {
-                this.condition = {
-                    dialog: true,
-                    data: QueryConditionBuild(useBaseSearchStore().current.conditions,
-                            useBaseSearchStore().current.page,
-                            useBaseSearchStore().current.size,
-                            useBaseSearchStore().current.orders)
-                }
-            } catch (e) {
-                MessageUtil.error('条件构造错误', e);
-            }
-        },
         search() {
             if (this.current.index.length === 0) {
                 MessageBoxUtil.alert(this.$t('baseSearch.placeholder.selectIndex'), null);

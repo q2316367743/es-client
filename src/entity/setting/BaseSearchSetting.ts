@@ -1,3 +1,5 @@
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+
 export default interface BaseSearchSetting {
 
     /**
@@ -14,5 +16,10 @@ export default interface BaseSearchSetting {
      * track_total_hits
      */
     trackTotalHits: boolean;
+
+    /**
+     * 默认视图
+     */
+    defaultView: ViewTypeEnum;
 
 }
