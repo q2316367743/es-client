@@ -2,7 +2,7 @@
     <div class="base-search-header">
         <div class="left">
             <!-- 索引选择 -->
-            <a-select v-model="index" style="width: 260px;" allow-search allow-clear
+            <a-select v-model="index" style="width: 360px;" allow-search allow-clear
                       :placeholder="$t('baseSearch.placeholder.selectIndex')">
                 <a-option v-for="index in indices" :key="index.label" :label="index.label"
                           :value="index.value"/>
