@@ -22,7 +22,7 @@
                     :scrollbar="true"
                     :bordered="false" :split="false">
                 <template #item="{ item }">
-                    <a-list-item>
+                    <a-list-item :key="item.name">
                         <index-item :index="item" @open-dialog="indexOpenDialog" @open-manage="indexOpenManage"/>
                     </a-list-item>
                 </template>
