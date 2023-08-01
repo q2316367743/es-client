@@ -21,6 +21,7 @@ export default class UrlService {
             createTime: new Date(),
             updateTime: new Date(),
             isAuth: url.isAuth,
+            authType: url.authType,
             authUser: url.authUser,
             authPassword: url.authPassword,
             version: url.version
@@ -43,6 +44,7 @@ export default class UrlService {
                 createTime: url.createTime,
                 updateTime: new Date(),
                 isAuth: url.isAuth,
+                authType: url.authType,
                 authUser: url.authUser,
                 authPassword: url.authPassword,
                 version: url.version

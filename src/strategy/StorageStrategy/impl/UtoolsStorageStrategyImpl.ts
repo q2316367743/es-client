@@ -71,13 +71,13 @@ export default class UtoolsStorageStrategyImpl implements StorageStrategy {
         utools.onPluginEnter(action => {
             if (action.code !== 'application') {
                 useUrlSelectEvent.emit(parseInt(action.code));
-            }else {
+            } else {
                 useUrlSelectEvent.emit(0);
             }
         });
     }
 
-    async delete<T extends Base>(name: TableNameEnum, id: number): Promise<void> {
+    async delete(name: TableNameEnum, id: number): Promise<void> {
         // 删除
         if (name === TableNameEnum.URL) {
             utools.removeFeature(id + '');
