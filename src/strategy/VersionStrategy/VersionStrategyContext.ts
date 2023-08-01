@@ -6,6 +6,7 @@ import Optional from "@/utils/Optional";
 import useNotificationStore from "@/store/NotificationStore";
 import useUrlStore from "@/store/UrlStore";
 import { urlService } from "@/global/BeanFactory";
+import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
 
 export default class VersionStrategyContext {
 
@@ -93,8 +94,7 @@ export default class VersionStrategyContext {
 
     getStrategy(): VersionStrategy {
         if (!this.strategy) {
-            this.chooseVersion();
-            throw new Error("无法获取版本")
+            return new V7VersionStrategyImpl();
         }
         return this.strategy;
     }

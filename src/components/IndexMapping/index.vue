@@ -81,7 +81,6 @@ import {
 import {Mapping, Property} from "@/es/IndexBase";
 import JsonView from "@/components/JsonView/index.vue";
 import MappingData from "./domain/MappingData";
-import {versionStrategyContext} from "@/global/BeanFactory";
 
 
 export default defineComponent({
@@ -119,7 +118,7 @@ export default defineComponent({
             expandedKeys: new Array<string>(),
             typeAutoData: markRaw(typeAutoData),
             source: {
-                show: false,
+                show: true,
                 data: {} as any
             },
             loading: false,
@@ -138,7 +137,6 @@ export default defineComponent({
         if (this.mapping) {
             this.setDate(this.mapping);
         } else {
-            this.hasType = versionStrategyContext.getStrategy().hasType();
             this.dataItems = [{
                 type: '',
                 dynamic: '',
@@ -172,7 +170,6 @@ export default defineComponent({
                         });
                     }
                     this.loading = false;
-                    this.hasType = versionStrategyContext.getStrategy().hasType();
                 });
             }, 200);
         },
