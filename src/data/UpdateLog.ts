@@ -2,6 +2,27 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '2.8.6',
+        sign: 285,
+        time: '2023-08-01',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '修复认证类型未保存，导致请求头认证方式失效'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '更新索引信息，刷新后索引信息未更新，实际上已经更新'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '基础搜索列表框变长'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '由于版本管理设计的不好，映射暂时不渲染'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "优化基础查询的exists，条件可搜索"
+        }]
+    },
+    {
         version: '2.8.5',
         sign: 285,
         time: '2023-07-15',
