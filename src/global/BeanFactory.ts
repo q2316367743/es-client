@@ -28,6 +28,24 @@ import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStra
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
 import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStrategyImpl";
 import Statistics from "@/plugins/Statistics";
+import {utools} from "@/plugins/utools";
+import {preload} from "@/plugins/preload";
+
+window.rain = {
+    env: window.utools ? 'utools' : 'web'
+}
+// @ts-ignore
+if (window.utools) {
+    utools.onPluginEnter(action => {
+        sessionStorage.setItem('action', action.code);
+    });
+} else {
+    // web环境
+    // @ts-ignore
+    window.utools = utools;
+    // @ts-ignore
+    window.preload = preload;
+}
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();

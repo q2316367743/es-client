@@ -61,7 +61,7 @@ export default class Statistics {
             nickname: this.nickname,
             operate,
             additional,
-            platform: 'utools',
+            platform: Constant.platform,
             system
         });
 

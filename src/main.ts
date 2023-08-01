@@ -20,21 +20,7 @@ import '@/components/JsonTree/index.less';
 // arco样式
 import '@arco-design/web-vue/dist/arco.css';
 
-window.rain = {
-    env: window.utools ? 'utools' : 'web'
-}
-// @ts-ignore
-if (window.utools) {
-    utools.onPluginEnter(action => {
-        sessionStorage.setItem('action', action.code);
-    });
-} else {
-    // web环境
-    // @ts-ignore
-    window.utools = utools;
-    // @ts-ignore
-    window.preload = preload;
-}
+
 
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
