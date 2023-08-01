@@ -41,7 +41,7 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     } else if (query.condition === 'terms') {
         expression[query.field] = JSON.parse(query.value);
     } else if (query.condition === 'exists') {
-        expression["field"] = query.value;
+        expression["field"] = query.field;
     } else if (query.condition === 'range_lt') {
         let value = {} as any;
         value['lt'] = query.value;

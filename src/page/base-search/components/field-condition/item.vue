@@ -16,13 +16,13 @@
         </a-select>
         <!-- 选择查询字段 -->
         <a-select v-model="condition.field" allow-search allow-create :placeholder="$t('baseSearch.placeholder.field')"
-                  :disabled="condition.condition === 'exists'" style="margin-left: 10px;width: 250px;">
+                  style="margin-left: 10px;width: 250px;">
             <a-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name"/>
         </a-select>
         <!-- 选择查询条件 -->
         <!-- TODO: 此处还需处理，对于不同类型，需要不同查询条件 -->
         <a-select v-model="condition.condition" filterable :placeholder="$t('baseSearch.placeholder.condition')"
-                  style="margin-left: 10px;width: 110px;">
+                  style="margin-left: 10px;width: 110px;" allow-search>
             <!-- 分词查询 -->
             <a-option label="match" value="match"/>
             <!-- 精准查询 -->
@@ -41,7 +41,7 @@
         <div class="condition-terms" v-if="condition.condition === 'terms'" @click="textArea">
             {{ condition.value }}
         </div>
-        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;" v-else/>
+        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;" v-else-if="condition.condition !== 'exists'" allow-clear/>
         <!-- 操作 -->
         <a-button type="primary" style="margin-left: 10px" @click="add">{{
                 $t('common.operation.add')
