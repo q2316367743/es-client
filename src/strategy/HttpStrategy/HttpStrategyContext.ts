@@ -14,6 +14,9 @@ export default class HttpStrategyContext {
         if (Constant.mode === HttpTypeEnum.BROWSER) {
             fetchPacking = await import('./mode/BrowserMode');
             this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
+        } else if (Constant.mode === HttpTypeEnum.UTOOLS) {
+            fetchPacking = await import('./mode/UtoolsMode');
+            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
         } else if (Constant.mode === HttpTypeEnum.DESKTOP) {
             fetchPacking = await import('./mode/TauriMode');
             this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);

@@ -23,7 +23,7 @@
                 <a-radio-group v-model="url.authType">
                     <a-radio :value="UrlAuthTypeEnum.BASIC">基础认证</a-radio>
                     <a-radio :value="UrlAuthTypeEnum.HEADER">请求头认证</a-radio>
-                    <a-radio :value="UrlAuthTypeEnum.COOKIE" disabled>Cookie认证</a-radio>
+                    <a-radio :value="UrlAuthTypeEnum.COOKIE">Cookie认证</a-radio>
                 </a-radio-group>
             </a-form-item>
             <a-form-item :label="authKey" prop="authUser" v-if="url.isAuth && url.authType !== UrlAuthTypeEnum.COOKIE">

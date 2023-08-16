@@ -38,6 +38,11 @@ export default class HttpStrategyProxy {
                         config.headers = {};
                         config.headers[url.authUser] = url.authPassword;
                     }
+                }if (url.authType === UrlAuthTypeEnum.COOKIE) {
+                    if (url.authUser) {
+                        config.headers = {};
+                        config.headers['Cookie'] = url.authPassword;
+                    }
                 } else {
                     config.auth = {
                         username: url.authUser!,

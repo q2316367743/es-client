@@ -6,6 +6,11 @@ enum HttpTypeEnum {
     BROWSER = 'browser',
 
     /**
+     * utools
+     */
+    UTOOLS = 'utools',
+
+    /**
      * 桌面客户端
      */
     DESKTOP = 'desktop',
