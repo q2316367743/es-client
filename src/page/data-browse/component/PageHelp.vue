@@ -33,36 +33,23 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {mapState} from "pinia";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 export default defineComponent({
     name: 'page-help',
-    props: {
-        page: {
-            type: Number,
-            required: true,
-            default: 0
-        },
-        size: {
-            type: Number,
-            required: true,
-            default: 0
-        },
-        total: {
-            type: Number,
-            required: true,
-            default: 0
-        }
+    computed: {
+        ...mapState(useDataBrowseStore, ['page', 'size', 'total'])
     },
-    emit: ['pageUpdate', 'update:page', 'update:size'],
     methods: {
         update() {
-            this.$emit('pageUpdate');
+            useDataBrowseStore().executeQuery(false);
         },
         updatePage(page: number) {
-            this.$emit("update:page", page);
+            useDataBrowseStore().updatePage(page);
         },
         updateSize(size: number) {
-            this.$emit("update:size", size);
+            useDataBrowseStore().updateSize(size);
         },
         toFirst() {
             if (this.page === 1) {

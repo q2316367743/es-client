@@ -176,6 +176,7 @@ export function exportData(config: ExportConfig, data: any): void {
     data = toRaw(data);
     let content: ExportContent | undefined;
     switch (config.scope) {
+        // TODO：导出范围
         case ExportScope.CURRENT:
             switch (config.type) {
                 case ExportType.JSON:

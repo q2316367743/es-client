@@ -4,7 +4,7 @@
         <div class="option">
             <!-- 左侧条件 -->
             <div class="left">
-                <page-help :total="total" v-model:size="size" v-model:page="page" @page-update="executeQuery(false)" />
+                <page-help />
                 <div class="sep"></div>
                 <db-simple-item :disable="type === ''" :tip="$t('common.operation.refresh')" @click="executeQuery(false)">
                     <icon-refresh />
@@ -79,20 +79,19 @@
             </div>
         </div>
         <!-- 输入条件 -->
-        <db-condition v-model:must-value="must" v-model:should-value="should" v-model:must-not-value="mustNot"
-            v-model:order-by-value="orderBy" @executeQuery="executeQuery(false)" />
+        <db-condition />
         <!-- 数据表格 -->
         <div class="content-table">
             <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
                 v-model:selectedKeys="selectedKeys" :scroll="scroll" :loading="loading" :pagination="false" row-key="_id"
-                :bordered="bordered" :row-selection="rowSelection" :id="id">
+                :bordered="bordered" :row-selection="rowSelection" id="data-browse-table">
                 <template #empty>
                     <div class="data-browse-empty">{{ emptyText }}</div>
                 </template>
             </a-table>
         </div>
         <!-- 导出弹窗 -->
-        <export-dialog v-model="exportDialog" :index-name="indexName" :records="records" :result="result" />
+        <export-dialog v-model="exportDialog" :index-name="indexName" :records="records" />
         <!-- 新增对话框 -->
         <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px" height="520px" draggable>
             <!-- @ts-ignore -->
@@ -119,7 +118,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, h, markRaw } from "vue";
+import { defineComponent, h } from "vue";
 import { mapState } from 'pinia';
 import { Codemirror } from 'vue-codemirror';
 import { json } from '@codemirror/lang-json';
@@ -148,7 +147,7 @@ import mitt from "@/plugins/mitt";
 import StructureIcon from "@/icon/StructureIcon.vue";
 
 import JsonView from "@/components/JsonView/index.vue";
-import DataBrowseComponent from "@/page/data-browse/component/DataBrowseComponent";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 let sort: Sortable | undefined;
 
@@ -165,35 +164,13 @@ export default defineComponent({
         Codemirror
     },
     data: () => {
-        const dataBrowseComponent = new DataBrowseComponent();
         return {
-            dataBrowseComponent: markRaw(dataBrowseComponent),
-            id: dataBrowseComponent.id,
-
-            loading: dataBrowseComponent.loading,
-
-            type: dataBrowseComponent.type,
-            page: dataBrowseComponent.page,
-            size: dataBrowseComponent.size,
-            total: dataBrowseComponent.total,
-            index: dataBrowseComponent.index,
 
             // 弹窗
             exportDialog: false,
 
-            // 查询条件
-            must: dataBrowseComponent.must,
-            should: dataBrowseComponent.should,
-            mustNot: dataBrowseComponent.mustNot,
-            orderBy: dataBrowseComponent.orderBy,
-
-            // 展示数据
-            columns: dataBrowseComponent.columns,
-            showColumns: dataBrowseComponent.showColumns,
-            checkItems: dataBrowseComponent.checkItems,
-            result: dataBrowseComponent.result,
-            records: dataBrowseComponent.records,
-            selectedKeys: dataBrowseComponent.selectedKeys,
+            checkItems: [],
+            selectedKeys: [],
 
             // 配置
             expandable: {
@@ -230,6 +207,7 @@ export default defineComponent({
         }
     },
     computed: {
+        ...mapState(useDataBrowseStore, ['index', 'records', 'columns', 'type', 'showColumns', 'loading']),
         ...mapState(useIndexStore, ['indices', 'indicesMap']),
         ...mapState(useUrlStore, ['url']),
         recordMap() {
@@ -250,7 +228,7 @@ export default defineComponent({
     },
     created() {
         mitt.on(MessageEventEnum.URL_UPDATE, () => {
-            this.dataBrowseComponent.clean();
+            useDataBrowseStore().clean();
             this.addConfig.dialog = false;
         });
     },
@@ -260,7 +238,7 @@ export default defineComponent({
             return XEUtils.toDateString(column, 'yyyy-MM-dd HH:ss:mm')
         },
         executeQuery(renderHeader: boolean) {
-            this.dataBrowseComponent.executeQuery(renderHeader)
+            useDataBrowseStore().executeQuery(renderHeader)
                 .then(() => {
                     this.$nextTick(() => {
                         this.addSortable();
@@ -281,11 +259,11 @@ export default defineComponent({
             }
         },
         recordAddClick() {
-            this.dataBrowseComponent.add(this.addConfig.data)
+            useDataBrowseStore().add(this.addConfig.data)
                 .then(() => this.addConfig.dialog = false);
         },
         recordReduce(deleteRowIndies?: Array<string>) {
-            this.dataBrowseComponent.reduce(deleteRowIndies)
+            useDataBrowseStore().reduce(deleteRowIndies)
         },
         recordEdit(_id?: string) {
             if (!this.index) {
@@ -313,7 +291,7 @@ export default defineComponent({
             }
         },
         recordEditClick() {
-            this.dataBrowseComponent.update(this.editConfig.id, this.editConfig.data)
+            useDataBrowseStore().update(this.editConfig.id, this.editConfig.data)
                 .then(() => {
                     this.editConfig.dialog = false;
                 })
@@ -325,17 +303,17 @@ export default defineComponent({
             type: string,
             index: IndexView | undefined
         }) {
-            this.dataBrowseComponent.indexChange(data)
+            useDataBrowseStore().indexChange(data)
                 .then(() => this.addSortable());
         },
         openMappingDrawer() {
-            this.dataBrowseComponent.openMappingDrawer();
+            useDataBrowseStore().openMappingDrawer();
         },
         jumpToBaseSearch() {
-            this.dataBrowseComponent.jumpToBaseSearch();
+            useDataBrowseStore().jumpToBaseSearch();
         },
         jumpToSeniorSearch() {
-            this.dataBrowseComponent.jumpToSeniorSearch();
+            useDataBrowseStore().jumpToSeniorSearch();
         },
         openExportDialog() {
             // 选择了索引
@@ -355,19 +333,19 @@ export default defineComponent({
         // >----------------------------------------- 功能 ----------------------------------------->
         copy: (value: any) => utools.copyText(JSON.stringify(value, null, 4)),
         jumpToSeniorSearchByInsert() {
-            this.dataBrowseComponent.jumpToSeniorSearchByInsert(this.addConfig.data)
+            useDataBrowseStore().jumpToSeniorSearchByInsert(this.addConfig.data)
                 .then(() => {
                     this.addConfig.dialog = false;
                 });
         },
         jumpToSeniorSearchByUpdate() {
-            this.dataBrowseComponent.jumpToSeniorSearchByUpdate(this.editConfig.id, this.editConfig.data)
+            useDataBrowseStore().jumpToSeniorSearchByUpdate(this.editConfig.id, this.editConfig.data)
                 .then(() => {
                     this.editConfig.dialog = false;
                 });
         },
         addSortable() {
-            let tableViewWrap = document.getElementById(this.id);
+            let tableViewWrap = document.getElementById("data-browse-table");
             if (sort) {
                 sort.destroy();
             }
@@ -406,10 +384,10 @@ export default defineComponent({
             });
         },
         resetColumn() {
-            this.dataBrowseComponent.resetColumn();
+            useDataBrowseStore().resetColumn();
         },
         handleChange(values: any[]) {
-            this.dataBrowseComponent.handleChange(values);
+            useDataBrowseStore().handleChange(values);
         },
     }
 });

@@ -54,16 +54,10 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 export default defineComponent({
     name: 'db-condition',
-    emit: ['executeQuery', 'update:mustValue', 'update:shouldValue', 'update:mustNotValue', 'update:orderByValue'],
-    props: {
-        mustValue: String,
-        shouldValue: String,
-        mustNotValue: String,
-        orderByValue: String
-    },
     data: () => ({
         must: '',
         should: '',
@@ -71,41 +65,26 @@ export default defineComponent({
         orderBy: ''
     }),
     watch: {
-        mustValue(newValue: string) {
-            this.must = newValue;
-        },
         must(newValue: string) {
-            this.$emit('update:mustValue', newValue);
-        },
-
-        shouldValue(newValue: string) {
-            this.should = newValue;
+            useDataBrowseStore().updateMust(newValue);
         },
         should(newValue: string) {
-            this.$emit('update:shouldValue', newValue);
-        },
-
-        mustNotValue(newValue: string) {
-            this.mustNot = newValue;
+            useDataBrowseStore().updateShould(newValue);
         },
         mustNot(newValue: string) {
-            this.$emit('update:mustNotValue', newValue);
-        },
-
-        orderByValue(newValue: string) {
-            this.orderBy = newValue;
+            useDataBrowseStore().updateMustNot(newValue);
         },
         orderBy(newValue: string) {
-            this.$emit('update:orderByValue', newValue);
+            useDataBrowseStore().updateOrderBy( newValue);
         },
     },
     methods: {
         executeQuery() {
-            this.$emit('executeQuery');
+            useDataBrowseStore().executeQuery(false);
         },
-        clear(value: string) {
-            this.$emit('update:' + value, '');
-            this.$emit('executeQuery');
+        clear(value: 'must' | 'should' | 'mustNot' | 'orderBy') {
+            this[value] = '';
+            useDataBrowseStore().executeQuery(false);
         }
     }
 });

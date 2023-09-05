@@ -30,7 +30,7 @@
             <a-form-item label="来源">
                 <a-select v-model="instance.source">
                     <a-option :value="ExportSource.ALL"
-                              :disabled="![ExportType.JSON, ExportType.YML, ExportType.XML].includes(instance.type)">全部
+                              :disabled="!allowExportTypes.includes(instance.type)">全部
                     </a-option>
                     <a-option :value="ExportSource.HIT">只导出hits</a-option>
                     <a-option :value="ExportSource.SOURCE">只导出_source内容</a-option>
@@ -58,6 +58,8 @@ import {
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {defineComponent, PropType} from "vue";
+import {mapState} from "pinia";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 export default defineComponent({
     name: 'senior-search-export-dialog',
@@ -65,7 +67,6 @@ export default defineComponent({
     props: {
         modelValue: Boolean,
         records: Object as PropType<Array<any>>,
-        result: Object,
         indexName: {
             type: String,
             required: false,
@@ -73,6 +74,7 @@ export default defineComponent({
         }
     },
     data: () => ({
+        allowExportTypes: [ExportType.JSON, ExportType.YML, ExportType.XML] as Array<ExportType>,
         visible: false,
         instance: {
             name: '数据导出',
@@ -90,6 +92,9 @@ export default defineComponent({
         ExportScope,
         ExportSource,
     }),
+    computed:{
+        ...mapState(useDataBrowseStore, ['result'])
+    },
     watch: {
         modelValue(newValue: boolean) {
             this.visible = newValue;

@@ -2,8 +2,8 @@
     <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
         :popup-offset="2">
         <div class="item" style="display: flex;" @click="showIndex">
-            <div v-if="index === ''" style="user-select: none;">未选择索引</div>
-            <div v-else style="user-select: none;">{{ index }}</div>
+            <div v-if="name === ''" style="user-select: none;">未选择索引</div>
+            <div v-else style="user-select: none;">{{ name }}</div>
             <icon-up style="margin: 5px;" v-if="show" />
             <icon-down style="margin: 5px;" v-else />
         </div>
@@ -16,7 +16,7 @@
                     <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
                         <div>
                             <div v-for="item in indicesShow" class="data-browse-list-item"
-                                :class="item.name === index ? 'data-browse-list-item-this' : ''"
+                                :class="item.name === name ? 'data-browse-list-item-this' : ''"
                                 @click="indexChange(item.name, item.type, item.index)">
                                 <span>{{ item.name }}</span>
                                 <a-tag color="blue" v-if="item.type === 'index'">索引</a-tag>
@@ -37,6 +37,7 @@ import useIndexStore from "@/store/IndexStore";
 import { stringContain } from "@/utils/SearchUtil";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import mitt from "@/plugins/mitt";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 interface Item {
 
@@ -53,11 +54,11 @@ export default defineComponent({
     emit: ['indexChange'],
     data: () => ({
         show: false,
-        index: '',
         indexFilter: ''
     }),
     computed: {
         ...mapState(useIndexStore, ['indices']),
+        ...mapState(useDataBrowseStore, ['name']),
         indicesShow(): Array<Item> {
             let items = new Set<Item>();
             let names = new Set<string>();
@@ -91,11 +92,6 @@ export default defineComponent({
             });
         },
     },
-    created() {
-        mitt.on(MessageEventEnum.URL_UPDATE, () => {
-            this.index = '';
-        });
-    },
     methods: {
         showIndex() {
             this.show = !this.show;
@@ -116,7 +112,6 @@ export default defineComponent({
             }
         },
         indexChange(name: string, type: string, index?: IndexView) {
-            this.index = name;
             this.show = false;
             this.$emit('indexChange', {
                 name,
