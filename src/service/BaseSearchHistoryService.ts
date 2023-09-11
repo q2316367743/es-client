@@ -22,7 +22,7 @@ export class BaseSearchHistoryService {
             return Promise.reject('记录名称已存在');
         }
         return storageStrategyContext.getStrategy().insert<BaseSearchHistory>(TableNameEnum.BASE_SEARCH_HISTORY, {
-            id: undefined,
+            id: 0,
             urlId: record.urlId,
             createTime: new Date(),
             updateTime: new Date(),

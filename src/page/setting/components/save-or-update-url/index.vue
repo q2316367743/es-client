@@ -35,7 +35,7 @@
         </a-form>
         <template #footer>
             <a-trigger position="top" trigger="click" content-class="save-or-update-url-content" :popup-offset="10">
-                <a-button @click="test">{{ $t('common.operation.test') }}</a-button>
+                <a-button @click="test()">{{ $t('common.operation.test') }}</a-button>
                 <template #content>
                     <a-spin :loading="loading">
                         <a-result :status="testData.icon" :title="testData.title">
@@ -50,7 +50,7 @@
                     </a-spin>
                 </template>
             </a-trigger>
-            <a-button type="primary" @click="submit">
+            <a-button type="primary" @click="submit()">
                 {{ isSave ? $t('common.operation.add') : $t('common.operation.update') }}
             </a-button>
         </template>
@@ -61,7 +61,7 @@ import { defineComponent } from "vue";
 
 import Url from '@/entity/Url';
 
-import { httpStrategyContext, urlService, useUrlEditEvent } from '@/global/BeanFactory';
+import { httpStrategyContext, useUrlEditEvent } from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import MessageUtil from "@/utils/MessageUtil";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
@@ -111,6 +111,7 @@ export default defineComponent({
         }
     },
     created() {
+        useUrlEditEvent.reset();
         useUrlEditEvent.on(url => {
             this.dialog = true;
             if (url) {
@@ -143,7 +144,7 @@ export default defineComponent({
             this.loading = true;
             if (this.isSave) {
                 // 新增
-                urlService.insert({
+                useUrlStore().add({
                     name: this.url.name,
                     value: this.url.value,
                     sequence: this.url.sequence,
@@ -152,25 +153,24 @@ export default defineComponent({
                     authUser: this.url.authUser,
                     authPassword: this.url.authPassword,
                     version: this.url.version
-                }).then(() => MessageUtil.success('新增成功', useUrlStore().reset))
+                }).then(() => MessageUtil.success('新增成功'))
                     .catch(e => MessageUtil.error('新增失败', e))
                     .finally(() => {
                         this.loading = false;
                     });
             } else {
                 // 更新
-                urlService.updateById(this.url.id!, {
+                useUrlStore().update(this.url.id!, {
                     name: this.url.name,
                     value: this.url.value,
                     sequence: this.url.sequence,
-                    createTime: this.url.createTime || new Date(),
                     isAuth: this.url.isAuth,
                     authType: this.url.authType,
                     authUser: this.url.authUser,
                     authPassword: this.url.authPassword,
                     version: this.url.version
                 })
-                    .then(() => MessageUtil.success('修改成功', useUrlStore().reset))
+                    .then(() => MessageUtil.success('修改成功'))
                     .catch(e => MessageUtil.error('修改失败', e))
                     .finally(() => {
                         this.loading = false;

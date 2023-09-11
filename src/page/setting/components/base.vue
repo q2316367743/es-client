@@ -6,7 +6,7 @@
                 <a-form-item label="默认页面">
                     <a-select v-model="instance.defaultPage">
                         <a-option :value="PageNameEnum.HOME" label="概览" />
-                        <a-option :value="PageNameEnum.DATA_BROWSER" label="数据浏览" />
+                        <a-option :value="PageNameEnum.DATA_BROWSE" label="数据浏览" />
                         <a-option :value="PageNameEnum.BASE_SEARCH" label="基础搜索" />
                         <a-option :value="PageNameEnum.SENIOR_SEARCH" label="高级搜索" />
                     </a-select>
@@ -47,8 +47,8 @@
                     </a-tag>
                     <a-input v-if="homeExcludeIndicesConfig.input" ref="homeExcludeIndexInput"
                         v-model="homeExcludeIndicesConfig.value" size="small" @keyup.enter="addHomeExcludeIndex"
-                        @blur="addHomeExcludeIndex" style="width: 72px;" class="home-exclude-item" />
-                    <a-button type="primary" v-else size="small" @click="addHomeExcludeIndexClick"
+                        @blur="addHomeExcludeIndex()" style="width: 72px;" class="home-exclude-item" />
+                    <a-button type="primary" v-else size="small" @click="addHomeExcludeIndexClick()"
                         class="home-exclude-item">
                         新增索引
                     </a-button>
@@ -66,8 +66,8 @@
                     </a-tag>
                     <a-input v-if="homeIncludeIndicesConfig.input" ref="homeIncludeIndexInput"
                         v-model="homeIncludeIndicesConfig.value" size="small" @keyup.enter="addHomeIncludeIndex"
-                        @blur="addHomeIncludeIndex" style="width: 72px;" class="home-exclude-item" />
-                    <a-button type="primary" v-else size="small" @click="addHomeIncludeIndexClick"
+                        @blur="addHomeIncludeIndex()" style="width: 72px;" class="home-exclude-item" />
+                    <a-button type="primary" v-else size="small" @click="addHomeIncludeIndexClick()"
                         class="home-exclude-item">
                         新增索引
                     </a-button>
@@ -199,7 +199,7 @@
                     </a-switch>
                 </a-form-item>
                 <a-form-item label="备份">
-                    <a-button type="primary" @click="backup">下载</a-button>
+                    <a-button type="primary" @click="backup()">下载</a-button>
                 </a-form-item>
             </a-collapse-item>
         </a-collapse>

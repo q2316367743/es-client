@@ -2,9 +2,8 @@ import Url from '@/entity/Url';
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import { storageStrategyContext } from "@/global/BeanFactory";
+import {storageStrategyContext} from "@/global/BeanFactory";
 import Assert from '@/utils/Assert';
-import useUrlStore from '@/store/UrlStore';
 
 export default class UrlService {
 
@@ -15,6 +14,7 @@ export default class UrlService {
 
     insert(url: Url): Promise<number> {
         return storageStrategyContext.getStrategy().insert<Url>(TableNameEnum.URL, {
+            id: 0,
             name: url.name,
             value: url.value,
             sequence: url.sequence,
@@ -50,7 +50,6 @@ export default class UrlService {
                 version: url.version
             }).then(() => {
                 resolve();
-                useUrlStore().reset();
             })
                 .catch(reject)
         });
@@ -74,12 +73,12 @@ export default class UrlService {
                 // 删除指定URL
                 await storageStrategyContext.getStrategy().delete(TableNameEnum.URL, id);
                 // 查询全部基础查询历史
-                let bshList = await storageStrategyContext.getStrategy().list<BaseSearchHistory>(TableNameEnum.BASE_SEARCH_HISTORY, { urlId: id });
+                let bshList = await storageStrategyContext.getStrategy().list<BaseSearchHistory>(TableNameEnum.BASE_SEARCH_HISTORY, {urlId: id});
                 for (let bsh of bshList) {
                     await storageStrategyContext.getStrategy().delete<BaseSearchHistory>(TableNameEnum.BASE_SEARCH_HISTORY, bsh.id!);
                 }
                 // 查询全部高级查询历史
-                let sshList = await storageStrategyContext.getStrategy().list<SeniorSearchHistory>(TableNameEnum.SENIOR_SEARCH_HISTORY, { urlId: id });
+                let sshList = await storageStrategyContext.getStrategy().list<SeniorSearchHistory>(TableNameEnum.SENIOR_SEARCH_HISTORY, {urlId: id});
                 for (let ssh of sshList) {
                     await storageStrategyContext.getStrategy().delete<SeniorSearchHistory>(TableNameEnum.SENIOR_SEARCH_HISTORY, ssh.id!);
                 }

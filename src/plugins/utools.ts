@@ -1,5 +1,5 @@
 import MessageUtil from '@/utils/MessageUtil';
-import {copy, generateUUID} from "@/utils/BrowserUtil";
+import {generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
 
 // 模拟utools声明
@@ -17,6 +17,31 @@ export interface DbReturn {
     error?: boolean,
     name?: string,
     message?: string
+}
+
+export type ShowOpenDialogOptionProperty = 'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles'
+    | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent';
+
+export interface ShowOpenDialogOptionFilter {
+    name: string;
+    extensions: Array<string>
+}
+
+export type RedirectPreloadType = 'text' | 'img' | 'files';
+
+export interface RedirectPreload {
+    type: RedirectPreloadType;
+    data: any;
+}
+
+export interface ShowOpenDialogOption {
+    title?: string,
+    defaultPath?: string,
+    buttonLabel?: string,
+    filters?: Array<ShowOpenDialogOptionFilter>,
+    properties?: Array<ShowOpenDialogOptionProperty>,
+    message?: string,
+    securityScopedBookmarks?: boolean
 }
 
 function isMacOS(): boolean{
@@ -116,7 +141,7 @@ export const utools = {
     shellOpenExternal(url: string): void {
         window.open(url);
     },
-    redirect() {
+    redirect(label: string | string[], payload: string | RedirectPreload) {
         MessageUtil.warning("web环境不支持utools");
         window.open("https://u.tools");
     },
@@ -129,12 +154,13 @@ export const utools = {
     onPluginEnter(callback: (action: { code: string, type: string, payload: any }) => void): void {
         document.addEventListener('load', () => callback({ code: 'application', type: '', payload: {} }));
     },
-    showOpenDialog(): [] {
+    showOpenDialog(options: ShowOpenDialogOption): (string[]) | (undefined) {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
         return [];
     },
-    setSubInput() {
+    setSubInput(action: { text: string }): boolean {
         console.warn("web环境不支持子输入框事件");
+        return true
     },
     setSubInputValue() {
         console.warn("web环境不支持子输入框事件");
@@ -158,15 +184,12 @@ export const utools = {
     },
     isDev(): boolean {
         // @ts-ignore
-        return import.meta.env.DEV || true;
+        return import.meta.env.DEV;
     },
     isMacOS,
     isWindows,
     isLinux(): boolean {
         return !isMacOS() && !isWindows();
-    },
-    copyText(text: string) {
-        copy(text);
     }
 
 }

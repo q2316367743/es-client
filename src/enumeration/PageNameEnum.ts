@@ -1,14 +1,22 @@
 enum PageNameEnum {
 
-    HOME = "home",
+    HOME = "/home",
 
-    DATA_BROWSER = "data-browser",
+    DATA_BROWSE = "/data-browse",
 
-    BASE_SEARCH = "base-search",
+    BASE_SEARCH = "/base-search",
 
-    SENIOR_SEARCH = "senior-search",
+    SENIOR_SEARCH = "/senior-search",
 
-    SETTING = "setting"
+    SETTING = "/setting",
+
+    SETTING_BASE = "/setting/base",
+
+    SETTING_URL = "/setting/url",
+
+    SETTING_UPDATE = "/setting/update",
+
+    SETTING_ABOUT = "/setting/about"
 
 }
 

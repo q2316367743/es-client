@@ -1,4 +1,3 @@
-import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import Base from "@/entity/Base";
 
 /**
@@ -10,16 +9,6 @@ export default interface SeniorSearchHistory extends Base{
      * URL的id
      */
     urlId?: number
-
-    /**
-     * 创建时间
-     */
-    createTime?: Date;
-
-    /**
-     * 更新时间
-     */
-    updateTime?: Date;
 
     /**
      * 名字。唯一

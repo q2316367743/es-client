@@ -73,7 +73,6 @@ export default class SeniorTabComponent {
 
     /**
      * 关闭一个标签
-     * @param id 标签ID
      */
     close(): void {
         this.searchMap.value.delete(this.searchId.value);

@@ -9,13 +9,12 @@
                     <!-- 索引服务器选择 -->
                     <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
                               allow-clear
-                              @change="selectUrl" class="url-select" :loading="urlSelectLoading || loading"
+                              @change="selectUrl" class="url-select"
                               :show-extra-options="true">
                         <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
                         <template #empty>
                             <div style="padding: 6px 0; text-align: center;">
-                                <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
-                                </a-button>
+                                <a-button type="primary" @click="jumpToAddUrl()">新增链接</a-button>
                             </div>
                         </template>
                         <template #footer>
@@ -81,7 +80,7 @@
                             </template>
                             {{ $t('menu.home') }}
                         </a-menu-item>
-                        <a-menu-item :key="PageNameEnum.DATA_BROWSER">
+                        <a-menu-item :key="PageNameEnum.DATA_BROWSE">
                             <template #icon>
                                 <icon-apps/>
                             </template>
@@ -99,28 +98,34 @@
                             </template>
                             {{ $t('menu.seniorSearch') }}
                         </a-menu-item>
-                        <a-menu-item :key="PageNameEnum.SETTING">
+                        <a-sub-menu :key="PageNameEnum.SETTING">
                             <template #icon>
                                 <icon-settings/>
                             </template>
-                            {{ $t('menu.setting') }}
-                        </a-menu-item>
+                            <template #title>设置</template>
+                            <a-menu-item :key="PageNameEnum.SETTING_BASE">
+                                基础设置
+                            </a-menu-item>
+                            <a-menu-item :key="PageNameEnum.SETTING_URL">
+                                链接管理
+                            </a-menu-item>
+                            <a-menu-item :key="PageNameEnum.SETTING_UPDATE">
+                                更新日志
+                            </a-menu-item>
+                            <a-menu-item :key="PageNameEnum.SETTING_ABOUT">
+                                关于
+                            </a-menu-item>
+                        </a-sub-menu>
                     </a-menu>
                 </a-layout-sider>
                 <!-- 内容-->
                 <a-layout-content>
                     <a-spin :loading="loading" :tip="text">
-                        <home v-show="selectedKeys[0] === PageNameEnum.HOME"></home>
-                        <data-browse v-show="selectedKeys[0] === PageNameEnum.DATA_BROWSER"></data-browse>
-                        <base-search v-show="selectedKeys[0] === PageNameEnum.BASE_SEARCH"></base-search>
-                        <senior-search v-show="selectedKeys[0] === PageNameEnum.SENIOR_SEARCH"></senior-search>
-                        <setting v-show="selectedKeys[0] === PageNameEnum.SETTING"></setting>
+                        <router-view/>
                     </a-spin>
                 </a-layout-content>
             </a-layout>
         </a-layout>
-        <!-- 保存或新增URL弹窗 -->
-        <save-or-update-url/>
         <!-- 索引管理 -->
         <index-manage/>
         <!-- 版本更新 -->
@@ -157,44 +162,27 @@ import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
 import zhCn from '@arco-design/web-vue/es/locale/lang/zh-cn';
 // 模块
 import Info from '@/module/info/index.vue';
-// 页面
-import Home from '@/page/home/index.vue';
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
 import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
-import {
-    applicationLaunch,
-    lodisStrategyContext, statistics,
-    usePageJumpEvent,
-    useUrlEditEvent,
-    useUrlSelectEvent,
-    versionManage,
-} from "@/global/BeanFactory";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
-import MessageUtil from "@/utils/MessageUtil";
+import { versionManage,} from "@/global/BeanFactory";
+import {setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 export default defineComponent({
     components: {
-        // 页面
-        Home,
-        DataBrowse: defineAsyncComponent(() => import('@/page/data-browse/index.vue')),
-        BaseSearch: defineAsyncComponent(() => import('@/page/base-search/index.vue')),
-        SeniorSearch: defineAsyncComponent(() => import('@/page/senior-search/index.vue')),
-        Setting: defineAsyncComponent(() => import('@/page/setting/index.vue')),
         // 组件
         Info,
-        SettingAbout: defineAsyncComponent(() => import("@/page/setting/components/About.vue")),
+        SettingAbout: defineAsyncComponent(() => import("@/page/setting/components/about.vue")),
         VersionUpdate: defineAsyncComponent(() => import("@/module/version-update/index.vue")),
         FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
-        SaveOrUpdateUrl: defineAsyncComponent(() => import("@/module/SaveOrUpdateUrl/index.vue")),
         IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
         NotificationManage: defineAsyncComponent(() => import('@/module/NotificationManage/index.vue')),
     },
@@ -207,9 +195,8 @@ export default defineComponent({
             newDialog: false,
             feedbackDialog: false,
             collapsed: true,
-            selectedKeys: new Array<PageNameEnum>(),
+            selectedKeys: [PageNameEnum.HOME] as Array<PageNameEnum>,
             // 窗口操作展示
-            urlSelectLoading: true,
             notificationDrawer: false,
             PageNameEnum,
             // 图标
@@ -218,7 +205,6 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalStore, ['isDark']),
         ...mapState(useUrlStore, ['urls', 'url']),
-        ...mapState(useIndexStore, ['name', 'active_shards', 'total_shards', 'status']),
         ...mapState(useSettingStore, ['instance']),
         ...mapState(useLoadingStore, ['loading', 'text']),
         ...mapState(useNotificationStore, ['hasRead']),
@@ -235,97 +221,39 @@ export default defineComponent({
             this.urlId = this.url?.id!;
         },
         selectedKeys(newValue: any[]) {
-            emitter.emit(MessageEventEnum.PAGE_ACTIVE, newValue[0]);
-            let page = newValue[0];
-            switch (page){
-                case PageNameEnum.HOME:
-                    page = "首页";
-                    break;
-                case PageNameEnum.BASE_SEARCH:
-                    page = "基础搜索";
-                    break;
-                case PageNameEnum.DATA_BROWSER:
-                    page = "数据浏览";
-                    break;
-                case PageNameEnum.SENIOR_SEARCH:
-                    page = "高级搜索";
-                    break;
-                case PageNameEnum.SETTING:
-                    page = "设置";
-                    break;
-            }
-            statistics.access(page);
+            this.$router.push(newValue[0]);
         },
         urlId(newValue) {
             if (newValue && typeof newValue === 'number') {
-                lodisStrategyContext.getStrategy().set(LocalStorageKeyEnum.LAST_URL, newValue + '');
+                setItem(LocalNameEnum.KEY_LAST_URL, newValue);
+            }
+        },
+        '$route.path': {
+            handler(value) {
+                this.selectedKeys = [value];
             }
         }
     },
     created() {
-        // 初始化基础搜索设置
-        useBaseSearchSettingStore().init()
-                .then(() => console.log("初始化基础搜索设置成功"))
-                .catch(e => MessageUtil.error("初始化基础搜索设置失败", e));
-        applicationLaunch.register(async () => {
-            console.log('开始执行应用启动后任务');
-            // 刷新索引列表
-            useUrlStore().reset(() => {
-                // url渲染成功
-                this.urlSelectLoading = false;
-                // utools/vscode第一次进入事件
-                let code = sessionStorage.getItem('action');
-                console.log('当前的code：', code)
-                if (code && code !== 'application') {
-                    let id = parseInt(code);
-                    if (Number.isInteger(id)) {
-                        this.selectUrl(id);
-                    }
-                } else {
-                    // 如果是utils，但是从应用进来，或者不是utils（因为只有utils存在action）
-                    // 如果展示历史
-                    if (useSettingStore().getLastUrl) {
-                        lodisStrategyContext.getStrategy().get<string>(LocalStorageKeyEnum.LAST_URL)
-                                .then(value => {
-                                    if (value) {
-                                        let id = parseInt(value);
-                                        if (Number.isInteger(id)) {
-                                            this.selectUrl(id);
-                                        }
-                                    }
-                                });
-                    }
+        // 初始化
+        Promise.all([
+            useUrlStore().init()
+        ])
+            .then(() => {
+                // 版本更新处理
+                switch (versionManage.checkBasicUpdate()) {
+                    case 1:
+                        this.newDialog = true;
+                        break;
+                    case 2:
+                        this.updateDialog = true;
+                        break;
                 }
-                // 删除sessionStorage
-                sessionStorage.removeItem('action');
-                // vscode事件
-                window.addEventListener('message', event => {
-                    const message = event.data;
-                    if (message['type'] === 'url-open') {
-                        let id = parseInt(message['content']);
-                        if (Number.isInteger(id)) {
-                            this.selectUrl(id);
-                        }
-                    }
-                });
-            });
-            // 未完全退出事件
-            useUrlSelectEvent.on(urlId => this.selectUrl(urlId === 0 ? '' : urlId));
+                versionManage.execUpdate();
 
-            // 版本更新处理
-            switch (versionManage.checkBasicUpdate()) {
-                case 1:
-                    this.newDialog = true;
-                    break;
-                case 2:
-                    this.updateDialog = true;
-                    break;
-            }
-            await versionManage.execUpdate();
+                this.selectMenu(useSettingStore().getDefaultPage)
+            })
 
-            this.selectMenu(useSettingStore().getDefaultPage);
-
-        });
 
         // 国际化
         let language = useSettingStore().getLanguage;
@@ -334,11 +262,6 @@ export default defineComponent({
         } else if (language === 'en') {
             this.locale = enUS;
         }
-
-        // 执行页面跳转事件
-        usePageJumpEvent.on((page: PageNameEnum) => {
-            this.selectMenu(page);
-        });
 
         // 执行窗口刷新事件
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
@@ -350,41 +273,29 @@ export default defineComponent({
             this.openNotification()
         });
 
-        if (Constant.platform === 'vscode') {
-            // vscode需要实现主题自适应
-            let theme = document.body.className;
-            let isDark = false
-            if (theme === 'vscode-light') {
-                // 浅色主题
-                isDark = false;
-            } else if (theme === 'vscode-dark') {
-                // 黑夜主题
-                isDark = true;
-            }
-            if (this.isDark !== isDark) {
-                this.switchDarkColors();
-            }
+        if (this.isDark) {
+            // 设置为暗黑主题
+            document.body.setAttribute('arco-theme', 'dark');
         } else {
-            if (this.isDark) {
-                // 设置为暗黑主题
-                document.body.setAttribute('arco-theme', 'dark');
-            } else {
-                // 恢复亮色主题
-                document.body.removeAttribute('arco-theme');
-            }
+            // 恢复亮色主题
+            document.body.removeAttribute('arco-theme');
         }
     },
     methods: {
         switchDarkColors() {
             useGlobalStore().switchDarkColors()
         },
+
+        jumpToAddUrl() {
+            this.$router.push({
+                path: '/setting/url',
+                query: {
+                    method: 'add'
+                }
+            })
+        },
+
         async selectUrl(value: any) {
-            // 新增，打开新增面板
-            if (value === 'add') {
-                this.urlId = undefined;
-                useUrlEditEvent.emit();
-                return;
-            }
             // 清空链接
             if (value === '') {
                 // 清空链接选择

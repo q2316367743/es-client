@@ -13,16 +13,6 @@ export default interface BaseSearchHistory extends Base{
     urlId?: number
 
     /**
-     * 创建时间
-     */
-    createTime?: Date;
-
-    /**
-     * 更新时间
-     */
-    updateTime?: Date;
-
-    /**
      * 名字。唯一
      */
     name?: string;

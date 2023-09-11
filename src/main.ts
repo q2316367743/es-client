@@ -3,8 +3,7 @@ import store from "@/store";
 import App from './App.vue';
 import i18n from '@/i18n';
 import { applicationLaunch } from "@/global/BeanFactory";
-import { utools } from './plugins/utools';
-import { preload } from './plugins/preload';
+import router from "@/plugins/router";
 
 // 额外引入图标库
 import ArcoVue from '@arco-design/web-vue';
@@ -19,8 +18,6 @@ import '@/components/JsonTree/index.less';
 
 // arco样式
 import '@arco-design/web-vue/dist/arco.css';
-
-
 
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
@@ -44,6 +41,7 @@ createApp(App)
     .use(store)
     .use(i18n)
     .use(ArcoVueIcon)
+    .use(router)
     .mount('#app');
 
 applicationLaunch.executeInit();

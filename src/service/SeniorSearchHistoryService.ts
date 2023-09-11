@@ -13,7 +13,7 @@ export class SeniorSearchHistoryService {
         return Promise.resolve(count.length > 0);
     }
 
-    async save(record: SeniorSearchHistory): Promise<number> {
+    async save(record: Omit<SeniorSearchHistory, 'id' | 'createTime' | 'updateTime'>): Promise<number> {
         if (!record.name || record.name === '') {
             return Promise.reject('记录名称不能为空');
         }
@@ -21,7 +21,7 @@ export class SeniorSearchHistoryService {
             return Promise.reject('记录名称已存在');
         }
         return storageStrategyContext.getStrategy().insert<SeniorSearchHistory>(TableNameEnum.SENIOR_SEARCH_HISTORY, {
-            id: undefined,
+            id: 0,
             urlId: record.urlId,
             createTime: new Date(),
             updateTime: new Date(),
