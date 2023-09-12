@@ -5,12 +5,10 @@ import BaseOrder from "@/entity/BaseOrder";
 import Field from "@/view/Field";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
-import useBaseTempRecordStore from "@/store/BaseSearchHistoryStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import useIndexStore from "@/store/IndexStore";
 import useSettingStore from "@/store/SettingStore";
-import useUrlStore from "@/store/UrlStore";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
