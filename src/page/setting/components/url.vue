@@ -1,9 +1,8 @@
 <template>
     <div class="setting-url">
         <div class="setting-url-toolbar">
-            <a-button type="primary" @click="editOpen(undefined)">{{ $t('common.operation.add') }}</a-button>
-            <div></div>
-            <a-input v-model="condition.name" :placeholder="$t('common.keyword.name')" allow-clear/>
+            <a-input v-model="condition.name" style="width: 40vw;" placeholder="链接名称" allow-clear/>
+            <a-button type="primary" @click="editOpen()">新增</a-button>
         </div>
         <a-table ref="urlTable" :data="showUrls" class="data" sticky-header style="height: 100%;">
             <template #columns>
@@ -113,8 +112,8 @@ export default defineComponent({
 <style lang="less">
 .setting-url {
     .setting-url-toolbar {
-        display: grid;
-        grid-template-columns: 60px 1fr 300px;
+        display: flex;
+        justify-content: space-between;
         margin: 8px 5px;
     }
 
