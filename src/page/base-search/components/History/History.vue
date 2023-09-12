@@ -1,9 +1,8 @@
 <template>
     <div class="bs-history">
         <div class="bs-history-toolbar">
-            <a-input v-model="name" :placeholder="$t('common.keyword.name')" style="width: 200px;"
-                @input="search"></a-input>
-            <a-switch v-model="onlyCurrent" @change="search" style="margin-left: 12px;" type="round">
+            <a-input v-model="name" placeholder="名称" style="width: 60%;" allow-clear/>
+            <a-switch v-model="onlyCurrent" @change="search()" style="margin-left: 12px;" type="round">
                 <template #checked>当前链接</template>
                 <template #unchecked>全部</template>
             </a-switch>
@@ -11,22 +10,22 @@
         <div class="bs-history-body">
             <a-table :data="histories" class="data" style="height: 100%;">
                 <template #columns>
-                    <a-table-column data-index="name" :title="$t('common.keyword.name')"></a-table-column>
-                    <a-table-column data-index="index" :title="$t('common.keyword.index')">
+                    <a-table-column data-index="name" title="名字"></a-table-column>
+                    <a-table-column data-index="index" title="索引">
                         <template #cell="{ record }">
                             <a-link type="primary" target="_blank">{{ record.index }}</a-link>
                             <div class="url-copy" @click="execCopy(record.index)">{{ $t('common.operation.copy') }}</div>
                         </template>
                     </a-table-column>
-                    <a-table-column :title="$t('common.keyword.operation')" :width="200" fixed="right">
+                    <a-table-column title="操作" :width="200" fixed="right">
                         <template #cell="{ record }">
                             <a-button type="primary" status="success" size="small" @click="load(record)">
-                                {{ $t('common.operation.load') }}
+                                加载
                             </a-button>
                             <a-popconfirm content="确认删除此条记录？" ok-text="删除" cancel-text="取消" @ok="removeById(record.id)"
                                 width="200px">
                                 <a-button type="primary" status="danger" size="small">
-                                    {{ $t('common.operation.delete') }}
+                                    删除
                                 </a-button>
                             </a-popconfirm>
                         </template>
@@ -41,8 +40,6 @@ import { defineComponent } from "vue";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import useUrlStore from "@/store/UrlStore";
 import { baseSearchHistoryService, useBaseSearchEvent } from "@/global/BeanFactory";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 // 工具类
 import MessageUtil from "@/utils/MessageUtil";
@@ -57,13 +54,6 @@ export default defineComponent({
         name: '',
         onlyCurrent: true,
     }),
-    mounted() {
-        this.search();
-        emitter.on(MessageEventEnum.BASE_HISTORY_UPDATE, () => {
-            // 历史记录变更，也要进行重新查询历史
-            this.search();
-        });
-    },
     methods: {
         execCopy(url: string) {
             utools.copyText(url);
@@ -101,33 +91,8 @@ export default defineComponent({
 </script>
 <style scoped lang="less">
 .bs-history {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
     .bs-history-body {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-        .bs-history-params {
-            display: flex;
-
-            .bs-history-params-value {
-                width: 200px;
-                overflow: hidden;
-                white-space: nowrap; //不折行
-                text-overflow: ellipsis; //溢出显示省略号
-            }
-        }
-
-        .url-copy {
-            display: inline;
-        }
+        margin-top: 7px;
     }
 }
 </style>

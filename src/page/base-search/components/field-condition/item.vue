@@ -1,8 +1,8 @@
 <template>
     <div class="field-condition-item">
         <!-- 是否启用 -->
-        <a-switch :checked-value="true" :unchecked-value="false" type="circle" v-model="condition.isEnable"
-                  checked-color="rgb(var(--green-6))" unchecked-color="var(--color-fill-4)"
+        <a-switch :checked-value="true" :unchecked-value="false" type="round" v-model="condition.isEnable"
+                  checked-color="rgb(var(--green-6))" unchecked-color="rgb(var(--red-6))"
                   style="margin: 4px 10px 4px 0;">
             <template #checked>启用</template>
             <template #unchecked>禁用</template>
@@ -15,7 +15,7 @@
             <a-option label="should" value="should"/>
         </a-select>
         <!-- 选择查询字段 -->
-        <a-select v-model="condition.field" allow-search allow-create :placeholder="$t('baseSearch.placeholder.field')"
+        <a-select v-model="condition.field" allow-search allow-create allow-clear placeholder="请选择查询字段"
                   style="margin-left: 10px;width: 250px;">
             <a-option v-for="(field, idx) in fields" :key="idx" :label="field.name" :value="field.name"/>
         </a-select>
@@ -43,13 +43,20 @@
         </div>
         <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;" v-else-if="condition.condition !== 'exists'" allow-clear/>
         <!-- 操作 -->
-        <a-button type="primary" style="margin-left: 10px" @click="add">{{
-                $t('common.operation.add')
-            }}
+        <a-button type="primary" style="margin-left: 10px" @click="add()">
+            <template #icon>
+                <icon-plus />
+            </template>
         </a-button>
-        <a-button type="primary" status="danger" @click="remove(condition.id)">{{
-                $t('common.operation.delete')
-            }}
+        <a-button type="primary" status="danger" @click="remove(condition.id)">
+            <template #icon>
+                <icon-minus />
+            </template>
+        </a-button>
+        <a-button type="primary" status="success" style="margin-left:10px;margin-right: 20px;" @click="search()">
+            <template #icon>
+                <icon-search />
+            </template>
         </a-button>
     </div>
 </template>
@@ -98,6 +105,9 @@ export default defineComponent({
         },
         textArea() {
             this.$emit('editTextArea', this.index);
+        },
+        search() {
+            useBaseSearchStore().search();
         }
     }
 });

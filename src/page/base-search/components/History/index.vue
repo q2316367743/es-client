@@ -5,33 +5,20 @@
         </template>
     </a-button>
     <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close :footer="false"
-              :header="false" popup-container="#main">
-        <div class="bsh-manage">
-            <a-tabs v-model:active-key="active" class="history-manage-tabs">
-                <a-tab-pane title="临时" key="temp"></a-tab-pane>
-                <a-tab-pane title="历史" key="history"></a-tab-pane>
-            </a-tabs>
-            <div class="bsh-manage-body">
-                <!-- 临时记录 -->
-                <bsh-temp-record @load="load" v-show="active === 'temp'"/>
-                <!-- 历史记录 -->
-                <bsh-history @load="load" v-show="active === 'history'"/>
-            </div>
-        </div>
+              popup-container="#main">
+        <bsh-history @load="load"/>
     </a-drawer>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import BshTempRecord from "./TempRecord.vue";
 import BshHistory from "./History.vue";
 
 
 export default defineComponent({
     name: 'bsh-manage',
-    components: {BshHistory, BshTempRecord},
+    components: {BshHistory},
     emits: ['update:modelValue'],
     data: () => ({
-        active: 'temp',
         dialog: false
     }),
     methods: {

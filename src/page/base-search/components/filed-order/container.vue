@@ -1,7 +1,8 @@
 <template>
     <div class="file-order-container">
         <div v-if="orders.length === 0">
-            <a-button type="primary" @click="add">{{ $t('common.operation.add') }}
+            <a-button type="primary" @click="add()">
+                新增
             </a-button>
         </div>
         <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(_order, idx) in orders" :key="idx">

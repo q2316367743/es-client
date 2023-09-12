@@ -6,16 +6,16 @@
             <a-form :model="current" layout="vertical" label-width="80px"
                     style="overflow-x: auto;overflow-y: hidden;">
                 <!-- 条件 -->
-                <a-form-item :label="$t('baseSearch.form.condition')">
+                <a-form-item label="条件">
                     <field-condition-container/>
                 </a-form-item>
                 <!-- 排序 -->
-                <a-form-item :label="$t('baseSearch.form.order')">
+                <a-form-item label="排序">
                     <field-order-container/>
                 </a-form-item>
                 <div class="base-condition-pagination">
                     <a-pagination :total="current.total" :current="current.page"
-                                  :page-size="current.size" show-total @change="pageChange"/>
+                                  :page-size="current.size" show-total @change="pageChange($event)"/>
                     <a-input-number v-model="current.size" style="width: 70px"/>
                 </div>
             </a-form>

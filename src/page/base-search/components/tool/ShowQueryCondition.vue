@@ -1,8 +1,8 @@
 <template>
-    <a-button type="text" @click="showBody">
-        {{ $t('baseSearch.form.displayQueryStatement') }}
+    <a-button type="text" @click="showBody()">
+        显示查询条件
     </a-button>
-    <json-dialog v-model:value="condition.dialog" :title="$t('baseSearch.dialog.statement')" :json="condition.data"/>
+    <json-dialog v-model:value="condition.dialog" title="查询条件" :json="condition.data"/>
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
