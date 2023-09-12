@@ -65,7 +65,7 @@
                             <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
                             <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
                             <a-doption value="update" v-if="Constant.mode === 'desktop'">检查更新</a-doption>
-                            <a-doption value="about">{{ $t('app.about') }}</a-doption>
+                            <a-doption value="about">关于</a-doption>
                         </template>
                     </a-dropdown>
                 </div>
@@ -342,12 +342,10 @@ export default defineComponent({
         versionCommand(command: any) {
             switch (command) {
                 case 'about':
-                    this.selectMenu(PageNameEnum.SETTING);
-                    emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'about');
+                    this.$router.push(PageNameEnum.SETTING_ABOUT)
                     break;
                 case 'log':
-                    this.selectMenu(PageNameEnum.SETTING);
-                    emitter.emit(MessageEventEnum.PAGE_SETTING_ACTIVE, 'update');
+                    this.$router.push(PageNameEnum.SETTING_UPDATE)
                     break;
                 case 'update':
                     alert('检查更新')

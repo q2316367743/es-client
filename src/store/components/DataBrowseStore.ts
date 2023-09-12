@@ -42,8 +42,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
         showColumns: new Array<TableViewColumnData>(),
         result: {},
         records: new Array<any>(),
-        checkItems: new Array<string>(),
         allowUpdate: true,
+
+
+        checkItems: new Array<string>(),
         selectedKeys: new Array<string>()
     }),
     actions: {
@@ -69,6 +71,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                             this.showColumns = columns;
                             this.allowUpdate = true;
                             this.checkItems = columns.map(e => e.dataIndex || '');
+                            this.selectedKeys = [];
                         }
                         this.records = records;
                         this.total = total;
@@ -141,6 +144,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
         },
         updateOrderBy(orderBy: string) {
             this.orderBy = orderBy;
+        },
+
+        updateSelectKeys(items: any[]) {
+            this.selectedKeys = items;
         },
 
         // ----------------------------------------- CRUD方法 -----------------------------------------
@@ -307,6 +314,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 this.must, this.should, this.mustNot, this.orderBy,
                 this.page, this.size);
         },
+
+        // ----------------------------------------- 跳转查询 -----------------------------------------
+
+
         /**
          * 跳转到基础查询
          */
@@ -395,6 +406,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
          * @param values 新的列
          */
         handleChange(values: any[]) {
+            this.checkItems = values;
             this.showColumns = this.columns.filter(column => values.includes(column.dataIndex));
             this.allowUpdate = this.showColumns.length === this.columns.length;
         },

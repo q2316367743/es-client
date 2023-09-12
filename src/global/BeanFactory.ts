@@ -1,5 +1,5 @@
 import x2js from 'x2js';
-import { useEventBus} from "@vueuse/core";
+import {useEventBus} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
 
@@ -34,18 +34,9 @@ import {preload} from "@/plugins/preload";
 window.rain = {
     env: window.utools ? 'utools' : 'web'
 }
-// @ts-ignore
-if (window.utools) {
-    utools.onPluginEnter(action => {
-        sessionStorage.setItem('action', action.code);
-    });
-} else {
-    // web环境
-    // @ts-ignore
-    window.utools = utools;
-    // @ts-ignore
-    window.preload = preload;
-}
+
+window.utools = window.utools || utools;
+window.preload = window.preload || preload;
 
 export const urlService = new UrlService();
 export const baseSearchHistoryService = new BaseSearchHistoryService();
