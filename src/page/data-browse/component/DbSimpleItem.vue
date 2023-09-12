@@ -27,7 +27,7 @@ export default defineComponent({
     }),
     methods: {
         click() {
-            if (this.disable === false) {
+            if (!this.disable) {
                 this.$emit('click')
             }
         }

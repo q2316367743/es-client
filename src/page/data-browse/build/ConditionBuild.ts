@@ -1,3 +1,5 @@
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+
 /**
  * 构造查询条件
  *
@@ -11,7 +13,7 @@
  * @param page    第几页
  * @param size    每页大小
  */
-export default function ConditionBuild(must: string, should: string, mustNot: string, orderBy: string, page: number, size: number): any {
+export default function ConditionBuild(must: string, should: string, mustNot: string, orderBy: string, page: number, size: number): DocumentSearchQuery {
     let condition = {
         from: (page - 1) * size,
         size: size,

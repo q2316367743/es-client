@@ -53,8 +53,6 @@ export default defineComponent({
     },
     data: () => {
         return {
-
-
             // 配置
             expandable: {
                 title: '源数据',

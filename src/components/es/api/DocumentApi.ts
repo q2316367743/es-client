@@ -1,15 +1,16 @@
 import {httpStrategyContext} from "@/global/BeanFactory";
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 
 /**
  * 与索引有关的API
  */
 export default function DocumentApi(index: string) {
     return {
-        _search(data?: any): Promise<any> {
+        _search(data?: DocumentSearchQuery): Promise<any> {
             return httpStrategyContext.getStrategy().es<any>({
                 url: `/${index}/_search`,
                 method: "POST",
-                data: data || {}
+                data: data
             })
         },
 

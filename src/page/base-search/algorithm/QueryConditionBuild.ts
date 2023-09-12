@@ -2,6 +2,7 @@ import BaseQuery from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 
 /**
  * 获取基础查询请求体
@@ -95,7 +96,7 @@ export default function QueryConditionBuild(
     page: number,
     size: number,
     orders: Array<BaseOrder>
-): any {
+): DocumentSearchQuery {
     let must = [] as Array<any>;
     let must_not = [] as Array<any>;
     let should = [] as Array<any>;
