@@ -1,4 +1,4 @@
-import {IndexInfo} from "@/es/IndexInfo";
+import {IndexInfo} from "@/components/es/domain/IndexInfo";
 
 /**
  * 集群状态

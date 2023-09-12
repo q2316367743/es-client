@@ -9,7 +9,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 export default class DexieInstance extends Dexie {
 
     constructor() {
-        super('es-client');
+        super('domain-client');
         this.version(5).stores({
             url: '++id, &name, &value, sequence',
             baseSearchHistory: '++id, urlId, &name',

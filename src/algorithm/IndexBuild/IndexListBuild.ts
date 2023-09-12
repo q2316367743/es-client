@@ -1,6 +1,6 @@
 import IndexView from "@/view/index/IndexView";
-import { prettyDataUnit } from "@/utils/FieldUtil";
-import clusterApi from "@/api/ClusterApi";
+import {prettyDataUnit} from "@/utils/FieldUtil";
+import clusterApi from "@/components/es/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
 import useSettingStore from "@/store/SettingStore";
 import StrUtil from "@/utils/StrUtil";
@@ -13,8 +13,9 @@ import Optional from "@/utils/Optional";
  */
 export default async function Builder(): Promise<Array<IndexView>> {
     let indices = new Array<IndexView>();
-    let cluster_stats = await clusterApi._cluster_state();
-    let stats = await clusterApi._stats()
+
+    const [cluster_stats, stats] = await Promise.all([clusterApi._cluster_state(), clusterApi._stats()])
+
     let metaIndices = cluster_stats.metadata.indices as any;
     let statsIndices = stats.indices;
     let cluster_indices = cluster_stats.routing_table.indices;
@@ -62,7 +63,7 @@ export default async function Builder(): Promise<Array<IndexView>> {
         }
         indices.push({
             name: key,
-            alias: Optional.ofNullable( indexInfo.aliases).orElse(new Array<string>()),
+            alias: Optional.ofNullable(indexInfo.aliases).orElse(new Array<string>()),
             original_size: size,
             settings: indexInfo.settings,
             mapping: indexInfo.mappings,

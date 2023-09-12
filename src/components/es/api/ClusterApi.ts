@@ -1,8 +1,8 @@
 import {httpStrategyContext} from "@/global/BeanFactory";
-import {NodeState} from "@/es/NodeState";
-import {Stats} from "@/es/Stats";
-import {ClusterState} from "@/es/ClusterState";
-import {Info} from "@/es/Info";
+import {NodeState} from "@/components/es/domain/NodeState";
+import {Stats} from "@/components/es/domain/Stats";
+import {ClusterState} from "@/components/es/domain/ClusterState";
+import {Info} from "@/components/es/domain/Info";
 
 /**
  * 与集群相关的API

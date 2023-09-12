@@ -11,26 +11,26 @@ function _resolve(dir: string) {
 
 function outDir() {
     switch (process.env.npm_lifecycle_event) {
-        case 'build:ts':
+        case 'IndexBuild:ts':
             return 'dist-ts';
-        case 'build:web':
+        case 'IndexBuild:web':
             return 'dist-web';
-        case 'build:utools':
+        case 'IndexBuild:utools':
             return 'src-utools/dist';
-        case 'build:edge':
-            return 'src-edge/es-client';
-        case 'build:firefox':
-            return 'src-firefox/es-client';
-        case 'build:server':
+        case 'IndexBuild:edge':
+            return 'src-edge/domain-client';
+        case 'IndexBuild:firefox':
+            return 'src-firefox/domain-client';
+        case 'IndexBuild:server':
             return 'src-server/public';
-        case 'build:tauri:windows':
+        case 'IndexBuild:tauri:windows':
             return 'dist';
-        case 'build:tauri:linux':
+        case 'IndexBuild:tauri:linux':
             return 'dist';
-        case 'build:tauri:macos':
+        case 'IndexBuild:tauri:macos':
             return 'dist';
-        case 'build:vscode':
-            return 'src-vscode/es-client';
+        case 'IndexBuild:vscode':
+            return 'src-vscode/domain-client';
         default:
             return 'out';
     }
@@ -48,10 +48,10 @@ export default defineConfig({
         vue(),
         VitePWA({
             // 只要不是web模式，禁用PWA
-            disable: process.env.npm_lifecycle_event !== 'build:web',
+            disable: process.env.npm_lifecycle_event !== 'IndexBuild:web',
             manifest: {
-                name: 'es-client',
-                short_name: 'es-client',
+                name: 'domain-client',
+                short_name: 'domain-client',
                 description: 'elasticsearch查询客户端',
                 background_color: '#165dff',
                 icons: [{

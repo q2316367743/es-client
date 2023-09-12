@@ -28,14 +28,15 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import useEditorSettingStore from "@/store/EditorSettingStore";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import DefaultUtil from "@/utils/DefaultUtil";
+import {getDefaultEditorSettingValue} from "@/domain/EditorSetting";
 
 export default defineComponent({
     name: 'senior-search-setting',
     data: () => ({
-        instance: DefaultUtil.getDefaultEditorSettingValue()
+        instance: getDefaultEditorSettingValue()
     }),
     created() {
         this.instance = useEditorSettingStore().getSetting

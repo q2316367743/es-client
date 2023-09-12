@@ -1,9 +1,8 @@
 import IndexView from "@/view/index/IndexView";
 import {defineStore} from "pinia";
-import indexListBuild from '@/build/IndexListBuild';
-import clusterApi from '@/api/ClusterApi'
+import indexListBuild from '@/algorithm/IndexBuild/IndexListBuild';
+import clusterApi from '@/components/es/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
-import {versionStrategyContext} from "@/global/BeanFactory";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
 import useNotificationStore from "@/store/NotificationStore";
@@ -20,18 +19,16 @@ function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
 }
 
 const useIndexStore = defineStore('index', {
-    state: () => {
-        return {
-            // 全部的索引
-            indices: new Array<IndexView>(),
-            indicesMap: new Map<string, IndexView>(),
-            // 服务器名称
-            name: '',
-            active_shards: 0,
-            total_shards: 0,
-            status: '',
-        }
-    },
+    state: () => ({
+        // 全部的索引
+        indices: new Array<IndexView>(),
+        indicesMap: new Map<string, IndexView>(),
+        // 服务器名称
+        name: '',
+        active_shards: 0,
+        total_shards: 0,
+        status: '',
+    }),
     getters: {
         /**
          * 返回全部的链接

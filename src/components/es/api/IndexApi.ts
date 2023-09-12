@@ -1,6 +1,6 @@
 import {httpStrategyContext} from "@/global/BeanFactory";
-import {IndexCreate} from "@/es/IndexCreate";
-import IndexHealth from "@/es/IndexHealth";
+import {IndexCreate} from "@/components/es/domain/IndexCreate";
+import IndexHealth from "@/components/es/domain/IndexHealth";
 
 /**
  * 与索引有关的API

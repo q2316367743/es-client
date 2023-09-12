@@ -1,7 +1,7 @@
 import Field from "../Field";
-import {IndexInfo, Mapping} from "@/es/IndexInfo";
-import {Setting} from "@/es/IndexBase";
-import {Index} from "@/es/Stats";
+import {IndexInfo, Mapping} from "@/components/es/domain/IndexInfo";
+import {Setting} from "@/components/es/domain/IndexBase";
+import {Index} from "@/components/es/domain/Stats";
 
 /**
  * 主页索引遍历

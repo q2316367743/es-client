@@ -1,6 +1,6 @@
 import ArrayUtil from "@/utils/ArrayUtil";
-import {Mapping} from "@/es/IndexInfo";
-import {Property} from "@/es/IndexBase";
+import {Mapping} from "@/components/es/domain/IndexInfo";
+import {Property} from "@/components/es/domain/IndexBase";
 
 /**
  * 数据构造器

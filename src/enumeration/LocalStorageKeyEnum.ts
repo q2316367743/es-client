@@ -11,7 +11,7 @@ enum LocalStorageKeyEnum {
     EDITOR_SETTING = 'editor-setting',
 
     /**
-     * es-client当前的版本
+     * domain-client当前的版本
      */
     VERSION = 'es-client.version',
 

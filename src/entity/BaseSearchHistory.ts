@@ -10,12 +10,12 @@ export default interface BaseSearchHistory extends Base{
     /**
      * URL的id
      */
-    urlId?: number
+    urlId: number
 
     /**
      * 名字。唯一
      */
-    name?: string;
+    name: string;
 
     /**
      * 索引

@@ -1,5 +1,5 @@
 import {IndexInstance} from "@/domain/IndexInstance";
-import {IndexCreate} from "@/es/IndexCreate";
+import {IndexCreate} from "@/components/es/domain/IndexCreate";
 
 /**
  * 版本策略

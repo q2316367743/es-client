@@ -65,7 +65,7 @@ export default {
                 value = e;
             }
             Modal.confirm({
-                content: () => h('div', { class: 'es-prompt' }, [
+                content: () => h('div', { class: 'domain-prompt' }, [
                     h('div', {}, content),
                     // @ts-ignore
                     h(Input, {
@@ -120,7 +120,7 @@ export default {
                 value.username = e;
             }
             Modal.confirm({
-                content: () => h('div', { class: 'es-prompt' }, [
+                content: () => h('div', { class: 'domain-prompt' }, [
                     h('div', {}, content),
                     // @ts-ignore
                     h(Input, {

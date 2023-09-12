@@ -3,7 +3,6 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {applicationLaunch} from "@/global/BeanFactory";
 
 import * as monaco from 'monaco-editor';
 
@@ -12,9 +11,7 @@ import configuration from "@/module/RestClientEditor/configuration";
 import provider from "@/module/RestClientEditor/provider";
 import codelens from "@/module/RestClientEditor/codelens";
 import Optional from "@/utils/Optional";
-import useEditorSettingStore from "@/store/EditorSettingStore";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import {URL_REGEX} from "@/data/EsUrl";
 import foldingRange from "@/module/RestClientEditor/foldingRange";
 import {mapState} from "pinia";
@@ -62,77 +59,62 @@ export default defineComponent({
         monaco.languages.registerCompletionItemProvider('http', provider);
         monaco.languages.registerFoldingRangeProvider('http', foldingRange)
 
-        applicationLaunch.register(() => {
-            const container = this.$refs.container as HTMLElement;
-            instance = monaco.editor.create(container, {
-                value: this.modelValue,
-                language: 'http',
-                automaticLayout: true,
-                theme: this.isDark as boolean ? 'vs-dark' : 'vs',
-                minimap: {
-                    enabled: useEditorSettingStore().getMinimap
-                },
-                fontFamily: "consoles",
-                wordWrap: useEditorSettingStore().getWordWrap,
-                fontSize: useEditorSettingStore().getFontSize
-            });
+        const container = this.$refs.container as HTMLElement;
+        instance = monaco.editor.create(container, {
+            value: this.modelValue,
+            language: 'http',
+            automaticLayout: true,
+            theme: this.isDark as boolean ? 'vs-dark' : 'vs',
+            minimap: {
+                enabled: useEditorSettingStore().getMinimap
+            },
+            fontFamily: "consoles",
+            wordWrap: useEditorSettingStore().getWordWrap,
+            fontSize: useEditorSettingStore().getFontSize
+        });
 
-            this.runColor = useEditorSettingStore().getRunColor;
+        this.runColor = useEditorSettingStore().getRunColor;
 
-            // 注册更新程序
-            emitter.on(MessageEventEnum.EDITOR_SETTING_UPDATE, () => {
-                instance.updateOptions({
-                    minimap: {
-                        enabled: useEditorSettingStore().getMinimap
-                    },
-                    wordWrap: useEditorSettingStore().getWordWrap,
-                    fontSize: useEditorSettingStore().getFontSize
-                });
-                this.runColor = useEditorSettingStore().getRunColor;
-            })
+        instance.onDidChangeModelContent(() => {
+            const value = instance.getValue();
+            if (this.content !== value) {
+                this.$emit('update:modelValue', value);
+            }
+            return true;
+        });
 
-            instance.onDidChangeModelContent(() => {
-                const value = instance.getValue();
-                if (this.content !== value) {
-                    this.$emit('update:modelValue', value);
+        let commandId = instance.addCommand(0, (...args: any[]) => {
+            this.$emit('execute', args[1])
+        });
+
+        monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
+
+        instance.addCommand(monaco.KeyCode.F9,
+            () => {
+                let value = instance.getValue();
+                let row = Optional.ofNullable(instance.getPosition()).attr("lineNumber").orElse(1);
+                let numbers = this.renderValue(value);
+                console.log(value, row, numbers)
+                if (numbers.length === 0) {
+                    return;
                 }
-                return true;
-            });
-
-            let commandId = instance.addCommand(0, (...args: any[]) => {
-                this.$emit('execute', args[1])
-            });
-
-            monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
-
-            instance.addCommand(monaco.KeyCode.F9,
-                () => {
-                    let value = instance.getValue();
-                    let row = Optional.ofNullable(instance.getPosition()).attr("lineNumber").orElse(1);
-                    let numbers = this.renderValue(value);
-                    console.log(value, row, numbers)
-                    if (numbers.length === 0) {
-                        return;
-                    }
-                    let fail = true;
-                    for (let i = 0; i < numbers.length; i++) {
-                        if (numbers[i] > row) {
-                            fail = false;
-                            let target = i - 1;
-                            if (target < 0) {
-                                target = 0;
-                            }
-                            console.log(target)
-                            this.$emit('execute', target);
+                let fail = true;
+                for (let i = 0; i < numbers.length; i++) {
+                    if (numbers[i] > row) {
+                        fail = false;
+                        let target = i - 1;
+                        if (target < 0) {
+                            target = 0;
                         }
+                        console.log(target)
+                        this.$emit('execute', target);
                     }
-                    if (fail) {
-                        this.$emit('execute', numbers.length - 1);
-                    }
-                });
+                }
+                if (fail) {
+                    this.$emit('execute', numbers.length - 1);
+                }
+            });
 
-            return Promise.resolve();
-        })
     },
     methods: {
         getInstance(): monaco.editor.IStandaloneCodeEditor {
@@ -153,10 +135,10 @@ export default defineComponent({
 </script>
 <style lang="less">
 .es-rest-client-editor {
-  .contentWidgets {
-    a {
-      color: v-bind(runColor);
+    .contentWidgets {
+        a {
+            color: v-bind(runColor);
+        }
     }
-  }
 }
 </style>

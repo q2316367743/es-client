@@ -20,7 +20,7 @@
     <json-dialog :json="data" :title="title" v-model:value="dialog" :preview-mode="previewMode"></json-dialog>
 </template>
 <script lang="ts">
-import clusterApi from "@/api/ClusterApi";
+import clusterApi from "@/components/es/api/ClusterApi";
 
 import {defineComponent} from "vue";
 

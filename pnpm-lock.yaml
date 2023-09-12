@@ -126,7 +126,7 @@ devDependencies:
     version: 4.3.9(@types/node@18.16.18)(less@4.1.3)
   vite-plugin-pwa:
     specifier: ^0.14.4
-    version: 0.14.7(vite@4.3.9)(workbox-build@6.6.0)(workbox-window@6.6.0)
+    version: 0.14.7(vite@4.3.9)(workbox-IndexBuild@6.6.0)(workbox-window@6.6.0)
   vue-tsc:
     specifier: ^1.0.19
     version: 1.8.1(typescript@4.9.5)
@@ -1334,7 +1334,7 @@ packages:
       pretty-bytes: 6.1.0
       rollup: 3.25.2
       vite: 4.3.9(@types/node@18.16.18)(less@4.1.3)
-      workbox-build: registry.npmmirror.com/workbox-build@6.6.0
+      workbox-build: registry.npmmirror.com/workbox-IndexBuild@6.6.0
       workbox-window: registry.npmmirror.com/workbox-window@6.6.0
     transitivePeerDependencies:
       - supports-color
@@ -4075,15 +4075,15 @@ packages:
 
   registry.npmmirror.com/es-abstract@1.21.2:
     resolution: {integrity: sha512-y/B5POM2iBnIxCiernH1G7rC9qQoM77lLIMQLuob0zhp8C56Po81+2Nj0WFKnd0pNReDTnkYryc+zhOzpEIROg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/es-abstract/-/es-abstract-1.21.2.tgz}
-    name: es-abstract
+    name: domain-abstract
     version: 1.21.2
     engines: {node: '>= 0.4'}
     dependencies:
       array-buffer-byte-length: registry.npmmirror.com/array-buffer-byte-length@1.0.0
       available-typed-arrays: registry.npmmirror.com/available-typed-arrays@1.0.5
       call-bind: registry.npmmirror.com/call-bind@1.0.2
-      es-set-tostringtag: registry.npmmirror.com/es-set-tostringtag@2.0.1
-      es-to-primitive: registry.npmmirror.com/es-to-primitive@1.2.1
+      es-set-tostringtag: registry.npmmirror.com/domain-set-tostringtag@2.0.1
+      es-to-primitive: registry.npmmirror.com/domain-to-primitive@1.2.1
       function.prototype.name: registry.npmmirror.com/function.prototype.name@1.1.5
       get-intrinsic: registry.npmmirror.com/get-intrinsic@1.2.1
       get-symbol-description: registry.npmmirror.com/get-symbol-description@1.0.0
@@ -4117,13 +4117,13 @@ packages:
 
   registry.npmmirror.com/es-module-lexer@1.3.0:
     resolution: {integrity: sha512-vZK7T0N2CBmBOixhmjdqx2gWVbFZ4DXZ/NyRMZVlJXPa7CyFS+/a4QQsDGDQy9ZfEzxFuNEsMLeQJnKP2p5/JA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/es-module-lexer/-/es-module-lexer-1.3.0.tgz}
-    name: es-module-lexer
+    name: domain-module-lexer
     version: 1.3.0
     dev: false
 
   registry.npmmirror.com/es-set-tostringtag@2.0.1:
     resolution: {integrity: sha512-g3OMbtlwY3QewlqAiMLI47KywjWZoEytKr8pf6iTC8uJq5bIAH52Z9pnQ8pVL6whrCto53JZDuUIsifGeLorTg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/es-set-tostringtag/-/es-set-tostringtag-2.0.1.tgz}
-    name: es-set-tostringtag
+    name: domain-set-tostringtag
     version: 2.0.1
     engines: {node: '>= 0.4'}
     dependencies:
@@ -4134,7 +4134,7 @@ packages:
 
   registry.npmmirror.com/es-to-primitive@1.2.1:
     resolution: {integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/es-to-primitive/-/es-to-primitive-1.2.1.tgz}
-    name: es-to-primitive
+    name: domain-to-primitive
     version: 1.2.1
     engines: {node: '>= 0.4'}
     dependencies:
@@ -4277,7 +4277,7 @@ packages:
     dependencies:
       call-bind: registry.npmmirror.com/call-bind@1.0.2
       define-properties: registry.npmmirror.com/define-properties@1.2.0
-      es-abstract: registry.npmmirror.com/es-abstract@1.21.2
+      es-abstract: registry.npmmirror.com/domain-abstract@1.21.2
       functions-have-names: registry.npmmirror.com/functions-have-names@1.2.3
     dev: true
 
@@ -5145,7 +5145,7 @@ packages:
     dependencies:
       call-bind: registry.npmmirror.com/call-bind@1.0.2
       define-properties: registry.npmmirror.com/define-properties@1.2.0
-      es-abstract: registry.npmmirror.com/es-abstract@1.21.2
+      es-abstract: registry.npmmirror.com/domain-abstract@1.21.2
       get-intrinsic: registry.npmmirror.com/get-intrinsic@1.2.1
       has-symbols: registry.npmmirror.com/has-symbols@1.0.3
       internal-slot: registry.npmmirror.com/internal-slot@1.0.5
@@ -5161,7 +5161,7 @@ packages:
     dependencies:
       call-bind: registry.npmmirror.com/call-bind@1.0.2
       define-properties: registry.npmmirror.com/define-properties@1.2.0
-      es-abstract: registry.npmmirror.com/es-abstract@1.21.2
+      es-abstract: registry.npmmirror.com/domain-abstract@1.21.2
     dev: true
 
   registry.npmmirror.com/string.prototype.trimend@1.0.6:
@@ -5171,7 +5171,7 @@ packages:
     dependencies:
       call-bind: registry.npmmirror.com/call-bind@1.0.2
       define-properties: registry.npmmirror.com/define-properties@1.2.0
-      es-abstract: registry.npmmirror.com/es-abstract@1.21.2
+      es-abstract: registry.npmmirror.com/domain-abstract@1.21.2
     dev: true
 
   registry.npmmirror.com/string.prototype.trimstart@1.0.6:
@@ -5181,7 +5181,7 @@ packages:
     dependencies:
       call-bind: registry.npmmirror.com/call-bind@1.0.2
       define-properties: registry.npmmirror.com/define-properties@1.2.0
-      es-abstract: registry.npmmirror.com/es-abstract@1.21.2
+      es-abstract: registry.npmmirror.com/domain-abstract@1.21.2
     dev: true
 
   registry.npmmirror.com/stringify-object@3.3.0:
@@ -5475,7 +5475,7 @@ packages:
       browserslist: registry.npmmirror.com/browserslist@4.21.9
       chrome-trace-event: registry.npmmirror.com/chrome-trace-event@1.0.3
       enhanced-resolve: registry.npmmirror.com/enhanced-resolve@5.15.0
-      es-module-lexer: registry.npmmirror.com/es-module-lexer@1.3.0
+      es-module-lexer: registry.npmmirror.com/domain-module-lexer@1.3.0
       eslint-scope: registry.npmmirror.com/eslint-scope@5.1.1
       events: registry.npmmirror.com/events@3.3.0
       glob-to-regexp: registry.npmmirror.com/glob-to-regexp@0.4.1
@@ -5550,7 +5550,7 @@ packages:
 
   registry.npmmirror.com/workbox-build@6.6.0:
     resolution: {integrity: sha512-Tjf+gBwOTuGyZwMz2Nk/B13Fuyeo0Q84W++bebbVsfr9iLkDSo6j6PST8tET9HYA58mlRXwlMGpyWO8ETJiXdQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/workbox-build/-/workbox-build-6.6.0.tgz}
-    name: workbox-build
+    name: workbox-IndexBuild
     version: 6.6.0
     engines: {node: '>=10.0.0'}
     dependencies:

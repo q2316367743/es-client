@@ -1,4 +1,3 @@
-import EditorSetting from "@/domain/EditorSetting";
 import Setting from "@/domain/Setting";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
@@ -46,12 +45,4 @@ export default {
             seniorFilter: false
         };
     },
-    getDefaultEditorSettingValue(): EditorSetting {
-        return {
-            fontSize: 14,
-            minimap: false,
-            wordWrap: 'on' as 'off' | 'on' | 'wordWrapColumn' | 'bounded',
-            runColor: '#0d7d6c'
-        }
-    }
 }

@@ -35,7 +35,7 @@
 import { defineComponent } from "vue";
 import { usePageJumpEvent, useSeniorSearchEvent, versionStrategyContext } from "@/global/BeanFactory";
 import { IndexInstance, Property } from "@/domain/IndexInstance";
-import indexApi from "@/api/IndexApi";
+import indexApi from "@/components/es/api/IndexApi";
 import emitter from "@/plugins/mitt";
 
 import useSettingStore from "@/store/SettingStore";

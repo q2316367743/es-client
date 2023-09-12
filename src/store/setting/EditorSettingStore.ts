@@ -1,15 +1,14 @@
 import { defineStore } from "pinia";
-import EditorSetting from "@/domain/EditorSetting";
+import {EditorSetting, getDefaultEditorSettingValue} from "@/domain/EditorSetting";
 import Optional from "@/utils/Optional";
-import { lodisStrategyContext } from "@/global/BeanFactory";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import DefaultUtil from "@/utils/DefaultUtil";
+import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const useEditorSettingStore = defineStore('editor-setting', {
     state: () => ({
-        instance: DefaultUtil.getDefaultEditorSettingValue()
+        instance: getDefaultEditorSettingValue(),
+        rev: undefined as undefined | string
     }),
     getters: {
         getSetting: (state): EditorSetting => state.instance,
@@ -20,7 +19,7 @@ const useEditorSettingStore = defineStore('editor-setting', {
     },
     actions: {
         async init(): Promise<void> {
-            let instance = await lodisStrategyContext.getStrategy().get<EditorSetting>(LocalStorageKeyEnum.EDITOR_SETTING);
+            let instance = await getFromOneByAsync<EditorSetting>(LocalNameEnum.SETTING_EDITOR, getDefaultEditorSettingValue());
             if (instance) {
                 try {
                     Object.assign(this.instance, instance);
@@ -36,13 +35,12 @@ const useEditorSettingStore = defineStore('editor-setting', {
             this.instance.wordWrap = editorSetting.wordWrap;
             this.instance.runColor = editorSetting.runColor;
             // 保存
-            await lodisStrategyContext.getStrategy().set<EditorSetting>(LocalStorageKeyEnum.EDITOR_SETTING, {
+            await saveOneByAsync(LocalStorageKeyEnum.EDITOR_SETTING, {
                 fontSize: this.instance.fontSize,
                 minimap: this.instance.minimap,
                 wordWrap: this.instance.wordWrap,
                 runColor: this.instance.runColor
             });
-            emitter.emit(MessageEventEnum.EDITOR_SETTING_UPDATE);
             return Promise.resolve();
         }
     }

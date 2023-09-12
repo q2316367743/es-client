@@ -1,4 +1,4 @@
-import {Property, Setting} from "@/es/IndexBase";
+import {Property, Setting} from "@/components/es/domain/IndexBase";
 
 export interface IndexInfo {
 

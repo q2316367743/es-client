@@ -1,7 +1,7 @@
 import BaseQuery from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import MessageUtil from "@/utils/MessageUtil";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 
 /**
  * 获取基础查询请求体

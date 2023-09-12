@@ -1,6 +1,6 @@
 <template>
     <a-form :model="instance" layout="vertical" class="setting-base">
-        <a-collapse v-model="actives">
+        <a-collapse v-model="actives" :bordered="false">
             <!-- 布局设置 -->
             <a-collapse-item :header="$t('setting.base.layout.title')" key="1">
                 <a-form-item label="默认页面">

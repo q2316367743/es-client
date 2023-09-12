@@ -1,4 +1,4 @@
-export default interface EditorSetting {
+export interface EditorSetting {
 
     /**
      * 编辑器字体大小
@@ -25,4 +25,13 @@ export default interface EditorSetting {
      */
     runColor: string;
 
+}
+
+export function getDefaultEditorSettingValue(): EditorSetting {
+    return {
+        fontSize: 14,
+        minimap: false,
+        wordWrap: 'on' as 'off' | 'on' | 'wordWrapColumn' | 'bounded',
+        runColor: '#0d7d6c'
+    }
 }

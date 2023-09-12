@@ -58,7 +58,7 @@ import {defineComponent} from "vue";
 import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 import {mapState} from "pinia";
-import {getDefaultBaseSearchSetting, useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
+import {getDefaultBaseSearchSetting, useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 

@@ -19,7 +19,7 @@ import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSetting";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 
 export default defineComponent({
     name: 'base-search-data-view',

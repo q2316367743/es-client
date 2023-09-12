@@ -78,7 +78,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
-import IndexApi from '@/api/IndexApi'
+import IndexApi from '@/components/es/api/IndexApi'
 
 import Optional from "@/utils/Optional";
 

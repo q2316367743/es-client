@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="temp-record-body">
-            <a-table :data="tempRecords" style="height: 100%;">
+            <a-table :data="baseSearchHistories" style="height: 100%;">
                 <template #columns>
                     <a-table-column data-index="index" :title="$t('common.keyword.index')" :width="250">
                         <template #cell="{ record }">
@@ -58,11 +58,12 @@ import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import {stringContain} from "@/utils/SearchUtil";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
-import useBaseTempRecordStore from "@/store/BaseTempRecordStore";
+import useBaseTempRecordStore from "@/store/BaseSearchHistoryStore";
 import XEUtils from "xe-utils";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
 
 export default defineComponent({
     name: 'bsh-temp-record',
@@ -71,7 +72,7 @@ export default defineComponent({
         index: ''
     }),
     computed: {
-        ...mapState(useBaseTempRecordStore, ['tempRecords']),
+        ...mapState(useBaseTempRecordStore, ['baseSearchHistories']),
     },
     watch: {
         tempRecords: {
@@ -96,11 +97,11 @@ export default defineComponent({
             return showTempRecords;
         },
         loadData() {
-            let showTempRecords = this.tempRecords
+            let showTempRecords = this.baseSearchHistories
             if (this.index !== '') {
                 showTempRecords = showTempRecords.filter(e => stringContain(e.index, this.index));
             }
-            showTempRecords = this.tempRecords.sort((e1, e2) => e2.id! - e1.id!);
+            showTempRecords = this.baseSearchHistories.sort((e1, e2) => e2.id! - e1.id!);
         },
         execCopy(url: string) {
             utools.copyText(url);
@@ -126,7 +127,7 @@ export default defineComponent({
                 inputPattern: /.+/,
                 inputErrorMessage: '名称为必填'
             }).then((value) => {
-                baseSearchHistoryService.save({
+                useBaseSearchHistoryStore().add({
                     name: value,
                     index: history.index,
                     conditions: toRaw(history.conditions),

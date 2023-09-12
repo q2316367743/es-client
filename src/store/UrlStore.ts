@@ -49,12 +49,12 @@ const useUrlStore = defineStore('url', {
                 return false;
             }
             this.url = url;
-            title.value = url.name || 'es-client';
+            title.value = url.name || 'domain-client';
             return true;
         },
         clear() {
             this.url = undefined;
-            title.value = 'es-client';
+            title.value = 'domain-client';
         },
 
 
@@ -86,7 +86,7 @@ const useUrlStore = defineStore('url', {
         async remove(id: number) {
             const index = this.urls.findIndex(e => e.id === id);
             if (index === -1) {
-                return Promise.reject(`存储【${id}】不存在`);
+                return Promise.reject(`链接【${id}】不存在`);
             }
             this.urls.splice(index, 1);
             await this._sync();

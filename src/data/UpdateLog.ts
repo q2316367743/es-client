@@ -3,7 +3,7 @@ import {Log, LogItemEnum} from "@/view/Data";
 export default [
     {
         version: '2.8.6',
-        sign: 285,
+        sign: 286,
         time: '2023-08-01',
         items: [{
             label: LogItemEnum.REPAIR,

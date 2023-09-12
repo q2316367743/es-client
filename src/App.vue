@@ -175,6 +175,8 @@ import Assert from "@/utils/Assert";
 import { versionManage,} from "@/global/BeanFactory";
 import {setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 
 export default defineComponent({
     components: {
@@ -237,7 +239,9 @@ export default defineComponent({
     created() {
         // 初始化
         Promise.all([
-            useUrlStore().init()
+            useUrlStore().init(),
+            useBaseSearchHistoryStore().init(),
+            useEditorSettingStore().init()
         ])
             .then(() => {
                 // 版本更新处理

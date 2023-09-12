@@ -5,7 +5,7 @@ import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext"
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import useLoadingStore from "@/store/LoadingStore";
-import useEditorSettingStore from "@/store/EditorSettingStore";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 
 /**
  * 应用启动器

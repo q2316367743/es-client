@@ -23,9 +23,6 @@ export default class HttpStrategyContext {
         } else if (Constant.mode === HttpTypeEnum.SERVER) {
             fetchPacking = await import('./mode/ServerMode');
             this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
-        } else if (Constant.mode === HttpTypeEnum.WEB) {
-            fetchPacking = await import('./mode/WebMode');
-            this.strategy = new HttpStrategyProxy(fetchPacking.default<any>);
         } else {
             fetchPacking = await import('./mode/BrowserMode');
         }

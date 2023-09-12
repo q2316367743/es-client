@@ -37,6 +37,8 @@ export interface DbRecord<T> {
 
 }
 
+// --------------------------------------- 列表操作 ---------------------------------------
+
 export async function listByAsync<T>(key: string): Promise<DbList<T>> {
     const res = await utools.db.promises.get(key);
     if (res) {
@@ -65,6 +67,8 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
     return Promise.resolve(res.rev);
 }
 
+// --------------------------------------- 单一对象操作 ---------------------------------------
+
 export async function getFromOneByAsync<T extends Record<string, any>>(key: string, record: T): Promise<DbRecord<T>> {
     const res = await utools.db.promises.get(key);
     if (!res) {
@@ -76,6 +80,18 @@ export async function getFromOneByAsync<T extends Record<string, any>>(key: stri
     });
 }
 
+export async function saveOneByAsync(key: string, value: Record<string, any>, rev?: string) {
+    const res = await utools.db.promises.put({
+        _id: key,
+        _rev: rev,
+        value: toRaw(value)
+    });
+    if (res.error) {
+        return Promise.reject(res.message);
+    }
+    return Promise.resolve();
+}
+
 export async function removeOneByAsync(key: string, ignoreError: boolean = false): Promise<void> {
     const res = await utools.db.promises.remove(key);
     if (res.error) {
@@ -84,6 +100,9 @@ export async function removeOneByAsync(key: string, ignoreError: boolean = false
         }
     }
 }
+
+
+// --------------------------------------- 批量操作 ---------------------------------------
 
 /**
  * 批量删除指定key开头的文档
@@ -96,6 +115,9 @@ export async function removeMultiByAsync(key: string, ignoreError: boolean = fal
         await removeOneByAsync(item._id, ignoreError);
     }
 }
+
+
+// --------------------------------------- 临时存储 ---------------------------------------
 
 export function getStrBySession(key: string): string {
     return sessionStorage.getItem(key) || '';
