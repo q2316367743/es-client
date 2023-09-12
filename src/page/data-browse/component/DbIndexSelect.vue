@@ -11,11 +11,11 @@
             <div class="data-browse-pull-down-panel">
                 <a-empty v-if="indices.length === 0" description="请选择链接" />
                 <div class="data-browse-pull-down-index" v-else>
-                    <a-input v-model="indexFilter" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch"
-                        clearable />
+                    <a-input v-model="keyword" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch"
+                        allow-clear />
                     <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
                         <div>
-                            <div v-for="item in indicesShow" class="data-browse-list-item"
+                            <div v-for="item in items" class="data-browse-list-item"
                                 :class="item.name === name ? 'data-browse-list-item-this' : ''"
                                 @click="indexChange(item.name, item.type, item.index)">
                                 <span>{{ item.name }}</span>
@@ -29,15 +29,14 @@
         </template>
     </a-trigger>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import {computed, nextTick, ref} from "vue";
 import IndexView from "@/view/index/IndexView";
-import { mapState } from "pinia";
 import useIndexStore from "@/store/IndexStore";
-import { stringContain } from "@/utils/SearchUtil";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import mitt from "@/plugins/mitt";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import {useFuse} from "@vueuse/integrations/useFuse";
+
+const emits = defineEmits(['indexChange']);
 
 interface Item {
 
@@ -49,78 +48,84 @@ interface Item {
 
 }
 
-export default defineComponent({
-    name: 'db-index-select',
-    emit: ['indexChange'],
-    data: () => ({
-        show: false,
-        indexFilter: ''
-    }),
-    computed: {
-        ...mapState(useIndexStore, ['indices']),
-        ...mapState(useDataBrowseStore, ['name']),
-        indicesShow(): Array<Item> {
-            let items = new Set<Item>();
-            let names = new Set<string>();
-            if (this.indices.length === 0) {
-                return Array.from(items);
-            }
-            let indices = this.indices.filter(e => this.indexFilter === '' || stringContain(e.name, this.indexFilter));
-            for (let index of indices) {
-                // 索引不会重名
-                items.add({
-                    name: index.name,
-                    type: 'index',
-                    index
-                });
-                if (index.alias) {
-                    for (let alias of index.alias) {
-                        // 别名可能重复
-                        if (!names.has(alias)) {
-                            names.add(alias);
-                            items.add({
-                                name: alias,
-                                type: 'alias'
-                            });
-                        }
-                    }
+
+const keyword = ref('');
+const show = ref(false);
+const dataBrowsePullDownSearch = ref<HTMLDivElement | null>(null);
+
+const name = computed(() => useDataBrowseStore().name);
+const indices = computed<Array<Item>>(() => {
+    let items = new Set<Item>();
+    let names = new Set<string>();
+    let indices = useIndexStore().indices;
+    if (indices.length === 0) {
+        return Array.from(items);
+    }
+    for (let index of indices) {
+        // 索引不会重名
+        items.add({
+            name: index.name,
+            type: 'index',
+            index
+        });
+        if (index.alias) {
+            for (let alias of index.alias) {
+                // 别名可能重复
+                if (!names.has(alias)) {
+                    names.add(alias);
+                    items.add({
+                        name: alias,
+                        type: 'alias'
+                    });
                 }
             }
-            // 此处是索引排序
-            return Array.from(items).sort((e1, e2) => {
-                return e1.name.localeCompare(e2.name, 'zh');
-            });
-        },
-    },
-    methods: {
-        showIndex() {
-            this.show = !this.show;
-            if (this.show) {
-                // 聚焦
-                this.$nextTick(() => {
-                    let input = this.$refs['dataBrowsePullDownSearch'] as HTMLInputElement;
-                    input.focus();
-                    this.$nextTick(() => {
-                        let element = document.querySelector('.data-browse-list-item-this');
-                        if (element) {
-                            element.scrollIntoView({
-                                behavior: 'smooth'
-                            })
-                        }
-                    })
-                });
-            }
-        },
-        indexChange(name: string, type: string, index?: IndexView) {
-            this.show = false;
-            this.$emit('indexChange', {
-                name,
-                type,
-                index
-            });
         }
     }
+    // 此处是索引排序
+    return Array.from(items).sort((e1, e2) => {
+        return e1.name.localeCompare(e2.name, 'zh');
+    });
 });
+const {results} = useFuse(keyword, indices, {
+    matchAllWhenSearchEmpty: true,
+    fuseOptions: {
+        keys: [{
+            name: 'name'
+        }]
+    }
+});
+const items = computed(() => results.value.map(e => e.item));
+
+
+function showIndex() {
+    show.value = !show.value;
+    if (show.value) {
+        // 聚焦
+        nextTick(() => {
+            if (dataBrowsePullDownSearch.value) {
+                dataBrowsePullDownSearch.value.focus();
+            }
+            nextTick(() => {
+                let element = document.querySelector('.data-browse-list-item-this');
+                if (element) {
+                    element.scrollIntoView({
+                        behavior: 'smooth'
+                    })
+                }
+            })
+        });
+    }
+}
+function indexChange(name: string, type: string, index?: IndexView) {
+    show.value = false;
+    emits('indexChange', {
+        name,
+        type,
+        index
+    });
+}
+
+
 </script>
 <style lang="less">
 // 下拉列表
