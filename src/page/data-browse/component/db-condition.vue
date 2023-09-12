@@ -8,7 +8,7 @@
                             <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
                             <input type="text" v-model="must" class="input" @keydown.enter="executeQuery()"
                                 placeholder="field1='str',field2=num" />
-                            <div class="clear" v-show="must !== ''" @click="clear('mustValue')">
+                            <div class="clear" v-show="must !== ''" @click="clear('must')">
                                 <icon-close-circle />
                             </div>
                         </div>
@@ -18,7 +18,7 @@
                             <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
                             <input type="text" v-model="should" class="input" @keydown.enter="executeQuery()"
                             placeholder="field1='str',field2=num" />
-                            <div class="clear" v-show="should !== ''" @click="clear('shouldValue')">
+                            <div class="clear" v-show="should !== ''" @click="clear('should')">
                                 <icon-close-circle />
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                             <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
                             <input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery()"
                                 placeholder="field1='str',field2=num" />
-                            <div class="clear" v-show="mustNot !== ''" @click="clear('mustNotValue')">
+                            <div class="clear" v-show="mustNot !== ''" @click="clear('mustNot')">
                                 <icon-close-circle />
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                             <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
                             <input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery"
                                 placeholder="field1,field2 desc" />
-                            <div class="clear" v-show="orderBy !== ''" @click="clear('orderByValue')">
+                            <div class="clear" v-show="orderBy !== ''" @click="clear('orderBy')">
                                 <icon-close-circle />
                             </div>
                         </div>
@@ -77,6 +77,12 @@ export default defineComponent({
         orderBy(newValue: string) {
             useDataBrowseStore().updateOrderBy( newValue);
         },
+    },
+    created() {
+        this.must = useDataBrowseStore().must;
+        this.should = useDataBrowseStore().should;
+        this.mustNot = useDataBrowseStore().mustNot;
+        this.orderBy = useDataBrowseStore().orderBy;
     },
     methods: {
         executeQuery() {
