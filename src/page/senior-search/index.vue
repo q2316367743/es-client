@@ -4,9 +4,7 @@
             <!-- 左面查询条件 -->
             <a-split class="senior-main" min="42px" :max="0.9" default-size="400px">
                 <template #first>
-                    <div class="senior-search-side" :class="globalSetting.showTab ? 'show-tab' : ''">
-                        <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                                  v-if="globalSetting.showTab" class="senior-search-tab" @option-tab="optionTab"/>
+                    <div class="senior-search-side">
                         <!-- 编辑器 -->
                         <div class="senior-search-editor">
                             <!-- 操作栏 -->
@@ -87,18 +85,15 @@ import {SeniorSearchItem} from './domain/SeniorSearchItem';
 import mitt from '@/plugins/mitt';
 
 import useUrlStore from "@/store/UrlStore";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
 // 枚举
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
-import {
-    useSeniorSearchEvent
-} from "@/global/BeanFactory";
+import {useSeniorSearchEvent} from "@/global/BeanFactory";
 
 // 事件
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
@@ -161,7 +156,6 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapState(useSettingStore, ['globalSetting']),
         ...mapState(useUrlStore, ['url']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
@@ -204,37 +198,15 @@ export default defineComponent({
             } as SeniorSearchItem;
 
             // 显示标签页
-            if (this.instance.showTab) {
-                // 头部
-                this.header = searchItem.header;
-                // 判断是否当前标签页
-                if (typeof param.current === 'undefined' || !param.current) {
-                    // 新标签页
-                    this.current = searchItem.body;
-                    this.searchMap.set(searchId, searchItem);
-                    this.searchId = searchId;
-                } else {
-                    // 当前标签页
-                    this.current += (this.current !== '' ? '\n\n' : '') + searchItem.body;
-                }
-            } else {
-                // 头部
-                this.header.name = searchItem.header.name;
-                this.header.relationId = searchItem.header.relationId;
-                // 隐藏标签页，插入到当前标签页
-                if (useSettingStore().getTabLoadMode === TabLoadModeEnum.APPEND) {
-                    this.current += (this.current !== '' ? '\n\n' : '') + searchItem.body;
-                } else if (useSettingStore().getTabLoadMode === TabLoadModeEnum.COVER) {
-                    this.current = searchItem.body;
-                } else {
-                    MessageUtil.error("标签载入模式错误")
-                }
-            }
+            // 头部
+            this.header.name = searchItem.header.name;
+            this.header.relationId = searchItem.header.relationId;
+            // 隐藏标签页，插入到当前标签页
         });
 
-        this.view = useSettingStore().getDefaultViewer;
+        this.view = useGlobalSettingStore().getDefaultViewer;
         // 是否启用过滤
-        this.isEnableFilter = useSettingStore().getSeniorFilter;
+        this.isEnableFilter = useGlobalSettingStore().getSeniorFilter;
 
     },
     // 获取最大宽度

@@ -4,10 +4,7 @@ import {GlobalSetting, getDefaultGlobalSetting} from "@/entity/setting/GlobalSet
 import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
 // 枚举
-import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
-import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
@@ -18,7 +15,7 @@ let lock = false;
 let todo = false;
 
 
-const useSettingStore = defineStore('global-setting', {
+const useGlobalSettingStore = defineStore('global-setting', {
     state: () => {
         return {
             globalSetting: getDefaultGlobalSetting(),
@@ -26,27 +23,24 @@ const useSettingStore = defineStore('global-setting', {
         }
     },
     getters: {
-        getDefaultPage: (state): PageNameEnum => Optional.ofNullable(state.globalSetting.defaultPage).orElse(PageNameEnum.HOME),
         getDefaultShard: (state) => state.globalSetting.defaultShard,
         getDefaultReplica: (state) => state.globalSetting.defaultReplica,
+
         getDefaultViewer: (state): ViewTypeEnum => Optional.ofNullable(state.globalSetting.defaultViewer).orElse(ViewTypeEnum.JSON),
         getPageSize: (state): number => state.globalSetting.pageSize,
+
         getTimeout: (state): number => Optional.ofNullable(state.globalSetting.timeout).orElse(5000),
         getNotificationTime: (state): number => Optional.ofNullable(state.globalSetting.notificationTime).orElse(5000),
-        getAutoFullScreen: (state): boolean => state.globalSetting.autoFullScreen,
+
         getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.globalSetting.homeSearchState) ? state.globalSetting.homeSearchState : 0,
         getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.globalSetting.homeExcludeIndices).orElse(new Array<string>()),
         getHomeIncludeIndices: (state): Array<string> => Optional.ofNullable(state.globalSetting.homeIncludeIndices).orElse(new Array<string>()),
-        getShowTab: (state): boolean => Optional.ofNullable(state.globalSetting.showTab).orElse(true),
-        getTabLoadMode: (state): TabLoadModeEnum => Optional.ofNullable(state.globalSetting.tabLoadMode).orElse(TabLoadModeEnum.APPEND),
-        getTabMaxCount: (state): number => Optional.ofNullable(state.globalSetting.tabMaxCount).orElse(10),
-        getTabCloseMode: (state): TabCloseModeEnum => Optional.ofNullable(state.globalSetting.tabCloseMode).orElse(TabCloseModeEnum.ALERT),
         getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.globalSetting.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),
         getLastUrl: (state): boolean => Optional.ofNullable(state.globalSetting.lastUrl).orElse(false),
-        getJsonWarp: (state): boolean => Optional.ofNullable(state.globalSetting.jsonWrap).orElse(false),
+        jsonWrap: (state): boolean => Optional.ofNullable(state.globalSetting.jsonWrap).orElse(false),
         getSeniorFilter: (state): boolean => Optional.ofNullable(state.globalSetting.seniorFilter).orElse(false),
+        jsonFontSize: state => state.globalSetting.jsonFontSize,
 
-        showTab: (state): boolean => Optional.ofNullable(state.globalSetting.showTab).orElse(true),
         pageSize: (state): number => Optional.ofNullable(state.globalSetting.pageSize).orElse(20),
         defaultViewer: (state): ViewTypeEnum => Optional.ofNullable(state.globalSetting.defaultViewer).orElse(ViewTypeEnum.JSON),
 
@@ -124,4 +118,4 @@ const useSettingStore = defineStore('global-setting', {
     }
 });
 
-export default useSettingStore;
+export default useGlobalSettingStore;

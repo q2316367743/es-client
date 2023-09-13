@@ -38,7 +38,7 @@ import { IndexInstance, Property } from "@/domain/IndexInstance";
 import indexApi from "@/components/es/api/IndexApi";
 import emitter from "@/plugins/mitt";
 
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useIndexStore from "@/store/IndexStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
@@ -63,8 +63,8 @@ export default defineComponent({
         index: {
             name: '',
             settings: {
-                numberOfReplicas: useSettingStore().getDefaultReplica,
-                numberOfShards: useSettingStore().getDefaultShard
+                numberOfReplicas: useGlobalSettingStore().getDefaultReplica,
+                numberOfShards: useGlobalSettingStore().getDefaultShard
             },
             mapping: [] as Array<Property>
         } as IndexInstance,
@@ -77,8 +77,8 @@ export default defineComponent({
                 this.index = {
                     name: '',
                     settings: {
-                        numberOfReplicas: useSettingStore().getDefaultReplica,
-                        numberOfShards: useSettingStore().getDefaultShard
+                        numberOfReplicas: useGlobalSettingStore().getDefaultReplica,
+                        numberOfShards: useGlobalSettingStore().getDefaultShard
                     },
                     mapping: [] as Array<Property>
                 } as IndexInstance

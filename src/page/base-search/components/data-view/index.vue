@@ -1,11 +1,11 @@
 <template>
     <div class="base-search-data-view hljs" :class="mainClass"
-        :style="{ fontSize: Optional.ofNullable(globalSetting.jsonFontSize).orElse(16) + 'px' }">
+         :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
         <pre v-if="defaultView === ViewTypeEnum.BASE">{{ pretty }}</pre>
-        <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
-        <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index" />
-        <div v-show="defaultView === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
-        <a-back-top target-container=".base-search-data-view .arco-scrollbar-container" />
+        <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"/>
+        <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index"/>
+        <div v-show="defaultView === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
+        <a-back-top target-container=".base-search-data-view .arco-scrollbar-container"/>
     </div>
 </template>
 <script lang="ts">
@@ -14,7 +14,7 @@ import {mapState} from "pinia";
 import {renderJSONTreeView} from "@/components/JsonTree";
 
 import {highlight} from '@/global/BeanFactory';
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
@@ -28,12 +28,12 @@ export default defineComponent({
         jsonTreeId: 'json-tree-view-' + new Date().getTime(),
         value: '',
         pretty: '',
-        copyable: { copyText: "复制", copiedText: "复制成功", timeout: 2000 },
+        copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
         Optional,
         ViewTypeEnum
     }),
     computed: {
-        ...mapState(useSettingStore, ['globalSetting']),
+        ...mapState(useGlobalSettingStore, ['jsonFontSize', 'jsonWrap']),
         ...mapState(useBaseSearchSettingStore, ['defaultView']),
         ...mapState(useBaseSearchStore, ['current']),
         mainClass() {
@@ -41,7 +41,7 @@ export default defineComponent({
             if (this.defaultView === ViewTypeEnum.TABLE) {
                 classItem.push('table-viewer-show')
             }
-            if (this.globalSetting.jsonWrap) {
+            if (this.jsonWrap) {
                 classItem.push('json-wrap')
             }
             return classItem.join(' ')
@@ -106,11 +106,12 @@ export default defineComponent({
                 flex-flow: wrap;
             }
         }
+
         pre.hljs {
-            white-space: pre-wrap;       /* css-3 */
-            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-            white-space: -o-pre-wrap;    /* Opera 7 */
-            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            white-space: pre-wrap; /* css-3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
             word-break: break-all;
         }
     }
@@ -120,6 +121,7 @@ export default defineComponent({
         top: 0;
         right: 15px;
     }
+
     &.table-viewer-show {
         height: calc(100vh - 108px);
         overflow: hidden;

@@ -2,17 +2,17 @@ import {defineStore} from "pinia";
 import {Button, Notification} from "@arco-design/web-vue";
 import {h} from "vue";
 import {NotificationItem} from "@/domain/NotificationItem";
-import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+import {AxiosRequestConfig} from "axios";
 
 function notification(content: string, title: string) {
     let notificationReturn = Notification.info({
         content,
         title,
         closable: true,
-        duration: useSettingStore().getNotificationTime,
+        duration: useGlobalSettingStore().getNotificationTime,
         footer: () => h('div', [
             h(Button, {
                 type: 'text',
@@ -57,7 +57,7 @@ const useNotificationStore = defineStore('notification', {
             this.items.push(item);
             this.hasRead = false;
         },
-        http(config: HttpStrategyConfig, body: any) {
+        http(config: AxiosRequestConfig, body: any) {
             let now = new Date();
             this.add({
                 id: now.getTime(),
@@ -67,7 +67,7 @@ const useNotificationStore = defineStore('notification', {
                 body: '详情请看通知中心',
                 httpMode: {
                     baseURL: config.baseURL,
-                    url: config.url,
+                    url: config.url || '',
                     method: config.method!,
                     data: config.data,
                     rsp: body,
@@ -81,7 +81,7 @@ const useNotificationStore = defineStore('notification', {
             this.hasRead = true;
         },
         clear() {
-            this.hasRead =true;
+            this.hasRead = true;
             this.items = [];
         }
     }

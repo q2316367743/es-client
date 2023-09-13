@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import MessageUtil from "@/utils/MessageUtil";
@@ -38,15 +38,15 @@ export default defineComponent({
         editTabs(targetName: any, action: 'remove' | 'add') {
             if (action === 'add') {
                 let count = Optional.ofNullable(this.searchItemHeaders).map(e => e!.length).orElse(0);
-                if (count === useSettingStore().getTabMaxCount - 1) {
+                if (count === useGlobalSettingStore().getTabMaxCount - 1) {
                     // 马上到达最大限制
-                    if (useSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
+                    if (useGlobalSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
                         NotificationUtil.warning('标签页已达到最大限制，再次新增标签页会关闭第一个标签', '警告');
                     }
                 }
-                if (count >= useSettingStore().getTabMaxCount) {
+                if (count >= useGlobalSettingStore().getTabMaxCount) {
                     // 标签数超过最大数
-                    if (useSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
+                    if (useGlobalSettingStore().getTabCloseMode === TabCloseModeEnum.FIRST) {
                         if (this.searchItemHeaders && this.searchItemHeaders.length > 0) {
                             this.$emit('editTabs', this.searchItemHeaders[0].id, 'remove');
                         }

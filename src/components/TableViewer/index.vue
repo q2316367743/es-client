@@ -44,7 +44,7 @@ import Sortable from 'sortablejs';
 
 import JsonView from "@/components/JsonView/index.vue";
 import {buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc} from "@/algorithm/jsonToTable";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import useIndexStore from "@/store/IndexStore";
 
@@ -119,7 +119,7 @@ export default defineComponent({
     },
     mounted() {
         // 启动时注册
-        this.tableHeaderMode = this.index === '' ? TableHeaderModeEnum.RENDER : useSettingStore().getTableHeaderMode;
+        this.tableHeaderMode = this.index === '' ? TableHeaderModeEnum.RENDER : useGlobalSettingStore().getTableHeaderMode;
         // 注册够渲染
         this.render();
     },

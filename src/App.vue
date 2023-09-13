@@ -141,7 +141,7 @@
 // 引入状态管理
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
 import useNotificationStore from "@/store/NotificationStore";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -195,7 +195,7 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalStore, ['isDark']),
         ...mapState(useUrlStore, ['urls', 'url']),
-        ...mapState(useSettingStore, ['jsonTheme']),
+        ...mapState(useGlobalSettingStore, ['jsonTheme']),
         ...mapState(useLoadingStore, ['loading', 'text']),
         ...mapState(useNotificationStore, ['hasRead'])
     },
@@ -236,7 +236,7 @@ export default defineComponent({
                 }
                 versionManage.execUpdate();
 
-                this.selectMenu(useSettingStore().getDefaultPage)
+                this.selectMenu(useGlobalSettingStore().getDefaultPage)
             })
 
 
@@ -292,7 +292,7 @@ export default defineComponent({
             // 发送url连接事件
             emitter.emit(MessageEventEnum.URL_UPDATE);
             // 选择链接后判断自动全屏
-            if (useSettingStore().getAutoFullScreen) {
+            if (useGlobalSettingStore().getAutoFullScreen) {
                 this.collapsed = true;
             }
 

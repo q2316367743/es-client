@@ -2,7 +2,7 @@ import IndexView from "@/view/index/IndexView";
 import {prettyDataUnit} from "@/utils/FieldUtil";
 import clusterApi from "@/components/es/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import StrUtil from "@/utils/StrUtil";
 import Optional from "@/utils/Optional";
 
@@ -20,13 +20,13 @@ export default async function Builder(): Promise<Array<IndexView>> {
     let statsIndices = stats.indices;
     let cluster_indices = cluster_stats.routing_table.indices;
     for (let key in metaIndices) {
-        if (useSettingStore().getHomeExcludeIndices.length > 0) {
-            if (StrUtil.matchAll(key, useSettingStore().getHomeExcludeIndices)) {
+        if (useGlobalSettingStore().getHomeExcludeIndices.length > 0) {
+            if (StrUtil.matchAll(key, useGlobalSettingStore().getHomeExcludeIndices)) {
                 continue;
             }
         }
-        if (useSettingStore().getHomeIncludeIndices.length > 0) {
-            if (!StrUtil.matchAll(key, useSettingStore().getHomeIncludeIndices)) {
+        if (useGlobalSettingStore().getHomeIncludeIndices.length > 0) {
+            if (!StrUtil.matchAll(key, useGlobalSettingStore().getHomeIncludeIndices)) {
                 continue;
             }
         }

@@ -8,7 +8,7 @@ import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuil
 import MessageUtil from "@/utils/MessageUtil";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import useIndexStore from "@/store/IndexStore";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
@@ -56,7 +56,7 @@ export const useBaseSearchStore = defineStore('base-search', {
                     return a.name.localeCompare(b.name, "zh-CN");
                 });
                 this.current.page = 1;
-                this.current.size = useSettingStore().pageSize;
+                this.current.size = useGlobalSettingStore().pageSize;
                 return;
             }
             if (index === '') {
@@ -126,7 +126,7 @@ export const useBaseSearchStore = defineStore('base-search', {
         },
         clear(clearIndex: boolean = false) {
             this.current.page = 1;
-            this.current.size = useSettingStore().pageSize;
+            this.current.size = useGlobalSettingStore().pageSize;
             this.current.total = 0;
             this.current.conditions = new Array<BaseQuery>();
             this.current.orders = new Array<BaseOrder>();

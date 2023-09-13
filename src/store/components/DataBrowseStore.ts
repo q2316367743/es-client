@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import IndexView from "@/view/index/IndexView";
 import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
-import useSettingStore from "@/store/setting/GlobalSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
 import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
@@ -23,7 +23,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
         loading: false,
         // 分页条件
         page: 1,
-        size: useSettingStore().getPageSize,
+        size: useGlobalSettingStore().getPageSize,
         total: 1,
         // 查询条件
         must: '',
@@ -94,7 +94,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
             this.type = data.type;
             this.index = data.index;
             this.page = 1;
-            this.size = useSettingStore().getPageSize;
+            this.size = useGlobalSettingStore().getPageSize;
             this.must = '';
             this.should = '';
             this.mustNot = '';
@@ -116,7 +116,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
             this.mustNot = '';
             this.orderBy = '';
             this.page = 1;
-            this.size = useSettingStore().getPageSize;
+            this.size = useGlobalSettingStore().getPageSize;
             this.total = 1;
             // 展示数据
             this.columns = [] as Array<TableViewColumnData>;
