@@ -1,6 +1,6 @@
 import {Button, Notification} from "@arco-design/web-vue";
 import {h} from "vue";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 
 export default {
     success(content: string, title?: string): void {

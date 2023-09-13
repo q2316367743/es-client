@@ -80,7 +80,7 @@ export async function getFromOneByAsync<T extends Record<string, any>>(key: stri
     });
 }
 
-export async function saveOneByAsync(key: string, value: Record<string, any>, rev?: string) {
+export async function saveOneByAsync(key: string, value: Record<string, any>, rev?: string): Promise<undefined | string> {
     const res = await utools.db.promises.put({
         _id: key,
         _rev: rev,
@@ -89,7 +89,7 @@ export async function saveOneByAsync(key: string, value: Record<string, any>, re
     if (res.error) {
         return Promise.reject(res.message);
     }
-    return Promise.resolve();
+    return Promise.resolve(res.rev);
 }
 
 export async function removeOneByAsync(key: string, ignoreError: boolean = false): Promise<void> {

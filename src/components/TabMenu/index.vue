@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TabMenuItem from "@/components/TabMenu/TabMenuItem";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import MessageUtil from "@/utils/MessageUtil";

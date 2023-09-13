@@ -1,6 +1,6 @@
 <template>
     <div class="base-search-data-view hljs" :class="mainClass"
-        :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+        :style="{ fontSize: Optional.ofNullable(globalSetting.jsonFontSize).orElse(16) + 'px' }">
         <pre v-if="defaultView === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
         <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index" />
@@ -14,7 +14,7 @@ import {mapState} from "pinia";
 import {renderJSONTreeView} from "@/components/JsonTree";
 
 import {highlight} from '@/global/BeanFactory';
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
@@ -33,7 +33,7 @@ export default defineComponent({
         ViewTypeEnum
     }),
     computed: {
-        ...mapState(useSettingStore, ['instance']),
+        ...mapState(useSettingStore, ['globalSetting']),
         ...mapState(useBaseSearchSettingStore, ['defaultView']),
         ...mapState(useBaseSearchStore, ['current']),
         mainClass() {
@@ -41,7 +41,7 @@ export default defineComponent({
             if (this.defaultView === ViewTypeEnum.TABLE) {
                 classItem.push('table-viewer-show')
             }
-            if (this.instance.jsonWrap) {
+            if (this.globalSetting.jsonWrap) {
                 classItem.push('json-wrap')
             }
             return classItem.join(' ')
@@ -124,7 +124,7 @@ export default defineComponent({
         height: calc(100vh - 108px);
         overflow: hidden;
         padding: 0;
-        border: 0px;
+        border: 0;
     }
 }
 </style>

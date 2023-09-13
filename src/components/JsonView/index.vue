@@ -1,5 +1,5 @@
 <template>
-    <div class="json-view hljs" :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+    <div class="json-view hljs" :style="{ fontSize: Optional.ofNullable(globalSetting.jsonFontSize).orElse(16) + 'px' }">
         <pre class="language-json hljs" v-html="value"></pre>
         <a-button v-if="copy" type="text" link class="json-view-copy" @click="execCopy">复制</a-button>
     </div>
@@ -8,7 +8,7 @@
 import { defineComponent } from "vue";
 import { highlight } from '@/global/BeanFactory';
 import { mapState } from "pinia";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 
 export default defineComponent({
@@ -27,7 +27,7 @@ export default defineComponent({
         Optional
     }),
     computed: {
-        ...mapState(useSettingStore, ['instance'])
+        ...mapState(useSettingStore, ['globalSetting'])
     },
     watch: {
         data() {

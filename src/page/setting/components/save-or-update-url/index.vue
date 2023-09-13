@@ -1,6 +1,6 @@
 <template>
     <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="600px" draggable
-        :close-on-click-modal="false" destroy-on-close>
+             :close-on-click-modal="false" destroy-on-close>
         <a-form :model="url" label-width="100px" ref="urlForm">
             <a-form-item :label="$t('common.keyword.name')" prop="name">
                 <a-input v-model="url.name"></a-input>
@@ -10,14 +10,14 @@
                 </a-input>
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.sequence')" prop="sequence">
-                <a-input-number v-model="url.sequence" controls-position="right" size="large" />
+                <a-input-number v-model="url.sequence" controls-position="right" size="large"/>
             </a-form-item>
             <a-form-item label="版本" prop="version">
                 <a-input v-model="url.version" placeholder="请输入版本，点击测试自动识别">
                 </a-input>
             </a-form-item>
             <a-form-item :label="$t('setting.link.form.isAuth')" prop="isAuth">
-                <a-switch v-model="url.isAuth" active-text="true" inactive-text="false" />
+                <a-switch v-model="url.isAuth" active-text="true" inactive-text="false"/>
             </a-form-item>
             <a-form-item label="认证方式" v-if="url.isAuth">
                 <a-radio-group v-model="url.authType">
@@ -27,10 +27,10 @@
                 </a-radio-group>
             </a-form-item>
             <a-form-item :label="authKey" prop="authUser" v-if="url.isAuth && url.authType !== UrlAuthTypeEnum.COOKIE">
-                <a-input v-model="url.authUser" size="large" />
+                <a-input v-model="url.authUser" size="large"/>
             </a-form-item>
             <a-form-item :label="authValue" prop="authPassword" v-if="url.isAuth">
-                <a-input v-model="url.authPassword" size="large" />
+                <a-input v-model="url.authPassword" size="large"/>
             </a-form-item>
         </a-form>
         <template #footer>
@@ -57,15 +57,16 @@
     </a-modal>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
 import Url from '@/entity/Url';
 
-import { httpStrategyContext, useUrlEditEvent } from '@/global/BeanFactory';
+import {useUrlEditEvent} from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import MessageUtil from "@/utils/MessageUtil";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
-import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
+import {http} from "@/plugins/axios";
+import {AxiosRequestConfig} from "axios";
 
 export default defineComponent({
     name: 'SaveOrUpdateUrl',
@@ -207,8 +208,11 @@ export default defineComponent({
                 baseURL: this.url.value,
                 url: '/',
                 method: 'GET',
+                headers: {} as Record<string, any>,
+                auth: {
 
-            } as HttpStrategyConfig;
+                }
+            } as AxiosRequestConfig;
             if (this.url.isAuth) {
                 if (this.url.authType === UrlAuthTypeEnum.BASIC) {
                     config.auth = {
@@ -222,7 +226,7 @@ export default defineComponent({
                     }
                 }
             }
-            httpStrategyContext.getStrategy().fetch<any>(config)
+            http<any>(config)
                 .then((response) => {
                     this.testData = {
                         icon: 'success',
@@ -233,16 +237,16 @@ export default defineComponent({
                     }
                     this.url.version = `${response.version.number}`;
                 }).catch(() => {
-                    this.testData = {
-                        icon: 'error',
-                        title: '链接不可用',
-                        name: '',
-                        version: '',
-                        luceneVersion: ''
-                    }
-                }).finally(() => {
-                    this.loading = false;
-                });
+                this.testData = {
+                    icon: 'error',
+                    title: '链接不可用',
+                    name: '',
+                    version: '',
+                    luceneVersion: ''
+                }
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 });

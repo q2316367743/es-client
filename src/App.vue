@@ -45,16 +45,6 @@
                         <icon-moon :size="16" v-if="isDark"/>
                         <icon-sun :size="16" v-else/>
                     </a-button>
-                    <!-- 多语言切换 -->
-                    <a-dropdown @select="languageCommand" trigger="click">
-                        <a-button class="menu-item" type="text" status="normal">
-                            <icon-language :size="16"/>
-                        </a-button>
-                        <template #content>
-                            <a-doption value="zhCn">中文</a-doption>
-                            <a-doption value="enUs">English</a-doption>
-                        </template>
-                    </a-dropdown>
                     <!-- 版本 -->
                     <a-dropdown @select="versionCommand">
                         <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
@@ -103,8 +93,8 @@
                                 <icon-settings/>
                             </template>
                             <template #title>设置</template>
-                            <a-menu-item :key="PageNameEnum.SETTING_BASE">
-                                基础设置
+                            <a-menu-item :key="PageNameEnum.SETTING_GLOBAL">
+                                全局设置
                             </a-menu-item>
                             <a-menu-item :key="PageNameEnum.SETTING_URL">
                                 链接管理
@@ -151,14 +141,13 @@
 // 引入状态管理
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
 import useNotificationStore from "@/store/NotificationStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 // 引入框架
 import {defineAsyncComponent, defineComponent} from 'vue';
 import {mapState} from "pinia";
-import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
 import zhCn from '@arco-design/web-vue/es/locale/lang/zh-cn';
 // 模块
 import Info from '@/module/info/index.vue';
@@ -170,7 +159,6 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
-import Optional from "@/utils/Optional";
 import Assert from "@/utils/Assert";
 import { versionManage,} from "@/global/BeanFactory";
 import {setItem} from "@/utils/utools/DbStorageUtil";
@@ -207,16 +195,9 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalStore, ['isDark']),
         ...mapState(useUrlStore, ['urls', 'url']),
-        ...mapState(useSettingStore, ['instance']),
+        ...mapState(useSettingStore, ['jsonTheme']),
         ...mapState(useLoadingStore, ['loading', 'text']),
-        ...mapState(useNotificationStore, ['hasRead']),
-        jsonTheme() {
-            if (this.isDark) {
-                return Optional.ofNullable(this.instance.jsonThemeByDark).orElse('atom-one-dark');
-            } else {
-                return Optional.ofNullable(this.instance.jsonThemeByLight).orElse('github');
-            }
-        }
+        ...mapState(useNotificationStore, ['hasRead'])
     },
     watch: {
         url() {
@@ -260,12 +241,6 @@ export default defineComponent({
 
 
         // 国际化
-        let language = useSettingStore().getLanguage;
-        if (language === 'zh') {
-            this.locale = zhCn;
-        } else if (language === 'en') {
-            this.locale = enUS;
-        }
 
         // 执行窗口刷新事件
         emitter.on(MessageEventEnum.REFRESH_URL, () => {
@@ -329,15 +304,6 @@ export default defineComponent({
         selectMenu(index: PageNameEnum) {
             // 切换active
             this.selectedKeys = [index];
-        },
-        languageCommand(command: any) {
-            useSettingStore().setLanguage(command);
-            this.$i18n.locale = command;
-            if (command === 'zh') {
-                this.locale = zhCn;
-            } else if (command === 'en') {
-                this.locale = enUS;
-            }
         },
         versionCommand(command: any) {
             switch (command) {

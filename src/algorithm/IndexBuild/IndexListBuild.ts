@@ -2,7 +2,7 @@ import IndexView from "@/view/index/IndexView";
 import {prettyDataUnit} from "@/utils/FieldUtil";
 import clusterApi from "@/components/es/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import StrUtil from "@/utils/StrUtil";
 import Optional from "@/utils/Optional";
 

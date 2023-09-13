@@ -27,13 +27,13 @@ const router = createRouter({
         name: '设置',
         path: '/setting',
         component: () => import('@/page/setting/index.vue'),
-        redirect: '/setting/base',
+        redirect: '/setting/global',
         children: [{
-            name: '基础设置',
-            path: 'base',
-            component: () => import('@/page/setting/components/base.vue')
+            name: '全局设置',
+            path: 'global',
+            component: () => import('@/page/setting/components/global.vue')
         }, {
-            name: '连接管理',
+            name: '链接管理',
             path: 'url',
             component: () => import('@/page/setting/components/url.vue')
         }, {

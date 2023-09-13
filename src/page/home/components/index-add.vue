@@ -38,7 +38,7 @@ import { IndexInstance, Property } from "@/domain/IndexInstance";
 import indexApi from "@/components/es/api/IndexApi";
 import emitter from "@/plugins/mitt";
 
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import useIndexStore from "@/store/IndexStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";

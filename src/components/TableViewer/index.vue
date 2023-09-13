@@ -4,7 +4,7 @@
             <a-trigger trigger="click" :unmount-on-close="false" :popup-translate="[75, 3]">
                 <a-button type="outline" size="small">
                     <template #icon>
-                        <icon-select-all />
+                        <icon-select-all/>
                     </template>
                     {{ `${showColumns.length} / ${columns.length}` }}
                 </a-button>
@@ -26,27 +26,27 @@
                 </template>
             </a-trigger>
             <a-select v-model="tableHeaderMode" :disabled="index === ''">
-                <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING" />
-                <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER" />
+                <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING"/>
+                <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER"/>
             </a-select>
         </div>
         <div class="table-view-wrap">
-            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable scrollbar
-                :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable" />
+            <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
+                     scrollbar
+                     :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable"/>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, h, PropType } from "vue";
-import { TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable } from "@arco-design/web-vue";
+import {defineComponent, h, PropType} from "vue";
+import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
 import JsonView from "@/components/JsonView/index.vue";
-import { buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc } from "@/algorithm/jsonToTable";
-import useSettingStore from "@/store/SettingStore";
+import {buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc} from "@/algorithm/jsonToTable";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import useIndexStore from "@/store/IndexStore";
-import { applicationLaunch } from "@/global/BeanFactory";
 
 let sort: Sortable | undefined;
 
@@ -60,7 +60,7 @@ export default defineComponent({
             default: ''
         }
     },
-    components: { JsonView },
+    components: {JsonView},
 
     data: () => {
         let now = new Date().getTime();
@@ -88,7 +88,7 @@ export default defineComponent({
                     });
                 }
             } as TableExpandable,
-            bordered: { wrapper: true, cell: true } as TableBorder,
+            bordered: {wrapper: true, cell: true} as TableBorder,
             scroll: {
                 x: '100%',
                 y: '100%'
@@ -118,13 +118,10 @@ export default defineComponent({
         }
     },
     mounted() {
-        applicationLaunch.register(() => {
-            // 启动时注册
-            this.tableHeaderMode = this.index === '' ? TableHeaderModeEnum.RENDER : useSettingStore().getTableHeaderMode;
-            // 注册够渲染
-            this.render();
-            return Promise.resolve();
-        })
+        // 启动时注册
+        this.tableHeaderMode = this.index === '' ? TableHeaderModeEnum.RENDER : useSettingStore().getTableHeaderMode;
+        // 注册够渲染
+        this.render();
     },
     methods: {
         render() {
@@ -136,7 +133,7 @@ export default defineComponent({
                 return;
             }
             // 数据处理
-            let { columns, records } = jsonToTable(this.data);
+            let {columns, records} = jsonToTable(this.data);
             // 渲染表头
             this.renderColumns = columns;
             // 映射表头
@@ -227,7 +224,7 @@ export default defineComponent({
                 animation: 150,
                 delay: 0,
                 onUpdate: (evt: any) => {
-                    const { newIndex, oldIndex } = evt;
+                    const {newIndex, oldIndex} = evt;
                     if (newIndex == oldIndex) {
                         // 没有变位置，直接返回
                         return;

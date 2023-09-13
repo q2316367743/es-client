@@ -10,7 +10,7 @@ enum PageNameEnum {
 
     SETTING = "/setting",
 
-    SETTING_BASE = "/setting/base",
+    SETTING_GLOBAL = "/setting/global",
 
     SETTING_URL = "/setting/url",
 

@@ -5,7 +5,7 @@ import {NotificationItem} from "@/domain/NotificationItem";
 import HttpStrategyConfig from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 
 function notification(content: string, title: string) {
     let notificationReturn = Notification.info({
@@ -40,7 +40,6 @@ const useNotificationStore = defineStore('notification', {
     actions: {
         send(content: string, title: string) {
             let now = new Date();
-            const items = new Array<string>();
             this.add({
                 id: now.getTime(),
                 time: now,
@@ -60,7 +59,6 @@ const useNotificationStore = defineStore('notification', {
         },
         http(config: HttpStrategyConfig, body: any) {
             let now = new Date();
-            const items = new Array<string>();
             this.add({
                 id: now.getTime(),
                 time: now,

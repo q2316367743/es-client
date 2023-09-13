@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import IndexView from "@/view/index/IndexView";
 import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import MessageUtil from "@/utils/MessageUtil";
 import ConditionBuild from "@/page/data-browse/build/ConditionBuild";

@@ -4,13 +4,13 @@
             <!-- 左面查询条件 -->
             <a-split class="senior-main" min="42px" :max="0.9" default-size="400px">
                 <template #first>
-                    <div class="senior-search-side" :class="instance.showTab ? 'show-tab' : ''">
+                    <div class="senior-search-side" :class="globalSetting.showTab ? 'show-tab' : ''">
                         <tab-menu v-model="searchId" :search-item-headers="searchItemHeaders" @edit-tabs="editTabs"
-                                  v-if="instance.showTab" class="senior-search-tab" @option-tab="optionTab"/>
+                                  v-if="globalSetting.showTab" class="senior-search-tab" @option-tab="optionTab"/>
                         <!-- 编辑器 -->
                         <div class="senior-search-editor">
                             <!-- 操作栏 -->
-                            <senior-search-option :relation-id="header.relationId" :view="view" @save="save"
+                            <senior-search-option :view="view" @save="save"
                                                   @format-document="formatDocument" @clear-body="clearBody"
                                                   @select="(command) => view = command" @setting="settingDialog = true"
                                                   @export-data="exportData">
@@ -87,7 +87,7 @@ import {SeniorSearchItem} from './domain/SeniorSearchItem';
 import mitt from '@/plugins/mitt';
 
 import useUrlStore from "@/store/UrlStore";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 
 // 枚举
@@ -97,8 +97,6 @@ import TabLoadModeEnum from "@/enumeration/TabLoadModeEnum";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 import {
-    applicationLaunch,
-    httpStrategyContext,
     useSeniorSearchEvent
 } from "@/global/BeanFactory";
 
@@ -118,6 +116,7 @@ import Optional from "@/utils/Optional";
 
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
 import {jsonFormat} from "@/algorithm/jsonFormat";
+import {fetchEs} from "@/plugins/axios";
 
 
 const seniorTabComponent = new SeniorTabComponent();
@@ -162,7 +161,7 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapState(useSettingStore, ['instance']),
+        ...mapState(useSettingStore, ['globalSetting']),
         ...mapState(useUrlStore, ['url']),
         searchItemHeaders(): Array<TabMenuItem> {
             return Array.from(this.searchMap.values()).map(e => e.header);
@@ -233,12 +232,9 @@ export default defineComponent({
             }
         });
 
-        applicationLaunch.register(() => {
-            this.view = useSettingStore().getDefaultViewer;
-            // 是否启用过滤
-            this.isEnableFilter = useSettingStore().getSeniorFilter;
-            return Promise.resolve();
-        });
+        this.view = useSettingStore().getDefaultViewer;
+        // 是否启用过滤
+        this.isEnableFilter = useSettingStore().getSeniorFilter;
 
     },
     // 获取最大宽度
@@ -267,11 +263,10 @@ export default defineComponent({
                 NotificationUtil.warning('新增文档，但没有参数', '警告');
                 return;
             }
-            httpStrategyContext.getStrategy().es<string>({
+            fetchEs<string>({
                 url: request.link,
                 method: request.method,
                 data: request.params,
-                hidden: true,
                 responseType: 'text',
                 headers: {
                     'content-type': 'application/json'

@@ -13,7 +13,6 @@ import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 
-import HttpStrategyContext from "@/strategy/HttpStrategy/HttpStrategyContext";
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
 import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 
@@ -21,7 +20,6 @@ import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
 
 
-import ApplicationLaunch from "@/plugins/ApplicationLaunch";
 import Url from "@/entity/Url";
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
@@ -44,10 +42,7 @@ export const seniorSearchHistoryService = new SeniorSearchHistoryService();
 
 export const versionManage = new VersionManage();
 
-// 策略模式
 
-// HTTP策略
-export const httpStrategyContext = new HttpStrategyContext();
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
 export const lodisStrategyContext = new LodisStrategyContext();
@@ -57,8 +52,6 @@ versionStrategyContext.register(new V7VersionStrategyImpl());
 versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 应用启动器
-export const applicationLaunch = new ApplicationLaunch(
-    lodisStrategyContext, storageStrategyContext, httpStrategyContext);
 
 export const json2xml = new x2js({
     selfClosingElements: false,

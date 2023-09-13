@@ -17,11 +17,11 @@
             </div>
         </div>
         <!-- 内容 -->
-        <div class="base-scroll" :class="instance.jsonWrap ? 'json-wrap' : ''">
+        <div class="base-scroll" :class="globalSetting.jsonWrap ? 'json-wrap' : ''">
             <!-- 固定的标签 -->
             <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
                 <a-scrollbar class="scrollbar"
-                    :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+                    :style="{ fontSize: Optional.ofNullable(globalSetting.jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="item.view === ViewTypeEnum.BASE">{{ item.pretty }}</pre>
                     <pre v-else-if="item.view === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
                         v-html="item.value" />
@@ -35,7 +35,7 @@
                 <!-- 可以滚动的视图 -->
                 <div class="json-scroll">
                     <a-scrollbar class="scrollbar"
-                        :style="{ fontSize: Optional.ofNullable(instance.jsonFontSize).orElse(16) + 'px' }">
+                        :style="{ fontSize: Optional.ofNullable(globalSetting.jsonFontSize).orElse(16) + 'px' }">
                         <!-- 基础视图 -->
                         <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
                         <!-- JSON视图 -->
@@ -58,7 +58,7 @@
 import { defineComponent } from "vue";
 import { mapState } from "pinia";
 import { renderJSONTreeView } from "@/components/JsonTree";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 
 import { highlight } from '@/global/BeanFactory';
 // 工具
@@ -122,7 +122,7 @@ export default defineComponent({
         itemActive: -1
     }),
     computed: {
-        ...mapState(useSettingStore, ['instance'])
+        ...mapState(useSettingStore, ['globalSetting'])
     },
     watch: {
         data() {

@@ -2,7 +2,6 @@ import { createApp } from 'vue';
 import store from "@/store";
 import App from './App.vue';
 import i18n from '@/i18n';
-import { applicationLaunch } from "@/global/BeanFactory";
 import router from "@/plugins/router";
 
 // 额外引入图标库
@@ -44,4 +43,3 @@ createApp(App)
     .use(router)
     .mount('#app');
 
-applicationLaunch.executeInit();

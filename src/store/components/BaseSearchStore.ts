@@ -8,7 +8,7 @@ import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuil
 import MessageUtil from "@/utils/MessageUtil";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import useIndexStore from "@/store/IndexStore";
-import useSettingStore from "@/store/SettingStore";
+import useSettingStore from "@/store/setting/GlobalSettingStore";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {

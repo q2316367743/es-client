@@ -1,6 +1,6 @@
-import {httpStrategyContext} from "@/global/BeanFactory";
 import {IndexCreate} from "@/components/es/domain/IndexCreate";
 import IndexHealth from "@/components/es/domain/IndexHealth";
+import {fetchEs} from "@/plugins/axios";
 
 /**
  * 与索引有关的API
@@ -15,7 +15,7 @@ export default function (name: string) {
          * @param data 索引信息
          */
         create(data: IndexCreate): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 method: 'PUT',
                 url: name,
                 data
@@ -25,7 +25,7 @@ export default function (name: string) {
          * 删除索引
          */
         delete(): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 method: 'DELETE',
                 url: name,
             })
@@ -40,7 +40,7 @@ export default function (name: string) {
          * 获取索引状态
          */
         _stats(): Promise<any> {
-            return httpStrategyContext.getStrategy().es({
+            return fetchEs({
                 method: 'GET',
                 url: `/${name}/_stats`
             });
@@ -49,25 +49,25 @@ export default function (name: string) {
          * 获取索引设置
          */
         _settings(): Promise<any> {
-            return httpStrategyContext.getStrategy().es({
+            return fetchEs({
                 method: 'GET',
                 url: `/${name}/_settings`
             })
         },
         _mappings(): Promise<any> {
-            return httpStrategyContext.getStrategy().es({
+            return fetchEs({
                 method: 'GET',
                 url: `${name}/_mappings`
             })
         },
         health(): Promise<IndexHealth> {
-            return httpStrategyContext.getStrategy().es({
+            return fetchEs({
                 method: 'GET',
                 url: `/_cluster/health/${name}`
             })
         },
         _cacheClear(): Promise<any> {
-            return httpStrategyContext.getStrategy().es({
+            return fetchEs({
                 method: 'POST',
                 url: `${name}/_cache/clear`
             });
@@ -77,7 +77,7 @@ export default function (name: string) {
          * @param alias 别名
          */
         newAlias(alias: string): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 method: 'POST',
                 url: '_aliases',
                 data: {"actions": [{"add": {"index": name, "alias": alias}}]}
@@ -88,7 +88,7 @@ export default function (name: string) {
          * @param alias 别名
          */
         removeAlias(alias: string): Promise<any> {
-            return  httpStrategyContext.getStrategy().es<any>({
+            return  fetchEs<any>({
                 method: 'POST',
                 url: '_aliases',
                 data: {"actions": [{"remove": {"index": name, "alias": alias}}]}
@@ -98,7 +98,7 @@ export default function (name: string) {
          * 刷新索引
          */
         _refresh(): Promise<any> {
-            return  httpStrategyContext.getStrategy().es<any>({
+            return  fetchEs<any>({
                 method: 'POST',
                 url: `${name}/_refresh`,
             })
@@ -107,7 +107,7 @@ export default function (name: string) {
          * 关闭索引
          */
         _close(): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 method: 'POST',
                 url: `${name}/_close`,
             });
@@ -116,7 +116,7 @@ export default function (name: string) {
          * 打开索引
          */
         _open(): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 method: 'POST',
                 url: `${name}/_open`,
             })
@@ -125,7 +125,7 @@ export default function (name: string) {
          * flush索引
          */
         _flush(): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 method: 'POST',
                 url: `${name}/_flush`,
             })

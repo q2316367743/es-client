@@ -1,5 +1,6 @@
-import {httpStrategyContext} from "@/global/BeanFactory";
 import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {fetchEs} from "@/plugins/axios";
+import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 
 /**
  * 与索引有关的API
@@ -7,7 +8,7 @@ import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 export default function DocumentApi(index: string) {
     return {
         _search(data?: DocumentSearchQuery): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<DocumentSearchResult<any>>({
                 url: `/${index}/_search`,
                 method: "POST",
                 data: data
@@ -15,7 +16,7 @@ export default function DocumentApi(index: string) {
         },
 
         _insert(data: Record<string, any>): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 url: `/${index}/_doc`,
                 method: "POST",
                 headers: {
@@ -25,7 +26,7 @@ export default function DocumentApi(index: string) {
             })
         },
         _delete_by_query(data: Record<string, any>): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 url: `/${index}/_delete_by_query`,
                 method: "POST",
                 headers: {
@@ -35,7 +36,7 @@ export default function DocumentApi(index: string) {
             })
         },
         _update(id: string, data: Record<string, any>): Promise<any> {
-            return httpStrategyContext.getStrategy().es<any>({
+            return fetchEs<any>({
                 url: `/${index}/_doc/${id}`,
                 method: "PUT",
                 headers: {
