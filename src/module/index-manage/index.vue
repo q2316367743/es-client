@@ -1,18 +1,18 @@
 <template>
     <a-drawer :title="index" class="index-manage-drawer" v-model:visible="drawer" :width="600" render-to-body
-              unmount-on-close popup-container="#main">
+        unmount-on-close popup-container="#main">
         <div class="index-manage">
             <a-tabs v-model:active-key="active" class="tab">
-                <a-tab-pane title="总览" key="1"/>
-                <a-tab-pane title="设置" key="2"/>
-                <a-tab-pane title="映射" key="3"/>
-                <a-tab-pane title="统计信息" key="4"/>
+                <a-tab-pane title="总览" key="1" />
+                <a-tab-pane title="设置" key="2" />
+                <a-tab-pane title="映射" key="3" />
+                <a-tab-pane title="统计信息" key="4" />
             </a-tabs>
             <a-spin :loading="loading" tip="加载中">
                 <div class="content">
-                    <json-view v-if="jsonViewShow" :data="data"/>
-                    <index-mapping read-only :mapping="data" :overflow="false" v-else-if="active === '3'"/>
-                    <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state"/>
+                    <json-view v-if="jsonViewShow" :data="data" />
+                    <index-mapping read-only :mapping="data" :overflow="false" v-else-if="active === '3'" />
+                    <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state" />
                 </div>
             </a-spin>
         </div>
@@ -20,7 +20,7 @@
             <a-dropdown trigger="click" @select="indexManage">
                 <a-button type="primary">
                     管理
-                    <icon-up/>
+                    <icon-up />
                 </a-button>
                 <template #content>
                     <a-doption value="open" v-if="state === 'close'">打开索引</a-doption>
@@ -38,7 +38,7 @@
     </a-drawer>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import JsonView from "@/components/JsonView/index.vue";
 import ArrayUtil from "@/utils/ArrayUtil";
 import IndexApi from "@/components/es/api/IndexApi";
@@ -49,15 +49,15 @@ import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useIndexStore from "@/store/IndexStore";
 import Optional from "@/utils/Optional";
-import {mapState} from "pinia";
-import {useIndexManageEvent} from "@/global/BeanFactory";
+import { mapState } from "pinia";
+import { useIndexManageEvent } from "@/global/BeanFactory";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import IndexMapping from "@/components/IndexMapping/index.vue";
 
 export default defineComponent({
     name: 'index-manage',
     emits: ['update:modelValue'],
-    components: {IndexMapping, IndexManageSummary, JsonView},
+    components: { IndexMapping, IndexManageSummary, JsonView },
     data: () => ({
         drawer: false,
         active: '1',
@@ -80,7 +80,7 @@ export default defineComponent({
             return ArrayUtil.contains(['2', '4'], this.active);
         },
         ...mapState(useIndexStore, ['indicesMap']),
-        state(): 'open'| 'close' |'' {
+        state(): 'open' | 'close' | '' {
             let indexView = useIndexStore().indicesMap.get(this.index);
             return Optional.ofNullable(indexView).map(e => e.state).orElse('');
         }

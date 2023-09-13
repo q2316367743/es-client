@@ -1,96 +1,40 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <a-config-provider :locale="locale" size="medium" global>
+    <a-config-provider size="medium" global>
         <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
             <!-- 顶部菜单栏 -->
-            <a-layout-header id="header" @click="closeNotification">
-                <div class="left">
-                    <div class="logo">{{ $t('app.name') }}</div>
-                    <!-- 索引服务器选择 -->
-                    <a-select v-model="urlId" :placeholder="$t('app.linkPlaceholder')" size="small" allow-search
-                              allow-clear
-                              @change="selectUrl" class="url-select"
-                              :show-extra-options="true">
-                        <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
-                        <template #empty>
-                            <div style="padding: 6px 0; text-align: center;">
-                                <a-button type="primary" @click="jumpToAddUrl()">新增链接</a-button>
-                            </div>
-                        </template>
-                        <template #footer>
-                            <div style="padding: 6px 0; text-align: center;">
-                                <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
-                                </a-button>
-                            </div>
-                        </template>
-                    </a-select>
-                    <!-- 刷新按钮 -->
-                    <a-button class="refresh" @click="refresh()" :disabled="loading || !urlId || urlId === ''">{{
-                            $t('common.operation.refresh')
-                        }}
-                    </a-button>
-                </div>
-                <div class="right">
-                    <!-- 各种信息弹框 -->
-                    <info class-name="menu-item" :disabled="loading"/>
-                    <!-- 通知中心 -->
-                    <a-button class="menu-item" type="text" status="normal" :disabled="loading"
-                              @click.stop="openNotification()">
-                        <a-badge :count="hasRead ? 0 : 1" dot>
-                            <icon-notification/>
-                        </a-badge>
-                    </a-button>
-                    <!-- 主题切换 -->
-                    <a-button class="menu-item" @click="switchDarkColors()" type="text" status="normal">
-                        <icon-moon :size="16" v-if="isDark"/>
-                        <icon-sun :size="16" v-else/>
-                    </a-button>
-                    <!-- 版本 -->
-                    <a-dropdown @select="versionCommand">
-                        <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
-                                Constant.version
-                            }}
-                        </a-button>
-                        <template #content>
-                            <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
-                            <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
-                            <a-doption value="update" v-if="Constant.mode === 'desktop'">检查更新</a-doption>
-                            <a-doption value="about">关于</a-doption>
-                        </template>
-                    </a-dropdown>
-                </div>
-            </a-layout-header>
+            <app-header />
             <!-- 主页面 -->
             <a-layout id="main">
                 <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
                     <a-menu v-model:collapsed="collapsed" v-model:selected-keys="selectedKeys" show-collapse-button>
                         <a-menu-item :key="PageNameEnum.HOME">
                             <template #icon>
-                                <icon-home/>
+                                <icon-home />
                             </template>
                             {{ $t('menu.home') }}
                         </a-menu-item>
                         <a-menu-item :key="PageNameEnum.DATA_BROWSE">
                             <template #icon>
-                                <icon-apps/>
+                                <icon-apps />
                             </template>
                             {{ $t('menu.dataBrowser') }}
                         </a-menu-item>
                         <a-menu-item :key="PageNameEnum.BASE_SEARCH">
                             <template #icon>
-                                <icon-search/>
+                                <icon-search />
                             </template>
                             {{ $t('menu.baseSearch') }}
                         </a-menu-item>
                         <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
                             <template #icon>
-                                <icon-filter/>
+                                <icon-filter />
                             </template>
                             {{ $t('menu.seniorSearch') }}
                         </a-menu-item>
                         <a-sub-menu :key="PageNameEnum.SETTING">
                             <template #icon>
-                                <icon-settings/>
+                                <icon-settings />
                             </template>
                             <template #title>设置</template>
                             <a-menu-item :key="PageNameEnum.SETTING_GLOBAL">
@@ -111,29 +55,22 @@
                 <!-- 内容-->
                 <a-layout-content>
                     <a-spin :loading="loading" :tip="text">
-                        <router-view/>
+                        <router-view />
                     </a-spin>
                 </a-layout-content>
             </a-layout>
         </a-layout>
         <!-- 索引管理 -->
-        <index-manage/>
+        <index-manage />
         <!-- 版本更新 -->
-        <version-update v-model:visible="updateDialog"/>
+        <version-update v-model:visible="updateDialog" />
         <!-- 欢迎新用户 -->
         <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog" mask-closable render-to-body
-                 draggable top="5vh" width="600px" :footer="false">
+            draggable top="5vh" width="600px" :footer="false">
             <a-scrollbar height="calc(80vh - 54px)">
-                <setting-about v-if="newDialog"/>
+                <setting-about v-if="newDialog" />
             </a-scrollbar>
         </a-modal>
-        <!-- 问题反馈 -->
-        <a-modal v-model:visible="feedbackDialog" :title="$t('app.feedback')" top="25vh" :close-on-click-modal="false"
-                 render-to-body draggable unmount-on-close :footer="false">
-            <feedback-module v-if="feedbackDialog"/>
-        </a-modal>
-        <!-- 通知管理 -->
-        <notification-manage v-model="notificationDrawer"/>
     </a-config-provider>
 </template>
 
@@ -143,14 +80,12 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
-import useNotificationStore from "@/store/NotificationStore";
-import {useGlobalStore} from "@/store/GlobalStore";
+import { useGlobalStore } from "@/store/GlobalStore";
 // 引入框架
-import {defineAsyncComponent, defineComponent} from 'vue';
-import {mapState} from "pinia";
-import zhCn from '@arco-design/web-vue/es/locale/lang/zh-cn';
+import { defineAsyncComponent, defineComponent } from 'vue';
+import { mapState } from "pinia";
 // 模块
-import Info from '@/module/info/index.vue';
+import AppHeader from '@/module/app-header/index.vue';
 // 插件
 import emitter from '@/plugins/mitt';
 // 枚举
@@ -160,56 +95,35 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import Constant from '@/global/Constant'
 // 工具类
 import Assert from "@/utils/Assert";
-import { versionManage,} from "@/global/BeanFactory";
-import {setItem} from "@/utils/utools/DbStorageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import { versionManage, } from "@/global/BeanFactory";
 import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 
 export default defineComponent({
     components: {
         // 组件
-        Info,
+        AppHeader,
         SettingAbout: defineAsyncComponent(() => import("@/page/setting/components/about.vue")),
         VersionUpdate: defineAsyncComponent(() => import("@/module/version-update/index.vue")),
-        FeedbackModule: defineAsyncComponent(() => import("@/module/Feedback/index.vue")),
         IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
-        NotificationManage: defineAsyncComponent(() => import('@/module/NotificationManage/index.vue')),
     },
     data: () => {
         return {
-            urlId: undefined as number | string | undefined,
-            locale: zhCn,
             Constant,
             updateDialog: false,
             newDialog: false,
-            feedbackDialog: false,
             collapsed: true,
             selectedKeys: [PageNameEnum.HOME] as Array<PageNameEnum>,
-            // 窗口操作展示
-            notificationDrawer: false,
             PageNameEnum,
-            // 图标
         };
     },
     computed: {
-        ...mapState(useGlobalStore, ['isDark']),
-        ...mapState(useUrlStore, ['urls', 'url']),
         ...mapState(useGlobalSettingStore, ['jsonTheme']),
         ...mapState(useLoadingStore, ['loading', 'text']),
-        ...mapState(useNotificationStore, ['hasRead'])
     },
     watch: {
-        url() {
-            this.urlId = this.url?.id!;
-        },
         selectedKeys(newValue: any[]) {
             this.$router.push(newValue[0]);
-        },
-        urlId(newValue) {
-            if (newValue && typeof newValue === 'number') {
-                setItem(LocalNameEnum.KEY_LAST_URL, newValue);
-            }
         },
         '$route.path': {
             handler(value) {
@@ -239,19 +153,7 @@ export default defineComponent({
             })
 
 
-        // 国际化
-
-        // 执行窗口刷新事件
-        emitter.on(MessageEventEnum.REFRESH_URL, () => {
-            this.refresh();
-        });
-
-        // 打开通知中心
-        emitter.on(MessageEventEnum.OPEN_NOTIFICATION_MANAGE, () => {
-            this.openNotification()
-        });
-
-        if (this.isDark) {
+        if (utools.isDarkColors()) {
             // 设置为暗黑主题
             document.body.setAttribute('arco-theme', 'dark');
         } else {
@@ -289,39 +191,14 @@ export default defineComponent({
             // 索引刷新
             await useIndexStore().reset();
             // 发送url连接事件
-            emitter.emit(MessageEventEnum.URL_UPDATE);
         },
         async refresh() {
             await useIndexStore().reset();
-            emitter.emit(MessageEventEnum.URL_REFRESH)
         },
         selectMenu(index: PageNameEnum) {
             // 切换active
             this.selectedKeys = [index];
         },
-        versionCommand(command: any) {
-            switch (command) {
-                case 'about':
-                    this.$router.push(PageNameEnum.SETTING_ABOUT)
-                    break;
-                case 'log':
-                    this.$router.push(PageNameEnum.SETTING_UPDATE)
-                    break;
-                case 'update':
-                    alert('检查更新')
-                    break;
-                case 'feedback':
-                    this.feedbackDialog = true;
-                    break;
-            }
-        },
-        openNotification() {
-            this.notificationDrawer = true;
-            useNotificationStore().read();
-        },
-        closeNotification() {
-            this.notificationDrawer = false;
-        }
     },
 });
 </script>
