@@ -1,10 +1,10 @@
 <template>
     <div class="setting-url">
         <div class="setting-url-toolbar">
-            <a-input v-model="condition.name" style="width: 40vw;" placeholder="链接名称" allow-clear/>
+            <a-input v-model="keyword" style="width: 40vw;" placeholder="链接名称" allow-clear/>
             <a-button type="primary" @click="editOpen()">新增</a-button>
         </div>
-        <a-table ref="urlTable" :data="showUrls" class="data" sticky-header style="height: 100%;">
+        <a-table ref="urlTable" :data="urls" class="data" sticky-header style="height: 100%;">
             <template #columns>
                 <a-table-column data-index="name" :title="$t('common.keyword.name')" :width="120"
                                 fixed="left"></a-table-column>
@@ -37,9 +37,8 @@
         <save-or-update-url />
     </div>
 </template>
-<script lang="ts">
-import {defineComponent, toRaw} from "vue";
-import {mapState} from "pinia";
+<script lang="ts" setup>
+import {computed, ref, toRaw} from "vue";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -48,66 +47,58 @@ import Url from "@/entity/Url";
 import { useUrlEditEvent} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 import SaveOrUpdateUrl from "@/page/setting/components/save-or-update-url/index.vue";
+import {useFuse} from "@vueuse/integrations/useFuse";
 
-export default defineComponent({
-    name: 'setting-url',
-    components: {SaveOrUpdateUrl},
-    data: () => ({
-        UrlAuthTypeEnum,
-        condition: {
-            name: '',
-            url: ''
-        },
-    }),
-    computed: {
-        ...mapState(useUrlStore, ['urls']),
-        showUrls() {
-            return this.urls.filter(url => this.condition.name === '' || (url.name && url.name.indexOf(this.condition.name) > -1))
-        }
-    },
-    mounted() {
-        if (this.$route.query.method) {
-            useUrlEditEvent.emit();
-        }
-    },
-    methods: {
-        prettyAuth(params: boolean) {
-            return params ? this.$t('setting.link.form.needAuth') : this.$t('setting.link.form.notAuth');
-        },
-        remove(id: number, value: string) {
-            MessageBoxUtil.confirm('是否删除相关的搜索历史', '提示', {
-                confirmButtonText: '删除全部',
-                cancelButtonText: '只删除链接'
-            }).then(() => {
-                useUrlStore().remove(id)
-                    .then(() => this.removeAfter(value))
-                    .catch(e => MessageUtil.error('删除失败', e));
-            })
-        },
-        removeAfter(value: string) {
-            MessageUtil.success('删除成功');
-            if (useUrlStore().current === value) {
-                // 删除了当前索引
-                useUrlStore().clear();
-                useIndexStore().clear();
-            }
-            useIndexStore().reset();
-        },
-        editOpen(url?: Url) {
-            if (url) {
-                useUrlEditEvent.emit(JSON.parse(JSON.stringify(toRaw(url))));
-            } else {
-                useUrlEditEvent.emit();
-            }
-        },
-        execCopy: utools.copyText,
-        open(url: string) {
-            utools.shellOpenExternal(url);
-        },
+const keyword = ref('');
+
+const items = computed(() => useUrlStore().urls);
+
+const {results} = useFuse(keyword, items, {
+    matchAllWhenSearchEmpty: true,
+    fuseOptions: {
+        keys: [{
+            name: 'name'
+        }, {
+            name: 'value'
+        }]
     }
 });
+const urls = computed(() => results.value.map(e => e.item));
+
+
+function prettyAuth(params: boolean) {
+    return params ? "需要认证" : "无需认证";
+}
+function remove(id: number, value: string) {
+    MessageBoxUtil.confirm('是否删除相关的搜索历史', '提示', {
+        confirmButtonText: '删除全部',
+        cancelButtonText: '只删除链接'
+    }).then(() => {
+        useUrlStore().remove(id)
+            .then(() => removeAfter(value))
+            .catch(e => MessageUtil.error('删除失败', e));
+    })
+}
+function removeAfter(value: string) {
+    MessageUtil.success('删除成功');
+    if (useUrlStore().current === value) {
+        // 删除了当前索引
+        useUrlStore().clear();
+        useIndexStore().clear();
+    }
+    useIndexStore().reset();
+}
+function editOpen(url?: Url) {
+    if (url) {
+        useUrlEditEvent.emit(JSON.parse(JSON.stringify(toRaw(url))));
+    } else {
+        useUrlEditEvent.emit();
+    }
+}
+const execCopy = (text: string) =>  utools.copyText(text);
+const open = (url: string) => utools.shellOpenExternal(url);
+
 </script>
 <style lang="less">
 .setting-url {
