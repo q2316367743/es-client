@@ -1,5 +1,5 @@
 <template>
-    <a-modal :title="$t('common.operation.add')" v-model:visible="dialog" width="850px" draggable class="home-index-add"
+    <a-modal title="新增索引" v-model:visible="dialog" width="850px" draggable class="home-index-add"
         render-to-body unmount-on-close>
         <a-form :model="index" layout="vertical">
             <a-form-item :label="$t('common.keyword.name')">

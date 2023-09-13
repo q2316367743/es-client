@@ -236,7 +236,6 @@ export default defineComponent({
                 }
                 versionManage.execUpdate();
 
-                this.selectMenu(useGlobalSettingStore().getDefaultPage)
             })
 
 
@@ -291,11 +290,6 @@ export default defineComponent({
             await useIndexStore().reset();
             // 发送url连接事件
             emitter.emit(MessageEventEnum.URL_UPDATE);
-            // 选择链接后判断自动全屏
-            if (useGlobalSettingStore().getAutoFullScreen) {
-                this.collapsed = true;
-            }
-
         },
         async refresh() {
             await useIndexStore().reset();
