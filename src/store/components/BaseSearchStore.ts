@@ -12,6 +12,8 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
 import useUrlStore from "@/store/UrlStore";
+import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
+import router from "@/plugins/router";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
@@ -168,6 +170,15 @@ export const useBaseSearchStore = defineStore('base-search', {
             this.current.orders = record.orders;
             this.current.index = record.index;
             this.search();
+        },
+        loadEvent(event: BaseSearchJumpEvent) {
+            router.push('/base-search').then(() => console.log('基础搜索跳转'));
+            this.current.conditions = event.conditions;
+            this.current.orders = event.orders;
+            this.current.index = event.index;
+            if (event.execute) {
+                this.search()
+            }
         }
     }
 })

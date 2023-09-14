@@ -1,6 +1,7 @@
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
 import TableNameEnum from "@/enumeration/TableNameEnum";
 import BaseService from "@/service/BaseService";
+import PageResult from "@/domain/PageResult";
 
 export class BaseSearchRecordService {
 
@@ -8,6 +9,10 @@ export class BaseSearchRecordService {
 
     constructor() {
         this.baseService = new BaseService<BaseSearchRecord>(TableNameEnum.BASE_SEARCH_RECORD);
+    }
+
+    async page(current: number, size: number, urlId?: number): Promise<PageResult<BaseSearchRecord>> {
+        return this.baseService.page(current, size, {urlId});
     }
 
     async list(urlId?: number): Promise<Array<BaseSearchRecord>> {

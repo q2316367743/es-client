@@ -83,10 +83,8 @@ import IndexApi from '@/components/es/api/IndexApi'
 import Optional from "@/utils/Optional";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import emitter from "@/plugins/mitt";
-import { useBaseSearchEvent, usePageJumpEvent } from "@/global/BeanFactory";
 
 import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
@@ -95,6 +93,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {mapState} from "pinia";
 import {useGlobalStore} from "@/store/GlobalStore";
 import IndexView from "@/view/index/IndexView";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -202,9 +201,7 @@ export default defineComponent({
         },
         jumpToBaseSearch() {
             if (this.index) {
-                usePageJumpEvent.emit(PageNameEnum.BASE_SEARCH);
-                useBaseSearchEvent.emit({
-                    name: this.index.name,
+                useBaseSearchStore().loadEvent({
                     index: this.index.name,
                     conditions: new Array<BaseQuery>(),
                     orders: new Array<BaseOrder>(),

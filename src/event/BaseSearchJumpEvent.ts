@@ -7,16 +7,6 @@ import BaseOrder from "@/entity/BaseOrder";
 export default interface BaseSearchJumpEvent {
 
     /**
-     * 历史记录载入时存在
-     */
-    id?: number;
-
-    /**
-     * 名字。唯一
-     */
-    name?: string;
-
-    /**
      * 索引
      */
     index: string;
@@ -31,6 +21,9 @@ export default interface BaseSearchJumpEvent {
      */
     orders: Array<BaseOrder>;
 
+    /**
+     * 是否立即执行
+     */
     execute: boolean;
 
 }

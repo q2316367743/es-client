@@ -13,8 +13,8 @@
                 <a-radio value="2">历史存储</a-radio>
             </a-radio-group>
         </template>
-        <bs-restore-record v-show="tab === '1'" />
-        <bs-restore-history v-show="tab === '2'"/>
+        <bs-restore-record @close="close()" v-show="tab === '1'" />
+        <bs-restore-history @close="close()" v-show="tab === '2'"/>
     </a-drawer>
 </template>
 <script lang="ts" setup>
@@ -25,7 +25,9 @@ import BsRestoreRecord from "@/page/base-search/components/History/bs-restore-re
 const visible = ref(false);
 const tab = ref("1");
 
-const load = () => visible.value = true
+const load = () => visible.value = true;
+
+const close = () => visible.value = false;
 
 </script>
 <style scoped lang="less">

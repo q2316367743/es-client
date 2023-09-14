@@ -48,7 +48,7 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'bsh-history',
-    emits: ['load'],
+    emits: ['close'],
     data: () => ({
         histories: new Array<BaseSearchHistory>(),
         name: '',
@@ -60,6 +60,7 @@ export default defineComponent({
         },
         load(history: BaseSearchHistory) {
             useBaseSearchStore().loadHistory(history);
+            this.$emit('close');
         },
         removeById(id: number) {
             console.log(id);

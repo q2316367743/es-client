@@ -21,76 +21,112 @@
             </a-popconfirm>
         </div>
         <div class="temp-record-body">
-            <a-table :data="items" style="height: 100%;">
+            <a-table :data="items" style="height: 100%;" :expandable="expandable" row-key="id" :pagination="false">
                 <template #columns>
-                    <a-table-column data-index="index" :title="$t('common.keyword.index')" :width="250">
+                    <a-table-column data-index="index" title="索引" :width="150">
                         <template #cell="{ record }">
-                            <a-link type="primary" target="_blank">{{ record.index }}</a-link>
-                            <div class="url-copy" @click="execCopy(record.index)">{{
-                                    $t('common.operation.copy')
-                                }}
-                            </div>
+                            <a-tooltip content="点击复制">
+                                <a-link type="primary" target="_blank" @click="execCopy(record.index)">{{
+                                        record.index
+                                    }}
+                                </a-link>
+                            </a-tooltip>
                         </template>
                     </a-table-column>
-                    <a-table-column data-index="id" title="时间" :width="200">
+                    <a-table-column data-index="id" title="时间" :width="170">
                         <template #cell="{ record }">
                             {{ prettyDate(new Date(record.id)) }}
                         </template>
                     </a-table-column>
-                    <a-table-column :title="$t('common.keyword.operation')" :width="190">
+                    <a-table-column :title="$t('common.keyword.operation')" :width="230">
                         <template #cell="{ record }">
-                            <a-button type="primary" status="success" size="small" @click="load(record)">{{
-                                    $t('common.operation.load')
-                                }}
+                            <a-button type="primary" status="success" size="small" @click="load(record)">
+                                加载
                             </a-button>
-                            <a-button type="primary" size="small" @click="appendToHistory(record)">新增
+                            <a-button type="primary" size="small" @click="appendToHistory(record)">
+                                新增
                             </a-button>
-                            <a-button type="primary" status="danger" size="small" @click="removeById(record.id)">
-                                {{ $t('common.operation.delete') }}
-                            </a-button>
+                            <a-popconfirm content="确认删除此历史记录？" @ok="removeById(record.id)">
+                                <a-button type="primary" status="danger" size="small">
+                                    删除
+                                </a-button>
+                            </a-popconfirm>
                         </template>
                     </a-table-column>
                 </template>
             </a-table>
+            <a-pagination v-model:current="current" v-model:page-size="size" :total="total" style="margin-top: 7px;"/>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, toRaw, watch} from "vue";
+import {computed, ref, toRaw, watch, h, markRaw} from "vue";
 
 import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import {baseSearchRecordService} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
-import useBaseTempRecordStore from "@/store/BaseSearchHistoryStore";
 import XEUtils from "xe-utils";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {TableData, TableExpandable} from "@arco-design/web-vue";
+import JsonView from "@/components/JsonView/index.vue";
+
+const emits = defineEmits(['close']);
 
 const urlId = ref<number | undefined>(useUrlStore().id);
 const items = ref(new Array<BaseSearchRecord>());
 const clearLoading = ref(false);
+const expandable = markRaw<TableExpandable>({
+    title: '详情',
+    width: 80,
+    expandedRowRender: (record: TableData) => {
+        return h(JsonView, {
+            data: record
+        });
+    }
+});
+
+const current = ref(1);
+const size = ref(10);
+const total = ref(0);
 
 watch(() => urlId.value, value => search(value));
+watch(() => current.value, () => search());
 
 const urls = computed(() => useUrlStore().urls);
 
-const search = (value?: number) => baseSearchRecordService.list(value || urlId.value).then(res => items.value = res);
+const search = (value?: number) => baseSearchRecordService.page(current.value, size.value, value || urlId.value)
+    .then(res => {
+        items.value = res.records;
+        total.value = res.total;
+    });
 
-search()
+search();
 
 const prettyDate = (date: Date) => XEUtils.toDateString(date);
-const execCopy = (url: string) => utools.copyText(url);
-const removeById = (id: number) => useBaseTempRecordStore().removeById(id);
-const load = (record: BaseSearchRecord) => useBaseSearchStore().loadRecord(record);
+const execCopy = (url: string) => {
+    utools.copyText(url);
+    MessageUtil.success("已成功复制到剪切板");
+};
+const removeById = (id: number) => baseSearchRecordService.removeById(id)
+    .then(() => MessageUtil.success("删除成功", () => search()))
+    .catch(e => MessageUtil.error("删除失败", e));
+const load = (record: BaseSearchRecord) => {
+    useBaseSearchStore().loadRecord(record);
+    emits('close');
+};
 const reset = () => urlId.value = undefined;
 const clear = () => {
     clearLoading.value = true;
     baseSearchRecordService.clear()
-        .then(() => MessageUtil.success("清空成功"))
+        .then(() => {
+            MessageUtil.success("清空成功");
+            search();
+        })
         .catch(e => MessageUtil.error("清空失败", e))
         .finally(() => clearLoading.value = false);
 }
@@ -113,6 +149,7 @@ function appendToHistory(history: BaseSearchHistory) {
             .catch(e => MessageUtil.error('新增失败', e));
     });
 }
+
 
 </script>
 <style lang="less">
