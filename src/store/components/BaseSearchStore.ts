@@ -6,9 +6,12 @@ import Field from "@/view/Field";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
-import {useIndexManageEvent} from "@/global/BeanFactory";
+import {baseSearchRecordService, useIndexManageEvent} from "@/global/BeanFactory";
 import useIndexStore from "@/store/IndexStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+import BaseSearchHistory from "@/entity/BaseSearchHistory";
+import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
+import useUrlStore from "@/store/UrlStore";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
@@ -85,17 +88,16 @@ export const useBaseSearchStore = defineStore('base-search', {
             }
             this.loading = true;
             try {
-                DocumentApi(this.current.index)._search(
-                    QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders)
-                ).then((response) => {
+                const condition = QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
+                DocumentApi(this.current.index)._search(condition).then((response) => {
                     // 结果
                     this.current.result = response as Record<string, any>;
                     // 解析总数
                     if (response.hits) {
-                        if (parseInt(response.hits.total)) {
-                            this.current.total = parseInt(response.hits.total)
-                        } else if (parseInt(response.hits.total.value)) {
-                            this.current.total = parseInt(response.hits.total.value);
+                        if (typeof response.hits.total === 'number') {
+                            this.current.total = response.hits.total
+                        } else if (response.hits.total) {
+                            this.current.total = response.hits.total.value;
                         } else {
                             this.current.total = 0;
                         }
@@ -107,6 +109,14 @@ export const useBaseSearchStore = defineStore('base-search', {
                 }).finally(() => {
                     this.loading = false;
                 });
+                // 新增历史记录
+                baseSearchRecordService.save({
+                    urlId: useUrlStore().id || 0,
+                    index: this.current.index,
+                    conditions: this.current.conditions,
+                    orders: this.current.orders
+                }).then(() => console.log("新增历史记录成功"))
+                    .catch(e => MessageUtil.error("新增历史记录失败", e))
             } catch (e) {
                 MessageUtil.error('条件构造错误', e);
                 this.loading = false;
@@ -139,5 +149,25 @@ export const useBaseSearchStore = defineStore('base-search', {
                 this.current.index = '';
             }
         },
+        /**
+         * 加载历史保存记录
+         * @param history 历史保存记录
+         */
+        loadHistory(history: BaseSearchHistory) {
+            this.current.conditions = history.conditions;
+            this.current.orders = history.orders;
+            this.current.index = history.index;
+            this.search();
+        },
+        /**
+         * 加载历史记录
+         * @param record 历史记录
+         */
+        loadRecord(record: BaseSearchRecord) {
+            this.current.conditions = record.conditions;
+            this.current.orders = record.orders;
+            this.current.index = record.index;
+            this.search();
+        }
     }
 })

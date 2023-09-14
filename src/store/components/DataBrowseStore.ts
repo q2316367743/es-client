@@ -65,7 +65,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 )
                     .then(result => {
                         this.result = result;
-                        let {columns, records, total} = jsonToTable(result, this.index);
+                        let {columns, records, total} = jsonToTable(result);
                         this.columns = columns;
                         if (renderHeader) {
                             this.showColumns = columns;

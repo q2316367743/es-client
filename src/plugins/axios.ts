@@ -50,8 +50,12 @@ export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
     }
 
     return Promise.resolve(JSONBig.parse(data, (_key, value) => {
-        if (typeof value === 'object' && value.constructor && value.constructor.name == 'BigNumber2') {
-            return value.toString();
+        try {
+            if (typeof value === 'object' && value.constructor && value.constructor.name == 'BigNumber2') {
+                return value.toString();
+            }
+        } catch (e) {
+            return value;
         }
         return value;
     }));

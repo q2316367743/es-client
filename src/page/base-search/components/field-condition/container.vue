@@ -36,6 +36,10 @@ watch(() => conditions.value,
     value => useBaseSearchStore().setCurrentCondition(value),
     {deep: true})
 
+watch(() => useBaseSearchStore().current.conditions,
+value => conditions.value = value,
+    {deep: true});
+
 conditions.value = useBaseSearchStore().current.conditions;
 
 function add() {

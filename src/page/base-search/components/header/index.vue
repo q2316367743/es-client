@@ -44,6 +44,8 @@ watch(() => index.value, value => useBaseSearchStore().setCurrentIndex(value));
 
 index.value = useBaseSearchStore().current.index;
 
+watch(() => useBaseSearchStore().current.index, value => index.value = value);
+
 const search = () => useBaseSearchStore().search();
 const openIndexManage = () => useBaseSearchStore().openIndexManage();
 

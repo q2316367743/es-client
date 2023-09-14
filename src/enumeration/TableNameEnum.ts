@@ -1,19 +1,14 @@
 enum TableNameEnum {
 
     /**
-     * 链接
+     * 基础搜索记录
      */
-    URL = 'url',
+    BASE_SEARCH_RECORD = 'baseSearchRecord',
 
     /**
-     * 基础搜索历史
+     * 高级搜索记录
      */
-    BASE_SEARCH_HISTORY = 'baseSearchHistory',
-
-    /**
-     * 高级搜索历史
-     */
-    SENIOR_SEARCH_HISTORY = 'seniorSearchHistory'
+    SENIOR_SEARCH_RECORD = 'seniorSearchRecord'
 
 }
 

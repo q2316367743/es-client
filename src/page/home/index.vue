@@ -62,7 +62,8 @@ const indexAddDialog = ref(false)
 const virtualListProps = computed(() => ({
     height: size.height.value - 40 - 15 - 42
 }))
-const indices = computed(() => useIndexStore().indices);
+const indices = computed(() => useIndexStore().indices
+    .sort((a, b) => a.name.localeCompare(b.name, "zh-CN")));
 const url = computed(() => useUrlStore().url);
 
 const {results} = useFuse(keyword, indices, {
@@ -78,7 +79,6 @@ const {results} = useFuse(keyword, indices, {
 
 const items = computed(() => {
     return results.value.map(result => result.item)
-        .sort((a, b) => a.name.localeCompare(b.name, "zh-CN"))
 })
 
 

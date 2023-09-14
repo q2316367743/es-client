@@ -4,7 +4,7 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [{
-        name: "主页",
+        name: "首页",
         path: '/',
         redirect: '/home'
     }, {

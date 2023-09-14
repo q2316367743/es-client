@@ -5,7 +5,6 @@ import ClusterApi from "@/components/es/api/ClusterApi";
 import Optional from "@/utils/Optional";
 import useNotificationStore from "@/store/NotificationStore";
 import useUrlStore from "@/store/UrlStore";
-import { urlService } from "@/global/BeanFactory";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
 
 export default class VersionStrategyContext {
@@ -80,8 +79,7 @@ export default class VersionStrategyContext {
         for (let strategy of this.strategies) {
             if (this.version.match(strategy.getVersionExp())) {
                 this.strategy = strategy;
-                // 重新更新url
-                urlService.updateVersionById(useUrlStore().id!, this.version);
+                // TODO: 重新更新url
                 return false;
             }
         }

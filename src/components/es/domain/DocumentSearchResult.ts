@@ -5,13 +5,15 @@ export interface DocumentSearchResult<T> {
     hits: Hits<T>;
 }
 
-interface Hits<T> {
-    total: number;
+export interface Hits<T> {
+    total: number | {
+        value: number
+    };
     max_score: number;
-    hits: Hit<T>[];
+    hits: Array<Hit<T>>;
 }
 
-interface Hit<T> {
+export interface Hit<T> {
     _index: string;
     _type: string;
     _id: string;

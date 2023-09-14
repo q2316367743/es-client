@@ -1,48 +1,32 @@
 <template>
-    <a-button type="primary" status="warning" @click="dialog= true" title="历史">
+    <a-button type="primary" status="warning" @click="load" title="历史">
         <template #icon>
             <icon-history/>
         </template>
     </a-button>
-    <a-drawer v-model:visible="dialog" width="60%" title="历史记录" render-to-body unmount-on-close :footer="false"
+    <a-drawer v-model:visible="visible" width="60%" render-to-body unmount-on-close :footer="false"
               popup-container="#main">
-        <bsh-history @load="load"/>
+        <template #header>
+            <h2>恢复</h2>
+            <a-radio-group v-model="tab" type="button" style="margin-left: 14px;">
+                <a-radio value="1">历史记录</a-radio>
+                <a-radio value="2">历史存储</a-radio>
+            </a-radio-group>
+        </template>
+        <bs-restore-record v-show="tab === '1'" />
+        <bs-restore-history v-show="tab === '2'"/>
     </a-drawer>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
-import BshHistory from "./History.vue";
+<script lang="ts" setup>
+import {ref} from "vue";
+import BsRestoreHistory from "./bs-restore-history.vue";
+import BsRestoreRecord from "@/page/base-search/components/History/bs-restore-record.vue";
 
+const visible = ref(false);
+const tab = ref("1");
 
-export default defineComponent({
-    name: 'bsh-manage',
-    components: {BshHistory},
-    emits: ['update:modelValue'],
-    data: () => ({
-        dialog: false
-    }),
-    methods: {
-        load() {
-            this.dialog = false;
-        }
-    }
-});
+const load = () => visible.value = true
+
 </script>
 <style scoped lang="less">
-.bsh-manage {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-
-    .bsh-manage-body {
-        position: absolute;
-        top: 54px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-    }
-}
 </style>

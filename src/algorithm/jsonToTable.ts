@@ -1,5 +1,5 @@
 import {ClassName} from "@arco-design/web-vue/es/_utils/types";
-import IndexView from "@/view/index/IndexView";
+import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 
 const MAX_WIDTH = 600;
 
@@ -72,25 +72,22 @@ export interface TableView {
 
 /**
  * JSON转化为表格视图
- * @param data 数据
- * @param index 索引，如果有
+ * @param result 数据
  * @constructor
  */
-export function jsonToTable(data: any, index?: IndexView): TableView {
-    return jsonToTableComplete(data, {common: true, source: true, separator: "-"}, index);
+export function jsonToTable(result: DocumentSearchResult<any>): TableView {
+    return jsonToTableComplete(result, {common: true, source: true, separator: "-"});
 }
 
 /**
  * JSON转化为表格视图
- * @param data 数据
+ * @param result 记录
  * @param config 配置
- * @param index 索引，如果有
  * @constructor
  */
 export function jsonToTableComplete(
-    data: any,
+    result: DocumentSearchResult<any>,
     config: BuildConfig,
-    index?: IndexView
 ): TableView {
     // 当变化时，进行渲染
     let records = new Array<any>();
@@ -112,8 +109,8 @@ export function jsonToTableComplete(
     }
 
     // 开始渲染
-    for (let item of data.hits.hits) {
-        let record = {} as Record<string, string>;
+    for (let item of result.hits.hits) {
+        let record = {} as Record<string, any>;
         if (config.common) {
             record['_id'] = item['_id'];
             record['_index'] = item['_index'];
@@ -133,7 +130,7 @@ export function jsonToTableComplete(
     // 此处设置显示的列
     return {
         columns, records,
-        total: data.hits.total.value !== undefined ? data.hits.total.value : data.hits.total
+        total: typeof result.hits.total == "number" ? result.hits.total : result.hits.total.value
     }
 }
 
@@ -157,7 +154,7 @@ export function renderObj(
                 value = JSON.stringify(source);
             } else {
                 renderObj(source, columnMap, record, title, separator);
-                break;
+                continue;
             }
         } else {
             // 普通类型，直接渲染

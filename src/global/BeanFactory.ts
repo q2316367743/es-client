@@ -1,4 +1,3 @@
-import x2js from 'x2js';
 import {useEventBus} from "@vueuse/core";
 
 import VersionManage from "@/plugins/VersionManage";
@@ -6,15 +5,13 @@ import VersionManage from "@/plugins/VersionManage";
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
 
-import UrlService from "@/service/UrlService";
 import {SeniorSearchHistoryService} from "@/service/SeniorSearchHistoryService";
-import {BaseSearchHistoryService} from "@/service/BaseSearchHistoryService";
+import {BaseSearchRecordService} from "@/service/BaseSearchRecordService";
 
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import EventBusEnum from "@/enumeration/EventBusEnum";
 
 import StorageStrategyContext from "@/strategy/StorageStrategy/StorageStrategyContext";
-import LodisStrategyContext from "@/strategy/LodisStrategy/LodisStrategyContext";
 
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
@@ -36,8 +33,8 @@ window.rain = {
 window.utools = window.utools || utools;
 window.preload = window.preload || preload;
 
-export const urlService = new UrlService();
-export const baseSearchHistoryService = new BaseSearchHistoryService();
+export const baseSearchRecordService = new BaseSearchRecordService();
+
 export const seniorSearchHistoryService = new SeniorSearchHistoryService();
 
 export const versionManage = new VersionManage();
@@ -45,7 +42,6 @@ export const versionManage = new VersionManage();
 
 // 存储策略
 export const storageStrategyContext = new StorageStrategyContext();
-export const lodisStrategyContext = new LodisStrategyContext();
 export const versionStrategyContext = new VersionStrategyContext();
 versionStrategyContext.register(new V6VersionStrategyImpl());
 versionStrategyContext.register(new V7VersionStrategyImpl());
@@ -53,10 +49,6 @@ versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 应用启动器
 
-export const json2xml = new x2js({
-    selfClosingElements: false,
-    escapeMode: false
-});
 
 
 // 事件总线

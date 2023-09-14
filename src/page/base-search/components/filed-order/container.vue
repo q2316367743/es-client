@@ -5,7 +5,7 @@
                 新增
             </a-button>
         </div>
-        <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(_order, idx) in orders" :key="idx">
+        <div style="display: flex;margin-bottom: 10px;width: 100%;" v-for="(_order, idx) in orders" :key="_order.id">
             <field-order-item v-model="orders[idx]" @add="add" @remove="remove"/>
         </div>
     </div>
@@ -19,6 +19,11 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 const orders = ref<Array<BaseOrder>>(new Array<BaseOrder>());
 
 watch(() => orders.value, value => useBaseSearchStore().setCurrentOrders(value), {deep: true});
+
+
+watch(() => useBaseSearchStore().current.orders,
+    value => orders.value = value,
+    {deep: true});
 
 const add = () => orders.value.push({
     id: new Date().getTime(),

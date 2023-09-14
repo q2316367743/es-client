@@ -7,9 +7,8 @@
         <!-- 数据表格 -->
         <div class="content-table">
             <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
-                     scrollbar
                      :selectedKeys="selectedKeys" :scroll="scroll" :loading="loading" :pagination="false" row-key="_id"
-                     :bordered="bordered" :row-selection="rowSelection" id="data-browse-table"
+                     :bordered="bordered" :row-selection="rowSelection" id="data-browse-table" scrollbar
                      @selection-change="updateSelectKeys">
                 <template #empty>
                     <div class="data-browse-empty">{{ emptyText }}</div>

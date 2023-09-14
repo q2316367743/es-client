@@ -7,8 +7,8 @@ import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult"
  */
 export default function DocumentApi(index: string) {
     return {
-        _search(data?: DocumentSearchQuery): Promise<any> {
-            return fetchEs<DocumentSearchResult<any>>({
+        _search(data?: DocumentSearchQuery): Promise<DocumentSearchResult<any>> {
+            return fetchEs<DocumentSearchResult<DocumentSearchResult<any>>>({
                 url: `/${index}/_search`,
                 method: "POST",
                 data: data

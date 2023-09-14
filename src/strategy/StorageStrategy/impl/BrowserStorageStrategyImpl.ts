@@ -1,6 +1,6 @@
 import StorageStrategy from "@/strategy/StorageStrategy/StorageStrategy";
 import TableNameEnum from "@/enumeration/TableNameEnum";
-import DexieInstance from "@/plugins/dexie";
+import {DexieInstance} from "@/plugins/dexie";
 import Base from "@/entity/Base";
 
 export default class BrowserStorageStrategyImpl implements StorageStrategy {
