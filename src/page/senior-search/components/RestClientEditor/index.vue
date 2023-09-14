@@ -6,14 +6,14 @@ import {defineComponent} from "vue";
 
 import * as monaco from 'monaco-editor';
 
-import language from "@/module/RestClientEditor/language";
-import configuration from "@/module/RestClientEditor/configuration";
-import provider from "@/module/RestClientEditor/provider";
-import codelens from "@/module/RestClientEditor/codelens";
+import language from "@/page/senior-search/components/RestClientEditor/language";
+import configuration from "@/page/senior-search/components/RestClientEditor/configuration";
+import provider from "@/page/senior-search/components/RestClientEditor/provider";
+import codelens from "@/page/senior-search/components/RestClientEditor/codelens";
 import Optional from "@/utils/Optional";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import {URL_REGEX} from "@/data/EsUrl";
-import foldingRange from "@/module/RestClientEditor/foldingRange";
+import foldingRange from "@/page/senior-search/components/RestClientEditor/foldingRange";
 import {mapState} from "pinia";
 import {useGlobalStore} from "@/store/GlobalStore";
 
