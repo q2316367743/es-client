@@ -14,7 +14,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Constant from "@/global/Constant";
-import UpdateItem from "@/components/UpdateItem/index.vue";
+import UpdateItem from "@/components/update-item/index.vue";
 
 export default defineComponent({
     name: 'version-update',

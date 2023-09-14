@@ -46,7 +46,7 @@
                                             禁用
                                         </template>
                                     </a-switch>
-                                    <a-button type="primary" @click="execFilter">过滤</a-button>
+                                    <a-button type="primary" @click="execFilter()">过滤</a-button>
                                 </div>
                                 <div class="js-editor-wrapper">
                                     <!-- 过滤编辑器 -->
@@ -100,8 +100,6 @@ import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
 
 // 组件
 import formatBuild from "@/page/senior-search/build/FormatBuild";
-import TabMenu from "@/components/TabMenu/index.vue";
-import TabMenuItem from "@/components/TabMenu/TabMenuItem";
 import SeniorTabComponent from "@/page/senior-search/components/SeniorTabComponent";
 // 工具类
 import NotificationUtil from "@/utils/NotificationUtil";
@@ -121,11 +119,11 @@ export default defineComponent({
     name: 'SeniorSearch',
     components: {
         SeniorSearchOption: defineAsyncComponent(() => import('@/page/senior-search/components/Option.vue')),
-        RestClientEditor: defineAsyncComponent(() => import('@/module/RestClientEditor/index.vue')),
+        RestClientEditor: defineAsyncComponent(() => import('@/page/senior-search/components/RestClientEditor/index.vue')),
         SeniorSearchSetting: defineAsyncComponent(() => import('@/page/senior-search/components/Setting.vue')),
         SeniorSearchExportDialog: defineAsyncComponent(() => import('@/page/senior-search/components/ExportDialog.vue')),
         SeniorSearchDisplay: defineAsyncComponent(() => import('@/page/senior-search/components/Display/index.vue')),
-        TabMenu, Codemirror
+         Codemirror
     },
     data: () => {
         return {
@@ -156,10 +154,7 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapState(useUrlStore, ['url']),
-        searchItemHeaders(): Array<TabMenuItem> {
-            return Array.from(this.searchMap.values()).map(e => e.header);
-        }
+        ...mapState(useUrlStore, ['url'])
     },
     watch: {
         link(newValue) {
@@ -290,36 +285,6 @@ export default defineComponent({
                 this.current = formatBuild(restClientEditor.getInstance());
             } catch (e: any) {
                 MessageUtil.error('格式化失败', e);
-            }
-        },
-        editTabs(targetName: number, action: 'remove' | 'add') {
-            if (action === 'add') {
-                seniorTabComponent.add();
-            } else if (action === 'remove') {
-                seniorTabComponent.remove(targetName);
-            }
-        },
-        optionTab(command: string) {
-            switch (command) {
-                case 'close-one':
-                    seniorTabComponent.close();
-                    break;
-                case 'close-other':
-                    // 移除其他
-                    seniorTabComponent.closeOther();
-                    break;
-                case 'close-all':
-                    seniorTabComponent.closeAll();
-                    break;
-                case 'rename':
-                    seniorTabComponent.rename();
-                    break;
-                case 'save':
-                    seniorTabComponent.save();
-                    break;
-                case 'update':
-                    seniorTabComponent.update();
-                    break;
             }
         },
         save() {

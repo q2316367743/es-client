@@ -3,7 +3,6 @@ import {useEventBus} from "@vueuse/core";
 import VersionManage from "@/plugins/VersionManage";
 
 import SeniorSearchJumpEvent from "@/event/SeniorSearchJumpEvent";
-import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
 
 import {SeniorSearchHistoryService} from "@/service/SeniorSearchHistoryService";
 import {BaseSearchRecordService} from "@/service/BaseSearchRecordService";
@@ -53,7 +52,6 @@ versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 事件总线
 // 基础查询
-export const useBaseSearchEvent = useEventBus<BaseSearchJumpEvent>(EventBusEnum.BASE_SEARCH_EVENT)
 // 高级查询
 export const useSeniorSearchEvent = useEventBus<SeniorSearchJumpEvent>(EventBusEnum.SENIOR_SEARCH_EVENT);
 // 页面跳转

@@ -5,7 +5,7 @@
         <p>
             <span>版本：</span>
             <a-tag color="blue">{{ data.version }}</a-tag>
-            <a-tag color="green" style="margin-left: 10px;">build {{ data.build }}</a-tag>
+            <a-tag color="green" style="margin-left: 10px;">构建于 {{ data.build }}</a-tag>
         </p>
         <p>
             <span>使用中遇到任何问题，你可以先访问 </span>

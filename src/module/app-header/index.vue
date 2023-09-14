@@ -13,7 +13,8 @@
                 </template>
                 <template #footer>
                     <div style="padding: 6px 0; text-align: center;">
-                        <a-button type="primary" @click="selectUrl('add')">{{ $t('common.operation.add') }}
+                        <a-button type="primary" @click="jumpToAddUrl()">
+                            新增链接
                         </a-button>
                     </div>
                 </template>
@@ -88,6 +89,7 @@ const refresh = () => useIndexStore().reset();
 const switchDarkColors = () => useGlobalStore().switchDarkColors();
 
 async function selectUrl(value: any) {
+    console.log(value)
     // 清空链接
     if (value === '') {
         // 清空链接选择

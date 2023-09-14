@@ -7,9 +7,10 @@ import MessageUtil from "@/utils/MessageUtil";
 import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
 import Optional from "@/utils/Optional";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {useBaseSearchEvent, useIndexManageEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
+import {useIndexManageEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseOrder from "@/entity/BaseOrder";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 export interface IndexInfo {
     name: string,
@@ -341,13 +342,12 @@ export const useDataBrowseStore = defineStore('data-browser', {
                     isEnable: true
                 });
             }
-            useBaseSearchEvent.emit({
+            useBaseSearchStore().loadEvent({
                 execute: true,
-                name: this.name,
                 index: this.name,
                 conditions: [],
                 orders
-            });
+            })
         },
         /**
          * 跳转到高级查询

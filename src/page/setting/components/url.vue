@@ -5,7 +5,7 @@
             <a-button type="primary" @click="editOpen()">新增</a-button>
         </div>
         <a-table ref="urlTable" :data="urls" class="data" sticky-header style="height: 100%;" :draggable="draggable"
-            @change="urlChange">
+            @change="urlChange($event)">
             <template #columns>
                 <a-table-column data-index="name" :title="$t('common.keyword.name')" :width="120"
                     fixed="left"></a-table-column>
@@ -39,7 +39,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref, toRaw } from "vue";
+import {computed, onMounted, ref, toRaw} from "vue";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
@@ -51,6 +51,9 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import SaveOrUpdateUrl from "@/page/setting/components/save-or-update-url/index.vue";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import { TableDraggable } from "@arco-design/web-vue";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
 
 const keyword = ref('');
 
@@ -75,6 +78,14 @@ const draggable = computed<TableDraggable | undefined>(() => {
         }
     }
 });
+
+onMounted(() => {
+    if (route.query.method && route.query.method === 'add') {
+        useUrlEditEvent.emit();
+    }
+})
+
+// -------------------------------------- 方法 --------------------------------------
 
 function urlChange(items: Array<Url>) {
     useUrlStore().save(items.map(item => toRaw(item)));

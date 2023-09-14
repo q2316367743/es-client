@@ -64,13 +64,6 @@
         <index-manage />
         <!-- 版本更新 -->
         <version-update v-model:visible="updateDialog" />
-        <!-- 欢迎新用户 -->
-        <a-modal v-model:visible="newDialog" :title="$t('app.welcome')" class="es-dialog" mask-closable render-to-body
-            draggable top="5vh" width="600px" :footer="false">
-            <a-scrollbar height="calc(80vh - 54px)">
-                <setting-about v-if="newDialog" />
-            </a-scrollbar>
-        </a-modal>
     </a-config-provider>
 </template>
 
@@ -87,14 +80,11 @@ import { mapState } from "pinia";
 // 模块
 import AppHeader from '@/module/app-header/index.vue';
 // 插件
-import emitter from '@/plugins/mitt';
 // 枚举
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
-import Assert from "@/utils/Assert";
 import { versionManage, } from "@/global/BeanFactory";
 import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
@@ -103,7 +93,6 @@ export default defineComponent({
     components: {
         // 组件
         AppHeader,
-        SettingAbout: defineAsyncComponent(() => import("@/page/setting/components/about.vue")),
         VersionUpdate: defineAsyncComponent(() => import("@/module/version-update/index.vue")),
         IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
     },
@@ -111,7 +100,6 @@ export default defineComponent({
         return {
             Constant,
             updateDialog: false,
-            newDialog: false,
             collapsed: true,
             selectedKeys: [PageNameEnum.HOME] as Array<PageNameEnum>,
             PageNameEnum,
@@ -142,7 +130,7 @@ export default defineComponent({
                 // 版本更新处理
                 switch (versionManage.checkBasicUpdate()) {
                     case 1:
-                        this.newDialog = true;
+                        this.$router.push('/setting/about')
                         break;
                     case 2:
                         this.updateDialog = true;
@@ -165,39 +153,8 @@ export default defineComponent({
         switchDarkColors() {
             useGlobalStore().switchDarkColors()
         },
-
-        jumpToAddUrl() {
-            this.$router.push({
-                path: '/setting/url',
-                query: {
-                    method: 'add'
-                }
-            })
-        },
-
-        async selectUrl(value: any) {
-            // 清空链接
-            if (value === '') {
-                // 清空链接选择
-                useUrlStore().clear();
-                // 清空索引信息
-                useIndexStore().clear();
-                // 发哦送清空事件
-                emitter.emit(MessageEventEnum.URL_UPDATE);
-                return
-            }
-            // 选择链接
-            Assert.isTrue(useUrlStore().choose(value as number), this.$t('app.urlUnFind'));
-            // 索引刷新
-            await useIndexStore().reset();
-            // 发送url连接事件
-        },
         async refresh() {
             await useIndexStore().reset();
-        },
-        selectMenu(index: PageNameEnum) {
-            // 切换active
-            this.selectedKeys = [index];
         },
     },
 });
