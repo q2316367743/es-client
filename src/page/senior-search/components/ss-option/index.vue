@@ -38,20 +38,8 @@
                     <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
                 </template>
             </a-dropdown>
-            <a-tooltip content="编辑器设置" position="right">
-                <a-button type="text" status="normal" @click="setting">
-                    <template #icon>
-                        <icon-settings :size="18" />
-                    </template>
-                </a-button>
-            </a-tooltip>
-            <a-tooltip content="导出" position="right">
-                <a-button type="text" status="warning" @click="exportData">
-                    <template #icon>
-                        <icon-launch :size="18" />
-                    </template>
-                </a-button>
-            </a-tooltip>
+            <ss-setting />
+            <ss-export />
             <a-tooltip content="帮助" position="right">
                 <a-button type="text" status="normal" @click="openHelp">
                     <template #icon>
@@ -69,10 +57,12 @@
 import { defineComponent } from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import SsSetting from '@/page/senior-search/components/ss-setting/index.vue'
+import SsExport from '@/page/senior-search/components/ss-export/index.vue'
 
 export default defineComponent({
-    name: 'senior-search-option',
-    components: { FormatIcon },
+    name: 'ss-option',
+    components: { FormatIcon, SsSetting, SsExport },
     emits: ['save', 'formatDocument', 'clearBody', 'select', 'setting', 'exportData'],
     props: {
         relationId: Number,
@@ -97,10 +87,6 @@ export default defineComponent({
         setting() {
 
             this.$emit('setting')
-        },
-        exportData() {
-
-            this.$emit('exportData')
         },
         openHelp() {
             utools.shellOpenExternal('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');

@@ -14,6 +14,10 @@ export async function http<T>(config: AxiosRequestConfig): Promise<T> {
  */
 export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
 
+    if (useUrlStore().current.trim() === '') {
+        return Promise.reject("请先选择链接！");
+    }
+
     let headers: Record<string, string> = {};
 
     // 如果有密码应该追加密码
@@ -45,11 +49,16 @@ export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
         responseEncoding: "utf-8"
     });
 
+    // 如果设置了响应类型是字符串，那么就不解码
     if (config.responseType === 'text') {
         return Promise.resolve(data as T);
     }
 
-    return Promise.resolve(JSONBig.parse(data, (_key, value) => {
+    return Promise.resolve(jsonParse(data));
+}
+
+export function jsonParse<T = any>(data: string): T {
+    return JSONBig.parse(data, (_key, value) => {
         try {
             if (typeof value === 'object' && value.constructor && value.constructor.name == 'BigNumber2') {
                 return value.toString();
@@ -58,5 +67,5 @@ export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
             return value;
         }
         return value;
-    }));
+    })
 }

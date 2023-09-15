@@ -1,4 +1,11 @@
 <template>
+    <a-tooltip content="导出" position="right">
+        <a-button type="text" status="warning" @click="visible = true">
+            <template #icon>
+                <icon-launch :size="18" />
+            </template>
+        </a-button>
+    </a-tooltip>
     <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false"
              draggable>
         <a-form :model="instance" layout="vertical">
@@ -56,27 +63,15 @@ import {
 } from "@/components/ExportComponent/domain";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {defineComponent, PropType} from "vue";
+import {defineComponent} from "vue";
+import {mapState} from "pinia";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 export default defineComponent({
     name: 'senior-search-export-dialog',
     emits: ['update:modelValue'],
-    props: {
-        result: {
-            type: String,
-            required: true
-        },
-        modelValue: Boolean
-    },
     computed: {
-        json() {
-            try {
-                return JSON.parse(this.result);
-            } catch (e) {
-                console.error(e);
-                return {};
-            }
-        }
+        ...mapState(useSeniorSearchStore, ['json'])
     },
     data: () => ({
         visible: false,
@@ -97,12 +92,6 @@ export default defineComponent({
         ExportSource
     }),
     watch: {
-        modelValue(newValue: boolean) {
-            this.visible = newValue;
-        },
-        visible(newValue: boolean) {
-            this.$emit('update:modelValue', newValue);
-        },
         'instance.type': {
             handler(newValue: ExportType) {
                 switch (newValue) {
