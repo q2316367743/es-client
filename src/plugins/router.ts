@@ -40,14 +40,19 @@ const router = createRouter({
             name: '链接管理',
             path: 'url',
             component: () => import('@/page/setting/components/url.vue')
-        }, {
+        }]
+    }, {
+        name: '更多',
+        path: '/more',
+        component: () => import('@/page/more/index.vue'),
+        children: [{
             name: '更新日志',
-            path: 'update',
-            component: () => import('@/page/setting/components/update.vue')
+            path: '/more/update',
+            component: () => import('@/page/more/components/update.vue')
         }, {
             name: '关于',
-            path: 'about',
-            component: () => import('@/page/setting/components/about.vue')
+            path: '/more/about',
+            component: () => import('@/page/more/components/about.vue')
         }]
     }]
 });

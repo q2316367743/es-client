@@ -46,10 +46,16 @@
                             <a-menu-item :key="PageNameEnum.SETTING_URL">
                                 链接管理
                             </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SETTING_UPDATE">
+                        </a-sub-menu>
+                        <a-sub-menu :key="PageNameEnum.MORE">
+                            <template #icon>
+                                <icon-more/>
+                            </template>
+                            <template #title>更多</template>
+                            <a-menu-item :key="PageNameEnum.MORE_UPDATE">
                                 更新日志
                             </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SETTING_ABOUT">
+                            <a-menu-item :key="PageNameEnum.MORE_ABOUT">
                                 关于
                             </a-menu-item>
                         </a-sub-menu>

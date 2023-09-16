@@ -16,9 +16,11 @@ enum PageNameEnum {
 
     SETTING_SENIOR_FILTER_RECORD = "/setting/senior-filter-record",
 
-    SETTING_UPDATE = "/setting/update",
+    MORE = "/more",
 
-    SETTING_ABOUT = "/setting/about"
+    MORE_UPDATE = "/more/update",
+
+    MORE_ABOUT = "/more/about"
 
 }
 
