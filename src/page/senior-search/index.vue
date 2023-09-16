@@ -4,12 +4,13 @@
             <!-- 左面查询条件 -->
             <a-split class="senior-main" min="42px" :max="0.9" default-size="400px">
                 <template #first>
-                    <ss-editor/>
+                    <senior-search-editor/>
                 </template>
                 <template #second>
-                    <ss-display/>
+                    <senior-search-display/>
                 </template>
             </a-split>
+            <senior-search-filter />
         </div>
     </a-spin>
 </template>
@@ -18,9 +19,10 @@
 import {computed} from "vue";
 import './index.less';
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
-
-import SsEditor from '@/page/senior-search/components/ss-editor/index.vue';
-import SsDisplay from '@/page/senior-search/components/ss-display/index.vue';
+// 布局组件
+import SeniorSearchEditor from '@/page/senior-search/layout/senior-search-editor/index.vue';
+import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-display/index.vue';
+import SeniorSearchFilter from '@/page/senior-search/layout/senior-search-filter/index.vue';
 
 const loading = computed(() => useSeniorSearchStore().loading);
 

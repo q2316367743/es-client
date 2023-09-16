@@ -90,11 +90,6 @@ export interface GlobalSetting {
      */
     lastUrl: boolean;
 
-    /**
-     * 高级查询默认过滤
-     */
-    seniorFilter: boolean;
-
 }
 
 
@@ -125,6 +120,5 @@ export function getDefaultGlobalSetting(): GlobalSetting {
 
         // 其他设置
         lastUrl: false,
-        seniorFilter: false
     };
 }

@@ -2,10 +2,10 @@
     <div class="hm-history">
         <div class="hm-history-toolbar">
             <a-input-search v-model="name" :placeholder="$t('common.keyword.name')" class="hm-history-toolbar-name"
-                @search="search" style="width: 240px" />
+                @search="search()" style="width: 240px" />
         </div>
         <div class="hm-history-body">
-            <a-tree :data="nodeItems" block-node show-line @drop="drop">
+            <a-tree :data="nodeItems" block-node show-line @drop="drop($event)">
                 <template #title="nodeData">
                     <span @dblclick="load(nodeData.key, nodeData.draggable)">{{ nodeData.title }}</span>
                 </template>
@@ -144,6 +144,8 @@ export default defineComponent({
                 }).then(value => {
                     seniorSearchHistoryService.update({
                         id,
+                        createTime: new Date(),
+                        updateTime: new Date(),
                         name: value,
                         body: history?.body
                     })

@@ -4,7 +4,7 @@
         <div class="tabs">
             <div class="tab" :class="itemActive === -1 ? 'active' : ''" @click="itemActive = -1">
                 <a-tooltip content="固定">
-                    <icon-subscribe-add @click.stop="fixAdd" />
+                    <icon-subscribe-add @click.stop="fixAdd()" />
                 </a-tooltip>
                 <span class="ssd-v-title">结果</span>
             </div>
@@ -48,7 +48,7 @@
                 <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="wrapper" />
             </div>
         </div>
-        <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy">复制
+        <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy()">复制
         </a-button>
         <a-back-top target-container=".json-scroll .arco-scrollbar-container" v-show="itemActive === -1"/>
         <a-back-top target-container=".fix-scroll .arco-scrollbar-container" v-show="itemActive !== -1"/>

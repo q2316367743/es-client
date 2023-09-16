@@ -1,4 +1,3 @@
-import * as monaco from "monaco-editor";
 import StrUtil from "@/utils/StrUtil";
 import {supportMethods} from "@/data/EsUrl";
 import MessageUtil from "@/utils/MessageUtil";
@@ -7,10 +6,9 @@ import {jsonFormat} from "@/algorithm/jsonFormat";
 /**
  * 格式化rest语法
  *
- * @param instance 编辑器实例
+ * @param value 当前内容
  */
-export default function formatBuild(instance: monaco.editor.IStandaloneCodeEditor): string {
-    let value = instance.getValue();
+export default function restFormat(value: string): string {
     let items = new Array<string>();
     let params = new Array<string>();
     let comments = new Array<string>();

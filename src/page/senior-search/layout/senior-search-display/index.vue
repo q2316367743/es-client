@@ -22,14 +22,14 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, defineAsyncComponent} from "vue";
+import {computed, defineAsyncComponent, ref} from "vue";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
-const SeniorSearchRecord = defineAsyncComponent(() => import('@/page/senior-search/components/ss-display/Search.vue'));
-const SeniorSearchHistory = defineAsyncComponent(() => import('@/page/senior-search/components/ss-display/History.vue'));
-const SeniorSearchDataView = defineAsyncComponent(() => import('@/page/senior-search/components/ss-display/DataView.vue'));
+const SeniorSearchRecord = defineAsyncComponent(() => import('@/page/senior-search/layout/senior-search-display/Search.vue'));
+const SeniorSearchHistory = defineAsyncComponent(() => import('@/page/senior-search/layout/senior-search-display/History.vue'));
+const SeniorSearchDataView = defineAsyncComponent(() => import('@/page/senior-search/layout/senior-search-display/DataView.vue'));
 
-const displayActive = computed(() => useSeniorSearchStore().displayActive);
+const displayActive = ref('result');
 const result = computed(() => useSeniorSearchStore().result);
 const show = computed(() => useSeniorSearchStore().show);
 const view = computed(() => useSeniorSearchStore().view);

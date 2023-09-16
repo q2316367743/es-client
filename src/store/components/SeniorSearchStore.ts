@@ -1,13 +1,15 @@
 import {defineStore} from "pinia";
-import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import {jsonFormat} from "@/algorithm/jsonFormat";
-import MessageUtil from "@/utils/MessageUtil";
-import {fetchEs, jsonParse} from "@/plugins/axios";
-import NotificationUtil from "@/utils/NotificationUtil";
-import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 import * as monaco from "monaco-editor";
+// 工具类
+import MessageUtil from "@/utils/MessageUtil";
+import NotificationUtil from "@/utils/NotificationUtil";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import {fetchEs, jsonParse} from "@/plugins/axios";
+import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
+//算法
+import restFormat from "@/algorithm/restFormat";
+import {jsonFormat} from "@/algorithm/jsonFormat";
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -25,26 +27,27 @@ function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: numb
 export const useSeniorSearchStore = defineStore('senior-search', {
     state: () => ({
         body: '',
+
         // 实际的结果
         result: '',
         json: {},
         // 展示的结果
         show: '',
-        isEnableFilter: useGlobalSettingStore().getSeniorFilter,
-        filter: 'return $;',
+
+        filter: '',
+
         view: ViewTypeEnum.JSON,
         loading: false,
-        displayActive: 'result'
     }),
     actions: {
         updateBody(body: string) {
             this.body = body;
         },
-        updateIsEnableFilter(isEnableFilter: boolean) {
-            this.isEnableFilter = isEnableFilter;
-        },
         updateFilter(filter: string) {
             this.filter = filter;
+        },
+        updateView(view: ViewTypeEnum) {
+            this.view = view;
         },
         execute(index: number, instance: monaco.editor.IStandaloneCodeEditor) {
 
@@ -89,7 +92,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 this.show = this.result;
                 success = false
             }).finally(() => {
-                this.displayActive = 'result';
                 useSeniorSearchRecordStore().push({
                     ...request!,
                     success,
@@ -101,20 +103,18 @@ export const useSeniorSearchStore = defineStore('senior-search', {
 
         },
         execFilter() {
-            if (this.isEnableFilter) {
-                try {
-                    // 使用过滤
-                    let filterFunc = new Function('$', this.filter);
-                    let resultJson = filterFunc(this.json);
-                    if (typeof resultJson === 'object') {
-                        this.show = jsonFormat(resultJson);
-                    } else {
-                        this.show = `${resultJson}`;
-                    }
-                } catch (e) {
-                    MessageUtil.error("结果集不是JSON，无法过滤", e);
-                    this.show = this.result;
+            try {
+                // 使用过滤
+                let filterFunc = new Function('$', this.filter);
+                let resultJson = filterFunc(this.json);
+                if (typeof resultJson === 'object') {
+                    this.show = jsonFormat(resultJson);
+                } else {
+                    this.show = `${resultJson}`;
                 }
+            } catch (e) {
+                MessageUtil.error("结果集不是JSON，无法过滤", e);
+                this.show = this.result;
             }
         },
         clearBody() {
@@ -123,6 +123,14 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             this.result = '';
             this.filter = "return $;"
         },
-        save() {}
+        save() {
+        },
+        formatDocument() {
+            try {
+                this.body = restFormat(this.body);
+            } catch (e: any) {
+                MessageUtil.error('格式化失败', e);
+            }
+        }
     }
 })

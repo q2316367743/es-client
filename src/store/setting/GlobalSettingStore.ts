@@ -38,7 +38,6 @@ const useGlobalSettingStore = defineStore('global-setting', {
         getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.globalSetting.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),
         getLastUrl: (state): boolean => Optional.ofNullable(state.globalSetting.lastUrl).orElse(false),
         jsonWrap: (state): boolean => Optional.ofNullable(state.globalSetting.jsonWrap).orElse(false),
-        getSeniorFilter: (state): boolean => Optional.ofNullable(state.globalSetting.seniorFilter).orElse(false),
         jsonFontSize: state => state.globalSetting.jsonFontSize,
 
         pageSize: (state): number => Optional.ofNullable(state.globalSetting.pageSize).orElse(20),

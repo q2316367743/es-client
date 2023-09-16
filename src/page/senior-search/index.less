@@ -1,88 +1,63 @@
-@media (max-width: 1200px) {
-    .senior-search {
-        .senior-search-card {
-            .senior-search-card__header {
-                .senior-search-link {
-                    width: 200px !important;
-                }
-            }
-        }
-    }
-}
-
 .senior-search {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
 
     .senior-main {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
+        bottom: 47px;
 
-        .senior-search-side {
+        。senior-search-side {
+            height: 100%;
+        }
+
+        .senior-search-editor {
+            display: flex;
             height: 100%;
 
-            .senior-search-tab {
-                display: none;
-            }
-
-            .senior-search-editor {
-                display: flex;
+            .editor {
+                width: calc(100% - 32px);
                 height: 100%;
+                position: relative;
 
-                .editor {
-                    width: calc(100% - 32px);
-                    height: 100%;
-                    position: relative;
+                .js-option {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    height: 40px;
+                    padding-left: 64px;
+                    display: flex;
+                    justify-content: space-between;
 
-                    .js-option {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        right: 0;
-                        height: 40px;
-                        padding-left: 64px;
-                        display: flex;
-                        justify-content: space-between;
-                        .arco-switch {
-                            margin: 8px;
-                        }
-                        .arco-btn {
-                            margin: 4px 8px;
-                        }
+                    .arco-switch {
+                        margin: 8px;
                     }
 
-                    .js-editor-wrapper {
+                    .arco-btn {
+                        margin: 4px 8px;
+                    }
+                }
+
+                .js-editor-wrapper {
+                    position: absolute;
+                    top: 40px;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+
+                    .js-editor {
                         position: absolute;
-                        top: 40px;
+                        top: 0;
                         left: 0;
                         right: 0;
                         bottom: 0;
-
-                        .js-editor {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                        }
                     }
-                }
-            }
-
-            &.show-tab {
-                .senior-search-tab {
-                    display: block;
-                }
-
-                .senior-search-editor {
-                    margin-top: 8px;
-                    height: calc(100% - 48px)
                 }
             }
         }
@@ -104,6 +79,27 @@
             left: 0;
             right: 0;
             bottom: 0;
+        }
+    }
+
+    .senior-search-filter {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 40px;
+        border: 1px solid var(--color-neutral-3);
+        line-height: 40px;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
+        .arco-input-wrapper {
+            padding-right: 0;
+        }
+
+        .arco-btn-group {
+            margin-left: 0;
         }
     }
 

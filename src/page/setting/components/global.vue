@@ -157,13 +157,6 @@
                 <template #unchecked>忽略</template>
             </a-switch>
         </a-form-item>
-        <a-form-item label="高级查询是否默认启用过滤" id="seniorFilter">
-            <a-switch v-model="instance.seniorFilter" :checked-value="true" :unchecked-value="false"
-                      type="round">
-                <template #checked>打开</template>
-                <template #unchecked>关闭</template>
-            </a-switch>
-        </a-form-item>
 
     </a-form>
 </template>

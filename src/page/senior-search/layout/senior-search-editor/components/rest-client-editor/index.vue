@@ -3,19 +3,20 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-
-import * as monaco from 'monaco-editor';
-
-import language from "@/page/senior-search/components/rest-client-editor/language";
-import configuration from "@/page/senior-search/components/rest-client-editor/configuration";
-import provider from "@/page/senior-search/components/rest-client-editor/provider";
-import codelens from "@/page/senior-search/components/rest-client-editor/codelens";
-import Optional from "@/utils/Optional";
-import useEditorSettingStore from "@/store/setting/EditorSettingStore";
-import {URL_REGEX} from "@/data/EsUrl";
-import foldingRange from "@/page/senior-search/components/rest-client-editor/foldingRange";
 import {mapState} from "pinia";
+import * as monaco from 'monaco-editor';
+// 语言组件
+import language from "./language";
+import configuration from "./configuration";
+import provider from "./provider";
+import codelens from "./codelens";
+import foldingRange from "./foldingRange";
+// 存储
 import {useGlobalStore} from "@/store/GlobalStore";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
+// 其他
+import Optional from "@/utils/Optional";
+import {URL_REGEX} from "@/data/EsUrl";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
