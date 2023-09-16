@@ -26,9 +26,6 @@ import { toDateString } from "xe-utils";
 
 // 工具类
 import MessageUtil from "@/utils/MessageUtil";
-import { stringContain } from "@/utils/SearchUtil";
-import SeniorSearchHistory from "@/entity/SeniorSearchHistory";
-import { seniorSearchHistoryService, useSeniorSearchEvent } from "@/global/BeanFactory";
 import emitter from "@/plugins/mitt";
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import { TreeNodeData } from "@arco-design/web-vue";
@@ -37,6 +34,8 @@ import useUrlStore from "@/store/UrlStore";
 import Optional from "@/utils/Optional";
 import ArrayUtil from "@/utils/ArrayUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import SeniorSearchHistory from "@/entity/history/SeniorSearchHistory";
 
 interface NodeData extends TreeNodeData {
 
@@ -107,8 +106,6 @@ export default defineComponent({
     },
     methods: {
         search() {
-            seniorSearchHistoryService.list()
-                .then(histories => this.histories = histories.filter(e => stringContain(e.name!, this.name)));
         },
         prettyDate(params: Date) {
             return toDateString(params, "yyyy-MM-dd HH:mm:ss");
@@ -122,19 +119,17 @@ export default defineComponent({
             }
             let history = this.historyMap.get(id);
             if (history) {
-                useSeniorSearchEvent.emit({
-                    id: history.id,
-                    name: history.name,
-                    body: history.body
+                // TODO: 跳转
+                useSeniorSearchStore().loadEvent({
+                    method: 'POST',
+                    link: history.name || '',
+                    body: history.body || '',
                 });
             } else {
                 MessageUtil.error('错误，未找到指定历史记录，请刷新历史记录后重试！');
             }
         },
         removeById(id: number) {
-            seniorSearchHistoryService.removeById(id)
-                .then(() => MessageUtil.success('删除成功', this.search))
-                .catch(e => MessageUtil.error('删除失败', e));
         },
         updateById(id: number) {
             let history = this.historyMap.get(id);
@@ -142,15 +137,6 @@ export default defineComponent({
                 MessageBoxUtil.prompt('请输入新的名称', '修改名称', {
                     inputValue: history.name
                 }).then(value => {
-                    seniorSearchHistoryService.update({
-                        id,
-                        createTime: new Date(),
-                        updateTime: new Date(),
-                        name: value,
-                        body: history?.body
-                    })
-                        .then(() => MessageUtil.success('更新成功', () => this.search()))
-                        .catch(e => MessageUtil.error('更新失败', e));
                 }).catch(() => console.debug('取消删除'));
             } else {
                 MessageUtil.error('错误，未找到指定历史记录，请刷新历史记录后重试！');

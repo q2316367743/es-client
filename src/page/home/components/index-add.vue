@@ -24,16 +24,16 @@
             </a-tab-pane>
         </a-tabs>
         <template #footer>
-            <a-button type="text" @click="jumpToSeniorSearch">{{ $t('common.action.jumpToSeniorSearch') }}</a-button>
-            <a-button type="text" text @click="copyIndex">{{ $t('common.action.copy') }}</a-button>
+            <a-button type="text" @click="jumpToSeniorSearch()">{{ $t('common.action.jumpToSeniorSearch') }}</a-button>
+            <a-button type="text" text @click="copyIndex()">{{ $t('common.action.copy') }}</a-button>
             <a-button type="secondary" text @click="dialog = false">{{ $t('common.operation.cancel') }}</a-button>
-            <a-button type="primary" @click="addIndex">{{ $t('common.operation.add') }}</a-button>
+            <a-button type="primary" @click="addIndex()">{{ $t('common.operation.add') }}</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { usePageJumpEvent, useSeniorSearchEvent, versionStrategyContext } from "@/global/BeanFactory";
+import {  versionStrategyContext } from "@/global/BeanFactory";
 import { IndexInstance, Property } from "@/domain/IndexInstance";
 import indexApi from "@/components/es/api/IndexApi";
 import emitter from "@/plugins/mitt";
@@ -42,12 +42,12 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useIndexStore from "@/store/IndexStore";
 
 import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 
 import IndexMapping from "@/components/IndexMapping/index.vue";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 export default defineComponent({
     name: 'index-add',
@@ -112,17 +112,15 @@ export default defineComponent({
             this.dialog = false;
         },
         jumpToSeniorSearch() {
-            // 页面跳转
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             // 构建数据
             let indexMapping = this.$refs['indexMapping'] as any;
             let indexCreate = versionStrategyContext.getStrategy().indexCreateBuild(this.index);
             indexCreate.mappings = indexMapping.getMapping()
             // 高级查询数据填充
-            useSeniorSearchEvent.emit({
+            useSeniorSearchStore().loadEvent({
                 link: this.index.name,
                 method: 'PUT',
-                params: JSON.stringify(indexCreate, null, 4)
+                body: JSON.stringify(indexCreate, null, 4)
             });
             // 关闭弹框
             this.dialog = false;

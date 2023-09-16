@@ -7,10 +7,10 @@ import MessageUtil from "@/utils/MessageUtil";
 import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
 import Optional from "@/utils/Optional";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {useIndexManageEvent, usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 import BaseOrder from "@/entity/BaseOrder";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 export interface IndexInfo {
     name: string,
@@ -318,7 +318,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
 
         // ----------------------------------------- 跳转查询 -----------------------------------------
 
-
         /**
          * 跳转到基础查询
          */
@@ -326,8 +325,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
             if (this.type === '') {
                 return;
             }
-            // 页面跳转
-            usePageJumpEvent.emit(PageNameEnum.BASE_SEARCH);
             // 基础数据
             let orders = new Array<BaseOrder>();
             // 填充数据
@@ -356,14 +353,11 @@ export const useDataBrowseStore = defineStore('data-browser', {
             if (this.type === '') {
                 return;
             }
-            // 跳转页面
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
             // 填充数据
-            useSeniorSearchEvent.emit({
-                name: this.name,
+            useSeniorSearchStore().loadEvent({
                 link: `/${this.name}/_search`,
                 method: 'POST',
-                params: JSON.stringify(this.conditionBuild(), null, 4)
+                body: JSON.stringify(this.conditionBuild(), null, 4)
             })
         },
         /**
@@ -374,11 +368,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
             if (!this.index) {
                 return Promise.reject();
             }
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            useSeniorSearchEvent.emit({
+            useSeniorSearchStore().loadEvent({
                 link: `/${this.index.name}/_doc`,
                 method: 'POST',
-                params: data
+                body: data
             });
             return Promise.resolve();
         },
@@ -391,11 +384,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
             if (!this.index) {
                 return Promise.reject();
             }
-            usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
-            useSeniorSearchEvent.emit({
+            useSeniorSearchStore().loadEvent({
                 link: `/${this.index.name}/_doc/${id}`,
                 method: 'PUT',
-                params: data
+                body: data
             });
             return Promise.resolve();
         },

@@ -9,11 +9,12 @@ import MessageUtil from "@/utils/MessageUtil";
 import {baseSearchRecordService, useIndexManageEvent} from "@/global/BeanFactory";
 import useIndexStore from "@/store/IndexStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
 import useUrlStore from "@/store/UrlStore";
-import BaseSearchJumpEvent from "@/event/BaseSearchJumpEvent";
 import router from "@/plugins/router";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
+import BaseSearchJumpEvent from "@/entity/event/BaseSearchJumpEvent";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
@@ -172,7 +173,7 @@ export const useBaseSearchStore = defineStore('base-search', {
             this.search();
         },
         loadEvent(event: BaseSearchJumpEvent) {
-            router.push('/base-search').then(() => console.log('基础搜索跳转'));
+            router.push(PageNameEnum.BASE_SEARCH).then(() => console.log('基础搜索跳转'));
             this.current.conditions = event.conditions;
             this.current.orders = event.orders;
             this.current.index = event.index;

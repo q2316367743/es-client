@@ -61,18 +61,22 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, toRaw, watch, h, markRaw} from "vue";
-
-import BaseSearchHistory from "@/entity/BaseSearchHistory";
-import {baseSearchRecordService} from "@/global/BeanFactory";
-import useUrlStore from "@/store/UrlStore";
-import Optional from "@/utils/Optional";
 import XEUtils from "xe-utils";
+import {TableData, TableExpandable} from "@arco-design/web-vue";
+
+import {baseSearchRecordService} from "@/global/BeanFactory";
+// 存储
+import useUrlStore from "@/store/UrlStore";
+import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+// 工具类
+import Optional from "@/utils/Optional";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
+// 实体类
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
-import {TableData, TableExpandable} from "@arco-design/web-vue";
+import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
+// 其他
 import JsonView from "@/components/JsonView/index.vue";
 
 const emits = defineEmits(['close']);

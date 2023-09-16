@@ -12,21 +12,19 @@
 <script lang="ts" setup>
 import {computed} from "vue";
 import ShowQueryCondition from "@/page/base-search/components/tool/ShowQueryCondition.vue";
-import {usePageJumpEvent, useSeniorSearchEvent} from "@/global/BeanFactory";
-import PageNameEnum from "@/enumeration/PageNameEnum";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 const current = computed(() => useBaseSearchStore().current);
 
 function jumpToSeniorSearch() {
-    usePageJumpEvent.emit(PageNameEnum.SENIOR_SEARCH);
     try {
-        useSeniorSearchEvent.emit({
+        useSeniorSearchStore().loadEvent({
             link: `/${current.value.index}/_search`,
             method: 'POST',
-            params: JSON.stringify(
+            body: JSON.stringify(
                 QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders),
                 null,
                 4)

@@ -1,5 +1,5 @@
-import {Method} from "@/strategy/HttpStrategy/HttpStrategyConfig";
 import {BLANK_REGEX, COMMENT_REGEX, URL_REGEX} from "@/data/EsUrl";
+import {Method} from "axios";
 
 /**
  * 请求

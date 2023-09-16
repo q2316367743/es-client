@@ -102,6 +102,7 @@ export default class BaseService<T extends Base> {
 
         await this.instance.table<T, number>(this.tableName)
             .put({
+                ...old,
                 ...clone(record, true),
                 createTime: old.createTime,
                 updateTime: now,

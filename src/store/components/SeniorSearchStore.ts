@@ -10,6 +10,9 @@ import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 import restFormat from "@/algorithm/restFormat";
 import {jsonFormat} from "@/algorithm/jsonFormat";
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
+import SeniorSearchJumpEvent from "@/entity/event/SeniorSearchJumpEvent";
+import router from "@/plugins/router";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -131,6 +134,13 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             } catch (e: any) {
                 MessageUtil.error('格式化失败', e);
             }
+        },
+        loadEvent(event: SeniorSearchJumpEvent) {
+            router.push(PageNameEnum.SENIOR_SEARCH).then(() => console.log('基础搜索跳转'));
+            this.body = this.body +
+                '\n\n' +
+                `${event.method} ${event.link}\n` +
+                event.body
         }
     }
 })
