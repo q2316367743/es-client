@@ -33,6 +33,10 @@ const router = createRouter({
             path: 'global',
             component: () => import('@/page/setting/components/global.vue')
         }, {
+            name: '高级查询过滤器',
+            path: 'senior-filter-record',
+            component: () => import('@/page/setting/components/senior-filter-record/index.vue')
+        }, {
             name: '链接管理',
             path: 'url',
             component: () => import('@/page/setting/components/url.vue')

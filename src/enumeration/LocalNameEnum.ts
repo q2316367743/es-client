@@ -21,7 +21,12 @@ enum LocalNameEnum {
     /**
      * 设置 - 基础搜索
      */
-    SETTING_BASE_SEARCH = '/setting/base-search'
+    SETTING_BASE_SEARCH = '/setting/base-search',
+
+    /**
+     * 设置 - 高级过滤器
+     */
+    SETTING_SENIOR_FILTER = '/setting/senior-filter'
 
 }
 

@@ -1,9 +1,8 @@
 import {defineStore} from "pinia";
-import BaseSearchHistory from "@/entity/BaseSearchHistory";
 import {listByAsync} from "@/utils/utools/DbStorageUtil";
-import Url from "@/entity/Url";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
+import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 
 const useBaseSearchHistoryStore = defineStore('base-search-history', {
     state: () => ({

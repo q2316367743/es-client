@@ -24,6 +24,7 @@ import SeniorSearchEditor from '@/page/senior-search/layout/senior-search-editor
 import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-display/index.vue';
 import SeniorSearchFilter from '@/page/senior-search/layout/senior-search-filter/index.vue';
 import {useWindowSize} from "@vueuse/core";
+import {useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
 
 const windowSize = useWindowSize();
 
@@ -55,6 +56,8 @@ function exitFullscreen() {
     size.value = history;
     disabled.value = false;
 }
+
+useSeniorFilterRecordStore().init();
 
 </script>
 

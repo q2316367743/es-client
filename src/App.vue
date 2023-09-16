@@ -40,6 +40,9 @@
                             <a-menu-item :key="PageNameEnum.SETTING_GLOBAL">
                                 全局设置
                             </a-menu-item>
+                            <a-menu-item :key="PageNameEnum.SETTING_SENIOR_FILTER_RECORD">
+                                高级查询过滤器
+                            </a-menu-item>
                             <a-menu-item :key="PageNameEnum.SETTING_URL">
                                 链接管理
                             </a-menu-item>
@@ -86,7 +89,7 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import Constant from '@/global/Constant'
 // 工具类
 import {versionManage,} from "@/global/BeanFactory";
-import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
+import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 

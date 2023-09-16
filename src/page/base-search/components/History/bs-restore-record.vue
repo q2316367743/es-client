@@ -67,7 +67,7 @@ import {TableData, TableExpandable} from "@arco-design/web-vue";
 import {baseSearchRecordService} from "@/global/BeanFactory";
 // 存储
 import useUrlStore from "@/store/UrlStore";
-import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
+import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 // 工具类
 import Optional from "@/utils/Optional";

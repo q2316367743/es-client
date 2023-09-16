@@ -14,6 +14,8 @@ enum PageNameEnum {
 
     SETTING_URL = "/setting/url",
 
+    SETTING_SENIOR_FILTER_RECORD = "/setting/senior-filter-record",
+
     SETTING_UPDATE = "/setting/update",
 
     SETTING_ABOUT = "/setting/about"
