@@ -16,7 +16,12 @@ enum LocalNameEnum {
     /**
      * 设置 - 编辑器
      */
-    SETTING_EDITOR = '/setting/editor'
+    SETTING_EDITOR = '/setting/editor',
+
+    /**
+     * 设置 - 基础搜索
+     */
+    SETTING_BASE_SEARCH = '/setting/base-search'
 
 }
 

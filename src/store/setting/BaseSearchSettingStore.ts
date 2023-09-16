@@ -1,7 +1,8 @@
 import BaseSearchSetting from "@/entity/setting/BaseSearchSetting";
 import {defineStore} from "pinia";
-import {toRaw} from "vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 export function getDefaultBaseSearchSetting(): BaseSearchSetting {
     return {
@@ -21,9 +22,9 @@ export const useBaseSearchSettingStore = defineStore('base-search-setting', {
         defaultParams: state => {
             let params = {};
             if (state.baseSearchSetting.defaultParams.trim() !== '') {
-                try{
+                try {
                     params = JSON.parse(state.baseSearchSetting.defaultParams);
-                }catch(e) {
+                } catch (e) {
                     console.error(e);
                 }
             }
@@ -35,23 +36,14 @@ export const useBaseSearchSettingStore = defineStore('base-search-setting', {
     },
     actions: {
         async init() {
-            const settingWrap = await utools.db.promises.get('/setting/base-search');
-            if (settingWrap) {
-                this.baseSearchSetting = Object.assign(this.baseSearchSetting, settingWrap.value);
-                this.rev = settingWrap._rev;
-            }
+            const {record, rev} = await getFromOneByAsync(
+                LocalNameEnum.SETTING_BASE_SEARCH, getDefaultBaseSearchSetting());
+            this.baseSearchSetting = record;
+            this.rev = rev;
         },
         async save(setting: BaseSearchSetting) {
             this.baseSearchSetting = setting;
-            const res = await utools.db.promises.put({
-                _id: "/setting/base-search",
-                _rev: this.rev,
-                value: toRaw(this.baseSearchSetting)
-            });
-            if (res.error){
-                return Promise.reject(res.message || "保存基础搜索设置失败");
-            }
-            this.rev = res.rev;
+            this.rev = await saveOneByAsync(LocalNameEnum.SETTING_BASE_SEARCH, this.baseSearchSetting, this.rev);
         }
     }
 })

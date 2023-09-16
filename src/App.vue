@@ -3,38 +3,38 @@
     <a-config-provider size="medium" global>
         <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
             <!-- 顶部菜单栏 -->
-            <app-header />
+            <app-header/>
             <!-- 主页面 -->
             <a-layout id="main">
                 <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
                     <a-menu v-model:collapsed="collapsed" v-model:selected-keys="selectedKeys" show-collapse-button>
                         <a-menu-item :key="PageNameEnum.HOME">
                             <template #icon>
-                                <icon-home />
+                                <icon-home/>
                             </template>
                             {{ $t('menu.home') }}
                         </a-menu-item>
                         <a-menu-item :key="PageNameEnum.DATA_BROWSE">
                             <template #icon>
-                                <icon-apps />
+                                <icon-apps/>
                             </template>
                             {{ $t('menu.dataBrowser') }}
                         </a-menu-item>
                         <a-menu-item :key="PageNameEnum.BASE_SEARCH">
                             <template #icon>
-                                <icon-search />
+                                <icon-search/>
                             </template>
                             {{ $t('menu.baseSearch') }}
                         </a-menu-item>
                         <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
                             <template #icon>
-                                <icon-filter />
+                                <icon-filter/>
                             </template>
                             {{ $t('menu.seniorSearch') }}
                         </a-menu-item>
                         <a-sub-menu :key="PageNameEnum.SETTING">
                             <template #icon>
-                                <icon-settings />
+                                <icon-settings/>
                             </template>
                             <template #title>设置</template>
                             <a-menu-item :key="PageNameEnum.SETTING_GLOBAL">
@@ -55,15 +55,15 @@
                 <!-- 内容-->
                 <a-layout-content>
                     <a-spin :loading="loading" :tip="text">
-                        <router-view />
+                        <router-view/>
                     </a-spin>
                 </a-layout-content>
             </a-layout>
         </a-layout>
         <!-- 索引管理 -->
-        <index-manage />
+        <index-manage/>
         <!-- 版本更新 -->
-        <version-update v-model:visible="updateDialog" />
+        <version-update v-model:visible="updateDialog"/>
     </a-config-provider>
 </template>
 
@@ -73,10 +73,10 @@ import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
-import { useGlobalStore } from "@/store/GlobalStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 // 引入框架
-import { defineAsyncComponent, defineComponent } from 'vue';
-import { mapState } from "pinia";
+import {defineAsyncComponent, defineComponent} from 'vue';
+import {mapState} from "pinia";
 // 模块
 import AppHeader from '@/module/app-header/index.vue';
 // 插件
@@ -85,9 +85,10 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
-import { versionManage, } from "@/global/BeanFactory";
+import {versionManage,} from "@/global/BeanFactory";
 import useBaseSearchHistoryStore from "@/store/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 
 export default defineComponent({
     components: {
@@ -124,7 +125,11 @@ export default defineComponent({
         Promise.all([
             useUrlStore().init(),
             useBaseSearchHistoryStore().init(),
-            useEditorSettingStore().init()
+            useEditorSettingStore().init(),
+            // 设置
+            useGlobalSettingStore().init(),
+            useEditorSettingStore().init(),
+            useBaseSearchSettingStore().init()
         ])
             .then(() => {
                 // 版本更新处理
