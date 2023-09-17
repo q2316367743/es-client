@@ -49,7 +49,6 @@ export default class BaseService<T extends Base> {
             .limit(Math.max(size, 0))
             .reverse()
             .sortBy('id');
-        console.log(records)
         return {
             current,
             size,

@@ -67,6 +67,14 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
     return Promise.resolve(res.rev);
 }
 
+export async function listRecordByAsync<T>(key: string): Promise<Array<DbRecord<T>>> {
+    const items = await utools.db.promises.allDocs(key);
+    return items.map(item => ({
+        record: item.value,
+        rev: item._rev
+    }));
+}
+
 // --------------------------------------- 单一对象操作 ---------------------------------------
 
 export async function getFromOneByAsync<T extends Record<string, any>>(key: string, record: T): Promise<DbRecord<T>> {

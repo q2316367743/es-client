@@ -21,7 +21,7 @@
             </a-popconfirm>
         </div>
         <div class="display-record-body">
-            <a-table :data="records" :expandable="expandable" row-key="date" :pagination="false">
+            <a-table :data="records" :expandable="expandable" :pagination="false" row-key="id">
                 <template #columns>
                     <a-table-column data-index="method" :width="100" title="请求方式"/>
                     <a-table-column data-index="link" :width="150" title="请求连接"/>
@@ -41,7 +41,6 @@
 import {TableData, TableExpandable} from "@arco-design/web-vue";
 import {computed, h, ref, watch} from "vue";
 import JsonView from "@/components/JsonView/index.vue";
-import XEUtils from "xe-utils";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {SeniorSearchRecord} from "@/entity/record/SeniorSearchRecord";
 import { seniorSearchRecordService} from "@/global/BeanFactory";
@@ -83,7 +82,6 @@ const search = (value?: number) => seniorSearchRecordService.page(current.value,
         total.value = res.total;
     });
 
-const formatter = (column: Date) => XEUtils.toDateString(column, 'yyyy-MM-dd HH:ss:mm');
 
 function load(record: SeniorSearchRecord) {
     useSeniorSearchStore().loadEvent({

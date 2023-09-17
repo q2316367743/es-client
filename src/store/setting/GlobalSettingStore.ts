@@ -4,7 +4,6 @@ import {GlobalSetting, getDefaultGlobalSetting} from "@/entity/setting/GlobalSet
 import ArrayUtil from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
 // 枚举
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
@@ -105,7 +104,7 @@ const useGlobalSettingStore = defineStore('global-setting', {
                 return;
             }
             lock = true
-            saveOneByAsync(LocalStorageKeyEnum.SETTING, this.globalSetting, this.rev).then(rev => this.rev = rev)
+            saveOneByAsync(LocalNameEnum.SETTING_GLOBAL, this.globalSetting, this.rev).then(rev => this.rev = rev)
                 .finally(() => {
                     lock = false;
                     if (todo) {

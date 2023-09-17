@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import {EditorSetting, getDefaultEditorSettingValue} from "@/domain/EditorSetting";
 import Optional from "@/utils/Optional";
-import LocalStorageKeyEnum from "@/enumeration/LocalStorageKeyEnum";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
@@ -35,7 +34,7 @@ const useEditorSettingStore = defineStore('editor-setting', {
             this.instance.wordWrap = editorSetting.wordWrap;
             this.instance.runColor = editorSetting.runColor;
             // 保存
-            await saveOneByAsync(LocalStorageKeyEnum.EDITOR_SETTING, {
+            await saveOneByAsync(LocalNameEnum.SETTING_EDITOR, {
                 fontSize: this.instance.fontSize,
                 minimap: this.instance.minimap,
                 wordWrap: this.instance.wordWrap,

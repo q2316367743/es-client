@@ -24,7 +24,7 @@
                     {{ item }}
                     <icon-close :size="16" @click="removeAlias(item)" class="alias-close" />
                 </span>
-                <a-button type="primary" status="normal" size="mini" @click="newAlias">{{ $t('common.operation.add') }}
+                <a-button type="primary" status="normal" size="mini" @click="newAlias()">{{ $t('common.operation.add') }}
                 </a-button>
             </a-descriptions-item>
         </a-descriptions>
@@ -39,8 +39,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 import { mapState } from "pinia";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 export default defineComponent({
     name: 'index-manage-summary',
@@ -125,7 +123,7 @@ export default defineComponent({
                 .catch(() => console.log('取消删除别买'));
         },
         reset() {
-            emitter.emit(MessageEventEnum.REFRESH_URL);
+            useIndexStore().reset();
         },
     }
 });

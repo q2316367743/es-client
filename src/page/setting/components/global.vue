@@ -165,16 +165,14 @@ import {defineComponent} from "vue";
 // 状态管理
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import JsonTheme from "@/data/JsonTheme";
-import emitter from "@/plugins/mitt";
 
 // 枚举
 import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import TabCloseModeEnum from "@/enumeration/TabCloseModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 
 import {getDefaultGlobalSetting, GlobalSetting} from "@/entity/setting/GlobalSetting";
+import useIndexStore from "@/store/IndexStore";
 
 
 export default defineComponent({
@@ -191,7 +189,6 @@ export default defineComponent({
         },
         actives: [''],
         LayoutModeEnum,
-        TabCloseModeEnum,
         PageNameEnum,
         JsonTheme,
         TableHeaderModeEnum,
@@ -210,7 +207,7 @@ export default defineComponent({
     methods: {
         removeHomeExcludeIndex(index: string) {
             useGlobalSettingStore().removeHomeExcludeIndex(index);
-            emitter.emit(MessageEventEnum.URL_REFRESH);
+            useIndexStore().reset();
         },
         addHomeExcludeIndexClick() {
             this.homeExcludeIndicesConfig.input = true;
@@ -227,12 +224,12 @@ export default defineComponent({
                     input: false,
                     value: ''
                 }
-                emitter.emit(MessageEventEnum.URL_REFRESH);
+                useIndexStore().reset();
             }
         },
         removeHomeIncludeIndex(index: string) {
             useGlobalSettingStore().removeHomeIncludeIndex(index);
-            emitter.emit(MessageEventEnum.URL_REFRESH);
+            useIndexStore().reset();
         },
         addHomeIncludeIndexClick() {
             this.homeIncludeIndicesConfig.input = true;
@@ -249,7 +246,7 @@ export default defineComponent({
                     input: false,
                     value: ''
                 }
-                emitter.emit(MessageEventEnum.URL_REFRESH);
+                useIndexStore().reset();
             }
         },
     }

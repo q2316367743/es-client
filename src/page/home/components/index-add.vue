@@ -36,12 +36,9 @@ import { defineComponent } from "vue";
 import {  versionStrategyContext } from "@/global/BeanFactory";
 import { IndexInstance, Property } from "@/domain/IndexInstance";
 import indexApi from "@/components/es/api/IndexApi";
-import emitter from "@/plugins/mitt";
 
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useIndexStore from "@/store/IndexStore";
-
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
@@ -103,7 +100,7 @@ export default defineComponent({
             // 关闭弹框
             this.dialog = false;
             // 发送刷新事件
-            emitter.emit(MessageEventEnum.REFRESH_URL);
+            useIndexStore().reset();
         },
         copyIndex() {
             // 执行拷贝

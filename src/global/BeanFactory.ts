@@ -31,7 +31,6 @@ window.preload = window.preload || preload;
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();
 
-
 export const versionManage = new VersionManage();
 
 

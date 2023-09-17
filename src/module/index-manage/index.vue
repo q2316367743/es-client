@@ -45,8 +45,6 @@ import IndexApi from "@/components/es/api/IndexApi";
 import Assert from "@/utils/Assert";
 import IndexManageSummary from "@/module/index-manage/summary.vue";
 import MessageUtil from "@/utils/MessageUtil";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
 import useIndexStore from "@/store/IndexStore";
 import Optional from "@/utils/Optional";
 import { mapState } from "pinia";
@@ -144,7 +142,7 @@ export default defineComponent({
         indexManage(command: any) {
             this.execCommand(command).then(() => {
                 // 1. 发送索引更新事件
-                emitter.emit(MessageEventEnum.REFRESH_URL);
+                useIndexStore().reset();
                 // 3. 更新本组件
                 this.assignJson(this.active);
             }).catch(e => console.error(e));

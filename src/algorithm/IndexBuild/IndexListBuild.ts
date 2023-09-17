@@ -1,5 +1,5 @@
 import IndexView from "@/view/index/IndexView";
-import {prettyDataUnit} from "@/utils/FieldUtil";
+import {prettyDataUnit} from "@/utils/BrowserUtil";
 import clusterApi from "@/components/es/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";

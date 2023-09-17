@@ -1,30 +1,26 @@
 import Base from "@/entity/Base";
 import {Method} from "axios";
 
-/**
- * 历史记录
- * */
-export default interface SeniorSearchHistory extends Base{
-
-    /**
-     * URL的id
-     */
-    urlId: number
-
-    /**
-     * 文件夹
-     */
-    folder: string;
+export interface SeniorSearchHistoryIndex extends Base {
 
     /**
      * 名字。唯一
      */
     name: string;
 
+}
+
+/**
+ * 历史记录
+ * */
+export interface SeniorSearchHistoryRecord {
+
+    id: number;
+
     /**
      * 请求方式
      */
-    method: Method;
+    method: Method | '';
 
     /**
      * 链接
@@ -36,5 +32,14 @@ export default interface SeniorSearchHistory extends Base{
      */
     body: string;
 
+}
 
+
+export function getDefaultSeniorSearchHistoryRecord(): SeniorSearchHistoryRecord {
+    return {
+        id: 0,
+        body: '',
+        link: '',
+        method: 'GET',
+    }
 }

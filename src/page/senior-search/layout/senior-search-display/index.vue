@@ -6,7 +6,7 @@
             <!-- 请求记录 -->
             <display-record v-show="displayActive === 'record'"/>
             <!-- 历史记录 -->
-            <senior-search-history v-show="displayActive === 'history'"/>
+            <display-history v-show="displayActive === 'history'"/>
         </div>
         <div class="tabs">
             <a-button type="text" @click="fullscreen = !fullscreen">
@@ -34,7 +34,7 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 组件
 import DisplayRecord from "@/page/senior-search/layout/senior-search-display/display-record.vue";
 import SeniorSearchDataView from '@/page/senior-search/layout/senior-search-display/DataView.vue'
-import SeniorSearchHistory from '@/page/senior-search/layout/senior-search-display/History.vue';
+import DisplayHistory from "@/page/senior-search/layout/senior-search-display/display-history.vue";
 
 const props = defineProps({
     fullscreen: Boolean

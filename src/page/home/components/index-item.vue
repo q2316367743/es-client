@@ -2,7 +2,7 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title">
-            <a-link type="primary" :style="{ color: indexStateTitle }" @click="indexInfo">{{ index?.name }}</a-link>
+            <a-link type="primary" :style="{ color: indexStateTitle }" @click="indexInfo()">{{ index?.name }}</a-link>
             <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
         </div>
         <!-- 详细 -->
@@ -13,7 +13,7 @@
         <!-- 操作 -->
         <div class="option">
             <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
-                <a-button type="text" @click="jumpToBaseSearch">
+                <a-button type="text" @click="jumpToBaseSearch()">
                     <template #icon>
                         <icon-search />
                     </template>
@@ -30,7 +30,7 @@
                 </a-popconfirm>
             </a-tooltip>
             <a-tooltip :effect="theme" content="删除索引" placement="bottom">
-                <a-button type="text" @click="removeIndex">
+                <a-button type="text" @click="removeIndex()">
                     <template #icon>
                         <icon-delete />
                     </template>
@@ -44,7 +44,7 @@
                 {{ item }}
                 <icon-close :size="16" @click="removeAlias(item)" class="alias-close" />
             </span>
-            <a-button type="primary" status="normal" size="mini" @click="newAlias">{{ $t('common.operation.add') }}
+            <a-button type="primary" status="normal" size="mini" @click="newAlias()">{{ $t('common.operation.add') }}
             </a-button>
         </div>
         <!-- 拓展面板按钮 -->
@@ -82,10 +82,6 @@ import IndexApi from '@/components/es/api/IndexApi'
 
 import Optional from "@/utils/Optional";
 
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-
-import emitter from "@/plugins/mitt";
-
 import BaseOrder from "@/entity/BaseOrder";
 import BaseQuery from "@/entity/BaseQuery";
 import MessageUtil from "@/utils/MessageUtil";
@@ -94,6 +90,7 @@ import {mapState} from "pinia";
 import {useGlobalStore} from "@/store/GlobalStore";
 import IndexView from "@/view/index/IndexView";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import useIndexStore from "@/store/IndexStore";
 
 export default defineComponent({
     name: 'IndexItem',
@@ -194,7 +191,7 @@ export default defineComponent({
                 .catch(e => MessageUtil.error('关闭索引失败', e));
         },
         reset() {
-            emitter.emit(MessageEventEnum.REFRESH_URL);
+            useIndexStore().reset();
         },
         execCopy(url?: string) {
             utools.copyText(Optional.ofNullable(url).orElse(''));

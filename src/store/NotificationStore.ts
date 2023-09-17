@@ -1,11 +1,9 @@
 import {defineStore} from "pinia";
-import {Button, Notification} from "@arco-design/web-vue";
 import {h} from "vue";
-import {NotificationItem} from "@/domain/NotificationItem";
-import emitter from "@/plugins/mitt";
-import MessageEventEnum from "@/enumeration/MessageEventEnum";
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {AxiosRequestConfig} from "axios";
+import {Button, Notification} from "@arco-design/web-vue";
+import {NotificationItem} from "@/domain/NotificationItem";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 function notification(content: string, title: string) {
     let notificationReturn = Notification.info({
@@ -23,8 +21,6 @@ function notification(content: string, title: string) {
             h(Button, {
                 type: 'primary',
                 onClick: () => {
-                    // 前往
-                    emitter.emit(MessageEventEnum.OPEN_NOTIFICATION_MANAGE);
                     notificationReturn.close();
                 }
             }, () => ("前往"))

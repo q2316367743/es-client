@@ -26,7 +26,19 @@ enum LocalNameEnum {
     /**
      * 设置 - 高级过滤器
      */
-    SETTING_SENIOR_FILTER = '/setting/senior-filter'
+    SETTING_SENIOR_FILTER = '/setting/senior-filter',
+
+    /**
+     * 记录 - 高级查询
+     * /record/senior-search
+     */
+    INDEX_SENIOR_SEARCH_HISTORY = '/index/senior-search-history',
+
+    /**
+     * 记录 - 高级查询
+     * /record/senior-search/${id}
+     */
+    RECORD_SENIOR_SEARCH_HISTORY = '/record/senior-search-history/'
 
 }
 
