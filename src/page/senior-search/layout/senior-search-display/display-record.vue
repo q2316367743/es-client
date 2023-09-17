@@ -21,24 +21,8 @@
             </a-popconfirm>
         </div>
         <div class="display-record-body">
-            <a-table :data="records" :expandable="expandable" row-key="date">
+            <a-table :data="records" :expandable="expandable" row-key="date" :pagination="false">
                 <template #columns>
-                    <a-table-column data-index="date" :width="150" title="查询时间">
-                        <template #cell="{ record }">{{ formatter(record.date) }}</template>
-                    </a-table-column>
-                    <a-table-column data-index="success" :width="100" title="查询状态">
-                        <template #cell="{ record }">
-                            <div style="display: flex;">
-                                <div class="dot" :style="{ backgroundColor: record.success ? 'green' : 'red' }"/>
-                                <div>{{ record.success ? '成功' : '失败' }}</div>
-                            </div>
-                        </template>
-                    </a-table-column>
-                    <a-table-column data-index="time" :width="100" title="执行时间">
-                        <template #cell="{ record }">
-                            {{ record.time }}ms
-                        </template>
-                    </a-table-column>
                     <a-table-column data-index="method" :width="100" title="请求方式"/>
                     <a-table-column data-index="link" :width="150" title="请求连接"/>
                     <a-table-column :width="85" title="操作" fixed="right">
@@ -84,10 +68,10 @@ const expandable = ref<TableExpandable>({
     expandedRowRender: (record: TableData) => {
         try {
             return h(JsonView, {
-                data: JSON.parse(record.params)
+                data: JSON.parse(record.body)
             });
         } catch (e) {
-            return h('pre', {}, record.params);
+            return h('pre', {}, record.body);
         }
     }
 });
@@ -119,6 +103,8 @@ const clear = () => {
         .catch(e => MessageUtil.error("清空失败", e))
         .finally(() => clearLoading.value = false);
 }
+
+search();
 </script>
 <style lang="less">
 .display-record {

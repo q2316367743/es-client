@@ -107,7 +107,7 @@ async function selectUrl(value: any) {
 
 function jumpToAddUrl() {
     router.push({
-        path: '/setting/url',
+        path: PageNameEnum.SETTING_URL,
         query: {
             method: 'add'
         }
@@ -117,10 +117,10 @@ function jumpToAddUrl() {
 function versionCommand(command: any) {
     switch (command) {
         case 'about':
-            router.push(PageNameEnum.SETTING_ABOUT)
+            router.push(PageNameEnum.MORE_ABOUT)
             break;
         case 'log':
-            router.push(PageNameEnum.SETTING_UPDATE)
+            router.push(PageNameEnum.MORE_UPDATE)
             break;
         case 'update':
             alert('检查更新')
