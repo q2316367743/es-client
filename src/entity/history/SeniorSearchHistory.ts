@@ -1,4 +1,5 @@
 import Base from "@/entity/Base";
+import {Method} from "axios";
 
 /**
  * 历史记录
@@ -8,26 +9,32 @@ export default interface SeniorSearchHistory extends Base{
     /**
      * URL的id
      */
-    urlId?: number
+    urlId: number
+
+    /**
+     * 文件夹
+     */
+    folder: string;
 
     /**
      * 名字。唯一
      */
-    name?: string;
+    name: string;
+
+    /**
+     * 请求方式
+     */
+    method: Method;
+
+    /**
+     * 链接
+     */
+    link: string;
 
     /**
      * 参数
      */
-    body?: string;
+    body: string;
 
-    /**
-     * 是否启用过滤器
-     */
-    isEnableFilter?: boolean;
-
-    /**
-     * 过滤器
-     */
-    filter?: string;
 
 }

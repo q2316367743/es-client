@@ -5,7 +5,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import NotificationUtil from "@/utils/NotificationUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {fetchEs, jsonParse} from "@/plugins/axios";
-import useSeniorSearchRecordStore from "@/store/seniorSearchRecordStore";
 //算法
 import restFormat from "@/algorithm/restFormat";
 import {jsonFormat} from "@/algorithm/jsonFormat";
@@ -13,6 +12,8 @@ import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis"
 import SeniorSearchJumpEvent from "@/entity/event/SeniorSearchJumpEvent";
 import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import {seniorSearchRecordService} from "@/global/BeanFactory";
+import useUrlStore from "@/store/UrlStore";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -64,7 +65,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 return;
             }
             this.loading = true;
-            let now = new Date();
             let success = true;
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
@@ -73,6 +73,14 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 NotificationUtil.warning('新增文档，但没有参数', '警告');
                 return;
             }
+            // 新增历史记录
+            seniorSearchRecordService.save({
+                urlId: useUrlStore().id,
+                body: request.params,
+                method: request.method,
+                link: request.link
+            }).then(() => console.log("新增高级查询历史记录"))
+                .catch(e => MessageUtil.error("新增高级查询历史记录失败", e))
             fetchEs<string>({
                 url: request.link,
                 method: request.method,
@@ -93,14 +101,9 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             }).catch((e) => {
                 this.result = e.data;
                 this.show = this.result;
-                success = false
+                success = false;
+                MessageUtil.error("执行失败", e);
             }).finally(() => {
-                useSeniorSearchRecordStore().push({
-                    ...request!,
-                    success,
-                    time: new Date().getTime() - now.getTime(),
-                    date: now
-                });
                 this.loading = false;
             })
 

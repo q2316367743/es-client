@@ -14,7 +14,7 @@ export async function http<T>(config: AxiosRequestConfig): Promise<T> {
  */
 export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
 
-    if (useUrlStore().current.trim() === '') {
+    if (useUrlStore().current.trim() === '' && (!config.url || !config.url.startsWith("http"))) {
         return Promise.reject("请先选择链接！");
     }
 
