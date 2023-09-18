@@ -40,6 +40,10 @@ const router = createRouter({
             name: '链接管理',
             path: 'url',
             component: () => import('@/page/setting/components/url.vue')
+        }, {
+            name: '备份设置',
+            path: 'backup',
+            component: () => import('@/page/setting/components/backup/index.vue')
         }]
     }, {
         name: '更多',

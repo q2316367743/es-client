@@ -19,6 +19,11 @@ import Statistics from "@/plugins/Statistics";
 import {utools} from "@/plugins/utools";
 import {preload} from "@/plugins/preload";
 import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
+import useUrlStore from "@/store/UrlStore";
+import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 
 window.rain = {
     env: window.utools ? 'utools' : 'web'
@@ -48,3 +53,16 @@ export {highlight};
 export const statistics = new Statistics();
 statistics.init();
 statistics.open()
+
+export async function initData(): Promise<void> {
+    await Promise.all([
+        useUrlStore().init(),
+        useBaseSearchHistoryStore().init(),
+        useEditorSettingStore().init(),
+        // 设置
+        useGlobalSettingStore().init(),
+        useEditorSettingStore().init(),
+        useBaseSearchSettingStore().init()
+    ]);
+    return Promise.resolve();
+}

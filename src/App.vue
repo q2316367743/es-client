@@ -46,6 +46,9 @@
                             <a-menu-item :key="PageNameEnum.SETTING_URL">
                                 链接管理
                             </a-menu-item>
+                            <a-menu-item :key="PageNameEnum.SETTING_BACKUP">
+                                备份管理
+                            </a-menu-item>
                         </a-sub-menu>
                         <a-sub-menu :key="PageNameEnum.MORE">
                             <template #icon>
@@ -78,7 +81,6 @@
 
 <script lang="ts">
 // 引入状态管理
-import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
@@ -94,10 +96,8 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
-import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
-import useEditorSettingStore from "@/store/setting/EditorSettingStore";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {versionManager, VersionStatus} from "@/components/version-manager";
+import {initData} from "@/global/BeanFactory";
 
 export default defineComponent({
     components: {
@@ -131,16 +131,7 @@ export default defineComponent({
     },
     created() {
         // 初始化
-        Promise.all([
-            useUrlStore().init(),
-            useBaseSearchHistoryStore().init(),
-            useEditorSettingStore().init(),
-            // 设置
-            useGlobalSettingStore().init(),
-            useEditorSettingStore().init(),
-            useBaseSearchSettingStore().init()
-        ])
-            .then(() => {
+        initData().then(() => {
                 console.log("初始化完成");
                 // 版本
                 switch (versionManager()) {

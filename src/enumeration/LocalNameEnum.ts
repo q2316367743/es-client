@@ -29,6 +29,11 @@ enum LocalNameEnum {
     SETTING_SENIOR_FILTER = '/setting/senior-filter',
 
     /**
+     * 设置 - 备份
+     */
+    SETTING_BACKUP = '/setting/backup',
+
+    /**
      * 记录 - 高级查询
      * /record/senior-search
      */

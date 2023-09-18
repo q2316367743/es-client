@@ -152,3 +152,7 @@ export function generateUUID(): string {
         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
+
+export function pathJoin(...paths: string[]): string {
+    return paths.join("/")
+}

@@ -1,20 +1,20 @@
-import { Input, InputPassword, Modal } from "@arco-design/web-vue";
-import { h, VNode } from "vue";
+import {Input, InputPassword, Modal} from "@arco-design/web-vue";
+import {h, VNode} from "vue";
 import Optional from "@/utils/Optional";
 
 export default {
 
-    confirm(content: string, title: string, config: {
-        confirmButtonText: string,
-        cancelButtonText: string
+    confirm(content: string, title: string, config?: {
+        confirmButtonText?: string,
+        cancelButtonText?: string
     }): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             Modal.confirm({
                 content,
                 title,
                 draggable: true,
-                okText: config.confirmButtonText,
-                cancelText: config.cancelButtonText,
+                okText: config ? config.confirmButtonText : undefined,
+                cancelText: config ? config.cancelButtonText : undefined,
                 onOk: () => {
                     resolve();
                 },
@@ -65,7 +65,7 @@ export default {
                 value = e;
             }
             Modal.confirm({
-                content: () => h('div', { class: 'domain-prompt' }, [
+                content: () => h('div', {class: 'domain-prompt'}, [
                     h('div', {}, content),
                     // @ts-ignore
                     h(Input, {
@@ -120,7 +120,7 @@ export default {
                 value.username = e;
             }
             Modal.confirm({
-                content: () => h('div', { class: 'domain-prompt' }, [
+                content: () => h('div', {class: 'domain-prompt'}, [
                     h('div', {}, content),
                     // @ts-ignore
                     h(Input, {
