@@ -7,11 +7,20 @@
             </template>
         </a-auto-complete>
         <a-button-group type="text" size="large">
-            <a-button>
-                <template #icon>
-                    <icon-play-arrow/>
-                </template>
-            </a-button>
+            <a-tooltip content="执行过滤">
+                <a-button status="success" @click="execFilter()" style="border: none;">
+                    <template #icon>
+                        <icon-play-arrow/>
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip content="清除过滤器" position="tr">
+                <a-button status="danger" @click="clearFilter()">
+                    <template #icon>
+                        <icon-delete/>
+                    </template>
+                </a-button>
+            </a-tooltip>
         </a-button-group>
     </div>
 </template>
@@ -26,6 +35,9 @@ watch(() => filter.value, value => useSeniorSearchStore().updateFilter(value));
 watch(() => useSeniorSearchStore().filter, value => filter.value = value);
 
 const seniorFilterRecords = computed(() => useSeniorFilterRecordStore().seniorFilterRecords);
+
+const execFilter = () => useSeniorSearchStore().execFilter();
+const clearFilter = () => useSeniorSearchStore().clearFilter();
 
 </script>
 <style scoped>

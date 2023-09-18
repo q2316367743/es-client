@@ -14,6 +14,7 @@ import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {seniorSearchRecordService} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
+import {toRaw} from "vue";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -34,9 +35,9 @@ export const useSeniorSearchStore = defineStore('senior-search', {
 
         // 实际的结果
         result: '',
-        json: {},
         // 展示的结果
         show: '',
+        json: {},
 
         filter: '',
 
@@ -90,14 +91,16 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                     'content-type': 'application/json'
                 }
             }).then((response) => {
+                // 真正的结果
                 this.result = response;
+                // 显示的结果
                 this.show = response;
+                // 解析后的数据，用于执行过滤器
                 try {
                     this.json = jsonParse(this.result);
                 } catch (e) {
                     this.json = {};
                 }
-                this.execFilter();
             }).catch((e) => {
                 this.result = e.data;
                 this.show = this.result;
@@ -109,10 +112,14 @@ export const useSeniorSearchStore = defineStore('senior-search', {
 
         },
         execFilter() {
+            if (this.filter.trim() === '') {
+                this.show = this.result;
+                return;
+            }
             try {
                 // 使用过滤
-                let filterFunc = new Function('$', this.filter);
-                let resultJson = filterFunc(this.json);
+                let filterFunc = new Function('$', 'return $' + this.filter);
+                let resultJson = filterFunc(toRaw(this.json));
                 if (typeof resultJson === 'object') {
                     this.show = jsonFormat(resultJson);
                 } else {
@@ -122,6 +129,10 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 MessageUtil.error("结果集不是JSON，无法过滤", e);
                 this.show = this.result;
             }
+        },
+        clearFilter() {
+            this.filter = '';
+            this.show = this.result;
         },
         clearBody() {
             this.body = '';

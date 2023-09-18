@@ -44,7 +44,6 @@ const emits = defineEmits(['update:fullscreen']);
 const displayActive = ref('result');
 const fullscreen = ref(false);
 
-const result = computed(() => useSeniorSearchStore().result);
 const show = computed(() => useSeniorSearchStore().show);
 const view = computed(() => useSeniorSearchStore().view);
 
