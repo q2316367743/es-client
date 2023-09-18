@@ -50,8 +50,8 @@
         </div>
         <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy()">复制
         </a-button>
-        <a-back-top target-container=".json-scroll .arco-scrollbar-container" v-show="itemActive === -1"/>
-        <a-back-top target-container=".fix-scroll .arco-scrollbar-container" v-show="itemActive !== -1"/>
+        <a-back-top target-container=".json-scroll .arco-scrollbar-container" v-show="itemActive === -1"  style="bottom: 65px"/>
+        <a-back-top target-container=".fix-scroll .arco-scrollbar-container" v-show="itemActive !== -1"  style="bottom: 65px"/>
     </div>
 </template>
 <script lang="ts">

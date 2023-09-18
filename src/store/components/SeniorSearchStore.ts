@@ -12,7 +12,7 @@ import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis"
 import SeniorSearchJumpEvent from "@/entity/event/SeniorSearchJumpEvent";
 import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import {seniorSearchRecordService} from "@/global/BeanFactory";
+import {seniorSearchRecordService, useSeniorShowResultEvent} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
 import {toRaw} from "vue";
 
@@ -108,6 +108,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 MessageUtil.error("执行失败", e);
             }).finally(() => {
                 this.loading = false;
+                useSeniorShowResultEvent.emit();
             })
 
         },

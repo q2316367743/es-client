@@ -25,7 +25,6 @@
                 历史记录
             </div>
         </div>
-        <a-back-top target-container=".senior-content .el-scrollbar__wrap"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -35,6 +34,7 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import DisplayRecord from "@/page/senior-search/layout/senior-search-display/display-record.vue";
 import SeniorSearchDataView from '@/page/senior-search/layout/senior-search-display/DataView.vue'
 import DisplayHistory from "@/page/senior-search/layout/senior-search-display/display-history.vue";
+import {useSeniorShowResultEvent} from "@/global/BeanFactory";
 
 const props = defineProps({
     fullscreen: Boolean
@@ -50,6 +50,9 @@ const view = computed(() => useSeniorSearchStore().view);
 watch(() => fullscreen.value, value => emits('update:fullscreen', value));
 watch(() => props.fullscreen, value => fullscreen.value = value);
 
+useSeniorShowResultEvent.reset();
+useSeniorShowResultEvent.on(() => displayActive.value = 'result');
+
 </script>
 <style scoped lang="less">
 .senior-search-display {
@@ -62,8 +65,8 @@ watch(() => props.fullscreen, value => fullscreen.value = value);
     .view {
         position: relative;
         padding: 0 4px;
-        overflow-x: auto;
-        overflow-y: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .tabs {
