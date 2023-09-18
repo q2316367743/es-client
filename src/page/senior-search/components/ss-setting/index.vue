@@ -31,7 +31,7 @@
                 <a-input v-model="instance.runColor" placeholder="颜色，十六进制"/>
             </a-form-item>
             <div style="text-align: right;margin-top: 18px">
-                <a-button @click="close">取消</a-button>
+                <a-button @click="settingDialog = false">取消</a-button>
                 <a-button @click="save" type="primary">保存</a-button>
             </div>
         </a-form>

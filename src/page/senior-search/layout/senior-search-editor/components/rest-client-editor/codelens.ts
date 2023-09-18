@@ -1,10 +1,11 @@
-import * as monaco from 'monaco-editor';
+import {languages, editor} from 'monaco-editor';
 import { URL_REGEX } from "@/data/EsUrl";
 
-export default function build(commandId: string) {
+export default function build(commandId: string): languages.CodeLensProvider {
     return {
-        provideCodeLenses(model: monaco.editor.ITextModel): monaco.languages.ProviderResult<monaco.languages.CodeLensList> {
-            let codeLens = new Array<monaco.languages.CodeLens>();
+        provideCodeLenses(model: editor.ITextModel): languages.ProviderResult<languages.CodeLensList> {
+
+            let codeLens = new Array<languages.CodeLens>();
             let lines = model.getValue().split("\n");
             let index = 0;
             for (let i = 0; i < lines.length; i++) {
@@ -34,5 +35,5 @@ export default function build(commandId: string) {
                 }
             }
         }
-    } as monaco.languages.CodeLensProvider
+    }
 }

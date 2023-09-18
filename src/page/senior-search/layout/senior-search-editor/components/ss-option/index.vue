@@ -61,7 +61,7 @@ import SsSetting from '@/page/senior-search/components/ss-setting/index.vue'
 import SsExport from '@/page/senior-search/components/ss-export/index.vue'
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
-const view = computed(() => useSeniorSearchStore().view);
+const view = computed<ViewTypeEnum>(() => useSeniorSearchStore().view);
 
 const openHelp = () => utools.shellOpenExternal('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
 const formatDocument = () => useSeniorSearchStore().formatDocument();

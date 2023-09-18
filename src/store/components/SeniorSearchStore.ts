@@ -127,7 +127,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             this.body = '';
             this.result = '';
             this.result = '';
-            this.filter = "return $;"
+            this.filter = ""
         },
         save() {
         },

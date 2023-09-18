@@ -17,9 +17,18 @@ import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 // 其他
 import Optional from "@/utils/Optional";
 import {URL_REGEX} from "@/data/EsUrl";
+import restFormat from "@/algorithm/restFormat";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
+// 注册语言服务器
+monaco.languages.register({id: 'http'});
+monaco.languages.setMonarchTokensProvider('http', language);
+monaco.languages.setLanguageConfiguration('http', configuration);
+monaco.languages.registerCompletionItemProvider('http', provider);
+monaco.languages.registerFoldingRangeProvider('http', foldingRange)
+
+let codeLensProviderDisposable: any | null = null
 
 export default defineComponent({
     name: 'rest-client-editor',
@@ -53,13 +62,6 @@ export default defineComponent({
     },
     mounted() {
 
-        // 注册语言服务器
-        monaco.languages.register({id: 'http'});
-        monaco.languages.setMonarchTokensProvider('http', language);
-        monaco.languages.setLanguageConfiguration('http', configuration);
-        monaco.languages.registerCompletionItemProvider('http', provider);
-        monaco.languages.registerFoldingRangeProvider('http', foldingRange)
-
         const container = this.$refs.container as HTMLElement;
         instance = monaco.editor.create(container, {
             value: this.modelValue,
@@ -87,9 +89,7 @@ export default defineComponent({
         let commandId = instance.addCommand(0, (...args: any[]) => {
             this.$emit('execute', args[1])
         });
-
-        monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
-
+        // 增加快捷键
         instance.addCommand(monaco.KeyCode.F9,
             () => {
                 let value = instance.getValue();
@@ -116,7 +116,41 @@ export default defineComponent({
                 }
             });
 
+        codeLensProviderDisposable = monaco.languages.registerCodeLensProvider('http', codelens(Optional.ofNullable(commandId).orElse("")));
+
+        // 增加一个动作：格式化文档
+        instance.addAction({
+            // An unique identifier of the contributed action.
+            id: "format rest",
+
+            // A label of the action that will be presented to the user.
+            label: "格式化文档",
+
+            // An optional array of keybindings for the action.
+            keybindings: [],
+
+
+            contextMenuGroupId: "navigation",
+
+            contextMenuOrder: 1.5,
+
+            // Method that will be executed when the action is triggered.
+            // @param editor The editor instance is passed in as a convenience
+            run: function (ed) {
+                ed.setValue(restFormat(ed.getValue()));
+            },
+        });
+
+
     },
+    unmounted() {
+        if (codeLensProviderDisposable) {
+            codeLensProviderDisposable.dispose();
+            codeLensProviderDisposable = null;
+        }
+    },
+
+
     methods: {
         getInstance(): monaco.editor.IStandaloneCodeEditor {
             return instance;
