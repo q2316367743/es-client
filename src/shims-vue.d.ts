@@ -12,8 +12,10 @@ declare module '@json2csv/plainjs' {
          */
         delimiter?: string;
     }
-    export class Parser{
+
+    export class Parser {
         constructor(option?: Option);
+
         parse(data: any): string;
     }
 }
@@ -22,9 +24,8 @@ interface Window {
     preload: {
         axios: any,
         iconv(content: any, charset: string): string,
+    },
+    rain: {
+        env: 'utools' | 'web'
     }
-}
-
-declare var rain = {
-    env: string
 }

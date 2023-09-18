@@ -2,8 +2,8 @@ import Dexie from 'dexie';
 
 export class DexieInstance extends Dexie {
 
-    constructor() {
-        super('rain-es-client');
+    constructor(tableName: string) {
+        super(tableName);
         this.version(1).stores({
             baseSearchRecord: '++id, urlId',
             seniorSearchRecord: '++id, urlId'
@@ -12,4 +12,4 @@ export class DexieInstance extends Dexie {
 
 }
 
-export const dexieInstance = new DexieInstance();
+export const dexieInstance = new DexieInstance('rain-es-client');

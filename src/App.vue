@@ -140,17 +140,18 @@ export default defineComponent({
             useEditorSettingStore().init(),
             useBaseSearchSettingStore().init()
         ])
-            .then(() => console.log("初始化完成"))
-
-        // 版本
-        switch (versionManager()) {
-            case VersionStatus.NEW:
-                this.$router.push(PageNameEnum.MORE_ABOUT)
-                break;
-            case VersionStatus.UPDATE:
-                this.updateDialog = true;
-                break;
-        }
+            .then(() => {
+                console.log("初始化完成");
+                // 版本
+                switch (versionManager()) {
+                    case VersionStatus.NEW:
+                        this.$router.push(PageNameEnum.MORE_ABOUT)
+                        break;
+                    case VersionStatus.UPDATE:
+                        this.updateDialog = true;
+                        break;
+                }
+            })
 
 
         if (utools.isDarkColors()) {
