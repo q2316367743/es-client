@@ -1,6 +1,5 @@
 import {useEventBus} from "@vueuse/core";
 
-import VersionManage from "@/plugins/VersionManage";
 
 import {BaseSearchRecordService} from "@/service/BaseSearchRecordService";
 
@@ -30,9 +29,6 @@ window.preload = window.preload || preload;
 
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();
-
-export const versionManage = new VersionManage();
-
 
 // 版本策略
 export const versionStrategyContext = new VersionStrategyContext();

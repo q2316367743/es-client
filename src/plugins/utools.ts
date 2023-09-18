@@ -7,6 +7,7 @@ import {del, get, getMany, keys, set} from 'idb-keyval';
 export interface DbDoc {
     _id: string,
     _rev?: string,
+
     [key: string]: any
 }
 
@@ -44,15 +45,38 @@ export interface ShowOpenDialogOption {
     securityScopedBookmarks?: boolean
 }
 
-function isMacOS(): boolean{
+function isMacOS(): boolean {
     return /macintosh|mac os x/i.test(navigator.userAgent);
 }
-function isWindows(): boolean{
+
+function isWindows(): boolean {
     let agent = navigator.userAgent.toLowerCase();
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
 
 export const utools = {
+    dbStorage: {
+        /**
+         * 键值对存储，如果键名存在，则更新其对应的值
+         * @param key 键名(同时为文档ID)
+         * @param value 键值
+         */
+        setItem<T>(key: string, value: T): void {
+            localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : (value + ''));
+        },
+        /**
+         * 获取键名对应的值
+         */
+        getItem(key: string): string | null {
+            return localStorage.getItem(key);
+        },
+        /**
+         * 删除键值对(删除文档)
+         */
+        removeItem(key: string): void {
+            localStorage.removeItem(key);
+        }
+    },
     db: {
         promises: {
             /**
@@ -75,14 +99,14 @@ export const utools = {
                 }
             },
             /**
-              * 获取文档
-              */
+             * 获取文档
+             */
             get(id: string): Promise<DbDoc | undefined> {
                 return get(id)
             },
             /**
-              * 删除文档
-              */
+             * 删除文档
+             */
             async remove(id: string): Promise<DbReturn> {
                 try {
                     await del(id);
@@ -101,8 +125,8 @@ export const utools = {
 
             },
             /**
-              * 获取所有文档 可根据文档id前缀查找
-              */
+             * 获取所有文档 可根据文档id前缀查找
+             */
             async allDocs(key?: string): Promise<DbDoc[]> {
                 let itemKeys = await keys();
                 if (key) {
@@ -116,20 +140,20 @@ export const utools = {
                 return getMany(itemKeys);
             },
             /**
-              * 存储附件到新文档
-              */
+             * 存储附件到新文档
+             */
             postAttachment(): Promise<DbReturn> {
                 return Promise.reject("Web不支持保存附件")
             },
             /**
-              * 获取附件
-              */
+             * 获取附件
+             */
             getAttachment(): Promise<Uint8Array | null> {
                 return Promise.reject("Web不支持获取附件")
             },
             /**
-              * 获取附件类型
-              */
+             * 获取附件类型
+             */
             getAttachmentType(): Promise<string | null> {
                 return Promise.reject("Web不支持获取附件类型")
             }
@@ -152,7 +176,7 @@ export const utools = {
         return window.matchMedia('(prefers-color-scheme: dark)').matches;
     },
     onPluginEnter(callback: (action: { code: string, type: string, payload: any }) => void): void {
-        document.addEventListener('load', () => callback({ code: 'application', type: '', payload: {} }));
+        document.addEventListener('load', () => callback({code: 'application', type: '', payload: {}}));
     },
     showOpenDialog(options: ShowOpenDialogOption): (string[]) | (undefined) {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
@@ -169,7 +193,7 @@ export const utools = {
         return Promise.resolve([]);
     },
     getUser() {
-        return { avatar: "", nickname: "web用户", type: "" };
+        return {avatar: "", nickname: "web用户", type: ""};
     },
     fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
         let token = localStorage.getItem("token");

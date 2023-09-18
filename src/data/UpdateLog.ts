@@ -2,6 +2,41 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.0',
+        sign: 300,
+        time: '2023-09-18',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '基础搜索列表框加长',
+            txc: 'https://support.qq.com/products/489458/post/168802971946618566/'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '过滤器增加记忆功能'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "链接排序"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "修复没有请求体传空字符串问题",
+            txc: 'https://support.qq.com/products/489458/post/169399208255068883/'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "JSON long型不支持",
+            txc: "https://support.qq.com/products/489458/post/169398548224812040/"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '首页链接名称太长，无法删除'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '优化数据浏览模块搜索体验',
+            txc: 'https://support.qq.com/products/489458/post/169137502892840521/'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '系统重构，底层数据全部优化，单标签页更加流程，修复了一些底层bug'
+        }],
+        remark: "本次更新对插件进行了全方位的重构，并且现在还处于基础节点，所以有些功能还没有迁移完，还有些BUG。"
+    },
+    {
         version: '2.8.6',
         sign: 286,
         time: '2023-08-01',

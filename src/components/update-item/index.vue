@@ -1,34 +1,38 @@
 <template>
-    <ol v-if="log">
-        <template v-for="item in log.items">
-            <li v-if="typeof item === 'string'">{{ item }}</li>
-            <ol v-else-if="item instanceof Array">
-                <li v-for="i in item">
-                    <span v-html="i"></span>
-                </li>
-            </ol>
-            <li v-else>
-                <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">{{
-                        renderTag(item.label).name
-                    }}
-                </a-tag>
-                <span style="margin-left:5px;">{{ item.content }}</span>
-                <span v-if="item.txc"><a-link @click="open(item.txc)">@兔小巢</a-link></span>
-                <span v-else-if="item.gitee"><a-link @click="open(item.gitee?.content)">#{{
-                        item.gitee?.title
-                    }}</a-link></span>
-                <span v-else-if="item.pull">
+    <div v-if="log">
+        <ol>
+            <template v-for="item in log.items">
+                <li v-if="typeof item === 'string'">{{ item }}</li>
+                <ol v-else-if="item instanceof Array">
+                    <li v-for="i in item">
+                        <span v-html="i"></span>
+                    </li>
+                </ol>
+                <li v-else>
+                    <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">
+                        {{ renderTag(item.label).name }}
+                    </a-tag>
+                    <span style="margin-left:5px;">{{ item.content }}</span>
+                    <span v-if="item.txc"><a-link @click="open(item.txc)">@兔小巢</a-link></span>
+                    <span v-else-if="item.gitee">
+                        <a-link @click="open(item.gitee.content)">
+                            #{{ item.gitee.title }}
+                        </a-link>
+                    </span>
+                    <span v-else-if="item.pull">
                     <a-tooltip content="贡献者">
                         <a-link status="success" @click="open(item.pull?.url)">@ {{ item.pull?.name }}</a-link>
                     </a-tooltip>
                 </span>
-            </li>
-        </template>
-    </ol>
-    <div v-if="log?.doc">
-        更多详细的更新信息与功能变化，请在
-        <a-link target="_blank" @click="open(log?.doc)">此处</a-link>
-        中查看
+                </li>
+            </template>
+        </ol>
+        <a-typography-paragraph v-if="log.remark">{{ log.remark }}</a-typography-paragraph>
+        <div v-if="log.doc">
+            更多详细的更新信息与功能变化，请在
+            <a-link target="_blank" @click="open(log?.doc)">此处</a-link>
+            中查看
+        </div>
     </div>
 </template>
 <script lang="ts">

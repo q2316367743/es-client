@@ -2,7 +2,9 @@
     <div class="home-index-card">
         <!-- 标题 -->
         <div class="title" :style="{maxWidth: maxWidth}">
-            <div class="index-item-title" type="primary" :style="{ color: indexStateTitle }" @click="indexInfo()" :title="index?.name">{{ index?.name }}--1234567890</div>
+            <div class="index-item-title" type="primary" :style="{ color: indexStateTitle }" @click="indexInfo()"
+                 :title="index?.name">{{ index?.name }}
+            </div>
             <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
         </div>
         <!-- 详细 -->
@@ -241,11 +243,12 @@ export default defineComponent({
             background-color: transparent;
             border-radius: var(--border-radius-small);
             cursor: pointer;
-            transition: all .1s cubic-bezier(0,0,1,1);
+            transition: all .1s cubic-bezier(0, 0, 1, 1);
 
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+
             &:hover {
                 color: rgb(var(--link-6));
                 background-color: var(--color-fill-2);

@@ -94,10 +94,10 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 // 常量
 import Constant from '@/global/Constant'
 // 工具类
-import {versionManage,} from "@/global/BeanFactory";
 import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
+import {versionManager, VersionStatus} from "@/components/version-manager";
 
 export default defineComponent({
     components: {
@@ -140,19 +140,17 @@ export default defineComponent({
             useEditorSettingStore().init(),
             useBaseSearchSettingStore().init()
         ])
-            .then(() => {
-                // 版本更新处理
-                switch (versionManage.checkBasicUpdate()) {
-                    case 1:
-                        this.$router.push('/setting/about')
-                        break;
-                    case 2:
-                        this.updateDialog = true;
-                        break;
-                }
-                versionManage.execUpdate();
+            .then(() => console.log("初始化完成"))
 
-            })
+        // 版本
+        switch (versionManager()) {
+            case VersionStatus.NEW:
+                this.$router.push(PageNameEnum.MORE_ABOUT)
+                break;
+            case VersionStatus.UPDATE:
+                this.updateDialog = true;
+                break;
+        }
 
 
         if (utools.isDarkColors()) {
