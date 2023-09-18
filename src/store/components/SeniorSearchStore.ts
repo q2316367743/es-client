@@ -57,6 +57,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         execute(index: number, instance: monaco.editor.IStandaloneCodeEditor) {
 
             let request = requestBuild(instance, index);
+            console.log(request)
             if (!request) {
                 MessageUtil.error('请求块无法识别');
                 return;
@@ -85,7 +86,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             fetchEs<string>({
                 url: request.link,
                 method: request.method,
-                data: request.params,
+                data: request.params.trim() === '' ? undefined : request.params,
                 responseType: 'text',
                 headers: {
                     'content-type': 'application/json'
