@@ -89,7 +89,6 @@ const refresh = () => useIndexStore().reset();
 const switchDarkColors = () => useGlobalStore().switchDarkColors();
 
 async function selectUrl(value: any) {
-    console.log(value)
     // 清空链接
     if (value === '') {
         // 清空链接选择

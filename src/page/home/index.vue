@@ -5,7 +5,7 @@
             <div style="display: flex">
                 <!-- 输入框 -->
                 <a-input v-model="keyword" :placeholder="$t('home.placeholder.index')"
-                         style="width: 250px;height: 32px;" allow-clear></a-input>
+                         style="width: 45vw;height: 32px;" allow-clear></a-input>
             </div>
             <a-button type="primary" style="margin-left: 10px" @click="indexAddDialog = true" :disabled="!url">
                 {{ $t('common.operation.new') }}

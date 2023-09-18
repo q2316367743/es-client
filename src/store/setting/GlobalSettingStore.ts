@@ -53,15 +53,9 @@ const useGlobalSettingStore = defineStore('global-setting', {
     },
     actions: {
         async init() {
-            let globalSetting = await getFromOneByAsync<GlobalSetting>(LocalNameEnum.SETTING_GLOBAL, getDefaultGlobalSetting());
-            if (globalSetting) {
-                try {
-                    Object.assign(this.globalSetting, globalSetting);
-                    this.rev = globalSetting.rev;
-                } catch (e) {
-                    console.error(e);
-                }
-            }
+            let globalSettingWrap = await getFromOneByAsync<GlobalSetting>(LocalNameEnum.SETTING_GLOBAL, getDefaultGlobalSetting());
+            this.globalSetting = globalSettingWrap.record;
+            this.rev = globalSettingWrap.rev;
             return Promise.resolve();
         },
         addHomeExcludeIndex(index: string): void {
@@ -104,7 +98,8 @@ const useGlobalSettingStore = defineStore('global-setting', {
                 return;
             }
             lock = true
-            saveOneByAsync(LocalNameEnum.SETTING_GLOBAL, this.globalSetting, this.rev).then(rev => this.rev = rev)
+            saveOneByAsync(LocalNameEnum.SETTING_GLOBAL, this.globalSetting, this.rev)
+                .then(rev => this.rev = rev)
                 .finally(() => {
                     lock = false;
                     if (todo) {

@@ -1,8 +1,8 @@
 <template>
     <div class="home-index-card">
         <!-- 标题 -->
-        <div class="title">
-            <a-link type="primary" :style="{ color: indexStateTitle }" @click="indexInfo()">{{ index?.name }}</a-link>
+        <div class="title" :style="{maxWidth: maxWidth}">
+            <div class="index-item-title" type="primary" :style="{ color: indexStateTitle }" @click="indexInfo()" :title="index?.name">{{ index?.name }}--1234567890</div>
             <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
         </div>
         <!-- 详细 -->
@@ -15,16 +15,17 @@
             <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
                 <a-button type="text" @click="jumpToBaseSearch()">
                     <template #icon>
-                        <icon-search />
+                        <icon-search/>
                     </template>
                 </a-button>
             </a-tooltip>
             <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
-                <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation" :ok-text="indexStateTooltip">
+                <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation"
+                              :ok-text="indexStateTooltip">
                     <a-button type="text" :status="indexStateBtn">
                         <template #icon>
-                            <icon-pause v-if="indexStateBtn === 'danger'" />
-                            <icon-play-arrow v-else />
+                            <icon-pause v-if="indexStateBtn === 'danger'"/>
+                            <icon-play-arrow v-else/>
                         </template>
                     </a-button>
                 </a-popconfirm>
@@ -32,17 +33,18 @@
             <a-tooltip :effect="theme" content="删除索引" placement="bottom">
                 <a-button type="text" @click="removeIndex()">
                     <template #icon>
-                        <icon-delete />
+                        <icon-delete/>
                     </template>
                 </a-button>
             </a-tooltip>
         </div>
         <!-- 别名 -->
         <div class="alias">
-            <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked" v-for="(item, idx) in index?.alias"
-                :key="idx" style="margin-right: 5px">
+            <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked"
+                  v-for="(item, idx) in index?.alias"
+                  :key="idx" style="margin-right: 5px">
                 {{ item }}
-                <icon-close :size="16" @click="removeAlias(item)" class="alias-close" />
+                <icon-close :size="16" @click="removeAlias(item)" class="alias-close"/>
             </span>
             <a-button type="primary" status="normal" size="mini" @click="newAlias()">{{ $t('common.operation.add') }}
             </a-button>
@@ -51,8 +53,8 @@
         <div class="expand-btn">
             <a-button type="text" @click="showExpand = !showExpand" size="small">
                 <template #icon>
-                    <icon-up v-if="showExpand" />
-                    <icon-down v-else />
+                    <icon-up v-if="showExpand"/>
+                    <icon-down v-else/>
                 </template>
             </a-button>
         </div>
@@ -60,15 +62,18 @@
         <div class="expand" v-if="showExpand">
             <div style="display: flex;">
                 <div v-for="(value, key) in index?.shard" :key="key">
-                    <div class="shard" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">{{ key
-                    }}
+                    <div class="shard" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">{{
+                            key
+                        }}
                     </div>
                 </div>
             </div>
             <div style="display: flex;">
                 <div v-for="(value, key) in index?.replica" :key="key">
-                    <div class="replica" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">{{
-                        key }}
+                    <div class="replica" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">
+                        {{
+                            key
+                        }}
                     </div>
                 </div>
             </div>
@@ -76,7 +81,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import {defineComponent, PropType} from "vue";
 
 import IndexApi from '@/components/es/api/IndexApi'
 
@@ -104,7 +109,10 @@ export default defineComponent({
         open: true,
     }),
     computed: {
-        ...mapState(useGlobalStore, ['isDark']),
+        ...mapState(useGlobalStore, ['isDark', 'width']),
+        maxWidth() {
+            return (this.width - 210) + 'px'
+        },
         indexStateBtn(): 'danger' | 'success' | 'normal' {
             if (this.index?.state === 'open') {
                 return 'danger';
@@ -222,9 +230,26 @@ export default defineComponent({
         display: flex;
         height: 40px;
 
-        .arco-link {
+        .index-item-title {
             font-size: 24px;
             font-weight: bold;
+
+            padding: 1px 4px;
+            color: rgb(var(--link-6));
+            line-height: 1.5715;
+            text-decoration: none;
+            background-color: transparent;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            transition: all .1s cubic-bezier(0,0,1,1);
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            &:hover {
+                color: rgb(var(--link-6));
+                background-color: var(--color-fill-2);
+            }
         }
 
         .arco-btn {
