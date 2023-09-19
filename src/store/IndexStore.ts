@@ -5,7 +5,7 @@ import clusterApi from '@/components/es/api/ClusterApi'
 import useUrlStore from "@/store/UrlStore";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
-import useNotificationStore from "@/store/NotificationStore";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
     let indicesMap = new Map<string, IndexView>();
@@ -71,7 +71,7 @@ const useIndexStore = defineStore('index', {
                     let unassigned_shards = health.unassigned_shards;
                     this.total_shards = this.active_shards + unassigned_shards;
                     this.status = health.status;
-                }).catch(e => useNotificationStore().send(e, '获取索引健康值失败'));
+                }).catch(e => NotificationUtil.error(e, '获取索引健康值失败'));
 
                 return Promise.resolve();
             } catch (e: any) {

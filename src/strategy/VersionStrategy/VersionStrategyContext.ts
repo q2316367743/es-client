@@ -3,9 +3,9 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 import ClusterApi from "@/components/es/api/ClusterApi";
 import Optional from "@/utils/Optional";
-import useNotificationStore from "@/store/NotificationStore";
 import useUrlStore from "@/store/UrlStore";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 export default class VersionStrategyContext {
 
@@ -40,7 +40,7 @@ export default class VersionStrategyContext {
                         });
                     }
                 })
-                .catch(e => useNotificationStore().send(e.toString(), '获取elasticsearch版本失败'));
+                .catch(e => NotificationUtil.error(e.toString(), '获取elasticsearch版本失败'));
             return;
         }
         // 匹配当前版本

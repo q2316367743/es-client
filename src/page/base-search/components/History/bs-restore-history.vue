@@ -41,7 +41,7 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import BaseSearchHistory from "@/entity/BaseSearchHistory";
+import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 
 // 工具类
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
