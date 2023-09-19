@@ -16,6 +16,9 @@ export default [
             label: LogItemEnum.ADD,
             content: "链接排序"
         }, {
+            label: LogItemEnum.ADD,
+            content: "增加备份功能，可以将插件数据备份到WebDAV中"
+        }, {
             label: LogItemEnum.REPAIR,
             content: "修复没有请求体传空字符串问题",
             txc: 'https://support.qq.com/products/489458/post/169399208255068883/'
@@ -33,6 +36,9 @@ export default [
         }, {
             label: LogItemEnum.UPDATE,
             content: '系统重构，底层数据全部优化，单标签页更加流程，修复了一些底层bug'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '重构了数据导出功能，可以分页全量导出数据，导出多种格式。数据浏览和基础查询都可以导出。'
         }],
         remark: "本次更新对插件进行了全方位的重构，并且现在还处于基础节点，所以有些功能还没有迁移完，还有些BUG。"
     },
