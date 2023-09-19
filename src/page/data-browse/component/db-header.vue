@@ -76,8 +76,6 @@
                 </template>
             </a-dropdown>
         </div>
-        <!-- 导出弹窗 -->
-        <export-dialog v-model="exportDialogVisible" :index-name="indexName" :records="records"/>
         <!-- 新增对话框 -->
         <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px" height="520px"
                  draggable>
@@ -111,7 +109,6 @@
 import PageHelp from "@/page/data-browse/component/PageHelp.vue";
 import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
 import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
-import ExportDialog from "@/page/data-browse/component/ExportDialog.vue";
 import {computed, markRaw, ref} from "vue";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import MessageUtil from "@/utils/MessageUtil";
@@ -119,6 +116,7 @@ import ArrayUtil from "@/utils/ArrayUtil";
 import DataBuild from "@/page/data-browse/build/DataBuild";
 import {Codemirror} from "vue-codemirror";
 import {json} from "@codemirror/lang-json";
+import {useExportEvent} from "@/global/BeanFactory";
 
 const editConfig = ref({
     dialog: false,
@@ -129,7 +127,6 @@ const addConfig = ref({
     dialog: false,
     data: ''
 });
-const exportDialogVisible = ref(false);
 
 const extensions = markRaw<Array<any>>([json()])
 
@@ -204,7 +201,11 @@ function openExportDialog() {
         MessageUtil.warning('数据为空');
         return;
     }
-    exportDialogVisible.value = true;
+    useExportEvent.emit({
+        name: useDataBrowseStore().name,
+        index: useDataBrowseStore().name,
+        search: useDataBrowseStore().getCondition()
+    })
 }
 
 function jumpToSeniorSearchByInsert() {

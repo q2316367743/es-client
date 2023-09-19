@@ -15,6 +15,7 @@ import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 import BaseSearchJumpEvent from "@/entity/event/BaseSearchJumpEvent";
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
@@ -84,6 +85,10 @@ export const useBaseSearchStore = defineStore('base-search', {
             this.current.page = page;
             this.search()
         },
+
+        getCondition(): DocumentSearchQuery {
+            return QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
+        },
         search() {
             if (this.current.index.length === 0) {
                 MessageUtil.error("请选择索引")
@@ -91,8 +96,7 @@ export const useBaseSearchStore = defineStore('base-search', {
             }
             this.loading = true;
             try {
-                const condition = QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
-                DocumentApi(this.current.index)._search(condition).then((response) => {
+                DocumentApi(this.current.index)._search(this.getCondition()).then((response) => {
                     // 结果
                     this.current.result = response as Record<string, any>;
                     // 解析总数

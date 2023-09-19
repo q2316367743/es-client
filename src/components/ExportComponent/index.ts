@@ -7,7 +7,6 @@ import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult"
 import {download} from "@/utils/BrowserUtil";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import useLoadingStore from "@/store/LoadingStore";
-import MessageUtil from "@/utils/MessageUtil";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -93,8 +92,6 @@ export async function getExportData(config: ExportConfig): Promise<Array<Documen
                 } while (page <= config.customEnd);
                 break;
         }
-    } catch (e) {
-        MessageUtil.error("导出错误", e);
     } finally {
         useLoadingStore().close();
     }
@@ -149,6 +146,7 @@ export function getExportFile(config: ExportConfig, records: Array<Record<string
  * @param config 到处配置
  */
 export async function exportData(config: ExportConfig): Promise<void> {
+    console.log(config)
     // 1. 确定导出的基础数据
     const results = await getExportData(config);
     // 2. 确定数据的范围

@@ -14,9 +14,14 @@
                 </template>
             </a-button>
             <!-- 索引管理 -->
-            <a-button type="primary" :disabled="index === ''" @click="openIndexManage()" title="管理">
+            <a-button type="primary" :disabled="index === ''" @click="openIndexManage()" title="索引信息">
                 <template #icon>
                     <icon-info/>
+                </template>
+            </a-button>
+            <a-button type="dashed" :disabled="index === ''" @click="printHandler()" title="打印">
+                <template #icon>
+                    <icon-printer/>
                 </template>
             </a-button>
         </div>
@@ -35,6 +40,7 @@ import BshManage from "@/page/base-search/components/History/index.vue";
 import BaseSearchSetting from "@/page/base-search/components/setting/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useWindowSize} from "@vueuse/core";
+import {useExportEvent} from "@/global/BeanFactory";
 
 const size = useWindowSize();
 
@@ -75,6 +81,14 @@ const indices = computed<Array<SelectOptionData>>(() => {
         return a.label!.localeCompare(b.label!, "zh-CN");
     });
 })
+
+function printHandler() {
+    useExportEvent.emit({
+        name: useBaseSearchStore().current.index,
+        index: useBaseSearchStore().current.index,
+        search: useBaseSearchStore().getCondition()
+    })
+}
 
 </script>
 <style scoped lang="less">

@@ -26,7 +26,6 @@ import {TableRowSelection, TableBorder, TableData, TableExpandable} from "@arco-
 import useUrlStore from "@/store/UrlStore";
 
 import PageHelp from "@/page/data-browse/component/PageHelp.vue";
-import ExportDialog from "@/page/data-browse/component/ExportDialog.vue";
 import DbCondition from "@/page/data-browse/component/db-condition.vue";
 import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
 import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
@@ -44,7 +43,6 @@ export default defineComponent({
         DbSimpleItem,
         DbIndexSelect,
         DbCondition,
-        ExportDialog,
         PageHelp,
         JsonView,
         StructureIcon,

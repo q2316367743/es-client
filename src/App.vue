@@ -76,6 +76,8 @@
         <index-manage/>
         <!-- 版本更新 -->
         <version-update v-model:visible="updateDialog"/>
+        <!-- 数据导出 -->
+        <app-data-export />
     </a-config-provider>
 </template>
 
@@ -103,6 +105,7 @@ export default defineComponent({
     components: {
         // 组件
         AppHeader,
+        AppDataExport: defineAsyncComponent(() => import("@/module/app-data-export/index.vue")),
         VersionUpdate: defineAsyncComponent(() => import("@/module/version-update/index.vue")),
         IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
     },
@@ -132,17 +135,17 @@ export default defineComponent({
     created() {
         // 初始化
         initData().then(() => {
-                console.log("初始化完成");
-                // 版本
-                switch (versionManager()) {
-                    case VersionStatus.NEW:
-                        this.$router.push(PageNameEnum.MORE_ABOUT)
-                        break;
-                    case VersionStatus.UPDATE:
-                        this.updateDialog = true;
-                        break;
-                }
-            })
+            console.log("初始化完成");
+            // 版本
+            switch (versionManager()) {
+                case VersionStatus.NEW:
+                    this.$router.push(PageNameEnum.MORE_ABOUT)
+                    break;
+                case VersionStatus.UPDATE:
+                    this.updateDialog = true;
+                    break;
+            }
+        })
 
 
         if (utools.isDarkColors()) {

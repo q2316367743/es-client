@@ -24,6 +24,7 @@ import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
+import ConditionExportEvent from "@/entity/event/ConditionExportEvent";
 
 window.rain = {
     env: window.utools ? 'utools' : 'web'
@@ -42,6 +43,7 @@ versionStrategyContext.register(new V7VersionStrategyImpl());
 versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 事件
+export const useExportEvent = useEventBus<ConditionExportEvent>(EventBusEnum.URL_EDIT);
 export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
 export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE);
 export const useSeniorShowResultEvent = useEventBus<void>(EventBusEnum.SENIOR_SHOW_RESULT);

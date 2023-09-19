@@ -1,6 +1,6 @@
 <template>
-    <a-drawer v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false"
-             width="350px">
+    <a-drawer v-model:visible="visible" title="数据导出" render-to-body unmount-on-close
+             width="350px" mask-closable>
         <a-form :model="instance" layout="vertical">
             <a-form-item label=文件名>
                 <a-input v-model="instance.name"/>
