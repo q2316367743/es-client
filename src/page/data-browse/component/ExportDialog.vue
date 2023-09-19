@@ -1,6 +1,6 @@
 <template>
-    <a-modal v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false"
-             draggable>
+    <a-drawer v-model:visible="visible" title="数据导出" render-to-body unmount-on-close :mask-closable="false"
+             width="350px">
         <a-form :model="instance" layout="vertical">
             <a-form-item label=文件名>
                 <a-input v-model="instance.name"/>
@@ -20,9 +20,19 @@
             <a-form-item label="导出范围">
                 <a-select v-model="instance.scope">
                     <a-option :value="ExportScope.CURRENT">当前页面</a-option>
-                    <a-option :value="ExportScope.ALL" disabled>全部</a-option>
-                    <a-option :value="ExportScope.CUSTOM" disabled>自定义范围</a-option>
+                    <a-option :value="ExportScope.ALL">全部</a-option>
+                    <a-option :value="ExportScope.CUSTOM">自定义范围</a-option>
                 </a-select>
+            </a-form-item>
+            <a-form-item label="范围" v-if="instance.scope === ExportScope.CUSTOM">
+                <a-input-group>
+                    <a-input-number v-model="instance.customStart" :min="1" />
+                    <span> - </span>
+                    <a-input-number v-model="instance.customEnd" :max="instance.customStart" />
+                </a-input-group>
+            </a-form-item>
+            <a-form-item label="每页大小" v-if="instance.scope === ExportScope.CUSTOM">
+                <a-input-number v-model="instance.size" :min="1" />
             </a-form-item>
             <a-form-item label="来源">
                 <a-select v-model="instance.source">
@@ -41,7 +51,7 @@
             <a-button @click="visible = false">取消</a-button>
             <a-button type="primary" @click="exportDownload">导出</a-button>
         </template>
-    </a-modal>
+    </a-drawer>
 </template>
 <script lang="ts">
 import {exportData} from "@/components/ExportComponent";
@@ -78,8 +88,8 @@ export default defineComponent({
             type: ExportType.JSON,
             separator: '',
             scope: ExportScope.CURRENT,
-            customStart: 0,
-            customEnd: -1,
+            customStart: 1,
+            customEnd: 1,
             source: ExportSource.ALL,
             fields: [],
             size: 1000,
@@ -95,6 +105,9 @@ export default defineComponent({
     watch: {
         modelValue(newValue: boolean) {
             this.visible = newValue;
+            if (newValue) {
+                this.instance.name = useDataBrowseStore().name;
+            }
         },
         indexName(newValue: string) {
             if (newValue != '') {

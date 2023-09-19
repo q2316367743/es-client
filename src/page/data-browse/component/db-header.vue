@@ -25,7 +25,7 @@
             <!-- 选择索引 -->
             <db-index-select @index-change="indexChange"/>
             <!-- 打印 -->
-            <db-simple-item :disable="!index" tip="打印" @click="openExportDialog">
+            <db-simple-item :disable="!name" tip="打印" @click="openExportDialog">
                 <icon-printer/>
             </db-simple-item>
             <!-- 索引结构 -->
@@ -134,6 +134,7 @@ const exportDialogVisible = ref(false);
 const extensions = markRaw<Array<any>>([json()])
 
 const index = computed(() => useDataBrowseStore().index);
+const name = computed(() => useDataBrowseStore().name);
 const records = computed(() => useDataBrowseStore().records);
 const columns = computed(() => useDataBrowseStore().columns);
 const type = computed(() => useDataBrowseStore().type);
@@ -194,7 +195,7 @@ function recordAdd() {
 
 function openExportDialog() {
     // 选择了索引
-    if (!index.value) {
+    if (!name.value) {
         MessageUtil.error('请选择索引');
         return;
     }

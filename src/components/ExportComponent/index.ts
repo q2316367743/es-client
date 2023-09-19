@@ -6,6 +6,8 @@ import {ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from ".
 import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 import {download} from "@/utils/BrowserUtil";
 import DocumentApi from "@/components/es/api/DocumentApi";
+import useLoadingStore from "@/store/LoadingStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -61,32 +63,40 @@ export async function getExportData(config: ExportConfig): Promise<Array<Documen
     let total = 0;
     const results = new Array<DocumentSearchResult>();
 
-    switch (config.scope) {
-        case ExportScope.CURRENT:
-            results.push(await DocumentApi(config.index)._search(config.search));
-            break;
-        case ExportScope.ALL:
-            const condition1 = config.search;
-            do {
-                page += 1;
-                condition1.from = (page - 1) * size;
-                condition1.size = size;
-                const result = await DocumentApi(config.index)._search(condition1);
-                results.push(result);
-                total = typeof result.hits.total === 'number' ? result.hits.total : result.hits.total.value;
-            } while (page * size < total);
-            break;
-        case ExportScope.CUSTOM:
-            page = Math.max(config.customStart - 1, 0)
-            const condition2 = config.search;
-            do {
-                page += 1;
-                condition2.from = (page - 1) * size;
-                condition2.size = size;
-                const result = await DocumentApi(config.index)._search(condition2);
-                results.push(result);
-            } while (page <= config.customEnd);
-            break;
+    try {
+        switch (config.scope) {
+            case ExportScope.CURRENT:
+                results.push(await DocumentApi(config.index)._search(config.search));
+                break;
+            case ExportScope.ALL:
+                const condition1 = config.search;
+                do {
+                    page += 1;
+                    condition1.from = (page - 1) * size;
+                    condition1.size = size;
+                    const result = await DocumentApi(config.index)._search(condition1);
+                    results.push(result);
+                    total = typeof result.hits.total === 'number' ? result.hits.total : result.hits.total.value;
+                    useLoadingStore().start(`正在导出${(page - 1) * size} - ${page * size}，共${total}条`);
+                } while (page * size < total);
+                break;
+            case ExportScope.CUSTOM:
+                page = Math.max(config.customStart - 1, 0)
+                const condition2 = config.search;
+                do {
+                    page += 1;
+                    condition2.from = (page - 1) * size;
+                    condition2.size = size;
+                    const result = await DocumentApi(config.index)._search(condition2);
+                    useLoadingStore().start(`正在导出${(page - 1) * size} - ${page * size}，共${total}条`);
+                    results.push(result);
+                } while (page <= config.customEnd);
+                break;
+        }
+    } catch (e) {
+        MessageUtil.error("导出错误", e);
+    } finally {
+        useLoadingStore().close();
     }
     return Promise.resolve(results);
 }
@@ -116,7 +126,7 @@ export function getExportRecords(config: ExportConfig, results: Array<DocumentSe
  * @return 文件内容。xlsx无效
  */
 export function getExportFile(config: ExportConfig, records: Array<Record<string, any>>): string {
-    switch (config.type){
+    switch (config.type) {
         case ExportType.JSON:
             return exportJson(records);
         case ExportType.CSV:
