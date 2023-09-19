@@ -10,25 +10,25 @@ function _resolve(dir: string) {
 
 function outDir() {
     switch (process.env.npm_lifecycle_event) {
-        case 'IndexBuild:ts':
+        case 'build:ts':
             return 'dist-ts';
-        case 'IndexBuild:web':
+        case 'build:web':
             return 'dist-web';
-        case 'IndexBuild:utools':
+        case 'build:utools':
             return 'src-utools/dist';
-        case 'IndexBuild:edge':
+        case 'build:edge':
             return 'src-edge/domain-client';
-        case 'IndexBuild:firefox':
+        case 'build:firefox':
             return 'src-firefox/domain-client';
-        case 'IndexBuild:server':
+        case 'build:server':
             return 'src-server/public';
-        case 'IndexBuild:tauri:windows':
+        case 'build:tauri:windows':
             return 'dist';
-        case 'IndexBuild:tauri:linux':
+        case 'build:tauri:linux':
             return 'dist';
-        case 'IndexBuild:tauri:macos':
+        case 'build:tauri:macos':
             return 'dist';
-        case 'IndexBuild:vscode':
+        case 'build:vscode':
             return 'src-vscode/domain-client';
         default:
             return 'out';

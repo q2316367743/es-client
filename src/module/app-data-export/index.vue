@@ -28,7 +28,7 @@
                 <a-input-group>
                     <a-input-number v-model="instance.customStart" :min="1"/>
                     <span> - </span>
-                    <a-input-number v-model="instance.customEnd" :max="instance.customStart"/>
+                    <a-input-number v-model="instance.customEnd" :min="instance.customStart"/>
                 </a-input-group>
             </a-form-item>
             <a-form-item label="每页大小" v-if="instance.scope === ExportScope.CUSTOM">
