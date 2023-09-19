@@ -1,6 +1,6 @@
 <template>
     <div class="display-history">
-        历史记录
+        <a-result status="404" title="历史记录" subtitle="正在施工中，敬请期待"></a-result>
     </div>
 </template>
 <script lang="ts" setup>
