@@ -5,7 +5,7 @@ const useLoadingStore = defineStore('loading', {
     state: () => ({
         loading: false,
         text: '',
-        timer: 0
+        timer: 0 as any
     }),
     getters: {
         isLoading: state => state.loading
