@@ -1,8 +1,8 @@
 {
     "$schema": "../node_modules/@tauri-apps/cli/schema.json",
     "build": {
-        "beforeBuildCommand": "yarn build:tauri:windows",
-        "beforeDevCommand": "yarn dev:tauri",
+        "beforeBuildCommand": "pnpm build:tauri:windows",
+        "beforeDevCommand": "pnpm dev:tauri",
         "devPath": "http://localhost:5173",
         "distDir": "../dist"
     },
@@ -100,8 +100,7 @@
                 "width": 1200,
                 "minHeight": 600,
                 "minWidth": 1000,
-                "center": true,
-                "decorations": false
+                "center": true
             }
         ]
     }
