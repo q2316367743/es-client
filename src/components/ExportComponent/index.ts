@@ -1,23 +1,14 @@
 // 导出库
-import x2js from 'x2js';
 import {Parser} from '@json2csv/plainjs';
-import jsYaml from 'js-yaml';
 import {utils, writeFile} from 'xlsx'
 
 import {ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
-import Assert from "@/utils/Assert";
-import {toRaw} from "vue";
-import MessageUtil from '@/utils/MessageUtil';
-import {jsonToTableComplete, TableViewColumnData} from "@/algorithm/jsonToTable";
-import { download } from '@/utils/BrowserUtil';
-import DownloadTypeEnum from '@/enumeration/DownloadTypeEnum';
+import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
+import {download} from "@/utils/BrowserUtil";
+import DocumentApi from "@/components/es/api/DocumentApi";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
-const json2xml = new x2js({
-    selfClosingElements: false,
-    escapeMode: false
-});
 const json2Csv = new Parser({});
 const json2Tsv = new Parser({
     delimiter: '\t'
@@ -25,127 +16,29 @@ const json2Tsv = new Parser({
 
 // ------------------------------------------------ 非结构化导出 ------------------------------------------------
 
-function exportNoSql(config: ExportConfig, data: any): ExportContent | undefined {
-    let obj: {};
-    if (config.source === ExportSource.HIT) {
-        Assert.isFalse(!data || !data.hits || !data.hits.hits,
-            "结构错误无法导出");
-        obj = data.hits.hits;
-    } else if (config.source === ExportSource.SOURCE) {
-        Assert.isFalse(!data || !data.hits || !data.hits.hits,
-            "结构错误无法导出");
-        obj = (data.hits.hits as Array<any>).map(e => e['_source']);
-    } else {
-        obj = data;
-    }
-    if (config.type === ExportType.JSON) {
-        return {
-            type: DownloadTypeEnum.JSON,
-            content: JSON.stringify(obj)
-        };
-    } else if (config.type === ExportType.XML) {
-        return {
-            type: DownloadTypeEnum.XML,
-            content: json2xml.js2xml(obj)
-        };
-    } else if (config.type === ExportType.YML) {
-        return {
-            type: DownloadTypeEnum.YML,
-            content: jsYaml.dump(obj)
-        };
-    }
+function exportJson(records: Array<Record<string, any>>): string {
+    return JSON.stringify(records);
 }
 
 // ------------------------------------------------ 结构化导出 ------------------------------------------------
 
-function exportForHtml(config: ExportConfig, data: any): ExportContent {
-    let {columns, records} = jsonToTableComplete(data, {
-        common: config.source === ExportSource.HIT,
-        source: false,
-        separator: '.'
-    });
-    return {
-        type: DownloadTypeEnum.HTML,
-        content: htmlTemplate(config.name, columns, records)
-    }
+
+function exportForCsv(records: Array<Record<string, any>>): string {
+    return json2Csv.parse(records)
 }
 
-function htmlTemplate(name: string, keys: Array<TableViewColumnData>, records: Array<any>) {
-    return `<html lang="zh">
-    <head>
-        <title>${name}</title>
-    </head>
-    <body>
-        <table>
-            <thead>
-                <tr>${keys.map(e => `<td>${e.dataIndex}</td>`).join('\n')}</tr>
-            </thead>
-            <tbody>
-                ${records
-        .map(record => keys.map(key => {
-            if (typeof record[key.dataIndex] === 'undefined') {
-                return '<td></td>';
-            } else if (typeof record[key.dataIndex] === 'object') {
-                return `<td>${JSON.stringify(record[key.dataIndex], null, 4)}</td>`;
-            } else {
-                return `<td>${record[key.dataIndex]}</td>`;
-            }
-        }).join('\n'))
-        .map(e => `<tr>${e}</tr>`)
-        .join('\n')}
-            </tbody>
-        </table>
-    <body>
-</html>    
-`
+function exportForTsv(records: Array<Record<string, any>>): string {
+    return json2Tsv.parse(records)
 }
 
-function exportForCsv(config: ExportConfig, data: any): ExportContent {
-    let {records} = jsonToTableComplete(data, {
-        common: config.source === ExportSource.HIT,
-        source: false,
-        separator: '.'
-    });
-    return {
-        type: DownloadTypeEnum.CSV,
-        content: json2Csv.parse(records)
-    }
-}
-
-function exportForTsv(config: ExportConfig, data: any): ExportContent {
-    let {records} = jsonToTableComplete(data, {
-        common: config.source === ExportSource.HIT,
-        source: false,
-        separator: '.'
-    });
-    return {
-        type: DownloadTypeEnum.TXT,
-        content: json2Tsv.parse(records)
-    }
-}
-
-function exportForTxt(config: ExportConfig, data: any): ExportContent {
-    let {records} = jsonToTableComplete(data, {
-        common: config.source === ExportSource.HIT,
-        source: false,
-        separator: '.'
-    });
+function exportForTxt(config: ExportConfig, records: Array<Record<string, any>>): string {
     const json2Txt = new Parser({
         delimiter: config.separator
     });
-    return {
-        type: DownloadTypeEnum.TXT,
-        content: json2Txt.parse(records)
-    }
+    return json2Txt.parse(records)
 }
 
-function exportFotXlsx(config: ExportConfig, data: any) {
-    let {records} = jsonToTableComplete(data, {
-        common: config.source === ExportSource.HIT,
-        source: false,
-        separator: '.'
-    });
-
+function exportFotXlsx(config: ExportConfig, records: Array<Record<string, any>>): void {
     writeFile({
         Sheets: {
             "sheet1": utils.json_to_sheet(records)
@@ -158,60 +51,107 @@ function exportFotXlsx(config: ExportConfig, data: any) {
 
 // ------------------------------------------------ 导出 ------------------------------------------------
 
-interface ExportContent {
+/**
+ * 获取导出数据
+ * @param config 导出配置
+ */
+export async function getExportData(config: ExportConfig): Promise<Array<DocumentSearchResult>> {
+    let page = 0;
+    const size = config.size;
+    let total = 0;
+    const results = new Array<DocumentSearchResult>();
 
-    type: DownloadTypeEnum;
-
-    content: string;
-
+    switch (config.scope) {
+        case ExportScope.CURRENT:
+            results.push(await DocumentApi(config.index)._search(config.search));
+            break;
+        case ExportScope.ALL:
+            const condition1 = config.search;
+            do {
+                page += 1;
+                condition1.from = (page - 1) * size;
+                condition1.size = size;
+                const result = await DocumentApi(config.index)._search(condition1);
+                results.push(result);
+                total = typeof result.hits.total === 'number' ? result.hits.total : result.hits.total.value;
+            } while (page * size < total);
+            break;
+        case ExportScope.CUSTOM:
+            page = Math.max(config.customStart - 1, 0)
+            const condition2 = config.search;
+            do {
+                page += 1;
+                condition2.from = (page - 1) * size;
+                condition2.size = size;
+                const result = await DocumentApi(config.index)._search(condition2);
+                results.push(result);
+            } while (page <= config.customEnd);
+            break;
+    }
+    return Promise.resolve(results);
 }
+
+/**
+ * 获取实际导出的数据
+ * @param config 导出配置
+ * @param results 全部的结果
+ */
+export function getExportRecords(config: ExportConfig, results: Array<DocumentSearchResult>): Array<Record<string, any>> {
+    switch (config.source) {
+        case ExportSource.ALL:
+            return results;
+        case ExportSource.HIT:
+            return results.flatMap(result => result.hits.hits);
+        case ExportSource.SOURCE:
+            return results.flatMap(result => result.hits.hits).map(hit => hit._source);
+        default:
+            return [];
+    }
+}
+
+/**
+ * 获取导出的文件
+ * @param config 导出配置
+ * @param records 记录
+ * @return 文件内容。xlsx无效
+ */
+export function getExportFile(config: ExportConfig, records: Array<Record<string, any>>): string {
+    switch (config.type){
+        case ExportType.JSON:
+            return exportJson(records);
+        case ExportType.CSV:
+            return exportForCsv(records);
+        case ExportType.TSV:
+            return exportForTsv(records);
+        case ExportType.TXT:
+            return exportForTxt(config, records);
+        case ExportType.XLSX:
+            // XLSX直接下载
+            exportFotXlsx(config, records);
+    }
+    return '';
+}
+
 
 /**
  * 导出数据
  *
  * @param config 到处配置
- * @param data 导出的源数据
  */
-export function exportData(config: ExportConfig, data: any): void {
-    data = toRaw(data);
-    let content: ExportContent | undefined;
-    switch (config.scope) {
-        // TODO：导出范围
-        case ExportScope.CURRENT:
-            switch (config.type) {
-                case ExportType.JSON:
-                case ExportType.YML:
-                case ExportType.XML:
-                    content = exportNoSql(config, data);
-                    break;
-                case ExportType.HTML:
-                    content = exportForHtml(config, data);
-                    break;
-                case ExportType.CSV:
-                    content = exportForCsv(config, data);
-                    break;
-                case ExportType.TSV:
-                    content = exportForTsv(config, data);
-                    break;
-                case ExportType.TXT:
-                    content = exportForTxt(config, data);
-                    break;
-                case ExportType.XLSX:
-                    // 表格只能下载
-                    exportFotXlsx(config, data);
-                    return;
-            }
-            break;
-    }
-    if (content) {
+export async function exportData(config: ExportConfig): Promise<void> {
+    // 1. 确定导出的基础数据
+    const results = await getExportData(config);
+    // 2. 确定数据的范围
+    const records = getExportRecords(config, results);
+    // 3. 确定导出的文件
+    const content = getExportFile(config, records);
+    if (content != '') {
+        // 4, 导出的方式
         if (config.mode === ExportMode.DOWNLOAD) {
-            download(content.content,
-                config.name + '.' + content.type,
-                content.type);
+            download(content, config.name + config.type, config.type);
         } else if (config.mode === ExportMode.COPY) {
-            utools.copyText(content.content);
+            utools.copyText(content);
         }
-    } else {
-        MessageUtil.error('导出异常，无法获取导出内容');
     }
+    return Promise.resolve();
 }

@@ -8,10 +8,7 @@
             <a-form-item label="文件类型">
                 <a-select v-model="instance.type">
                     <a-option :value="ExportType.JSON">JSON文件(*.json)</a-option>
-                    <a-option :value="ExportType.YML">YML文件(*.yml)</a-option>
-                    <a-option :value="ExportType.XML">XML文件(*.xml)</a-option>
                     <a-option :value="ExportType.XLSX">表格(*.xlsx)</a-option>
-                    <a-option :value="ExportType.HTML">网页(*.html)</a-option>
                     <a-option :value="ExportType.CSV">CSV(*.csv)</a-option>
                     <a-option :value="ExportType.TSV">管道分隔(*.txt)</a-option>
                     <a-option :value="ExportType.TXT">文本文件(*.txt)</a-option>
@@ -74,7 +71,7 @@ export default defineComponent({
         }
     },
     data: () => ({
-        allowExportTypes: [ExportType.JSON, ExportType.YML, ExportType.XML] as Array<ExportType>,
+        allowExportTypes: [ExportType.JSON] as Array<ExportType>,
         visible: false,
         instance: {
             name: '数据导出',
@@ -87,12 +84,12 @@ export default defineComponent({
             fields: [],
             size: 1000,
             mode: ExportMode.DOWNLOAD
-        } as ExportConfig,
+        } as Omit<ExportConfig, 'search' | 'index'>,
         ExportType,
         ExportScope,
         ExportSource,
     }),
-    computed:{
+    computed: {
         ...mapState(useDataBrowseStore, ['result'])
     },
     watch: {
@@ -111,7 +108,6 @@ export default defineComponent({
             handler(newValue: ExportType) {
                 switch (newValue) {
                     case ExportType.XLSX:
-                    case ExportType.HTML:
                     case ExportType.CSV:
                     case ExportType.TSV:
                     case ExportType.TXT:
@@ -134,15 +130,14 @@ export default defineComponent({
             this.execute();
         },
         execute() {
-            try {
-                useLoadingStore().start('开始导出');
-                exportData(this.instance, this.result);
-                this.visible = false;
-            } catch (e) {
-                MessageUtil.error('导出失败', e);
-            } finally {
-                useLoadingStore().close();
-            }
+            useLoadingStore().start('开始导出');
+            exportData({
+                ...this.instance,
+                index: useDataBrowseStore().name,
+                search: useDataBrowseStore().getCondition()
+            }).then(() => MessageUtil.success("导出成功"))
+                .catch(e => MessageUtil.error("导出失败", e))
+                .finally(() => useLoadingStore().close());
         }
     }
 });

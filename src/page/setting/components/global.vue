@@ -167,7 +167,6 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import JsonTheme from "@/data/JsonTheme";
 
 // 枚举
-import LayoutModeEnum from "@/enumeration/LayoutModeEnum";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 
@@ -188,7 +187,6 @@ export default defineComponent({
             value: ''
         },
         actives: [''],
-        LayoutModeEnum,
         PageNameEnum,
         JsonTheme,
         TableHeaderModeEnum,

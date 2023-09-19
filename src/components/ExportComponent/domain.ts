@@ -1,3 +1,5 @@
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+
 /**
  * 导出类型
  */
@@ -8,45 +10,31 @@ export enum ExportType {
     /**
      * *.json
      */
-    JSON = 1,
+    JSON = '.json',
 
-    /**
-     * *.yml
-     */
-    YML = 2,
-
-    /**
-     * *.xml
-     */
-    XML = 3,
 
     // --------------------------------------- 结构化数据 ---------------------------------------
 
     /**
-     * *.html
-     */
-    HTML = 4,
-
-    /**
      * *.csv
      */
-    CSV = 5,
+    CSV = '.csv',
 
     /**
      * tab分割
      * *.txt
      */
-    TSV = 6,
+    TSV = '.tsv',
 
     /**
      * 指定分隔符
      */
-    TXT = 7,
+    TXT = '.txt',
 
     /**
      * 表格
      */
-    XLSX = 8
+    XLSX = '.xlsx'
 
 }
 
@@ -54,7 +42,7 @@ export enum ExportScope {
 
     /**
      * 当前页面
-     * 
+     *
      * 高级查询这只能选择此选项
      */
     CURRENT = 1,
@@ -155,5 +143,15 @@ export interface ExportConfig {
      * 导出方式
      */
     mode: ExportMode;
+
+    /**
+     * 索引
+     */
+    index: string;
+
+    /**
+     * 查询条件
+     */
+    search: DocumentSearchQuery;
 
 }

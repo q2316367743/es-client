@@ -39,7 +39,6 @@
                 </template>
             </a-dropdown>
             <ss-setting/>
-            <ss-export/>
             <a-tooltip content="帮助" position="right">
                 <a-button type="text" status="normal" @click="openHelp()">
                     <template #icon>
@@ -58,7 +57,6 @@ import {computed} from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import SsSetting from '@/page/senior-search/components/ss-setting/index.vue'
-import SsExport from '@/page/senior-search/components/ss-export/index.vue'
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 const view = computed<ViewTypeEnum>(() => useSeniorSearchStore().view);

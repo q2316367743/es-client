@@ -11,6 +11,7 @@ import {useIndexManageEvent} from "@/global/BeanFactory";
 import BaseOrder from "@/entity/BaseOrder";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 
 export interface IndexInfo {
     name: string,
@@ -50,6 +51,9 @@ export const useDataBrowseStore = defineStore('data-browser', {
         selectedKeys: new Array<string>()
     }),
     actions: {
+        getCondition(): DocumentSearchQuery {
+            return ConditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
+        },
         /**
          * 执行查询
          * @param renderHeader 是否渲染表头，默认渲染
@@ -61,9 +65,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                     return;
                 }
                 this.loading = true;
-                DocumentApi(this.name)._search(
-                    ConditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
-                )
+                DocumentApi(this.name)._search(this.getCondition())
                     .then(result => {
                         this.result = result;
                         let {columns, records, total} = jsonToTable(result);

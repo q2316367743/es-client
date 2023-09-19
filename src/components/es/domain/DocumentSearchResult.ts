@@ -1,4 +1,4 @@
-export interface DocumentSearchResult<T> {
+export interface DocumentSearchResult<T = any> {
     took: number;
     timed_out: boolean;
     _shards: Shards;
