@@ -2,6 +2,25 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.1',
+        sign: 301,
+        time: '2023-09-20',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '新增请求日志，可以快速看到错误原因',
+            txc: 'https://support.qq.com/products/489458/post/169517661544538636/'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "修复Windows客户端无法连接的问题"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "打印组件偶尔失效的问题"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '首页排序加了回来'
+        }],
+    },
+    {
         version: '3.0.0',
         sign: 300,
         time: '2023-09-18',

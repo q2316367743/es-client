@@ -1,6 +1,6 @@
 {
-  "name": "rain-api",
-  "version": "3.0.0",
+  "name": "es-client",
+  "version": "3.0.1",
   "description": "他朝若是同淋雪，此生也算共白头。",
   "main": "preload.js",
   "author": "落雨不悔",
