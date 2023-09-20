@@ -69,6 +69,7 @@
         "@tauri-apps/cli": "^1.2.3",
         "@types/js-yaml": "^4.0.5",
         "@types/json-bigint": "^1.0.1",
+        "@types/json2csv__plainjs": "^6.1.1",
         "@types/jszip": "^3.4.1",
         "@types/node": "^18.11.18",
         "@types/sortablejs": "^1.15.0",

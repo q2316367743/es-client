@@ -40,7 +40,7 @@ export function versionManager(): VersionStatus {
 }
 
 function updateTo3() {
-    if (Constant.sign >= 300) {
+    if (Constant.sign === 300) {
         if (Constant.mode === PluginModeEnum.UTOOLS) {
             useLoadingStore().start("链接迁移")
             updateTo3ByUtools().then(() => MessageUtil.success("迁移完成"))

@@ -100,6 +100,9 @@ devDependencies:
   '@types/json-bigint':
     specifier: ^1.0.1
     version: 1.0.1
+  '@types/json2csv__plainjs':
+    specifier: ^6.1.1
+    version: 6.1.1
   '@types/jszip':
     specifier: ^3.4.1
     version: 3.4.1
@@ -1883,7 +1886,6 @@ packages:
 
   /@streamparser/json@0.0.12:
     resolution: {integrity: sha512-+kmRpd+EeTFd3qNt1AoKphJqbAN26ZDsbiwqjBFeoAmdCyiUO19xMXPtYi9vovAj9a7OAJnvWtiHkwwjU2Fx4Q==}
-    dev: false
 
   /@surma/rollup-plugin-off-main-thread@2.2.3:
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -2042,6 +2044,12 @@ packages:
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
     dev: false
+
+  /@types/json2csv__plainjs@6.1.1:
+    resolution: {integrity: sha512-IFtIs4jtD7TeEgAcTwVjcmfo7jCCOSOYdJmObO+PxwruOT7Eqk0/tnFOdsINZGTz+pV6aJ1soTDgK2f7kYD1Sw==}
+    dependencies:
+      '@streamparser/json': 0.0.12
+    dev: true
 
   /@types/jszip@3.4.1:
     resolution: {integrity: sha512-TezXjmf3lj+zQ651r6hPqvSScqBLvyPI9FxdXBqpEwBijNGQ2NXpaFW/7joGzveYkKQUil7iiDHLo6LV71Pc0A==}

@@ -7,6 +7,7 @@ import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {fetch, ResponseType, Body} from "@tauri-apps/api/http";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 interface Response<T> {
     /** The request URL. */
@@ -60,7 +61,10 @@ async function tauri(config: AxiosRequestConfig): Promise<Response<string>> {
 }
 
 async function axios(config: AxiosRequestConfig): Promise<Response<string>> {
-    const rsp = await window.preload.axios<string>(config);
+    const rsp = await window.preload.axios<string>({
+        ...config,
+        responseType: 'text'
+    });
     return Promise.resolve({
         url: (rsp.config.baseURL || '') + (rsp.config.url || ''),
         data: rsp.data,
@@ -79,11 +83,25 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
         result = await axios(config);
     }
 
-    return Promise.resolve({
-        ...result,
-        data: config.responseType === 'text' ? (result.data as T) : jsonParse(result.data),
-    });
+    if (config.responseType === 'text') {
 
+        return Promise.resolve({
+            ...result,
+            data: result.data as T,
+        });
+    }
+    try {
+        return Promise.resolve({
+            ...result,
+            data: jsonParse(result.data),
+        });
+    } catch (e) {
+        MessageUtil.error("JSON解析失败", e);
+        return Promise.resolve({
+            ...result,
+            data: result.data as T,
+        });
+    }
 }
 
 
@@ -115,7 +133,7 @@ export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
             url: e.config ? ((e.config.baseURL || '') + (e.config.url || '')) : '',
             code: e.response ? e.response.status : 0,
             time: new Date().getTime() - now,
-            response: e.response.data,
+            response: e.response ? e.response.data : {},
             message: e.message
         })
         throw e;
