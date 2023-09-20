@@ -1,5 +1,5 @@
 import Constant from '@/global/Constant';
-import axios from 'axios';
+import {http} from "@/plugins/axios";
 
 export default class Statistics {
 
@@ -31,7 +31,7 @@ export default class Statistics {
      * @param additional 附加
      */
     async access(operate: string, additional?: string) {
-        if(utools.isDev()) {
+        if (utools.isDev()) {
             return;
         }
         let now = new Date();
@@ -56,13 +56,18 @@ export default class Statistics {
         } else {
             system = navigator.userAgent;
         }
-        await axios.post(`${Constant.statistics}/open/statistics?id=${Constant.uid}`, {
-            token: this.token,
-            nickname: this.nickname,
-            operate,
-            additional,
-            platform: Constant.platform,
-            system
+        await http({
+            url: `${Constant.statistics}/open/statistics?id=${Constant.uid}`,
+            method: "POST",
+            data: {
+                token: this.token,
+                nickname: this.nickname,
+                operate,
+                additional,
+                platform: Constant.mode,
+                system,
+                version: Constant.version
+            }
         });
 
     }
