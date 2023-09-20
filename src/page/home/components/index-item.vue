@@ -98,13 +98,14 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import IndexView from "@/view/index/IndexView";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import useIndexStore from "@/store/IndexStore";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'IndexItem',
     props: {
         index: Object as PropType<IndexView>
     },
-    emits: ['openDialog', 'openManage'],
+    emits: ['openDialog'],
     data: () => ({
         state: false,
         showExpand: false,
@@ -151,7 +152,7 @@ export default defineComponent({
             this.$emit('openDialog', title, json);
         },
         indexInfo() {
-            this.$emit('openManage', this.index?.name);
+            useIndexManageEvent.emit(this.index?.name);
         },
         newAlias() {
             MessageBoxUtil.prompt("请输入新别名", "提示", {
@@ -224,7 +225,7 @@ export default defineComponent({
     margin: 0;
     padding: 10px;
     border: var(--color-border-2) solid 1px;
-    border-radius: 5px;
+    border-radius: 2px;
     position: relative;
     min-width: 700px;
 

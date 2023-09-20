@@ -51,7 +51,7 @@ export default interface IndexView {
     size: string;
 
     /**
-     * 索引大小，原始逐句
+     * 索引大小，原始数据
      */
     original_size: number;
 

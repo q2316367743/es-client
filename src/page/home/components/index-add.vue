@@ -1,4 +1,7 @@
 <template>
+    <a-button type="primary" style="margin-left: 10px" @click="dialog = true" :disabled="!url">
+        新建
+    </a-button>
     <a-modal title="新增索引" v-model:visible="dialog" width="850px" draggable class="home-index-add"
         render-to-body unmount-on-close>
         <a-form :model="index" layout="vertical">
@@ -45,6 +48,8 @@ import Optional from "@/utils/Optional";
 
 import IndexMapping from "@/components/IndexMapping/index.vue";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {mapState} from "pinia";
+import useUrlStore from "@/store/UrlStore";
 
 export default defineComponent({
     name: 'index-add',
@@ -66,6 +71,9 @@ export default defineComponent({
             mapping: [] as Array<Property>
         } as IndexInstance,
     }),
+    computed: {
+        ...mapState(useUrlStore, ['url'])
+    },
     watch: {
         modelValue(newValue: boolean) {
             this.dialog = newValue;
