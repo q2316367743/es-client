@@ -19,27 +19,6 @@
                     "http://**/*",
                     "https://**/*"
                 ]
-            },
-            "shell": {
-                "all": true,
-                "open": true
-            },
-            "window": {
-                "maximize": true,
-                "unmaximize": true,
-                "minimize": true,
-                "close": true,
-                "setTitle": true,
-                "startDragging": true
-            },
-            "clipboard": {
-                "writeText": true
-            },
-            "dialog": {
-                "save": true
-            },
-            "fs": {
-                "writeFile": true
             }
         },
         "bundle": {

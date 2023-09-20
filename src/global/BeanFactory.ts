@@ -26,10 +26,6 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import ConditionExportEvent from "@/entity/event/ConditionExportEvent";
 
-window.rain = {
-    env: window.utools ? 'utools' : 'web'
-}
-
 window.utools = window.utools || utools;
 window.preload = window.preload || preload;
 

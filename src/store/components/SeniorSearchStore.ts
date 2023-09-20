@@ -57,7 +57,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         execute(index: number, instance: monaco.editor.IStandaloneCodeEditor) {
 
             let request = requestBuild(instance, index);
-            console.log(request)
             if (!request) {
                 MessageUtil.error('请求块无法识别');
                 return;
@@ -67,7 +66,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 return;
             }
             this.loading = true;
-            let success = true;
             if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
                 // 如果是新增文档，但是没有参数，不进行查询
                 this.result = "{}";
@@ -103,9 +101,8 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                     this.json = {};
                 }
             }).catch((e) => {
-                this.result = e.data;
+                this.result = e.response.data;
                 this.show = this.result;
-                success = false;
                 MessageUtil.error("执行失败", e);
             }).finally(() => {
                 this.loading = false;

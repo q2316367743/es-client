@@ -3,8 +3,8 @@ import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/MessageUtil";
 import {updateTo3ByUtools, updateTo3ByWeb} from "@/components/version-manager/updateTo3";
-import {raf} from "@arco-design/web-vue/es/_utils/raf";
 import useLoadingStore from "@/store/LoadingStore";
+import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
 export enum VersionStatus {
     // 新用户
@@ -40,13 +40,13 @@ export function versionManager(): VersionStatus {
 }
 
 function updateTo3() {
-    if (Constant.sign>= 300) {
-        if (window.rain.env === 'utools') {
+    if (Constant.sign >= 300) {
+        if (Constant.mode === PluginModeEnum.UTOOLS) {
             useLoadingStore().start("链接迁移")
             updateTo3ByUtools().then(() => MessageUtil.success("迁移完成"))
                 .catch(e => MessageUtil.error("迁移失败", e))
                 .finally(() => useLoadingStore().close());
-        }else if (window.rain.env === 'web') {
+        } else {
             useLoadingStore().start("链接迁移")
             updateTo3ByWeb().then(() => MessageUtil.success("迁移完成"))
                 .catch(e => MessageUtil.error("迁移失败", e))

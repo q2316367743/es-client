@@ -3,14 +3,10 @@
              :close-on-click-modal="false" destroy-on-close>
         <a-form :model="url" label-width="100px" ref="urlForm">
             <a-form-item :label="$t('common.keyword.name')" prop="name">
-                <a-input v-model="url.name"></a-input>
+                <a-input v-model="url.name" allow-clear/>
             </a-form-item>
             <a-form-item :label="$t('common.keyword.url')" prop="value">
-                <a-input v-model="url.value" :placeholder="$t('setting.link.placeholder.url')">
-                </a-input>
-            </a-form-item>
-            <a-form-item :label="$t('setting.link.form.sequence')" prop="sequence">
-                <a-input-number v-model="url.sequence" controls-position="right" size="large"/>
+                <a-input v-model="url.value" :placeholder="$t('setting.link.placeholder.url')" allow-clear/>
             </a-form-item>
             <a-form-item label="版本" prop="version">
                 <a-input v-model="url.version" placeholder="请输入版本，点击测试自动识别">
@@ -231,11 +227,11 @@ export default defineComponent({
                     this.testData = {
                         icon: 'success',
                         title: '链接成功',
-                        name: response.name,
-                        version: response.version.number,
-                        luceneVersion: response.version.lucene_version
+                        name: response.data.name,
+                        version: response.data.version.number,
+                        luceneVersion: response.data.version.lucene_version
                     }
-                    this.url.version = `${response.version.number}`;
+                    this.url.version = `${response.data.version.number}`;
                 }).catch(() => {
                 this.testData = {
                     icon: 'error',

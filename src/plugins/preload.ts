@@ -1,1 +1,5 @@
-export const preload = {}
+import axios from "axios";
+
+export const preload = {
+    axios: axios
+}

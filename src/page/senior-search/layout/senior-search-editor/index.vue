@@ -20,7 +20,7 @@ import RestClientEditor from "@/page/senior-search/layout/senior-search-editor/c
 import SsOption from "@/page/senior-search/layout/senior-search-editor/components/ss-option/index.vue";
 
 const size = useWindowSize();
-const height = computed(() => (size.height.value - 102) + 'px');
+const height = computed(() => (size.height.value - 103) + 'px');
 
 const editorInstance = ref<any | null>(null)
 const body = ref(useSeniorSearchStore().body);

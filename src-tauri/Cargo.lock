@@ -1527,16 +1527,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6f61fba1741ea2b3d6a1e3178721804bb716a68a6aeba1149b5d52e3d464ea66"
 
 [[package]]
-name = "open"
-version = "3.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2078c0039e6a54a0c42c28faa984e115fb4c2d5bf2208f77d1961002df8576f8"
-dependencies = [
- "pathdiff",
- "windows-sys 0.42.0",
-]
-
-[[package]]
 name = "openssl"
 version = "0.10.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1579,16 +1569,6 @@ dependencies = [
  "libc",
  "pkg-config",
  "vcpkg",
-]
-
-[[package]]
-name = "os_pipe"
-version = "1.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6a252f1f8c11e84b3ab59d7a488e48e4478a93937e027076638c49536204639"
-dependencies = [
- "libc",
- "windows-sys 0.42.0",
 ]
 
 [[package]]
@@ -1650,12 +1630,6 @@ name = "paste"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d01a5bd0424d00070b0098dd17ebca6f961a959dead1dbcbbbc1d1cd8d3deeba"
-
-[[package]]
-name = "pathdiff"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8835116a5c179084a830efb3adc117ab007512b535bc1a21c991d3b32a6b44dd"
 
 [[package]]
 name = "percent-encoding"
@@ -2321,16 +2295,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shared_child"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0d94659ad3c2137fef23ae75b03d5241d633f8acded53d672decfa0e6e0caef"
-dependencies = [
- "libc",
- "winapi",
-]
-
-[[package]]
 name = "siphasher"
 version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2544,19 +2508,15 @@ dependencies = [
  "minisign-verify",
  "objc",
  "once_cell",
- "open",
- "os_pipe",
  "percent-encoding",
  "rand 0.8.5",
  "raw-window-handle",
- "regex",
  "rfd",
  "semver 1.0.16",
  "serde",
  "serde_json",
  "serde_repr",
  "serialize-to-javascript",
- "shared_child",
  "state",
  "tar",
  "tauri-macros",
@@ -2605,7 +2565,6 @@ dependencies = [
  "png",
  "proc-macro2",
  "quote",
- "regex",
  "semver 1.0.16",
  "serde",
  "serde_json",

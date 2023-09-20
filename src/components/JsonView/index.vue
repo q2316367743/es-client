@@ -5,16 +5,18 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { highlight } from '@/global/BeanFactory';
-import { mapState } from "pinia";
+import {defineComponent} from "vue";
+import {highlight} from '@/global/BeanFactory';
+import {mapState} from "pinia";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
+import {jsonFormat} from "@/algorithm/jsonFormat";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'json-view',
     props: {
-        data: Object,
+        data: [Object, String],
         copy: {
             type: Boolean,
             required: false,
@@ -23,41 +25,54 @@ export default defineComponent({
     },
     data: () => ({
         value: '',
-        pretty: '',
+        origin: '',
         Optional
     }),
     computed: {
         ...mapState(useGlobalSettingStore, ['jsonFontSize'])
     },
     watch: {
-        data() {
-            let value = JSON.stringify(this.data, null, 4);
-            this.pretty = value;
-            if (value !== '') {
-                this.$nextTick(() => {
-                    let highlightResult = highlight.highlight(value, {
-                        language: 'json'
-                    });
-                    this.value = highlightResult.value;
-                })
-            }
+        data(value) {
+            this.value = this.render(value);
         }
     },
     created() {
-        let value = JSON.stringify(this.data, null, 4);
-        this.pretty = value;
-        if (value !== '') {
-            this.$nextTick(() => {
-                let highlightResult = highlight.highlight(value, {
-                    language: 'json'
-                });
-                this.value = highlightResult.value;
-            })
-        }
+        this.value = this.render(this.data);
     },
     methods: {
         execCopy() {
-            utools.copyText(this.pretty);
+            utools.copyText(this.origin);
+            MessageUtil.success("成功复制到剪切板");
+        },
+        render(data: any): string {
+            let value = '';
+            let needPretty = true;
+            if (typeof data === 'string') {
+                if (/^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/.test(data)) {
+                    try {
+                        value = jsonFormat(data)
+                    }catch (e) {
+                        MessageUtil.error("格式化JSON失败", e);
+                        value = this.data as string;
+                        needPretty = false;
+                    }
+                } else {
+                    value = this.data as string;
+                    needPretty = false;
+                }
+            } else {
+                value = JSON.stringify(data, null, 4);
+            }
+            // 原始值
+            this.origin = value;
+            if (needPretty && value !== '') {
+                let highlightResult = highlight.highlight(value, {
+                    language: 'json'
+                });
+                return highlightResult.value;
+            }else {
+                return value
+            }
         }
     }
 });

@@ -1,5 +1,6 @@
 import {Repository} from "@/view/Data";
 import UpdateLog from '@/data/UpdateLog'
+import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
 
 export default {
@@ -11,11 +12,7 @@ export default {
     author: "Esion",
     email: 'm17762618644@163.com',
     // @ts-ignore
-    platform: import.meta.env.VITE_PLATFORM,
-    // @ts-ignore
-    mode: import.meta.env.VITE_MODE,
-    // @ts-ignore
-    storage: import.meta.env.VITE_STORAGE,
+    mode: import.meta.env.VITE_MODE as PluginModeEnum,
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,
     homeUrl: 'https://blog.esion.xyz',

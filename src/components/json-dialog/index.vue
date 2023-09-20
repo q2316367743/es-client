@@ -1,21 +1,22 @@
 <template>
     <a-modal
-        :title="title"
-        v-model:visible="visible"
-        width="70%"
-        render-to-body
-        class="es-dialog"
-        top="10vh"
-        draggable
-        unmount-on-close
-        :footer="false"
+            :title="title"
+            v-model:visible="visible"
+            width="70%"
+            render-to-body
+            class="es-dialog"
+            top="10vh"
+            draggable
+            unmount-on-close
+            :footer="false"
     >
         <json-view :data="json"/>
     </a-modal>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, PropType} from "vue";
 import JsonView from "@/components/JsonView/index.vue";
+import {jsonFormat} from "@/algorithm/jsonFormat";
 
 export default defineComponent({
     name: 'json-dialog',
@@ -23,7 +24,7 @@ export default defineComponent({
     props: {
         value: Boolean,
         title: String,
-        json: Object,
+        json: [Object, String],
         open: {
             type: Boolean,
             required: false,
@@ -46,9 +47,9 @@ export default defineComponent({
             this.$emit("update:value", now);
         },
         value(newValue) {
-            this.visible = this.value;
+            this.visible = newValue;
         }
-    }
+    },
 });
 </script>
 <style>

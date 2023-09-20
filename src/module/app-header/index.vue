@@ -26,6 +26,8 @@
             </a-button>
         </div>
         <div class="right">
+            <!-- 控制台 -->
+            <app-bug />
             <!-- 各种信息弹框 -->
             <app-info class-name="menu-item" :disabled="loading" />
             <!-- 主题切换 -->
@@ -65,6 +67,7 @@ import LocalNameEnum from '@/enumeration/LocalNameEnum';
 // 组件
 import FeedbackModule from "@/module/Feedback/index.vue";
 import AppInfo from './app-info.vue';
+import AppBug from '@/module/app-bug/index.vue';
 // 引入状态管理
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
