@@ -2,6 +2,22 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.3',
+        sign: 303,
+        time: '2023-09-21',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '新增历史记录功能，可以保存记录用于以后重复使用'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '新增文件备份功能'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '修复Windows客户端复制等功能无效问题'
+        }],
+        remark: "新增2.0.0数据迁移功能，在【链接管理】=>【新增旁边的按钮】"
+    },
+    {
         version: '3.0.2',
         sign: 302,
         time: '2023-09-21',
