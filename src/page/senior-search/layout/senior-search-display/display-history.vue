@@ -6,7 +6,7 @@
         <a-list :data="results" :bordered="false" :virtual-list-props="virtualListProps">
             <template #item="{ item, index }">
                 <a-list-item :key="item.item.id">
-                    <a-link>{{ item.item.name }}</a-link>
+                    <a-link @click="load(item.item.id)">{{ item.item.name }}</a-link>
                     <template #extra>
                         <a-button-group type="text">
                             <a-tooltip content="载入">
