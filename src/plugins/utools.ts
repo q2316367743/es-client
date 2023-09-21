@@ -1,5 +1,5 @@
 import MessageUtil from '@/utils/MessageUtil';
-import {generateUUID} from "@/utils/BrowserUtil";
+import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
 
 // 模拟utools声明
@@ -214,6 +214,9 @@ export const utools = {
     isWindows,
     isLinux(): boolean {
         return !isMacOS() && !isWindows();
+    },
+    copyText(text: string) {
+        copy(text);
     }
 
 }

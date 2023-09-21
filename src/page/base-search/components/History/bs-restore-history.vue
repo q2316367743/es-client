@@ -45,6 +45,7 @@ import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 
 // 工具类
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'bsh-history',
@@ -57,6 +58,7 @@ export default defineComponent({
     methods: {
         execCopy(url: string) {
             utools.copyText(url);
+            MessageUtil.success("已成功复制到剪切板");
         },
         load(history: BaseSearchHistory) {
             useBaseSearchStore().loadHistory(history);

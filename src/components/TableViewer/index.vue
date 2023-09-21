@@ -47,6 +47,7 @@ import {buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc} from 
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
 import useIndexStore from "@/store/IndexStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 let sort: Sortable | undefined;
 
@@ -201,6 +202,7 @@ export default defineComponent({
         },
         copy(value: any) {
             utools.copyText(JSON.stringify(value, null, 4));
+            MessageUtil.success("已成功复制到剪切板");
         },
         handleChange(values: any[]) {
             this.showColumns = this.columns.filter(column => values.includes(column.dataIndex));

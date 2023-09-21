@@ -2,9 +2,6 @@ import {AxiosError, AxiosHeaders, AxiosRequestConfig} from "axios";
 import useUrlStore from "@/store/UrlStore";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 import JSONBig from 'json-bigint';
-import Constant from "@/global/Constant";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
-import {fetch, ResponseType, Body} from "@tauri-apps/api/http";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/MessageUtil";
@@ -34,32 +31,11 @@ const error = {
     }
 } as AxiosError
 
-async function tauri(config: AxiosRequestConfig): Promise<Response<string>> {
-    try {
-        let body = undefined;
-        if (config.data) {
-            body = typeof config.data === 'string' ? Body.text(config.data) : Body.json(config.data);
-        }
-        const rsp = await fetch<string>((config.baseURL || '') + (config.url || ''), {
-            headers: config.headers || {},
-            method: config.method as any,
-            query: config.params,
-            timeout: config.timeout,
-            responseType: ResponseType.Text,
-            body
-        });
-        return {
-            url: rsp.url,
-            data: rsp.data,
-            status: rsp.status
-        }
-    } catch (e) {
-        // TODO: 抛出的异常类型
-        console.error(e);
-        throw new AxiosError();
-    }
-}
-
+/**
+ * axios的简单封装
+ *
+ * @param config 配置项
+ */
 async function axios(config: AxiosRequestConfig): Promise<Response<string>> {
     const rsp = await window.preload.axios<string>({
         ...config,
@@ -72,16 +48,16 @@ async function axios(config: AxiosRequestConfig): Promise<Response<string>> {
     });
 }
 
-
+/**
+ * 执行一个HTTP请求
+ * @param config 请求配置项
+ * @return 响应内容
+ */
 export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> {
     config.timeout = useGlobalSettingStore().getTimeout;
     let result: Response<string>;
     // 先判断是否是判断是否是桌面客户端
-    if (Constant.mode === PluginModeEnum.DESKTOP) {
-        result = await tauri(config);
-    } else {
-        result = await axios(config);
-    }
+    result = await axios(config);
 
     if (config.responseType === 'text') {
 
@@ -104,7 +80,11 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
     }
 }
 
-
+/**
+ * 对HTTP请求的包装，主要是增加了请求记录
+ *
+ * @param config 请求配置项
+ */
 export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
     const now = new Date().getTime();
     const event = {
@@ -141,7 +121,8 @@ export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
 }
 
 /**
- * http请求
+ * 对es的http请求进行了封装，主要是增加了基础URL和认证信息
+ *
  * @param config
  */
 export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
@@ -181,6 +162,10 @@ export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
     });
 }
 
+/**
+ * JSON解析，将字符串解析为对象
+ * @param data
+ */
 export function jsonParse<T = any>(data: string): T {
     return JSONBig.parse(data, (_key, value) => {
         try {

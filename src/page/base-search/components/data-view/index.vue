@@ -20,6 +20,7 @@ import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'base-search-data-view',
@@ -61,6 +62,7 @@ export default defineComponent({
     methods: {
         execCopy() {
             utools.copyText(this.pretty);
+            MessageUtil.success("已成功复制到剪切板");
         },
         render() {
             this.pretty = JSON.stringify(this.current.result, null, 4);

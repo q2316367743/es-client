@@ -1,14 +1,11 @@
 import {useEventBus} from "@vueuse/core";
 
-
 import {BaseSearchRecordService} from "@/service/BaseSearchRecordService";
 
 import EventBusEnum from "@/enumeration/EventBusEnum";
 
-
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
-
 
 import Url from "@/entity/Url";
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
@@ -18,6 +15,7 @@ import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStra
 import Statistics from "@/plugins/Statistics";
 import {utools} from "@/plugins/utools";
 import {preload} from "@/plugins/preload";
+import {tauri, tauriPreload} from "@/plugins/tauri";
 import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
 import useUrlStore from "@/store/UrlStore";
 import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
@@ -25,9 +23,10 @@ import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import ConditionExportEvent from "@/entity/event/ConditionExportEvent";
+import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
 
-window.utools = window.utools || utools;
-window.preload = window.preload || preload;
+window.utools = Object.assign(utools, window.utools, tauri);
+window.preload = Object.assign(preload, window.preload, tauriPreload);
 
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();
@@ -60,7 +59,8 @@ export async function initData(): Promise<void> {
         // 设置
         useGlobalSettingStore().init(),
         useEditorSettingStore().init(),
-        useBaseSearchSettingStore().init()
+        useBaseSearchSettingStore().init(),
+        useBackupSettingStore().init()
     ]);
     return Promise.resolve();
 }

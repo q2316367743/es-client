@@ -67,6 +67,7 @@ import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
 import { jsonFormat } from "@/algorithm/jsonFormat";
+import MessageUtil from "@/utils/MessageUtil";
 
 /**
  * 每一项
@@ -138,6 +139,7 @@ export default defineComponent({
     methods: {
         execCopy() {
             utools.copyText(this.pretty);
+            MessageUtil.success("已成功复制到剪切板");
         },
         render() {
             // 渲染后的视图

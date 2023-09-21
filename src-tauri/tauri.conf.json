@@ -19,6 +19,15 @@
                     "http://**/*",
                     "https://**/*"
                 ]
+            },
+            "clipboard": {
+                "writeText": true
+            },
+            "notification": {
+                "all": true
+            },
+            "shell": {
+                "open": true
             }
         },
         "bundle": {

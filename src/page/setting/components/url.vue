@@ -128,7 +128,10 @@ function editOpen(url?: Url) {
     }
 }
 
-const execCopy = (text: string) => utools.copyText(text);
+const execCopy = (text: string) => {
+    utools.copyText(text);
+    MessageUtil.success("已成功复制到剪切板");
+};
 const open = (url: string) => utools.shellOpenExternal(url);
 
 </script>

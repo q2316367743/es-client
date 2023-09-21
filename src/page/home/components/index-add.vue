@@ -113,6 +113,7 @@ export default defineComponent({
         copyIndex() {
             // 执行拷贝
             utools.copyText(JSON.stringify(versionStrategyContext.getStrategy().indexCreateBuild(this.index), null, 4));
+            MessageUtil.success("已成功复制到剪切板");
             // 关闭弹框
             this.dialog = false;
         },

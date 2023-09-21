@@ -7,6 +7,7 @@ import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult"
 import {download} from "@/utils/BrowserUtil";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import useLoadingStore from "@/store/LoadingStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -159,6 +160,7 @@ export async function exportData(config: ExportConfig): Promise<void> {
             download(content, config.name + config.type, config.type);
         } else if (config.mode === ExportMode.COPY) {
             utools.copyText(content);
+            MessageUtil.success("已成功复制到剪切板");
         }
     }
     return Promise.resolve();

@@ -206,6 +206,7 @@ export default defineComponent({
         },
         execCopy(url?: string) {
             utools.copyText(Optional.ofNullable(url).orElse(''));
+            MessageUtil.success("已成功复制到剪切板");
         },
         jumpToBaseSearch() {
             if (this.index) {

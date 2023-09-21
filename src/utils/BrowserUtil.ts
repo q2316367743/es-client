@@ -1,5 +1,3 @@
-import MessageUtil from "@/utils/MessageUtil";
-
 /**
  * 下载
  * @param data 内容
@@ -23,9 +21,8 @@ export function download(data: string | ArrayBuffer | Blob, fileName: string, mi
 /**
  * 拷贝
  * @param content 内容
- * @param showMessage 显示消息，默认显示
  */
-export function copy(content: string, showMessage: boolean = true) {
+export function copy(content: string) {
     // content为要复制的内容
     // 创建元素用于复制
     const ele = document.createElement('textarea');
@@ -39,9 +36,6 @@ export function copy(content: string, showMessage: boolean = true) {
     document.execCommand('copy');
     // 删除创建元素
     document.body.removeChild(ele);
-    if (showMessage) {
-        MessageUtil.success('已成功复制到剪切板');
-    }
 }
 
 export function downloadByUrl(url: string, fileName?: string) {
