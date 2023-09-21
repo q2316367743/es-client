@@ -1,14 +1,14 @@
-import BaseQuery from "@/entity/BaseQuery";
+import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {ConditionArray, DocumentSearchQuery, QuerySort} from "@/components/es/domain/DocumentSearchQuery";
 
 /**
  * 获取基础查询请求体
  * @returns 基础查询请求体
  */
-function getBaseBody(page: number, size: number): any {
+function getBaseBody(page: number, size: number): DocumentSearchQuery {
     return {
         query: {
             bool: {
@@ -19,20 +19,24 @@ function getBaseBody(page: number, size: number): any {
         },
         from: (page - 1) * size,
         size: size,
-        sort: [],
+        sort: {},
         aggs: {},
     };
 }
 
-function buildQuery(query: BaseQuery, array: Array<any>): void {
-    if ((!query.field || query.field === '') && query.condition !== 'exists') {
-        return;
-    }
+function buildQuery(query: BaseQuery, array: ConditionArray): void {
+    // 启用
     if (!query.isEnable) {
         return;
     }
+    // 字段是否为空
+    if (!query.field || query.field === '') {
+        if (query.condition !== 'exists' && query.condition !== 'missing') {
+            return;
+        }
+    }
     let condition = {} as any;
-    let expression = {} as any;
+    let expression: Record<string, any> = {};
     let cod: string = query.condition;
     // 不同的条件，查询方式和表达式不同
     if (query.condition === 'match' ||
@@ -43,6 +47,9 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
         expression[query.field] = JSON.parse(query.value);
     } else if (query.condition === 'exists') {
         expression["field"] = query.field;
+    } else if (query.condition === 'missing') {
+        expression["field"] = query.field;
+        cod = 'exists';
     } else if (query.condition === 'range_lt') {
         let value = {} as any;
         value['lt'] = query.value;
@@ -70,17 +77,18 @@ function buildQuery(query: BaseQuery, array: Array<any>): void {
     array.push(condition);
 }
 
-function buildOrder(orders: Array<BaseOrder>, body: any) {
-    body.sort = {};
+function buildOrder(orders: Array<BaseOrder>): QuerySort {
+    const sort: QuerySort = {};
     for (let order of orders) {
         if (order.field === '' || order.type === null) {
             continue;
         }
         if (!order.isEnable) {
-            return;
+            continue;
         }
-        body.sort[order.field] = {order: order.type};
+        sort[order.field] = {order: order.type};
     }
+    return sort;
 }
 
 /**
@@ -97,30 +105,45 @@ export default function QueryConditionBuild(
     size: number,
     orders: Array<BaseOrder>
 ): DocumentSearchQuery {
-    let must = [] as Array<any>;
-    let must_not = [] as Array<any>;
-    let should = [] as Array<any>;
+    let must: ConditionArray = [];
+    let must_not: ConditionArray = [];
+    let should: ConditionArray = [];
     let index = 0;
     for (let query of queries) {
         index += 1;
         try {
-            if (query.type === 'must') {
-                buildQuery(query, must);
-            } else if (query.type === 'must_not') {
-                buildQuery(query, must_not);
-            } else if (query.type === 'should') {
-                buildQuery(query, should);
+            if (query.condition === 'missing') {
+                // 取反
+                if (query.type === 'must') {
+                    buildQuery(query, must_not);
+                } else if (query.type === 'must_not') {
+                    buildQuery(query, must);
+                } else if (query.type === 'should') {
+                    buildQuery(query, should);
+                }
+            } else {
+                if (query.type === 'must') {
+                    buildQuery(query, must);
+                } else if (query.type === 'must_not') {
+                    buildQuery(query, must_not);
+                } else if (query.type === 'should') {
+                    buildQuery(query, should);
+                }
             }
         } catch (e) {
             MessageUtil.warning(`第${index}个条件解析错误`, e);
         }
     }
     let body = getBaseBody(page, size);
-    body.query.bool.must = must;
-    body.query.bool.must_not = must_not;
-    body.query.bool.should = should;
+    body.query = {
+        bool: {
+            must,
+            must_not,
+            should
+        }
+    }
     if (orders.length > 0) {
-        buildOrder(orders, body);
+        body.sort = buildOrder(orders);
     }
     let customerOption = {} as Record<string, any>;
     if (useBaseSearchSettingStore().enableTrackTotalHits) {

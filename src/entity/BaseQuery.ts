@@ -1,7 +1,7 @@
 /**
  * 基础查询
  */
-export default interface BaseQuery {
+export interface BaseQuery {
 
     /**
      * 唯一标识，时间戳
@@ -12,7 +12,7 @@ export default interface BaseQuery {
      * 查询类型 <br />
      * ['must', 'should', 'must_not']
      */
-    type: string,
+    type: BaseQueryType,
 
     /**
      * 字段
@@ -21,9 +21,9 @@ export default interface BaseQuery {
 
     /**
      * 条件 <br />
-     * ['match', 'wildcard', 'prefix', 'range', 'fuzzy', 'query_string', 'text', 'missing']
+     * 'match', 'wildcard', 'prefix', 'range', 'fuzzy', 'query_string', 'text', 'missing'
      */
-    condition: 'match' | 'term' | 'terms' | 'exists' | 'wildcard' | 'range_lt' | 'range_lte' | 'range_gt' | 'range_gte';
+    condition: BaseQueryCondition;
 
     /**
      * 值
@@ -35,4 +35,20 @@ export default interface BaseQuery {
      */
     isEnable: boolean;
 
+}
+
+export type BaseQueryType = 'must' | 'should' | 'must_not';
+
+export type BaseQueryCondition = 'match' | 'term' | 'terms' | 'exists' | 'missing' | 'wildcard' |
+    'range_lt' | 'range_lte' | 'range_gt' | 'range_gte';
+
+export function getDefaultBaseQuery():BaseQuery {
+    return {
+        id: new Date().getTime(),
+        condition: 'match',
+        field: '',
+        isEnable: true,
+        type: 'must',
+        value: ''
+    }
 }

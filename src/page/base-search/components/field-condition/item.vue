@@ -8,11 +8,10 @@
             <template #unchecked>禁用</template>
         </a-switch>
         <!-- 选择查询模式 -->
-        <a-select v-model="condition.type" filterable :placeholder="$t('baseSearch.placeholder.condition')"
-                  style="width: 110px;">
+        <a-select v-model="condition.type" filterable placeholder="请选择查询条件" style="width: 120px;">
             <a-option label="must" value="must"/>
-            <a-option label="must_not" value="must_not"/>
-            <a-option label="should" value="should"/>
+            <a-option label="should" value="should" :disabled="condition.condition === 'missing'"/>
+            <a-option label="must not" value="must_not" />
         </a-select>
         <!-- 选择查询字段 -->
         <a-select v-model="condition.field" allow-search allow-create allow-clear placeholder="请选择查询字段"
@@ -31,6 +30,8 @@
             <a-option label="terms" value="terms"/>
             <!-- 是否存在 -->
             <a-option label="exists" value="exists"/>
+            <!-- 是否不存在 -->
+            <a-option label="missing" value="missing"/>
             <!-- 通配符查询 -->
             <a-option label="wildcard" value="wildcard"/>
             <a-option label="range lt" value="range_lt"/>
@@ -38,79 +39,61 @@
             <a-option label="range gt" value="range_gt"/>
             <a-option label="range gte" value="range_gte"/>
         </a-select>
+        <!-- 值 -->
         <div class="condition-terms" v-if="condition.condition === 'terms'" @click="textArea">
             {{ condition.value }}
         </div>
-        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;" v-else-if="condition.condition !== 'exists'" allow-clear/>
+        <a-input v-model="condition.value" style="width: 180px; margin-left: 10px;"
+                 v-if="condition.condition !== 'exists' && condition.condition !== 'missing'" allow-clear/>
         <!-- 操作 -->
         <a-button type="primary" style="margin-left: 10px" @click="add()">
             <template #icon>
-                <icon-plus />
+                <icon-plus/>
             </template>
         </a-button>
         <a-button type="primary" status="danger" @click="remove(condition.id)">
             <template #icon>
-                <icon-minus />
+                <icon-minus/>
             </template>
         </a-button>
         <a-button type="primary" status="success" style="margin-left:10px;margin-right: 20px;" @click="search()">
             <template #icon>
-                <icon-search />
+                <icon-search/>
             </template>
         </a-button>
     </div>
 </template>
-<script lang="ts">
-import BaseQuery from "@/entity/BaseQuery";
-import {defineComponent, PropType} from "vue";
-import {mapState} from "pinia";
+<script lang="ts" setup>
+import {BaseQuery, getDefaultBaseQuery} from "@/entity/BaseQuery";
+import {computed, PropType, ref, watch} from "vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
-export default defineComponent({
-    name: 'field-condition-item',
-    props: {
-        modelValue: Object as PropType<BaseQuery>,
-        index: Number
-    },
-    emits: ['add', 'remove', 'editTextArea', 'update:modelValue'],
-    data: () => ({
-        condition: {} as BaseQuery
-    }),
-    computed: {
-        ...mapState(useBaseSearchStore, ['fields'])
-    },
-    created() {
-        this.condition = this.modelValue!;
-    },
-    watch: {
-        condition: {
-            handler() {
-                this.$emit("update:modelValue", this.condition);
-            },
-            deep: true
-        },
-        modelValue: {
-            handler() {
-                this.condition = this.modelValue!;
-            },
-            deep: true
-        }
-    },
-    methods: {
-        add() {
-            this.$emit('add');
-        },
-        remove(id: number) {
-            this.$emit('remove', id)
-        },
-        textArea() {
-            this.$emit('editTextArea', this.index);
-        },
-        search() {
-            useBaseSearchStore().search();
-        }
-    }
+const props = defineProps({
+    modelValue: Object as PropType<BaseQuery>,
+    index: Number
 });
+const emits = defineEmits(['add', 'remove', 'editTextArea', 'update:modelValue']);
+
+const condition = ref<BaseQuery>(getDefaultBaseQuery());
+
+const fields = computed(() => useBaseSearchStore().fields);
+
+condition.value = Object.assign(condition.value, props.modelValue);
+
+watch(() => condition.value, value => emits('update:modelValue', value), {deep: true});
+watch(() => props.modelValue, value => condition.value = Object.assign(condition.value, value));
+watch(() => condition.value.condition, value => {
+    if (value === 'missing') {
+        condition.value.type = 'must';
+    }
+})
+
+const add = () => emits('add')
+const remove = (id: number) => emits('remove', id);
+const textArea = () => emits('editTextArea', props.index);
+const search = () => useBaseSearchStore().search();
+
+
 </script>
 <style scoped lang="less">
 .field-condition-item {

@@ -1,4 +1,4 @@
-import BaseQuery from "@/entity/BaseQuery";
+import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 
 /**

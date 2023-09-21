@@ -46,7 +46,7 @@ export default defineComponent({
         order: {
             id: new Date().getTime(),
             field: '',
-            type: ''
+            type: 'asc'
         } as BaseOrder
     }),
     computed: {

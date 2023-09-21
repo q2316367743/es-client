@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {BaseSearchItemBody} from "@/page/base-search/domain/BaseSearchItem";
-import BaseQuery from "@/entity/BaseQuery";
+import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import Field from "@/view/Field";
 import DocumentApi from "@/components/es/api/DocumentApi";

@@ -1,3 +1,5 @@
+import {SortConditionType} from "@/components/es/domain/DocumentSearchQuery";
+
 /**
  * 基础排序
  */
@@ -13,7 +15,7 @@ export default interface BaseOrder {
     /**
      * 排序的方式
      */
-    type: string;
+    type: SortConditionType;
 
     /**
      * 是否启用

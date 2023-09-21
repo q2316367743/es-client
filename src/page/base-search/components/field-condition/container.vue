@@ -22,7 +22,7 @@ import {Codemirror} from 'vue-codemirror';
 import {json} from '@codemirror/lang-json';
 
 import FieldConditionItem from "./item.vue";
-import BaseQuery from "@/entity/BaseQuery";
+import {BaseQuery} from "@/entity/BaseQuery";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 
 const conditions = ref<Array<BaseQuery>>(new Array<BaseQuery>());

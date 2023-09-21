@@ -1,5 +1,5 @@
 import Base from "@/entity/Base";
-import BaseQuery from "@/entity/BaseQuery";
+import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 
 export interface BaseSearchRecord extends Base {
