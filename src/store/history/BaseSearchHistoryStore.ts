@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {listByAsync} from "@/utils/utools/DbStorageUtil";
+import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
@@ -51,15 +51,7 @@ const useBaseSearchHistoryStore = defineStore('base-search-history', {
             this.baseSearchHistories = new Array<BaseSearchHistory>();
         },
         async _sync() {
-            const res = await utools.db.promises.put({
-                _id: LocalNameEnum.DB_BASE_SEARCH_HISTORY,
-                _rev: this.rev,
-                value: toRaw(this.baseSearchHistories)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
+            this.rev = await saveListByAsync(LocalNameEnum.DB_BASE_SEARCH_HISTORY, toRaw(this.baseSearchHistories), this.rev);
         },
     }
 });

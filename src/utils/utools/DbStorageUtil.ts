@@ -88,13 +88,18 @@ export async function getFromOneByAsync<T extends Record<string, any>>(key: stri
     });
 }
 
-export async function saveOneByAsync(key: string, value: Record<string, any>, rev?: string): Promise<undefined | string> {
+export async function saveOneByAsync<T>(key: string, value: T, rev?: string): Promise<undefined | string> {
     const res = await utools.db.promises.put({
         _id: key,
         _rev: rev,
         value: toRaw(value)
     });
     if (res.error) {
+        if (res.message === "Document update conflict") {
+            // 查询后更新
+            const res = await utools.db.promises.get(key);
+            return await saveOneByAsync(key, value, res ? res._rev : undefined);
+        }
         return Promise.reject(res.message);
     }
     return Promise.resolve(res.rev);

@@ -15,6 +15,8 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import {seniorSearchRecordService, useSeniorShowResultEvent} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
 import {toRaw} from "vue";
+import useLoadingStore from "@/store/LoadingStore";
+import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -31,6 +33,10 @@ function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: numb
 
 export const useSeniorSearchStore = defineStore('senior-search', {
     state: () => ({
+        // 历史相关
+        id: 0,
+        rev: undefined as string | undefined,
+
         body: '',
 
         // 实际的结果
@@ -139,8 +145,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             this.result = '';
             this.filter = ""
         },
-        save() {
-        },
         formatDocument() {
             try {
                 this.body = restFormat(this.body);
@@ -153,7 +157,37 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             this.body = this.body +
                 '\n\n' +
                 `${event.method} ${event.link}\n` +
-                event.body
+                event.body;
+        },
+        saveHistory() {
+            useLoadingStore().start("保存中");
+            if (this.id > 0) {
+                useSeniorSearchHistoryStore()
+                    .update(this.id, this.body)
+                    .then(() => MessageUtil.success("保存成功"))
+                    .catch(e => MessageUtil.error("保存失败", e))
+                    .finally(() => useLoadingStore().close());
+            } else {
+                useSeniorSearchHistoryStore()
+                    .save(this.body)
+                    .then(id => {
+                        this.id = id;
+                        MessageUtil.success("保存成功");
+                    })
+                    .catch(e => MessageUtil.error("保存失败", e))
+                    .finally(() => useLoadingStore().close());
+            }
+        },
+        loadHistory(id: number) {
+            this.id = id;
+            useLoadingStore().start("获取历史记录中");
+            useSeniorSearchHistoryStore().getInfo(this.id)
+                .then(body => this.body = body)
+                .catch(e => MessageUtil.error("获取详情失败", e))
+                .finally(() => useLoadingStore().close());
+        },
+        clearHistory() {
+            this.id = 0;
         }
     }
 })

@@ -17,7 +17,7 @@ export interface SeniorSearchHistoryRecord {
     id: number;
 
     /**
-     * 参数
+     * 内容
      */
     body: string;
 

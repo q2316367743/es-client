@@ -1,10 +1,17 @@
 <template>
     <div class="option">
         <div>
-            <a-tooltip content="保存" position="right">
-                <a-button type="text" status="success" @click="save()">
+            <a-tooltip :content="allowEdit ? '更新' : '保存'" position="right">
+                <a-button type="text" :status="allowEdit ? 'danger' : 'success'" @click="saveHistory()">
                     <template #icon>
                         <icon-save :size="18"/>
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-tooltip content="取消与历史记录的关联" v-if="allowEdit" position="right">
+                <a-button type="text" status="danger" @click="clearHistory()">
+                    <template #icon>
+                        <icon-close />
                     </template>
                 </a-button>
             </a-tooltip>
@@ -60,11 +67,13 @@ import SsSetting from '@/page/senior-search/components/ss-setting/index.vue'
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 const view = computed<ViewTypeEnum>(() => useSeniorSearchStore().view);
+const allowEdit = computed(() => useSeniorSearchStore().id !== 0);
 
 const openHelp = () => utools.shellOpenExternal('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
 const formatDocument = () => useSeniorSearchStore().formatDocument();
-const save = () => useSeniorSearchStore().save();
 const clearBody = () => useSeniorSearchStore().clearBody();
+const saveHistory = () => useSeniorSearchStore().saveHistory();
+const clearHistory = () => useSeniorSearchStore().clearHistory();
 
 function select(value: any) {
     useSeniorSearchStore().updateView(value);

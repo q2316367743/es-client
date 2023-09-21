@@ -24,6 +24,7 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import ConditionExportEvent from "@/entity/event/ConditionExportEvent";
 import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
+import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 
 window.utools = Object.assign(utools, window.utools, tauri);
 window.preload = Object.assign(preload, window.preload, tauriPreload);
@@ -54,8 +55,9 @@ statistics.open()
 export async function initData(): Promise<void> {
     await Promise.all([
         useUrlStore().init(),
+        // 历史记录
         useBaseSearchHistoryStore().init(),
-        useEditorSettingStore().init(),
+        useSeniorSearchHistoryStore().init(),
         // 设置
         useGlobalSettingStore().init(),
         useEditorSettingStore().init(),

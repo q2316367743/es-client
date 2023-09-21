@@ -27,7 +27,20 @@
                     <a-table-column data-index="link" :width="150" title="请求连接"/>
                     <a-table-column :width="85" title="操作" fixed="right">
                         <template #cell="{ record }">
-                            <a-button type="primary" @click="load(record)">载入</a-button>
+                            <a-tooltip content="载入">
+                                <a-button type="primary" @click="load(record)">
+                                    <template #icon>
+                                        <icon-import />
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
+                            <a-popconfirm content="是否删除此记录？">
+                                <a-button type="primary" status="danger">
+                                    <template #icon>
+                                        <icon-delete />
+                                    </template>
+                                </a-button>
+                            </a-popconfirm>
                         </template>
                     </a-table-column>
                 </template>
