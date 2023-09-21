@@ -14,9 +14,10 @@
                     <field-order-container/>
                 </a-form-item>
                 <div class="base-condition-pagination">
-                    <a-pagination :total="current.total" :current="current.page"
-                                  :page-size="current.size" show-total @change="pageChange($event)"/>
-                    <a-input-number v-model="current.size" style="width: 70px"/>
+                    <a-pagination :total="current.total" :current="current.page" @change="pageChange($event)"
+                                  :page-size="current.size" show-total show-jumper/>
+                    <a-input-number :default-value="current.size" style="width: 70px;margin-left: 10px;"
+                                    @change="sizeChange($event)"/>
                 </div>
             </a-form>
         </div>
@@ -28,7 +29,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import BaseSearchDataView from "@/page/base-search/components/data-view/index.vue";
 import FieldOrderContainer from "@/page/base-search/components/filed-order/container.vue";
 import FieldConditionContainer from "@/page/base-search/components/field-condition/container.vue";
@@ -38,15 +39,16 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 export default defineComponent({
     name: 'base-search-display',
     components: {FieldConditionContainer, FieldOrderContainer, BaseSearchDataView},
-    data: () => ({
-
-    }),
+    data: () => ({}),
     computed: {
         ...mapState(useBaseSearchStore, ['current'])
     },
     methods: {
         pageChange(page: number) {
             useBaseSearchStore().setCurrentPage(page);
+        },
+        sizeChange(size: number) {
+            useBaseSearchStore().setCurrentSize(size);
         }
     }
 });

@@ -85,6 +85,10 @@ export const useBaseSearchStore = defineStore('base-search', {
             this.current.page = page;
             this.search()
         },
+        setCurrentSize(size: number) {
+            this.current.size = size;
+            this.search()
+        },
 
         getCondition(): DocumentSearchQuery {
             return QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
