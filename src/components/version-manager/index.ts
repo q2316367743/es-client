@@ -27,30 +27,35 @@ export function versionManager(): VersionStatus {
     if (version === '') {
         setItem(LocalNameEnum.KEY_VERSION, Constant.version);
         MessageUtil.success("欢迎您使用es-client");
-        updateTo3();
+        updateTo();
         return VersionStatus.NEW;
     } else if (version != Constant.version) {
         setItem(LocalNameEnum.KEY_VERSION, Constant.version);
         MessageUtil.success("欢迎您更新到" + Constant.version);
-        updateTo3();
+        updateTo();
         return VersionStatus.UPDATE;
     } else {
         return VersionStatus.NONE;
     }
 }
 
-function updateTo3() {
+function updateTo() {
     if (Constant.sign === 300) {
-        if (Constant.mode === PluginModeEnum.UTOOLS) {
-            useLoadingStore().start("链接迁移")
-            updateTo3ByUtools().then(() => MessageUtil.success("迁移完成"))
-                .catch(e => MessageUtil.error("迁移失败", e))
-                .finally(() => useLoadingStore().close());
-        } else {
-            useLoadingStore().start("链接迁移")
-            updateTo3ByWeb().then(() => MessageUtil.success("迁移完成"))
-                .catch(e => MessageUtil.error("迁移失败", e))
-                .finally(() => useLoadingStore().close());
-        }
+        updateTo3();
     }
 }
+
+export function updateTo3() {
+    if (Constant.mode === PluginModeEnum.UTOOLS) {
+        useLoadingStore().start("链接迁移")
+        updateTo3ByUtools().then(() => MessageUtil.success("迁移完成"))
+            .catch(e => MessageUtil.error("迁移失败", e))
+            .finally(() => useLoadingStore().close());
+    } else {
+        useLoadingStore().start("链接迁移")
+        updateTo3ByWeb().then(() => MessageUtil.success("迁移完成"))
+            .catch(e => MessageUtil.error("迁移失败", e))
+            .finally(() => useLoadingStore().close());
+    }
+}
+

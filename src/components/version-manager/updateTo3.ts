@@ -13,7 +13,6 @@ export async function updateTo3ByUtools() {
 }
 
 class DexieInstance extends Dexie {
-
     constructor(tableName: string) {
         super(tableName);
         this.version(5).stores({

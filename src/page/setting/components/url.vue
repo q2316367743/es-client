@@ -2,7 +2,12 @@
     <div class="setting-url">
         <div class="setting-url-toolbar">
             <a-input v-model="keyword" style="width: 40vw;" placeholder="链接名称" allow-clear/>
-            <a-button type="primary" @click="editOpen()">新增</a-button>
+            <a-dropdown-button @click="editOpen()" type="primary">
+                新增
+                <template #content>
+                    <a-doption @click="updateTo3()">2.0.0数据迁移</a-doption>
+                </template>
+            </a-dropdown-button>
         </div>
         <a-table ref="urlTable" :data="urls" class="data" sticky-header style="height: 100%;" :draggable="draggable"
                  @change="urlChange($event)">
@@ -50,11 +55,11 @@ import Url from "@/entity/Url";
 
 import {useUrlEditEvent} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import SaveOrUpdateUrl from "@/page/setting/components/save-or-update-url/index.vue";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {TableDraggable} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
+import {updateTo3} from "@/components/version-manager";
 
 const route = useRoute();
 

@@ -2,6 +2,15 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.2',
+        sign: 302,
+        time: '2023-09-21',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '紧急新增2.0.0数据迁移功能，在【链接管理】=>【新增旁边的按钮】'
+        }],
+    },
+    {
         version: '3.0.1',
         sign: 301,
         time: '2023-09-20',
