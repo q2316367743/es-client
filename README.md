@@ -1,5 +1,5 @@
 <p align="center">
-<img src="http://es-client.esion.xyz/logo.png" alt="图标" >
+<img src="./public/logo.png" alt="图标" >
 </p>
 
 <p align="center"><strong>elasticsearch查询客户端。</strong></p>
@@ -21,10 +21,10 @@
 		<img src="https://img.shields.io/badge/firefox-v2.8.6-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
-        <img src='https://img.shields.io/badge/windows-v3.0.0-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v3.0.2-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.0.0-%23787B80' alt="utools"/>
+        <img src='https://img.shields.io/badge/utools-v3.0.2-%23787B80' alt="utools"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
