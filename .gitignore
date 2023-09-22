@@ -2,9 +2,6 @@
 node_modules
 /dist*
 /out
-electron/node_modules
-electron/html
-electron/out
 src-edge/es-client
 chrome.crx
 chrome.pem
@@ -62,3 +59,7 @@ pnpm-debug.log*
 
 # utools
 /src-utools/dist
+
+# electron
+/dist-electron
+/release
