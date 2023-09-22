@@ -47,8 +47,10 @@ export default defineComponent({
         pageChange(page: number) {
             useBaseSearchStore().setCurrentPage(page);
         },
-        sizeChange(size: number) {
-            useBaseSearchStore().setCurrentSize(size);
+        sizeChange(size?: number) {
+            if (typeof size !== 'undefined') {
+                useBaseSearchStore().setCurrentSize(size);
+            }
         }
     }
 });
