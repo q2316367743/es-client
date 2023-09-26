@@ -35,6 +35,12 @@
             </a-descriptions>
         </a-card>
         <template #footer>
+            <a-tooltip content="控制台">
+                <a-switch :model-value="vconsole != null" @change="switchVConsole()">
+                    <template #checked>打开</template>
+                    <template #unchecked>关闭</template>
+                </a-switch>
+            </a-tooltip>
             <a-button type="primary" status="danger" @click="clear()">清空</a-button>
         </template>
     </a-drawer>
@@ -42,10 +48,12 @@
     <json-dialog :title="dialog.title" :json="dialog.data" :open="true" v-model:value="dialog.visible"/>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import {toDateString} from "xe-utils";
 import JsonDialog from "@/components/json-dialog/index.vue";
+import VConsole from 'vconsole';
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const visible = ref(false);
 // 信息弹框
@@ -58,6 +66,27 @@ const dialog = ref({
 
 const hasNew = computed(() => useErrorStore().hasNew);
 const records = computed(() => useErrorStore().records);
+
+let vconsole: VConsole | null;
+
+watch(() => useGlobalStore().isDark, isDark => {
+    if (vconsole) {
+        vconsole.setOption({
+            theme: isDark ? 'dark' : 'light'
+        })
+    }
+});
+
+function switchVConsole() {
+    if (vconsole) {
+        vconsole.destroy();
+        vconsole = null;
+    } else {
+        vconsole = new VConsole({
+            theme: useGlobalStore().isDark ? 'dark' : 'light'
+        });
+    }
+}
 
 const prettyDate = (date: Date) => toDateString(date, "yyyy-MM-dd HH:mm:ss");
 const clear = () => useErrorStore().clear();
