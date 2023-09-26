@@ -1,15 +1,17 @@
 <template>
     <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
         :popup-offset="2">
-        <div class="item" style="display: flex;" @click="showIndex">
-            <div v-if="name === ''" style="user-select: none;">未选择索引</div>
-            <div v-else style="user-select: none;">{{ name }}</div>
-            <icon-up style="margin: 5px;" v-if="show" />
-            <icon-down style="margin: 5px;" v-else />
-        </div>
+        <a-button type="dashed" size="mini" @click="showIndex()">
+            <template #icon>
+                <icon-up style="margin: 5px;" v-if="show" />
+                <icon-down style="margin: 5px;" v-else />
+            </template>
+            <span v-if="name === ''" style="user-select: none;">未选择索引</span>
+            <span v-else style="user-select: none;">{{ name }}</span>
+        </a-button>
         <template #content>
             <div class="data-browse-pull-down-panel">
-                <a-empty v-if="indices.length === 0" description="请选择链接" />
+                <a-empty v-if="indices.length === 0" description="请选择链接" style="padding-top: 150px"/>
                 <div class="data-browse-pull-down-index" v-else>
                     <a-input v-model="keyword" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch"
                         allow-clear />

@@ -1,15 +1,19 @@
 <template>
-    <div class="page-help">
-        <div class="item" :class="page === 1 ? 'disable' : ''" @click="toFirst">
-            <icon-double-left/>
-        </div>
-        <div class="item" :class="page === 1 ? 'disable' : ''" @click="prePage">
-            <icon-left/>
-        </div>
+    <a-button-group type="text" size="mini" class="page-help">
+        <a-button :disabled="page === 1" @click="toFirst()">
+            <template #icon>
+                <icon-double-left/>
+            </template>
+        </a-button>
+        <a-button :disabled="page === 1" @click="prePage()">
+            <template #icon>
+                <icon-left/>
+            </template>
+        </a-button>
         <a-dropdown trigger="click" @select="pageSizeChange">
-            <div class="item" style="font-size: 12px;line-height: 20px;">
+            <a-button style="font-size: 12px;line-height: 20px;">
                 {{ (page - 1) * size }} - {{ Math.min(page * size, total) }}
-            </div>
+            </a-button>
             <template #content>
                 <a-doption value="1">10</a-doption>
                 <a-doption value="2">100</a-doption>
@@ -19,16 +23,20 @@
                 <a-doption value="6">自定义</a-doption>
             </template>
         </a-dropdown>
-        <div class="item" style="font-size: 12px">
+        <a-button style="font-size: 12px">
             / {{ total }}
-        </div>
-        <div class="item" :class="page * size > total ? 'disable' : ''" @click="nextPage">
-            <icon-right/>
-        </div>
-        <div class="item" :class="page * size > total ? 'disable' : ''" @click="toLast">
-            <icon-double-right/>
-        </div>
-    </div>
+        </a-button>
+        <a-button :disabled="page * size > total" @click="nextPage()">
+            <template #icon>
+                <icon-right/>
+            </template>
+        </a-button>
+        <a-button :disabled="page * size > total" @click="toLast()">
+            <template #icon>
+                <icon-double-right/>
+            </template>
+        </a-button>
+    </a-button-group>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -127,5 +135,6 @@ export default defineComponent({
 <style scoped>
 .page-help {
     display: flex;
+    margin: 0;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="option">
         <!-- 左侧条件 -->
-        <div class="left">
+        <a-button-group class="left">
             <page-help/>
             <div class="sep"></div>
             <db-simple-item :disable="type === ''" tip="刷新" @click="executeQuery(false)">
@@ -19,9 +19,9 @@
                             @click="recordEdit">
                 <icon-edit/>
             </db-simple-item>
-        </div>
+        </a-button-group>
         <!-- 右侧条件 -->
-        <div class="right">
+        <a-button-group class="right">
             <!-- 选择索引 -->
             <db-index-select @index-change="indexChange"/>
             <!-- 打印 -->
@@ -49,11 +49,11 @@
                     <div class="table-view-trigger">
                         <a-list style="width: 250px">
                             <template #header>
-                                <a-button long status="danger" type="primary" size="small" @click="resetColumn">重置
+                                <a-button long status="danger" type="primary" size="small" @click="resetColumn()">重置
                                 </a-button>
                             </template>
                             <a-scrollbar style="height: 341px;overflow: auto;width: 250px;">
-                                <a-checkbox-group :model-value="checkItems" @change="handleChange">
+                                <a-checkbox-group :model-value="checkItems" @change="handleChange($event)">
                                     <div v-for="column in columns" style="width: 240px;margin: 5px 5px;">
                                         <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
                                     </div>
@@ -65,9 +65,11 @@
             </a-trigger>
             <!-- 操作 -->
             <a-dropdown trigger="click">
-                <div class="item">
-                    <icon-more-vertical/>
-                </div>
+                <a-button type="text" size="mini">
+                    <template #icon>
+                        <icon-more-vertical/>
+                    </template>
+                </a-button>
                 <template #content>
                     <a-doption>
                         <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助
@@ -75,7 +77,7 @@
                     </a-doption>
                 </template>
             </a-dropdown>
-        </div>
+        </a-button-group>
         <!-- 新增对话框 -->
         <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px" height="520px"
                  draggable>
@@ -84,9 +86,9 @@
                         :autofocus="true"
                         :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
             <template #footer>
-                <a-button type="text" @click="jumpToSeniorSearchByInsert">跳转到高级查询</a-button>
+                <a-button type="text" @click="jumpToSeniorSearchByInsert()">跳转到高级查询</a-button>
                 <a-button @click="addConfig.dialog = false">取消</a-button>
-                <a-button type="primary" @click="recordAddClick">新增</a-button>
+                <a-button type="primary" @click="recordAddClick()">新增</a-button>
             </template>
         </a-modal>
         <!-- 修改对话框 -->
@@ -98,9 +100,9 @@
                         :autofocus="true"
                         :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
             <template #footer>
-                <a-button type="text" @click="jumpToSeniorSearchByUpdate">跳转到高级查询</a-button>
+                <a-button type="text" @click="jumpToSeniorSearchByUpdate()">跳转到高级查询</a-button>
                 <a-button @click="editConfig.dialog = false">取消</a-button>
-                <a-button type="primary" @click="recordEditClick">修改</a-button>
+                <a-button type="primary" @click="recordEditClick()">修改</a-button>
             </template>
         </a-modal>
     </div>

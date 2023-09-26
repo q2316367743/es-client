@@ -1,8 +1,10 @@
 <template>
     <a-tooltip :content="tip" placement="bottom">
-        <div class="item" :class="disable ? 'disable' : ''" @click="click">
-            <slot/>
-        </div>
+        <a-button type="text" size="mini" :disabled="disable" @click="click()">
+            <template #icon>
+                <slot/>
+            </template>
+        </a-button>
     </a-tooltip>
 </template>
 <script lang="ts">
@@ -14,7 +16,7 @@ export default defineComponent({
     props: {
         disable: {
             type: Boolean,
-            required: false,
+            required: true,
             default: false
         },
         tip: {
