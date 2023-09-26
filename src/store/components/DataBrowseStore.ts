@@ -1,19 +1,23 @@
 import {defineStore} from "pinia";
-import IndexView from "@/view/index/IndexView";
-import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
+// 存储
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import DocumentApi from "@/components/es/api/DocumentApi";
-import MessageUtil from "@/utils/MessageUtil";
-import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
-import Optional from "@/utils/Optional";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {useIndexManageEvent} from "@/global/BeanFactory";
-import BaseOrder from "@/entity/BaseOrder";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+// 工具类
+import MessageUtil from "@/utils/MessageUtil";
+import Optional from "@/utils/Optional";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
+// 组件
+import DocumentApi from "@/components/es/api/DocumentApi";
 import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+// 其他
+import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
+import {useIndexManageEvent} from "@/global/BeanFactory";
+import BaseOrder from "@/entity/BaseOrder";
 import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import IndexView from "@/view/index/IndexView";
+import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
 
 export interface IndexInfo {
     name: string,

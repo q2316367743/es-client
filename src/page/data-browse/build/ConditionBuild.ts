@@ -96,6 +96,8 @@ const CONDITION = new Set<string>(['>', '<', '=']);
 function templateBuild(template: string, condition: Array<any>): void {
     let items = template.split(',');
     for (let item of items) {
+        // 去除空格
+        item = item.trim();
         // 每一项：[key]{条件}[value]([and|or] [key]{条件}[value])
         let models = parseCondition(item);
         if (models.length === 3) {
@@ -115,7 +117,6 @@ function templateBuild(template: string, condition: Array<any>): void {
                     match
                 });
             } else {
-                // TODO: >，<，>=，<=
                 let range = {} as any;
                 if (model === '>') {
                     range[models[0]] = {

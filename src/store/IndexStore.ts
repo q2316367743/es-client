@@ -87,8 +87,13 @@ const useIndexStore = defineStore('index', {
             this.indices = new Array<IndexView>();
             this.indicesMap = new Map<string, IndexView>();
         },
-        field(indexName: string): Array<Field> {
-            let indexView = this.indicesMap.get(indexName);
+        field(indexName: string | IndexView | undefined): Array<Field> {
+            let indexView: IndexView | undefined;
+            if (typeof indexName === 'string') {
+                indexView = this.indicesMap.get(indexName);
+            } else {
+                indexView = indexName;
+            }
             if (indexView) {
                 return [{
                     name: '_id',

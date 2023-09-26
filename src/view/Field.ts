@@ -6,7 +6,7 @@ export default interface Field {
     name: string;
 
     /**
-     * 数据索引
+     * 数据索引，仅用于确保唯一
      */
     dataIndex: string;
 
