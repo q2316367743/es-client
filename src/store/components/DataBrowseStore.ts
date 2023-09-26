@@ -12,6 +12,8 @@ import BaseOrder from "@/entity/BaseOrder";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import router from "@/plugins/router";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 export interface IndexInfo {
     name: string,
@@ -392,6 +394,15 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 body: data
             });
             return Promise.resolve();
+        },
+
+        loadEvent(index: IndexView) {
+            this.indexChange({
+                name: index.name,
+                type: 'index',
+                index: index
+            })
+                .then(() => router.push(PageNameEnum.DATA_BROWSE));
         },
 
         // ----------------------------------------- 筛选 -----------------------------------------

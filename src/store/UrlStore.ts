@@ -4,7 +4,7 @@ import {useTitle} from "@vueuse/core";
 import Url from "@/entity/Url";
 
 import ArrayUtil from "@/utils/ArrayUtil";
-import {listByAsync} from "@/utils/utools/DbStorageUtil";
+import {listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 
@@ -48,6 +48,7 @@ const useUrlStore = defineStore('url', {
             if (!url) {
                 return false;
             }
+            setItem(LocalNameEnum.KEY_LAST_URL, id);
             this.url = url;
             title.value = url.name || 'domain-client';
             return true;

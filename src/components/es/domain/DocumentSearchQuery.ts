@@ -1,3 +1,5 @@
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+
 /**
  * 文档搜索条件
  */
@@ -35,6 +37,23 @@ export type ConditionArray = Array<Record<ConditionKey, Record<string, any>>>;
 
 export type ConditionKey = 'match' | 'term' | 'terms' | 'exists' | 'wildcard' | 'range';
 
+export const getDefaultDocumentSearchQuery = (): DocumentSearchQuery => ({
+    sort: {},
+    query: {
+        bool: {
+            must: [],
+            should: [],
+            must_not: []
+        }
+    },
+    aggs: {},
+    from: 0,
+    size: useGlobalSettingStore().getPageSize
+});
+
+const defaultDocumentSearchQueryStr = JSON.stringify(getDefaultDocumentSearchQuery());
+
+export const getDefaultDocumentSearchQueryStr = (): string => defaultDocumentSearchQueryStr;
 
 
 

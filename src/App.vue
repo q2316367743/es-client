@@ -7,62 +7,7 @@
             <!-- 主页面 -->
             <a-layout id="main">
                 <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
-                    <a-menu v-model:collapsed="collapsed" v-model:selected-keys="selectedKeys" show-collapse-button>
-                        <a-menu-item :key="PageNameEnum.HOME">
-                            <template #icon>
-                                <icon-home/>
-                            </template>
-                            {{ $t('menu.home') }}
-                        </a-menu-item>
-                        <a-menu-item :key="PageNameEnum.DATA_BROWSE">
-                            <template #icon>
-                                <icon-apps/>
-                            </template>
-                            {{ $t('menu.dataBrowser') }}
-                        </a-menu-item>
-                        <a-menu-item :key="PageNameEnum.BASE_SEARCH">
-                            <template #icon>
-                                <icon-search/>
-                            </template>
-                            {{ $t('menu.baseSearch') }}
-                        </a-menu-item>
-                        <a-menu-item :key="PageNameEnum.SENIOR_SEARCH">
-                            <template #icon>
-                                <icon-filter/>
-                            </template>
-                            {{ $t('menu.seniorSearch') }}
-                        </a-menu-item>
-                        <a-sub-menu :key="PageNameEnum.SETTING">
-                            <template #icon>
-                                <icon-settings/>
-                            </template>
-                            <template #title>设置</template>
-                            <a-menu-item :key="PageNameEnum.SETTING_GLOBAL">
-                                全局设置
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SETTING_SENIOR_FILTER_RECORD">
-                                高级查询过滤器
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SETTING_URL">
-                                链接管理
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.SETTING_BACKUP">
-                                备份管理
-                            </a-menu-item>
-                        </a-sub-menu>
-                        <a-sub-menu :key="PageNameEnum.MORE">
-                            <template #icon>
-                                <icon-more/>
-                            </template>
-                            <template #title>更多</template>
-                            <a-menu-item :key="PageNameEnum.MORE_UPDATE">
-                                更新日志
-                            </a-menu-item>
-                            <a-menu-item :key="PageNameEnum.MORE_ABOUT">
-                                关于
-                            </a-menu-item>
-                        </a-sub-menu>
-                    </a-menu>
+                    <app-sider />
                 </a-layout-sider>
                 <!-- 内容-->
                 <a-layout-content>
@@ -75,96 +20,74 @@
         <!-- 索引管理 -->
         <index-manage/>
         <!-- 版本更新 -->
-        <version-update v-model:visible="updateDialog"/>
+        <version-update v-if="updateDialog" v-model:visible="updateDialog"/>
         <!-- 数据导出 -->
-        <app-data-export />
+        <app-data-export/>
     </a-config-provider>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 // 引入状态管理
 import useIndexStore from '@/store/IndexStore';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
+import useUrlStore from "@/store/UrlStore";
 // 引入框架
-import {defineAsyncComponent, defineComponent} from 'vue';
-import {mapState} from "pinia";
+import {computed, defineAsyncComponent, ref} from 'vue';
+import {useRouter} from "vue-router";
 // 模块
 import AppHeader from '@/module/app-header/index.vue';
-// 插件
+import AppSider from '@/module/app-sider/index.vue';
 // 枚举
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 常量
 import Constant from '@/global/Constant'
+import {initData} from "@/global/BeanFactory";
 // 工具类
 import {versionManager, VersionStatus} from "@/components/version-manager";
-import {initData} from "@/global/BeanFactory";
+import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 
-export default defineComponent({
-    components: {
-        // 组件
-        AppHeader,
-        AppDataExport: defineAsyncComponent(() => import("@/module/app-data-export/index.vue")),
-        VersionUpdate: defineAsyncComponent(() => import("@/module/version-update/index.vue")),
-        IndexManage: defineAsyncComponent(() => import('@/module/index-manage/index.vue')),
-    },
-    data: () => {
-        return {
-            Constant,
-            updateDialog: false,
-            collapsed: true,
-            selectedKeys: [PageNameEnum.HOME] as Array<PageNameEnum>,
-            PageNameEnum,
-        };
-    },
-    computed: {
-        ...mapState(useGlobalSettingStore, ['jsonTheme']),
-        ...mapState(useLoadingStore, ['loading', 'text']),
-    },
-    watch: {
-        selectedKeys(newValue: any[]) {
-            this.$router.push(newValue[0]);
-        },
-        '$route.path': {
-            handler(value) {
-                this.selectedKeys = [value];
-            }
+const router = useRouter();
+
+const AppDataExport = defineAsyncComponent(() => import("@/module/app-data-export/index.vue"));
+const VersionUpdate = defineAsyncComponent(() => import("@/module/version-update/index.vue"));
+const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
+
+const updateDialog = ref(false);
+
+const jsonTheme = computed(() => useGlobalSettingStore().jsonTheme);
+const collapsed = computed(() => useGlobalStore().collapsed);
+const loading = computed(() => useLoadingStore().loading);
+const text = computed(() => useLoadingStore().text);
+
+// 初始化数据
+initData().then(() => {
+    console.log("初始化完成");
+    // 版本
+    switch (versionManager()) {
+        case VersionStatus.NEW:
+            router.push(PageNameEnum.MORE_ABOUT)
+            break;
+        case VersionStatus.UPDATE:
+            updateDialog.value = true;
+            break;
+    }
+    // 最后的链接
+    if (useGlobalSettingStore().getLastUrl) {
+        const lastUrlId = getItemByDefault(LocalNameEnum.KEY_LAST_URL, 0);
+        if (lastUrlId !== 0) {
+            useUrlStore().choose(lastUrlId);
         }
-    },
-    created() {
-        // 初始化
-        initData().then(() => {
-            console.log("初始化完成");
-            // 版本
-            switch (versionManager()) {
-                case VersionStatus.NEW:
-                    this.$router.push(PageNameEnum.MORE_ABOUT)
-                    break;
-                case VersionStatus.UPDATE:
-                    this.updateDialog = true;
-                    break;
-            }
-        })
-
-
-        if (utools.isDarkColors()) {
-            // 设置为暗黑主题
-            document.body.setAttribute('arco-theme', 'dark');
-        } else {
-            // 恢复亮色主题
-            document.body.removeAttribute('arco-theme');
-        }
-    },
-    methods: {
-        switchDarkColors() {
-            useGlobalStore().switchDarkColors()
-        },
-        async refresh() {
-            await useIndexStore().reset();
-        },
-    },
+    }
 });
+// 初始化主题
+useGlobalStore().initDarkColors();
+
+const switchDarkColors = () => useGlobalStore().switchDarkColors();
+const refresh = () => useIndexStore().reset();
+
 </script>
 
 <style lang="less">

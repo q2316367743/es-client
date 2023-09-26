@@ -14,13 +14,6 @@
         </div>
         <!-- 操作 -->
         <div class="option">
-            <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
-                <a-button type="text" @click="jumpToBaseSearch()">
-                    <template #icon>
-                        <icon-search/>
-                    </template>
-                </a-button>
-            </a-tooltip>
             <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
                 <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation"
                               :ok-text="indexStateTooltip">
@@ -53,6 +46,31 @@
         </div>
         <!-- 拓展面板按钮 -->
         <div class="expand-btn">
+            <!-- 查询跳转 -->
+            <a-button-group  type="text">
+                <a-tooltip :effect="theme" content="跳转到数据浏览" placement="bottom">
+                    <a-button @click="jumpToDataBrowser()">
+                        <template #icon>
+                            <icon-apps/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
+                <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
+                    <a-button @click="jumpToBaseSearch()">
+                        <template #icon>
+                            <icon-search/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
+                <a-tooltip :effect="theme" content="跳转到高级查询" placement="bottom">
+                    <a-button @click="jumpToSeniorSearch()">
+                        <template #icon>
+                            <icon-filter/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
+
+            </a-button-group>
             <a-button type="text" @click="showExpand = !showExpand" size="small">
                 <template #icon>
                     <icon-up v-if="showExpand"/>
@@ -99,9 +117,12 @@ import IndexView from "@/view/index/IndexView";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import useIndexStore from "@/store/IndexStore";
 import {useIndexManageEvent} from "@/global/BeanFactory";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {getDefaultDocumentSearchQueryStr} from "@/components/es/domain/DocumentSearchQuery";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 export default defineComponent({
-    name: 'IndexItem',
+    name: 'index-item',
     props: {
         index: Object as PropType<IndexView>
     },
@@ -215,6 +236,20 @@ export default defineComponent({
                     conditions: new Array<BaseQuery>(),
                     orders: new Array<BaseOrder>(),
                     execute: true
+                })
+            }
+        },
+        jumpToDataBrowser() {
+            if (this.index) {
+                useDataBrowseStore().loadEvent(this.index);
+            }
+        },
+        jumpToSeniorSearch() {
+            if (this.index) {
+                useSeniorSearchStore().loadEvent({
+                    link: `/${this.index.name}/_search`,
+                    method: 'POST',
+                    body: getDefaultDocumentSearchQueryStr()
                 })
             }
         }

@@ -56,13 +56,13 @@ import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/setting/Ba
 import MessageUtil from "@/utils/MessageUtil";
 import JSZip from "jszip";
 import {download, pathJoin} from "@/utils/BrowserUtil";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateString} from "xe-utils";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {initData} from "@/global/BeanFactory";
 import Constant from "@/global/Constant";
 import {useFileSystemAccess} from "@vueuse/core";
+import useLoadingStore from "@/store/LoadingStore";
 
 
 const FOLDER = Constant.name;
@@ -211,14 +211,14 @@ async function _loadFiles(): Promise<Array<string>> {
 }
 
 function execBackup() {
-    useGlobalStore().startLoading("开始备份");
+    useLoadingStore().start("开始备份");
     loading.value.exec = true;
     _execBackup()
         .then(() => MessageUtil.success("备份成功"))
         .catch(e => MessageUtil.error("备份失败", e))
         .finally(() => {
             loading.value.exec = false;
-            useGlobalStore().closeLoading();
+            useLoadingStore().close();
         });
 }
 

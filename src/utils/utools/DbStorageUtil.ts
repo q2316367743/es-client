@@ -21,6 +21,8 @@ export function setItem(key: string, value: any) {
     utools.dbStorage.setItem(key, toRaw(value));
 }
 
+// --------------------------------------- 基础对象 ---------------------------------------
+
 export interface DbList<T> {
 
     list: Array<T>;
