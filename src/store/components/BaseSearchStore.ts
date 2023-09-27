@@ -72,7 +72,8 @@ export const useBaseSearchStore = defineStore('base-search', {
             this.fields = [{
                 name: '_id',
                 dataIndex: '_id',
-                type: 'string'
+                type: 'string',
+                label: '_id'
             }]
         },
         setCurrentCondition(conditions: Array<BaseQuery>) {

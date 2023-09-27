@@ -1,4 +1,4 @@
-import {Property, Setting} from "@/components/es/domain/IndexBase";
+import {Mapping, Setting} from "@/components/es/domain/IndexBase";
 
 export interface IndexInfo {
 
@@ -15,12 +15,12 @@ export interface IndexInfo {
     /**
      * 映射
      */
-    mappings: { _doc: Mapping };
+    mappings: Record<string, Mapping>;
 
     /**
      * 设置
      */
-    settings: { index: SettingInfo };
+    settings: SettingInfo;
 
 }
 
@@ -50,8 +50,3 @@ export interface SettingInfo extends Setting {
 
 }
 
-export interface Mapping {
-
-    _doc: { properties: Record<string, Property>; }
-
-}

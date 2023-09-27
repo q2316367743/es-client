@@ -16,7 +16,7 @@ export default async function Builder(): Promise<Array<IndexView>> {
 
     const [cluster_stats, stats] = await Promise.all([clusterApi._cluster_state(), clusterApi._stats()])
 
-    let metaIndices = cluster_stats.metadata.indices as any;
+    let metaIndices = cluster_stats.metadata.indices;
     let statsIndices = stats.indices;
     let cluster_indices = cluster_stats.routing_table.indices;
     for (let key in metaIndices) {

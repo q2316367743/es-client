@@ -1,6 +1,11 @@
 export default interface Field {
 
     /**
+     * 显示名称
+     */
+    label: string;
+
+    /**
      * 字段名称
      */
     name: string;

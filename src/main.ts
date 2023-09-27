@@ -19,11 +19,31 @@ import '@/components/JsonTree/index.less';
 import '@arco-design/web-vue/dist/arco.css';
 
 // @ts-ignore
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+// @ts-ignore
+import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+// @ts-ignore
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+// @ts-ignore
+import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+// @ts-ignore
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
 self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
-    getWorker() {
-        return new EditorWorker(); // 基础功能文件， 提供了所有语言通用功能 无论使用什么语言，monaco都会去加载他。
+    getWorker(_: string, label: string) {
+        if (label === 'json') {
+            return new JsonWorker()
+        }
+        if (['css', 'scss', 'less'].includes(label)) {
+            return new CssWorker()
+        }
+        if (['html', 'handlebars', 'razor'].includes(label)) {
+            return new HtmlWorker()
+        }
+        if (['typescript', 'javascript'].includes(label)) {
+            return new TsWorker()
+        }
+        return new EditorWorker()
     }
 };
 

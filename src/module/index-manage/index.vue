@@ -10,9 +10,8 @@
             </a-tabs>
             <a-spin :loading="loading" tip="加载中">
                 <div class="content">
-                    <json-view v-if="jsonViewShow" :data="data" />
-                    <index-mapping read-only :mapping="data" :overflow="false" v-else-if="active === '3'" />
-                    <index-manage-summary ref="indexManageSummary" v-else :index="index" :state="state" />
+                    <monaco-editor language="json" :model-value="data" v-show="jsonViewShow" read-only/>
+                    <index-manage-summary ref="indexManageSummary" v-show="!jsonViewShow" :index="index" :state="state" />
                 </div>
             </a-spin>
         </div>
@@ -51,15 +50,16 @@ import { mapState } from "pinia";
 import { useIndexManageEvent } from "@/global/BeanFactory";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import IndexMapping from "@/components/IndexMapping/index.vue";
+import MonacoEditor from "@/components/monaco-editor/index.vue";
 
 export default defineComponent({
     name: 'index-manage',
     emits: ['update:modelValue'],
-    components: { IndexMapping, IndexManageSummary, JsonView },
+    components: {MonacoEditor, IndexMapping, IndexManageSummary, JsonView },
     data: () => ({
         drawer: false,
         active: '1',
-        data: {},
+        data: '',
         loading: false,
         index: ''
     }),
@@ -75,7 +75,7 @@ export default defineComponent({
     },
     computed: {
         jsonViewShow() {
-            return ArrayUtil.contains(['2', '4'], this.active);
+            return ArrayUtil.contains(['2', '3', '4'], this.active);
         },
         ...mapState(useIndexStore, ['indicesMap']),
         state(): 'open' | 'close' | '' {
@@ -107,10 +107,10 @@ export default defineComponent({
             Assert.notNull(this.index, "索引名称不存在");
             this.loading = true;
             IndexApi(this.index)._settings().then(result => {
-                this.data = result[this.index];
+                this.data = JSON.stringify(result[this.index], null, 4);
             }).catch(e => {
                 MessageUtil.error('索引设置查询错误', e);
-                this.data = {};
+                this.data = '{}';
             }).finally(() => {
                 this.loading = false;
             })
@@ -119,10 +119,10 @@ export default defineComponent({
             Assert.notNull(this.index, "索引名称不存在");
             this.loading = true;
             IndexApi(this.index)._mappings().then(result => {
-                this.data = result[this.index!];
+                this.data = JSON.stringify(result[this.index!], null, 4);
             }).catch(e => {
                 MessageUtil.error('索引映射查询错误', e);
-                this.data = {};
+                this.data = '{}';
             }).finally(() => {
                 this.loading = false;
             })
@@ -131,10 +131,10 @@ export default defineComponent({
             Assert.notNull(this.index, "索引名称不存在");
             this.loading = true;
             IndexApi(this.index)._stats().then(result => {
-                this.data = result;
+                this.data = JSON.stringify(result, null, 4);
             }).catch(e => {
                 MessageUtil.error('索引状态查询错误', e);
-                this.data = {};
+                this.data = '{}';
             }).finally(() => {
                 this.loading = false;
             })
