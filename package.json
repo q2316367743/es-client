@@ -20,7 +20,6 @@
         "dev:ts": "vite --host --mode=tsbrowser",
         "dev:web": "vite --host --mode=web",
         "dev:utools": "vite --host --mode=utools -c config/vite.utools.ts",
-        "dev:server": "vite --host --mode=server",
         "dev:tauri": "vite --host --mode=desktop_windows",
         "dev:electron": "chcp 65001 && vite --host --mode=electron -c config/vite.electron.ts",
         "build": "vue-tsc --noEmit && vite build",

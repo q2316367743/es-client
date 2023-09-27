@@ -17,10 +17,11 @@ POST http://localhost:3000/api/fetch
 
 
 ### 获取全部数据
-GET http://localhost:3000/api/db/{tableName}/list
+GET http://localhost:3000/api/db/allDocs?key=""
+Content-Type: application/json
 
 ### 获取一个数据
-POST http://localhost:3000/api/db/{tableName}/one
+POST http://localhost:3000/api/db/get
 Content-Type: application/json
 
 {
@@ -29,7 +30,7 @@ Content-Type: application/json
 
 
 ### 保存数据
-POST http://localhost:3000/api/db/{tableName}/save
+PUT http://localhost:3000/api/db/put
 Content-Type: application/json
 
 {
@@ -37,17 +38,9 @@ Content-Type: application/json
     "value": ""
 }
 
-### 修改一个数据
-PUT http://localhost:3000/api/db/{tableName}/update
-Content-Type: application/json
-
-{
-    "_id": "",
-    "value": ""
-}
 
 ### 删除一个数据
-DELETE http://localhost:3000/api/db/{tableName}/delete
+DELETE http://localhost:3000/api/db/remove
 Content-Type: application/json
 
 {
@@ -55,27 +48,3 @@ Content-Type: application/json
 }
 
 
-### 获取键值对
-POST http://localhost:3000/api/lodis/get
-Content-Type: application/json
-
-{
-    "key": ""
-}
-
-### 设置键值对
-POST http://localhost:3000/api/lodis/set
-Content-Type: application/json
-
-{
-    "key": "",
-    "value": ""
-}
-
-### 移除键值对
-DELETE http://localhost:3000/api/lodis/remove
-Content-Type: application/json
-
-{
-    "key": ""
-}

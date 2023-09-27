@@ -8,15 +8,19 @@ import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
 
 import Url from "@/entity/Url";
+// 策略
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";
 import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStrategyImpl";
+import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
+// 插件
 import Statistics from "@/plugins/Statistics";
 import {utools} from "@/plugins/utools";
 import {preload} from "@/plugins/preload";
 import {tauri, tauriPreload} from "@/plugins/tauri";
-import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
+import {serverUtools, serverPreload} from "@/plugins/server";
+// 存储
 import useUrlStore from "@/store/UrlStore";
 import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
@@ -26,8 +30,8 @@ import ConditionExportEvent from "@/entity/event/ConditionExportEvent";
 import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 
-window.utools = Object.assign(utools, window.utools, tauri);
-window.preload = Object.assign(preload, window.preload, tauriPreload);
+window.utools = Object.assign(utools, window.utools, tauri, serverUtools);
+window.preload = Object.assign(preload, window.preload, tauriPreload, serverPreload);
 
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();

@@ -32,12 +32,6 @@ pnpm-debug.log*
 #utools
 /utools
 
-# 服务器
-/src-server/dist
-/src-server/public
-/src-server/node_modules
-/src-server/es-client.db
-
 # 想天浏览器
 /dist-ts
 

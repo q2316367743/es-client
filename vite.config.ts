@@ -10,28 +10,14 @@ function _resolve(dir: string) {
 
 function outDir() {
     switch (process.env.npm_lifecycle_event) {
-        case 'build:ts':
-            return 'dist-ts';
-        case 'build:web':
-            return 'dist-web';
-        case 'build:utools':
-            return 'src-utools/dist';
         case 'build:edge':
             return 'src-edge/domain-client';
         case 'build:firefox':
             return 'src-firefox/domain-client';
-        case 'build:server':
-            return 'src-server/public';
-        case 'build:tauri:windows':
-            return 'dist';
-        case 'build:tauri:linux':
-            return 'dist';
-        case 'build:tauri:macos':
-            return 'dist';
         case 'build:vscode':
             return 'src-vscode/domain-client';
         default:
-            return 'out';
+            return 'dist';
     }
 }
 

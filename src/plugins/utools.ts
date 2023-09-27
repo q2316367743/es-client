@@ -4,21 +4,6 @@ import {del, get, getMany, keys, set} from 'idb-keyval';
 
 // 模拟utools声明
 
-export interface DbDoc {
-    _id: string,
-    _rev?: string,
-
-    [key: string]: any
-}
-
-export interface DbReturn {
-    id: string,
-    rev?: string,
-    ok?: boolean,
-    error?: boolean,
-    name?: string,
-    message?: string
-}
 
 export type ShowOpenDialogOptionProperty = 'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles'
     | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent';

@@ -1,5 +1,25 @@
 import {toRaw} from "vue";
 
+// 定义
+
+export interface DbDoc {
+    _id: string,
+    _rev?: string,
+
+    [key: string]: any
+}
+
+export interface DbReturn {
+    id: string,
+    rev?: string,
+    ok?: boolean,
+    error?: boolean,
+    name?: string,
+    message?: string
+}
+
+// 对象
+
 export function getItem<T>(key: string): T | null {
     let value = utools.dbStorage.getItem(key);
     if (typeof value === 'undefined' || value == null) {
