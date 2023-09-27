@@ -12,7 +12,7 @@ export default [
             label: LogItemEnum.ADD,
             content: '基础查询增加missing查询条件',
             gitee: {
-                title: "",
+                title: "基础筛选希望新增exist类",
                 content: "https://gitee.com/qiaoshengda/es-client/issues/I79OFV"
             }
         }, {
