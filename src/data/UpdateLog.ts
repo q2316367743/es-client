@@ -7,10 +7,14 @@ export default [
         time: '2023-09-27',
         items: [{
             label: LogItemEnum.ADD,
-            content: '新增VConsole控制台，可以查看报错原因，在又上角的bug对话框下面打开'
+            content: '新增VConsole控制台，可以查看报错原因，在右上角的bug对话框下面打开'
         }, {
             label: LogItemEnum.ADD,
-            content: '基础查询增加missing查询条件'
+            content: '基础查询增加missing查询条件',
+            gitee: {
+                title: "",
+                content: "https://gitee.com/qiaoshengda/es-client/issues/I79OFV"
+            }
         }, {
             label: LogItemEnum.ADD,
             content: '数据浏览准备增加快捷提示，选择链接、索引后，在条件输入框中输入时，会有提示'
@@ -22,7 +26,11 @@ export default [
             content: '数据浏览按钮优化'
         }, {
             label: LogItemEnum.UPDATE,
-            content: '页布局优化，新增两种查询跳转方式'
+            content: '首页布局优化，新增两种查询跳转方式',
+            gitee: {
+                title: "概览 能增加跳转到 数据浏览 的按钮么",
+                content: "https://gitee.com/qiaoshengda/es-client/issues/I8425X"
+            }
         }, {
             label: LogItemEnum.REPAIR,
             content: '修复打开最后一次链接'
