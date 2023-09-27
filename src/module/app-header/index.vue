@@ -79,14 +79,19 @@ import { setItem } from '@/utils/utools/DbStorageUtil';
 
 const router = useRouter();
 
-const urlId = ref<number | string | undefined>(undefined);
+const urlId = ref<number | string | undefined>(useUrlStore().id);
 const feedbackDialog = ref<boolean>(false);
 
 const urls = computed(() => useUrlStore().urls);
 const loading = computed(() => useLoadingStore().loading);
 const isDark = computed(() => useGlobalStore().isDark);
 
-watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value))
+watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
+watch(() => useUrlStore().id, value => {
+    if (value !== urlId.value) {
+        urlId.value = value;
+    }
+})
 
 const refresh = () => useIndexStore().reset();
 const switchDarkColors = () => useGlobalStore().switchDarkColors();

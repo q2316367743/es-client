@@ -28,7 +28,6 @@
 
 <script lang="ts" setup>
 // 引入状态管理
-import useIndexStore from '@/store/IndexStore';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -48,6 +47,8 @@ import {initData} from "@/global/BeanFactory";
 // 工具类
 import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
+import Assert from "@/utils/Assert";
+import useIndexStore from "@/store/IndexStore";
 
 const router = useRouter();
 
@@ -79,14 +80,16 @@ initData().then(() => {
         const lastUrlId = getItemByDefault(LocalNameEnum.KEY_LAST_URL, 0);
         if (lastUrlId !== 0) {
             useUrlStore().choose(lastUrlId);
+            // 选择链接
+            Assert.isTrue(useUrlStore().choose(lastUrlId), "链接未找到");
+            // 索引刷新
+            useIndexStore().reset();
         }
     }
 });
 // 初始化主题
 useGlobalStore().initDarkColors();
 
-const switchDarkColors = () => useGlobalStore().switchDarkColors();
-const refresh = () => useIndexStore().reset();
 
 </script>
 
