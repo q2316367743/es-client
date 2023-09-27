@@ -21,10 +21,10 @@
 		<img src="https://img.shields.io/badge/firefox-v2.8.6-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
-        <img src='https://img.shields.io/badge/windows-v3.0.2-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v3.0.4-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.0.2-%23787B80' alt="utools"/>
+        <img src='https://img.shields.io/badge/utools-v3.0.4-%23787B80' alt="utools"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
@@ -49,9 +49,6 @@
 **注意**：由于谷歌浏览器、edge政策，2024年起，将下架全部V2版本的插件，由于本项目基于vue开发，无法迁移到v3，
 所以，2.8.3版本之后，开发重心将会以utools插件为主，不再以浏览器插件为主，但仍然会提供v2版本的浏览器插件安装包。
 
-推荐使用utools插件，或者windows安装版。由于没有其他设备，目前安装包仅打包的`windows安装包`，其他平台需要自己打包。
-使用utools插件版或者安装包，都会有更新提示，如果windows更新无反应，可以自行到`Gitee发行版`中下载新版本安装包进行更新
-
 ## 安装 & 更新
 
 ### 发行版
@@ -69,6 +66,16 @@
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 - [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
+
+### 安装
+
+推荐使用utools插件，或者windows安装版。由于没有其他设备，目前安装包仅打包的`windows安装包`，其他平台需要自己打包。
+使用utools插件版或者安装包，都会有更新提示，如果windows更新无反应，可以自行到`Gitee发行版`中下载新版本安装包进行更新
+
+### 桌面客户端
+
+优先推荐使用`tauri`安装包，在[release](https://gitee.com/qiaoshengda/es-client/releases)中下载即可，如果安装后使用异常，
+就需要前往[百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)中下载`electron`打包的安装包。
 
 ## 开发
 
