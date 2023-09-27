@@ -7,6 +7,18 @@
             </div>
             <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
         </div>
+        <!-- 别名 -->
+        <div class="alias">
+            <a-space>
+                <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked"
+                      v-for="(item, idx) in index?.alias" :key="idx">
+                {{ item }}
+                <icon-close :size="16" @click="removeAlias(item)" class="alias-close"/>
+            </span>
+            </a-space>
+            <a-button type="primary" status="normal" size="mini" @click="newAlias()">{{ $t('common.operation.add') }}
+            </a-button>
+        </div>
         <!-- 详细 -->
         <div class="detail">
             <div> size: {{ index?.size }}</div>
@@ -33,43 +45,31 @@
                 </a-button>
             </a-tooltip>
         </div>
-        <!-- 别名 -->
-        <div class="alias">
-            <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked"
-                  v-for="(item, idx) in index?.alias"
-                  :key="idx" style="margin-right: 5px">
-                {{ item }}
-                <icon-close :size="16" @click="removeAlias(item)" class="alias-close"/>
-            </span>
-            <a-button type="primary" status="normal" size="mini" @click="newAlias()">{{ $t('common.operation.add') }}
-            </a-button>
-        </div>
         <!-- 拓展面板按钮 -->
         <div class="expand-btn">
             <!-- 查询跳转 -->
-            <a-button-group  type="text">
+            <a-button-group type="text" status="success">
                 <a-tooltip :effect="theme" content="跳转到数据浏览" placement="bottom">
-                    <a-button @click="jumpToDataBrowser()">
+                    <a-button @click="jumpToDataBrowser()" style="border: none">
                         <template #icon>
                             <icon-apps/>
                         </template>
                     </a-button>
                 </a-tooltip>
                 <a-tooltip :effect="theme" content="跳转到基础查询" placement="bottom">
-                    <a-button @click="jumpToBaseSearch()">
+                    <a-button @click="jumpToBaseSearch()" style="border: none">
                         <template #icon>
                             <icon-search/>
                         </template>
                     </a-button>
                 </a-tooltip>
                 <a-tooltip :effect="theme" content="跳转到高级查询" placement="bottom">
-                    <a-button @click="jumpToSeniorSearch()">
+                    <a-button @click="jumpToSeniorSearch()" style="border: none">
                         <template #icon>
                             <icon-filter/>
                         </template>
                     </a-button>
                 </a-tooltip>
-
             </a-button-group>
             <a-button type="text" @click="showExpand = !showExpand" size="small">
                 <template #icon>
@@ -298,21 +298,9 @@ export default defineComponent({
 
     }
 
-    .detail {
-        margin-top: 24px;
-        color: var(--color-text-1);
-    }
-
-    .option {
-        position: absolute;
-        top: 8px;
-        right: 12px;
-    }
-
     .alias {
-        position: absolute;
-        top: 50px;
-        right: 102px;
+        margin-top: 7px;
+        flex-wrap: wrap;
 
         .alias-close {
             margin-left: 4px;
@@ -326,9 +314,20 @@ export default defineComponent({
         }
     }
 
+    .detail {
+        margin-top: 14px;
+        color: var(--color-text-1);
+    }
+
+    .option {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+    }
+
     .expand-btn {
         position: absolute;
-        top: 74px;
+        top: 114px;
         right: 12px;
     }
 
