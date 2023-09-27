@@ -33,7 +33,8 @@ export default [
             }
         }, {
             label: LogItemEnum.REPAIR,
-            content: '修复打开最后一次链接'
+            content: '修复打开最后一次链接',
+            txc: "https://support.qq.com/products/489458/post/169537698365029241/"
         }]
     },
     {
