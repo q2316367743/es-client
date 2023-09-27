@@ -9,8 +9,8 @@ import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 export function ConditionStrBuild(value: string): Array<string> {
     const oldStr = buildOldStr(value).trim();
     const newArr = buildNewStr(value);
-    if (newArr.length ===0) {
-        return [oldStr];
+    if (newArr.length === 0) {
+        return [value];
     }
     return oldStr !== '' ? newArr.map(e => oldStr + ',' + e) : newArr;
 }
@@ -27,9 +27,8 @@ function buildOldStr(value: string): string {
     const index = value.lastIndexOf(',');
     if (index > -1) {
         return value.substring(0, index);
-    }else {
-        return value;
     }
+    return '';
 }
 
 function buildNewStr(value: string): Array<string> {
@@ -40,12 +39,31 @@ function buildNewStr(value: string): Array<string> {
     const fields = useIndexStore().field(index);
     return fields.map(field => {
         let str = field.name;
-        // TODO: 类型待考证
-        if (field.type === 'string') {
+        if (field.type === 'text' || field.type === 'keyword'
+            || field.type === 'date') {
             str += "=''";
-        }else {
+        } else {
             str += "="
         }
         return str;
     });
+}
+
+function buildNewOrderStr(value: string): Array<string> {
+    if (value.trim() === '') {
+        return [];
+    }
+    let index = useDataBrowseStore().index;
+    const fields = useIndexStore().field(index);
+    return fields.flatMap(field => [field.name + ' asc', field.name + ' desc']);
+}
+
+export function OrderByStrBuild(value: string): Array<string> {
+    const oldStr = buildOldStr(value).trim();
+    const newArr = buildNewOrderStr(value);
+    if (newArr.length === 0) {
+        return [value];
+    }
+    return oldStr !== '' ? newArr.map(e => oldStr + ',' + e) : newArr;
+
 }

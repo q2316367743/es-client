@@ -23,7 +23,7 @@
         <!-- 右侧条件 -->
         <a-button-group class="right">
             <!-- 选择索引 -->
-            <db-index-select @index-change="indexChange"/>
+            <db-index-select/>
             <!-- 打印 -->
             <db-simple-item :disable="!name" tip="打印" @click="openExportDialog">
                 <icon-printer/>
@@ -145,7 +145,6 @@ const indexName = computed(() => index.value ? index.value.name : '')
 
 const recordReduce = (deleteRowIndies?: Array<string>) => useDataBrowseStore().reduce(deleteRowIndies);
 const executeQuery = (renderHeader?: boolean) => useDataBrowseStore().executeQuery(renderHeader);
-const indexChange = (data: any) => useDataBrowseStore().indexChange(data);
 const openMappingDrawer = () => useDataBrowseStore().openMappingDrawer();
 const jumpToBaseSearch = () => useDataBrowseStore().jumpToBaseSearch();
 const jumpToSeniorSearch = () => useDataBrowseStore().jumpToSeniorSearch();

@@ -109,30 +109,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
             this.mustNot = '';
             return this.executeQuery();
         },
-        /**
-         * 清空全部信息
-         */
-        clean() {
-            // 重置条件
-            if (!this.index) {
-                return;
-            }
-            this.name = '';
-            this.type = '';
-            this.index = undefined;
-            this.must = '';
-            this.should = '';
-            this.mustNot = '';
-            this.orderBy = '';
-            this.page = 1;
-            this.size = useGlobalSettingStore().getPageSize;
-            this.total = 1;
-            // 展示数据
-            this.columns = [] as Array<TableViewColumnData>;
-            this.result = {} as any;
-            this.records = new Array<any>();
-            this.loading = false;
-        },
 
         // ----------------------------------------- 数据更新 -----------------------------------------
 

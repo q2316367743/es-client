@@ -1,10 +1,10 @@
 <template>
     <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
-        :popup-offset="2">
+               :popup-offset="2">
         <a-button type="dashed" size="mini" @click="showIndex()">
             <template #icon>
-                <icon-up style="margin: 5px;" v-if="show" />
-                <icon-down style="margin: 5px;" v-else />
+                <icon-up style="margin: 5px;" v-if="show"/>
+                <icon-down style="margin: 5px;" v-else/>
             </template>
             <span v-if="name === ''" style="user-select: none;">未选择索引</span>
             <span v-else style="user-select: none;">{{ name }}</span>
@@ -14,12 +14,12 @@
                 <a-empty v-if="indices.length === 0" description="请选择链接" style="padding-top: 150px"/>
                 <div class="data-browse-pull-down-index" v-else>
                     <a-input v-model="keyword" class="data-browse-pull-down-search" ref="dataBrowsePullDownSearch"
-                        allow-clear />
+                             allow-clear/>
                     <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
                         <div>
                             <div v-for="item in items" class="data-browse-list-item"
-                                :class="item.name === name ? 'data-browse-list-item-this' : ''"
-                                @click="indexChange(item.name, item.type, item.index)">
+                                 :class="item.name === name ? 'data-browse-list-item-this' : ''"
+                                 @click="indexChange(item.name, item.type, item.index)">
                                 <span>{{ item.name }}</span>
                                 <a-tag color="blue" v-if="item.type === 'index'">索引</a-tag>
                                 <a-tag color="green" v-else-if="item.type === 'alias'">别名</a-tag>
@@ -38,7 +38,6 @@ import useIndexStore from "@/store/IndexStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {useFuse} from "@vueuse/integrations/useFuse";
 
-const emits = defineEmits(['indexChange']);
 
 interface Item {
 
@@ -77,7 +76,8 @@ const indices = computed<Array<Item>>(() => {
                     names.add(alias);
                     items.add({
                         name: alias,
-                        type: 'alias'
+                        type: 'alias',
+                        index
                     });
                 }
             }
@@ -118,13 +118,14 @@ function showIndex() {
         });
     }
 }
+
 function indexChange(name: string, type: string, index?: IndexView) {
     show.value = false;
-    emits('indexChange', {
+    useDataBrowseStore().indexChange({
         name,
         type,
         index
-    });
+    })
 }
 
 
