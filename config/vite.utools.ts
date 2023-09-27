@@ -21,7 +21,7 @@ export default defineConfig({
     ],
     base: './',
     build: {
-        outDir: 'src-utools'
+        outDir: 'src-utools/dist'
     },
     // 强制预构建插件包
     optimizeDeps: {
