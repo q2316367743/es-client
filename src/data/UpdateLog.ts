@@ -2,6 +2,33 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.4',
+        sign: 304,
+        time: '2023-09-27',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '新增VConsole控制台，可以查看报错原因，在又上角的bug对话框下面打开'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '基础查询增加missing查询条件'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '数据浏览准备增加快捷提示，选择链接、索引后，在条件输入框中输入时，会有提示'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '增加服务器相关接口，如果实现了src-server中的接口，可以打包为docker镜像'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '数据浏览按钮优化'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '页布局优化，新增两种查询跳转方式'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '修复打开最后一次链接'
+        }]
+    },
+    {
         version: '3.0.3',
         sign: 303,
         time: '2023-09-21',

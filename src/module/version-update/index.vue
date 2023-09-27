@@ -28,6 +28,9 @@ export default defineComponent({
         log: Constant.logs[0],
         dialog: false
     }),
+    created() {
+        this.dialog = this.visible
+    },
     watch: {
         visible(newValue) {
             this.dialog = newValue;

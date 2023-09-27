@@ -20,7 +20,7 @@
         <!-- 索引管理 -->
         <index-manage/>
         <!-- 版本更新 -->
-        <version-update v-if="updateDialog" v-model:visible="updateDialog"/>
+        <version-update v-model:visible="updateDialog"/>
         <!-- 数据导出 -->
         <app-data-export/>
     </a-config-provider>
@@ -69,10 +69,11 @@ initData().then(() => {
     // 版本
     switch (versionManager()) {
         case VersionStatus.NEW:
-            router.push(PageNameEnum.MORE_ABOUT)
+            router.push(PageNameEnum.MORE_ABOUT);
             break;
         case VersionStatus.UPDATE:
             updateDialog.value = true;
+            router.push(PageNameEnum.MORE_UPDATE);
             break;
     }
     // 最后的链接
