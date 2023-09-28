@@ -30,7 +30,7 @@
         <a-card v-for="item in nodeItems" :title="item.name" style="margin-top: 7px;">
             <!-- 基础信息 -->
             <a-descriptions :column="1">
-                <a-descriptions-item label="时间戳">{{ item.node.timestamp }}</a-descriptions-item>
+                <a-descriptions-item label="时间戳">{{ dateFormat(item.node.timestamp) }}</a-descriptions-item>
                 <a-descriptions-item label="IP地址">{{ item.node.host }}</a-descriptions-item>
                 <a-descriptions-item label="角色">
                     <a-space>
@@ -71,6 +71,7 @@ import ClusterApi from "@/components/es/api/ClusterApi";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {prettyDataUnit} from "@/utils/BrowserUtil";
+import {toDateString} from "xe-utils";
 
 interface NodeItem {
     name: string;
@@ -124,6 +125,10 @@ function calcStatus(percent: number): 'success' | 'warning' | 'danger' {
         return 'warning';
     }
     return 'success';
+}
+
+function dateFormat(date: number): string {
+    return toDateString(date);
 }
 
 </script>
