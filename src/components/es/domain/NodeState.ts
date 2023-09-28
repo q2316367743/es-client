@@ -360,6 +360,13 @@ export interface OS {
 
 export interface OSCPU {
     percent: number;
+    load_average: OSCPULoadAverage;
+}
+
+export interface OSCPULoadAverage {
+    "1m": number;
+    "5m": number;
+    "15m": number;
 }
 
 export interface OSMem {

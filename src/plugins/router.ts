@@ -32,6 +32,10 @@ const router = createRouter({
             name: '信息',
             path: 'info',
             component: () => import('@/page/dashboard/info/index.vue')
+        }, {
+            name: '节点',
+            path: 'node',
+            component: () => import('@/page/dashboard/node/index.vue')
         }]
     }, {
         name: '设置',
