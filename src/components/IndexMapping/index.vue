@@ -5,39 +5,37 @@
                         :key="index">
             </a-tab-pane>
         </a-tabs>
+        <!-- 可视化面板 -->
         <div class="index-mapping-tab" v-for="(item, index) in dataItems" v-show="index === activeKey"
              :style="{height: hasType ? 'calc(100% - 50px)' : '100%'}">
             <div class="index-mapping-main">
                 <a-tag bordered color="blue">type</a-tag>
-                <div v-if="readOnly" class="read-only">{{ item.type }}</div>
                 <a-input v-model="dataItems[index].type" style="width: 200px;" size="mini"
-                         :disabled="!hasType" v-else/>
+                         :disabled="!hasType"/>
                 <a-tag bordered color="blue">dynamic</a-tag>
-                <div v-if="readOnly" class="read-only">{{ item.dynamic }}</div>
                 <a-select v-model="dataItems[index].dynamic" style="width: 200px;" size="mini"
-                          :disabled="!hasType" v-else>
+                          :disabled="!hasType">
                     <a-option label="动态模式" value="true"/>
                     <a-option label="静态模式" value="false"/>
                     <a-option label="严格模式" value="strict"/>
                 </a-select>
             </div>
             <div class="index-mapping-mapper"
-                 :style="{height: readOnly ? 'calc(100% - 50px)' : '100%', overflow: overflow?'hidden':'auto'}">
+                 :style="{height: '100%', overflow: overflow?'hidden':'auto'}">
                 <a-tree v-model:expanded-keys="expandedKeys" :data="dataItems[index].nodes" block-node show-line
                         auto-expand-parent :ref="'indexManageTree' + index">
                     <template #title="nodeData">
                         <div class="index-mapping-mapper-node">
                             <a-tag bordered :color="typeColor(nodeData.type)">{{ typeRender(nodeData.type) }}</a-tag>
-                            <div v-if="readOnly" class="read-only">{{ nodeData.type }}</div>
                             <a-auto-complete :data="typeAutoData" size="mini" :disabled="nodeData.key === 'root'"
-                                             allow-clear v-model="nodeData.type" v-else/>
-                            <div v-if="readOnly" class="read-only" style="margin-left: 16px;">{{ nodeData.value }}</div>
+                                             allow-clear v-model="nodeData.type"/>
                             <a-auto-complete :data="valueTips" size="mini" :disabled="!allowEdit(nodeData.type)"
-                                             v-model="nodeData.value" style="margin-left: 16px;" @search="valueTipsBuild(nodeData.type)" v-else/>
+                                             v-model="nodeData.value" style="margin-left: 16px;"
+                                             @search="valueTipsBuild(nodeData.type)"/>
                         </div>
                     </template>
                     <template #extra="nodeData">
-                        <div class="index-mapping-mapper-option" v-if="!readOnly">
+                        <div class="index-mapping-mapper-option">
                             <a-button type="text" status="danger" :disabled="nodeData.key === 'root'"
                                       @click="() => removeChildNode(nodeData)">
                                 <template #icon>
@@ -55,6 +53,7 @@
                 </a-tree>
             </div>
         </div>
+        <!-- 结果展示 -->
         <div class="index-mapping-source" v-if="source.show">
             <json-view :data="source.data" :copy="false"/>
         </div>
@@ -64,7 +63,7 @@
     </a-spin>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw, PropType} from "vue";
+import {defineComponent, markRaw} from "vue";
 import {SelectOptionData,} from "@arco-design/web-vue";
 
 import './index.less';
@@ -73,7 +72,6 @@ import MappingNode from "@/components/IndexMapping/domain/MappingNode";
 import {allowEditTypes, typeAutoData} from "@/components/IndexMapping/Constant";
 import {
     mappingBuild,
-    mappingNodeBuild,
     removeTreeNode, typeColor,
     typeRender,
     valueTipsBuild
@@ -87,12 +85,6 @@ export default defineComponent({
     name: 'index-mapping',
     components: {JsonView},
     props: {
-        mapping: Object as PropType<Record<string, Mapping>>,
-        readOnly: {
-            type: Boolean,
-            required: false,
-            default: false
-        },
         overflow: {
             type: Boolean,
             required: false,
@@ -126,52 +118,25 @@ export default defineComponent({
             valueTips: new Array<SelectOptionData>()
         }
     },
-    watch: {
-        mapping: {
-            handler(newValue: Record<string, Mapping>) {
-                this.setDate(newValue);
-            }
-        }
-    },
     mounted() {
-        if (this.mapping) {
-            this.setDate(this.mapping);
-        } else {
-            this.dataItems = [{
-                type: '',
-                dynamic: '',
-                nodes: [{
-                    disabled: true,
-                    key: 'root',
-                    type: 'root',
-                    value: '',
-                    children: new Array<MappingNode>()
-                }]
-            }];
-            this.source.data = {};
-        }
+        this.dataItems = [{
+            type: '',
+            dynamic: '',
+            nodes: [{
+                disabled: true,
+                key: 'root',
+                type: 'root',
+                value: '',
+                children: new Array<MappingNode>()
+            }]
+        }];
+        this.source.data = {};
     },
     methods: {
         typeRender,
         typeColor,
         valueTipsBuild(keyword: string) {
             this.valueTips = valueTipsBuild(keyword);
-        },
-        setDate(newValue: Record<string, Mapping>) {
-            this.loading = true;
-            setTimeout(() => {
-                this.source.data = this.mapping;
-                this.dataItems = mappingNodeBuild(newValue['mappings'] as any);
-                this.$nextTick(() => {
-                    for (let i = 0; i < this.dataItems.length; i++) {
-                        let indexManageTree = this.$refs[`indexManageTree${i}`] as any;
-                        this.$nextTick(() => {
-                            indexManageTree[0].expandAll();
-                        });
-                    }
-                    this.loading = false;
-                });
-            }, 200);
         },
         addChildNode(node: MappingNode) {
             let time = new Date().getTime();

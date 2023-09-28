@@ -1,3 +1,6 @@
+import {Setting} from "@/components/es/domain/IndexBase";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+
 /**
  * 索引实体类
  */
@@ -16,38 +19,15 @@ export interface IndexInstance {
     /**
      * 映射
      */
-    mapping: Array<Property>;
+    mappings: string;
 }
-
-export interface Setting {
-
-    /**
-     * 分片数量
-     */
-    numberOfShards: number;
-
-    /**
-     * 副本数量
-     */
-    numberOfReplicas: number;
-
-}
-
-export interface Property {
-
-    /**
-     * 唯一标识，时间戳
-     */
-    id: number;
-
-    /**
-     * 字段
-     */
-    field: string;
-
-    /**
-     * 类型
-     */
-    type: string;
-
+export function getDefaultIndexInstance(): IndexInstance {
+    return {
+        name: '',
+        settings: {
+            number_of_shards: useGlobalSettingStore().getDefaultShard,
+            number_of_replicas: useGlobalSettingStore().getDefaultReplica
+        },
+        mappings: "{}"
+    }
 }

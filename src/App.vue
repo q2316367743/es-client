@@ -36,8 +36,6 @@ import useUrlStore from "@/store/UrlStore";
 import {computed, defineAsyncComponent, ref} from 'vue';
 import {useRouter} from "vue-router";
 // 模块
-import AppHeader from '@/module/app-header/index.vue';
-import AppSider from '@/module/app-sider/index.vue';
 // 枚举
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
@@ -52,6 +50,9 @@ import useIndexStore from "@/store/IndexStore";
 
 const router = useRouter();
 
+
+const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.vue"));
+const AppSider = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
 const AppDataExport = defineAsyncComponent(() => import("@/module/app-data-export/index.vue"));
 const VersionUpdate = defineAsyncComponent(() => import("@/module/version-update/index.vue"));
 const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
