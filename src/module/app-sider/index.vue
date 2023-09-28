@@ -24,6 +24,15 @@
             </template>
             高级搜索
         </a-menu-item>
+        <a-sub-menu :key="PageNameEnum.DASHBOARD">
+            <template #icon>
+                <icon-dashboard/>
+            </template>
+            <template #title>仪表盘</template>
+            <a-menu-item :key="PageNameEnum.DASHBOARD_INFO" :disabled="empty">
+                信息
+            </a-menu-item>
+        </a-sub-menu>
         <a-sub-menu :key="PageNameEnum.SETTING">
             <template #icon>
                 <icon-settings/>
@@ -58,15 +67,17 @@
 </template>
 <script lang="ts" setup>
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useGlobalStore} from "@/store/GlobalStore";
+import useUrlStore from "@/store/UrlStore";
 
 const route = useRoute();
 const router = useRouter();
 
 const collapsed = ref(useGlobalStore().collapsed);
 const selectedKeys = ref<Array<PageNameEnum>>([PageNameEnum.HOME]);
+const empty = computed(() => useUrlStore().empty)
 
 watch(() => selectedKeys.value, value => router.push(value[0]));
 watch(() => route.path, value => selectedKeys.value = [value as PageNameEnum]);

@@ -8,6 +8,10 @@ enum PageNameEnum {
 
     SENIOR_SEARCH = "/senior-search",
 
+    DASHBOARD = '/dashboard',
+
+    DASHBOARD_INFO = '/dashboard/info',
+
     SETTING = "/setting",
 
     SETTING_GLOBAL = "/setting/global",

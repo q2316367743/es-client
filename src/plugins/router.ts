@@ -1,4 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
+import PageNameEnum from "@/enumeration/PageNameEnum";
 // 引入路由
 
 const router = createRouter({
@@ -23,6 +24,15 @@ const router = createRouter({
         name: '高级查询',
         path: '/senior-search',
         component: () => import('@/page/senior-search/index.vue')
+    }, {
+        name: '仪表盘',
+        path: PageNameEnum.DASHBOARD,
+        component: () => import('@/page/dashboard/index.vue'),
+        children: [{
+            name: '信息',
+            path: 'info',
+            component: () => import('@/page/dashboard/info/index.vue')
+        }]
     }, {
         name: '设置',
         path: '/setting',

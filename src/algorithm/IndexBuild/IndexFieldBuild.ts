@@ -31,7 +31,6 @@ export default function IndexFieldBuild(mappings: Record<string, Mapping>): Arra
 
     }
 
-    console.log(types, mappings)
     // 多类型
     for (let type of types) {
         const mapping = mappings[type];

@@ -12,7 +12,7 @@ export default {
      * 集群基本信息
      */
     info(): Promise<Info> {
-        return fetchEs<any>({
+        return fetchEs<Info>({
             method: 'GET',
             url: '/'
         });

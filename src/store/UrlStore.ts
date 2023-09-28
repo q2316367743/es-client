@@ -31,7 +31,8 @@ const useUrlStore = defineStore('url', {
         },
         id: (state): number | undefined => {
             return state.url ? state.url.id! : undefined;
-        }
+        },
+        empty: state => state.url === undefined
     },
     actions: {
         async init() {
