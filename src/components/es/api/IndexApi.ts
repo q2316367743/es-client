@@ -17,7 +17,7 @@ export default function (name: string) {
         create(data: IndexCreate): Promise<any> {
             return fetchEs<any>({
                 method: 'PUT',
-                url: name,
+                url: '/' + name,
                 data
             })
         },
@@ -27,7 +27,7 @@ export default function (name: string) {
         delete(): Promise<any> {
             return fetchEs<any>({
                 method: 'DELETE',
-                url: name,
+                url: '/' + name,
             })
         },
         /**
@@ -57,7 +57,7 @@ export default function (name: string) {
         _mappings(): Promise<any> {
             return fetchEs({
                 method: 'GET',
-                url: `${name}/_mappings`
+                url: `/${name}/_mappings`
             })
         },
         health(): Promise<IndexHealth> {
@@ -69,7 +69,7 @@ export default function (name: string) {
         _cacheClear(): Promise<any> {
             return fetchEs({
                 method: 'POST',
-                url: `${name}/_cache/clear`
+                url: `/${name}/_cache/clear`
             });
         },
         /**
@@ -79,7 +79,7 @@ export default function (name: string) {
         newAlias(alias: string): Promise<any> {
             return fetchEs<any>({
                 method: 'POST',
-                url: '_aliases',
+                url: '/_aliases',
                 data: {"actions": [{"add": {"index": name, "alias": alias}}]}
             });
         },
@@ -90,7 +90,7 @@ export default function (name: string) {
         removeAlias(alias: string): Promise<any> {
             return  fetchEs<any>({
                 method: 'POST',
-                url: '_aliases',
+                url: '/_aliases',
                 data: {"actions": [{"remove": {"index": name, "alias": alias}}]}
             });
         },
@@ -100,7 +100,7 @@ export default function (name: string) {
         _refresh(): Promise<any> {
             return  fetchEs<any>({
                 method: 'POST',
-                url: `${name}/_refresh`,
+                url: `/${name}/_refresh`,
             })
         },
         /**
@@ -109,7 +109,7 @@ export default function (name: string) {
         _close(): Promise<any> {
             return fetchEs<any>({
                 method: 'POST',
-                url: `${name}/_close`,
+                url: `/${name}/_close`,
             });
         },
         /**
@@ -118,7 +118,7 @@ export default function (name: string) {
         _open(): Promise<any> {
             return fetchEs<any>({
                 method: 'POST',
-                url: `${name}/_open`,
+                url: `/${name}/_open`,
             })
         },
         /**
@@ -127,7 +127,7 @@ export default function (name: string) {
         _flush(): Promise<any> {
             return fetchEs<any>({
                 method: 'POST',
-                url: `${name}/_flush`,
+                url: `/${name}/_flush`,
             })
         },
     }

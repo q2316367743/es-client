@@ -40,8 +40,16 @@ if (Constant.mode === PluginModeEnum.DESKTOP) {
                 if (config.data) {
                     body = typeof config.data === 'string' ? Body.text(config.data) : Body.json(config.data);
                 }
+                let headers = {
+                    ...config.headers
+                };
+                if (config.auth) {
+                    headers = {
+                        Authorization: 'Basic ' + btoa(`${config.auth.username}:${config.auth.password}`)
+                    }
+                }
                 const rsp = await fetch<T>((config.baseURL || '') + (config.url || ''), {
-                    headers: config.headers || {},
+                    headers: headers,
                     method: config.method as any,
                     query: config.params,
                     timeout: config.timeout,
