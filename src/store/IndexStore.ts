@@ -98,7 +98,8 @@ const useIndexStore = defineStore('index', {
                 return [{
                     name: '_id',
                     type: 'text',
-                    dataIndex: '_id'
+                    dataIndex: '_id',
+                    label: '_id'
                 }, ...Array.from(indexView.fields)]
             }
             return new Array<Field>;

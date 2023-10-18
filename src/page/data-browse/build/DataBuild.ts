@@ -1,6 +1,5 @@
 import ArrayUtil from "@/utils/ArrayUtil";
-import {Mapping} from "@/components/es/domain/IndexInfo";
-import {Property} from "@/components/es/domain/IndexBase";
+import {Property, Mapping} from "@/components/es/domain/IndexBase";
 
 /**
  * 数据构造器
@@ -9,9 +8,12 @@ import {Property} from "@/components/es/domain/IndexBase";
 export default function DataBuild(mapping: Mapping): string {
     try {
         let data = {} as any;
+        // TODO: 此处需要处理
+        // @ts-ignore
         if (!mapping || !mapping._doc || !mapping._doc.properties) {
             return '{}';
         }
+        // @ts-ignore
         let properties = mapping._doc.properties;
         for (let key in properties) {
             buildItem(key, properties[key], data);

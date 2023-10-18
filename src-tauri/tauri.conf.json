@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "es-client",
-        "version": "3.0.4"
+        "version": "3.0.5"
     },
     "tauri": {
         "allowlist": {

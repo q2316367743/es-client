@@ -1,6 +1,7 @@
 import VersionStrategy from "@/strategy/VersionStrategy/VersionStrategy";
-import {IndexInstance, Setting} from "@/domain/IndexInstance";
+import {IndexInstance} from "@/domain/IndexInstance";
 import {IndexCreate} from "@/components/es/domain/IndexCreate";
+import {Setting} from "@/components/es/domain/IndexBase";
 
 /**
  * v6版本策略
@@ -17,8 +18,8 @@ export default class V6VersionStrategyImpl implements VersionStrategy {
     private getDefaultBody(setting: Setting): any {
         return {
             settings: {
-                number_of_shards: setting.numberOfShards,
-                number_of_replicas: setting.numberOfReplicas
+                number_of_shards: setting.number_of_shards,
+                number_of_replicas: setting.number_of_replicas
             },
             mappings: {
                 _doc: {
@@ -29,15 +30,8 @@ export default class V6VersionStrategyImpl implements VersionStrategy {
     }
 
     indexCreateBuild(index: IndexInstance): IndexCreate {
-        let body = this.getDefaultBody(index.settings);
-        let properties = {} as any;
-        for (let property of index.mapping) {
-            properties[property.field] = {
-                'type': property.type
-            };
-        }
-        body.mappings._doc.properties = properties;
-        return body;
+        // TODO：此处需要处理
+        return this.getDefaultBody(index.settings);
     }
 
 }

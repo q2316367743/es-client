@@ -563,7 +563,7 @@ dependencies = [
 
 [[package]]
 name = "es-client"
-version = "3.0.4"
+version = "3.0.5"
 dependencies = [
  "serde",
  "serde_json",

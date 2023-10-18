@@ -2,6 +2,23 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.5',
+        sign: 305,
+        time: '2023-10-18',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '修复中文名索引查询映射关系url错误问题',
+            gitee: {
+                title: '3.0.4查看索引映射的时候报AxiosError异常',
+                content: 'https://gitee.com/qiaoshengda/es-client/issues/I86FO1'
+            }
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '修复HTTP客户端，无法使用Basic认证问题',
+            txc: 'https://support.qq.com/products/489458/post/169700870484188099/'
+        }]
+    },
+    {
         version: '3.0.4',
         sign: 304,
         time: '2023-09-27',

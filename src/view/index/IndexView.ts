@@ -1,6 +1,6 @@
 import Field from "../Field";
-import {IndexInfo, Mapping} from "@/components/es/domain/IndexInfo";
-import {Setting} from "@/components/es/domain/IndexBase";
+import {IndexInfo} from "@/components/es/domain/IndexInfo";
+import {Setting, Mapping} from "@/components/es/domain/IndexBase";
 import {Index} from "@/components/es/domain/Stats";
 
 /**
