@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {useTitle} from "@vueuse/core";
 
-import Url from "@/entity/Url";
+import {Url} from "@/entity/Url";
 
 import ArrayUtil from "@/utils/ArrayUtil";
 import {listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
@@ -69,6 +69,20 @@ const useUrlStore = defineStore('url', {
                 createTime: now,
                 updateTime: now
             });
+            await this._sync();
+        },
+        async addByBatch(records: Array<Omit<Url, 'id' | 'createTime' | 'updateTime'>>) {
+            const now = new Date();
+            const id = now.getTime();
+            for (let i = 0; i < records.length; i++) {
+                const record = records[i];
+                this.urls.push({
+                    ...record,
+                    id: id + i,
+                    createTime: now,
+                    updateTime: now
+                });
+            }
             await this._sync();
         },
         async update(id: number, record: Omit<Url, 'id' | 'createTime' | 'updateTime'>) {

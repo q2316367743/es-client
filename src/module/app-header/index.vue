@@ -1,11 +1,11 @@
 <template>
     <a-layout-header id="header">
         <div class="left">
-            <div class="logo">{{ $t('app.name') }}</div>
+            <div class="logo" :style="{color: color}">{{ name || $t('app.name') }}</div>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
-                class="url-select" :show-extra-options="true">
-                <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id" />
+                      class="url-select" :show-extra-options="true">
+                <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
                 <template #empty>
                     <div style="padding: 6px 0; text-align: center;">
                         <a-button type="primary" @click="jumpToAddUrl()">新增链接</a-button>
@@ -21,27 +21,27 @@
             </a-select>
             <!-- 刷新按钮 -->
             <a-button class="refresh" @click="refresh()" :disabled="loading || !urlId || urlId === ''">{{
-                $t('common.operation.refresh')
-            }}
+                    $t('common.operation.refresh')
+                }}
             </a-button>
         </div>
         <div class="right">
             <!-- 控制台 -->
-            <app-bug />
+            <app-bug/>
             <!-- 各种信息弹框 -->
-            <app-info class-name="menu-item" :disabled="loading" />
+            <app-info class-name="menu-item" :disabled="loading"/>
             <!-- 主题切换 -->
             <a-button class="menu-item" @click="switchDarkColors()" type="text" status="normal">
                 <template #icon>
-                    <icon-moon :size="16" v-if="isDark" />
-                    <icon-sun :size="16" v-else />
+                    <icon-moon :size="16" v-if="isDark"/>
+                    <icon-sun :size="16" v-else/>
                 </template>
             </a-button>
             <!-- 版本 -->
             <a-dropdown @select="versionCommand" position="br">
                 <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
-                    Constant.version
-                }}
+                        Constant.version
+                    }}
                 </a-button>
                 <template #content>
                     <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
@@ -51,15 +51,16 @@
             </a-dropdown>
         </div>
         <!-- 问题反馈 -->
-        <a-modal v-model:visible="feedbackDialog" title="问题反馈" top="25vh" :close-on-click-modal="false" render-to-body
-            draggable unmount-on-close :footer="false">
-            <feedback-module v-if="feedbackDialog" />
+        <a-modal v-model:visible="feedbackDialog" title="问题反馈" top="25vh" :close-on-click-modal="false"
+                 render-to-body
+                 draggable unmount-on-close :footer="false">
+            <feedback-module v-if="feedbackDialog"/>
         </a-modal>
     </a-layout-header>
 </template>
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import {ref, computed, watch} from 'vue';
+import {useRouter} from 'vue-router';
 import Constant from '@/global/Constant';
 // 枚举
 import PageNameEnum from "@/enumeration/PageNameEnum";
@@ -72,10 +73,10 @@ import AppBug from '@/module/app-bug/index.vue';
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useLoadingStore from "@/store/LoadingStore";
-import { useGlobalStore } from "@/store/GlobalStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 // 工具类
 import Assert from "@/utils/Assert";
-import { setItem } from '@/utils/utools/DbStorageUtil';
+import {setItem} from '@/utils/utools/DbStorageUtil';
 
 const router = useRouter();
 
@@ -85,6 +86,18 @@ const feedbackDialog = ref<boolean>(false);
 const urls = computed(() => useUrlStore().urls);
 const loading = computed(() => useLoadingStore().loading);
 const isDark = computed(() => useGlobalStore().isDark);
+const name = computed(() => useIndexStore().name);
+const color = computed(() => {
+    const status = useIndexStore().status;
+    if (status === 'yellow') {
+        return 'rgb(var(--orange-6))';
+    } else if (status === 'green') {
+        return 'rgb(var(--green-6))';
+    } else if (status === 'red') {
+        return 'rgb(var(--red-6))';
+    }
+    return 'var(--color-text-1)';
+})
 
 watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
 watch(() => useUrlStore().id, value => {

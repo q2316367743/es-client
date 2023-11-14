@@ -7,7 +7,7 @@ import EventBusEnum from "@/enumeration/EventBusEnum";
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
 
-import Url from "@/entity/Url";
+import {Url} from "@/entity/Url";
 // 策略
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";

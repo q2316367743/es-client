@@ -1,7 +1,7 @@
 import Base from "@/entity/Base";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 
-export default interface Url extends Base {
+export interface Url extends Base {
 
     /**
      * 链接名称
@@ -42,4 +42,20 @@ export default interface Url extends Base {
      */
     version: string;
 
+}
+
+export function getDefaultUrl(source?: Partial<Url>): Url {
+    return Object.assign<Url, Partial<Url>>({
+        id: 0,
+        version: '',
+        updateTime: new Date(),
+        createTime: new Date(),
+        name: '',
+        value: 'http://',
+        sequence: 0,
+        isAuth: false,
+        authType: UrlAuthTypeEnum.BASIC as UrlAuthTypeEnum,
+        authUser: '',
+        authPassword: ''
+    }, source || {});
 }

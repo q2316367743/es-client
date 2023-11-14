@@ -55,6 +55,8 @@ const useIndexStore = defineStore('index', {
             if (useUrlStore().current === '') {
                 return Promise.reject('链接不存在');
             }
+            // 清空数据
+            this.clear();
             // 初始化时加载
             useLoadingStore().start('准备索引信息中');
             try {
@@ -86,6 +88,9 @@ const useIndexStore = defineStore('index', {
             this.name = '';
             this.indices = new Array<IndexView>();
             this.indicesMap = new Map<string, IndexView>();
+            this.active_shards = 0;
+            this.total_shards = 0;
+            this.status = '';
         },
         field(indexName: string | IndexView | undefined): Array<Field> {
             let indexView: IndexView | undefined;

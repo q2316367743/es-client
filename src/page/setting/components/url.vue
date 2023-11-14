@@ -5,7 +5,18 @@
             <a-dropdown-button @click="editOpen()" type="primary">
                 新增
                 <template #content>
-                    <a-doption @click="updateTo3()">2.0.0数据迁移</a-doption>
+                    <a-doption @click="exportUrlToJson()">
+                        <template #icon>
+                            <icon-export />
+                        </template>
+                        数据导出
+                    </a-doption>
+                    <a-doption @click="importUrlByJson()">
+                        <template #icon>
+                            <icon-import />
+                        </template>
+                        数据导入
+                    </a-doption>
                 </template>
             </a-dropdown-button>
         </div>
@@ -51,7 +62,7 @@ import {computed, onMounted, ref, toRaw} from "vue";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
-import Url from "@/entity/Url";
+import {getDefaultUrl, Url} from "@/entity/Url";
 
 import {useUrlEditEvent} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
@@ -59,7 +70,9 @@ import SaveOrUpdateUrl from "@/page/setting/components/save-or-update-url/index.
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {TableDraggable} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
-import {updateTo3} from "@/components/version-manager";
+import {download} from "@/utils/BrowserUtil";
+import Constant from "@/global/Constant";
+import {useFileSystemAccess} from "@vueuse/core";
 
 const route = useRoute();
 
@@ -117,7 +130,6 @@ function removeAfter(value: string) {
         useUrlStore().clear();
         useIndexStore().clear();
     }
-    useIndexStore().reset();
 }
 
 function editOpen(url?: Url) {
@@ -133,6 +145,60 @@ const execCopy = (text: string) => {
     MessageUtil.success("已成功复制到剪切板");
 };
 const open = (url: string) => utools.shellOpenExternal(url);
+
+// 导入导出
+
+function exportUrlToJson() {
+    download(JSON.stringify({
+        version: Constant.version,
+        records: useUrlStore().urls
+    }, null, 4), "链接导出.json", "application/json");
+}
+
+const importFile = useFileSystemAccess({
+    dataType: 'Text',
+    types: [{
+        accept: {
+            'application/json': ['.json']
+        },
+        description: "JSON文件"
+    }]
+});
+function importUrlByJson() {
+    const rsp =  importFile.open() as Promise<void>;
+    rsp.then(() => {
+        const value = importFile.data.value;
+        if (!value) {
+            MessageUtil.error("没有解析到数据，请确认上传文件是否正确")
+        }
+        handlerJson(value)
+                .then(() => MessageUtil.success("导入成功"))
+                .catch(e => MessageUtil.error("导入失败", e));
+    })
+}
+
+async function handlerJson(json?: string) {
+    if (!json) {
+        return Promise.reject("没有解析到数据，请确认上传文件是否正确");
+    }
+    let value;
+    try {
+        value = JSON.parse(json) as any;
+    }catch (e) {
+        return Promise.reject("JSON文件解析失败");
+    }
+    if (!value) {
+        return Promise.reject("JSON未解析到数据");
+    }
+    let records = value.records;
+    if (!records) {
+        return Promise.reject("链接记录不存在");
+    }
+    if (!(records instanceof Array)) {
+        return Promise.reject("数据格式错误，无法导入");
+    }
+    await useUrlStore().addByBatch(records.map(e => getDefaultUrl(e)))
+}
 
 </script>
 <style lang="less">

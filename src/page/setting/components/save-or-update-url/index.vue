@@ -55,7 +55,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 
-import Url from '@/entity/Url';
+import {getDefaultUrl, Url} from '@/entity/Url';
 
 import {useUrlEditEvent} from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
@@ -68,15 +68,7 @@ export default defineComponent({
     name: 'SaveOrUpdateUrl',
     data: () => ({
         UrlAuthTypeEnum,
-        url: {
-            name: '',
-            value: 'http://',
-            sequence: 0,
-            isAuth: false,
-            authType: UrlAuthTypeEnum.BASIC as UrlAuthTypeEnum,
-            authUser: '',
-            authPassword: ''
-        } as Url,
+        url: getDefaultUrl(),
         dialog: false,
         isSave: true,
         loading: false,
@@ -173,15 +165,7 @@ export default defineComponent({
                         this.loading = false;
                     });
             }
-            this.url = {
-                name: '',
-                value: 'http://',
-                sequence: 0,
-                isAuth: false,
-                authType: UrlAuthTypeEnum.BASIC,
-                authUser: '',
-                authPassword: ''
-            } as Url;
+            this.url = getDefaultUrl();
             this.testData = {
                 icon: 'success',
                 title: '',
