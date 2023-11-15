@@ -1,7 +1,7 @@
 <template>
     <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
                :popup-offset="2">
-        <a-button type="dashed" size="mini" @click="showIndex()">
+        <a-button type="text" size="mini" @click="showIndex()">
             <template #icon>
                 <icon-up style="margin: 5px;" v-if="show"/>
                 <icon-down style="margin: 5px;" v-else/>

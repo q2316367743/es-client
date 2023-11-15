@@ -63,6 +63,7 @@
         "vue-i18n": "^9.2.2",
         "vue-json-viewer": "3",
         "vue-router": "^4.0.13",
+        "vxe-table": "^4.5.13",
         "webdav": "^5.3.0",
         "xe-utils": "^3.5.7",
         "xlsx": "^0.18.5"

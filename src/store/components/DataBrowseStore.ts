@@ -54,7 +54,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
 
 
         checkItems: new Array<string>(),
-        selectedKeys: new Array<string>()
+        selectedKeys: new Array<any>()
     }),
     actions: {
         getCondition(): DocumentSearchQuery {
@@ -84,7 +84,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                         }
                         this.records = records;
                         this.total = total;
-                        this.selectedKeys = new Array<string>();
+                        this.selectedKeys = new Array<any>();
                         resolve();
                     })
                     .catch(e => {
@@ -225,7 +225,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                                 this.executeQuery(false).then(() => console.log("查询成功"));
                             }, 1000);
                             // 删除后，重置选择
-                            this.selectedKeys = new Array<string>();
+                            this.selectedKeys = new Array<any>();
                         })
                         .catch(e => MessageUtil.error('删除失败', e));
                 }).catch((action) => {

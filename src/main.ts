@@ -7,6 +7,7 @@ import router from "@/plugins/router";
 // 额外引入图标库
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
+// 引入VXETable
 
 // 引入样式
 import '@/less/theme.less';
@@ -14,9 +15,8 @@ import '@/less/main.less';
 import '@/less/post.css';
 import '@/less/customer.less';
 import '@/components/JsonTree/index.less';
-
-// arco样式
 import '@arco-design/web-vue/dist/arco.css';
+import 'vxe-table/lib/style.css'
 
 // @ts-ignore
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
@@ -53,6 +53,17 @@ window.addEventListener('message', event => {
         sessionStorage.setItem('action', message['content']);
     }
 });
+
+import XEUtils from 'xe-utils'
+import {
+    VXETable,
+} from 'vxe-table'
+import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
+
+// 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
+VXETable.setup({
+    i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
+})
 
 // 插件
 createApp(App)
