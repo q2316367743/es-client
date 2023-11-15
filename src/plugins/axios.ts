@@ -169,8 +169,14 @@ export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
 export function jsonParse<T = any>(data: string): T {
     return JSONBig.parse(data, (_key, value) => {
         try {
-            if (typeof value === 'object' && value.constructor && value.constructor.name == 'BigNumber2') {
-                return value.toString();
+            if (typeof value === 'object') {
+                if (value.constructor) {
+                    if (value.constructor.name == 'BigNumber2') {
+                        return value.toString();
+                    } else if (value.constructor.name == 'BigNumber') {
+                        return value.toString();
+                    }
+                }
             }
         } catch (e) {
             return value;
