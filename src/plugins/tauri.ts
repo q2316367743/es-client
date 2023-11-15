@@ -45,6 +45,7 @@ if (Constant.mode === PluginModeEnum.DESKTOP) {
                 };
                 if (config.auth) {
                     headers = {
+                        ...headers,
                         Authorization: 'Basic ' + btoa(`${config.auth.username}:${config.auth.password}`)
                     }
                 }

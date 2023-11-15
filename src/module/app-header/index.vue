@@ -1,7 +1,7 @@
 <template>
     <a-layout-header id="header">
         <div class="left">
-            <div class="logo" :style="{color: color}">{{ name || $t('app.name') }}</div>
+            <div class="logo" :style="{color: color}" :title="name || $t('app.name')">{{ name || $t('app.name') }}</div>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
                       class="url-select" :show-extra-options="true">

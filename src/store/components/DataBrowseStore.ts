@@ -194,7 +194,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 return Promise.reject();
             }
             let deleteRowIndies = Optional.ofNullable(deleteRow)
-                .orElse(this.selectedKeys);
+                .orElse(this.selectedKeys.map(e => e['_id']));
             if (deleteRowIndies.length === 0) {
                 MessageUtil.error("请选择要删除的行");
                 return Promise.reject();

@@ -93,7 +93,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 data: request.params.trim() === '' ? undefined : request.params,
                 responseType: 'text',
                 headers: {
-                    'content-type': 'application/json'
+                    'Content-Type': 'application/json;charset=UTF-8'
                 }
             }).then((response) => {
                 // 真正的结果

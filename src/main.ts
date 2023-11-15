@@ -1,6 +1,6 @@
-import { createApp } from 'vue';
+import { createApp, App } from 'vue';
 import store from "@/store";
-import App from './App.vue';
+import AppInstance from './App.vue';
 import i18n from '@/i18n';
 import router from "@/plugins/router";
 
@@ -55,22 +55,60 @@ window.addEventListener('message', event => {
 });
 
 import XEUtils from 'xe-utils'
-import {
-    VXETable,
-} from 'vxe-table'
+import {VXETable, Column, Icon, Tooltip, VxeTable, Menu} from 'vxe-table'
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 
 // 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
 VXETable.setup({
     i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
 })
+function useTable (app: App) {
+    // 表格功能
+    app
+    // .use(Filter)
+    // .use(Edit)
+    .use(Menu)
+    // .use(Export)
+    // .use(Keyboard)
+    // .use(Validator)
 
+    // 可选组件
+    app.use(Icon)
+        .use(Column)
+        // .use(Colgroup)
+        // .use(Grid)
+        .use(Tooltip)
+        // .use(Toolbar)
+        // .use(Pager)
+        // .use(Form)
+        // .use(FormItem)
+        // .use(FormGather)
+        // .use(Checkbox)
+        // .use(CheckboxGroup)
+        // .use(Radio)
+        // .use(RadioGroup)
+        // .use(RadioButton)
+        // .use(Switch)
+        // .use(Input)
+        // .use(Select)
+        // .use(Optgroup)
+        // .use(Option)
+        // .use(Textarea)
+        // .use(Button)
+        // .use(Modal)
+        // .use(List)
+        // .use(Pulldown)
+
+        // 安装表格
+        .use(VxeTable)
+}
 // 插件
-createApp(App)
+createApp(AppInstance)
     .use(ArcoVue)
     .use(store)
     .use(i18n)
     .use(ArcoVueIcon)
     .use(router)
+    .use(useTable)
     .mount('#app');
 

@@ -171,7 +171,7 @@ function recordEdit(_id?: string) {
             return;
         }
     } else {
-        record = recordMap.value.get(selectedKeys.value[0]);
+        record = selectedKeys.value[0];
     }
     console.log(record)
     editConfig.value = {
