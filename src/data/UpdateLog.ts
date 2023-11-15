@@ -2,6 +2,25 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.6',
+        sign: 306,
+        time: '2023-11-15',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '新增链接导入导出',
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '更新数据浏览的表格组件，新的组件支持右键菜单，可以快速复制数据、切换选中等功能',
+            txc: 'https://support.qq.com/products/489458/post/169951634472374187/'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '尝试解决utools端和electron客户端中，如果服务器开启https但没有证书导致报错的问题',
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '尝试修复tauri客户端部分组件',
+        }]
+    },
+    {
         version: '3.0.5',
         sign: 305,
         time: '2023-10-18',
