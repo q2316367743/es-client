@@ -1,5 +1,6 @@
 const axios = require('./lib/axios');
 const iconv = require('iconv-lite');
+const https = require('https');
 
 "use strict";
 window.preload = Object.create(null);
@@ -10,4 +11,11 @@ window.preload['iconv'] = function (content, charset) {
     return iconv.encode(str, 'utf8').toString();
 };
 
-window.preload['axios'] = axios;
+
+const ignoreSSL = axios.create({
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+    })
+});
+
+window.preload['axios'] = ignoreSSL;

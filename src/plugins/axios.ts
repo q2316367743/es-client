@@ -1,4 +1,4 @@
-import {AxiosError, AxiosHeaders, AxiosRequestConfig} from "axios";
+import {AxiosRequestConfig} from "axios";
 import useUrlStore from "@/store/UrlStore";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 import JSONBig from 'json-bigint';
@@ -15,21 +15,21 @@ interface Response<T> {
     data: T;
 }
 
-const error = {
-    code: "ERR_BAD_REQUEST",
-    config: {} as AxiosRequestConfig,
-    message: "Request failed with status code 400",
-    name: "AxiosError",
-    request: {},
-    response: {
-        config: {} as AxiosRequestConfig,
-        data: "{\"error\":{\"root_cause\":[{\"type\":\"parsing_exception\",\"reason\":\"Expected [START_OBJECT]",
-        headers: {} as AxiosHeaders,
-        request: {},
-        status: 400,
-        statusText: "Bad Request"
-    }
-} as AxiosError
+// const error = {
+//     code: "ERR_BAD_REQUEST",
+//     config: {} as AxiosRequestConfig,
+//     message: "Request failed with status code 400",
+//     name: "AxiosError",
+//     request: {},
+//     response: {
+//         config: {} as AxiosRequestConfig,
+//         data: "{\"error\":{\"root_cause\":[{\"type\":\"parsing_exception\",\"reason\":\"Expected [START_OBJECT]",
+//         headers: {} as AxiosHeaders,
+//         request: {},
+//         status: 400,
+//         statusText: "Bad Request"
+//     }
+// } as AxiosError
 
 /**
  * axios的简单封装
