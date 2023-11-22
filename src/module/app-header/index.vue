@@ -31,17 +31,39 @@
             <!-- 各种信息弹框 -->
             <app-info class-name="menu-item" :disabled="loading"/>
             <!-- 主题切换 -->
-            <a-button class="menu-item" @click="switchDarkColors()" type="text" status="normal">
-                <template #icon>
-                    <icon-moon :size="16" v-if="isDark"/>
-                    <icon-sun :size="16" v-else/>
+            <a-dropdown>
+                <a-button class="menu-item" type="text" status="normal">
+                    <template #icon>
+                        <icon-sun v-if="darkType === DarkTypeEnum.LIGHT"/>
+                        <icon-moon v-else-if="darkType === DarkTypeEnum.DARK"/>
+                        <icon-palette v-else/>
+                    </template>
+                </a-button>
+                <template #content>
+                    <a-doption @click="switchDarkColors(DarkTypeEnum.LIGHT)">
+                        <template #icon>
+                            <icon-sun/>
+                        </template>
+                        日间
+                    </a-doption>
+                    <a-doption @click="switchDarkColors(DarkTypeEnum.DARK)">
+                        <template #icon>
+                            <icon-moon/>
+                        </template>
+                        黑夜
+                    </a-doption>
+                    <a-doption @click="switchDarkColors(DarkTypeEnum.AUTO)">
+                        <template #icon>
+                            <icon-palette/>
+                        </template>
+                        跟随系统
+                    </a-doption>
                 </template>
-            </a-button>
+            </a-dropdown>
             <!-- 版本 -->
             <a-dropdown @select="versionCommand" position="br">
-                <a-button class="menu-item" type="text" status="normal" :disabled="loading">{{
-                        Constant.version
-                    }}
+                <a-button class="menu-item" type="text" status="normal" :disabled="loading" style="padding: 0 7px;">
+                    {{ Constant.version }}
                 </a-button>
                 <template #content>
                     <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
@@ -59,7 +81,7 @@
     </a-layout-header>
 </template>
 <script lang="ts" setup>
-import {ref, computed, watch} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import Constant from '@/global/Constant';
 // 枚举
@@ -73,7 +95,7 @@ import AppBug from '@/module/app-bug/index.vue';
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from '@/store/IndexStore';
 import useLoadingStore from "@/store/LoadingStore";
-import {useGlobalStore} from "@/store/GlobalStore";
+import {DarkTypeEnum, useGlobalStore} from "@/store/GlobalStore";
 // 工具类
 import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
@@ -85,7 +107,7 @@ const feedbackDialog = ref<boolean>(false);
 
 const urls = computed(() => useUrlStore().urls);
 const loading = computed(() => useLoadingStore().loading);
-const isDark = computed(() => useGlobalStore().isDark);
+const darkType = computed(() => useGlobalStore().darkType);
 const name = computed(() => useIndexStore().name);
 const color = computed(() => {
     const status = useIndexStore().status;
@@ -107,7 +129,7 @@ watch(() => useUrlStore().id, value => {
 })
 
 const refresh = () => useIndexStore().reset();
-const switchDarkColors = () => useGlobalStore().switchDarkColors();
+const switchDarkColors = useGlobalStore().switchDarkColors;
 
 async function selectUrl(value: any) {
     // 清空链接

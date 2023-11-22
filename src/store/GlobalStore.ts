@@ -1,9 +1,31 @@
 import {useWindowSize} from "@vueuse/core";
 import {defineStore} from "pinia";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {utools} from "@/plugins/utools";
+
+export enum DarkTypeEnum {
+    LIGHT = 1,
+    DARK = 2,
+    AUTO = 3
+}
+
+function getIsDark(): boolean {
+    const darkType = getItemByDefault(LocalNameEnum.KEY_THEME, DarkTypeEnum.AUTO);
+    if (darkType === DarkTypeEnum.LIGHT) {
+        return false;
+    } else if (darkType === DarkTypeEnum.DARK) {
+        return true;
+    } else if (darkType === DarkTypeEnum.AUTO) {
+        return utools.isDarkColors();
+    } else {
+        return false;
+    }
+}
 
 export const useGlobalStore = defineStore('global', {
     state: () => ({
-        isDark: utools.isDarkColors(),
+        darkType: getItemByDefault(LocalNameEnum.KEY_THEME, DarkTypeEnum.AUTO),
         size: useWindowSize(),
         loading: false,
         loadingText: '',
@@ -15,8 +37,8 @@ export const useGlobalStore = defineStore('global', {
     },
     actions: {
         initDarkColors() {
-            this.isDark = utools.isDarkColors();
-            if (this.isDark) {
+            const isDark = getIsDark();
+            if (isDark) {
                 // 设置为暗黑主题
                 document.body.setAttribute('arco-theme', 'dark');
             } else {
@@ -24,9 +46,12 @@ export const useGlobalStore = defineStore('global', {
                 document.body.removeAttribute('arco-theme');
             }
         },
-        switchDarkColors() {
-            this.isDark = !this.isDark;
-            if (this.isDark) {
+        switchDarkColors(type: DarkTypeEnum) {
+            // 设置值
+            this.darkType = type;
+            setItem(LocalNameEnum.KEY_THEME, type);
+            const isDark = getIsDark();
+            if (isDark) {
                 // 设置为暗黑主题
                 document.body.setAttribute('arco-theme', 'dark');
             } else {

@@ -4,6 +4,8 @@ enum LocalNameEnum {
 
     KEY_VERSION = '/key/version',
 
+    KEY_THEME = '/key/theme',
+
     DB_URL = '/db/url',
 
     DB_BASE_SEARCH_HISTORY = '/db/base-search-history',
