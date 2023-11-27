@@ -1,7 +1,7 @@
 <!-- 此处是右上角详情 -->
 <template>
     <a-dropdown trigger="click" @select="handleCommand">
-        <a-button type="text" status="normal" :class="className" :disabled="url === undefined || disabled">
+        <a-button type="text" status="normal" :class="className" :disabled="selfDisabled">
             <template #icon>
                 <icon-info-circle :size="16"/>
             </template>
@@ -17,16 +17,13 @@
             <a-doption value="template">{{ $t('app.info.template') }}</a-doption>
         </template>
     </a-dropdown>
-    <json-dialog :json="data" :title="title" v-model:value="dialog" :preview-mode="previewMode"></json-dialog>
 </template>
 <script lang="ts">
-import clusterApi from "@/components/es/api/ClusterApi";
-
 import {defineComponent} from "vue";
-
-import JsonDialog from "@/components/json-dialog/index.vue";
 import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
+import clusterApi from "@/components/es/api/ClusterApi";
+import {showJsonDialogByAsync} from "@/utils/DialogUtil";
 
 export default defineComponent({
     name: 'home-info',
@@ -37,10 +34,11 @@ export default defineComponent({
             required: false,
             default: ''
         },
-        disabled: Boolean
-    },
-    components: {
-        JsonDialog,
+        disabled: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     },
     data: () => ({
         title: '',
@@ -50,7 +48,13 @@ export default defineComponent({
         nodeStatsDialog: false
     }),
     computed: {
-        ...mapState(useUrlStore, ['url'])
+        ...mapState(useUrlStore, ['url']),
+        selfDisabled(): boolean {
+            if (!this.url) {
+                return true;
+            }
+            return this.disabled;
+        }
     },
     methods: {
         handleCommand(command: any) {
@@ -82,52 +86,28 @@ export default defineComponent({
             }
         },
         async info() {
-            this.title = this.$t('app.info.info')
-            this.data = await clusterApi.info();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.info'), clusterApi.info());
         },
         async state() {
-            this.title = this.$t('app.info.status')
-            this.data = await clusterApi._stats();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.status'), clusterApi._stats());
         },
         async node_stats() {
-            this.title = this.$t('app.info.nodeStatus')
-            this.data = await clusterApi._nodes_stats();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.nodeStatus'), clusterApi._nodes_stats());
         },
         async cluster_nodes() {
-            this.title = this.$t('app.info.clusterNodes')
-            this.data = await clusterApi._nodes();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.clusterNodes'), clusterApi._nodes());
         },
         async plugin() {
-            this.title = this.$t('app.info.plugin')
-            this.data = await clusterApi._nodes_plugins();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.plugin'), clusterApi._nodes_plugins());
         },
         async cluster_status() {
-            this.title = this.$t('app.info.clusterStatus')
-            this.data = await clusterApi._cluster_state();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.clusterStatus'), clusterApi._cluster_state());
         },
         async cluster_health() {
-            this.title = this.$t('app.info.clusterHealth')
-            this.data = await clusterApi._cluster_health();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.clusterHealth'), clusterApi._cluster_health());
         },
         async template() {
-            this.title = this.$t('app.info.template')
-            this.data = await clusterApi._template();
-            this.dialog = true;
-            this.previewMode = false;
+            showJsonDialogByAsync(this.$t('app.info.template'), clusterApi._template());
         }
     }
 });

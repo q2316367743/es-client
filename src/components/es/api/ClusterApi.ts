@@ -36,7 +36,7 @@ export default {
         })
     },
     _nodes_stats(): Promise<NodeState> {
-        return fetchEs<any>({
+        return fetchEs<NodeState>({
             method: 'GET',
             url: '/_nodes/stats'
         })

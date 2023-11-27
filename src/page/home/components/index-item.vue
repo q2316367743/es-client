@@ -102,31 +102,33 @@
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-
+import {mapState} from "pinia";
+// 组件
 import IndexApi from '@/components/es/api/IndexApi'
-
-import Optional from "@/utils/Optional";
-
+import {getDefaultDocumentSearchQueryStr} from "@/components/es/domain/DocumentSearchQuery";
+// 实体类
 import BaseOrder from "@/entity/BaseOrder";
 import {BaseQuery} from "@/entity/BaseQuery";
+// 工具类
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {mapState} from "pinia";
-import {useGlobalStore} from "@/store/GlobalStore";
-import IndexView from "@/view/index/IndexView";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {showJson} from "@/utils/DialogUtil";
+import Optional from "@/utils/Optional";
+// 存储
 import useIndexStore from "@/store/IndexStore";
-import {useIndexManageEvent} from "@/global/BeanFactory";
-import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
-import {getDefaultDocumentSearchQueryStr} from "@/components/es/domain/DocumentSearchQuery";
+import {useGlobalStore} from "@/store/GlobalStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+// 其他
+import IndexView from "@/view/index/IndexView";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'index-item',
     props: {
         index: Object as PropType<IndexView>
     },
-    emits: ['openDialog'],
     data: () => ({
         state: false,
         showExpand: false,
@@ -170,7 +172,7 @@ export default defineComponent({
     methods: {
         showShardOrReplica(json: any, idx: number) {
             let title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
-            this.$emit('openDialog', title, json);
+            showJson(title, json);
         },
         indexInfo() {
             useIndexManageEvent.emit(this.index?.name);

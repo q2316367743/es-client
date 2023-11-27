@@ -43,7 +43,7 @@
                     :bordered="false" :split="false">
                 <template #item="{ item }">
                     <a-list-item :key="item.name">
-                        <index-item :index="item" @open-dialog="indexOpenDialog"/>
+                        <index-item :index="item"/>
                     </a-list-item>
                 </template>
                 <template #empty>
@@ -52,18 +52,15 @@
             </a-list>
             <a-back-top target-container=".home-container .arco-scrollbar-container"/>
         </div>
-        <!-- 数据展示 -->
-        <json-dialog :title="indexItem.title" :json="indexItem.data" :open="true" v-model:value="indexItem.dialog"/>
     </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, ref} from 'vue';
+import {computed} from 'vue';
 
 import useIndexStore from '@/store/IndexStore';
 
 import IndexItem from "./components/index-item.vue";
-import JsonDialog from "@/components/json-dialog/index.vue";
 import HomeIndexAdd from './components/index-add.vue';
 
 import {useWindowSize} from "@vueuse/core";
@@ -77,12 +74,6 @@ const size = useWindowSize();
 const keyword = useHomeStore().keyword;
 const order = useHomeStore().order;
 const status = useHomeStore().status;
-// 信息弹框
-const indexItem = ref({
-    dialog: false,
-    title: '',
-    data: {} as any,
-});
 
 
 const virtualListProps = computed(() => ({
@@ -137,16 +128,6 @@ const {results} = useFuse(keyword, indices, {
 const items = computed(() => {
     return results.value.map(result => result.item)
 })
-
-
-function indexOpenDialog(title: string, content: any) {
-    indexItem.value = {
-        dialog: true,
-        title,
-        data: content,
-    }
-}
-
 </script>
 
 <style lang="less">

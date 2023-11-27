@@ -34,6 +34,7 @@ export const useGlobalStore = defineStore('global', {
     getters: {
         height: state => state.size.height,
         width: state => state.size.width,
+        isDark: state => getIsDark()
     },
     actions: {
         initDarkColors() {

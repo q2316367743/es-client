@@ -44,24 +44,17 @@
             <a-button type="primary" status="danger" @click="clear()">清空</a-button>
         </template>
     </a-drawer>
-    <!-- 数据展示 -->
-    <json-dialog :title="dialog.title" :json="dialog.data" :open="true" v-model:value="dialog.visible"/>
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import {toDateString} from "xe-utils";
-import JsonDialog from "@/components/json-dialog/index.vue";
 import VConsole from 'vconsole';
 import {useGlobalStore} from "@/store/GlobalStore";
+import {showJson} from "@/utils/DialogUtil";
 
 const visible = ref(false);
 // 信息弹框
-const dialog = ref({
-    visible: false,
-    title: '',
-    data: {} as any,
-});
 
 
 const hasNew = computed(() => useErrorStore().hasNew);
@@ -100,11 +93,7 @@ function openDialog(title: string, data: any) {
     if (data === 'undefined' && title === '请求体') {
         data = '没有请求体';
     }
-    dialog.value = {
-        visible: true,
-        title,
-        data
-    }
+    showJson(title, data);
 }
 
 
