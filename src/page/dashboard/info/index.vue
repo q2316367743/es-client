@@ -2,19 +2,7 @@
     <div class="dashboard-info">
         <a-row style="width: 100%">
             <a-col :span="24" :xs="24" :lg="24" :xl="24" :xxl="12">
-                <a-card style="margin: 7px">
-                    <template #title>
-                        <span>节点信息</span>
-                        <a-button type="text" size="large" @click="getInfoData()">
-                            <template #icon>
-                                <icon-refresh/>
-                            </template>
-                        </a-button>
-                    </template>
-                    <template #extra>
-                        <icon-refresh spin v-if="infoLoad"/>
-                        <span style="margin-left: 7px" v-if="infoLoad">加载中</span>
-                    </template>
+                <dashboard-card title="节点信息" :loading="infoLoad" @render="getInfoData()">
                     <a-descriptions :column="1" style="width: 100%" :align="{value: 'right'}"
                                     v-if="info !== null">
                         <a-descriptions-item label="name">{{ info.name }}</a-descriptions-item>
@@ -54,41 +42,61 @@
                             </a-space>
                         </a-skeleton>
                     </a-space>
-                </a-card>
+                </dashboard-card>
             </a-col>
 
 
             <a-col :span="24" :xs="24" :lg="24" :xl="24" :xxl="12">
-                <a-card  style="margin: 7px">
-                    <template #title>
-                        <span>集群健康</span>
-                        <a-button type="text" size="large" @click="getClusterHealth()">
-                            <template #icon>
-                                <icon-refresh/>
-                            </template>
-                        </a-button>
-                    </template>
-                    <template #extra>
-                        <icon-refresh spin v-if="clusterHealthLoad"/>
-                        <span style="margin-left: 7px" v-if="clusterHealthLoad">加载中</span>
-                    </template>
+                <dashboard-card title="集群健康" :loading="clusterHealthLoad" @render="getClusterHealth()">
                     <a-descriptions :column="1" style="width: 100%" :align="{value: 'right'}"
                                     v-if="clusterHealth !== null">
                         <a-descriptions-item label="cluster_name">{{ clusterHealth.cluster_name }}</a-descriptions-item>
                         <a-descriptions-item label="status">{{ clusterHealth.status }}</a-descriptions-item>
                         <a-descriptions-item label="timed_out">{{ clusterHealth.timed_out }}</a-descriptions-item>
-                        <a-descriptions-item label="number_of_nodes">{{ clusterHealth.number_of_nodes }}</a-descriptions-item>
-                        <a-descriptions-item label="number_of_data_nodes">{{ clusterHealth.number_of_data_nodes }}</a-descriptions-item>
-                        <a-descriptions-item label="active_primary_shards">{{ clusterHealth.active_primary_shards }}</a-descriptions-item>
-                        <a-descriptions-item label="active_shards">{{ clusterHealth.active_shards }}</a-descriptions-item>
-                        <a-descriptions-item label="relocating_shards">{{ clusterHealth.relocating_shards }}</a-descriptions-item>
-                        <a-descriptions-item label="initializing_shards">{{ clusterHealth.initializing_shards }}</a-descriptions-item>
-                        <a-descriptions-item label="unassigned_shards">{{ clusterHealth.unassigned_shards }}</a-descriptions-item>
-                        <a-descriptions-item label="delayed_unassigned_shards">{{ clusterHealth.delayed_unassigned_shards }}</a-descriptions-item>
-                        <a-descriptions-item label="number_of_pending_tasks">{{ clusterHealth.number_of_pending_tasks }}</a-descriptions-item>
-                        <a-descriptions-item label="number_of_in_flight_fetch">{{ clusterHealth.number_of_in_flight_fetch }}</a-descriptions-item>
-                        <a-descriptions-item label="task_max_waiting_in_queue_millis">{{ clusterHealth.task_max_waiting_in_queue_millis }}</a-descriptions-item>
-                        <a-descriptions-item label="active_shards_percent_as_number">{{ clusterHealth.active_shards_percent_as_number }}</a-descriptions-item>
+                        <a-descriptions-item label="number_of_nodes">{{
+                                clusterHealth.number_of_nodes
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="number_of_data_nodes">{{
+                                clusterHealth.number_of_data_nodes
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="active_primary_shards">{{
+                                clusterHealth.active_primary_shards
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="active_shards">{{
+                                clusterHealth.active_shards
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="relocating_shards">{{
+                                clusterHealth.relocating_shards
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="initializing_shards">{{
+                                clusterHealth.initializing_shards
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="unassigned_shards">{{
+                                clusterHealth.unassigned_shards
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="delayed_unassigned_shards">
+                            {{ clusterHealth.delayed_unassigned_shards }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="number_of_pending_tasks">{{
+                                clusterHealth.number_of_pending_tasks
+                            }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="number_of_in_flight_fetch">
+                            {{ clusterHealth.number_of_in_flight_fetch }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="task_max_waiting_in_queue_millis">
+                            {{ clusterHealth.task_max_waiting_in_queue_millis }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="active_shards_percent_as_number">
+                            {{ clusterHealth.active_shards_percent_as_number }}
+                        </a-descriptions-item>
                     </a-descriptions>
                     <a-space direction="vertical" size="large" :style="{width:'100%'}" v-else>
                         <a-skeleton animation>
@@ -97,7 +105,7 @@
                             </a-space>
                         </a-skeleton>
                     </a-space>
-                </a-card>
+                </dashboard-card>
             </a-col>
 
         </a-row>
@@ -110,6 +118,7 @@ import {Info} from "@/components/es/domain/Info";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {ClusterHealth} from "@/components/es/domain/ClusterHealth";
+import DashboardCard from "@/page/dashboard/components/DashboardCard.vue";
 
 const empty = computed(() => useUrlStore().empty);
 
