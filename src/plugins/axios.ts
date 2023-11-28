@@ -171,10 +171,13 @@ export function jsonParse<T = any>(data: string): T {
         try {
             if (typeof value === 'object') {
                 if (value.constructor) {
+                    // 存在构造器，是个类
                     if (value.constructor.name == 'BigNumber2') {
                         return value.toString();
                     } else if (value.constructor.name == 'BigNumber') {
                         return value.toString();
+                    } else {
+                        return `${value}`;
                     }
                 }
             }
