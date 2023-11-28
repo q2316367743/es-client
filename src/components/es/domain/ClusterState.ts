@@ -12,7 +12,7 @@ export interface ClusterState {
     blocks: any;
     nodes: Record<string, Node>;
     metadata: Metadata;
-    routing_table: {indices: Record<string, {shards: Record<string, Array<Shard>>}>};
+    routing_table: { indices: Record<string, { shards: Record<string, Array<Shard>> }> };
     routing_nodes: any;
 }
 
@@ -155,16 +155,16 @@ export interface Rollover {
 }
 
 export interface Shard {
-    state:           string;
-    primary:         boolean;
-    node:            string;
+    state: string;
+    primary: boolean;
+    node: string;
     relocating_node: null;
-    shard:           number;
-    index:           string;
+    shard: number;
+    index: string;
     /**
      * state === 'STARTED' 时有效
      */
-    allocation_id?:   AllocationID;
+    allocation_id?: AllocationID;
     /**
      * state === 'UNASSIGNED' 时有效
      */
@@ -184,8 +184,8 @@ export interface RecoverySource {
 }
 
 export interface UnassignedInfo {
-    reason:            string;
-    at:                Date;
-    delayed:           boolean;
+    reason: string;
+    at: Date;
+    delayed: boolean;
     allocation_status: string;
 }

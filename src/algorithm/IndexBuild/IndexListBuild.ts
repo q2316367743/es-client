@@ -40,27 +40,6 @@ export default async function Builder(): Promise<Array<IndexView>> {
             docs = total.docs.count;
         }
         let state = metaIndices[key].state;
-        let shard = {} as any;
-        let replica = {} as any;
-        if (cluster_indices[key]) {
-            let shards = cluster_indices[key].shards;
-            for (let idx in shards) {
-                // 数组
-                let items = shards[idx];
-                let replica_temp = [];
-                let shard_temp = [];
-                for (let item of items!) {
-                    if (item.state === "STARTED") {
-                        shard_temp.push(item);
-                    } else if (item.state === "UNASSIGNED") {
-                        replica_temp.push(item);
-                    }
-                }
-                // NOTE: 分片和副本可能都是list
-                shard[idx] = shard_temp;
-                replica[idx] = replica_temp;
-            }
-        }
         indices.push({
             name: key,
             alias: Optional.ofNullable(indexInfo.aliases).orElse(new Array<string>()),
@@ -74,8 +53,7 @@ export default async function Builder(): Promise<Array<IndexView>> {
             doc_count: prettyDataUnit(docs),
             original_doc_count: docs,
             state: state,
-            shard,
-            replica,
+            shards: cluster_indices[key].shards,
         });
     }
     return new Promise((resolve) => {

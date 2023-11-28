@@ -14,6 +14,8 @@ enum PageNameEnum {
 
     DASHBOARD_NODE = '/dashboard/node',
 
+    DASHBOARD_SHARD_AND_REPLICA = '/dashboard/shard-and-replica',
+
     SETTING = "/setting",
 
     SETTING_GLOBAL = "/setting/global",

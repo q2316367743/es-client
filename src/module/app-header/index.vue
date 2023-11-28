@@ -1,7 +1,9 @@
 <template>
     <a-layout-header id="header">
         <div class="left">
-            <div class="logo" :style="{color: color}" :title="name || $t('app.name')">{{ name || $t('app.name') }}</div>
+            <a-tooltip :content="shards" :background-color="color">
+                <div class="logo" :style="{color: color}" :title="name || $t('app.name')">{{ name || $t('app.name') }}</div>
+            </a-tooltip>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
                       class="url-select" :show-extra-options="true">
@@ -119,7 +121,8 @@ const color = computed(() => {
         return 'rgb(var(--red-6))';
     }
     return 'var(--color-text-1)';
-})
+});
+const shards = computed(() => `${useIndexStore().active_shards} / ${useIndexStore().total_shards}`)
 
 watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
 watch(() => useUrlStore().id, value => {

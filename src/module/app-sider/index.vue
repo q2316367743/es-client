@@ -35,6 +35,9 @@
             <a-menu-item :key="PageNameEnum.DASHBOARD_NODE">
                 节点
             </a-menu-item>
+            <a-menu-item :key="PageNameEnum.DASHBOARD_SHARD_AND_REPLICA">
+                副本与分片
+            </a-menu-item>
         </a-sub-menu>
         <a-sub-menu :key="PageNameEnum.SETTING">
             <template #icon>

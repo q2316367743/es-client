@@ -2,6 +2,7 @@ import Field from "../Field";
 import {IndexInfo} from "@/components/es/domain/IndexInfo";
 import {Setting, Mapping} from "@/components/es/domain/IndexBase";
 import {Index} from "@/components/es/domain/Stats";
+import {Shard} from "@/components/es/domain/ClusterState";
 
 /**
  * 主页索引遍历
@@ -73,11 +74,6 @@ export default interface IndexView {
     /**
      * 分片
      */
-    shard: any;
-
-    /**
-     * 副本
-     */
-    replica: any;
+    shards: Record<string, Array<Shard>>;
 
 }
