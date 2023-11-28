@@ -15,18 +15,34 @@
                 </div>
                 <div class="shards">
                     <div class="shard-title">
-                        <a-typography-paragraph v-for="node in nodes">
-                            <a-typography-text class="icon">
-                                <a-tooltip content="主节点" v-if="node.status === NodeItemStatus.PRIMARY">
+                        <a-typography v-for="node in nodes">
+                            <a-typography-paragraph class="icon">
+                                <a-tooltip content="主节点" v-if="ArrayUtil.contains(node.types, NodeItemType.PRIMARY)">
                                     <icon-star-fill style="color: rgb(var(--arcoblue-6));"/>
                                 </a-tooltip>
-                                <a-tooltip content="无效的节点" v-else-if="node.status === NodeItemStatus.UNASSIGNED">
+                                <a-tooltip content="无效的节点"
+                                           v-else-if="ArrayUtil.contains(node.types, NodeItemType.UNASSIGNED)">
                                     <icon-exclamation-circle-fill style="color: rgb(var(--red-6));"/>
                                 </a-tooltip>
-                                <icon-info-circle-fill v-else/>
-                            </a-typography-text>
-                            <a-typography-paragraph bold>{{ node.name }}</a-typography-paragraph>
-                        </a-typography-paragraph>
+                                <!-- 标准节点 -->
+                                <icon-info-circle-fill
+                                        v-else-if="ArrayUtil.contains(node.types, NodeItemType.STARTED)"/>
+                            </a-typography-paragraph>
+                            <a-typography-paragraph bold>
+                                <a-dropdown position="bl">
+                                    <a-button type="text">
+                                        <template #icon>
+                                            <icon-down />
+                                        </template>
+                                        {{ node.name }}
+                                    </a-button>
+                                    <template #content>
+                                        <a-doption>集群节点信息</a-doption>
+                                        <a-doption>节点信息</a-doption>
+                                    </template>
+                                </a-dropdown>
+                            </a-typography-paragraph>
+                        </a-typography>
                     </div>
                 </div>
             </div>
@@ -41,7 +57,7 @@
                 <div class="shards">
                     <div class="shard" v-for="node in index.nodes">
                         <div class="item" v-for="shard in node" @click="openJsonDialog(shard)"
-                             :class="shard ? shard.state ==='UNASSIGNED' ?  'unassigned' : '' : 'empty'">
+                             :class="shard ? (shard.state ==='UNASSIGNED' ?  'unassigned' : '') : 'empty'">
                             {{ shard ? shard.shard : '' }}
                         </div>
                     </div>
@@ -53,6 +69,7 @@
 <script lang="ts" setup>
 import useIndexStore from "@/store/IndexStore";
 import {showJson} from "@/utils/DialogUtil";
+import ArrayUtil from '@/utils/ArrayUtil';
 import {computed, ref} from "vue";
 import {Shard} from "@/components/es/domain/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
@@ -70,13 +87,13 @@ interface IndexItem {
 interface NodeItem {
     key: string;
     name: string;
-    status: NodeItemStatus;
+    types: Array<NodeItemType>;
 }
 
-enum NodeItemStatus {
+enum NodeItemType {
     UNASSIGNED = 1,
     PRIMARY = 2,
-    OTHER = 3
+    STARTED = 3
 }
 
 const nodeNames = new Set<string>();
@@ -106,11 +123,20 @@ const indices = computed(() => {
                 }
                 temp[shard.shard] = shard;
                 if (!nodeNames.has(key)) {
-                    nodes.value.push({
+                    const node: NodeItem = {
                         key: key,
                         name: key,
-                        status: shard.primary ? NodeItemStatus.PRIMARY : (shard.state === 'UNASSIGNED' ? NodeItemStatus.UNASSIGNED : NodeItemStatus.OTHER)
-                    });
+                        types: new Array<NodeItemType>()
+                    };
+                    if (shard.primary) {
+                        node.types.push(NodeItemType.PRIMARY);
+                    }
+                    if (shard.state === 'UNASSIGNED') {
+                        node.types.push(NodeItemType.UNASSIGNED);
+                    } else if (shard.state === 'STARTED') {
+                        node.types.push(NodeItemType.STARTED);
+                    }
+                    nodes.value.push(node);
                     nodeNames.add(key)
                 }
             }
@@ -132,7 +158,9 @@ const items = computed(() => results.value.map(e => e.item));
 
 function openJsonDialog(shard: Shard | null) {
     if (shard) {
-        showJson(`${shard.index}/${shard.node}[${shard.shard}]`, shard);
+        showJson(`${shard.index}/${shard.node}[${shard.shard}]`, shard, {
+            width: '600px'
+        });
     }
 }
 
@@ -156,18 +184,18 @@ function openJsonDialog(shard: Shard | null) {
         bottom: 0;
         display: flex;
         flex: 1;
-        overflow-x: auto;
+        overflow: auto;
     }
 
     .index {
-        padding: 7px 14px;
+        margin: 7px 14px;
 
         .info {
             padding: 14px 0;
             height: 120px;
 
             .name {
-                font-size: 1.2em;
+                font-size: 1.6em;
                 font-weight: bold;
                 margin-bottom: 14px;
                 white-space: nowrap;
@@ -200,7 +228,13 @@ function openJsonDialog(shard: Shard | null) {
                     font-size: 1.2em;
                     font-weight: bold;
                     cursor: pointer;
-                    margin: 4px 4px 36px;
+                    margin: 18px 4px 24px;
+                    &:first-child{
+                        margin-left: 0;
+                    }
+                    &:last-child {
+                        margin-right: 0;
+                    }
                 }
 
                 .unassigned {
@@ -221,6 +255,7 @@ function openJsonDialog(shard: Shard | null) {
                 .icon {
                     font-size: 1.5em;
                     cursor: pointer;
+                    margin-bottom: 7px;
                 }
             }
         }

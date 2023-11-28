@@ -7,19 +7,25 @@ import useLoadingStore from "@/store/LoadingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {utools} from "@/plugins/utools";
 
+interface DialogOption  {
+    width: string,
+
+}
+
 /**
  * 显示json对话框，异步加载数据
  * @param title 对话框标题
  * @param data 数据
+ * @param options 操作人
  */
-export function showJsonDialogByAsync(title: string, data: Promise<any>) {
+export function showJsonDialogByAsync(title: string, data: Promise<any>, options?: DialogOption) {
     useLoadingStore().start("开始获取数据，请稍后");
-    data.then(json => showJson(title, json))
+    data.then(json => showJson(title, json, options))
         .catch(e => MessageUtil.error("数据获取失败", e))
         .finally(() => useLoadingStore().close());
 }
 
-export function showJson(title: string, json: string | any) {
+export function showJson(title: string, json: string | any, options?: DialogOption) {
     // 原始值
     let value = '';
     // 格式化后的值
@@ -78,7 +84,7 @@ export function showJson(title: string, json: string | any) {
             ]
         }),
         draggable: true,
-        width: "80vw",
+        width: options? options.width : "80vw",
         footer: false
     });
 
