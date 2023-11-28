@@ -1129,7 +1129,7 @@ function buildURL(url, params, options) {
   if (!params) {
     return url;
   }
-  
+
   const _encode = options && options.encode || encode;
 
   const serializeFn = options && options.serialize;
@@ -2409,7 +2409,7 @@ class ZlibHeaderTransformStream extends stream__default["default"].Transform {
       if (chunk[0] !== 120) { // Hex: 78
         const header = Buffer.alloc(2);
         header[0] = 120; // Hex: 78
-        header[1] = 156; // Hex: 9C 
+        header[1] = 156; // Hex: 9C
         this.push(header, encoding);
       }
     }
@@ -2966,7 +2966,6 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter(config) {
 
     // Handle errors
     req.on('error', function handleRequestError(err) {
-      // @todo remove
       // if (req.aborted && err.code !== AxiosError.ERR_FR_TOO_MANY_REDIRECTS) return;
       reject(AxiosError.from(err, null, config, req));
     });

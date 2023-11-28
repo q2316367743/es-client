@@ -140,7 +140,6 @@ function templateBuild(template: string, condition: Array<any>): void {
                 })
             }
         } else if (models.length === 7) {
-            // TODO: >，<，>=，<=
             let range = {} as any;
             range[models[0]] = {}
             let model1 = models[1];

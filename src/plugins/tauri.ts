@@ -65,7 +65,6 @@ if (Constant.mode === PluginModeEnum.DESKTOP) {
                     data: rsp.data
                 });
             } catch (e: any) {
-                // TODO: 抛出的异常类型
                 console.error(e);
                 throw new AxiosError(e.message);
             }
