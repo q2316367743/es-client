@@ -71,32 +71,6 @@
                     </a-button>
                 </a-tooltip>
             </a-button-group>
-            <a-button type="text" @click="showExpand = !showExpand" size="small">
-                <template #icon>
-                    <icon-up v-if="showExpand"/>
-                    <icon-down v-else/>
-                </template>
-            </a-button>
-        </div>
-        <!-- 拓展面板 -->
-        <div class="expand" v-if="showExpand">
-            <div style="display: flex;">
-                <div v-for="(value, key) in index?.shard" :key="key">
-                    <div class="shard" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">{{
-                            key
-                        }}
-                    </div>
-                </div>
-            </div>
-            <div style="display: flex;">
-                <div v-for="(value, key) in index?.replica" :key="key">
-                    <div class="replica" v-for="(item, idx) in value" :key="idx" @click="showShardOrReplica(item, idx)">
-                        {{
-                            key
-                        }}
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -131,7 +105,6 @@ export default defineComponent({
     },
     data: () => ({
         state: false,
-        showExpand: false,
         open: true,
     }),
     computed: {

@@ -106,9 +106,9 @@ function handleOrder(records: Array<IndexView>): Array<IndexView> {
             } else if (order.value === OrderType.SIZE_DESC) {
                 return b.original_size - a.original_size;
             } else if (order.value === OrderType.DOCS_ASC) {
-                return a.doc_count - b.doc_count;
+                return a.original_doc_count - b.original_doc_count;
             } else if (order.value === OrderType.DOCS_DESC) {
-                return b.doc_count - a.doc_count;
+                return b.original_doc_count - a.original_doc_count;
             }
             return 0;
         })

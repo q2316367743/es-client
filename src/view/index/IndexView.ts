@@ -58,7 +58,12 @@ export default interface IndexView {
     /**
      * 文档数
      */
-    doc_count: number;
+    doc_count: string;
+
+    /**
+     * 原始文档数
+     */
+    original_doc_count: number;
 
     /**
      * 状态
