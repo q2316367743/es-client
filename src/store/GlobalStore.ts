@@ -10,8 +10,8 @@ export enum DarkTypeEnum {
     AUTO = 3
 }
 
-function getIsDark(): boolean {
-    const darkType = getItemByDefault(LocalNameEnum.KEY_THEME, DarkTypeEnum.AUTO);
+function getIsDark(darkType?: DarkTypeEnum): boolean {
+    darkType = darkType || getItemByDefault(LocalNameEnum.KEY_THEME, DarkTypeEnum.AUTO);
     if (darkType === DarkTypeEnum.LIGHT) {
         return false;
     } else if (darkType === DarkTypeEnum.DARK) {
@@ -34,7 +34,7 @@ export const useGlobalStore = defineStore('global', {
     getters: {
         height: state => state.size.height,
         width: state => state.size.width,
-        isDark: state => getIsDark()
+        isDark: state => getIsDark(state.darkType)
     },
     actions: {
         initDarkColors() {
