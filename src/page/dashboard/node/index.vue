@@ -40,7 +40,7 @@
                 <a-descriptions-item label="IP地址">{{ item.node.host }}</a-descriptions-item>
                 <a-descriptions-item label="角色">
                     <a-space>
-                        <a-tag color="arcoblue" v-for="role in item.node.roles">{{ role }}</a-tag>
+                        <a-tag color="arcoblue" v-for="role in (typeof item.node.roles === 'string' ? item.node.roles.split(',') : item.node.roles)">{{ role }}</a-tag>
                     </a-space>
                 </a-descriptions-item>
                 <a-divider>系统信息</a-divider>

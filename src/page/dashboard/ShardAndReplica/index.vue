@@ -11,54 +11,56 @@
             <!-- 标题 -->
             <div class="index">
                 <div class="info">
-                    <div class="name">索引</div>
+                    <div class="name"></div>
                 </div>
                 <div class="shards">
-                    <div class="shard-title">
-                        <a-typography v-for="node in nodes">
-                            <a-typography-paragraph class="icon">
-                                <a-tooltip content="主节点" v-if="ArrayUtil.contains(node.types, NodeItemType.PRIMARY)">
-                                    <icon-star-fill style="color: rgb(var(--arcoblue-6));"/>
-                                </a-tooltip>
-                                <a-tooltip content="无效的节点"
-                                           v-else-if="ArrayUtil.contains(node.types, NodeItemType.UNASSIGNED)">
-                                    <icon-exclamation-circle-fill style="color: rgb(var(--red-6));"/>
-                                </a-tooltip>
-                                <!-- 标准节点 -->
-                                <icon-info-circle-fill
-                                        v-else-if="ArrayUtil.contains(node.types, NodeItemType.STARTED)"/>
-                            </a-typography-paragraph>
-                            <a-typography-paragraph bold>
-                                <a-dropdown position="bl">
-                                    <a-button type="text">
-                                        <template #icon>
-                                            <icon-down />
-                                        </template>
-                                        {{ node.name }}
-                                    </a-button>
-                                    <template #content>
-                                        <a-doption>集群节点信息</a-doption>
-                                        <a-doption>节点信息</a-doption>
+                    <a-typography v-for="node in nodes" class="shard-title">
+                        <a-typography-paragraph class="icon">
+                            <a-tooltip content="主节点" v-if="ArrayUtil.contains(node.types, NodeItemType.PRIMARY)">
+                                <icon-star-fill style="color: rgb(var(--arcoblue-6));"/>
+                            </a-tooltip>
+                            <a-tooltip content="未分配的节点"
+                                       v-else-if="ArrayUtil.contains(node.types, NodeItemType.UNASSIGNED)">
+                                <icon-exclamation-circle-fill style="color: rgb(var(--red-6));"/>
+                            </a-tooltip>
+                            <!-- 标准节点 -->
+                            <a-tooltip content="工作节点"
+                                       v-else-if="ArrayUtil.contains(node.types, NodeItemType.STARTED)">
+                                <icon-info-circle-fill/>
+                            </a-tooltip>
+                        </a-typography-paragraph>
+                        <a-typography-paragraph bold>
+                            <a-dropdown position="bl">
+                                <a-button type="text">
+                                    <template #icon>
+                                        <icon-down/>
                                     </template>
-                                </a-dropdown>
-                            </a-typography-paragraph>
-                        </a-typography>
-                    </div>
+                                    {{ node.name }}
+                                </a-button>
+                                <template #content>
+                                    <a-doption>集群节点信息</a-doption>
+                                    <a-doption>节点信息</a-doption>
+                                </template>
+                            </a-dropdown>
+                        </a-typography-paragraph>
+                    </a-typography>
                 </div>
             </div>
             <!-- 每一个索引 -->
             <div class="index" v-for="index in items" :key="index.name">
                 <div class="info">
-                    <div class="name">{{ index.name }}</div>
+                    <div class="name">
+                        <a-link class="link" @click="openIndexInfo(index.name)">{{ index.name }}</a-link>
+                    </div>
                     <div class="size">size: {{ index.size }}</div>
                     <div class="doc_count">docs: {{ index.docCount }}</div>
                 </div>
                 <!-- 每一个副本 -->
                 <div class="shards">
-                    <div class="shard" v-for="node in index.nodes">
-                        <div class="item" v-for="shard in node" @click="openJsonDialog(shard)"
-                             :class="shard ? (shard.state ==='UNASSIGNED' ?  'unassigned' : '') : 'empty'">
-                            {{ shard ? shard.shard : '' }}
+                    <div class="shard" v-for="node in nodes">
+                        <div class="item" v-for="(shard, idx) in index.nodes[node.name]" @click="openJsonDialog(shard)"
+                             :class="handlerReplicaClass(shard)">
+                            {{ shard ? shard.shard : idx }}
                         </div>
                     </div>
                 </div>
@@ -73,6 +75,7 @@ import ArrayUtil from '@/utils/ArrayUtil';
 import {computed, ref} from "vue";
 import {Shard} from "@/components/es/domain/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 
 interface IndexItem {
     name: string;
@@ -103,6 +106,8 @@ const keyword = ref('');
 const nodes = ref(new Array<NodeItem>());
 // 索引信息
 const indices = computed(() => {
+    nodes.value.length = 0;
+    nodeNames.clear();
     const items = new Array<IndexItem>();
     useIndexStore().indices.forEach(index => {
         const item: IndexItem = {
@@ -164,6 +169,23 @@ function openJsonDialog(shard: Shard | null) {
     }
 }
 
+function openIndexInfo(name: string) {
+    useIndexManageEvent.emit(name);
+}
+
+function handlerReplicaClass(shard: Shard | null): string {
+    if (!shard) {
+        return 'empty';
+    }
+    if (shard.state === 'UNASSIGNED') {
+        return "unassigned"
+    }
+    if (shard.primary) {
+        return 'primary';
+    }
+    return "";
+}
+
 </script>
 <style scoped lang="less">
 .shard-and-replica {
@@ -195,10 +217,13 @@ function openJsonDialog(shard: Shard | null) {
             height: 120px;
 
             .name {
-                font-size: 1.6em;
-                font-weight: bold;
                 margin-bottom: 14px;
                 white-space: nowrap;
+
+                .link {
+                    font-size: 1.3em;
+                    font-weight: bold;
+                }
             }
 
             .size {
@@ -221,30 +246,41 @@ function openJsonDialog(shard: Shard | null) {
             }
 
             .shard, .shard-title {
+                height: 83px;
                 .item {
-                    border: 3px solid var(--color-neutral-8);
+                    border: 3px solid var(--color-neutral-6);
                     padding: 8px 12px;
                     background-color: rgb(var(--green-3));
                     font-size: 1.2em;
                     font-weight: bold;
                     cursor: pointer;
                     margin: 18px 4px 24px;
-                    &:first-child{
+
+                    &:first-child {
                         margin-left: 0;
                     }
+
                     &:last-child {
                         margin-right: 0;
                     }
+
+                    &.primary {
+                        border: 3px solid rgb(var(--arcoblue-6));
+                    }
+
+                    &.unassigned {
+                        background-color: rgb(var(--color-neutral-3));
+                    }
+
+                    &.empty {
+                        background-color: var(--color-bg-1);
+                        border: 3px solid var(--color-bg-1);
+                        cursor: default;
+                        color: var(--color-bg-1) !important;
+                        user-select: none;
+                    }
                 }
 
-                .unassigned {
-                    background-color: rgb(var(--color-neutral-3));
-                }
-
-                .empty {
-                    background-color: rgb(var(--color-bg-1));
-                    border: 3px solid var(--color-bg-1);
-                }
 
                 .item-title {
                     padding: 11px;

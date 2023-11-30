@@ -10,7 +10,7 @@ export interface IndexInfo {
     /**
      * 别名
      */
-    aliases: Record<string, any>;
+    aliases: string[] | string;
 
     /**
      * 映射

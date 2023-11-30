@@ -4,7 +4,6 @@ import clusterApi from "@/components/es/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import StrUtil from "@/utils/StrUtil";
-import Optional from "@/utils/Optional";
 
 /**
  * 索引列表构造器
@@ -42,7 +41,7 @@ export default async function Builder(): Promise<Array<IndexView>> {
         let state = metaIndices[key].state;
         indices.push({
             name: key,
-            alias: Optional.ofNullable(indexInfo.aliases).orElse(new Array<string>()),
+            alias: handlerAlias(indexInfo.aliases),
             original_size: size,
             settings: indexInfo.settings,
             mapping: indexInfo.mappings,
@@ -59,4 +58,17 @@ export default async function Builder(): Promise<Array<IndexView>> {
     return new Promise((resolve) => {
         resolve(indices);
     })
+}
+
+function handlerAlias(target: string | string[]): string[] {
+
+    let aliases = new Array<string>();
+    if (typeof target === 'string') {
+        if (target.trim().length > 0) {
+            aliases = target.split(",");
+        }
+    } else {
+        aliases = target;
+    }
+    return aliases;
 }

@@ -20,7 +20,7 @@ export interface Node {
     transport_address: string;
     host: string;
     ip: string;
-    roles: string[];
+    roles: string[] | string;
     attributes: Record<string, string>;
     indices: Indices;
     os: OS;

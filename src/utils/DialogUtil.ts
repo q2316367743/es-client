@@ -85,7 +85,8 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
         }),
         draggable: true,
         width: options? options.width : "80vw",
-        footer: false
+        footer: false,
+        modalClass: "es-dialog"
     });
 
 }
