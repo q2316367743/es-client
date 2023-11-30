@@ -113,6 +113,7 @@ const nodes = computed(() => useIndexStore().nodes);
 const masterNode = computed(() => useIndexStore().masterNode);
 // 索引信息
 const indices = computed(() => {
+    hasUnAssigned.value = false;
     const items = new Array<IndexItem>();
     useIndexStore().indices.forEach(index => {
         const item: IndexItem = {
