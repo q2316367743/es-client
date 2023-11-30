@@ -21,6 +21,9 @@ function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
 
 const useIndexStore = defineStore('index', {
     state: () => ({
+        // 集群信息
+        masterNode: '',
+        nodes: {},
         // 全部的索引
         indices: new Array<IndexView>(),
         indicesMap: new Map<string, IndexView>(),
@@ -64,7 +67,10 @@ const useIndexStore = defineStore('index', {
             try {
                 useLoadingStore().setText('开始构建索引信息');
                 // 获取索引信息
-                this.indices = await indexListBuild();
+                let clusterInfo = await indexListBuild();
+                this.indices = clusterInfo.indices;
+                this.masterNode = clusterInfo.masterNode;
+                this.nodes = clusterInfo.nodes;
                 // 渲染map
                 this.indicesMap = renderMap(this.indices);
 
@@ -88,6 +94,8 @@ const useIndexStore = defineStore('index', {
         },
         clear() {
             this.name = '';
+            this.masterNode = '';
+            this.nodes = {};
             this.indices = new Array<IndexView>();
             this.indicesMap = new Map<string, IndexView>();
             this.active_shards = 0;

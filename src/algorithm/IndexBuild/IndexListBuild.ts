@@ -4,13 +4,14 @@ import clusterApi from "@/components/es/api/ClusterApi";
 import IndexFieldBuild from "./IndexFieldBuild";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import StrUtil from "@/utils/StrUtil";
+import {ClusterInfo, ClusterNode} from "@/domain/index/ClusterInfo";
 
 /**
  * 索引列表构造器
  *
  * @returns 索引数组
  */
-export default async function Builder(): Promise<Array<IndexView>> {
+export default async function Builder(): Promise<ClusterInfo> {
     let indices = new Array<IndexView>();
 
     const [cluster_stats, stats] = await Promise.all([clusterApi._cluster_state(), clusterApi._stats()])
@@ -55,9 +56,18 @@ export default async function Builder(): Promise<Array<IndexView>> {
             shards: cluster_indices[key].shards,
         });
     }
-    return new Promise((resolve) => {
-        resolve(indices);
-    })
+    const nodes: Record<string, ClusterNode> = {};
+    for (let key of Object.keys(cluster_stats.nodes)) {
+        const node = cluster_stats.nodes[key];
+        nodes[key] = {
+            name: node.name
+        }
+    }
+    return Promise.resolve<ClusterInfo>({
+        masterNode: cluster_stats.master_node,
+        nodes,
+        indices
+    });
 }
 
 function handlerAlias(target: string | string[]): string[] {

@@ -24,27 +24,25 @@
                     <div class="name"></div>
                 </div>
                 <div class="shards">
-                    <a-typography v-for="node in nodes" class="shard-title">
+                    <a-typography v-for="node in nodeKeys" class="shard-title">
                         <a-typography-paragraph class="icon">
-                            <a-tooltip content="主节点" v-if="ArrayUtil.contains(node.types, NodeItemType.PRIMARY)">
+                            <a-tooltip content="主节点" v-if="node === masterNode">
                                 <icon-star-fill style="color: rgb(var(--arcoblue-6));"/>
                             </a-tooltip>
-                            <a-tooltip content="未分配的节点"
-                                       v-else-if="ArrayUtil.contains(node.types, NodeItemType.UNASSIGNED)">
+                            <a-tooltip content="未分配的节点" v-else-if="node === UNASSIGNED">
                                 <icon-exclamation-circle-fill style="color: rgb(var(--red-6));"/>
                             </a-tooltip>
                             <!-- 标准节点 -->
-                            <a-tooltip content="工作节点"
-                                       v-else-if="ArrayUtil.contains(node.types, NodeItemType.STARTED)">
+                            <a-tooltip content="工作节点" v-else>
                                 <icon-info-circle-fill/>
                             </a-tooltip>
                         </a-typography-paragraph>
                         <a-typography-paragraph bold>
-                            <a-link v-if="ArrayUtil.contains(node.types, NodeItemType.UNASSIGNED)">
-                                {{ node.name }}
-                            </a-link>
-                            <a-dropdown-button position="bl" v-else type="text">
-                                {{ node.name }}
+                            <a-button type="text" v-if="node === UNASSIGNED">
+                                {{ nodes[node] ? nodes[node].name : node }}
+                            </a-button>
+                            <a-dropdown-button position="br" v-else type="text" :title="node">
+                                {{ nodes[node] ? nodes[node].name : node }}
                                 <template #icon>
                                     <icon-down/>
                                 </template>
@@ -68,8 +66,8 @@
                 </div>
                 <!-- 每一个副本 -->
                 <div class="shards">
-                    <div class="shard" v-for="node in nodes">
-                        <div class="item" v-for="(shard, idx) in index.nodes[node.name]" @click="openJsonDialog(shard)"
+                    <div class="shard" v-for="nodeKey in nodeKeys">
+                        <div class="item" v-for="(shard, idx) in index.nodes[nodeKey]" @click="openJsonDialog(shard)"
                              :class="handlerReplicaClass(shard)">
                             {{ shard ? shard.shard : idx }}
                         </div>
@@ -82,12 +80,13 @@
 <script lang="ts" setup>
 import useIndexStore from "@/store/IndexStore";
 import {showJson} from "@/utils/DialogUtil";
-import ArrayUtil from '@/utils/ArrayUtil';
 import {computed, ref, watch} from "vue";
 import {Shard} from "@/components/es/domain/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import {OrderType} from "@/store/components/HomeStore";
+
+const UNASSIGNED = "Unassigned";
 
 interface IndexItem {
     name: string;
@@ -99,28 +98,21 @@ interface IndexItem {
 }
 
 
-interface NodeItem {
-    key: string;
-    name: string;
-    types: Array<NodeItemType>;
-}
-
-enum NodeItemType {
-    UNASSIGNED = 1,
-    PRIMARY = 2,
-    STARTED = 3
-}
-
-const nodeNames = new Set<string>();
-
 const keyword = ref('');
 const order = ref(useIndexStore().order);
+const hasUnAssigned = ref(false);
 // 节点信息
-const nodes = ref(new Array<NodeItem>());
+const nodeKeys = computed<Array<string>>(() => {
+    let keys = Object.keys(useIndexStore().nodes);
+    if (hasUnAssigned.value) {
+        keys.push(UNASSIGNED)
+    }
+    return keys;
+});
+const nodes = computed(() => useIndexStore().nodes);
+const masterNode = computed(() => useIndexStore().masterNode);
 // 索引信息
 const indices = computed(() => {
-    nodes.value.length = 0;
-    nodeNames.clear();
     const items = new Array<IndexItem>();
     useIndexStore().indices.forEach(index => {
         const item: IndexItem = {
@@ -133,30 +125,16 @@ const indices = computed(() => {
             // shardsKey: 分片编号
             let shards = index.shards[shardsKey];
             for (let shard of shards) {
-                const key = shard.node || 'Unassigned';
+                if (!shard.node) {
+                    hasUnAssigned.value = true;
+                }
+                const key = shard.node || UNASSIGNED;
                 let temp = item.nodes[key];
                 if (!temp) {
                     item.nodes[key] = new Array<Shard | null>();
                     temp = item.nodes[key];
                 }
                 temp.push(shard)
-                if (!nodeNames.has(key)) {
-                    const node: NodeItem = {
-                        key: key,
-                        name: key,
-                        types: new Array<NodeItemType>()
-                    };
-                    if (shard.primary) {
-                        node.types.push(NodeItemType.PRIMARY);
-                    }
-                    if (shard.state === 'UNASSIGNED') {
-                        node.types.push(NodeItemType.UNASSIGNED);
-                    } else if (shard.state === 'STARTED') {
-                        node.types.push(NodeItemType.STARTED);
-                    }
-                    nodes.value.push(node);
-                    nodeNames.add(key)
-                }
             }
         }
         items.push(item);
