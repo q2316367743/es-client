@@ -1,11 +1,21 @@
 <template>
     <div class="shard-and-replica">
         <div class="header">
-            <a-input style="width: 350px;" v-model="keyword" allow-clear>
-                <template #suffix>
-                    <icon-search/>
-                </template>
-            </a-input>
+            <a-input-group>
+                <a-input style="width: 350px;" v-model="keyword" allow-clear>
+                    <template #suffix>
+                        <icon-search/>
+                    </template>
+                </a-input>
+                <a-select v-model="order" placeholder="索引排序" style="width: 120px;margin-left: 7px;">
+                    <a-option :value="OrderType.NAME_ASC">名称正序</a-option>
+                    <a-option :value="OrderType.NAME_DESC">名称倒序</a-option>
+                    <a-option :value="OrderType.SIZE_ASC">大小正序</a-option>
+                    <a-option :value="OrderType.SIZE_DESC">大小倒序</a-option>
+                    <a-option :value="OrderType.DOCS_ASC">文档正序</a-option>
+                    <a-option :value="OrderType.DOCS_DESC">文档倒序</a-option>
+                </a-select>
+            </a-input-group>
         </div>
         <div class="container">
             <!-- 标题 -->
@@ -30,18 +40,19 @@
                             </a-tooltip>
                         </a-typography-paragraph>
                         <a-typography-paragraph bold>
-                            <a-dropdown position="bl">
-                                <a-button type="text">
-                                    <template #icon>
-                                        <icon-down/>
-                                    </template>
-                                    {{ node.name }}
-                                </a-button>
+                            <a-link v-if="ArrayUtil.contains(node.types, NodeItemType.UNASSIGNED)">
+                                {{ node.name }}
+                            </a-link>
+                            <a-dropdown-button position="bl" v-else type="text">
+                                {{ node.name }}
+                                <template #icon>
+                                    <icon-down/>
+                                </template>
                                 <template #content>
                                     <a-doption>集群节点信息</a-doption>
                                     <a-doption>节点信息</a-doption>
                                 </template>
-                            </a-dropdown>
+                            </a-dropdown-button>
                         </a-typography-paragraph>
                     </a-typography>
                 </div>
@@ -72,10 +83,11 @@
 import useIndexStore from "@/store/IndexStore";
 import {showJson} from "@/utils/DialogUtil";
 import ArrayUtil from '@/utils/ArrayUtil';
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {Shard} from "@/components/es/domain/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useIndexManageEvent} from "@/global/BeanFactory";
+import {OrderType} from "@/store/components/HomeStore";
 
 interface IndexItem {
     name: string;
@@ -102,6 +114,7 @@ enum NodeItemType {
 const nodeNames = new Set<string>();
 
 const keyword = ref('');
+const order = ref(useIndexStore().order);
 // 节点信息
 const nodes = ref(new Array<NodeItem>());
 // 索引信息
@@ -123,10 +136,10 @@ const indices = computed(() => {
                 const key = shard.node || 'Unassigned';
                 let temp = item.nodes[key];
                 if (!temp) {
-                    item.nodes[key] = new Array<Shard | null>(index.indexInfo.settings.number_of_shards);
+                    item.nodes[key] = new Array<Shard | null>();
                     temp = item.nodes[key];
                 }
-                temp[shard.shard] = shard;
+                temp.push(shard)
                 if (!nodeNames.has(key)) {
                     const node: NodeItem = {
                         key: key,
@@ -160,6 +173,8 @@ const {results} = useFuse(keyword, indices, {
     }
 });
 const items = computed(() => results.value.map(e => e.item));
+
+watch(order, value => useIndexStore().sort(value));
 
 function openJsonDialog(shard: Shard | null) {
     if (shard) {
@@ -247,6 +262,7 @@ function handlerReplicaClass(shard: Shard | null): string {
 
             .shard, .shard-title {
                 height: 83px;
+
                 .item {
                     border: 3px solid var(--color-neutral-6);
                     padding: 8px 12px;
@@ -255,6 +271,7 @@ function handlerReplicaClass(shard: Shard | null): string {
                     font-weight: bold;
                     cursor: pointer;
                     margin: 18px 4px 24px;
+                    user-select: none;
 
                     &:first-child {
                         margin-left: 0;
@@ -277,7 +294,6 @@ function handlerReplicaClass(shard: Shard | null): string {
                         border: 3px solid var(--color-bg-1);
                         cursor: default;
                         color: var(--color-bg-1) !important;
-                        user-select: none;
                     }
                 }
 

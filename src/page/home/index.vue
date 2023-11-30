@@ -66,7 +66,6 @@ import HomeIndexAdd from './components/index-add.vue';
 import {useWindowSize} from "@vueuse/core";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {OrderType, Status, useHomeStore} from "@/store/components/HomeStore";
-import IndexView from "@/view/index/IndexView";
 
 
 const size = useWindowSize();
@@ -80,6 +79,7 @@ const virtualListProps = computed(() => ({
     height: size.height.value - 40 - 15 - 42
 }))
 const indices = computed(() => {
+    useIndexStore().sort(order.value);
     let indices = useIndexStore().indices;
     // 状态
     if (status.value !== Status.NONE) {
@@ -90,29 +90,9 @@ const indices = computed(() => {
         }
     }
     // 排序
-    return handleOrder(indices);
+    return indices;
 });
 
-
-function handleOrder(records: Array<IndexView>): Array<IndexView> {
-    return records
-        .sort((a, b) => {
-            if (order.value === OrderType.NAME_ASC) {
-                return a.name.localeCompare(b.name, "zh-CN");
-            } else if (order.value === OrderType.NAME_DESC) {
-                return b.name.localeCompare(a.name, "zh-CN");
-            } else if (order.value === OrderType.SIZE_ASC) {
-                return a.original_size - b.original_size;
-            } else if (order.value === OrderType.SIZE_DESC) {
-                return b.original_size - a.original_size;
-            } else if (order.value === OrderType.DOCS_ASC) {
-                return a.original_doc_count - b.original_doc_count;
-            } else if (order.value === OrderType.DOCS_DESC) {
-                return b.original_doc_count - a.original_doc_count;
-            }
-            return 0;
-        })
-}
 
 const {results} = useFuse(keyword, indices, {
     matchAllWhenSearchEmpty: true,

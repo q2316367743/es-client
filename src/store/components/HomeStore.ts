@@ -1,5 +1,6 @@
 import {createGlobalState} from "@vueuse/core";
 import {ref} from "vue";
+import useIndexStore from "@/store/IndexStore";
 
 
 export enum OrderType {
@@ -26,7 +27,7 @@ export const useHomeStore = createGlobalState(
     () => {
         // state
         const keyword = ref('');
-        const order = ref<OrderType>(OrderType.NAME_ASC);
+        const order = ref<OrderType>(useIndexStore().order);
         const status = ref<Status>(Status.NONE)
 
         return {keyword, order, status}

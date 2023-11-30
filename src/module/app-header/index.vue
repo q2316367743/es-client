@@ -122,7 +122,7 @@ const color = computed(() => {
     }
     return 'var(--color-text-1)';
 });
-const shards = computed(() => `${useIndexStore().active_shards} / ${useIndexStore().total_shards}`)
+const shards = computed(() => `分片：${useIndexStore().active_shards} / ${useIndexStore().total_shards}`)
 
 watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
 watch(() => useUrlStore().id, value => {

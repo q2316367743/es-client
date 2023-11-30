@@ -6,6 +6,7 @@ import useUrlStore from "@/store/UrlStore";
 import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
 import NotificationUtil from "@/utils/NotificationUtil";
+import {OrderType} from "@/store/components/HomeStore";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
     let indicesMap = new Map<string, IndexView>();
@@ -28,6 +29,7 @@ const useIndexStore = defineStore('index', {
         active_shards: 0,
         total_shards: 0,
         status: '',
+        order: OrderType.NAME_ASC
     }),
     getters: {
         /**
@@ -74,7 +76,7 @@ const useIndexStore = defineStore('index', {
                     this.total_shards = this.active_shards + unassigned_shards;
                     this.status = health.status;
                 }).catch(e => NotificationUtil.error(e, '获取索引健康值失败'));
-
+                this.sort(this.order);
                 return Promise.resolve();
             } catch (e: any) {
                 useUrlStore().clear();
@@ -108,6 +110,26 @@ const useIndexStore = defineStore('index', {
                 }, ...Array.from(indexView.fields)]
             }
             return new Array<Field>;
+        },
+        sort(order: OrderType) {
+            this.order = order;
+            this.indices
+                .sort((a, b) => {
+                    if (order === OrderType.NAME_ASC) {
+                        return a.name.localeCompare(b.name, "zh-CN");
+                    } else if (order === OrderType.NAME_DESC) {
+                        return b.name.localeCompare(a.name, "zh-CN");
+                    } else if (order === OrderType.SIZE_ASC) {
+                        return a.original_size - b.original_size;
+                    } else if (order === OrderType.SIZE_DESC) {
+                        return b.original_size - a.original_size;
+                    } else if (order === OrderType.DOCS_ASC) {
+                        return a.original_doc_count - b.original_doc_count;
+                    } else if (order === OrderType.DOCS_DESC) {
+                        return b.original_doc_count - a.original_doc_count;
+                    }
+                    return 0;
+                })
         }
     }
 });
