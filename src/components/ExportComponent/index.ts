@@ -2,12 +2,13 @@
 import {Parser} from '@json2csv/plainjs';
 import {utils, writeFile} from 'xlsx'
 
-import {ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
+import {ApiType, ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
 import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 import {download} from "@/utils/BrowserUtil";
 import DocumentApi from "@/components/es/api/DocumentApi";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -70,15 +71,23 @@ export async function getExportData(config: ExportConfig): Promise<Array<Documen
                 break;
             case ExportScope.ALL:
                 const condition1 = config.search;
-                do {
-                    page += 1;
-                    condition1.from = (page - 1) * size;
-                    condition1.size = size;
-                    const result = await DocumentApi(config.index)._search(condition1);
-                    results.push(result);
-                    total = typeof result.hits.total === 'number' ? result.hits.total : result.hits.total.value;
-                    useLoadingStore().start(`正在导出${(page - 1) * size} - ${page * size}，共${total}条`);
-                } while (page * size < total);
+                if (config.apiType === ApiType.BASE) {
+
+                    do {
+                        page += 1;
+                        condition1.from = (page - 1) * size;
+                        condition1.size = size;
+                        const result = await DocumentApi(config.index)._search(condition1);
+                        results.push(result);
+                        total = typeof result.hits.total === 'number' ? result.hits.total : result.hits.total.value;
+                        useLoadingStore().start(`正在导出${(page - 1) * size} - ${page * size}，共${total}条`);
+                    } while (page * size < total);
+                } else if (config.apiType === ApiType.SCROLL) {
+                    // 滚动导出
+                    await useScrollApi(results, config);
+                } else {
+                    throw new Error("导出异常，API类型不存在");
+                }
                 break;
             case ExportScope.CUSTOM:
                 page = Math.max(config.customStart - 1, 0)
@@ -99,6 +108,32 @@ export async function getExportData(config: ExportConfig): Promise<Array<Documen
     return Promise.resolve(results);
 }
 
+async function useScrollApi(results: Array<DocumentSearchResult>, config: ExportConfig) {
+    // 第一遍查询
+    const condition: DocumentSearchQuery = {
+        sort: config.search.sort,
+        query: config.search.query,
+        size: config.size
+    }
+    const result = await DocumentApi(config.index)._search_first(condition, config.scrollTime);
+    const scrollId = result._scroll_id;
+    if (!scrollId) {
+        return Promise.reject("系统异常，滚动ID不存在")
+    }
+    results.push(result);
+    while (true) {
+        const result = await DocumentApi(config.index)._search_scroll(config.scrollTime, scrollId);
+        if (!result.hits.hits|| result.hits.hits.length === 0) {
+            break;
+        }
+        useLoadingStore().start(`已经导出【${results.length * config.size}】条`);
+        results.push(result);
+    }
+
+}
+
+// ------------------------------------------------ 确定数据的范围 ------------------------------------------------
+
 /**
  * 获取实际导出的数据
  * @param config 导出配置
@@ -116,6 +151,8 @@ export function getExportRecords(config: ExportConfig, results: Array<DocumentSe
             return [];
     }
 }
+
+// ------------------------------------------------ 确定导出的文件 ------------------------------------------------
 
 /**
  * 获取导出的文件

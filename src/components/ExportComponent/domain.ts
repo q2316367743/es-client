@@ -92,6 +92,11 @@ export enum ExportMode {
 
 }
 
+export enum ApiType {
+    BASE = 1,
+    SCROLL = 2
+}
+
 export interface ExportConfig {
 
     /**
@@ -153,5 +158,15 @@ export interface ExportConfig {
      * 查询条件
      */
     search: DocumentSearchQuery;
+
+    /**
+     * API类型
+     */
+    apiType: ApiType;
+
+    /**
+     * 滚动时间，API类型是scroll时有效
+     */
+    scrollTime: string;
 
 }

@@ -1,4 +1,5 @@
 export interface DocumentSearchResult<T = any> {
+    _scroll_id?: string;
     took: number;
     timed_out: boolean;
     _shards: Shards;

@@ -44,6 +44,26 @@ export default function DocumentApi(index: string) {
                 },
                 data
             })
-        }
+        },
+        _search_first(data: DocumentSearchQuery, time: string): Promise<DocumentSearchResult<any>> {
+            return fetchEs<DocumentSearchResult<DocumentSearchResult<any>>>({
+                url: `/${index}/_search`,
+                method: "POST",
+                data: data,
+                params: {
+                    scroll: time
+                }
+            })
+        },
+        _search_scroll(time: string, scroll_id: string): Promise<DocumentSearchResult<any>> {
+            return fetchEs<DocumentSearchResult<DocumentSearchResult<any>>>({
+                url: '/_search/scroll',
+                method: "POST",
+                data: {
+                    scroll: time,
+                    scroll_id: scroll_id
+                }
+            })
+        },
     }
 }

@@ -31,7 +31,7 @@
                     <a-input-number v-model="instance.customEnd" :min="instance.customStart"/>
                 </a-input-group>
             </a-form-item>
-            <a-form-item label="每页大小" v-if="instance.scope === ExportScope.CUSTOM">
+            <a-form-item label="每页大小" v-if="instance.scope !== ExportScope.CURRENT">
                 <a-input-number v-model="instance.size" :min="1"/>
             </a-form-item>
             <a-form-item label="来源">
@@ -42,6 +42,21 @@
                     <a-option :value="ExportSource.HIT">只导出hits</a-option>
                     <a-option :value="ExportSource.SOURCE">只导出_source内容</a-option>
                 </a-select>
+            </a-form-item>
+            <a-form-item label="API类型">
+                <a-radio-group v-model="instance.apiType" type="button" :disabled="instance.scope != ExportScope.ALL">
+                    <a-radio :value="ApiType.BASE">基础API</a-radio>
+                    <a-radio :value="ApiType.SCROLL">scroll api</a-radio>
+                </a-radio-group>
+                <template #help>
+                    <span v-if="instance.scope != ExportScope.ALL">只有导出全部才可以选择API</span>
+                    <span v-else-if="instance.apiType === ApiType.BASE">基础分页API</span>
+                    <span v-else-if="instance.apiType === ApiType.SCROLL">scroll api，适合导出大批量数据，没有10000条限制</span>
+                </template>
+            </a-form-item>
+            <a-form-item label="滚动时间" v-if="instance.apiType === ApiType.SCROLL">
+                <a-input v-model="instance.scrollTime" />
+                <template #help>如果使用滚动API报错，可以适当加大此参数</template>
             </a-form-item>
         </a-form>
         <template #footer>
@@ -56,11 +71,12 @@
 <script lang="ts" setup>
 import {exportData} from "@/components/ExportComponent";
 import {
+    ApiType,
     ExportConfig,
+    ExportMode,
     ExportScope,
     ExportSource,
-    ExportType,
-    ExportMode
+    ExportType
 } from "@/components/ExportComponent/domain";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
@@ -75,13 +91,15 @@ const instance = ref<ExportConfig>({
     separator: '',
     scope: ExportScope.CURRENT,
     customStart: 1,
-    customEnd: 1,
+    customEnd: 2,
     source: ExportSource.ALL,
     fields: [],
     size: 1000,
     mode: ExportMode.DOWNLOAD,
     search: {},
-    index: ''
+    index: '',
+    apiType: ApiType.BASE,
+    scrollTime: "1m"
 });
 
 watch(() => instance.value.type, value => {
@@ -107,13 +125,15 @@ useExportEvent.on(event => {
         separator: '',
         scope: ExportScope.CURRENT,
         customStart: 1,
-        customEnd: 1,
+        customEnd: 2,
         source: ExportSource.ALL,
         fields: [],
         size: 1000,
         mode: ExportMode.DOWNLOAD,
         search: event.search,
-        index: event.index
+        index: event.index,
+        apiType: ApiType.BASE,
+        scrollTime: "1m"
     }
 
 })
@@ -131,9 +151,9 @@ function exportDownload() {
 function execute() {
     useLoadingStore().start('开始导出');
     exportData(instance.value)
-        .then(() => MessageUtil.success("导出成功"))
-        .catch(e => MessageUtil.error("导出失败", e))
-        .finally(() => useLoadingStore().close());
+            .then(() => MessageUtil.success("导出成功"))
+            .catch(e => MessageUtil.error("导出失败", e))
+            .finally(() => useLoadingStore().close());
 }
 
 </script>
