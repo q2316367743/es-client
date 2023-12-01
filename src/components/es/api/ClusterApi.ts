@@ -2,6 +2,7 @@ import {NodeState} from "@/components/es/domain/NodeState";
 import {Stats} from "@/components/es/domain/Stats";
 import {ClusterState} from "@/components/es/domain/ClusterState";
 import {Info} from "@/components/es/domain/Info";
+import {Nodes} from "@/components/es/domain/Nodes";
 import {fetchEs} from "@/plugins/axios";
 
 /**
@@ -41,8 +42,8 @@ export default {
             url: '/_nodes/stats'
         })
     },
-    _nodes(): Promise<any> {
-        return fetchEs<any>({
+    _nodes(): Promise<Nodes> {
+        return fetchEs<Nodes>({
             method: 'GET',
             url: '/_nodes'
         })

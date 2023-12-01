@@ -42,7 +42,7 @@ export default async function Builder(): Promise<ClusterInfo> {
         let state = metaIndices[key].state;
         indices.push({
             name: key,
-            alias: handlerAlias(indexInfo.aliases),
+            alias: indexInfo.aliases,
             original_size: size,
             settings: indexInfo.settings,
             mapping: indexInfo.mappings,
@@ -68,17 +68,4 @@ export default async function Builder(): Promise<ClusterInfo> {
         nodes,
         indices
     });
-}
-
-function handlerAlias(target: string | string[]): string[] {
-
-    let aliases = new Array<string>();
-    if (typeof target === 'string') {
-        if (target.trim().length > 0) {
-            aliases = target.split(",");
-        }
-    } else {
-        aliases = target;
-    }
-    return aliases;
 }

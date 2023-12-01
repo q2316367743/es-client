@@ -1,0 +1,110 @@
+.shard-and-replica {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+
+    .header {
+    }
+
+    .container {
+        position: absolute;
+        top: 39px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex: 1;
+        overflow: auto;
+    }
+
+    .index {
+        margin: 7px 14px;
+
+        .info {
+            padding: 14px 0;
+            height: 120px;
+
+            .name {
+                margin-bottom: 14px;
+                white-space: nowrap;
+
+                .link {
+                    font-size: 1.3em;
+                    font-weight: bold;
+                }
+            }
+
+            .size {
+                margin-bottom: 14px;
+                color: var(--color-text-2);
+            }
+
+            .doc_count {
+                color: var(--color-text-2);
+            }
+        }
+
+        .shards {
+            display: flex;
+            flex-direction: column;
+
+            .shard {
+                display: flex;
+                flex-direction: row;
+            }
+
+            .shard, .shard-title {
+                height: 83px;
+
+                .item {
+                    border: 3px solid var(--color-neutral-6);
+                    padding: 8px 12px;
+                    background-color: rgb(var(--green-3));
+                    font-size: 1.2em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin: 18px 4px 24px;
+                    user-select: none;
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
+
+                    &:last-child {
+                        margin-right: 0;
+                    }
+
+                    &.primary {
+                        border: 3px solid rgb(var(--arcoblue-6));
+                    }
+
+                    &.unassigned {
+                        background-color: rgb(var(--color-neutral-3));
+                    }
+
+                    &.empty {
+                        background-color: var(--color-bg-1);
+                        border: 3px solid var(--color-bg-1);
+                        cursor: default;
+                        color: var(--color-bg-1) !important;
+                    }
+                }
+
+
+                .item-title {
+                    padding: 11px;
+                    font-weight: bold;
+                    margin: 4px 4px 24px;
+                }
+
+                .icon {
+                    font-size: 1.5em;
+                    cursor: pointer;
+                    margin-bottom: 7px;
+                }
+            }
+        }
+    }
+}

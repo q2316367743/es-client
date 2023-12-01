@@ -176,7 +176,10 @@ export function jsonParse<T = any>(data: string): T {
                         return value.toString();
                     } else if (value.constructor.name == 'BigNumber') {
                         return value.toString();
+                    }  else if (value.constructor.name == 'Array') {
+                        return value;
                     } else {
+                        // 尝试解决数据异常问题
                         return `${value}`;
                     }
                 }
