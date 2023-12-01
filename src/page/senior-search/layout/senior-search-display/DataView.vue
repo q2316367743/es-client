@@ -4,14 +4,14 @@
         <div class="tabs">
             <div class="tab" :class="itemActive === -1 ? 'active' : ''" @click="itemActive = -1">
                 <a-tooltip content="固定">
-                    <icon-subscribe-add @click.stop="fixAdd()" />
+                    <icon-subscribe-add @click.stop="fixAdd()"/>
                 </a-tooltip>
                 <span class="ssd-v-title">结果</span>
             </div>
             <div class="tab fix" v-for="(item, index) in items" :class="itemActive === index ? 'active' : ''"
-                @click="itemActive = index">
+                 @click="itemActive = index">
                 <a-tooltip content="取消后将会关闭">
-                    <icon-subscribe @click.stop="fixDelete(index)" />
+                    <icon-subscribe @click.stop="fixDelete(index)"/>
                 </a-tooltip>
                 <span class="ssd-v-title">结果{{ item.title }}</span>
             </div>
@@ -21,53 +21,65 @@
             <!-- 固定的标签 -->
             <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
                 <a-scrollbar class="scrollbar"
-                    :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
+                             :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
                     <pre v-if="item.view === ViewTypeEnum.BASE">{{ item.pretty }}</pre>
                     <pre v-else-if="item.view === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                        v-html="item.value" />
+                         v-html="item.value"/>
                     <div v-else-if="item.view === ViewTypeEnum.JSON_TREE" :ref="`jsonTree${item.title}`"
-                        class="data-scroll hljs CompCssDJsonViewTree" v-html="item.value" />
+                         class="data-scroll hljs CompCssDJsonViewTree" v-html="item.value"/>
                 </a-scrollbar>
-                <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :data="item.data" />
+                <monaco-editor v-if="item.view === ViewTypeEnum.EDITOR" :model-value="item.pretty" language="json"
+                               height="100%" read-only/>
+                <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :data="item.data"/>
             </div>
             <!-- 当前的标签 -->
             <div class="current-scroll" v-show="itemActive === -1">
                 <!-- 可以滚动的视图 -->
-                <div class="json-scroll">
+                <div class="json-scroll"
+                     v-if="show === ViewTypeEnum.BASE || show === ViewTypeEnum.JSON || show === ViewTypeEnum.JSON_TREE">
                     <a-scrollbar class="scrollbar"
-                        :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
+                                 :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
                         <!-- 基础视图 -->
                         <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
                         <!-- JSON视图 -->
-                        <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value" />
+                        <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
+                             v-html="value"/>
                         <!-- JSON树视图 -->
-                        <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs" />
+                        <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
                     </a-scrollbar>
                 </div>
+                <!-- 编辑器视图 -->
+                <monaco-editor v-if="show === ViewTypeEnum.EDITOR" :model-value="pretty" language="json" height="100%"
+                               read-only/>
                 <!-- 表格视图 -->
-                <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="wrapper" />
+                <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="wrapper"/>
             </div>
         </div>
         <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy()">复制
         </a-button>
-        <a-back-top target-container=".json-scroll .arco-scrollbar-container" v-show="itemActive === -1"  style="bottom: 65px"/>
-        <a-back-top target-container=".fix-scroll .arco-scrollbar-container" v-show="itemActive !== -1"  style="bottom: 65px"/>
+        <a-back-top target-container=".json-scroll .arco-scrollbar-container" v-show="itemActive === -1"
+                    style="bottom: 65px"/>
+        <a-back-top target-container=".fix-scroll .arco-scrollbar-container" v-show="itemActive !== -1"
+                    style="bottom: 65px"/>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "pinia";
-import { renderJSONTreeView } from "@/components/JsonTree";
+import {defineComponent} from "vue";
+import {mapState} from "pinia";
+import {renderJSONTreeView} from "@/components/JsonTree";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
-import { highlight } from '@/global/BeanFactory';
+import {highlight} from '@/global/BeanFactory';
 // 工具
 import Optional from "@/utils/Optional";
 // 枚举
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
-import { jsonFormat } from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/jsonFormat";
 import MessageUtil from "@/utils/MessageUtil";
+import MonacoEditor from "@/components/monaco-editor/index.vue";
+import {useWindowSize} from "@vueuse/core";
+import {computed} from "vue";
 
 /**
  * 每一项
@@ -103,7 +115,7 @@ interface Item {
 
 export default defineComponent({
     name: 'senior-search-data-view',
-    components: { TableViewer },
+    components: {MonacoEditor, TableViewer},
     props: {
         view: Number,
         data: String,
@@ -113,7 +125,7 @@ export default defineComponent({
         value: '',
         pretty: '',
         wrapper: {} as any,
-        copyable: { copyText: "复制", copiedText: "复制成功", timeout: 2000 },
+        copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
         Optional,
         ViewTypeEnum,
         show: ViewTypeEnum.JSON as ViewTypeEnum,
@@ -131,6 +143,13 @@ export default defineComponent({
         },
         view() {
             this.render();
+        }
+    },
+    setup() {
+        const size = useWindowSize();
+        const height = computed(() => (size.height.value - 120) + 'px');
+        return {
+            height
         }
     },
     mounted() {

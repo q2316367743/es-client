@@ -58,6 +58,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             this.filter = filter;
         },
         updateView(view: ViewTypeEnum) {
+            // TODO: 此处需要保存
             this.view = view;
         },
         execute(index: number, instance: monaco.editor.IStandaloneCodeEditor) {

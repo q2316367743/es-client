@@ -11,7 +11,7 @@
             <a-tooltip content="取消与历史记录的关联" v-if="allowEdit" position="right">
                 <a-button type="text" status="danger" @click="clearHistory()">
                     <template #icon>
-                        <icon-close />
+                        <icon-close/>
                     </template>
                 </a-button>
             </a-tooltip>
@@ -36,6 +36,7 @@
                         <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON"/>
                         <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE"/>
                         <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE"/>
+                        <icon-edit :size="18" v-else-if="view === ViewTypeEnum.EDITOR"/>
                     </template>
                 </a-button>
                 <template #content>
@@ -43,6 +44,7 @@
                     <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
                     <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
                     <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
+                    <a-doption :value="ViewTypeEnum.EDITOR">编辑器视图</a-doption>
                 </template>
             </a-dropdown>
             <ss-setting/>

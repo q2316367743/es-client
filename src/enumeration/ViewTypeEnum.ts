@@ -4,6 +4,7 @@
  * 2：JSON视图
  * 3：表格视图
  * 4：JSON树视图
+ * 5：编辑器视图
  */
 enum ViewTypeEnum {
 
@@ -13,7 +14,9 @@ enum ViewTypeEnum {
 
     TABLE = 3,
 
-    JSON_TREE = 4
+    JSON_TREE = 4,
+
+    EDITOR = 5
 
 }
 

@@ -4,12 +4,13 @@
         <pre v-if="defaultView === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"/>
         <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index"/>
+        <monaco-editor v-else-if="defaultView === ViewTypeEnum.EDITOR" :model-value="pretty" language="json" :height="height" read-only/>
         <div v-show="defaultView === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
         <a-back-top target-container=".base-search-data-view .arco-scrollbar-container"/>
     </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import {computed, defineComponent} from "vue";
 import {mapState} from "pinia";
 import {renderJSONTreeView} from "@/components/JsonTree";
 
@@ -21,10 +22,12 @@ import TableViewer from "@/components/TableViewer/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
+import MonacoEditor from "@/components/monaco-editor/index.vue";
+import {useWindowSize} from "@vueuse/core";
 
 export default defineComponent({
     name: 'base-search-data-view',
-    components: {TableViewer},
+    components: {MonacoEditor, TableViewer},
     data: () => ({
         jsonTreeId: 'json-tree-view-' + new Date().getTime(),
         value: '',
@@ -54,6 +57,13 @@ export default defineComponent({
         },
         view() {
             this.render();
+        }
+    },
+    setup() {
+        const size = useWindowSize();
+        const height = computed(() => (size.height.value - 120) + 'px');
+        return {
+            height
         }
     },
     mounted() {

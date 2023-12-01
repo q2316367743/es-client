@@ -13,6 +13,7 @@
                     <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
                     <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
                     <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
+                    <a-option label="编辑器视图" :value="ViewTypeEnum.EDITOR"/>
                 </a-select>
             </a-form-item>
             <a-form-item label="默认查询参数">
