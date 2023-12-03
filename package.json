@@ -1,6 +1,6 @@
 {
     "name": "es-client",
-    "version": "3.0.6",
+    "version": "3.0.7",
     "description": "elasticsearch客户端",
     "main": "dist-electron/main.js",
     "author": {

@@ -86,6 +86,7 @@ import {useFuse} from "@vueuse/integrations/useFuse";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import {OrderType} from "@/store/components/HomeStore";
 import ClusterApi from "@/components/es/api/ClusterApi";
+import {ClusterNode} from "@/domain/index/ClusterInfo";
 
 const UNASSIGNED = "Unassigned";
 
@@ -110,7 +111,7 @@ const nodeKeys = computed<Array<string>>(() => {
     }
     return keys;
 });
-const nodes = computed(() => useIndexStore().nodes);
+const nodes = computed<Record<string, ClusterNode>>(() => useIndexStore().nodes);
 const masterNode = computed(() => useIndexStore().masterNode);
 // 索引信息
 const indices = computed(() => {

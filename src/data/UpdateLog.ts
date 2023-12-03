@@ -2,6 +2,29 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.0.7',
+        sign: 307,
+        time: '2023-12-04',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "颜色模式新增跟随系统"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "新增编辑器视图，可以直接搜索结果，显示更加清晰（基础搜索、高级搜索）"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '在导出全部数据时，新增滚动API，避免出现超过10000条记录而报错的问题',
+            txc: "https://txc.qq.com/products/489458/post/170139928052973806/"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '在首页将副本与分片的展示移除，在仪表盘新增标签页【副本与分片】'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "尝试修复JSON解析错误问题"
+        }],
+        remark: "由于我试了好几个版本的es，都没有出现JSON解析问题，目前只是尝试修复，如果后续有用户反馈，我再进行修复。"
+    },
+    {
         version: '3.0.6',
         sign: 306,
         time: '2023-11-15',

@@ -15,16 +15,16 @@
 </p>
 <p align="center">
 	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v2.8.6-%230883d8' alt='edge插件'/>
+        <img src='https://img.shields.io/badge/edge-v2.8.7-%230883d8' alt='edge插件'/>
     </a>
  	<a target="_blank" href="https://addons.mozilla.org/zh-CN/firefox/addon/es-client">
-		<img src="https://img.shields.io/badge/firefox-v2.8.6-%23ff3847" alt="火狐插件"/>
+		<img src="https://img.shields.io/badge/firefox-v2.8.7-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
-        <img src='https://img.shields.io/badge/windows-v3.0.4-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v3.0.7-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.0.4-%23787B80' alt="utools"/>
+        <img src='https://img.shields.io/badge/utools-v3.0.7-%23787B80' alt="utools"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
@@ -66,6 +66,7 @@
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
 - [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
+- [可道云网盘](http://disk.esion.xyz/#s/93qZEN8w)
 
 ### 安装
 
@@ -75,7 +76,7 @@
 ### 桌面客户端
 
 优先推荐使用`tauri`安装包，在[release](https://gitee.com/qiaoshengda/es-client/releases)中下载即可，如果安装后使用异常，
-就需要前往[百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)中下载`electron`打包的安装包。
+就需要前往[可道云网盘](http://disk.esion.xyz/#s/93qZEN8w)中下载`electron`打包的安装包。
 
 ## 开发
 

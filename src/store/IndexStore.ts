@@ -7,6 +7,7 @@ import Field from "@/view/Field";
 import useLoadingStore from "@/store/LoadingStore";
 import NotificationUtil from "@/utils/NotificationUtil";
 import {OrderType} from "@/store/components/HomeStore";
+import {ClusterNode} from "@/domain/index/ClusterInfo";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
     let indicesMap = new Map<string, IndexView>();
@@ -23,7 +24,7 @@ const useIndexStore = defineStore('index', {
     state: () => ({
         // 集群信息
         masterNode: '',
-        nodes: {},
+        nodes: {} as Record<string, ClusterNode>,
         // 全部的索引
         indices: new Array<IndexView>(),
         indicesMap: new Map<string, IndexView>(),
