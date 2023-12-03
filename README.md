@@ -64,9 +64,9 @@
 ### 存储
 
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
-- [阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)
-- [夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs
 - [可道云网盘](http://disk.esion.xyz/#s/93qZEN8w)
+- ~~[阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)~~
+- ~~[夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs~~
 
 ### 安装
 
