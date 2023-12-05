@@ -6,6 +6,15 @@ enum LocalNameEnum {
 
     KEY_THEME = '/key/theme',
 
+    KEY_PRIVACY_ENABLE = '/key/privacy/enable',
+
+
+    KEY_PRIVACY_PLATFORM = '/key/privacy/platform',
+
+
+    KEY_PRIVACY_SYSTEM = '/key/privacy/system',
+
+
     DB_URL = '/db/url',
 
     DB_BASE_SEARCH_HISTORY = '/db/base-search-history',

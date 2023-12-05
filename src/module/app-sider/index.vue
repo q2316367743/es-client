@@ -65,6 +65,9 @@
             <a-menu-item :key="PageNameEnum.MORE_UPDATE">
                 更新日志
             </a-menu-item>
+            <a-menu-item :key="PageNameEnum.MORE_PRIVACY">
+                隐私协议
+            </a-menu-item>
             <a-menu-item :key="PageNameEnum.MORE_ABOUT">
                 关于
             </a-menu-item>

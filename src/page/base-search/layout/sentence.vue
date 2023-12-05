@@ -20,14 +20,18 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 const current = computed(() => useBaseSearchStore().current);
 
 function jumpToSeniorSearch() {
+    if (!current.value.index) {
+        MessageUtil.warning("请选择索引再跳转。");
+        return;
+    }
     try {
         useSeniorSearchStore().loadEvent({
             link: `/${current.value.index}/_search`,
             method: 'POST',
             body: JSON.stringify(
-                QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders),
-                null,
-                4)
+                    QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders),
+                    null,
+                    4)
         });
     } catch (e) {
         MessageUtil.error('条件构造错误', e);

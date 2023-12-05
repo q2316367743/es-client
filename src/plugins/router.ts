@@ -72,6 +72,10 @@ const router = createRouter({
             path: '/more/update',
             component: () => import('@/page/more/components/update.vue')
         }, {
+            name: '隐私协议',
+            path: '/more/privacy',
+            component: () => import('@/page/more/components/privacy.vue')
+        }, {
             name: '关于',
             path: '/more/about',
             component: () => import('@/page/more/components/about.vue')

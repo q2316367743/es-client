@@ -30,6 +30,8 @@ enum PageNameEnum {
 
     MORE_UPDATE = "/more/update",
 
+    MORE_PRIVACY = "/more/privacy",
+
     MORE_ABOUT = "/more/about"
 
 }

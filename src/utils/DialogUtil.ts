@@ -1,5 +1,5 @@
 import {Button, Modal} from "@arco-design/web-vue";
-import {h} from "vue";
+import {defineComponent, h} from "vue";
 import {jsonFormat} from "@/algorithm/jsonFormat";
 import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
@@ -7,7 +7,7 @@ import useLoadingStore from "@/store/LoadingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {utools} from "@/plugins/utools";
 
-interface DialogOption  {
+interface DialogOption {
     width: string,
 
 }
@@ -71,7 +71,9 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
             class: 'hljs'
         }, {
             default: () => [
-                h({template: `<pre class="language-json hljs">${html}</pre>`}),
+                h(defineComponent({
+                    template: `<pre class="language-json hljs">${html}</pre>`
+                })),
                 h(Button, {
                     type: "text",
                     style: {
@@ -84,7 +86,7 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
             ]
         }),
         draggable: true,
-        width: options? options.width : "80vw",
+        width: options ? options.width : "80vw",
         footer: false,
         modalClass: "es-dialog"
     });
