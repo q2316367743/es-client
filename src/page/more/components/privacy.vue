@@ -1,12 +1,12 @@
 <template>
     <a-typography>
-        <a-typography-title heading="1" align="center">隐私协议</a-typography-title>
+        <a-typography-title :heading="1" align="center">隐私协议</a-typography-title>
 
         <a-typography-paragraph>更新日期：2023年03月11日</a-typography-paragraph>
 
         <a-typography-paragraph>生效日期：2023年03月11日</a-typography-paragraph>
 
-        <a-typography-title heading="3">一、引言</a-typography-title>
+        <a-typography-title :heading="3">一、引言</a-typography-title>
 
         <a-typography-paragraph>
             本软件重视用户的隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。我们希望通过本《隐私政策》向您说明，在使用我们的服务时，
@@ -19,33 +19,33 @@
             您使用或继续使用我们的服务，即意味着同意我们按照本《隐私政策》收集、使用、储存和分享您的相关信息。
         </a-typography-paragraph>
 
-        <a-typography-title heading="3">二、我们可能收集您的信息</a-typography-title>
+        <a-typography-title :heading="3">二、我们可能收集您的信息</a-typography-title>
 
         <a-typography-paragraph>
             我们提供服务时，会收集您的插件使用情况、使用的平台、使用的系统信息。
             主要用于分析用户使用情况来做下一步主要更新方向。
         </a-typography-paragraph>
 
-        <a-typography-title heading="3">三、数据存储</a-typography-title>
+        <a-typography-title :heading="3">三、数据存储</a-typography-title>
 
-        <a-typography-title heading="4">插件版本、web版本、vscode版本</a-typography-title>
+        <a-typography-title :heading="4">插件版本、web版本、vscode版本</a-typography-title>
 
         <a-typography-paragraph>
             插件版本数据存储在浏览器中，其中，文档类数据存储在IndexedDB，设置类数据存储在localStorage中。
         </a-typography-paragraph>
 
-        <a-typography-title heading="4">桌面客户端版本</a-typography-title>
+        <a-typography-title :heading="4">桌面客户端版本</a-typography-title>
 
         <a-typography-paragraph>桌面客户端使用tauri打包，使用的是WebView2，本质上也是存储在浏览器中。
         </a-typography-paragraph>
 
-        <a-typography-title heading="4"> utools版本</a-typography-title>
+        <a-typography-title :heading="4"> utools版本</a-typography-title>
 
         <a-typography-paragraph>
             utools版本存放在utools提供的db中，可以在账号与数据中点击插件右侧查看存储的文档数据中查看
         </a-typography-paragraph>
 
-        <a-typography-title heading="3">四、隐私开关</a-typography-title>
+        <a-typography-title :heading="3">四、隐私开关</a-typography-title>
 
         <a-descriptions :column="1" bordered style="margin-bottom: 14px;">
             <a-descriptions-item label="昵称">

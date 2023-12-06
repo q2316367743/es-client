@@ -49,20 +49,18 @@
             <a-link target="_blank" @click="open(data.docUrl)">语雀</a-link>
         </p>
         <div class="title-2">建议反馈</div>
-        <feedback-module />
+        <feedback-module/>
         <a-modal title="Apache2.0" v-model:visible="licenseDialog" render-to-body :mask-closable="false" draggable
-            unmount-on-close width="700px" :footer="false">
+                 unmount-on-close width="750px" :footer="false">
             <div style="height: calc(80vh - 60px - 54px)">
-                <a-scrollbar>
-                    <license-apache2_0 />
-                </a-scrollbar>
+                <license-apache2_0/>
             </div>
         </a-modal>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import {defineComponent} from "vue"
 
 import Constant from "@/global/Constant";
 import LicenseApache2_0 from "@/components/License/Apache2_0.vue";
@@ -70,7 +68,7 @@ import FeedbackModule from '@/module/Feedback/index.vue';
 
 export default defineComponent({
     name: "setting-about",
-    components: { LicenseApache2_0, FeedbackModule },
+    components: {LicenseApache2_0, FeedbackModule},
     data: () => ({
         data: Constant,
         licenseDialog: false,

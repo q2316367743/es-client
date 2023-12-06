@@ -1,7 +1,6 @@
 <template>
-    <a-scrollbar>
-            <pre>
-                <code>
+    <pre>
+        <code style='font-family: JetBrainsMono, "Microsoft YaHei", "Wenquanyi Micro Hei", sans-serif'>
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -204,18 +203,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-                </code>
-            </pre>
-    </a-scrollbar>
+        </code>
+    </pre>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
 export default defineComponent({
     name: 'license-apache-2_0',
-    data: () => ({
-
-    })
+    data: () => ({})
 });
 </script>
 <style scoped>

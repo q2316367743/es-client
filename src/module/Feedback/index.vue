@@ -6,11 +6,6 @@
             进行建议反馈，无须登录即可留言。
         </p>
         <p>
-            也可以使用
-            <a-link @click="open(data.feedback)" target="_blank" type="primary">金山文档</a-link>
-            进行建议反馈，但需要登录WPS账号才能提交建议。
-        </p>
-        <p>
             当然，你也可以在
             <a-link href="https://gitee.com/qiaoshengda/es-client" target="_blank" type="primary">码云
             </a-link>

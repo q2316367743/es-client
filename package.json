@@ -35,6 +35,7 @@
         "build:vscode": "vue-tsc --noEmit && vite build --mode=vscode",
         "build:tauri": "tauri build",
         "build:electron": "vue-tsc --noEmit && vite build --mode=electron -c config/vite.electron.ts && electron-builder",
+        "build:electron:mac": "vue-tsc --noEmit && vite build --mode=electron -c config/vite.electron.ts && electron-builder build --mac",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -103,9 +104,13 @@
         ],
         "mac": {
             "artifactName": "${productName}_${version}.${ext}",
-            "target": [
-                "dmg"
-            ]
+            "target": {
+                "target": "dmg",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            }
         },
         "win": {
             "target": [
