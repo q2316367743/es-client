@@ -1,6 +1,14 @@
-import {Input, InputPassword, Modal} from "@arco-design/web-vue";
-import {h, VNode} from "vue";
+import {Input, Modal} from "@arco-design/web-vue";
 import Optional from "@/utils/Optional";
+
+
+interface PromptOption {
+    confirmButtonText: string,
+    cancelButtonText: string,
+    inputPattern: RegExp,
+    inputErrorMessage: string,
+    inputValue: string
+}
 
 export default {
 
@@ -37,8 +45,8 @@ export default {
                 content,
                 title: Optional.ofNullable(title).orElse("警告"),
                 draggable: true,
-                okText: Optional.ofNullable(config).map(e => e?.confirmButtonText).orElse('确定'),
-                cancelText: Optional.ofNullable(config).map(e => e?.cancelButtonText).orElse('取消'),
+                okText: Optional.ofNullable(config).map(e => e.confirmButtonText).orElse('确定'),
+                cancelText: Optional.ofNullable(config).map(e => e.cancelButtonText).orElse('取消'),
                 onOk: () => {
                     resolve();
                 },
@@ -52,39 +60,26 @@ export default {
         })
     },
 
-    prompt(content: string, title: string, config: {
-        confirmButtonText?: string,
-        cancelButtonText?: string,
-        inputPattern?: RegExp,
-        inputErrorMessage?: string,
-        inputValue?: string
-    }): Promise<string> {
+    prompt(content: string, title: string, config?: Partial<PromptOption>): Promise<string> {
+        const option = config || {}
         return new Promise<string>((resolve, reject) => {
-            let value = Optional.ofNullable(config.inputValue).orElse("") as string;
+            let value = Optional.ofNullable(option).map(e => e.inputValue).orElse("");
             const onInput = (e: string) => {
                 value = e;
             }
             Modal.confirm({
-                content: () => h('div', {class: 'domain-prompt'}, [
-                    h('div', {}, content),
-                    // @ts-ignore
-                    h(Input, {
-                        type: 'text',
-                        onInput,
-                        "default-value": config.inputValue,
-                        style: 'margin-top: 8px;',
-                        onVnodeMounted: (e: VNode) => {
-                            (e.el as HTMLInputElement)
-                                .getElementsByTagName("input")
-                                .item(0)!
-                                .focus();
-                        }
-                    })
-                ]),
-                title: '提示',
+                content: () => <div class="domain-prompt">
+                    <div>{content}</div>
+                    <Input type="text" defaultValue={option.inputValue} onInput={e => onInput(e)}
+                           style={{marginTop: '8px'}} onVnodeMounted={e => (e.el as HTMLInputElement)
+                        .getElementsByTagName("input")
+                        .item(0)!
+                        .focus()}/>
+                </div>,
+                title: title,
                 draggable: true,
-                okText: config.confirmButtonText,
-                cancelText: config.cancelButtonText,
+                okText: option.confirmButtonText,
+                cancelText: option.cancelButtonText,
                 onOk: () => {
                     resolve(value);
                 },
@@ -98,13 +93,11 @@ export default {
         })
     },
 
-    password(content: string, title: string, config: {
-        confirmButtonText?: string,
-        cancelButtonText?: string
-    }): Promise<{
+    password(content: string, title: string, config?: Partial<PromptOption>): Promise<{
         username: string;
         password: string;
     }> {
+        const option = config || {}
         return new Promise<{
             username: string;
             password: string;
@@ -120,30 +113,21 @@ export default {
                 value.username = e;
             }
             Modal.confirm({
-                content: () => h('div', {class: 'domain-prompt'}, [
-                    h('div', {}, content),
-                    // @ts-ignore
-                    h(Input, {
-                        type: 'text',
-                        onInput: onUsernameInput,
-                        style: 'margin-top: 8px;',
-                        onVnodeMounted: (e: VNode) => {
-                            (e.el as HTMLInputElement)
-                                .getElementsByTagName("input")
-                                .item(0)!
-                                .focus();
-                        }
-                    }),
-                    h(InputPassword, {
-                        type: 'text',
-                        onInput: onPasswordInput,
-                        style: 'margin-top: 8px;'
-                    })
-                ]),
-                title: '提示',
+                content: () => <div class="domain-prompt">
+                    <div>{content}</div>
+                    <Input type="text" onInput={e => onUsernameInput(e)} style={{marginTop: '8px'}}
+                           onVnodeMounted={e => {
+                               (e.el as HTMLInputElement)
+                                   .getElementsByTagName("input")
+                                   .item(0)!
+                                   .focus();
+                           }}/>
+                    <Input type="password" onInput={e => onPasswordInput(e)} style={{marginTop: '8px'}}/>
+                </div>,
+                title: title,
                 draggable: true,
-                okText: config.confirmButtonText,
-                cancelText: config.cancelButtonText,
+                okText: option.confirmButtonText,
+                cancelText: option.cancelButtonText,
                 onOk: () => {
                     resolve(value);
                 },

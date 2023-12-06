@@ -11,7 +11,7 @@ export default class Optional<T> {
     }
 
     public map<S>(mapper: (value: T) => S): Optional<S> {
-        if (this.value !== undefined && this.value !== null) {
+        if (this.value !== undefined && this.value !== null && typeof this.value != 'undefined') {
             return new Optional<S>(mapper(this.value));
         } else {
             return new Optional<S>(undefined);
@@ -48,7 +48,7 @@ export default class Optional<T> {
     }
 
     public orElse<S = T>(value: S): S {
-        if (this.value === undefined || this.value === null) {
+        if (this.value === undefined || this.value === null || typeof this.value === 'undefined') {
             return value;
         }
         return this.value as S;
