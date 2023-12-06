@@ -1,5 +1,4 @@
 import {Button, Modal} from "@arco-design/web-vue";
-import {defineComponent, h} from "vue";
 import {jsonFormat} from "@/algorithm/jsonFormat";
 import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
@@ -32,7 +31,7 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
     let html = "";
     let needPretty = true;
     if (typeof json === 'string') {
-        if (/^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/.test(json)) {
+        if (/^\s*(\{[\s\S]*}|\[[\s\S]*])\s*$/.test(json)) {
             try {
                 value = jsonFormat(json)
             } catch (e) {
@@ -63,28 +62,17 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
     // 创建对话框
     Modal.open({
         title: title,
-        content: () => h('div', {
-            style: {
-                fontSize: useGlobalSettingStore().jsonFontSize + 'px',
-                position: 'relative'
-            },
-            class: 'hljs'
-        }, {
-            default: () => [
-                h(defineComponent({
-                    template: `<pre class="language-json hljs">${html}</pre>`
-                })),
-                h(Button, {
-                    type: "text",
-                    style: {
-                        position: "absolute",
-                        top: "6px",
-                        right: "20px"
-                    },
-                    onClick: () => execCopy()
-                }, {default: () => "复制"})
-            ]
-        }),
+        content: () => <div class="hljs" style={{
+            fontSize: useGlobalSettingStore().jsonFontSize + 'px',
+            position: 'relative'
+        }}>
+            <pre class="language-json" v-html={html}></pre>
+            <Button type="text" style={{
+                position: "absolute",
+                top: "6px",
+                right: "20px"
+            }} onClick={() => execCopy()}>复制</Button>
+        </div>,
         draggable: true,
         width: options ? options.width : "80vw",
         footer: false,
