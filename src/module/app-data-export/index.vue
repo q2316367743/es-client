@@ -82,6 +82,7 @@ import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {markRaw, ref, watch} from "vue";
 import {useExportEvent} from "@/global/BeanFactory";
+import {showDataExportDrawer} from "@/components/DataExport";
 
 const allowExportTypes = markRaw<Array<ExportType>>([ExportType.JSON]);
 const visible = ref(false);

@@ -7,7 +7,7 @@
                 <base-search-header/>
                 <!-- 核心查询区 -->
                 <base-search-display/>
-                <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
+                <a-back-top target-container=".arco-scrollbar-container"/>
             </div>
         </div>
     </a-spin>
@@ -21,7 +21,6 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import BaseSearchHeader from './components/header/index.vue';
 import BaseSearchDisplay from "./layout/display.vue";
 
-const showTop = ref(true);
 
 const loading = computed(() => useBaseSearchStore().loading);
 const current = computed(() => useBaseSearchStore().current);

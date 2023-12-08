@@ -43,6 +43,7 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useWindowSize} from "@vueuse/core";
 import {useExportEvent} from "@/global/BeanFactory";
 import Sentence from "@/page/base-search/components/header/sentence.vue";
+import {showDataExportDrawer} from "@/components/DataExport";
 
 const size = useWindowSize();
 
@@ -85,7 +86,12 @@ const indices = computed<Array<SelectOptionData>>(() => {
 })
 
 function printHandler() {
-    useExportEvent.emit({
+    // useExportEvent.emit({
+    //     name: useBaseSearchStore().current.index,
+    //     index: useBaseSearchStore().current.index,
+    //     search: useBaseSearchStore().getCondition()
+    // })
+    showDataExportDrawer({
         name: useBaseSearchStore().current.index,
         index: useBaseSearchStore().current.index,
         search: useBaseSearchStore().getCondition()
