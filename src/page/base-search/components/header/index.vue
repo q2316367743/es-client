@@ -26,6 +26,7 @@
             </a-button>
         </div>
         <div class="right">
+            <sentence />
             <bsh-manage/>
             <!-- 设置 -->
             <base-search-setting/>
@@ -41,6 +42,7 @@ import BaseSearchSetting from "@/page/base-search/components/setting/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useWindowSize} from "@vueuse/core";
 import {useExportEvent} from "@/global/BeanFactory";
+import Sentence from "@/page/base-search/components/header/sentence.vue";
 
 const size = useWindowSize();
 

@@ -8,8 +8,6 @@
                 <!-- 核心查询区 -->
                 <base-search-display/>
                 <a-back-top target-container=".arco-scrollbar-container" v-show="showTop"/>
-                <!-- 快捷工具 -->
-                <base-search-sentence/>
             </div>
         </div>
     </a-spin>
@@ -21,7 +19,6 @@ import {computed, ref} from "vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 // 内部组件
 import BaseSearchHeader from './components/header/index.vue';
-import BaseSearchSentence from "./layout/sentence.vue";
 import BaseSearchDisplay from "./layout/display.vue";
 
 const showTop = ref(true);

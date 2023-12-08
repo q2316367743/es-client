@@ -1,13 +1,25 @@
 <template>
-    <div class="base-search-condition-sentence">
-        <show-query-condition/>
-        <a-button type="text" @click="jumpToSeniorSearch()">
-            跳转到高级查询
+    <a-tooltip content="显示查询条件" position="bottom">
+        <a-button type="dashed" @click="showBody()">
+            <template #icon>
+                <icon-search />
+            </template>
         </a-button>
-        <a-button type="text" @click="execCopy()">
-            复制到剪切板
+    </a-tooltip>
+    <a-tooltip content="跳转到高级查询" position="bottom">
+        <a-button type="dashed" @click="jumpToSeniorSearch()">
+            <template #icon>
+                <icon-filter />
+            </template>
         </a-button>
-    </div>
+    </a-tooltip>
+    <a-tooltip content="复制到剪切板" position="bottom">
+        <a-button type="dashed" @click="execCopy()">
+            <template #icon>
+                <icon-copy/>
+            </template>
+        </a-button>
+    </a-tooltip>
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
@@ -16,6 +28,7 @@ import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuil
 import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {showJson} from "@/utils/DialogUtil";
 
 const current = computed(() => useBaseSearchStore().current);
 
@@ -29,9 +42,9 @@ function jumpToSeniorSearch() {
             link: `/${current.value.index}/_search`,
             method: 'POST',
             body: JSON.stringify(
-                    QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders),
-                    null,
-                    4)
+                QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders),
+                null,
+                4)
         });
     } catch (e) {
         MessageUtil.error('条件构造错误', e);
@@ -41,6 +54,18 @@ function jumpToSeniorSearch() {
 function execCopy() {
     utools.copyText(JSON.stringify(QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders)));
     MessageUtil.success("已成功复制到剪切板");
+}
+
+function showBody() {
+    try {
+        let current = useBaseSearchStore().current;
+        showJson("查询条件", QueryConditionBuild(current.conditions,
+            current.page,
+            current.size,
+            current.orders));
+    } catch (e) {
+        MessageUtil.error('条件构造错误', e);
+    }
 }
 
 </script>
