@@ -1,18 +1,27 @@
-import ConditionExportEvent, {ExportConfig} from "@/components/DataExport/domain";
+import ConditionExportEvent, {
+    ApiType,
+    ExportConfig,
+    ExportMode,
+    ExportScope,
+    ExportSource,
+    ExportType
+} from "@/components/DataExport/domain";
 import {
     Drawer,
     Form,
     FormItem,
-    Select,
-    Option,
     Input,
-    InputNumber,
     InputGroup,
+    InputNumber,
+    Option,
     Radio,
-    RadioGroup
+    RadioGroup,
+    Select
 } from "@arco-design/web-vue";
 import {Ref, ref} from "vue";
-import {ApiType, ExportMode, ExportScope, ExportSource, ExportType} from "@/components/ExportComponent/domain";
+import {exportData} from "@/components/DataExport/func";
+import useLoadingStore from "@/store/LoadingStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 const allowExportTypes: Array<ExportType> = [ExportType.JSON];
 
@@ -82,6 +91,11 @@ export function showDataExportDrawer(config: ConditionExportEvent) {
         width: "400px",
         onOpen() {
             // 打开
+            useLoadingStore().start('开始导出');
+            exportData(instance.value)
+                .then(() => MessageUtil.success("导出成功"))
+                .catch(e => MessageUtil.error("导出失败", e))
+                .finally(() => useLoadingStore().close());
         }
     });
 }

@@ -41,7 +41,6 @@ import BshManage from "@/page/base-search/components/History/index.vue";
 import BaseSearchSetting from "@/page/base-search/components/setting/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useWindowSize} from "@vueuse/core";
-import {useExportEvent} from "@/global/BeanFactory";
 import Sentence from "@/page/base-search/components/header/sentence.vue";
 import {showDataExportDrawer} from "@/components/DataExport";
 

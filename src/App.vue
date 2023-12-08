@@ -19,8 +19,6 @@
         </a-layout>
         <!-- 索引管理 -->
         <index-manage/>
-        <!-- 数据导出 -->
-        <app-data-export/>
     </a-config-provider>
 </template>
 
@@ -52,7 +50,6 @@ const router = useRouter();
 
 const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.vue"));
 const AppSider = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
-const AppDataExport = defineAsyncComponent(() => import("@/module/app-data-export/index.vue"));
 const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
 
 

@@ -118,7 +118,7 @@ import ArrayUtil from "@/utils/ArrayUtil";
 import DataBuild from "@/page/data-browse/build/DataBuild";
 import {Codemirror} from "vue-codemirror";
 import {json} from "@codemirror/lang-json";
-import {useExportEvent} from "@/global/BeanFactory";
+import {showDataExportDrawer} from "@/components/DataExport";
 
 const editConfig = ref({
     dialog: false,
@@ -202,7 +202,8 @@ function openExportDialog() {
         MessageUtil.warning('数据为空');
         return;
     }
-    useExportEvent.emit({
+    // 显示导出对话框
+    showDataExportDrawer({
         name: useDataBrowseStore().name,
         index: useDataBrowseStore().name,
         search: useDataBrowseStore().getCondition()
