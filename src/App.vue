@@ -19,8 +19,6 @@
         </a-layout>
         <!-- 索引管理 -->
         <index-manage/>
-        <!-- 版本更新 -->
-        <version-update v-model:visible="updateDialog"/>
         <!-- 数据导出 -->
         <app-data-export/>
     </a-config-provider>
@@ -47,6 +45,7 @@ import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 import Assert from "@/utils/Assert";
 import useIndexStore from "@/store/IndexStore";
+import {showVersionUpdateDialog} from "@/module/version-update";
 
 const router = useRouter();
 
@@ -54,10 +53,8 @@ const router = useRouter();
 const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.vue"));
 const AppSider = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
 const AppDataExport = defineAsyncComponent(() => import("@/module/app-data-export/index.vue"));
-const VersionUpdate = defineAsyncComponent(() => import("@/module/version-update/index.vue"));
 const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
 
-const updateDialog = ref(false);
 
 const jsonTheme = computed(() => useGlobalSettingStore().jsonTheme);
 const collapsed = computed(() => useGlobalStore().collapsed);
@@ -73,7 +70,7 @@ initData().then(() => {
             router.push(PageNameEnum.MORE_ABOUT);
             break;
         case VersionStatus.UPDATE:
-            updateDialog.value = true;
+            showVersionUpdateDialog()
             router.push(PageNameEnum.MORE_UPDATE);
             break;
     }

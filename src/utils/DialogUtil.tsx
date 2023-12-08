@@ -1,11 +1,15 @@
-import {Button, Modal} from "@arco-design/web-vue";
+import {Button, Modal, ModalReturn} from "@arco-design/web-vue";
 import {jsonFormat} from "@/algorithm/jsonFormat";
 import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
 import useLoadingStore from "@/store/LoadingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {utools} from "@/plugins/utools";
+import type {RenderFunction} from 'vue';
 
+/**
+ * 对话框参数
+ */
 interface DialogOption {
     width: string,
 
@@ -60,23 +64,35 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
         MessageUtil.success("复制成功");
     };
     // 创建对话框
-    Modal.open({
+
+    showDialog(title, () => <div class="hljs" style={{
+        fontSize: useGlobalSettingStore().jsonFontSize + 'px',
+        position: 'relative'
+    }}>
+        <pre class="language-json" v-html={html}></pre>
+        <Button type="text" style={{
+            position: "absolute",
+            top: "6px",
+            right: "20px"
+        }} onClick={() => execCopy()}>复制</Button>
+    </div>, options);
+
+}
+
+/**
+ * 显示一个对话框
+ * @param title 对话框标题
+ * @param content 对话框内容
+ * @param options 对话框选项
+ */
+export function showDialog(title: string, content: RenderFunction, options?: DialogOption): ModalReturn {
+    // 创建对话框
+    return Modal.open({
         title: title,
-        content: () => <div class="hljs" style={{
-            fontSize: useGlobalSettingStore().jsonFontSize + 'px',
-            position: 'relative'
-        }}>
-            <pre class="language-json" v-html={html}></pre>
-            <Button type="text" style={{
-                position: "absolute",
-                top: "6px",
-                right: "20px"
-            }} onClick={() => execCopy()}>复制</Button>
-        </div>,
+        content: content,
         draggable: true,
         width: options ? options.width : "80vw",
         footer: false,
         modalClass: "es-dialog"
     });
-
 }
