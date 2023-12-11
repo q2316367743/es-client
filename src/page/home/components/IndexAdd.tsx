@@ -1,4 +1,4 @@
-import {Ref, ref} from "vue";
+import {Ref, ref, watch} from "vue";
 import {Modal, Form, FormItem, Input, InputNumber, Tabs, TabPane, ModalReturn, Button} from "@arco-design/web-vue";
 import {IndexCreate} from "@/components/es/domain/IndexCreate";
 import {getDefaultIndexInstance, IndexInstance} from "@/domain/IndexInstance";
@@ -9,8 +9,29 @@ import useIndexStore from "@/store/IndexStore";
 import useLoadingStore from "@/store/LoadingStore";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 
+/**
+ * 索引创建
+ *
+ * 名字限制
+ * - 不能是大写。
+ * - 不能包含 \，/，*，?，"，<，>，|，(空格)，,，#等字符。
+ * - 7.0 之后的版本不能再包含 : （冒号）字符了。
+ * - 不能以 -，_，+ 开头。名字不能是 . 或者 ..。
+ * - 不能长于 255 字节。需要注意的是某些字符是需要多个字节来表示的。
+ */
 export function indexAdd(): void {
     const index: Ref<IndexInstance> = ref<IndexInstance>(getDefaultIndexInstance());
+    // 名字是否正确
+    const nameError = ref(0);
+    watch(() => index.value.name, value => {
+
+        if (value.trim() === '') {
+            nameError.value = 0;
+            return;
+        }
+        // 此处正则校验有问题
+        nameError.value = !/^(?![-._+])[a-z0-9]+(?<![-._+])(?<![-._+])[a-z0-9]*$/.test(value) ? 1 : 0;
+    })
     let modalReturn: ModalReturn = Modal.open({
         title: "新建索引",
         width: "850px",
@@ -21,7 +42,16 @@ export function indexAdd(): void {
         content: () => <>
             <Form model={index} layout="vertical">
                 <FormItem label="名称">
-                    <Input style="width: 300px;"></Input>
+                    {{
+                        default: () => <Input v-model={index.value.name} style="width: 300px;" maxLength={255}
+                                              showWordLimit allowClear
+                                              error={nameError.value > 0}></Input>,
+                        help: () => {
+                            if (nameError.value) {
+                                return <span>错误</span>
+                            }
+                        }
+                    }}
                 </FormItem>
             </Form>
             <Tabs>
@@ -37,7 +67,7 @@ export function indexAdd(): void {
                 </TabPane>
                 <TabPane title="映射设置" key="2">
                     <MonacoEditor v-model={index.value.mappings} language="json"
-                                   height={window.innerHeight - 200 + 'px'}/>
+                                  height={window.innerHeight - 200 + 'px'}/>
                 </TabPane>
             </Tabs>
         </>,
