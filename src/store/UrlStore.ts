@@ -7,6 +7,7 @@ import ArrayUtil from "@/utils/ArrayUtil";
 import {listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
+import {statistics} from "@/global/BeanFactory";
 
 const title = useTitle();
 
@@ -49,6 +50,8 @@ const useUrlStore = defineStore('url', {
             if (!url) {
                 return false;
             }
+            // 统计用户使用的es版本
+            statistics.access("es版本统计", url.version);
             setItem(LocalNameEnum.KEY_LAST_URL, id);
             this.url = url;
             title.value = url.name || 'domain-client';

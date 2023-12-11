@@ -8,11 +8,11 @@ enum LocalNameEnum {
 
     KEY_PRIVACY_ENABLE = '/key/privacy/enable',
 
-
     KEY_PRIVACY_PLATFORM = '/key/privacy/platform',
 
-
     KEY_PRIVACY_SYSTEM = '/key/privacy/system',
+
+    KEY_PRIVACY_ES_VERSION = '/key/privacy/es/version',
 
 
     DB_URL = '/db/url',

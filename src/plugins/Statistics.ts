@@ -21,8 +21,7 @@ export default class Statistics {
      * 插件打开
      */
     open() {
-        this.access("插件打开")
-            .then(() => console.log("插件打开"));
+        this.access("插件打开");
     }
 
     /**
@@ -30,7 +29,17 @@ export default class Statistics {
      * @param operate 操作
      * @param additional 附加
      */
-    async access(operate: string, additional?: string) {
+    access(operate: string, additional?: string) {
+        this._access(operate, additional)
+            .then(() => console.log("执行统计"))
+    }
+
+    /**
+     * 访问某个标签
+     * @param operate 操作
+     * @param additional 附加
+     */
+    private async _access(operate: string, additional?: string) {
         if (utools.isDev()) {
             return;
         }

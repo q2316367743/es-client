@@ -31,7 +31,10 @@ if (Constant.mode === PluginModeEnum.DESKTOP) {
             }
 
             _show(body).then(() => console.log("发送通知"));
-        }
+        },
+        getUser() {
+            return {avatar: "", nickname: localStorage.getItem("nickname") || "客户端用户", type: ""};
+        },
     }
     preloadWrap = {
         async axios<T, D>(config: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {

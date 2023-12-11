@@ -22,8 +22,17 @@
         <a-typography-title :heading="3">二、我们可能收集您的信息</a-typography-title>
 
         <a-typography-paragraph>
-            我们提供服务时，会收集您的插件使用情况、使用的平台、使用的系统信息。
-            主要用于分析用户使用情况来做下一步主要更新方向。
+            我们提供服务时，会收集您的一些使用信息，用于分析用户使用情况来做下一步主要更新方向。主要包括：
+        </a-typography-paragraph>
+
+        <a-typography-paragraph>
+            <ul>
+                <li>使用的时间</li>
+                <li>使用的平台</li>
+                <li>您的操作系统</li>
+                <li>您的es版本</li>
+                <li>插件各个功能的使用情况</li>
+            </ul>
         </a-typography-paragraph>
 
         <a-typography-title :heading="3">三、数据存储</a-typography-title>
@@ -45,23 +54,6 @@
             utools版本存放在utools提供的db中，可以在账号与数据中点击插件右侧查看存储的文档数据中查看
         </a-typography-paragraph>
 
-        <a-typography-title :heading="3">四、隐私开关</a-typography-title>
-
-        <a-descriptions :column="1" bordered style="margin-bottom: 14px;">
-            <a-descriptions-item label="昵称">
-                <a-typography-text :editable="allowEdit" v-model:edit-text="nickname">{{ nickname }}</a-typography-text>
-            </a-descriptions-item>
-            <a-descriptions-item label="是否启用">
-                <a-switch type="round" v-model="enabled"/>
-            </a-descriptions-item>
-            <a-descriptions-item label="使用的平台">
-                <a-switch type="round" v-model="platform" :disabled="!enabled"/>
-            </a-descriptions-item>
-            <a-descriptions-item label="使用的系统">
-                <a-switch type="round" v-model="system" :disabled="!enabled"/>
-            </a-descriptions-item>
-        </a-descriptions>
-
     </a-typography>
 </template>
 <script lang="ts" setup>
@@ -76,6 +68,7 @@ const nickname = ref("");
 const enabled = ref<boolean>(getItemByDefault<boolean>(LocalNameEnum.KEY_PRIVACY_ENABLE, true));
 const platform = ref<boolean>(getItemByDefault<boolean>(LocalNameEnum.KEY_PRIVACY_PLATFORM, true));
 const system = ref<boolean>(getItemByDefault<boolean>(LocalNameEnum.KEY_PRIVACY_SYSTEM, true));
+const esVersion = ref<boolean>(getItemByDefault<boolean>(LocalNameEnum.KEY_PRIVACY_ES_VERSION, true));
 const allowEdit = ref(Constant.mode !== PluginModeEnum.UTOOLS);
 
 let user = utools.getUser();

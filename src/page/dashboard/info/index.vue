@@ -119,6 +119,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {ClusterHealth} from "@/components/es/domain/ClusterHealth";
 import DashboardCard from "@/page/dashboard/components/DashboardCard.vue";
+import {statistics} from "@/global/BeanFactory";
 
 const empty = computed(() => useUrlStore().empty);
 
@@ -153,8 +154,11 @@ getClusterHealth();
 
 watch(() => useUrlStore().current, () => {
     getInfoData();
-    getClusterHealth()
+    getClusterHealth();
 })
+
+
+statistics.access("功能统计", "仪表盘-信息");
 
 </script>
 <style scoped>
