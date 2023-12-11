@@ -1,12 +1,12 @@
 <template>
     <a-layout-header id="header">
         <div class="left">
-            <a-tooltip :content="shards" :background-color="color">
-                <div class="logo" :style="{color: color}" :title="name || $t('app.name')">{{ name || $t('app.name') }}</div>
-            </a-tooltip>
+            <div class="logo" :title="$t('app.name')">
+                {{ $t('app.name') }}
+            </div>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
-                      class="url-select" :show-extra-options="true">
+                      class="url-select" :show-extra-options="true" style="max-width: 100px">
                 <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
                 <template #empty>
                     <div style="padding: 6px 0; text-align: center;">
@@ -26,6 +26,12 @@
                     $t('common.operation.refresh')
                 }}
             </a-button>
+            <a-progress v-if="total_shards > 0" :percent="Math.round(active_shards / total_shards * 100) / 100"
+                        :status="status" style="width: 220px;margin-left: 14px;">
+                <template v-slot:text="scope" >
+                    {{active_shards}} / {{total_shards}}
+                </template>
+            </a-progress>
         </div>
         <div class="right">
             <!-- 控制台 -->
@@ -111,18 +117,19 @@ const urls = computed(() => useUrlStore().urls);
 const loading = computed(() => useLoadingStore().loading);
 const darkType = computed(() => useGlobalStore().darkType);
 const name = computed(() => useIndexStore().name);
-const color = computed(() => {
+const status = computed(() => {
     const status = useIndexStore().status;
     if (status === 'yellow') {
-        return 'rgb(var(--orange-6))';
+        return 'warning';
     } else if (status === 'green') {
-        return 'rgb(var(--green-6))';
+        return 'success';
     } else if (status === 'red') {
-        return 'rgb(var(--red-6))';
+        return 'danger';
     }
-    return 'var(--color-text-1)';
+    return 'normal';
 });
-const shards = computed(() => `分片：${useIndexStore().active_shards} / ${useIndexStore().total_shards}`)
+const active_shards = computed(() => useIndexStore().active_shards);
+const total_shards = computed(() => useIndexStore().total_shards);
 
 watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
 watch(() => useUrlStore().id, value => {

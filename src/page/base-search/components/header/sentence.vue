@@ -23,7 +23,6 @@
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
-import ShowQueryCondition from "@/page/base-search/components/tool/ShowQueryCondition.vue";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
