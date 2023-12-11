@@ -165,8 +165,9 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 DocumentApi(this.index.name)._insert(record)
                     .then(result => {
                         MessageUtil.success(`新增成功，新数据ID【${result._id || ''}】`)
-                        // 延迟100ms，
+                        // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
                         setTimeout(() => {
+                            resolve();
                             this.executeQuery(false).then(() => console.log("查询成功"));
                         }, 1000);
                         resolve()
@@ -217,8 +218,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
                         }
                     })
                         .then(() => {
-                            MessageUtil.success('删除成功', resolve)
+                            MessageUtil.success('删除成功');
+                            // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
                             setTimeout(() => {
+                                resolve();
                                 this.executeQuery(false).then(() => console.log("查询成功"));
                             }, 1000);
                             // 删除后，重置选择
@@ -261,13 +264,13 @@ export const useDataBrowseStore = defineStore('data-browser', {
                     return;
                 }
                 DocumentApi(this.index.name)._update(id, record).then(() => {
-                    // 延迟100ms，
+                    // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
                     setTimeout(() => {
+                        resolve();
                         this.executeQuery(false).then(() => console.log("查询成功"));
                     }, 1000);
                     // 更新后，重置选择
                     this.selectedKeys = new Array<string>();
-                    resolve();
                 }).catch(e => reject(e));
             })
         },

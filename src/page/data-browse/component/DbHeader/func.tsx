@@ -2,6 +2,7 @@ import {ref} from "vue";
 import {Button, Modal} from "@arco-design/web-vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 /**
  * 执行新增操作
@@ -21,9 +22,13 @@ export function execAdd(indexName: string, initData: string): Promise<string> {
                                          v-model={data.value}/>,
             footer: () => <>
                 <Button type="text"
-                        onClick={() => useDataBrowseStore().jumpToSeniorSearchByInsert(data.value)}>跳转到高级查询</Button>
+                        onClick={() => useDataBrowseStore().jumpToSeniorSearchByInsert(data.value)
+                            .finally(modalReturn.close)}>跳转到高级查询</Button>
                 <Button onClick={() => modalReturn.close()}>取消</Button>
-                <Button type="primary" onClick={() => resolve(data.value)}>新增</Button>
+                <Button type="primary" onClick={() => {
+                    resolve(data.value);
+                    modalReturn.close();
+                }}>新增</Button>
             </>
         });
     });
@@ -43,9 +48,13 @@ export function execUpdate(indexName: string, id: string, initData: string): Pro
                                          v-model={data.value}/>,
             footer: () => <>
                 <Button type="text"
-                        onClick={() => useDataBrowseStore().jumpToSeniorSearchByUpdate(id, data.value)}>跳转到高级查询</Button>
-                <Button onClick={() => modalReturn.close}>取消</Button>
-                <Button type="primary" onClick={() => resolve({id, data: data.value})}>新增</Button>
+                        onClick={() => useDataBrowseStore().jumpToSeniorSearchByUpdate(id, data.value)
+                            .finally(modalReturn.close)}>跳转到高级查询</Button>
+                <Button onClick={() => modalReturn.close()}>取消</Button>
+                <Button type="primary" onClick={() => {
+                    resolve({id, data: data.value});
+                    modalReturn.close();
+                }}>新增</Button>
             </>
         });
     });
