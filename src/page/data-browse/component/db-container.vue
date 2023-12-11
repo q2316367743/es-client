@@ -123,7 +123,6 @@ const menuConfig: VxeTablePropTypes.MenuConfig = {
 };
 
 const contextMenuClickEvent: VxeTableEvents.MenuClick = ({menu, row, column}) => {
-    console.log(menu, row, column)
     const $table = tableRef.value
     switch (menu.code) {
         case 'copy':
