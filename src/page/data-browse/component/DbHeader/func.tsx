@@ -22,7 +22,7 @@ export function execAdd(indexName: string, initData: string): Promise<string> {
             footer: () => <>
                 <Button type="text"
                         onClick={() => useDataBrowseStore().jumpToSeniorSearchByInsert(data.value)}>跳转到高级查询</Button>
-                <Button onClick={() => modalReturn.close}>取消</Button>
+                <Button onClick={() => modalReturn.close()}>取消</Button>
                 <Button type="primary" onClick={() => resolve(data.value)}>新增</Button>
             </>
         });
