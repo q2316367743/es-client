@@ -16,7 +16,7 @@ import PageHelp from "@/page/data-browse/component/PageHelp.vue";
 import DbCondition from "@/page/data-browse/component/db-condition.vue";
 import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
 import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
-import DbHeader from "@/page/data-browse/component/db-header.vue";
+import DbHeader from "@/page/data-browse/component/DbHeader/index.vue";
 import DbContainer from "@/page/data-browse/component/db-container.vue";
 
 import StructureIcon from "@/icon/StructureIcon.vue";

@@ -6,13 +6,7 @@
 import {defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {editorProps} from './MonacoEditorType'
 import * as monaco from 'monaco-editor'
-import markdown from './language/markdown'
 import {useGlobalStore} from "@/store/GlobalStore";
-
-monaco.languages.register({id: 'markdown'});
-monaco.languages.setMonarchTokensProvider('markdown', markdown.token);
-monaco.languages.setLanguageConfiguration('markdown', markdown.config);
-monaco.languages.registerCompletionItemProvider('markdown', markdown.provider);
 
 export default defineComponent({
     name: 'monaco-editor',

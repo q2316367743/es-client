@@ -171,10 +171,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                         }, 1000);
                         resolve()
                     })
-                    .catch(e => {
-                        MessageUtil.error('新增失败', e);
-                        reject();
-                    });
+                    .catch(reject);
             })
         },
         /**

@@ -47,6 +47,13 @@ self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
     }
 };
 
+// 注册语言服务器
+monaco.languages.register({id: 'http'});
+monaco.languages.setMonarchTokensProvider('http', language);
+monaco.languages.setLanguageConfiguration('http', configuration);
+monaco.languages.registerCompletionItemProvider('http', provider);
+monaco.languages.registerFoldingRangeProvider('http', foldingRange)
+
 window.addEventListener('message', event => {
     const message = event.data;
     if (message['type'] === 'url-open') {
@@ -57,6 +64,12 @@ window.addEventListener('message', event => {
 import XEUtils from 'xe-utils'
 import {VXETable, Column, Icon, Tooltip, VxeTable, Menu} from 'vxe-table'
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
+import * as monaco from "monaco-editor";
+import language from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/language";
+import configuration
+    from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/configuration";
+import provider from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/provider";
+import foldingRange from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/foldingRange";
 
 // 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
 VXETable.setup({

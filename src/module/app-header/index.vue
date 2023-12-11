@@ -1,12 +1,12 @@
 <template>
     <a-layout-header id="header">
         <div class="left">
-            <div class="logo" :title="$t('app.name')">
-                {{ $t('app.name') }}
+            <div class="logo" :title="name || $t('app.name')">
+                {{ name || $t('app.name') }}
             </div>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
-                      class="url-select" :show-extra-options="true" style="max-width: 100px">
+                      class="url-select" :show-extra-options="true" style="max-width: 150px">
                 <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
                 <template #empty>
                     <div style="padding: 6px 0; text-align: center;">

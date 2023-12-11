@@ -21,13 +21,6 @@ import restFormat from "@/algorithm/restFormat";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
-// 注册语言服务器
-monaco.languages.register({id: 'http'});
-monaco.languages.setMonarchTokensProvider('http', language);
-monaco.languages.setLanguageConfiguration('http', configuration);
-monaco.languages.registerCompletionItemProvider('http', provider);
-monaco.languages.registerFoldingRangeProvider('http', foldingRange)
-
 let codeLensProviderDisposable: any | null = null
 
 export default defineComponent({

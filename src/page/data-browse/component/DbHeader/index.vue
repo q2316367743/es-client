@@ -78,59 +78,19 @@
                 </template>
             </a-dropdown>
         </a-button-group>
-        <!-- 新增对话框 -->
-        <a-modal v-model:visible="addConfig.dialog" :title="`在【${indexName}】中新增数据`" width="800px" height="520px"
-                 draggable>
-            <!-- @ts-ignore -->
-            <codemirror v-model="addConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }"
-                        :autofocus="true"
-                        :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
-            <template #footer>
-                <a-button type="text" @click="jumpToSeniorSearchByInsert()">跳转到高级查询</a-button>
-                <a-button @click="addConfig.dialog = false">取消</a-button>
-                <a-button type="primary" @click="recordAddClick()">新增</a-button>
-            </template>
-        </a-modal>
-        <!-- 修改对话框 -->
-        <a-modal v-model:visible="editConfig.dialog" :title="`在【${indexName}】中修改【${editConfig.id}】数据`"
-                 :resize="true"
-                 width="800px" height="520px" draggable>
-            <!-- @ts-ignore -->
-            <codemirror v-model="editConfig.data" placeholder="请在这里输入查询条件" :style="{ height: '400px' }"
-                        :autofocus="true"
-                        :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
-            <template #footer>
-                <a-button type="text" @click="jumpToSeniorSearchByUpdate()">跳转到高级查询</a-button>
-                <a-button @click="editConfig.dialog = false">取消</a-button>
-                <a-button type="primary" @click="recordEditClick()">修改</a-button>
-            </template>
-        </a-modal>
     </div>
 </template>
 <script lang="ts" setup>
 import PageHelp from "@/page/data-browse/component/PageHelp.vue";
 import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
 import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
-import {computed, markRaw, ref} from "vue";
+import {computed} from "vue";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ArrayUtil from "@/utils/ArrayUtil";
 import DataBuild from "@/page/data-browse/build/DataBuild";
-import {Codemirror} from "vue-codemirror";
-import {json} from "@codemirror/lang-json";
 import {showDataExportDrawer} from "@/components/DataExport";
-
-const editConfig = ref({
-    dialog: false,
-    id: '',
-    data: ''
-});
-const addConfig = ref({
-    dialog: false,
-    data: ''
-});
-
-const extensions = markRaw<Array<any>>([json()])
+import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 
 const index = computed(() => useDataBrowseStore().index);
 const name = computed(() => useDataBrowseStore().name);
@@ -150,10 +110,6 @@ const jumpToBaseSearch = () => useDataBrowseStore().jumpToBaseSearch();
 const jumpToSeniorSearch = () => useDataBrowseStore().jumpToSeniorSearch();
 const resetColumn = () => useDataBrowseStore().resetColumn();
 const handleChange = (values: any[]) => useDataBrowseStore().handleChange(values);
-const recordAddClick = () => useDataBrowseStore().add(addConfig.value.data).then(() => addConfig.value.dialog = false)
-const recordEditClick = () => useDataBrowseStore()
-    .update(editConfig.value.id, editConfig.value.data)
-    .then(() => editConfig.value.dialog = false)
 
 function recordEdit(_id?: string) {
     if (!index.value) {
@@ -173,22 +129,20 @@ function recordEdit(_id?: string) {
     } else {
         record = selectedKeys.value[0];
     }
-    console.log(record)
-    editConfig.value = {
-        dialog: true,
-        id: record['_id'],
-        data: JSON.stringify(record['_source']['_source'], null, 4)
-    }
+    execUpdate(indexName.value, record['_id'], JSON.stringify(record['_source']['_source'], null, 4))
+        .then(({id, data}) => useDataBrowseStore().update(id, data)
+            .then(() => MessageUtil.success("新增成功"))
+            .catch(e => MessageUtil.error("新增失败", e)));
 }
 
 function recordAdd() {
     if (!index.value) {
         return;
     }
-    addConfig.value = {
-        dialog: true,
-        data: DataBuild(index.value.mapping)
-    }
+    execAdd(indexName.value, DataBuild(index.value.mapping))
+        .then(data => useDataBrowseStore().add(data)
+            .then(() => MessageUtil.success("新增成功"))
+            .catch(e => MessageUtil.error("新增失败", e)))
 }
 
 function openExportDialog() {
@@ -210,19 +164,6 @@ function openExportDialog() {
     })
 }
 
-function jumpToSeniorSearchByInsert() {
-    useDataBrowseStore().jumpToSeniorSearchByInsert(addConfig.value.data)
-        .then(() => {
-            addConfig.value.dialog = false;
-        });
-}
-
-function jumpToSeniorSearchByUpdate() {
-    useDataBrowseStore().jumpToSeniorSearchByUpdate(editConfig.value.id, editConfig.value.data)
-        .then(() => {
-            editConfig.value.dialog = false;
-        });
-}
 
 </script>
 <style scoped>
