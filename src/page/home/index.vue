@@ -34,7 +34,9 @@
                 </a-select>
             </a-input-group>
             <!-- 新增索引 -->
-            <home-index-add/>
+            <a-button type="primary" style="margin-left: 10px" @click="indexAdd()" :disabled="!url">
+                新建
+            </a-button>
         </div>
         <!-- 索引容器 -->
         <div class="home-container" ref="homeContainer">
@@ -61,11 +63,12 @@ import {computed} from 'vue';
 import useIndexStore from '@/store/IndexStore';
 
 import IndexItem from "./components/index-item.vue";
-import HomeIndexAdd from './components/index-add.vue';
 
 import {useWindowSize} from "@vueuse/core";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {OrderType, Status, useHomeStore} from "@/store/components/HomeStore";
+import {indexAdd} from "@/page/home/components/IndexAdd";
+import useUrlStore from "@/store/UrlStore";
 
 
 const size = useWindowSize();
@@ -74,7 +77,7 @@ const keyword = useHomeStore().keyword;
 const order = useHomeStore().order;
 const status = useHomeStore().status;
 
-
+const url = computed(() => useUrlStore().url);
 const virtualListProps = computed(() => ({
     height: size.height.value - 40 - 15 - 42
 }))
