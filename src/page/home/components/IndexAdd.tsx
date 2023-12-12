@@ -29,8 +29,22 @@ export function indexAdd(): void {
             nameError.value = 0;
             return;
         }
-        // 此处正则校验有问题
-        nameError.value = !/^(?![-._+])[a-z0-9]+(?<![-._+])(?<![-._+])[a-z0-9]*$/.test(value) ? 1 : 0;
+
+        if (/[A-Z]+/.test(value)) {
+            nameError.value = 1;
+            return;
+        }
+
+        if (/[\\\/*?"<>|\s#]+/.test(value)) {
+            nameError.value = 2;
+            return;
+        }
+        if (/^[_\-+]+/.test(value)) {
+            nameError.value = 3;
+            return;
+
+        }
+        nameError.value = 0;
     })
     let modalReturn: ModalReturn = Modal.open({
         title: "新建索引",
@@ -47,8 +61,12 @@ export function indexAdd(): void {
                                               showWordLimit allowClear
                                               error={nameError.value > 0}></Input>,
                         help: () => {
-                            if (nameError.value) {
-                                return <span>错误</span>
+                            if (nameError.value === 1) {
+                                return <span>不能是大写。</span>
+                            } else if (nameError.value === 2) {
+                                return <span>不能包含 \，/，*，?，"，&lt;，&gt;，|，(空格)，,，#等字符。</span>
+                            }else if (nameError.value === 3) {
+                                return <span>不能以 -，_，+ 开头。</span>
                             }
                         }
                     }}
