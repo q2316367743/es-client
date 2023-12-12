@@ -40,6 +40,10 @@ const router = createRouter({
             name: '副本与分片',
             path: 'shard-and-replica',
             component: () => import('@/page/dashboard/ShardAndReplica/index.vue')
+        }, {
+            name: '_cat',
+            path: 'cat',
+            component: () => import('@/page/dashboard/Cat/index.vue')
         }]
     }, {
         name: '设置',

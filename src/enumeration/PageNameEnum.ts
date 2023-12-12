@@ -16,6 +16,8 @@ enum PageNameEnum {
 
     DASHBOARD_SHARD_AND_REPLICA = '/dashboard/shard-and-replica',
 
+    DASHBOARD_CAT = '/dashboard/cat',
+
     SETTING = "/setting",
 
     SETTING_GLOBAL = "/setting/global",
