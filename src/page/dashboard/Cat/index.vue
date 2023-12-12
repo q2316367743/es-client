@@ -26,7 +26,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {TableColumnData, TableData} from "@arco-design/web-vue";
 import {useWindowSize} from "@vueuse/core";
 import {cat, tabs} from "@/page/dashboard/Cat/func";
@@ -43,9 +43,9 @@ const columns = ref(new Array<TableColumnData>());
 const records = ref(new Array<TableData>());
 const width = ref(0);
 
-const virtualListProps = ref({
+const virtualListProps = computed(() => ({
     height: size.height.value - 90 - 36 - 4
-})
+}));
 
 watch(() => activeKey.value, (key) => handler(key), {immediate: true});
 

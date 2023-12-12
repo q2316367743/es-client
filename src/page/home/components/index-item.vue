@@ -3,15 +3,15 @@
         <!-- 标题 -->
         <div class="title" :style="{maxWidth: maxWidth}">
             <div class="index-item-title" type="primary" :style="{ color: indexStateTitle }" @click="indexInfo()"
-                 :title="index?.name">{{ index?.name }}
+                 :title="index.name">{{ index.name }}
             </div>
-            <a-button shape="round" type="dashed" size="small" @click="execCopy(index?.name)">复制</a-button>
+            <a-button shape="round" type="dashed" size="small" @click="execCopy(index.name)">复制</a-button>
         </div>
         <!-- 别名 -->
         <div class="alias">
             <a-space>
                 <span class="arco-tag arco-tag-size-medium arco-tag-blue arco-tag-checked"
-                      v-for="(item, idx) in index?.alias" :key="idx">
+                      v-for="(item, idx) in index.alias" :key="idx">
                 {{ item }}
                 <icon-close :size="16" @click="removeAlias(item)" class="alias-close"/>
             </span>
@@ -21,11 +21,18 @@
         </div>
         <!-- 详细 -->
         <div class="detail">
-            <div> size: {{ index?.size }}</div>
-            <div>docs: {{ index?.doc_count }}</div>
+            <div> size: {{ index.size }}</div>
+            <div>docs: {{ index.doc_count }}</div>
         </div>
         <!-- 操作 -->
         <div class="option">
+            <a-tooltip :effect="theme" content="迁移索引" placement="bottom">
+                <a-button type="text" @click="indexReindex(index.name)">
+                    <template #icon>
+                        <icon-rotate-right/>
+                    </template>
+                </a-button>
+            </a-tooltip>
             <a-tooltip :effect="theme" :content="indexStateTooltip" placement="bottom">
                 <a-popconfirm :content="`确认${indexStateTooltip}索引？`" @ok="indexOperation"
                               :ok-text="indexStateTooltip">
@@ -86,7 +93,6 @@ import {BaseQuery} from "@/entity/BaseQuery";
 // 工具类
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {showJson} from "@/utils/DialogUtil";
 import Optional from "@/utils/Optional";
 // 存储
 import useIndexStore from "@/store/IndexStore";
@@ -97,11 +103,16 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 其他
 import IndexView from "@/view/index/IndexView";
 import {useIndexManageEvent} from "@/global/BeanFactory";
+import {indexReindex} from "@/page/home/components/IndexReindex";
 
 export default defineComponent({
     name: 'index-item',
     props: {
-        index: Object as PropType<IndexView>
+        index: {
+            type: Object as PropType<IndexView>,
+            required: false,
+            default: {}
+        }
     },
     data: () => ({
         state: false,
@@ -113,9 +124,9 @@ export default defineComponent({
             return (this.width - 210) + 'px'
         },
         indexStateBtn(): 'danger' | 'success' | 'normal' {
-            if (this.index?.state === 'open') {
+            if (this.index.state === 'open') {
                 return 'danger';
-            } else if (this.index?.state === 'close') {
+            } else if (this.index.state === 'close') {
                 return 'success';
             } else {
                 return 'normal'
@@ -123,16 +134,16 @@ export default defineComponent({
         },
 
         indexStateTooltip(): string {
-            if (this.index?.state === 'open') {
+            if (this.index.state === 'open') {
                 return '关闭';
-            } else if (this.index?.state === 'close') {
+            } else if (this.index.state === 'close') {
                 return '打开';
             } else {
                 return '未知状态'
             }
         },
         indexStateTitle(): 'gray' | '' {
-            if (this.index?.state === 'close') {
+            if (this.index.state === 'close') {
                 return 'gray';
             } else {
                 return ''
@@ -143,18 +154,15 @@ export default defineComponent({
         }
     },
     methods: {
-        showShardOrReplica(json: any, idx: number) {
-            let title = `${this.index?.name}/${json.allocation_id ? json.allocation_id.id : 'null'}[${idx}]`;
-            showJson(title, json);
-        },
+        indexReindex,
         indexInfo() {
-            useIndexManageEvent.emit(this.index?.name);
+            useIndexManageEvent.emit(this.index.name);
         },
         newAlias() {
             MessageBoxUtil.prompt("请输入新别名", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-            }).then((value) => IndexApi(this.index?.name!).newAlias(value)
+            }).then((value) => IndexApi(this.index.name!).newAlias(value)
                 .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('新建别名错误', e)));
         },
@@ -163,7 +171,7 @@ export default defineComponent({
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
             })
-                .then(() => IndexApi(this.index?.name!).removeAlias(alias)
+                .then(() => IndexApi(this.index.name!).removeAlias(alias)
                     .then(res => {
                         MessageUtil.success(JSON.stringify(res), this.reset);
                     })
@@ -174,26 +182,26 @@ export default defineComponent({
             MessageBoxUtil.confirm("此操作将永久删除该索引, 是否继续?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消"
-            }).then(() => IndexApi(this.index?.name!).delete()
+            }).then(() => IndexApi(this.index.name!).delete()
                 .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('索引删除错误', e)));
         },
         indexOperation() {
-            if (this.index?.state === 'open') {
+            if (this.index.state === 'open') {
                 this.closeIndex();
-            } else if (this.index?.state === 'close') {
+            } else if (this.index.state === 'close') {
                 this.openIndex();
             } else {
-                MessageUtil.warning(`未知索引状态【${this.index?.state}】，无法完成操作`);
+                MessageUtil.warning(`未知索引状态【${this.index.state}】，无法完成操作`);
             }
         },
         openIndex() {
-            IndexApi(this.index?.name!)._open()
+            IndexApi(this.index.name!)._open()
                 .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('打开索引失败', e));
         },
         closeIndex() {
-            IndexApi(this.index?.name!)._close()
+            IndexApi(this.index.name!)._close()
                 .then((res: any) => MessageUtil.success(JSON.stringify(res), this.reset))
                 .catch(e => MessageUtil.error('关闭索引失败', e));
         },
@@ -239,6 +247,7 @@ export default defineComponent({
     border-radius: 2px;
     position: relative;
     min-width: 700px;
+
 
     .title {
         display: flex;
