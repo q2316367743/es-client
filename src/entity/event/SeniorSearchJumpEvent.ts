@@ -19,6 +19,6 @@ export default interface SeniorSearchJumpEvent {
     /**
      * 请求体，存在会替代上面参数
      */
-    body: string;
+    body?: string;
 
 }

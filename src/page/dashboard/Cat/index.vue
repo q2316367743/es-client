@@ -3,6 +3,13 @@
         <a-spin dot tip="数据加载中..." :loading="loading">
             <a-tabs v-model:active-key="activeKey" hide-content>
                 <template #extra>
+                    <a-tooltip content="跳转到高级查询" position="br">
+                        <a-button type="text" @click="jumpTo()">
+                            <template #icon>
+                                <icon-filter />
+                            </template>
+                        </a-button>
+                    </a-tooltip>
                     <a-button type="text" @click="refresh()" :loading="loading">
                         <template #icon>
                             <icon-refresh/>
@@ -25,6 +32,7 @@ import {useWindowSize} from "@vueuse/core";
 import {cat, tabs} from "@/page/dashboard/Cat/func";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 const size = useWindowSize();
 
@@ -58,12 +66,18 @@ function handler(url: string) {
     }
     loading.value = true;
     cat(url).then(data => {
-        console.log(data)
         columns.value = data.columns;
         records.value = data.records;
         width.value = data.width;
     }).catch(e => MessageUtil.error("获取数据失败！", e))
         .finally(() => loading.value = false);
+}
+
+function jumpTo() {
+    useSeniorSearchStore().loadEvent({
+        method: 'GET',
+        link: activeKey.value,
+    })
 }
 
 </script>

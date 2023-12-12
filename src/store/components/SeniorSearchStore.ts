@@ -154,11 +154,10 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             }
         },
         loadEvent(event: SeniorSearchJumpEvent) {
-            router.push(PageNameEnum.SENIOR_SEARCH).then(() => console.log('基础搜索跳转'));
+            router.push(PageNameEnum.SENIOR_SEARCH).then(() => console.log('高级搜索跳转'));
             this.body = this.body +
                 '\n\n' +
-                `${event.method} ${event.link}\n` +
-                event.body;
+                `${event.method} ${event.link}` +  (!event.body ? '' : ('\n' + event.body));
         },
         saveHistory() {
             useLoadingStore().start("保存中");
