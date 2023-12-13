@@ -1,6 +1,7 @@
 import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 import {fetchEs} from "@/plugins/axios";
 import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
+import {Analyze} from "@/components/es/domain/Analyze";
 
 /**
  * 与索引有关的API
@@ -45,8 +46,8 @@ export default function DocumentApi(index: string) {
                 data
             })
         },
-        _search_first(data: DocumentSearchQuery, time: string): Promise<DocumentSearchResult<any>> {
-            return fetchEs<DocumentSearchResult<DocumentSearchResult<any>>>({
+        _search_first(data: DocumentSearchQuery, time: string): Promise<DocumentSearchResult> {
+            return fetchEs<DocumentSearchResult>({
                 url: `/${index}/_search`,
                 method: "POST",
                 data: data,
@@ -56,7 +57,7 @@ export default function DocumentApi(index: string) {
             })
         },
         _search_scroll(time: string, scroll_id: string): Promise<DocumentSearchResult<any>> {
-            return fetchEs<DocumentSearchResult<DocumentSearchResult<any>>>({
+            return fetchEs<DocumentSearchResult<any>>({
                 url: '/_search/scroll',
                 method: "POST",
                 data: {
@@ -65,5 +66,12 @@ export default function DocumentApi(index: string) {
                 }
             })
         },
+        _analyze(field: string, text: string): Promise<Analyze> {
+            return fetchEs<Analyze>({
+                url: `/${index}/_analyze`,
+                method: 'POST',
+                data: {text, field}
+            })
+        }
     }
 }

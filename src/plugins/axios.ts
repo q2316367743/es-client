@@ -5,6 +5,7 @@ import JSONBig from 'json-bigint';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/MessageUtil";
+import {utools} from "@/plugins/utools";
 
 interface Response<T> {
     /** The request URL. */
@@ -97,6 +98,9 @@ export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
         response: {}
     }
     try {
+        if (utools.isDev()) {
+            console.log(config)
+        }
         const res = await http<T>(config);
         useErrorStore().addEvent({
             ...event,

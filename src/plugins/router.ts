@@ -44,6 +44,10 @@ const router = createRouter({
             name: '_cat',
             path: 'cat',
             component: () => import('@/page/dashboard/Cat/index.vue')
+        }, {
+            name: '分析器',
+            path: 'analysis',
+            component: () => import('@/page/dashboard/Analysis/index.vue')
         }]
     }, {
         name: '设置',

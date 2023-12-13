@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard-cat">
+    <div class="dashboard-cat abs-07">
         <a-spin dot tip="数据加载中..." :loading="loading">
             <div class="header">
                 <a-input-group>
@@ -108,11 +108,6 @@ function jumpTo() {
 </script>
 <style scoped lang="less">
 .dashboard-cat {
-    position: absolute;
-    top: 0;
-    left: 7px;
-    right: 7px;
-    bottom: 7px;
 
     .header {
         display: flex;
@@ -120,13 +115,5 @@ function jumpTo() {
         padding: 7px 0;
     }
 
-    .container {
-        position: absolute;
-        top: 43px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: auto;
-    }
 }
 </style>

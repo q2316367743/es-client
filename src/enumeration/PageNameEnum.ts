@@ -18,6 +18,8 @@ enum PageNameEnum {
 
     DASHBOARD_CAT = '/dashboard/cat',
 
+    DASHBOARD_ANALYSIS = '/dashboard/analysis',
+
     SETTING = "/setting",
 
     SETTING_GLOBAL = "/setting/global",
