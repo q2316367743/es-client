@@ -42,7 +42,7 @@
                 _cat
             </a-menu-item>
             <a-menu-item :key="PageNameEnum.DASHBOARD_ANALYSIS">
-                分析器
+                分析
             </a-menu-item>
         </a-sub-menu>
         <a-sub-menu :key="PageNameEnum.SETTING">

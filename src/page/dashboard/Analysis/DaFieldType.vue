@@ -27,7 +27,8 @@
                     <a-input v-model="config.text" allow-clear placeholder="请输入要分析的字符串"/>
                 </a-form-item>
                 <a-form-item>
-                    <a-button type="primary" @click="exec()">开始分析</a-button>
+                    <a-button type="primary" @click="exec()" :disabled="disabled">开始分析</a-button>
+                    <a-button type="text" @click="jumpTo()" :disabled="disabled">跳转到高级查询</a-button>
                 </a-form-item>
             </a-form>
             <a-table :data="tokens" :pagination="false">
@@ -49,6 +50,11 @@ import Field from "@/view/Field";
 import {Token} from "@/components/es/domain/Analyze";
 import MessageUtil from "@/utils/MessageUtil";
 import DocumentApi from "@/components/es/api/DocumentApi";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {useRouter} from "vue-router";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
+const router = useRouter();
 
 const config = ref({
     index: "",
@@ -60,24 +66,14 @@ const tokens = ref<Array<Token>>(new Array<Token>());
 const loading = ref(false);
 
 const indices = computed(() => useIndexStore().indices);
+const disabled = computed(() => config.value.index === '' || config.value.field === '')
+
 watch(() => config.value.index, index => {
     fields.value = useIndexStore().field(index);
     config.value.field = "";
 });
 
 function exec() {
-    if (config.value.index.trim() === '') {
-        MessageUtil.warning("请选择索引");
-        return;
-    }
-    if (config.value.field.trim() === '') {
-        MessageUtil.warning("请选择字段");
-        return;
-    }
-    if (config.value.text.trim() === '') {
-        MessageUtil.warning("请输入要分析的字符串");
-        return;
-    }
     tokens.value = [];
     loading.value = true;
     DocumentApi(config.value.index)
@@ -85,6 +81,18 @@ function exec() {
         .then(rsp => tokens.value = rsp.tokens)
         .catch(e => MessageUtil.error("执行失败", e))
         .finally(() => loading.value = false);
+}
+
+function jumpTo() {
+    useSeniorSearchStore().loadEvent({
+        method: 'POST',
+        link: `/${config.value.index}/_analyze`,
+        body: `{
+    "field": "${config.value.field}",
+    "text": "${config.value.text}"
+}`
+    }, false);
+    router.push(PageNameEnum.SENIOR_SEARCH);
 }
 
 </script>

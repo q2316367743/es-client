@@ -45,7 +45,7 @@ const router = createRouter({
             path: 'cat',
             component: () => import('@/page/dashboard/Cat/index.vue')
         }, {
-            name: '分析器',
+            name: '分析',
             path: 'analysis',
             component: () => import('@/page/dashboard/Analysis/index.vue')
         }]
