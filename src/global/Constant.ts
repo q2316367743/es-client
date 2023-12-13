@@ -24,9 +24,6 @@ export default {
     }, {
         name: 'Github',
         url: 'https://github.com/q2316367743/es-client'
-    }, {
-        name: 'GitLink',
-        url: 'https://www.gitlink.org.cn/m17762618644/es-client'
     }] as Repository[],
     // 分发平台
     distributes: {

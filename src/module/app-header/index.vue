@@ -76,6 +76,7 @@
                 <template #content>
                     <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
                     <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
+                    <a-doption value="gitee">代码仓库</a-doption>
                     <a-doption value="about">关于</a-doption>
                 </template>
             </a-dropdown>
@@ -173,6 +174,9 @@ function versionCommand(command: any) {
             break;
         case 'log':
             router.push(PageNameEnum.MORE_UPDATE)
+            break;
+        case 'gitee':
+            utools.shellOpenExternal(Constant.repositories[0].url)
             break;
         case 'update':
             alert('检查更新')

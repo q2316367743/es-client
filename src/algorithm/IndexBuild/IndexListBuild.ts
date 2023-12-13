@@ -53,7 +53,8 @@ export default async function Builder(): Promise<ClusterInfo> {
             doc_count: prettyDataUnit(docs),
             original_doc_count: docs,
             state: state,
-            shards: cluster_indices[key].shards,
+            // 可能存在关闭的索引
+            shards: cluster_indices[key] ? cluster_indices[key].shards : {},
         });
     }
     const nodes: Record<string, ClusterNode> = {};
