@@ -153,10 +153,12 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 MessageUtil.error('格式化失败', e);
             }
         },
-        loadEvent(event: SeniorSearchJumpEvent) {
-            router.push(PageNameEnum.SENIOR_SEARCH).then(() => console.log('高级搜索跳转'));
+        loadEvent(event: SeniorSearchJumpEvent, jump: boolean = true) {
+            if (jump) {
+                router.push(PageNameEnum.SENIOR_SEARCH).then(() => console.log('高级搜索跳转'));
+            }
             this.body = this.body +
-                '\n\n' +
+                (this.body.trim() === '' ? '' : '\n\n') +
                 `${event.method} ${event.link}` +  (!event.body ? '' : ('\n' + event.body));
         },
         saveHistory() {

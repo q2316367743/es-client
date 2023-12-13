@@ -35,8 +35,7 @@ export async function cat(url: string): Promise<Table> {
         if (header === 'index') {
             // 索引增加排序
             column.sortable = {
-                sortDirections: ['ascend', 'descend'],
-                defaultSortOrder: 'ascend'
+                sortDirections: ['ascend', 'descend']
             }
         }
         columns.push(column);
@@ -95,7 +94,8 @@ interface Url {
 // /_cat/snapshots/{repository}
 // /_cat/templates
 
-const urls = ['allocation', 'shards', 'master', 'nodes', 'tasks', 'indices', 'segments', 'count', 'recovery',
+const urls = ['allocation', 'shards', 'shards/{index}', 'master', 'nodes', 'tasks', 'indices', 'indices/{index}',
+    'segments', 'segments/{index}', 'count', 'count/{index}', 'recovery', 'recovery/{index}',
     'health', 'pending_tasks', 'aliases', 'thread_pool', 'plugins', 'fielddata', 'nodeattrs', 'repositories', 'templates'];
 
 export const tabs: Array<Url> = urls.map(e => ({title: e, key: `/_cat/${e}?v`}));
