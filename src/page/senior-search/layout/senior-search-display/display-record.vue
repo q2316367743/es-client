@@ -101,7 +101,7 @@ function load(record: SeniorSearchRecord) {
         link: record.link,
         method: record.method,
         body: record.body
-    })
+    }, false);
 }
 
 const clear = () => {

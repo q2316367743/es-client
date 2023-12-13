@@ -28,6 +28,10 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {showJson} from "@/utils/DialogUtil";
+import {useRouter} from "vue-router";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
+const router = useRouter();
 
 const current = computed(() => useBaseSearchStore().current);
 
@@ -44,7 +48,8 @@ function jumpToSeniorSearch() {
                 QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders),
                 null,
                 4)
-        });
+        }, false);
+        router.push(PageNameEnum.SENIOR_SEARCH);
     } catch (e) {
         MessageUtil.error('条件构造错误', e);
     }

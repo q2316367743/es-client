@@ -333,7 +333,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
         /**
          * 跳转到高级查询
          */
-        jumpToSeniorSearch() {
+        jumpToSeniorSearch(callback: () => void) {
             if (this.type === '') {
                 return;
             }
@@ -342,7 +342,8 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 link: `/${this.name}/_search`,
                 method: 'POST',
                 body: JSON.stringify(this.conditionBuild(), null, 4)
-            })
+            }, false);
+            callback();
         },
         /**
          * 以插入的方式跳转到高级查询

@@ -104,6 +104,7 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import IndexView from "@/view/index/IndexView";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import {indexReindex} from "@/page/home/components/IndexReindex";
+import PageNameEnum from "@/enumeration/PageNameEnum";
 
 export default defineComponent({
     name: 'index-item',
@@ -233,7 +234,8 @@ export default defineComponent({
                     link: `/${this.index.name}/_search`,
                     method: 'POST',
                     body: getDefaultDocumentSearchQueryStr()
-                })
+                }, false);
+                this.$router.push(PageNameEnum.SENIOR_SEARCH);
             }
         }
     }

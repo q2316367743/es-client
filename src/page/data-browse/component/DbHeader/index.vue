@@ -91,6 +91,10 @@ import ArrayUtil from "@/utils/ArrayUtil";
 import DataBuild from "@/page/data-browse/build/DataBuild";
 import {showDataExportDrawer} from "@/components/DataExport";
 import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
+import {useRouter} from "vue-router";
+import PageNameEnum from "@/enumeration/PageNameEnum";
+
+const router = useRouter();
 
 const index = computed(() => useDataBrowseStore().index);
 const name = computed(() => useDataBrowseStore().name);
@@ -107,7 +111,9 @@ const recordReduce = (deleteRowIndies?: Array<string>) => useDataBrowseStore().r
 const executeQuery = (renderHeader?: boolean) => useDataBrowseStore().executeQuery(renderHeader);
 const openMappingDrawer = () => useDataBrowseStore().openMappingDrawer();
 const jumpToBaseSearch = () => useDataBrowseStore().jumpToBaseSearch();
-const jumpToSeniorSearch = () => useDataBrowseStore().jumpToSeniorSearch();
+const jumpToSeniorSearch = () => {
+    useDataBrowseStore().jumpToSeniorSearch(() => router.push(PageNameEnum.SENIOR_SEARCH));
+}
 const resetColumn = () => useDataBrowseStore().resetColumn();
 const handleChange = (values: any[]) => useDataBrowseStore().handleChange(values);
 
