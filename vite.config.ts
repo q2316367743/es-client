@@ -12,11 +12,11 @@ function _resolve(dir: string) {
 function outDir() {
     switch (process.env.npm_lifecycle_event) {
         case 'build:edge':
-            return 'src-edge/domain-client';
+            return 'src-edge/es-client';
         case 'build:firefox':
-            return 'src-firefox/domain-client';
+            return 'src-firefox/es-client';
         case 'build:vscode':
-            return 'src-vscode/domain-client';
+            return 'src-vscode/es-client';
         default:
             return 'dist';
     }
