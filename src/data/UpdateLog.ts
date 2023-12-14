@@ -2,6 +2,40 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.0',
+        sign: 310,
+        time: '2023-12-14',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: "【插件】引入jsx，弹窗组件更加丝滑"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【插件】优化集群健康值显示，现在显示为进度条的形式"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【数据浏览】优化新增、编辑文档组件，编辑器使用monaco editor，编辑更加舒适"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【概览】优化索引新增组件，现在会校验索引为是否正确"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【仪表盘】新增cat页面，快速查看集群信息，并且将数据以表格形式展示吗，更加直观"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【仪表盘】新增分析页面，快速对索引中指定字段查询中对于指定文本的分词情况"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【概览】新增reindex API，快速进行索引迁移"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【插件】electron新增自动更新"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【插件】修复存在关闭的索引，无法初始化的问题"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善"
+    },
+    {
         version: '3.0.7',
         sign: 307,
         time: '2023-12-04',

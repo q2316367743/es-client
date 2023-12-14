@@ -89,7 +89,7 @@ export function showDataExportDrawer(config: ConditionExportEvent) {
             {isScroll(instance)}
         </Form>,
         width: "400px",
-        onOpen() {
+        onOk() {
             // 打开
             useLoadingStore().start('开始导出');
             exportData(instance.value)

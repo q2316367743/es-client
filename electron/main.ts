@@ -1,5 +1,5 @@
 // electron-main/index.ts
-import { app, BrowserWindow, dialog } from "electron";
+import { app, BrowserWindow, dialog,Notification  } from "electron";
 import path from "path";
 import { autoUpdater } from 'electron-updater'
 
@@ -53,26 +53,47 @@ function checkUpdate(){
     //设置要检测更新的路径
     if(process.platform == 'darwin'){
         autoUpdater.setFeedURL({
-            url: 'https://es-client.esion.xyz/electron/darwin'
+            url: 'https://es-client.esion.xyz/electron/darwin',
+            provider: "generic"
         })
 
     }else{
         autoUpdater.setFeedURL({
-            url: 'https://es-client.esion.xyz/electron/win32'
+            url: 'https://es-client.esion.xyz/electron/win32',
+            provider: "generic"
         })
     }
 
     //检测更新
-    autoUpdater.checkForUpdates()
+    autoUpdater.checkForUpdates().then(() => console.log("check update success"))
+    const isAllowed = Notification.isSupported();
 
     //监听'error'事件
     autoUpdater.on('error', (err: Error) => {
-        console.log(err)
+        if (isAllowed) {
+            const options = {
+                title: '更新提示',
+                body: '自动更新检查失败，' + err,
+                silent: true, // 系统默认的通知声音
+                icon: '', // 通知图标
+            }
+            const notification = new Notification(options);
+            notification.show();
+        }
     })
 
     //监听'update-available'事件，发现有新版本时触发
     autoUpdater.on('update-available', () => {
-        console.log('found new version')
+        if (isAllowed) {
+            const options = {
+                title: '更新提示',
+                body: '发现新版本，正在下载更新',
+                silent: true, // 系统默认的通知声音
+                icon: '', // 通知图标
+            }
+            const notification = new Notification(options);
+            notification.show();
+        }
     })
 
     //默认会自动下载新版本，如果不想自动下载，设置autoUpdater.autoDownload = false

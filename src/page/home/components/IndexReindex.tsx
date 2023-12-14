@@ -25,7 +25,8 @@ export function indexReindex(index: string) {
     });
 
     let modalReturn = Modal.open({
-        title: `索引【${index}】迁移`,
+        // TODO: 此处bete
+        title: `索引【${index}】迁移（beta）`,
         content: () => <>
             <div style="margin-bottom: 7px;">
                 如果 Mapping 中字段已经定义就不能修改其字段的类型等属性了，同时也不能改变分片的数量，

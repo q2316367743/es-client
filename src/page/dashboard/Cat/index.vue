@@ -43,6 +43,7 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import useIndexStore from "@/store/IndexStore";
+import {statistics} from "@/global/BeanFactory";
 
 const size = useWindowSize();
 const router = useRouter();
@@ -105,6 +106,7 @@ function jumpTo() {
     }, false);
 }
 
+statistics.access("功能统计", "仪表盘-_cat");
 </script>
 <style scoped lang="less">
 .dashboard-cat {
