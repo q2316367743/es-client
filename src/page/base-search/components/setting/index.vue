@@ -17,9 +17,7 @@
                 </a-select>
             </a-form-item>
             <a-form-item label="默认查询参数">
-                <codemirror v-model.trim="setting.defaultParams" placeholder="请在这里输入默认查询参数"
-                            :style="{ height: '200px',width: '568px' }" :autofocus="true"
-                            :indent-with-tab="true" :tabSize="4" :extensions="extensions"/>
+                <monaco-editor v-model.trim="setting.defaultParams" height="200px" language="json"/>
                 <template #help>
                     此处需要一个JSON字符串，可以覆盖下面的参数
                 </template>
@@ -56,20 +54,18 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {Codemirror} from 'vue-codemirror';
-import {json} from '@codemirror/lang-json';
 import {mapState} from "pinia";
 import {getDefaultBaseSearchSetting, useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
+import MonacoEditor from "@/components/monaco-editor/index.vue";
 
 export default defineComponent({
     name: 'base-search-setting',
-    components: {Codemirror},
+    components: {MonacoEditor},
     data: () => ({
         ViewTypeEnum,
         visible: false,
-        extensions: [json()] as Array<any>,
         setting: getDefaultBaseSearchSetting()
     }),
     computed: {

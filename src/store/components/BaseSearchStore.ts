@@ -60,17 +60,9 @@ export const useBaseSearchStore = defineStore('base-search', {
         setCurrentIndex(index: string) {
             this.current.index = index;
             if (index.length > 0) {
-                this.fields = [
-                    {
-                        name: '_id',
-                        dataIndex: '_id',
-                        type: 'string',
-                        label: '_id'
-                    },
-                    ...useIndexStore().field(index).sort((a, b) => {
-                        return a.name.localeCompare(b.name, "zh-CN");
-                    })
-                ];
+                this.fields = useIndexStore().field(index).sort((a, b) => {
+                    return a.name.localeCompare(b.name, "zh-CN");
+                });
                 this.current.page = 1;
                 this.current.size = useGlobalSettingStore().pageSize;
                 return;
@@ -78,12 +70,7 @@ export const useBaseSearchStore = defineStore('base-search', {
             if (index === '') {
                 this.clear();
             }
-            this.fields = [{
-                name: '_id',
-                dataIndex: '_id',
-                type: 'string',
-                label: '_id'
-            }]
+            this.fields = []
         },
         setCurrentCondition(conditions: Array<BaseQuery>) {
             this.current.conditions = conditions;

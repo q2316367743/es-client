@@ -3,12 +3,16 @@ import store from "@/store";
 import AppInstance from './App.vue';
 import i18n from '@/i18n';
 import router from "@/plugins/router";
-
+// monaco editor
+import * as monaco from "monaco-editor";
+import language from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/language";
+import configuration
+    from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/configuration";
+import provider from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/provider";
+import foldingRange from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/foldingRange";
 // 额外引入图标库
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
-// 引入VXETable
-
 // 引入样式
 import '@/less/theme.less';
 import '@/less/main.less';
@@ -16,8 +20,6 @@ import '@/less/post.css';
 import '@/less/customer.less';
 import '@/components/JsonTree/index.less';
 import '@arco-design/web-vue/dist/arco.css';
-import 'vxe-table/lib/style.css'
-
 // @ts-ignore
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 // @ts-ignore
@@ -61,60 +63,7 @@ window.addEventListener('message', event => {
     }
 });
 
-import XEUtils from 'xe-utils'
-import {VXETable, Column, Icon, Tooltip, VxeTable, Menu} from 'vxe-table'
-import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
-import * as monaco from "monaco-editor";
-import language from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/language";
-import configuration
-    from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/configuration";
-import provider from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/provider";
-import foldingRange from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/foldingRange";
 
-// 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
-VXETable.setup({
-    i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
-})
-function useTable (app: App) {
-    // 表格功能
-    app
-    // .use(Filter)
-    // .use(Edit)
-    .use(Menu)
-    // .use(Export)
-    // .use(Keyboard)
-    // .use(Validator)
-
-    // 可选组件
-    app.use(Icon)
-        .use(Column)
-        // .use(Colgroup)
-        // .use(Grid)
-        .use(Tooltip)
-        // .use(Toolbar)
-        // .use(Pager)
-        // .use(Form)
-        // .use(FormItem)
-        // .use(FormGather)
-        // .use(Checkbox)
-        // .use(CheckboxGroup)
-        // .use(Radio)
-        // .use(RadioGroup)
-        // .use(RadioButton)
-        // .use(Switch)
-        // .use(Input)
-        // .use(Select)
-        // .use(Optgroup)
-        // .use(Option)
-        // .use(Textarea)
-        // .use(Button)
-        // .use(Modal)
-        // .use(List)
-        // .use(Pulldown)
-
-        // 安装表格
-        .use(VxeTable)
-}
 // 插件
 createApp(AppInstance)
     .use(ArcoVue)
@@ -122,6 +71,5 @@ createApp(AppInstance)
     .use(i18n)
     .use(ArcoVueIcon)
     .use(router)
-    .use(useTable)
     .mount('#app');
 
