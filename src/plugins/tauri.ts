@@ -10,7 +10,7 @@ let instance = {}
 
 let preloadWrap = {};
 
-if (Constant.mode === PluginModeEnum.DESKTOP) {
+if (Constant.mode === PluginModeEnum.TAURI) {
     instance = {
         copyText(text: string) {
             writeText(text).then(() => console.log("复制文本"));

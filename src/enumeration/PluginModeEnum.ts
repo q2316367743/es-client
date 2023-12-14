@@ -1,6 +1,8 @@
 enum PluginModeEnum {
 
-    DESKTOP = 'desktop',
+    TAURI = 'tauri',
+
+    ELECTRON = 'electron',
 
     BROWSER = 'browser',
 
