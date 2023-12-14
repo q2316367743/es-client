@@ -83,6 +83,7 @@
         "@vitejs/plugin-vue-jsx": "^3.1.0",
         "electron": "^26.2.2",
         "electron-builder": "^24.6.4",
+        "electron-updater": "^6.1.7",
         "typescript": "^4.9.4",
         "utools-api-types": "^3.0.0",
         "vite": "^4.0.3",
@@ -151,11 +152,19 @@
             "shortcutName": "es-client",
             "deleteAppDataOnUninstall": false,
             "runAfterFinish": true,
-            "menuCategory": false
+            "menuCategory": false,
+            "language": "2052",
+            "perMachine": true
         },
         "releaseInfo": {
             "releaseNotes": ""
-        }
+        },
+        "publish": [
+            {
+                "provider": "generic",
+                "url": "https://es-client.esion.xyz/electron/"
+            }
+        ]
     },
     "electronDownload": {
         "mirror": "https://npm.taobao.org/mirrors/electron/"
