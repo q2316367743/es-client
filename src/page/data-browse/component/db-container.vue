@@ -1,44 +1,47 @@
 <template>
     <div class="content-table">
-        <div ref="tableRef" :style="{height: height + 'px'}"></div>
-        <a-result v-if="emptyText !== ''" :title="emptyText" style="position:absolute;top: 0;left: 0;"/>
+        <vxe-table ref="tableRef" :data="records" :height="height" :column-config="columnConfig" :row-config="rowConfig"
+                   :empty-text="emptyText" :loading="loading" :menu-config="menuConfig"
+                   @checkbox-all="selectAllChangeEvent" @checkbox-change="selectChangeEvent"
+                   @menu-click="contextMenuClickEvent">
+            <vxe-column type="checkbox" width="60"></vxe-column>
+            <vxe-column type="expand" width="80" title="详细">
+                <template #content="{ row, rowIndex }">
+                    <div class="expand-wrapper">
+                        <json-view :data="row"/>
+                    </div>
+                </template>
+            </vxe-column>
+            <vxe-column v-for="column in showColumns" :key="column.title" :field="column.dataIndex"
+                        :title="column.title" :fixed="column.title === '_id' ? 'left' : null"
+                        :width="Math.max(column.title.length * 14, 80)" show-overflow="tooltip"/>
+        </vxe-table>
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref, shallowRef, watch} from "vue";
+import {computed, onMounted, ref} from "vue";
 import useUrlStore from "@/store/UrlStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import {
+    VxeTableEvents,
+    VxeTableInstance,
+    VxeTablePropTypes
+} from 'vxe-table';
 import {useWindowSize} from "@vueuse/core";
-import {ColumnDefine, ListTable} from '@visactor/vtable';
-
-import type {ListTableConstructorOptions} from "@visactor/vtable/es/ts-types";
-import {TableViewColumnData} from "@/algorithm/jsonToTable";
-import {utools} from "@/plugins/utools";
 import MessageUtil from "@/utils/MessageUtil";
-import {showJson} from "@/utils/DialogUtil";
+import {utools} from "@/plugins/utools";
+import JsonView from "@/components/JsonView/index.vue";
 
 const size = useWindowSize();
 
-const option: ListTableConstructorOptions = {
-    records: useDataBrowseStore().records,
-    columns: useDataBrowseStore().showColumns.map(transfer),
-    widthMode: 'standard',
-    menu: {
-        contextMenuItems: [{
-            menuKey: 'copy-one',
-            text: "复制单元格内容"
-        }, {
-            menuKey: 'copy-line',
-            text: '复制当前行'
-        }, {
-            menuKey: 'show-source',
-            text: '查看源数据'
-        }],
-    },
+const columnConfig: VxeTablePropTypes.ColumnConfig = {
+    resizable: true,
+};
+const rowConfig: VxeTablePropTypes.RowConfig = {
+    keyField: '_id'
 };
 
-const tableRef = ref<HTMLDivElement | null>(null);
-const tableInstance = shallowRef<ListTable | null>(null);
+const tableRef = ref<VxeTableInstance | null>(null);
 
 const height = computed(() => size.height.value - 40 - 20 - 26 - 35)
 const emptyText = computed(() => {
@@ -48,60 +51,107 @@ const emptyText = computed(() => {
     if (!useDataBrowseStore().index) {
         return '请在右上角选择索引'
     }
-    if (useDataBrowseStore().records.length == 0) {
-        return '什么也没有';
-    }
-    return '';
+    return '什么也没有';
 });
+const records = computed(() => useDataBrowseStore().records);
+const showColumns = computed(() => useDataBrowseStore().showColumns);
 const loading = computed(() => useDataBrowseStore().loading);
 
 onMounted(() => {
     const $table = tableRef.value
     if ($table) {
-        // 创建 VTable 实例
-        tableInstance.value = new ListTable($table, option);
-        tableInstance.value.on('dropdown_menu_click', (args) => {
-            console.log(args);
-            const row = useDataBrowseStore().records[args.row - 1];
-            switch (args.menuKey) {
-                case 'copy-one':
-                    utools.copyText(row[`${args.field}`]);
-                    MessageUtil.success("已成功复制到剪切板");
-                    break;
-                case 'copy-line':
-                    utools.copyText(JSON.stringify(row['_source'], null, 4));
-                    MessageUtil.success("已成功复制到剪切板");
-                    break;
-                case 'show-source':
-                    showJson('源数据', row['_source']);
-                    break;
-            }
-        })
+        $table.setCheckboxRow(useDataBrowseStore().selectedKeys, true);
     }
-});
+})
 
-
-watch(() => useDataBrowseStore().showColumns, showColumns => {
-    if (tableInstance.value) {
-        tableInstance.value.updateColumns(showColumns.map(transfer));
-    }
-});
-
-watch(() => useDataBrowseStore().records, records => {
-    if (tableInstance.value) {
-        tableInstance.value.setRecords(records)
-    }
-});
-
-function transfer(e: TableViewColumnData): ColumnDefine {
-    return {
-        field: e.dataIndex,
-        title: e.title,
-        width: 'auto',
-        cellType: 'text'
+const selectAllChangeEvent: VxeTableEvents.CheckboxAll = () => {
+    const $table = tableRef.value
+    if ($table) {
+        const records = $table.getCheckboxRecords()
+        useDataBrowseStore().updateSelectKeys(records)
     }
 }
 
+const selectChangeEvent: VxeTableEvents.CheckboxChange = () => {
+    const $table = tableRef.value
+    if ($table) {
+        const records = $table.getCheckboxRecords()
+        useDataBrowseStore().updateSelectKeys(records)
+    }
+}
+
+const menuConfig: VxeTablePropTypes.MenuConfig = {
+    header: {
+        options: [
+            [
+                {
+                    code: 'filter',
+                    name: '筛选',
+                    visible: false,
+                    disabled: false,
+                    children: [
+                        {code: 'clearFilter', name: '清除筛选', visible: true, disabled: false},
+                        {code: 'filterSelect', name: '按所选单元格的值筛选', visible: true, disabled: false}
+                    ]
+                },
+                {
+                    code: 'sort',
+                    name: '排序',
+                    visible: false,
+                    disabled: false,
+                    children: [
+                        {code: 'clearSort', name: '清除排序', visible: true, disabled: false},
+                        {code: 'sortAsc', name: '升序', visible: true, disabled: false},
+                        {code: 'sortDesc', name: '倒序', visible: true, disabled: false}
+                    ]
+                },
+            ]
+        ]
+    },
+    body: {
+        options: [
+            [
+                {code: 'copy', name: '复制', prefixIcon: 'vxe-icon-copy', visible: true},
+                {code: 'copy-row', name: '复制当前行', prefixIcon: 'vxe-icon-copy', visible: true},
+            ],
+            [
+                {code: 'expand', name: '展开/收起当前行', visible: true},
+                {code: 'select', name: '选中/取消当前行', visible: true}
+            ]
+        ]
+    },
+};
+
+const contextMenuClickEvent: VxeTableEvents.MenuClick = ({menu, row, column}) => {
+    const $table = tableRef.value
+    switch (menu.code) {
+        case 'copy':
+            // 示例
+            if (row && column) {
+                utools.copyText(row[column.field])
+                MessageUtil.info("已复制到剪贴板！")
+            }
+            break
+        case 'copy-row':
+            if (row) {
+                utools.copyText(JSON.stringify(row))
+                MessageUtil.info("已复制到剪贴板！")
+            }
+            break;
+        case 'expand':
+            if ($table) {
+                $table.toggleRowExpand(row)
+            }
+            break;
+        case 'select':
+            if ($table) {
+                $table.toggleCheckboxRow(row)
+            }
+            break
+        default:
+            MessageUtil.info(`点击了 ${menu.name} 选项`)
+    }
+}
 </script>
 <style scoped>
 
