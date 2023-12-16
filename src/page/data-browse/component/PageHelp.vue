@@ -46,18 +46,24 @@ import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
 export default defineComponent({
     name: 'page-help',
+    data: () => ({
+        page: useDataBrowseStore().query.page,
+        size: useDataBrowseStore().query.size
+    }),
     computed: {
-        ...mapState(useDataBrowseStore, ['page', 'size', 'total'])
+        ...mapState(useDataBrowseStore, ['total'])
     },
     methods: {
         update() {
             useDataBrowseStore().executeQuery(false);
         },
         updatePage(page: number) {
-            useDataBrowseStore().updatePage(page);
+            this.page = page;
+            useDataBrowseStore().query.page = page;
         },
         updateSize(size: number) {
-            useDataBrowseStore().updateSize(size);
+            this.size = size;
+            useDataBrowseStore().query.size = size;
         },
         toFirst() {
             if (this.page === 1) {

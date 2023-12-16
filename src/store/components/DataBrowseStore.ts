@@ -9,7 +9,7 @@ import Optional from "@/utils/Optional";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 // 组件
 import DocumentApi from "@/components/es/api/DocumentApi";
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {DocumentSearchQuery, getDefaultDocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 // 其他
 import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
 import {useIndexManageEvent} from "@/global/BeanFactory";
@@ -18,6 +18,7 @@ import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import IndexView from "@/view/index/IndexView";
 import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
+import {DocumentConditionGenerator} from "@/page/data-browse/domain/DocumentCondition";
 
 export interface IndexInfo {
     name: string,
@@ -30,14 +31,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
         // 状态
         loading: false,
         // 分页条件
-        page: 1,
-        size: useGlobalSettingStore().getPageSize,
         total: 1,
-        // 查询条件
-        must: '',
-        should: '',
-        mustNot: '',
-        orderBy: '',
         // 当前的索引，别名是此处未空
         index: undefined as IndexView | undefined,
         // 当前查询的索引的名字，可能是索引，也可能是别名；
@@ -52,13 +46,16 @@ export const useDataBrowseStore = defineStore('data-browser', {
         records: new Array<any>(),
         allowUpdate: true,
 
+        // 实际的查询条件
+        query: new DocumentConditionGenerator(1, useGlobalSettingStore().getPageSize),
+
 
         checkItems: new Array<string>(),
         selectedKeys: new Array<any>()
     }),
     actions: {
         getCondition(): DocumentSearchQuery {
-            return ConditionBuild(this.must, this.should, this.mustNot, this.orderBy, this.page, this.size)
+            return this.query.buildSearchQuery();
         },
         /**
          * 执行查询
@@ -71,7 +68,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                     return;
                 }
                 this.loading = true;
-                DocumentApi(this.name)._search(this.getCondition())
+                DocumentApi(this.name)._search(this.query.buildSearchQuery())
                     .then(result => {
                         this.result = result;
                         let {columns, records, total} = jsonToTable(result);
@@ -102,34 +99,11 @@ export const useDataBrowseStore = defineStore('data-browser', {
             this.name = data.name;
             this.type = data.type;
             this.index = data.index;
-            this.page = 1;
-            this.size = useGlobalSettingStore().getPageSize;
-            this.must = '';
-            this.should = '';
-            this.mustNot = '';
             return this.executeQuery();
         },
 
         // ----------------------------------------- 数据更新 -----------------------------------------
 
-        updatePage(page: number) {
-            this.page = page;
-        },
-        updateSize(size: number) {
-            this.size = size;
-        },
-        updateMust(must: string) {
-            this.must = must;
-        },
-        updateMustNot(mustNot: string) {
-            this.mustNot = mustNot;
-        },
-        updateShould(should: string) {
-            this.should = should;
-        },
-        updateOrderBy(orderBy: string) {
-            this.orderBy = orderBy;
-        },
 
         updateSelectKeys(items: any[]) {
             this.selectedKeys = items;
@@ -294,11 +268,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
             }
             useIndexManageEvent.emit(this.index.name);
         },
-        conditionBuild() {
-            return ConditionBuild(
-                this.must, this.should, this.mustNot, this.orderBy,
-                this.page, this.size);
-        },
 
         // ----------------------------------------- 跳转查询 -----------------------------------------
 
@@ -313,7 +282,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
             let orders = new Array<BaseOrder>();
             // 填充数据
             let count = 1;
-            let condition = this.conditionBuild();
+            let condition = this.query.buildSearchQuery();
             // 排序
             for (let key in condition.sort) {
                 orders.push({
@@ -341,7 +310,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
             useSeniorSearchStore().loadEvent({
                 link: `/${this.name}/_search`,
                 method: 'POST',
-                body: JSON.stringify(this.conditionBuild(), null, 4)
+                body: JSON.stringify(this.query.buildSearchQuery(), null, 4)
             }, false);
             callback();
         },
