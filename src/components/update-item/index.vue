@@ -38,11 +38,18 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {Log, LogItemEnum} from "@/view/Data";
+import {Tag, TypographyParagraph, Tooltip, Link} from "@arco-design/web-vue";
 
 export default defineComponent({
     name: 'update-item',
     props: {
         log: Object as PropType<Log>
+    },
+    components: {
+        "a-tag": Tag,
+        "a-typography-paragraph": TypographyParagraph,
+        "a-tooltip": Tooltip,
+        "a-link": Link
     },
     methods: {
         renderTag(value: number): { name: string, color: string } {

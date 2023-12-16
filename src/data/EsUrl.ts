@@ -15,6 +15,7 @@ export const signs = ['/', '/_cluster/settings', '/_cat/allocation?v', '/_cat/sh
 
 // URL正则匹配
 export const URL_REGEX = /^\s*(HEAD|head|GET|get|POST|post|PUT|put|DELETE|delete)\s+(.+)\s*/;
+// JSON格式正则匹配
 export const JSON_REGEX = /^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/;
 export const COMMENT_REGEX = /^\s*\/\/.*/;
 export const BLANK_REGEX = /^\s*$/;

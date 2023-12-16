@@ -53,18 +53,3 @@ export {highlight};
 export const statistics = new Statistics();
 statistics.init();
 statistics.open()
-
-export async function initData(): Promise<void> {
-    await Promise.all([
-        useUrlStore().init(),
-        // 历史记录
-        useBaseSearchHistoryStore().init(),
-        useSeniorSearchHistoryStore().init(),
-        // 设置
-        useGlobalSettingStore().init(),
-        useEditorSettingStore().init(),
-        useBaseSearchSettingStore().init(),
-        useBackupSettingStore().init()
-    ]);
-    return Promise.resolve();
-}

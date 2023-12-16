@@ -6,6 +6,7 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {utools} from "@/plugins/utools";
+import {JSON_REGEX} from "@/data/EsUrl";
 
 interface Response<T> {
     /** The request URL. */
@@ -68,10 +69,18 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
         });
     }
     try {
-        return Promise.resolve({
-            ...result,
-            data: jsonParse(result.data),
-        });
+        if (JSON_REGEX.test(result.data)) {
+            // 是个JSON
+            return Promise.resolve({
+                ...result,
+                data: jsonParse(result.data),
+            });
+        }else {
+            return Promise.resolve({
+                ...result,
+                data: result.data as T,
+            });
+        }
     } catch (e) {
         MessageUtil.error("JSON解析失败", e);
         try{

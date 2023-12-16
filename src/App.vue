@@ -1,25 +1,23 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <a-config-provider size="medium" global>
-        <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
-            <!-- 顶部菜单栏 -->
-            <app-header/>
-            <!-- 主页面 -->
-            <a-layout id="main">
-                <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
-                    <app-sider />
-                </a-layout-sider>
-                <!-- 内容-->
-                <a-layout-content>
-                    <a-spin :loading="loading" :tip="text">
-                        <router-view/>
-                    </a-spin>
-                </a-layout-content>
-            </a-layout>
+    <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
+        <!-- 顶部菜单栏 -->
+        <app-header/>
+        <!-- 主页面 -->
+        <a-layout id="main">
+            <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
+                <app-sider/>
+            </a-layout-sider>
+            <!-- 内容-->
+            <a-layout-content>
+                <a-spin :loading="loading" :tip="text">
+                    <router-view/>
+                </a-spin>
+            </a-layout-content>
         </a-layout>
-        <!-- 索引管理 -->
-        <index-manage/>
-    </a-config-provider>
+    </a-layout>
+    <!-- 索引管理 -->
+    <index-manage/>
 </template>
 
 <script lang="ts" setup>
@@ -28,16 +26,19 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import useUrlStore from "@/store/UrlStore";
+import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
+import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
+import useEditorSettingStore from "@/store/setting/EditorSettingStore";
+import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
+import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
 // 引入框架
-import {computed, defineAsyncComponent, ref} from 'vue';
+import {computed, defineAsyncComponent} from 'vue';
 import {useRouter} from "vue-router";
-// 模块
 // 枚举
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 常量
 import Constant from '@/global/Constant'
-import {initData} from "@/global/BeanFactory";
 // 工具类
 import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
@@ -57,6 +58,21 @@ const jsonTheme = computed(() => useGlobalSettingStore().jsonTheme);
 const collapsed = computed(() => useGlobalStore().collapsed);
 const loading = computed(() => useLoadingStore().loading);
 const text = computed(() => useLoadingStore().text);
+
+async function initData(): Promise<void> {
+    await Promise.all([
+        useUrlStore().init(),
+        // 历史记录
+        useBaseSearchHistoryStore().init(),
+        useSeniorSearchHistoryStore().init(),
+        // 设置
+        useGlobalSettingStore().init(),
+        useEditorSettingStore().init(),
+        useBaseSearchSettingStore().init(),
+        useBackupSettingStore().init()
+    ]);
+    return Promise.resolve();
+}
 
 // 初始化数据
 initData().then(() => {

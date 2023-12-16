@@ -1,6 +1,7 @@
 import MessageUtil from '@/utils/MessageUtil';
 import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
+import {JSON_REGEX} from "@/data/EsUrl";
 
 // 模拟utools声明
 
@@ -47,13 +48,25 @@ export const utools = {
          * @param value 键值
          */
         setItem<T>(key: string, value: T): void {
-            localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : (value + ''));
+            localStorage.setItem(key, JSON.stringify({value}));
         },
         /**
          * 获取键名对应的值
          */
-        getItem(key: string): string | null {
-            return localStorage.getItem(key);
+        getItem(key: string): any | null {
+            const str = localStorage.getItem(key);
+            if (!str) {
+                return null;
+            }
+            if (JSON_REGEX.test(str)) {
+                const target = JSON.parse(str);
+                if (target.value) {
+                    return target.value;
+                }
+            }
+            // 数据是错的，直接删掉
+            localStorage.removeItem(key);
+            return null;
         },
         /**
          * 删除键值对(删除文档)

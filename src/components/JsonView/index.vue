@@ -12,6 +12,7 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import {jsonFormat} from "@/algorithm/jsonFormat";
 import MessageUtil from "@/utils/MessageUtil";
+import {JSON_REGEX} from "@/data/EsUrl";
 
 export default defineComponent({
     name: 'json-view',
@@ -48,7 +49,7 @@ export default defineComponent({
             let value = '';
             let needPretty = true;
             if (typeof data === 'string') {
-                if (/^\s*(\{[\s\S]*\}|\[[\s\S]*\])\s*$/.test(data)) {
+                if (JSON_REGEX.test(data)) {
                     try {
                         value = jsonFormat(data)
                     }catch (e) {
