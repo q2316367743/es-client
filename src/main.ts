@@ -72,3 +72,4 @@ createApp(AppInstance)
     .use(ArcoVueIcon)
     .use(router)
     .mount('#app');
+

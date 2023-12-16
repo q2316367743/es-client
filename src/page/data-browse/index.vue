@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import DbCondition from "@/page/data-browse/component/db-condition.vue";
 import DbHeader from "@/page/data-browse/component/DbHeader/index.vue";
-import DbContainer from "@/page/data-browse/component/DbContainer/index.vue";
+import DbContainer from "@/page/data-browse/component/db-container.vue";
 import {statistics} from "@/global/BeanFactory";
 
 
