@@ -22,10 +22,7 @@ export function buildOption():ListTableConstructorOptions{
         },
         allowFrozenColCount: 5,
         frozenColCount: 1,
-        showFrozenIcon: true,
-        hover:{
-            highlightMode:'row'
-        }
+        showFrozenIcon: true
     };
 }
 
