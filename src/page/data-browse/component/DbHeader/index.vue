@@ -93,6 +93,7 @@ import {showDataExportDrawer} from "@/components/DataExport";
 import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import {buildSearchQuery} from "@/page/data-browse/domain/DocumentCondition";
 
 const router = useRouter();
 
@@ -166,7 +167,7 @@ function openExportDialog() {
     showDataExportDrawer({
         name: useDataBrowseStore().name,
         index: useDataBrowseStore().name,
-        search: useDataBrowseStore().getCondition()
+        search: buildSearchQuery()
     })
 }
 

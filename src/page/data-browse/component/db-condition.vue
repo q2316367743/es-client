@@ -5,19 +5,18 @@
                 <a-split :default-size="0.5">
                     <template #first>
                         <div class="condition-item">
-                            <div :class="must === '' ? 'disable' : ''" class="key">MUST</div>
-                            <a-input type="text" v-model="must" class="input" @keydown.enter="executeQuery()"
-                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"/>
+                            <div :class="mustStr === '' ? 'disable' : ''" class="key">MUST</div>
+                            <a-input type="text" v-model="mustStr" class="input" @keydown.enter="executeQuery()"
+                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"
+                                     @clear="clear()"/>
                         </div>
                     </template>
                     <template #second>
                         <div class="condition-item">
-                            <div :class="should === '' ? 'disable' : ''" class="key">SHOULD</div>
-                            <a-input type="text" v-model="should" class="input" @keydown.enter="executeQuery()"
-                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"/>
-                            <div class="clear" v-show="should !== ''" @click="clear('should')">
-                                <icon-close-circle/>
-                            </div>
+                            <div :class="shouldStr === '' ? 'disable' : ''" class="key">SHOULD</div>
+                            <a-input type="text" v-model="shouldStr" class="input" @keydown.enter="executeQuery()"
+                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"
+                                     @clear="clear()"/>
                         </div>
                     </template>
                 </a-split>
@@ -26,19 +25,18 @@
                 <a-split :default-size="0.5">
                     <template #first>
                         <div class="condition-item">
-                            <div :class="mustNot === '' ? 'disable' : ''" class="key">MUST_NOT</div>
-                            <a-input type="text" v-model="mustNot" class="input" @keydown.enter="executeQuery()"
-                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"/>
-                            <div class="clear" v-show="mustNot !== ''" @click="clear('mustNot')">
-                                <icon-close-circle/>
-                            </div>
+                            <div :class="mustNotStr === '' ? 'disable' : ''" class="key">MUST_NOT</div>
+                            <a-input type="text" v-model="mustNotStr" class="input" @keydown.enter="executeQuery()"
+                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"
+                                     @clear="clear()"/>
                         </div>
                     </template>
                     <template #second>
                         <div class="condition-item">
-                            <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
-                            <a-input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery()"
-                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"/>
+                            <div :class="orderByStr === '' ? 'disable' : ''" class="key">ORDER</div>
+                            <a-input type="text" v-model="orderByStr" class="input" @keydown.enter="executeQuery()"
+                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"
+                                     @clear="clear()"/>
                         </div>
                     </template>
                 </a-split>
@@ -47,36 +45,15 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ref, watch} from "vue";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import {useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
+import {nextTick} from "vue";
 
-const must = ref(useDataBrowseStore().query.mustStr);
-const should = ref(useDataBrowseStore().query.shouldStr);
-const mustNot = ref(useDataBrowseStore().query.mustNotStr);
-const orderBy = ref(useDataBrowseStore().query.orderByStr);
-
-watch(() => must.value, value => useDataBrowseStore().query.setMustStr(value));
-watch(() => should.value, value => useDataBrowseStore().query.setMustNotStr(value));
-watch(() => mustNot.value, value => useDataBrowseStore().query.setShouldStr(value));
-watch(() => orderBy.value, value => useDataBrowseStore().query.setOrderByStr(value));
+const {mustStr, shouldStr, mustNotStr, orderByStr} = useDbConditionState()
 
 const executeQuery = () => useDataBrowseStore().executeQuery(false);
-const clear = (value: 'must' | 'should' | 'mustNot' | 'orderBy') => {
-    switch (value) {
-        case "must":
-            must.value = '';
-            break;
-        case "should":
-            should.value = '';
-            break;
-        case "mustNot":
-            mustNot.value = '';
-            break;
-        case "orderBy":
-            orderBy.value = '';
-            break;
-    }
-    useDataBrowseStore().executeQuery(false);
+const clear = () => {
+    nextTick(() => useDataBrowseStore().executeQuery(false));
 }
 
 

@@ -1,49 +1,17 @@
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {SortConditionType} from "@/components/es/domain/DocumentSearchQuery";
+import {ConditionItem, SortItem} from "@/page/data-browse/domain/DbConditionItem";
 
-/**
- * 构造查询条件
- *
- * must、should、mustNot，条件支持：[=],[!=],[>],[>=],[<],[<=]；[,]分割；链接符号支持：[and],[or]
- * orderBy：[asc],[desc]，[,]分割
- *
- * @param must    must条件
- * @param should  should条件
- * @param mustNot must_not条件
- * @param orderBy 排序
- * @param page    第几页
- * @param size    每页大小
- */
-export default function ConditionBuild(must: string, should: string, mustNot: string, orderBy: string, page: number, size: number): DocumentSearchQuery {
-    let condition = {
-        from: (page - 1) * size,
-        size: size,
-        sort: {},
-        query: {
-            bool: {
-                must: [],
-                must_not: [],
-                should: []
-            }
-        }
-    };
-    // 条件构造
-    whereBuild(must, should, mustNot, condition);
-    // 排序构造
-    orderByBuild(orderBy, condition);
-    // 返回结果集
-    return condition;
-}
 
 /**
  * 排序构造
  * [asc],[desc]，[,]分割
  *
  * @param orderBy 排序语句
- * @param condition 条件
  */
-function orderByBuild(orderBy: string, condition: any) {
+export function orderByBuild(orderBy: string): Array<SortItem> {
+    const condition = new Array<SortItem>();
     if (!orderBy || orderBy === '') {
-        return;
+        return condition;
     }
     // 根据[,]分割
     let items = orderBy.split(',');
@@ -57,116 +25,78 @@ function orderByBuild(orderBy: string, condition: any) {
             continue;
         }
         if (temps.length == 2) {
-            condition.sort[temps[0].trim()] = {
-                order: temps[1].trim()
-            }
+            condition.push({
+                field: temps[0].trim(),
+                type: temps[1].trim() as SortConditionType
+            })
         } else {
-            condition.sort[temps[0].trim()] = {
-                order: 'asc'
-            }
+            condition.push({
+                field: temps[0].trim(),
+                type: 'asc'
+            })
         }
     }
+    return condition;
 }
 
-/**
- * where语句构造
- *
- * 条件支持：[=],[!=],[>],[>=],[<],[<=]
- * 链接符号支持：[and],[or]
- *
- * @param must must条件
- * @param should should
- * @param mustNot mustNot
- * @param condition 查询条件
- */
-function whereBuild(must: string, should: string, mustNot: string, condition: any) {
-    if (must) {
-        templateBuild(must, condition.query.bool.must)
-    }
-    if (should) {
-        templateBuild(should, condition.query.bool.should)
-    }
-    if (mustNot) {
-        templateBuild(mustNot, condition.query.bool.must_not)
-    }
-}
 
 const CONDITION = new Set<string>(['>', '<', '=']);
 
-function templateBuild(template: string, condition: Array<any>): void {
+/**
+ * 条件模板构造器
+ * @param template 模板
+ * @return 条件
+ */
+export function templateBuild(template: string): Array<ConditionItem> {
+    const condition = new Array<ConditionItem>()
+
     let items = template.split(',');
     for (let item of items) {
         // 去除空格
         item = item.trim();
+        if (!item || item === '') {
+            continue;
+        }
         // 每一项：[key]{条件}[value]([and|or] [key]{条件}[value])
         let models = parseCondition(item);
-        if (models.length === 3) {
-            let model = models[1];
-            if (model === '=') {
-                // term
-                let term = {} as any;
-                term[models[0]] = models[2];
-                condition.push({
-                    term
-                });
-            } else if (model === 'match') {
-                // term
-                let match = {} as any;
-                match[models[0]] = models[2];
-                condition.push({
-                    match
-                });
-            } else {
-                let range = {} as any;
-                if (model === '>') {
-                    range[models[0]] = {
-                        gt: models[2]
-                    };
-                } else if (model === '<') {
-                    range[models[0]] = {
-                        lt: models[2]
-                    };
-                } else if (model === '>=') {
-                    range[models[0]] = {
-                        gte: models[2]
-                    };
-                } else if (model === '<=') {
-                    range[models[0]] = {
-                        lte: models[2]
-                    };
-                }
-                condition.push({
-                    range
-                })
-            }
-        } else if (models.length === 7) {
-            let range = {} as any;
-            range[models[0]] = {}
-            let model1 = models[1];
-            let model2 = models[5];
-            if (model1 === '>') {
-                range[models[0]]['gt'] = models[2];
-            } else if (model1 === '<') {
-                range[models[0]]['lt'] = models[2];
-            } else if (model1 === '>=') {
-                range[models[0]]['gte'] = models[2];
-            } else if (model1 === '<=') {
-                range[models[0]]['lte'] = models[2];
-            }
-            if (model2 === '>') {
-                range[models[0]]['gt'] = models[6];
-            } else if (model2 === '<') {
-                range[models[0]]['lt'] = models[6];
-            } else if (model2 === '>=') {
-                range[models[0]]['gte'] = models[6];
-            } else if (model2 === '<=') {
-                range[models[0]]['lte'] = models[6];
-            }
+        // 最基本的 key [=|match|>=|>|<|<= value];
+        let model = models[1];
+        if (model === '=') {
             condition.push({
-                range
-            })
+                field: models[0],
+                type: 'term',
+                value: models[2]
+            });
+        } else if (model === 'match') {
+            // term
+            let match = {} as any;
+            match[models[0]] = models[2];
+            condition.push({
+                field: models[0],
+                type: 'match',
+                value: models[2]
+            });
+        } else {
+
+            const range: ConditionItem = {
+                field: models[0],
+                type: 'range',
+                value: models[2]
+            };
+
+            if (model === '>') {
+                range.expand = 'gt';
+            } else if (model === '<') {
+                range.expand = 'lt';
+            } else if (model === '>=') {
+                range.expand = 'gte';
+            } else if (model === '<=') {
+                range.expand = 'lte';
+            }
+            condition.push(range)
         }
     }
+    return condition;
 }
 
 function parseCondition(condition: string): string[] {

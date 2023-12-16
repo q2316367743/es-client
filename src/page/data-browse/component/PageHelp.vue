@@ -38,105 +38,103 @@
         </a-button>
     </a-button-group>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
+<script lang="ts" setup>
+import {computed} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {mapState} from "pinia";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import {useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
 
-export default defineComponent({
-    name: 'page-help',
-    data: () => ({
-        page: useDataBrowseStore().query.page,
-        size: useDataBrowseStore().query.size
-    }),
-    computed: {
-        ...mapState(useDataBrowseStore, ['total'])
-    },
-    methods: {
-        update() {
-            useDataBrowseStore().executeQuery(false);
-        },
-        updatePage(page: number) {
-            this.page = page;
-            useDataBrowseStore().query.page = page;
-        },
-        updateSize(size: number) {
-            this.size = size;
-            useDataBrowseStore().query.size = size;
-        },
-        toFirst() {
-            if (this.page === 1) {
-                return;
-            }
-            this.updatePage(1);
-            this.update();
-        },
-        prePage() {
-            if (this.page === 1) {
-                return;
-            }
-            this.updatePage(this.page - 1);
-            this.update();
-        },
-        pageSizeChange(command: any) {
-            this.pageSizeChangeExec(command, this.update, (page, size) => {
-                this.updatePage(page);
-                this.updateSize(size);
-            })
-        },
-        nextPage() {
-            if (this.page * this.size > this.total) {
-                return;
-            }
-            this.updatePage(this.page + 1);
-            this.update();
-        },
-        toLast() {
-            this.updatePage(Math.ceil(this.total / this.size));
-            this.update();
-        },
-        pageSizeChangeExec(command: string, executeQuery: () => void, callback: (page: number, size: number) => void) {
-            switch (command) {
-                case "1":
-                    callback(1, 10);
-                    executeQuery();
-                    break;
-                case "2":
-                    callback(1, 100);
-                    executeQuery();
-                    break;
-                case "3":
-                    callback(1, 250);
-                    executeQuery();
-                    break;
-                case "4":
-                    callback(1, 500);
-                    executeQuery();
-                    break;
-                case "5":
-                    callback(1, 1000);
-                    executeQuery();
-                    break;
-                case "6":
-                    MessageBoxUtil.prompt('请输入自定义分页大小', '自定义分页', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        inputPattern: /\d+/,
-                        inputErrorMessage: '请输入正确的数字',
-                        inputValue: this.size + ''
-                    })
-                        .then((value) => {
-                            callback(1, parseInt(value));
-                            executeQuery();
-                        })
-                        .catch(() => {
-                        });
-                    break
-            }
-        }
+const page = useDbConditionState().page;
+const size = useDbConditionState().size;
+const total = computed(() => useDataBrowseStore().total);
+
+function update() {
+    useDataBrowseStore().executeQuery(false);
+}
+
+function updatePage(value: number) {
+    page.value = value;
+}
+
+function updateSize(value: number) {
+    size.value = value;
+}
+
+function toFirst() {
+    if (page.value === 1) {
+        return;
     }
-});
+    updatePage(1);
+    update();
+}
+
+function prePage() {
+    if (page.value === 1) {
+        return;
+    }
+    updatePage(page.value - 1);
+    update();
+}
+
+function pageSizeChange(command: any) {
+    pageSizeChangeExec(command, update, (p, s) => {
+        updatePage(p);
+        updateSize(s);
+    })
+}
+
+function nextPage() {
+    if (page.value * size.value > total.value) {
+        return;
+    }
+    updatePage(page.value + 1);
+    update();
+}
+
+function toLast() {
+    updatePage(Math.ceil(total.value / size.value));
+    update();
+}
+
+function pageSizeChangeExec(command: string, executeQuery: () => void, callback: (page: number, size: number) => void) {
+    switch (command) {
+        case "1":
+            callback(1, 10);
+            executeQuery();
+            break;
+        case "2":
+            callback(1, 100);
+            executeQuery();
+            break;
+        case "3":
+            callback(1, 250);
+            executeQuery();
+            break;
+        case "4":
+            callback(1, 500);
+            executeQuery();
+            break;
+        case "5":
+            callback(1, 1000);
+            executeQuery();
+            break;
+        case "6":
+            MessageBoxUtil.prompt('请输入自定义分页大小', '自定义分页', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /\d+/,
+                inputErrorMessage: '请输入正确的数字',
+                inputValue: size.value + ''
+            })
+                .then((value) => {
+                    callback(1, parseInt(value));
+                    executeQuery();
+                })
+                .catch(() => {
+                });
+            break
+    }
+}
 </script>
 <style scoped>
 .page-help {

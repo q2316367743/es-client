@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 // 存储
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 工具类
@@ -9,16 +8,15 @@ import Optional from "@/utils/Optional";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 // 组件
 import DocumentApi from "@/components/es/api/DocumentApi";
-import {DocumentSearchQuery, getDefaultDocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 // 其他
-import ConditionBuild from "@/page/data-browse/build/ConditionBuild";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import BaseOrder from "@/entity/BaseOrder";
 import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import IndexView from "@/view/index/IndexView";
 import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
-import {DocumentConditionGenerator} from "@/page/data-browse/domain/DocumentCondition";
+import {buildSearchQuery} from "@/page/data-browse/domain/DocumentCondition";
 
 export interface IndexInfo {
     name: string,
@@ -47,16 +45,12 @@ export const useDataBrowseStore = defineStore('data-browser', {
         allowUpdate: true,
 
         // 实际的查询条件
-        query: new DocumentConditionGenerator(1, useGlobalSettingStore().getPageSize),
 
 
         checkItems: new Array<string>(),
         selectedKeys: new Array<any>()
     }),
     actions: {
-        getCondition(): DocumentSearchQuery {
-            return this.query.buildSearchQuery();
-        },
         /**
          * 执行查询
          * @param renderHeader 是否渲染表头，默认渲染
@@ -68,7 +62,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                     return;
                 }
                 this.loading = true;
-                DocumentApi(this.name)._search(this.query.buildSearchQuery())
+                DocumentApi(this.name)._search(buildSearchQuery())
                     .then(result => {
                         this.result = result;
                         let {columns, records, total} = jsonToTable(result);
@@ -282,7 +276,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
             let orders = new Array<BaseOrder>();
             // 填充数据
             let count = 1;
-            let condition = this.query.buildSearchQuery();
+            let condition = buildSearchQuery();
             // 排序
             for (let key in condition.sort) {
                 orders.push({
@@ -310,7 +304,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
             useSeniorSearchStore().loadEvent({
                 link: `/${this.name}/_search`,
                 method: 'POST',
-                body: JSON.stringify(this.query.buildSearchQuery(), null, 4)
+                body: JSON.stringify(buildSearchQuery(), null, 4)
             }, false);
             callback();
         },

@@ -16,13 +16,21 @@ export interface ConditionItem {
     value: string;
 
     /**
-     * 操作符
+     * 类型
      */
     type: ConditionKey;
+
+    /**
+     * 拓展
+     */
+    expand?: ConditionItemExpand;
+
 }
 
 export interface SortItem {
     field: string;
     type: SortConditionType
 }
+
+export type ConditionItemExpand = 'lt' | 'lte' | 'gt' | 'gte';
 

@@ -2,6 +2,7 @@ import {VxeTableEvents, VxeTableInstance} from "vxe-table";
 import MessageUtil from "@/utils/MessageUtil";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {Ref} from "vue";
+import {useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
 
 
 export function buildSelectAllChangeEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.CheckboxAll {
@@ -52,28 +53,27 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                     $table.toggleCheckboxRow(row).then(() => console.log("切换行选择状态成功"))
                 }
                 break;
-            case 'must-clear':{
-                useDataBrowseStore().updateMust("");
+            case 'must-clear': {
+                useDbConditionState().mustStr.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空must条件"));
                 break
             }
-            case 'should-clear':{
-                useDataBrowseStore().updateShould("");
+            case 'should-clear': {
+                useDbConditionState().shouldStr.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空should条件"));
                 break
             }
-            case 'must_not-clear':{
-                useDataBrowseStore().updateMustNot("");
+            case 'must_not-clear': {
+                useDbConditionState().mustNotStr.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空must_not条件"));
                 break
             }
-            case 'sort-clear':{
-                useDataBrowseStore().updateOrderBy("");
+            case 'sort-clear': {
+                useDbConditionState().orderByStr.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空排序条件"));
                 break
             }
             case "must-term": {
-                let condition = useDataBrowseStore().getCondition();
             }
             default:
                 MessageUtil.info(`点击了 ${menu.name} 选项`)
