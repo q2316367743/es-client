@@ -8,7 +8,6 @@ import Optional from "@/utils/Optional";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 // 组件
 import DocumentApi from "@/components/es/api/DocumentApi";
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
 // 其他
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import BaseOrder from "@/entity/BaseOrder";
