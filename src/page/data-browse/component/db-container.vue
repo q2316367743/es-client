@@ -38,7 +38,9 @@ const columnConfig: VxeTablePropTypes.ColumnConfig = {
     resizable: true,
 };
 const rowConfig: VxeTablePropTypes.RowConfig = {
-    keyField: '_id'
+    keyField: '_id',
+    isCurrent: true,
+    isHover: true
 };
 
 const tableRef = ref<VxeTableInstance | null>(null);
