@@ -76,7 +76,7 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
         MessageUtil.error("JSON解析失败", e);
         return Promise.resolve({
             ...result,
-            data: result.data as T,
+            data: JSON.parse(result.data),
         });
     }
 }
