@@ -1,6 +1,6 @@
 import {ConditionItem, SortItem} from "@/page/data-browse/domain/DbConditionItem";
 import {ConditionKey, DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
-import {orderByBuild, templateBuild} from "@/page/data-browse/build/ConditionBuild";
+import {orderByBuild, templateBuild, templateRender} from "@/page/data-browse/build/ConditionBuild";
 import {ref, Ref, watch} from "vue";
 import {createGlobalState} from "@vueuse/core";
 
@@ -35,6 +35,7 @@ function buildSort(): Record<string, any> {
 
 export function buildSearchQuery(): DocumentSearchQuery {
     const {page, size} = useDbConditionState();
+    console.log(must, should, mustNot, orderBy)
     return {
         sort: buildSort(),
         query: {
@@ -45,18 +46,22 @@ export function buildSearchQuery(): DocumentSearchQuery {
             }
         },
         aggs: {},
-        from: page.value,
+        from: (page.value - 1) * size.value,
         size: size.value
     }
 }
 
 export function addCondition(condition: func, field: string, type: ConditionKey, value: string) {
+    const {mustStr, shouldStr, mustNotStr} = useDbConditionState();
     if (condition === 'must') {
         renderCondition(must, field, type, value);
+        mustStr.value = templateRender(must);
     } else if (condition === 'should') {
         renderCondition(should, field, type, value);
+        shouldStr.value = templateRender(should);
     } else if (condition === 'mustNot') {
         renderCondition(mustNot, field, type, value);
+        mustNotStr.value = templateRender(mustNot);
     }
 }
 
@@ -82,7 +87,7 @@ function renderCondition(items: Array<ConditionItem>, field: string, type: Condi
 type func = 'must' | 'mustNot' | 'should';
 
 export const useDbConditionState = createGlobalState(() => {
-    const page = ref(0);
+    const page = ref(1);
     const size = ref(10);
     const mustStr: Ref<string> = ref('');
     const mustNotStr: Ref<string> = ref('');

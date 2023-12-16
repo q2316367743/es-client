@@ -2,7 +2,7 @@ import {VxeTableEvents, VxeTableInstance} from "vxe-table";
 import MessageUtil from "@/utils/MessageUtil";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {Ref} from "vue";
-import {useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
+import {addCondition, useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
 
 
 export function buildSelectAllChangeEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.CheckboxAll {
@@ -74,6 +74,16 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                 break
             }
             case "must-term": {
+                const field = column.field;
+                addCondition('must', field, 'term', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
+                break
+            }
+            case "must-match": {
+                const field = column.field;
+                addCondition('must', field, 'match', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
+                break
             }
             default:
                 MessageUtil.info(`点击了 ${menu.name} 选项`)

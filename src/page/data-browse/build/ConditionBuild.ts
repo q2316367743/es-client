@@ -96,6 +96,7 @@ export function templateBuild(template: string): Array<ConditionItem> {
             condition.push(range)
         }
     }
+    console.log(template, condition)
     return condition;
 }
 
@@ -162,4 +163,14 @@ function parseCondition(condition: string): string[] {
         items.push(item);
     }
     return items;
+}
+
+export function templateRender(items: Array<ConditionItem>): string {
+    return items.map(e => {
+        if (e.type === 'term') {
+            return `${e.field}='${e.value}'`;
+        }else if (e.type === 'match') {
+            return `${e.field} match '${e.value}'`;
+        }
+    }).join(',');
 }
