@@ -10,34 +10,30 @@
         </div>
         <a-modal v-model:visible="condition.dialog" title="请输入terms条件" render-to-body unmount-on-close draggable
                  :mask-closable="false" :footer="false">
-            <codemirror v-model="conditions[condition.index].value" placeholder="请在这里输入查询条件，内容为json字符串。"
-                        :style="{ height: '400px' }" :autofocus="true" :indent-with-tab="true" :tabSize="4"
-                        :extensions="extensions"/>
+            <monaco-editor v-model="conditions[condition.index].value" language="json" height="200px"/>
         </a-modal>
     </div>
 </template>
 <script lang="ts" setup>
-import {markRaw, ref, watch} from "vue";
-import {Codemirror} from 'vue-codemirror';
-import {json} from '@codemirror/lang-json';
+import {ref, watch} from "vue";
 
 import FieldConditionItem from "./item.vue";
 import {BaseQuery} from "@/entity/BaseQuery";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import MonacoEditor from "@/components/monaco-editor/index.vue";
 
 const conditions = ref<Array<BaseQuery>>(new Array<BaseQuery>());
 const condition = ref({
     dialog: false,
     index: 0
 });
-const extensions = markRaw<Array<any>>([json()]);
 
 watch(() => conditions.value,
     value => useBaseSearchStore().setCurrentCondition(value),
     {deep: true})
 
 watch(() => useBaseSearchStore().current.conditions,
-value => conditions.value = value,
+    value => conditions.value = value,
     {deep: true});
 
 conditions.value = useBaseSearchStore().current.conditions;
