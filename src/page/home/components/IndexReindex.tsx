@@ -4,7 +4,7 @@ import {Button, Modal, Select, Option, Switch, Form, FormItem, ModalReturn} from
 import {Ref, ref} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import useLoadingStore from "@/store/LoadingStore";
-import {fetchEs} from "@/plugins/axios";
+import {fetchEs} from "@/plugins/native/axios";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 interface Config {

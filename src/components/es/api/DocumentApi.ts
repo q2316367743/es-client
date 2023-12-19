@@ -1,5 +1,5 @@
 import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
-import {fetchEs} from "@/plugins/axios";
+import {fetchEs} from "@/plugins/native/axios";
 import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 import {Analyze} from "@/components/es/domain/Analyze";
 

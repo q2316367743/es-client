@@ -4,7 +4,7 @@ import * as monaco from "monaco-editor";
 import MessageUtil from "@/utils/MessageUtil";
 import NotificationUtil from "@/utils/NotificationUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import {fetchEs, jsonParse} from "@/plugins/axios";
+import {fetchEs, jsonParse} from "@/plugins/native/axios";
 //算法
 import restFormat from "@/algorithm/restFormat";
 import {jsonFormat} from "@/algorithm/jsonFormat";

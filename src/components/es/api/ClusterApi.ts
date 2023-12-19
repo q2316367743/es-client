@@ -3,7 +3,7 @@ import {Stats} from "@/components/es/domain/Stats";
 import {ClusterState} from "@/components/es/domain/ClusterState";
 import {Info} from "@/components/es/domain/Info";
 import {Nodes} from "@/components/es/domain/Nodes";
-import {fetchEs} from "@/plugins/axios";
+import {fetchEs} from "@/plugins/native/axios";
 
 /**
  * 与集群相关的API

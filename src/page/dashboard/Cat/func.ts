@@ -1,5 +1,5 @@
 import {TableColumnData, TableData} from "@arco-design/web-vue";
-import {fetchEs} from "@/plugins/axios";
+import {fetchEs} from "@/plugins/native/axios";
 
 
 export interface Table {

@@ -11,5 +11,6 @@ interface Window {
     preload: {
         axios: <T>(config: any) => any,
         iconv(content: any, charset: string): string,
+        sendTo(id: number, channel: string, data: any): void;
     }
 }

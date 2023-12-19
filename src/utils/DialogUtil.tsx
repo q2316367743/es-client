@@ -6,6 +6,7 @@ import useLoadingStore from "@/store/LoadingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {utools} from "@/plugins/utools";
 import type {RenderFunction} from 'vue';
+import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 
 /**
  * 对话框参数
@@ -64,6 +65,7 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
         MessageUtil.success("复制成功");
     };
     // 创建对话框
+    createDataBrowserWindow(BrowserWindowType.JSON, html, {});
 
     showDialog(title, () => <div class="hljs" style={{
         fontSize: useGlobalSettingStore().jsonFontSize + 'px',

@@ -61,7 +61,7 @@ import {useUrlEditEvent} from '@/global/BeanFactory';
 import useUrlStore from '@/store/UrlStore';
 import MessageUtil from "@/utils/MessageUtil";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
-import {http} from "@/plugins/axios";
+import {http} from "@/plugins/native/axios";
 import {AxiosRequestConfig} from "axios";
 
 export default defineComponent({

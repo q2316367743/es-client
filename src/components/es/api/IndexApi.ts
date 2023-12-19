@@ -1,6 +1,6 @@
 import {IndexCreate} from "@/components/es/domain/IndexCreate";
 import IndexHealth from "@/components/es/domain/IndexHealth";
-import {fetchEs} from "@/plugins/axios";
+import {fetchEs} from "@/plugins/native/axios";
 
 /**
  * 与索引有关的API

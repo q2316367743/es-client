@@ -1,5 +1,5 @@
 import Constant from '@/global/Constant';
-import {http} from "@/plugins/axios";
+import {http} from "@/plugins/native/axios";
 
 export default class Statistics {
 

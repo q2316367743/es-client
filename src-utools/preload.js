@@ -1,6 +1,7 @@
 const axios = require('./lib/axios');
 const iconv = require('iconv-lite');
 const https = require('https');
+const {ipcRenderer} = require('electron');
 
 "use strict";
 window.preload = Object.create(null);
@@ -19,3 +20,5 @@ const ignoreSSL = axios.create({
 });
 
 window.preload['axios'] = ignoreSSL;
+
+window.preload['sendTo'] = (id, channel, data) => ipcRenderer.sendTo(id, channel, data);
