@@ -31,7 +31,7 @@ export default class Statistics {
      */
     access(operate: string, additional?: string) {
         this._access(operate, additional)
-            .then(() => console.log("执行统计"))
+            .then(() => console.debug("执行统计"))
     }
 
     /**
