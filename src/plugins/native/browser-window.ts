@@ -1,6 +1,5 @@
 import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
-import {utools} from "@/plugins/utools";
 
 export interface BrowserWindowOption {
     title: string;
@@ -59,6 +58,7 @@ function createDataBrowserWindowByUtools(
 
     const browserWindow = utools.createBrowserWindow(file, {
         ...options,
+        // @ts-ignore
         webPreferences: {
             preload: preload
         }
