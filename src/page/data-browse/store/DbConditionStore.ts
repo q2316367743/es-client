@@ -28,6 +28,15 @@ function addOneCondition(items: Array<ConditionItem>, field: string, key: Condit
     return conditionConvert(items);
 }
 
+function removeOneCondition(items: Array<ConditionItem>, field: string, key: ConditionKey): string {
+    const index = items.findIndex(e => e.field === field);
+    if (index > -1) {
+        // 存在此条件，变化
+        items.splice(index, 1);
+    }
+    return conditionConvert(items);
+}
+
 function addOneSort(items: Array<SortItem>, field: string, key: SortConditionType) {
     const index = items.findIndex(e => e.field === field);
     if (index > -1) {
@@ -37,7 +46,15 @@ function addOneSort(items: Array<SortItem>, field: string, key: SortConditionTyp
         items.push({field, type: key})
     }
     return orderByConvert(items);
+}
 
+function removeOneSort(items: Array<SortItem>, field: string) {
+    const index = items.findIndex(e => e.field === field);
+    if (index > -1) {
+        // 存在此条件，变化
+        items.splice(index, 1);
+    }
+    return orderByConvert(items);
 }
 
 
@@ -67,10 +84,30 @@ export const useDbConditionStore = createGlobalState(() => {
         }
     }
 
+    function removeCondition(type: Type, field: string, key: ConditionKey) {
+        switch (type) {
+            case "must":
+                must.value = removeOneCondition(templateBuild(must.value), field, key);
+                break;
+            case "should":
+                should.value = removeOneCondition(templateBuild(should.value), field, key);
+                break;
+            case "mustNot":
+                mustNot.value = removeOneCondition(templateBuild(mustNot.value), field, key);
+                break;
+            default:
+                MessageUtil.warning("条件类型错误");
+                break;
+        }
+    }
+
     function addOrderBy(field: string, type: SortConditionType) {
         orderBy.value = addOneSort(orderByBuild(orderBy.value), field, type);
     }
 
+    function removeOrderBy(field: string) {
+        orderBy.value = removeOneSort(orderByBuild(orderBy.value), field);
+    }
 
     function buildSearchQuery(): DocumentSearchQuery {
         return {
@@ -90,6 +127,6 @@ export const useDbConditionStore = createGlobalState(() => {
 
     return {
         page, size, must, mustNot, should, orderBy,
-        addCondition, addOrderBy, buildSearchQuery
+        addCondition, removeCondition, addOrderBy, removeOrderBy, buildSearchQuery
     };
 })

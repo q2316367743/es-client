@@ -5,21 +5,39 @@ export const menuConfig: VxeTablePropTypes.MenuConfig = {
         options: [
             [
                 {
-                    code: 'filter',
-                    name: '筛选',
-                    visible: false,
+                    code: 'must',
+                    name: 'must',
+                    visible: true,
                     disabled: false,
                     children: [
-                        {code: 'clearFilter', name: '清除筛选', visible: true, disabled: false},
+                        {code: 'must-clear', name: '清除筛选', visible: true, disabled: false},
+                    ]
+                },
+                {
+                    code: 'should',
+                    name: 'should',
+                    visible: true,
+                    disabled: false,
+                    children: [
+                        {code: 'should-clear', name: '清除筛选', visible: true, disabled: false},
+                    ]
+                },
+                {
+                    code: 'must_not',
+                    name: 'must not',
+                    visible: true,
+                    disabled: false,
+                    children: [
+                        {code: 'must_not-clear', name: '清除筛选', visible: true, disabled: false},
                     ]
                 },
                 {
                     code: 'sort',
                     name: '排序',
-                    visible: false,
+                    visible: true,
                     disabled: false,
                     children: [
-                        {code: 'clearSort', name: '清除排序', visible: true, disabled: false},
+                        {code: 'sort-clear', name: '清除排序', visible: true, disabled: false},
                         {code: 'sort-asc', name: '升序', visible: true, disabled: false},
                         {code: 'sort-desc', name: '倒序', visible: true, disabled: false}
                     ]

@@ -28,6 +28,7 @@ export function buildSelectChangeEvent(instance: Ref<VxeTableInstance | null>): 
 export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.MenuClick {
     return ({menu, row, column}) => {
         const $table = instance.value;
+        const field = column.field;
         switch (menu.code) {
             case 'copy':
                 // 示例
@@ -53,69 +54,61 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                 }
                 break;
             case 'must-clear': {
-                useDbConditionStore().must.value = '';
+                useDbConditionStore().removeCondition('must', field, 'term');
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空must条件"));
                 break
             }
             case 'should-clear': {
-                useDbConditionStore().should.value = '';
+                useDbConditionStore().removeCondition('should', field, 'term');
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空should条件"));
                 break
             }
             case 'must_not-clear': {
-                useDbConditionStore().mustNot.value = '';
+                useDbConditionStore().removeCondition('mustNot', field, 'term');
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空must_not条件"));
                 break
             }
             case 'sort-clear': {
-                useDbConditionStore().orderBy.value = '';
+                useDbConditionStore().removeOrderBy(field);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空排序条件"));
                 break
             }
             case "must-term": {
-                const field = column.field;
                 useDbConditionStore().addCondition('must', field, 'term', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
                 break
             }
             case "must-match": {
-                const field = column.field;
                 useDbConditionStore().addCondition('must', field, 'match', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
                 break
             }
             case "should-term": {
-                const field = column.field;
                 useDbConditionStore().addCondition('should', field, 'term', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
                 break
             }
             case "should-match": {
-                const field = column.field;
                 useDbConditionStore().addCondition('should', field, 'match', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
                 break
             }
             case "must_not-term": {
-                const field = column.field;
                 useDbConditionStore().addCondition('mustNot', field, 'term', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
                 break
             }
             case "must_not-match": {
-                const field = column.field;
                 useDbConditionStore().addCondition('mustNot', field, 'match', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
                 break
             }
             case "sort-asc": {
-                const field = column.field;
                 useDbConditionStore().addOrderBy(field, 'asc');
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
                 break
             }
             case "sort-desc": {
-                const field = column.field;
                 useDbConditionStore().addOrderBy(field, 'desc');
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
                 break
