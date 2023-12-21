@@ -31,7 +31,7 @@ export function showJsonDialogByAsync(title: string, data: Promise<any>, options
         .finally(() => useLoadingStore().close());
 }
 
-export function showJson(title: string, json: string | any, options?: DialogOption) {
+export function jsonToHtml(json: string | any): { html: string, original: string } {
     // 原始值
     let value = '';
     // 格式化后的值
@@ -62,8 +62,14 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
     } else {
         html = value;
     }
+    return {html, original: value};
+}
+
+export function showJson(title: string, json: string | any, options?: DialogOption) {
+    // 原始值
+    const {html, original} = jsonToHtml(json);
     const execCopy = () => {
-        utools.copyText(value);
+        utools.copyText(original);
         MessageUtil.success("复制成功");
     };
     // 创建对话框
@@ -81,7 +87,7 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
             }} onClick={() => execCopy()}>复制</Button>
         </div>, options);
     } else {
-        createDataBrowserWindow(BrowserWindowType.JSON, html, value, {
+        createDataBrowserWindow(BrowserWindowType.JSON, html, original, {
             title: title,
         });
 

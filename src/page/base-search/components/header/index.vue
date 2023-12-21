@@ -43,6 +43,7 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useWindowSize} from "@vueuse/core";
 import Sentence from "@/page/base-search/components/header/sentence.vue";
 import {showDataExportDrawer} from "@/components/DataExport";
+import {statistics} from "@/global/BeanFactory";
 
 const size = useWindowSize();
 
@@ -85,11 +86,7 @@ const indices = computed<Array<SelectOptionData>>(() => {
 })
 
 function printHandler() {
-    // useExportEvent.emit({
-    //     name: useBaseSearchStore().current.index,
-    //     index: useBaseSearchStore().current.index,
-    //     search: useBaseSearchStore().getCondition()
-    // })
+    statistics.access("功能统计-基础搜索", "打印");
     showDataExportDrawer({
         name: useBaseSearchStore().current.index,
         index: useBaseSearchStore().current.index,

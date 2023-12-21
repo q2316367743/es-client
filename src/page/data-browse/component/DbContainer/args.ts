@@ -11,7 +11,6 @@ export const menuConfig: VxeTablePropTypes.MenuConfig = {
                     disabled: false,
                     children: [
                         {code: 'clearFilter', name: '清除筛选', visible: true, disabled: false},
-                        {code: 'filterSelect', name: '按所选单元格的值筛选', visible: true, disabled: false}
                     ]
                 },
                 {
@@ -21,8 +20,8 @@ export const menuConfig: VxeTablePropTypes.MenuConfig = {
                     disabled: false,
                     children: [
                         {code: 'clearSort', name: '清除排序', visible: true, disabled: false},
-                        {code: 'sortAsc', name: '升序', visible: true, disabled: false},
-                        {code: 'sortDesc', name: '倒序', visible: true, disabled: false}
+                        {code: 'sort-asc', name: '升序', visible: true, disabled: false},
+                        {code: 'sort-desc', name: '倒序', visible: true, disabled: false}
                     ]
                 },
             ]
