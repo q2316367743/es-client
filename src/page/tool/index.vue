@@ -1,11 +1,11 @@
 <template>
-    <div class="dashboard abs-0">
+    <div class="tool abs-0">
         <router-view />
     </div>
 </template>
 <script lang="ts" setup>
 </script>
 <style scoped>
-.dashboard {
+.tool {
 }
 </style>

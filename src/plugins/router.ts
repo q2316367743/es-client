@@ -25,6 +25,19 @@ const router = createRouter({
         path: '/senior-search',
         component: () => import('@/page/senior-search/index.vue')
     }, {
+        name: '工具',
+        path: PageNameEnum.TOOL,
+        component: () => import('@/page/dashboard/index.vue'),
+        children: [{
+            name: '观察者',
+            path: 'watch',
+            component: () => import('@/page/tool/watch/index.vue')
+        }, {
+            name: 'sql',
+            path: 'sql',
+            component: () => import('@/page/tool/sql/index.vue')
+        }]
+    }, {
         name: '仪表盘',
         path: PageNameEnum.DASHBOARD,
         component: () => import('@/page/dashboard/index.vue'),

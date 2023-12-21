@@ -8,6 +8,13 @@ enum PageNameEnum {
 
     SENIOR_SEARCH = "/senior-search",
 
+    TOOL = "/tool",
+
+    TOOL_WATCH = "/tool/watch",
+
+    TOOL_SQL = "/tool/sql",
+
+
     DASHBOARD = '/dashboard',
 
     DASHBOARD_INFO = '/dashboard/info',

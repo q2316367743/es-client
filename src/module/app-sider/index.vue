@@ -24,6 +24,18 @@
             </template>
             高级搜索
         </a-menu-item>
+        <a-sub-menu :key="PageNameEnum.TOOL">
+            <template #icon>
+                <icon-tool/>
+            </template>
+            <template #title>工具</template>
+            <a-menu-item :key="PageNameEnum.TOOL_WATCH">
+                观察者
+            </a-menu-item>
+            <a-menu-item :key="PageNameEnum.TOOL_SQL">
+                SQL
+            </a-menu-item>
+        </a-sub-menu>
         <a-sub-menu :key="PageNameEnum.DASHBOARD">
             <template #icon>
                 <icon-dashboard/>

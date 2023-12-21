@@ -103,7 +103,7 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
  *
  * @param config 请求配置项
  */
-export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
+export async function httpWrap<T>(config: RequestConfig): Promise<T> {
     const now = new Date().getTime();
     const event = {
         url: '',
@@ -119,26 +119,38 @@ export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
             console.log(config)
         }
         const res = await http<T>(config);
-        useErrorStore().addEvent({
-            ...event,
-            url: res.url,
-            code: res.status,
-            time: new Date().getTime() - now,
-            response: res.data,
-            message: ''
-        })
+        if (config.debug) {
+            useErrorStore().addEvent({
+                ...event,
+                url: res.url,
+                code: res.status,
+                time: new Date().getTime() - now,
+                response: res.data,
+                message: ''
+            })
+        }
         return res.data;
     } catch (e: any) {
-        useErrorStore().addEvent({
-            ...event,
-            url: e.config ? ((e.config.baseURL || '') + (e.config.url || '')) : '',
-            code: e.response ? e.response.status : 0,
-            time: new Date().getTime() - now,
-            response: e.response ? e.response.data : {},
-            message: e.message
-        })
+        if (config.debug) {
+            useErrorStore().addEvent({
+                ...event,
+                url: e.config ? ((e.config.baseURL || '') + (e.config.url || '')) : '',
+                code: e.response ? e.response.status : 0,
+                time: new Date().getTime() - now,
+                response: e.response ? e.response.data : {},
+                message: e.message
+            });
+        }
         throw e;
     }
+}
+
+export interface RequestConfig extends AxiosRequestConfig {
+
+    /**
+     * 是否是调试模式，如果是调试模式，则不会监控
+     */
+    debug?: boolean
 }
 
 /**
@@ -146,7 +158,7 @@ export async function httpWrap<T>(config: AxiosRequestConfig): Promise<T> {
  *
  * @param config
  */
-export async function fetchEs<T>(config: AxiosRequestConfig): Promise<T> {
+export async function fetchEs<T>(config: RequestConfig): Promise<T> {
 
     if (useUrlStore().current.trim() === '' && (!config.url || !config.url.startsWith("http"))) {
         return Promise.reject("请先选择链接！");
