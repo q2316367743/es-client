@@ -88,7 +88,7 @@ const useUrlStore = defineStore('url', {
             }
             await this._sync();
         },
-        async update(id: number, record: Omit<Url, 'id' | 'createTime' | 'updateTime'>) {
+        async update(id: number, record: Partial<Url>) {
             const index = this.urls.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject(`存储【${id}】不存在`);

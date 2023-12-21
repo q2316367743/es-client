@@ -114,16 +114,16 @@
 <script lang="ts" setup>
 import ClusterApi from "@/components/es/api/ClusterApi";
 import {computed, ref, watch} from "vue";
-import {Info} from "@/components/es/domain/Info";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {ClusterHealth} from "@/components/es/domain/ClusterHealth";
 import DashboardCard from "@/page/dashboard/components/DashboardCard.vue";
 import {statistics} from "@/global/BeanFactory";
+import {Overview} from "@/components/es/domain/Overview";
 
 const empty = computed(() => useUrlStore().empty);
 
-const info = ref<Info | null>(null);
+const info = ref<Overview | null>(null);
 const infoLoad = ref(false);
 const clusterHealth = ref<ClusterHealth | null>(null);
 const clusterHealthLoad = ref(false);

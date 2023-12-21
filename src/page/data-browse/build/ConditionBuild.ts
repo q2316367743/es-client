@@ -97,7 +97,6 @@ export function templateBuild(template: string): Array<ConditionItem> {
             condition.push(range)
         }
     }
-    console.log(template, condition)
     return condition;
 }
 

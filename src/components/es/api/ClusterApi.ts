@@ -1,9 +1,10 @@
 import {NodeState} from "@/components/es/domain/NodeState";
 import {Stats} from "@/components/es/domain/Stats";
 import {ClusterState} from "@/components/es/domain/ClusterState";
-import {Info} from "@/components/es/domain/Info";
 import {Nodes} from "@/components/es/domain/Nodes";
 import {fetchEs} from "@/plugins/native/axios";
+import {ClusterHealth} from "@/components/es/domain/ClusterHealth";
+import {Overview} from "@/components/es/domain/Overview";
 
 /**
  * 与集群相关的API
@@ -12,8 +13,8 @@ export default {
     /**
      * 集群基本信息
      */
-    info(): Promise<Info> {
-        return fetchEs<Info>({
+    info(): Promise<Overview> {
+        return fetchEs<Overview>({
             method: 'GET',
             url: '/'
         });
@@ -54,7 +55,7 @@ export default {
             url: '/_nodes/plugins'
         })
     },
-    _cluster_health(): Promise<any> {
+    _cluster_health(): Promise<ClusterHealth> {
         return fetchEs<any>({
             method: 'GET',
             url: '/_cluster/health'
