@@ -1,5 +1,6 @@
 import {SortConditionType} from "@/components/es/domain/DocumentSearchQuery";
 import {ConditionItem, SortItem} from "@/page/data-browse/domain/DbConditionItem";
+import MessageUtil from "@/utils/MessageUtil";
 
 
 /**
@@ -165,12 +166,60 @@ function parseCondition(condition: string): string[] {
     return items;
 }
 
+/**
+ * 将条件字符串转换成数组
+ * @param items 条件
+ */
 export function templateRender(items: Array<ConditionItem>): string {
     return items.map(e => {
         if (e.type === 'term') {
             return `${e.field}='${e.value}'`;
-        }else if (e.type === 'match') {
+        } else if (e.type === 'match') {
             return `${e.field} match '${e.value}'`;
         }
     }).join(',');
+}
+
+/**
+ * 条件渲染
+ * @param items
+ */
+export function conditionRender(items: Array<ConditionItem>): Array<Record<string, any>> {
+    return items.map(item => {
+        const obj: Record<string, any> = {};
+        const con: Record<string, any> = {};
+        con[item.field] = item.value;
+        obj[item.type] = con;
+        return obj;
+    })
+}
+
+export function conditionConvert(items: Array<ConditionItem>): string {
+    return items.map(item => {
+        if (item.type === 'term') {
+            return `${item.field}='${item.value}'`;
+        } else if (item.type === 'match') {
+            return `${item.field} match ${item.value}`;
+        } else if (item.type === 'range') {
+            // TODO: 此处需要处理
+            return `${item.field} ${item.expand} ${item.value}`;
+        } else {
+            MessageUtil.warning("解析异常，条件解析失败")
+            return ""
+        }
+    }).filter(e => e.trim() !== '').join(",")
+}
+
+export function orderByRender(items: Array<SortItem>): Record<string, any> {
+    const obj: Record<string, any> = {}
+    for (let item of items) {
+        obj[item.field] = {
+            order: item.type
+        };
+    }
+    return obj;
+}
+
+export function orderByConvert(items: Array<SortItem>): string {
+    return items.map(item => `${item.field} ${item.type}`).join(",");
 }

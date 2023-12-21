@@ -2,7 +2,7 @@ import {VxeTableEvents, VxeTableInstance} from "vxe-table";
 import MessageUtil from "@/utils/MessageUtil";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {Ref} from "vue";
-import {addCondition, useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
+import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 
 
 export function buildSelectAllChangeEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.CheckboxAll {
@@ -18,7 +18,6 @@ export function buildSelectAllChangeEvent(instance: Ref<VxeTableInstance | null>
 export function buildSelectChangeEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.CheckboxChange {
     return () => {
         const $table = instance.value;
-        console.log("$table", $table)
         if ($table) {
             const records = $table.getCheckboxRecords()
             useDataBrowseStore().updateSelectKeys(records)
@@ -54,34 +53,70 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                 }
                 break;
             case 'must-clear': {
-                useDbConditionState().mustStr.value = '';
+                useDbConditionStore().must.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空must条件"));
                 break
             }
             case 'should-clear': {
-                useDbConditionState().shouldStr.value = '';
+                useDbConditionStore().should.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空should条件"));
                 break
             }
             case 'must_not-clear': {
-                useDbConditionState().mustNotStr.value = '';
+                useDbConditionStore().mustNot.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空must_not条件"));
                 break
             }
             case 'sort-clear': {
-                useDbConditionState().orderByStr.value = '';
+                useDbConditionStore().orderBy.value = '';
                 useDataBrowseStore().executeQuery(false).then(() => console.log("已清空排序条件"));
                 break
             }
             case "must-term": {
                 const field = column.field;
-                addCondition('must', field, 'term', row[field]);
+                useDbConditionStore().addCondition('must', field, 'term', row[field]);
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
                 break
             }
             case "must-match": {
                 const field = column.field;
-                addCondition('must', field, 'match', row[field]);
+                useDbConditionStore().addCondition('must', field, 'match', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
+                break
+            }
+            case "should-term": {
+                const field = column.field;
+                useDbConditionStore().addCondition('should', field, 'term', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
+                break
+            }
+            case "should-match": {
+                const field = column.field;
+                useDbConditionStore().addCondition('should', field, 'match', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
+                break
+            }
+            case "must_not-term": {
+                const field = column.field;
+                useDbConditionStore().addCondition('mustNot', field, 'term', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
+                break
+            }
+            case "must_not-match": {
+                const field = column.field;
+                useDbConditionStore().addCondition('mustNot', field, 'match', row[field]);
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
+                break
+            }
+            case "sort-asc": {
+                const field = column.field;
+                useDbConditionStore().addOrderBy(field, 'asc');
+                useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-term查询"));
+                break
+            }
+            case "sort-desc": {
+                const field = column.field;
+                useDbConditionStore().addOrderBy(field, 'desc');
                 useDataBrowseStore().executeQuery(false).then(() => console.log("执行must-match查询"));
                 break
             }

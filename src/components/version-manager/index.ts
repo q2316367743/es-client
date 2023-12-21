@@ -5,6 +5,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {updateTo3ByUtools, updateTo3ByWeb} from "@/components/version-manager/updateTo3";
 import useLoadingStore from "@/store/LoadingStore";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
+import {statistics} from "@/global/BeanFactory";
 
 export enum VersionStatus {
     // 新用户
@@ -28,11 +29,13 @@ export function versionManager(): VersionStatus {
         setItem(LocalNameEnum.KEY_VERSION, Constant.version);
         MessageUtil.success("欢迎您使用es-client");
         updateTo();
+        statistics.access("版本更新", `新用户使用`);
         return VersionStatus.NEW;
     } else if (version != Constant.version) {
         setItem(LocalNameEnum.KEY_VERSION, Constant.version);
         MessageUtil.success("欢迎您更新到" + Constant.version);
         updateTo();
+        statistics.access("版本更新", `从${version}更新到${Constant.version}`);
         return VersionStatus.UPDATE;
     } else {
         return VersionStatus.NONE;

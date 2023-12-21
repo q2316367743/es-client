@@ -42,11 +42,12 @@
 import {computed} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
-import {useDbConditionState} from "@/page/data-browse/domain/DocumentCondition";
+import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
+import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
 
-const page = useDbConditionState().page;
-const size = useDbConditionState().size;
-const total = computed(() => useDataBrowseStore().total);
+const {page, size} = useDbConditionStore();
+
+const total = computed(() => useDbResultStore().total);
 
 function update() {
     useDataBrowseStore().executeQuery(false);

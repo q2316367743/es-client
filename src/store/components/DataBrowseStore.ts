@@ -1,7 +1,4 @@
 import {defineStore} from "pinia";
-// 存储
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
-import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 工具类
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
@@ -10,12 +7,12 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import DocumentApi from "@/components/es/api/DocumentApi";
 // 其他
 import {useIndexManageEvent} from "@/global/BeanFactory";
-import BaseOrder from "@/entity/BaseOrder";
 import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import IndexView from "@/view/index/IndexView";
-import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
-import {buildSearchQuery} from "@/page/data-browse/domain/DocumentCondition";
+// 存储
+import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
+import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
 
 export interface IndexInfo {
     name: string,
@@ -27,26 +24,15 @@ export const useDataBrowseStore = defineStore('data-browser', {
     state: () => ({
         // 状态
         loading: false,
-        // 分页条件
-        total: 1,
         // 当前的索引，别名是此处未空
         index: undefined as IndexView | undefined,
         // 当前查询的索引的名字，可能是索引，也可能是别名；
         name: '',
-        // 当前查询的类型
+        // 当前查询的类型 'index' | 'alias' | ''
         type: '',
-        // 展示数据
-        columns: new Array<TableViewColumnData>(),
-        // 展示数据
-        showColumns: new Array<TableViewColumnData>(),
-        result: {},
-        records: new Array<any>(),
         allowUpdate: true,
 
-        // 实际的查询条件
-
-
-        checkItems: new Array<string>(),
+        // 选中的记录，此处是记录的全部内容
         selectedKeys: new Array<any>()
     }),
     actions: {
@@ -61,19 +47,13 @@ export const useDataBrowseStore = defineStore('data-browser', {
                     return;
                 }
                 this.loading = true;
-                DocumentApi(this.name)._search(buildSearchQuery())
+                DocumentApi(this.name)._search(useDbConditionStore().buildSearchQuery())
                     .then(result => {
-                        this.result = result;
-                        let {columns, records, total} = jsonToTable(result);
-                        this.columns = columns;
                         if (renderHeader) {
-                            this.showColumns = columns;
                             this.allowUpdate = true;
-                            this.checkItems = columns.map(e => e.dataIndex || '');
                             this.selectedKeys = [];
                         }
-                        this.records = records;
-                        this.total = total;
+                        useDbResultStore().render(result, renderHeader);
                         this.selectedKeys = new Array<any>();
                         resolve();
                     })
@@ -99,6 +79,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
 
 
         updateSelectKeys(items: any[]) {
+            console.log(items)
             this.selectedKeys = items;
         },
 
@@ -262,82 +243,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
             useIndexManageEvent.emit(this.index.name);
         },
 
-        // ----------------------------------------- 跳转查询 -----------------------------------------
-
-        /**
-         * 跳转到基础查询
-         */
-        jumpToBaseSearch() {
-            if (this.type === '') {
-                return;
-            }
-            // 基础数据
-            let orders = new Array<BaseOrder>();
-            // 填充数据
-            let count = 1;
-            let condition = buildSearchQuery();
-            // 排序
-            for (let key in condition.sort) {
-                orders.push({
-                    id: count++,
-                    field: `${key}`,
-                    type: condition.sort[key].order,
-                    isEnable: true
-                });
-            }
-            useBaseSearchStore().loadEvent({
-                execute: true,
-                index: this.name,
-                conditions: [],
-                orders
-            })
-        },
-        /**
-         * 跳转到高级查询
-         */
-        jumpToSeniorSearch(callback: () => void) {
-            if (this.type === '') {
-                return;
-            }
-            // 填充数据
-            useSeniorSearchStore().loadEvent({
-                link: `/${this.name}/_search`,
-                method: 'POST',
-                body: JSON.stringify(buildSearchQuery(), null, 4)
-            }, false);
-            callback();
-        },
-        /**
-         * 以插入的方式跳转到高级查询
-         * @param data
-         */
-        jumpToSeniorSearchByInsert(data: any): Promise<void> {
-            if (!this.index) {
-                return Promise.reject();
-            }
-            useSeniorSearchStore().loadEvent({
-                link: `/${this.index.name}/_doc`,
-                method: 'POST',
-                body: data
-            });
-            return Promise.resolve();
-        },
-        /**
-         * 以更新的方式跳转到高级查询
-         * @param id
-         * @param data
-         */
-        jumpToSeniorSearchByUpdate(id: string, data: any): Promise<void> {
-            if (!this.index) {
-                return Promise.reject();
-            }
-            useSeniorSearchStore().loadEvent({
-                link: `/${this.index.name}/_doc/${id}`,
-                method: 'PUT',
-                body: data
-            });
-            return Promise.resolve();
-        },
 
         loadEvent(index: IndexView) {
             this.indexChange({
@@ -349,23 +254,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
         },
 
         // ----------------------------------------- 筛选 -----------------------------------------
-        /**
-         * 显示的列变更
-         * @param values 新的列
-         */
-        handleChange(values: any[]) {
-            this.checkItems = values;
-            this.showColumns = this.columns.filter(column => values.includes(column.dataIndex));
-            this.allowUpdate = this.showColumns.length === this.columns.length;
-        },
-        /**
-         * 重置列
-         */
-        resetColumn() {
-            this.showColumns = this.columns;
-            this.checkItems = this.showColumns.map(column => column.dataIndex!);
-            this.allowUpdate = true;
-        }
 
     }
 })

@@ -11,10 +11,10 @@
             <db-simple-item :disable="type !== 'index'" tip="新增" @click="recordAdd">
                 <icon-plus/>
             </db-simple-item>
-            <db-simple-item :disable="selectedKeys.length === 0 || type !== 'index'" tip="删除" @click="recordReduce">
+            <db-simple-item :disable="selectedKeys.length === 0" tip="删除" @click="recordReduce">
                 <icon-minus/>
             </db-simple-item>
-            <db-simple-item :disable="selectedKeys.length !== 1 || type !== 'index'"
+            <db-simple-item :disable="selectedKeys.length !== 1"
                             :tip="$t('common.operation.update')"
                             @click="recordEdit">
                 <icon-edit/>
@@ -53,7 +53,7 @@
                                 </a-button>
                             </template>
                             <a-scrollbar style="height: 341px;overflow: auto;width: 250px;">
-                                <a-checkbox-group :model-value="checkItems" @change="handleChange($event)">
+                                <a-checkbox-group :model-value="selectedKeys" @change="setColumn($event)">
                                     <div v-for="column in columns" style="width: 240px;margin: 5px 5px;">
                                         <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
                                     </div>
@@ -93,30 +93,29 @@ import {showDataExportDrawer} from "@/components/DataExport";
 import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
-import {buildSearchQuery} from "@/page/data-browse/domain/DocumentCondition";
+import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
+import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
 
 const router = useRouter();
 
 const index = computed(() => useDataBrowseStore().index);
 const name = computed(() => useDataBrowseStore().name);
-const records = computed(() => useDataBrowseStore().records);
-const columns = computed(() => useDataBrowseStore().columns);
+const records = computed(() => useDbResultStore().records);
+const columns = computed(() => useDbResultStore().columns);
 const type = computed(() => useDataBrowseStore().type);
 const loading = computed(() => useDataBrowseStore().loading);
-const checkItems = computed(() => useDataBrowseStore().checkItems);
 const selectedKeys = computed(() => useDataBrowseStore().selectedKeys);
-const recordMap = computed(() => ArrayUtil.map<any, string, '_id'>(records.value, '_id'));
 const indexName = computed(() => index.value ? index.value.name : '')
 
 const recordReduce = (deleteRowIndies?: Array<string>) => useDataBrowseStore().reduce(deleteRowIndies);
 const executeQuery = (renderHeader?: boolean) => useDataBrowseStore().executeQuery(renderHeader);
 const openMappingDrawer = () => useDataBrowseStore().openMappingDrawer();
-const jumpToBaseSearch = () => useDataBrowseStore().jumpToBaseSearch();
+const jumpToBaseSearch = () => useDbResultStore().jumpToBaseSearch(() => router.push(PageNameEnum.BASE_SEARCH));
 const jumpToSeniorSearch = () => {
-    useDataBrowseStore().jumpToSeniorSearch(() => router.push(PageNameEnum.SENIOR_SEARCH));
+    useDbResultStore().jumpToSeniorSearch(() => router.push(PageNameEnum.SENIOR_SEARCH));
 }
-const resetColumn = () => useDataBrowseStore().resetColumn();
-const handleChange = (values: any[]) => useDataBrowseStore().handleChange(values);
+const resetColumn = () => useDbResultStore().resetColumn();
+const setColumn = (values: any[]) => useDbResultStore().setColumn(values);
 
 function recordEdit(_id?: string) {
     if (!index.value) {
@@ -124,9 +123,10 @@ function recordEdit(_id?: string) {
         return;
     }
     let record;
+    const recordMap = ArrayUtil.map<any, string, '_id'>(records.value, '_id');
     if (selectedKeys.value.length !== 1) {
         if (_id) {
-            record = recordMap.value.get(_id);
+            record = recordMap.get(_id);
             if (!record) {
                 return;
             }
@@ -167,7 +167,7 @@ function openExportDialog() {
     showDataExportDrawer({
         name: useDataBrowseStore().name,
         index: useDataBrowseStore().name,
-        search: buildSearchQuery()
+        search: useDbConditionStore().buildSearchQuery()
     })
 }
 

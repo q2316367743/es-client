@@ -31,6 +31,7 @@ import {
     buildSelectChangeEvent
 } from "@/page/data-browse/component/DbContainer/func";
 import {columnConfig, menuConfig, rowConfig} from "@/page/data-browse/component/DbContainer/args";
+import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
 
 const size = useWindowSize();
 
@@ -47,8 +48,10 @@ const emptyText = computed(() => {
     }
     return '什么也没有';
 });
-const records = computed(() => useDataBrowseStore().records);
-const showColumns = computed(() => useDataBrowseStore().showColumns);
+
+
+const records = computed(() => useDbResultStore().records);
+const showColumns = computed(() => useDbResultStore().showColumns);
 const loading = computed(() => useDataBrowseStore().loading);
 
 onMounted(() => {
