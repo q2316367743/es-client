@@ -47,7 +47,20 @@
         </a-card>
         <a-card style="margin-top: 7px;" title="结果">
             <template #extra>
-                <a-button type="text" :disabled="json.length === 0" @click="execCopy()">复制</a-button>
+                <a-button-group type="dashed">
+                    <a-space>
+                        <a-tooltip content="钉住" v-if="isSupportPin">
+                            <a-button :disabled="json.length === 0" @click="execPin()">
+                                <template #icon><icon-subscribe-add /></template>
+                            </a-button>
+                        </a-tooltip>
+                        <a-tooltip content="复制">
+                            <a-button :disabled="json.length === 0" @click="execCopy()">
+                                <template #icon><icon-copy /></template>
+                            </a-button>
+                        </a-tooltip>
+                    </a-space>
+                </a-button-group>
             </template>
             <pre class="hljs language-java" style="overflow-x: auto;overflow-y: hidden;font-size: 16px;line-height: 24px"
                  v-html="result"/>
@@ -65,6 +78,11 @@ import {fetchEs, jsonParse} from "@/plugins/native/axios";
 import useUrlStore from "@/store/UrlStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {jsonToHtml} from "@/utils/DialogUtil";
+import Constant from "@/global/Constant";
+import PluginModeEnum from "@/enumeration/PluginModeEnum";
+import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
+
+const isSupportPin = Constant.mode === PluginModeEnum.UTOOLS;
 
 const method = ref<Method>('POST');
 const url = ref('');
@@ -90,7 +108,6 @@ const data = computed(() => [
 const percent = computed(() => Math.floor((timer.value - index.value) / timer.value * 100) / 100);
 
 watch(() => run.value, () => showBody.value = false);
-
 
 const {pause, resume, isActive} = useIntervalFn(() => {
     if (!run.value) {
@@ -166,6 +183,16 @@ function execShowBody() {
 function execCopy() {
     utools.copyText(json.value);
     MessageUtil.success("已复制到剪贴板");
+}
+
+function execPin() {
+    if (!isSupportPin) {
+        return;
+    }
+    createDataBrowserWindow(BrowserWindowType.JSON, result.value, json.value, {
+        title: "钉住",
+        alwaysOnTop: true
+    });
 }
 
 </script>

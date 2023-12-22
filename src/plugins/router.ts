@@ -29,7 +29,7 @@ const router = createRouter({
         path: PageNameEnum.TOOL,
         component: () => import('@/page/dashboard/index.vue'),
         children: [{
-            name: '观察者',
+            name: '观察器',
             path: 'watch',
             component: () => import('@/page/tool/watch/index.vue')
         }, {

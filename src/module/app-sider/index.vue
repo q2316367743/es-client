@@ -30,7 +30,7 @@
             </template>
             <template #title>工具</template>
             <a-menu-item :key="PageNameEnum.TOOL_WATCH">
-                观察者
+                观察器
             </a-menu-item>
             <a-menu-item :key="PageNameEnum.TOOL_SQL">
                 SQL
