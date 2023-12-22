@@ -30,8 +30,12 @@ export default class Statistics {
      * @param additional 附加
      */
     access(operate: string, additional?: string) {
-        this._access(operate, additional)
-            .then(() => console.debug("执行统计"))
+        try {
+            this._access(operate, additional)
+                .then(() => console.debug("执行统计"))
+        }catch (e) {
+            console.error(e);
+        }
     }
 
     /**

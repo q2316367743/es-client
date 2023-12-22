@@ -3,6 +3,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {Ref} from "vue";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
+import {statistics} from "@/global/BeanFactory";
 
 
 export function buildSelectAllChangeEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.CheckboxAll {
@@ -29,6 +30,7 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
     return ({menu, row, column}) => {
         const $table = instance.value;
         const field = column.field;
+        statistics.access("功能统计-数据浏览", "使用右键菜单")
         switch (menu.code) {
             case 'copy':
                 // 示例
