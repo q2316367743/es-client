@@ -4,7 +4,8 @@
         "beforeBuildCommand": "pnpm build:tauri:windows",
         "beforeDevCommand": "pnpm dev:tauri",
         "devPath": "http://localhost:5173",
-        "distDir": "../dist"
+        "distDir": "../dist",
+        "withGlobalTauri": true
     },
     "package": {
         "productName": "es-client",
@@ -28,6 +29,9 @@
             },
             "shell": {
                 "open": true
+            },
+            "window": {
+                "create": true
             }
         },
         "bundle": {

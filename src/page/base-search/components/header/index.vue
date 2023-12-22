@@ -19,7 +19,7 @@
                     <icon-info/>
                 </template>
             </a-button>
-            <a-button type="dashed" :disabled="index === ''" @click="printHandler()" title="打印">
+            <a-button type="outline" :disabled="index === ''" @click="printHandler()" title="打印">
                 <template #icon>
                     <icon-printer/>
                 </template>

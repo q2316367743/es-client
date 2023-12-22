@@ -3,7 +3,7 @@ import UpdateLog from '@/data/UpdateLog'
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
 // @ts-ignore
-const mode: PluginModeEnum =  import.meta.env.VITE_MODE;
+const mode: PluginModeEnum = import.meta.env.VITE_MODE;
 
 export default {
     uid: "z1f3vu4k",
@@ -36,5 +36,7 @@ export default {
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog,
     updater: "https://static.esion.xyz/share/es-client/update.json",
-    isSupportPin: mode === PluginModeEnum.UTOOLS || mode === PluginModeEnum.ELECTRON
+    isSupportPin: mode === PluginModeEnum.UTOOLS ||
+        mode === PluginModeEnum.ELECTRON ||
+        mode === PluginModeEnum.TAURI
 }

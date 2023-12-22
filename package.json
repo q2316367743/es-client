@@ -33,9 +33,10 @@
         "build:tauri:linux": "vue-tsc --noEmit && vite build --mode=desktop_linux",
         "build:tauri:macos": "vue-tsc --noEmit && vite build --mode=desktop_macos",
         "build:vscode": "vue-tsc --noEmit && vite build --mode=vscode",
-        "build:tauri": "tauri build",
         "build:electron": "vue-tsc --noEmit && vite build --mode=electron -c config/vite.electron.ts",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "tauri:dev": "tauri dev",
+        "tauri:build": "tauri build"
     },
     "dependencies": {
         "@arco-design/web-vue": "^2.42.1",
