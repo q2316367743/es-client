@@ -17,20 +17,22 @@ import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
 // 插件
 import Statistics from "@/plugins/Statistics";
 import {utools} from "@/plugins/utools";
-import {preload} from "@/plugins/preload";
 import {tauri, tauriPreload} from "@/plugins/tauri";
-import {serverUtools, serverPreload} from "@/plugins/server";
-// 存储
-import useUrlStore from "@/store/UrlStore";
-import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
-import useEditorSettingStore from "@/store/setting/EditorSettingStore";
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
-import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
-import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
+import Constant from "@/global/Constant";
+import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
-window.utools = Object.assign(utools, window.utools, tauri, serverUtools);
-window.preload = Object.assign(preload, window.preload, tauriPreload, serverPreload);
+
+if (Constant.mode === PluginModeEnum.TAURI) {
+    // 目前，只有tauri需要处理
+    // @ts-ignore
+    window.utools = Object.assign(utools, tauri);
+    // @ts-ignore
+    window.preload = tauriPreload;
+}else if (Constant.mode === PluginModeEnum.ELECTRON) {
+    // 大部分还是使用web提供的功能
+    window.utools = Object.assign(utools, window.utools);
+}
+
 
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();

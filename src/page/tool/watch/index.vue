@@ -49,7 +49,7 @@
             <template #extra>
                 <a-button-group type="dashed">
                     <a-space>
-                        <a-tooltip content="钉住" v-if="isSupportPin">
+                        <a-tooltip content="钉住" v-if="Constant.isSupportPin">
                             <a-button :disabled="json.length === 0" @click="execPin()">
                                 <template #icon><icon-subscribe-add /></template>
                             </a-button>
@@ -82,7 +82,6 @@ import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 
-const isSupportPin = Constant.mode === PluginModeEnum.UTOOLS;
 
 const method = ref<Method>('POST');
 const url = ref('');
@@ -186,7 +185,7 @@ function execCopy() {
 }
 
 function execPin() {
-    if (!isSupportPin) {
+    if (!Constant.isSupportPin) {
         return;
     }
     createDataBrowserWindow(BrowserWindowType.JSON, result.value, json.value, {

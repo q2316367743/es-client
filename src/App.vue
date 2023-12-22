@@ -1,6 +1,6 @@
 <template>
     <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <a-layout id="app" :class="Constant.mode === 'desktop' ? 'desktop' : ''">
+    <a-layout id="app">
         <!-- 顶部菜单栏 -->
         <app-header/>
         <!-- 主页面 -->

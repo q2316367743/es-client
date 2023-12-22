@@ -20,7 +20,7 @@
             </template>
         </a-button>
     </a-tooltip>
-    <a-tooltip v-if="isSupportPin" content="钉住" position="bottom">
+    <a-tooltip v-if="Constant.isSupportPin" content="钉住" position="bottom">
         <a-button type="dashed" @click="pin()">
             <template #icon>
                 <icon-subscribed />
@@ -46,7 +46,6 @@ import {statistics} from "@/global/BeanFactory";
 const router = useRouter();
 
 const current = computed(() => useBaseSearchStore().current);
-const isSupportPin = Constant.mode === PluginModeEnum.UTOOLS;
 
 function jumpToSeniorSearch() {
     if (!current.value.index) {
@@ -90,7 +89,7 @@ function showBody() {
 
 function pin() {
     statistics.access("功能统计-基础搜索", "钉住");
-    if (isSupportPin) {
+    if (Constant.isSupportPin) {
         const {html, original} = jsonToHtml(useBaseSearchStore().current.result);
         createDataBrowserWindow(BrowserWindowType.JSON, html, original, {
             title: "查询结果",

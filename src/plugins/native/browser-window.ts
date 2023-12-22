@@ -1,5 +1,7 @@
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
+import Constant from "@/global/Constant";
+import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
 export interface BrowserWindowOption {
     title: string;
@@ -35,6 +37,20 @@ export function createDataBrowserWindow(
     data: string,
     json: string,
     options: Partial<BrowserWindowOption>) {
+
+    if (Constant.mode === PluginModeEnum.UTOOLS) {
+        createDataBrowserWindowByUtools(type, data, json, options);
+    }else if (Constant.mode ===PluginModeEnum.ELECTRON) {
+        createDataBrowserWindowByElectron(type, data, json, options)
+    }
+}
+
+
+export function createDataBrowserWindowByUtools(
+    type: BrowserWindowType,
+    data: string,
+    json: string,
+    options: Partial<BrowserWindowOption>) {
     const file: string = utools.isDev() ? "../public/json.html" : "dist/json.html";
     const preload: string = utools.isDev() ? '../public/electron/preload-json.js' : 'dist/electron/preload-json.js';
 
@@ -46,7 +62,6 @@ export function createDataBrowserWindow(
         }
     }, () => {
         browserWindow.show();
-        // 发送数据
         if (utools.isDev()) {
             browserWindow.webContents.openDevTools();
         }
@@ -58,6 +73,29 @@ export function createDataBrowserWindow(
             json: json
         });
     });
-
 }
 
+
+export function createDataBrowserWindowByElectron(
+    type: BrowserWindowType,
+    data: string,
+    json: string,
+    options: Partial<BrowserWindowOption>) {
+    const file: string = utools.isDev() ? "../public/json.html" : "dist/json.html";
+    const preload: string = utools.isDev() ? '../public/electron/preload-json.js' : 'dist/electron/preload-json.js';
+    utools.createBrowserWindow(file, {
+        ...options,
+        // @ts-ignore
+        webPreferences: {
+            preload: preload
+        },
+        data: {
+            html: data,
+            theme: useGlobalSettingStore().jsonTheme,
+            title: options.title,
+            isDark: useGlobalStore().isDark,
+            json: json
+        },
+        type
+    });
+}

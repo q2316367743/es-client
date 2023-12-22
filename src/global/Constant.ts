@@ -2,6 +2,8 @@ import {Repository} from "@/view/Data";
 import UpdateLog from '@/data/UpdateLog'
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
+// @ts-ignore
+const mode: PluginModeEnum =  import.meta.env.VITE_MODE;
 
 export default {
     uid: "z1f3vu4k",
@@ -11,8 +13,7 @@ export default {
     build: UpdateLog[0].time,
     author: "Esion",
     email: 'm17762618644@163.com',
-    // @ts-ignore
-    mode: import.meta.env.VITE_MODE as PluginModeEnum,
+    mode,
     // @ts-ignore
     feedback: import.meta.env.VITE_FEEDBACK_URL,
     homeUrl: 'https://blog.esion.xyz',
@@ -34,5 +35,6 @@ export default {
     },
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog,
-    updater: "https://static.esion.xyz/share/es-client/update.json"
+    updater: "https://static.esion.xyz/share/es-client/update.json",
+    isSupportPin: mode === PluginModeEnum.UTOOLS || mode === PluginModeEnum.ELECTRON
 }

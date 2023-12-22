@@ -73,7 +73,7 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
         MessageUtil.success("复制成功");
     };
     // 创建对话框
-    if (Constant.mode === PluginModeEnum.BROWSER) {
+    if (Constant.isSupportPin) {
 
         showDialog(title, () => <div class="hljs" style={{
             fontSize: useGlobalSettingStore().jsonFontSize + 'px',
