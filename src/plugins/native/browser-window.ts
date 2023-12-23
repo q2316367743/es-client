@@ -4,6 +4,7 @@ import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import NotificationUtil from "@/utils/NotificationUtil";
 import {WebviewWindow} from "@tauri-apps/api/window";
+import {emit} from "@tauri-apps/api/event";
 import MessageUtil from "@/utils/MessageUtil";
 
 export interface BrowserWindowOption {
@@ -43,11 +44,11 @@ export function createDataBrowserWindow(
 
     if (Constant.mode === PluginModeEnum.UTOOLS) {
         createDataBrowserWindowByUtools(type, data, json, options);
-    }else if (Constant.mode ===PluginModeEnum.ELECTRON) {
+    } else if (Constant.mode === PluginModeEnum.ELECTRON) {
         createDataBrowserWindowByElectron(type, data, json, options)
-    }else if (Constant.mode === PluginModeEnum.TAURI) {
+    } else if (Constant.mode === PluginModeEnum.TAURI) {
         createDataBrowserWindowByTauri(type, data, json, options);
-    }else {
+    } else {
         NotificationUtil.warning("系统异常，未知平台");
     }
 }
@@ -120,20 +121,20 @@ export function createDataBrowserWindowByTauri(
         height: options.height,
         title: options.title,
         theme: useGlobalStore().isDark ? 'dark' : 'light',
-        alwaysOnTop: true
+        alwaysOnTop: true,
     });
     webviewWindow.once('tauri://created', function () {
-        console.log("webview window successfully created")
+        // 发送5次
         setInterval(() => {
-            webviewWindow.emit("data", {
+            emit("data", {
                 html: data,
                 theme: useGlobalSettingStore().jsonTheme,
                 title: options.title,
                 isDark: useGlobalStore().isDark,
                 json: json
-            }).then(() => console.log("消息发送成功"));
-        }, 1000);
-    });
+            }).then(() => console.debug("消息发送成功"));
+        }, 1000, 5);
+    }).then(() => console.debug("窗口已成功创建"));
     webviewWindow.once('tauri://error', function (e) {
         MessageUtil.error("创建webview窗口失败", e);
     });

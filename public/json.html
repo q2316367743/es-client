@@ -116,9 +116,10 @@
         window.preload.receiveMsg(callback)
     } else if (window.__TAURI__) {
         // TODO: 此处有bug
-        window.__TAURI__.window.appWindow.listen("data", ({event, payload}) => {
+        window.__TAURI__.event.once("data", ({event, payload}) => {
             console.log("接收到信息")
             console.log(event, payload);
+            callback(payload);
         });
     }
 
