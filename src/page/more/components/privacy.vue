@@ -58,7 +58,6 @@
 </template>
 <script lang="ts" setup>
 import {ref, watch} from "vue";
-import {utools} from "@/plugins/utools";
 import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";

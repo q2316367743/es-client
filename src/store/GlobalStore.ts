@@ -2,7 +2,6 @@ import {useWindowSize} from "@vueuse/core";
 import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {utools} from "@/plugins/utools";
 
 export enum DarkTypeEnum {
     LIGHT = 1,

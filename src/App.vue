@@ -31,19 +31,17 @@ import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistorySt
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
+import useIndexStore from "@/store/IndexStore";
 // 引入框架
 import {computed, defineAsyncComponent} from 'vue';
 import {useRouter} from "vue-router";
 // 枚举
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-// 常量
-import Constant from '@/global/Constant'
 // 工具类
 import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 import Assert from "@/utils/Assert";
-import useIndexStore from "@/store/IndexStore";
 import {showVersionUpdateDialog} from "@/module/version-update";
 
 const router = useRouter();

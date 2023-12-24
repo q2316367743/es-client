@@ -16,23 +16,13 @@ import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStra
 import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
 // 插件
 import Statistics from "@/plugins/Statistics";
-import {utools} from "@/plugins/utools";
-import {tauri, tauriPreload} from "@/plugins/tauri";
-import Constant from "@/global/Constant";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
+import {instance, preload} from "@/plugins/distribute";
 
-
-if (Constant.mode === PluginModeEnum.TAURI) {
-    // 目前，只有tauri需要处理
-    // @ts-ignore
-    window.utools = Object.assign(utools, tauri);
-    // @ts-ignore
-    window.preload = tauriPreload;
-}else if (Constant.mode === PluginModeEnum.ELECTRON) {
-    // 大部分还是使用web提供的功能
-    window.utools = Object.assign(utools, window.utools);
-}
-
+// 重新注入
+// @ts-ignore
+window.utools = instance
+// @ts-ignore
+window.preload = preload;
 
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();

@@ -4,11 +4,9 @@ import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
 import useLoadingStore from "@/store/LoadingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import {utools} from "@/plugins/utools";
 import type {RenderFunction} from 'vue';
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import Constant from "@/global/Constant";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
 /**
  * 对话框参数
@@ -33,9 +31,9 @@ export function showJsonDialogByAsync(title: string, data: Promise<any>, options
 
 export function jsonToHtml(json: string | any): { html: string, original: string } {
     // 原始值
-    let value = '';
+    let value: string;
     // 格式化后的值
-    let html = "";
+    let html: string;
     let needPretty = true;
     if (typeof json === 'string') {
         if (/^\s*(\{[\s\S]*}|\[[\s\S]*])\s*$/.test(json)) {

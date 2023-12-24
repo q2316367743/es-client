@@ -40,7 +40,7 @@ function isWindows(): boolean {
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
 
-export const utools = {
+export const web = {
     dbStorage: {
         /**
          * 键值对存储，如果键名存在，则更新其对应的值

@@ -28,7 +28,7 @@
         "build:firefox": "vue-tsc --noEmit && vite build --mode=firefox",
         "build:ts": "vue-tsc --noEmit && vite build --mode=tsbrowser",
         "build:utools": "vue-tsc --noEmit && vite build --mode=utools -c config/vite.utools.ts",
-        "build:server": "vue-tsc --noEmit && vite build --mode=server",
+        "build:server": "vue-tsc --noEmit && vite build --mode=server -c config/vite.server.ts",
         "build:tauri:windows": "vue-tsc --noEmit && vite build --mode=desktop_windows",
         "build:tauri:linux": "vue-tsc --noEmit && vite build --mode=desktop_linux",
         "build:tauri:macos": "vue-tsc --noEmit && vite build --mode=desktop_macos",

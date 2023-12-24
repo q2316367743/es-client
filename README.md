@@ -24,7 +24,7 @@
         <img src='https://img.shields.io/badge/windows-v3.1.0-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.1.0-%23787B80' alt="utools"/>
+        <img src='https://img.shields.io/badge/utools-v3.1.0-%23787B80' alt="web"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
@@ -57,7 +57,7 @@
 - [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 - ~~[想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)~~
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
-- [utools](https://www.u.tools/)
+- [web](https://www.u.tools/)
 - ~~[vscode](https://marketplace.visualstudio.com/items?itemName=m17762618644.es-client)~~
 - ~~[IDEA](https://plugins.jetbrains.com/plugin/21804-es-client)（第三方提供：[es-client](https://gitee.com/shenmk/es-client)）~~
 

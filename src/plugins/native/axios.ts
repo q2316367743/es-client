@@ -5,7 +5,6 @@ import JSONBig from 'json-bigint';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {utools} from "@/plugins/utools";
 import {JSON_REGEX} from "@/data/EsUrl";
 
 interface Response<T> {

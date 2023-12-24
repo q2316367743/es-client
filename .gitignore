@@ -29,7 +29,7 @@ pnpm-debug.log*
 # 依赖分析
 /stats.html
 
-#utools
+#web
 /utools
 
 # 想天浏览器
@@ -51,7 +51,7 @@ pnpm-debug.log*
 /src-chrome/dist.pem
 /src-chrome/dist.crx
 
-# utools
+# web
 /src-utools/dist
 
 # electron
