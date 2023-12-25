@@ -1,8 +1,8 @@
 {
     "name": "es-client",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "description": "elasticsearch客户端",
-    "main": "dist-electron/main.js",
+    "main": "main.js",
     "type": "commonjs",
     "author": {
         "name": "Esion",
@@ -24,13 +24,13 @@
         "es-client"
     ],
     "dependencies": {
-        "axios": "^1.6.2",
+        "axios": "^1.6.2"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.5",
         "electron": "^28.1.0",
         "electron-builder": "^24.9.1",
         "electron-updater": "^6.1.7"
-    },
-    "devDependencies": {
-        "@types/node": "^20.10.5"
     },
     "build": {
         "appId": "xyz.esion.es-client",
@@ -41,7 +41,11 @@
             "output": "release/"
         },
         "files": [
-            "./"
+            "main.js",
+            "preload.js",
+            "package.json",
+            "dist/**/*",
+            "node_modules/**/*"
         ],
         "mac": {
             "artifactName": "${productName}_${version}.${ext}",

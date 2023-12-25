@@ -2,6 +2,22 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.1',
+        sign: 311,
+        time: '2023-12-25',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【基础搜索、高级搜索】新增钉住功能，可以将结果创建新的窗口展示，用于多个搜索结果的对比"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【插件】修复部分情况下，json解析错误问题"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【数据浏览】右键能力大加强，右键单元格可以直接新增条件，右键表头可以直接进行筛选"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善"
+    },
+    {
         version: '3.1.0',
         sign: 310,
         time: '2023-12-14',
