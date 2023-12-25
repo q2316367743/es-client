@@ -1,91 +1,98 @@
 package main
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
-	"os"
-	"path"
-
 	"github.com/gin-gonic/gin"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
-type Record struct {
-	_id   string
-	_rev  string
-	value map[string]string
-}
-
 func main() {
-	// _id => record
-	var db map[string]Record
-	path := path.Join(os.Getenv("HOME"), ".es-client", "db.json")
-	content, err := os.ReadFile(path)
-	if err != nil {
-		content = make([]byte, 0)
-	}
-
-	// 初始化数据库
-	error := json.Unmarshal(content, &db)
-	if error != nil {
-		fmt.Println("JSON解析失败")
-	}
 
 	r := gin.Default()
 
-	// 获取一个字典
-	r.GET("/db/get", func(context *gin.Context) {
-		id := context.Params.ByName("_id")
-		if id == nil {
-			context.JSON(500, gin.H{
-				"success": false,
-				"error":   "id is nil",
-			})
-			return
-		}
-		context.JSON(200, gin.H{
-			"success": true,
-			"data":    db[id],
-		})
-	})
-
-	// 保存一个字典
-	r.POST("/db/put", func(context *gin.Context) {
-		var record Record
-		context.BindJSON(&record)
-		db[record._id] = record
-
-		// 保存数据
-		temp, _ := json.Marshal(db)
-		os.WriteFile(path, temp, 0644)
-
-		context.JSON(200, gin.H{
-			"success": true,
-		})
-	})
-
-	// 删除一个字典
-	r.DELETE("/db/delete", func(context *gin.Context) {
-		id := context.Params.ByName("_id")
-		if id == nil {
-			context.JSON(500, gin.H{
-				"success": false,
-				"error":   "id is nil",
-			})
-			return
-		}
-	})
+	// 创建一个HTTP客户端
+	client := &http.Client{}
 
 	// 执行一个http请求
-	r.POST("/preload/http", func(context *gin.Context) {
+	r.POST("/api/preload/fetch", func(context *gin.Context) {
+		// 读取请求体
+		// 读取请求体并解析为map格式
+		var requestBody map[string]interface{}
+		if err := context.ShouldBindJSON(&requestBody); err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"msg":     err.Error(),
+			})
+			return
+		}
 
+		// 将JSON字节数组转换为字符串并返回给客户端
+		request, err := http.NewRequest(
+			requestBody["method"].(string),
+			buildUrl(requestBody["baseURL"].(string), requestBody["url"].(string)),
+			bytes.NewBufferString(requestBody["data"].(string)))
+		if err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"msg":     err.Error(),
+			})
+			return
+		}
+
+		request.Header.Set("Content-Type", "application/json")
+
+		resp, err := client.Do(request)
+
+		if err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"msg":     err.Error(),
+			})
+			return
+		}
+
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+				fmt.Println("关闭响应流失败:", err)
+			}
+		}(resp.Body)
+
+		// 读取响应的内容
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println("读取响应失败:", err)
+			return
+		}
+
+		context.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"msg":     "",
+			"data":    string(body),
+		})
 	})
 
 	// 处理静态资源
-	r.Static("/", "./static")
+	r.Static("/", "./dist")
 
 	// 监听并在 0.0.0.0:8080 上启动服务
 	e := r.Run(":8888")
 	if e != nil {
 		return
+	}
+}
+
+func buildUrl(baseUrl string, url string) string {
+	if strings.HasSuffix(baseUrl, "/") {
+		baseUrl = baseUrl[0 : len(baseUrl)-1]
+	}
+	if strings.HasPrefix(url, "/") {
+		return baseUrl + url
+	} else {
+		return baseUrl + "/" + url
 	}
 }

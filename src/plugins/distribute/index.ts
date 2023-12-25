@@ -2,7 +2,7 @@ import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {web} from "@/plugins/distribute/web";
 import {tauri, tauriPreload} from "@/plugins/distribute/tauri";
-import {server, serverPreload} from "@/plugins/distribute/server";
+import {serverPreload} from "@/plugins/distribute/server";
 
 let utools: any;
 let source: any;
@@ -18,7 +18,7 @@ if (Constant.mode === PluginModeEnum.TAURI) {
     source = window.preload;
 } else if (Constant.mode === PluginModeEnum.SERVER) {
     // 服务器版本需要处理
-    utools = Object.assign(web, server);
+    utools = web;
     source = serverPreload;
 } else if (Constant.mode === PluginModeEnum.UTOOLS) {
     // utools会注入

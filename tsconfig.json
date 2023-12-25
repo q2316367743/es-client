@@ -32,8 +32,11 @@
     ],
     "exclude": [
         "node_modules",
-        "src-edge",
         "electron",
-        "src-firefox"
+        "src-edge",
+        "src-firefox",
+        "src-server",
+        "src-electron",
+        "src-tauri"
     ]
 }
