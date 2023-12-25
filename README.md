@@ -24,7 +24,7 @@
         <img src='https://img.shields.io/badge/windows-v3.1.0-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.1.0-%23787B80' alt="web"/>
+        <img src='https://img.shields.io/badge/utools-v3.1.0-%23787B80' alt="utools"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
