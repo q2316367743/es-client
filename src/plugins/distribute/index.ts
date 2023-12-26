@@ -14,11 +14,20 @@ if (Constant.mode === PluginModeEnum.TAURI) {
     source = tauriPreload;
 } else if (Constant.mode === PluginModeEnum.ELECTRON) {
     // 大部分还是使用web提供的功能
-    utools = Object.assign(web, window.utools);
+    utools = Object.assign(web, window.utools, {
+        getUser() {
+            return {avatar: "", nickname: "客户端用户", type: ""};
+        }
+    });
     source = window.preload;
 } else if (Constant.mode === PluginModeEnum.SERVER) {
     // 服务器版本需要处理
-    utools = web;
+    utools = Object.assign(web, {
+        getUser() {
+            return {avatar: "", nickname: "服务器用户", type: ""};
+        }
+    });
+    ;
     source = serverPreload;
 } else if (Constant.mode === PluginModeEnum.UTOOLS) {
     // utools会注入
