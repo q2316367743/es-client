@@ -24,13 +24,13 @@
         "es-client"
     ],
     "dependencies": {
-        "axios": "^1.6.2"
+        "axios": "^1.6.2",
+        "electron-updater": "^6.1.7"
     },
     "devDependencies": {
         "@types/node": "^20.10.5",
         "electron": "^28.1.0",
-        "electron-builder": "^24.9.1",
-        "electron-updater": "^6.1.7"
+        "electron-builder": "^24.9.1"
     },
     "build": {
         "appId": "xyz.esion.es-client",
