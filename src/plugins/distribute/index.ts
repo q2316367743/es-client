@@ -1,6 +1,6 @@
 import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
-import {web} from "@/plugins/distribute/web";
+import {web, webPreload} from "@/plugins/distribute/web";
 import {tauri, tauriPreload} from "@/plugins/distribute/tauri";
 import {serverPreload} from "@/plugins/distribute/server";
 
@@ -27,6 +27,7 @@ if (Constant.mode === PluginModeEnum.TAURI) {
 } else {
     // 默认情况
     utools = web;
+    source = webPreload;
 }
 
 

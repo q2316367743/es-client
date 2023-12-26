@@ -2,7 +2,6 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
-import NotificationUtil from "@/utils/NotificationUtil";
 import {WebviewWindow} from "@tauri-apps/api/window";
 import {emit} from "@tauri-apps/api/event";
 import MessageUtil from "@/utils/MessageUtil";
@@ -49,7 +48,7 @@ export function createDataBrowserWindow(
     } else if (Constant.mode === PluginModeEnum.TAURI) {
         createDataBrowserWindowByTauri(type, data, json, options);
     } else {
-        NotificationUtil.warning("系统异常，未知平台");
+        createDataBrowserWindowByWeb(type, data, json, options);
     }
 }
 
@@ -140,3 +139,46 @@ export function createDataBrowserWindowByTauri(
     });
 }
 
+export function createDataBrowserWindowByWeb(
+    type: BrowserWindowType,
+    data: string,
+    json: string,
+    options: Partial<BrowserWindowOption>) {
+    const newWindow = window.open(`${type}.html`);
+    if (newWindow) {
+        const msg = {
+            html: data,
+            theme: useGlobalSettingStore().jsonTheme,
+            title: options.title,
+            isDark: useGlobalStore().isDark,
+            json: json
+        };
+
+        newWindow.addEventListener('load', () => {
+            const link = newWindow.document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = `./highlight.js/styles/${msg.theme}.css`
+            newWindow.document.head.appendChild(link);
+            newWindow.document.getElementById("code")!.innerHTML = msg.html;
+            if (msg.title) {
+                newWindow.document.title = msg.title;
+            }
+
+            if (msg.isDark) {
+                // 设置为暗黑主题
+                newWindow.document.body.setAttribute('arco-theme', 'dark');
+            } else {
+                // 恢复亮色主题
+                newWindow.document.body.removeAttribute('arco-theme');
+            }
+            newWindow.document.querySelector('.copy button')!.addEventListener('click', function () {
+                // 复制
+                utools.copyText(json);
+                newWindow.alert("已成功复制到剪切板");
+            });
+        })
+
+
+    }
+}

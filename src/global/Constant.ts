@@ -36,7 +36,5 @@ export default {
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog,
     updater: "https://static.esion.xyz/share/es-client/update.json",
-    isSupportPin: mode === PluginModeEnum.UTOOLS ||
-        mode === PluginModeEnum.ELECTRON ||
-        mode === PluginModeEnum.TAURI
+    isSupportPin: true
 }

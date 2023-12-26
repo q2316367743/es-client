@@ -2,6 +2,7 @@ import MessageUtil from '@/utils/MessageUtil';
 import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
 import {JSON_REGEX} from "@/data/EsUrl";
+import axios from "axios";
 
 // 模拟utools声明
 
@@ -217,4 +218,8 @@ export const web = {
         copy(text);
     }
 
+}
+
+export const webPreload = {
+    axios: axios
 }
