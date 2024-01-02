@@ -1,7 +1,7 @@
 // electron-main/index.ts
 const {app, BrowserWindow, dialog, Notification, ipcMain} = require("electron");
 const path = require("path");
-const {autoUpdater} = require("electron-updater");
+const axios = require("axios");
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -42,70 +42,36 @@ app.on("window-all-closed", () => {
     }
 });
 
-function checkUpdate() {
+async function checkUpdate() {
+    let url = "";
     //设置要检测更新的路径
     if (process.platform === 'darwin') {
-        autoUpdater.setFeedURL({
-            url: 'https://es-client.esion.xyz/electron/darwin',
-            provider: "generic"
-        })
-
+        url = 'https://es-client.esion.xyz/electron/darwin'
     } else {
-        autoUpdater.setFeedURL({
-            url: 'https://es-client.esion.xyz/electron/win32',
-            provider: "generic"
-        })
+        url = 'https://es-client.esion.xyz/electron/win32';
     }
-
-    //检测更新
-    autoUpdater.checkForUpdates().then(() => console.log("check update success"))
-    const isAllowed = Notification.isSupported();
-
-    //监听'error'事件
-    autoUpdater.on('error', err => {
-        if (isAllowed) {
-            const options = {
-                title: '更新提示',
-                body: '自动更新检查失败，' + err,
-                silent: true, // 系统默认的通知声音
-                icon: '', // 通知图标
-            }
-            const notification = new Notification(options);
-            notification.show();
-        }
+    const response = await axios.request({
+        baseURL: url,
+        url: "/latest.json",
+        responseType: 'json'
     })
 
-    //监听'update-available'事件，发现有新版本时触发
-    autoUpdater.on('update-available', () => {
-        if (isAllowed) {
-            const options = {
-                title: '更新提示',
-                body: '发现新版本，正在下载更新',
-                silent: true, // 系统默认的通知声音
-                icon: '', // 通知图标
-            }
-            const notification = new Notification(options);
-            notification.show();
-        }
-    })
-
-    //默认会自动下载新版本，如果不想自动下载，设置autoUpdater.autoDownload = false
-
-    //监听'update-downloaded'事件，新版本下载完成时触发
-    autoUpdater.on('update-downloaded', () => {
-        dialog.showMessageBox({
-            type: 'info',
-            title: '应用更新',
-            message: '发现新版本，是否更新？',
-            buttons: ['是', '否']
-        }).then((buttonIndex) => {
-            if (buttonIndex.response === 0) {  //选择是，则退出程序，安装新版本
-                autoUpdater.quitAndInstall()
-                app.quit();
-            }
-        })
-    })
+    if (true) {
+        // 如果更新
+            dialog.showMessageBox({
+                type: 'info',
+                title: '应用更新',
+                message: '发现新版本，是否更新？',
+                buttons: ['是', '否']
+            }).then((buttonIndex) => {
+                if (buttonIndex.response === 0) {  //选择是，则退出程序，安装新版本
+                    // 更新
+                }
+            })
+    }
 }
+
+
 
 ipcMain.on('utools-createBrowserWindow', (e, data) => {
     return new Promise(resolve => {
