@@ -26,7 +26,7 @@
                 <a-input v-model="url.authUser" size="large"/>
             </a-form-item>
             <a-form-item :label="authValue" prop="authPassword" v-if="url.isAuth">
-                <a-input v-model="url.authPassword" size="large"/>
+                <a-input-password v-model="url.authPassword" size="large"/>
             </a-form-item>
         </a-form>
         <template #footer>
