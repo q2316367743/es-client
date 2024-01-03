@@ -5,7 +5,6 @@ export interface JsonFormatOption {
 }
 
 export function jsonFormat(json: string, options?: JsonFormatOption): string {
-
     return JSON.stringify(JSON.parse(json), null, 4);
     //
     // let reg,

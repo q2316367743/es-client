@@ -7,5 +7,6 @@
 </script>
 <style scoped>
 .dashboard {
+    overflow-y: auto;
 }
 </style>
