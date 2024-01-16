@@ -2,6 +2,22 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.2',
+        sign: 312,
+        time: '2024-01-16',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【链接管理】在基础认证里密码不再明文显示。"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【仪表盘】对于溢出窗口大小的信息无滚动条，且无法滚动。"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【高级查询】修复格式化问题"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善"
+    },
+    {
         version: '3.1.1',
         sign: 311,
         time: '2023-12-25',
