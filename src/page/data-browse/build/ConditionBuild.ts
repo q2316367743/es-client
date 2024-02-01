@@ -187,7 +187,13 @@ export function conditionRender(items: Array<ConditionItem>): Array<Record<strin
     return items.map(item => {
         const obj: Record<string, any> = {};
         const con: Record<string, any> = {};
-        con[item.field] = item.value;
+        if (item.expand) {
+            const obj: Record<string, any> = {};
+            obj[item.expand]= item.value;
+            con[item.field] = obj;
+        }else {
+            con[item.field] = item.value;
+        }
         obj[item.type] = con;
         return obj;
     })
