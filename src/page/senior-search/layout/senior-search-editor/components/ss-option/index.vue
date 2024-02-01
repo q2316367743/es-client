@@ -71,7 +71,6 @@
 import {computed} from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import SsSetting from '@/page/senior-search/components/ss-setting/index.vue'
 import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {
     useSeniorSearchSetting

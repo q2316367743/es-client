@@ -17,7 +17,7 @@ import useUrlStore from "@/store/UrlStore";
 import {ref, toRaw, watch} from "vue";
 import useLoadingStore from "@/store/LoadingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
-import {getFromOne, getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getFromOne, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {

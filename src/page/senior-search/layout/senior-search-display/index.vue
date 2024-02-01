@@ -42,7 +42,6 @@ import DisplayHistory from "@/page/senior-search/layout/senior-search-display/di
 import {statistics, useSeniorShowResultEvent} from "@/global/BeanFactory";
 import Constant from "@/global/Constant";
 import {jsonToHtml} from "@/utils/DialogUtil";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import NotificationUtil from "@/utils/NotificationUtil";
 
