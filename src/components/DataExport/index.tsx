@@ -77,7 +77,7 @@ export function showDataExportDrawer(config: ConditionExportEvent) {
                     </RadioGroup>,
                     help: () => {
                         if (instance.value.scope != ExportScope.ALL) {
-                            return <span>只有导出全部才可以选择API</span>
+                            return <span>只有导出范围是全部才可以选择API</span>
                         } else if (instance.value.apiType === ApiType.BASE) {
                             return <span>基础分页API</span>
                         } else if (instance.value.apiType === ApiType.SCROLL) {

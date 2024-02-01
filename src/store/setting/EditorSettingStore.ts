@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import {EditorSetting, getDefaultEditorSettingValue} from "@/domain/EditorSetting";
 import Optional from "@/utils/Optional";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
@@ -18,29 +18,14 @@ const useEditorSettingStore = defineStore('editor-setting', {
     },
     actions: {
         async init(): Promise<void> {
-            let instance = await getFromOneByAsync<EditorSetting>(LocalNameEnum.SETTING_EDITOR, getDefaultEditorSettingValue());
-            if (instance) {
-                try {
-                    Object.assign(this.instance, instance);
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-            return Promise.resolve();
+            const res = await getFromOneByAsync<EditorSetting>(LocalNameEnum.SETTING_EDITOR, getDefaultEditorSettingValue());
+            this.instance = res.record;
+            this.rev = res.rev;
         },
         async save(editorSetting: EditorSetting): Promise<void> {
-            this.instance.fontSize = editorSetting.fontSize;
-            this.instance.minimap = editorSetting.minimap;
-            this.instance.wordWrap = editorSetting.wordWrap;
-            this.instance.runColor = editorSetting.runColor;
+            this.instance = editorSetting;
             // 保存
-            await saveOneByAsync(LocalNameEnum.SETTING_EDITOR, {
-                fontSize: this.instance.fontSize,
-                minimap: this.instance.minimap,
-                wordWrap: this.instance.wordWrap,
-                runColor: this.instance.runColor
-            });
-            return Promise.resolve();
+            this.rev = await saveOneByAsync(LocalNameEnum.SETTING_EDITOR, this.instance, this.rev);
         }
     }
 });

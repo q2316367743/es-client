@@ -32,11 +32,11 @@
             <a-dropdown position="bl" @select="select">
                 <a-button type="text" status="normal">
                     <template #icon>
-                        <icon-code :size="18" v-if="view === ViewTypeEnum.BASE"/>
-                        <icon-code-block :size="18" v-else-if="view === ViewTypeEnum.JSON"/>
-                        <icon-nav :size="18" v-else-if="view === ViewTypeEnum.TABLE"/>
-                        <icon-mind-mapping :size="18" v-else-if="view === ViewTypeEnum.JSON_TREE"/>
-                        <icon-edit :size="18" v-else-if="view === ViewTypeEnum.EDITOR"/>
+                        <icon-code :size="18" v-if="seniorSearchView === ViewTypeEnum.BASE"/>
+                        <icon-code-block :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON"/>
+                        <icon-nav :size="18" v-else-if="seniorSearchView === ViewTypeEnum.TABLE"/>
+                        <icon-mind-mapping :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON_TREE"/>
+                        <icon-edit :size="18" v-else-if="seniorSearchView === ViewTypeEnum.EDITOR"/>
                     </template>
                 </a-button>
                 <template #content>
@@ -47,7 +47,13 @@
                     <a-doption :value="ViewTypeEnum.EDITOR">编辑器视图</a-doption>
                 </template>
             </a-dropdown>
-            <ss-setting/>
+            <a-tooltip content="编辑器设置" position="right">
+                <a-button type="text" status="normal" @click="useSeniorSearchSetting()">
+                    <template #icon>
+                        <icon-settings :size="18" />
+                    </template>
+                </a-button>
+            </a-tooltip>
             <a-tooltip content="帮助" position="right">
                 <a-button type="text" status="normal" @click="openHelp()">
                     <template #icon>
@@ -66,9 +72,11 @@ import {computed} from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import SsSetting from '@/page/senior-search/components/ss-setting/index.vue'
-import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {
+    useSeniorSearchSetting
+} from "@/page/senior-search/layout/senior-search-editor/components/ss-option/SeniorSearchSetting";
 
-const view = computed<ViewTypeEnum>(() => useSeniorSearchStore().view);
 const allowEdit = computed(() => useSeniorSearchStore().id !== 0);
 
 const openHelp = () => utools.shellOpenExternal('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
@@ -78,7 +86,7 @@ const saveHistory = () => useSeniorSearchStore().saveHistory();
 const clearHistory = () => useSeniorSearchStore().clearHistory();
 
 function select(value: any) {
-    useSeniorSearchStore().updateView(value);
+    seniorSearchView.value = value;
 }
 
 </script>

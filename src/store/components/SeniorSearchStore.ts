@@ -14,9 +14,11 @@ import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {seniorSearchRecordService, useSeniorShowResultEvent} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
-import {toRaw} from "vue";
+import {ref, toRaw, watch} from "vue";
 import useLoadingStore from "@/store/LoadingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
+import {getFromOne, getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -30,6 +32,15 @@ function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: numb
     }
     return list[index];
 }
+
+// 高级搜索视图，默认编辑器视图
+export const seniorSearchView = ref(ViewTypeEnum.EDITOR);
+// 数据初始化
+getFromOne<ViewTypeEnum>(LocalNameEnum.KEY_SENIOR_SEARCH_VIEW)
+    .then(res => seniorSearchView.value = (res ? res.record : seniorSearchView.value));
+// 数据存储
+watch(() => seniorSearchView.value, value => saveOneByAsync(LocalNameEnum.KEY_SENIOR_SEARCH_VIEW, value));
+
 
 export const useSeniorSearchStore = defineStore('senior-search', {
     state: () => ({
@@ -47,7 +58,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
 
         filter: '',
 
-        view: ViewTypeEnum.JSON,
         loading: false,
     }),
     actions: {
@@ -56,10 +66,6 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         },
         updateFilter(filter: string) {
             this.filter = filter;
-        },
-        updateView(view: ViewTypeEnum) {
-            // TODO: 此处需要保存
-            this.view = view;
         },
         execute(index: number, instance: monaco.editor.IStandaloneCodeEditor) {
 
@@ -159,7 +165,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
             }
             this.body = this.body +
                 (this.body.trim() === '' ? '' : '\n\n') +
-                `${event.method} ${event.link}` +  (!event.body ? '' : ('\n' + event.body));
+                `${event.method} ${event.link}` + (!event.body ? '' : ('\n' + event.body));
         },
         saveHistory() {
             useLoadingStore().start("保存中");

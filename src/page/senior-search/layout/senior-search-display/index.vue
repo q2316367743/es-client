@@ -2,7 +2,7 @@
     <div class="senior-search-display">
         <div class="view">
             <!-- 结果集渲染 -->
-            <senior-search-data-view v-show="displayActive === 'result'" :view="view" :data="show"/>
+            <senior-search-data-view v-show="displayActive === 'result'" :view="seniorSearchView" :data="show"/>
             <!-- 请求记录 -->
             <display-record v-show="displayActive === 'record'"/>
             <!-- 历史记录 -->
@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 组件
 import DisplayRecord from "@/page/senior-search/layout/senior-search-display/display-record.vue";
 import SeniorSearchDataView from '@/page/senior-search/layout/senior-search-display/DataView.vue'
@@ -56,7 +56,6 @@ const displayActive = ref('result');
 const fullscreen = ref(false);
 
 const show = computed(() => useSeniorSearchStore().show);
-const view = computed(() => useSeniorSearchStore().view);
 
 watch(() => fullscreen.value, value => emits('update:fullscreen', value));
 watch(() => props.fullscreen, value => fullscreen.value = value);
@@ -67,7 +66,7 @@ useSeniorShowResultEvent.on(() => displayActive.value = 'result');
 function pin() {
     statistics.access("功能统计-高级搜索", "钉住");
     if (Constant.isSupportPin) {
-        const {html, original} = jsonToHtml(useBaseSearchStore().current.result);
+        const {html, original} = jsonToHtml(useSeniorSearchStore().result);
         createDataBrowserWindow(BrowserWindowType.JSON, html, original, {
             title: "高级搜索-查询结果",
             alwaysOnTop: true
