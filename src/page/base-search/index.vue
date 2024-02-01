@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed} from "vue";
 // 全局存储
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 // 内部组件
