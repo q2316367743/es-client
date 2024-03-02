@@ -2,6 +2,19 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.4',
+        sign: 314,
+        time: '2024-04-03',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: "【插件】上方链接选择器根据窗口宽度自适应"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【高级查询】修复过滤器失败的问题"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善"
+    },
+    {
         version: '3.1.3',
         sign: 313,
         time: '2024-02-01',

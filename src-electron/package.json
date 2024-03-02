@@ -1,6 +1,6 @@
 {
     "name": "es-client",
-    "version": "3.1.2",
+    "version": "3.1.4",
     "description": "elasticsearch客户端",
     "main": "main.js",
     "type": "commonjs",
