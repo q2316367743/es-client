@@ -4,7 +4,6 @@ import {Method} from "axios";
 /**
  * 请求
  */
-
 export interface Grammatical {
 
     /**

@@ -6,11 +6,7 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import * as monaco from 'monaco-editor';
 // 语言组件
-import language from "./language";
-import configuration from "./configuration";
-import provider from "./provider";
 import codelens from "./codelens";
-import foldingRange from "./foldingRange";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
@@ -18,6 +14,7 @@ import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import Optional from "@/utils/Optional";
 import {URL_REGEX} from "@/data/EsUrl";
 import restFormat from "@/algorithm/restFormat";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 
 let instance: monaco.editor.IStandaloneCodeEditor;
 
@@ -25,10 +22,6 @@ let codeLensProviderDisposable: any | null = null
 
 export default defineComponent({
     name: 'rest-client-editor',
-    props: {
-        modelValue: String
-    },
-    emits: ['execute', 'update:modelValue'],
     data: () => ({
         content: '',
         id: `rest-client-${new Date().getTime()}`,
@@ -57,7 +50,7 @@ export default defineComponent({
 
         const container = this.$refs.container as HTMLElement;
         instance = monaco.editor.create(container, {
-            value: this.modelValue,
+            value: useSeniorSearchStore().body,
             language: 'http',
             automaticLayout: true,
             theme: this.isDark as boolean ? 'vs-dark' : 'vs',
@@ -74,13 +67,13 @@ export default defineComponent({
         instance.onDidChangeModelContent(() => {
             const value = instance.getValue();
             if (this.content !== value) {
-                this.$emit('update:modelValue', value);
+                useSeniorSearchStore().updateBody(value)
             }
             return true;
         });
 
         let commandId = instance.addCommand(0, (...args: any[]) => {
-            this.$emit('execute', args[1])
+            useSeniorSearchStore().execute(args[1], instance);
         });
         // 增加快捷键
         instance.addCommand(monaco.KeyCode.F9,
@@ -105,7 +98,8 @@ export default defineComponent({
                     }
                 }
                 if (fail) {
-                    this.$emit('execute', numbers.length - 1);
+                    useSeniorSearchStore().execute(numbers.length - 1, instance);
+
                 }
             });
 
@@ -145,9 +139,6 @@ export default defineComponent({
 
 
     methods: {
-        getInstance(): monaco.editor.IStandaloneCodeEditor {
-            return instance;
-        },
         renderValue(value: string): Array<number> {
             let lineNumbers = new Array<number>();
             const lines = value.split("\n");

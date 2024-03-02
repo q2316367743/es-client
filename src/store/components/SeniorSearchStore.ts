@@ -70,6 +70,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         execute(index: number, instance: monaco.editor.IStandaloneCodeEditor) {
 
             let request = requestBuild(instance, index);
+
             if (!request) {
                 MessageUtil.error('请求块无法识别');
                 return;
@@ -113,6 +114,12 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 } catch (e) {
                     this.json = {};
                 }
+
+                // 如果有过滤
+                if (this.filter.trim() !== '') {
+                    this.execFilter();
+                }
+
             }).catch((e) => {
                 this.result = e.response.data;
                 this.show = this.result;
