@@ -6,7 +6,7 @@
             </div>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
-                      class="url-select" :show-extra-options="true" style="max-width: 150px">
+                      class="url-select" :show-extra-options="true" :style="{width: width + 'px'}">
                 <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
                 <template #empty>
                     <div style="padding: 6px 0; text-align: center;">
@@ -108,8 +108,10 @@ import {DarkTypeEnum, useGlobalStore} from "@/store/GlobalStore";
 // 工具类
 import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
+import {useWindowSize} from "@vueuse/core";
 
 const router = useRouter();
+const size = useWindowSize();
 
 const urlId = ref<number | string | undefined>(useUrlStore().id);
 const feedbackDialog = ref<boolean>(false);
@@ -131,6 +133,7 @@ const status = computed(() => {
 });
 const active_shards = computed(() => useIndexStore().active_shards);
 const total_shards = computed(() => useIndexStore().total_shards);
+const width = computed(() => size.width.value / 5);
 
 watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
 watch(() => useUrlStore().id, value => {
