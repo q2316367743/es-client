@@ -53,7 +53,7 @@ export function execUpdate(indexName: string, id: string, initData: string): Pro
                 <Button type="primary" onClick={() => {
                     resolve({id, data: data.value});
                     modalReturn.close();
-                }}>新增</Button>
+                }}>修改</Button>
             </>
         });
     });
