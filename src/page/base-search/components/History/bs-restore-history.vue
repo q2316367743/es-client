@@ -14,10 +14,7 @@
                     <a-table-column data-index="index" title="索引">
                         <template #cell="{ record }">
                             <a-link type="primary" target="_blank">{{ record.index }}</a-link>
-                            <div class="url-copy" @click="execCopy(record.index)">{{
-                                    $t('common.operation.copy')
-                                }}
-                            </div>
+                            <div class="url-copy" @click="execCopy(record.index)">复制</div>
                         </template>
                     </a-table-column>
                     <a-table-column title="操作" :width="200" fixed="right">

@@ -7,7 +7,6 @@ import EventBusEnum from "@/enumeration/EventBusEnum";
 import highlight from "highlight.js/lib/core";
 import highlightJson from "highlight.js/lib/languages/json";
 
-import {Url} from "@/entity/Url";
 // 策略
 import VersionStrategyContext from "@/strategy/VersionStrategy/VersionStrategyContext";
 import V6VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V6VersionStrategyImpl";
@@ -34,7 +33,6 @@ versionStrategyContext.register(new V7VersionStrategyImpl());
 versionStrategyContext.register(new V8VersionStrategyImpl());
 
 // 事件
-export const useUrlEditEvent = useEventBus<Url>(EventBusEnum.URL_EDIT);
 export const useIndexManageEvent = useEventBus<string>(EventBusEnum.INDEX_MANAGE);
 export const useSeniorShowResultEvent = useEventBus<void>(EventBusEnum.SENIOR_SHOW_RESULT);
 

@@ -70,19 +70,19 @@ const router = createRouter({
         children: [{
             name: '全局设置',
             path: 'global',
-            component: () => import('@/page/setting/components/global.vue')
+            component: () => import('@/page/setting/pages/global.vue')
         }, {
             name: '高级查询过滤器',
             path: 'senior-filter-record',
-            component: () => import('@/page/setting/components/senior-filter-record/index.vue')
+            component: () => import('@/page/setting/pages/senior-filter-record/index.vue')
         }, {
             name: '链接管理',
-            path: 'url',
-            component: () => import('@/page/setting/components/url.vue')
+            path: 'link',
+            component: () => import('@/page/setting/pages/link/index.vue')
         }, {
             name: '备份设置',
             path: 'backup',
-            component: () => import('@/page/setting/components/backup/index.vue')
+            component: () => import('@/page/setting/pages/backup/index.vue')
         }]
     }, {
         name: '更多',

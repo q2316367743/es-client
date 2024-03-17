@@ -1,13 +1,11 @@
 import { createApp, App } from 'vue';
 import store from "@/store";
 import AppInstance from './App.vue';
-import i18n from '@/i18n';
 import router from "@/plugins/router";
 
 // 额外引入图标库
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
-// 引入VXETable
 
 // 引入样式
 import '@/less/theme.less';
@@ -71,6 +69,7 @@ import configuration
 import provider from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/provider";
 import foldingRange from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/foldingRange";
 
+// 引入VXETable
 // 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
 VXETable.setup({
     i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
@@ -78,39 +77,12 @@ VXETable.setup({
 function useTable (app: App) {
     // 表格功能
     app
-    // .use(Filter)
-    // .use(Edit)
     .use(Menu)
-    // .use(Export)
-    // .use(Keyboard)
-    // .use(Validator)
 
     // 可选组件
     app.use(Icon)
         .use(Column)
-        // .use(Colgroup)
-        // .use(Grid)
         .use(Tooltip)
-        // .use(Toolbar)
-        // .use(Pager)
-        // .use(Form)
-        // .use(FormItem)
-        // .use(FormGather)
-        // .use(Checkbox)
-        // .use(CheckboxGroup)
-        // .use(Radio)
-        // .use(RadioGroup)
-        // .use(RadioButton)
-        // .use(Switch)
-        // .use(Input)
-        // .use(Select)
-        // .use(Optgroup)
-        // .use(Option)
-        // .use(Textarea)
-        // .use(Button)
-        // .use(Modal)
-        // .use(List)
-        // .use(Pulldown)
 
         // 安装表格
         .use(VxeTable)
@@ -119,7 +91,6 @@ function useTable (app: App) {
 createApp(AppInstance)
     .use(ArcoVue)
     .use(store)
-    .use(i18n)
     .use(ArcoVueIcon)
     .use(router)
     .use(useTable)

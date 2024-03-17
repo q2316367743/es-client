@@ -7,14 +7,14 @@
             </template>
         </a-button>
         <template #content>
-            <a-doption value="info">{{ $t('app.info.info') }}</a-doption>
-            <a-doption value="status">{{ $t('app.info.status') }}</a-doption>
-            <a-doption value="node_status">{{ $t('app.info.nodeStatus') }}</a-doption>
-            <a-doption value="cluster_nodes">{{ $t('app.info.clusterNodes') }}</a-doption>
-            <a-doption value="plugin">{{ $t('app.info.plugin') }}</a-doption>
-            <a-doption value="cluster_status">{{ $t('app.info.clusterStatus') }}</a-doption>
-            <a-doption value="cluster_health">{{ $t('app.info.clusterHealth') }}</a-doption>
-            <a-doption value="template">{{ $t('app.info.template') }}</a-doption>
+            <a-doption value="info">信息</a-doption>
+            <a-doption value="status">状态</a-doption>
+            <a-doption value="node_status">节点状态</a-doption>
+            <a-doption value="cluster_nodes">集群节点</a-doption>
+            <a-doption value="plugin">插件</a-doption>
+            <a-doption value="cluster_status">集群状态</a-doption>
+            <a-doption value="cluster_health">集群健康值</a-doption>
+            <a-doption value="template">模板</a-doption>
         </template>
     </a-dropdown>
 </template>
@@ -86,28 +86,28 @@ export default defineComponent({
             }
         },
         async info() {
-            showJsonDialogByAsync(this.$t('app.info.info'), clusterApi.info());
+            showJsonDialogByAsync('信息', clusterApi.info());
         },
         async state() {
-            showJsonDialogByAsync(this.$t('app.info.status'), clusterApi._stats());
+            showJsonDialogByAsync('状态', clusterApi._stats());
         },
         async node_stats() {
-            showJsonDialogByAsync(this.$t('app.info.nodeStatus'), clusterApi._nodes_stats());
+            showJsonDialogByAsync('节点状态', clusterApi._nodes_stats());
         },
         async cluster_nodes() {
-            showJsonDialogByAsync(this.$t('app.info.clusterNodes'), clusterApi._nodes());
+            showJsonDialogByAsync('集群节点', clusterApi._nodes());
         },
         async plugin() {
-            showJsonDialogByAsync(this.$t('app.info.plugin'), clusterApi._nodes_plugins());
+            showJsonDialogByAsync('插件1', clusterApi._nodes_plugins());
         },
         async cluster_status() {
-            showJsonDialogByAsync(this.$t('app.info.clusterStatus'), clusterApi._cluster_state());
+            showJsonDialogByAsync('集群状态', clusterApi._cluster_state());
         },
         async cluster_health() {
-            showJsonDialogByAsync(this.$t('app.info.clusterHealth'), clusterApi._cluster_health());
+            showJsonDialogByAsync('集群健康值', clusterApi._cluster_health());
         },
         async template() {
-            showJsonDialogByAsync(this.$t('app.info.template'), clusterApi._template());
+            showJsonDialogByAsync('模板', clusterApi._template());
         }
     }
 });

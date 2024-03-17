@@ -4,7 +4,7 @@
         <div class="home-option">
             <a-input-group>
                 <!-- 输入框 -->
-                <a-input v-model="keyword" :placeholder="$t('home.placeholder.index')"
+                <a-input v-model="keyword" placeholder="请输入索引名称"
                          style="width: 45vw;height: 32px;" allow-clear></a-input>
                 <a-trigger trigger="click">
                     <a-button type="secondary">

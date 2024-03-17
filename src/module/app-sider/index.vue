@@ -4,7 +4,7 @@
             <template #icon>
                 <icon-home/>
             </template>
-            {{ $t('menu.home') }}
+            概览
         </a-menu-item>
         <a-menu-item :key="PageNameEnum.DATA_BROWSE">
             <template #icon>
@@ -68,7 +68,7 @@
             <a-menu-item :key="PageNameEnum.SETTING_SENIOR_FILTER_RECORD">
                 高级查询过滤器
             </a-menu-item>
-            <a-menu-item :key="PageNameEnum.SETTING_URL">
+            <a-menu-item :key="PageNameEnum.SETTING_LINK">
                 链接管理
             </a-menu-item>
             <a-menu-item :key="PageNameEnum.SETTING_BACKUP">

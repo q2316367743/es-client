@@ -10,8 +10,8 @@
             <a-form-item label="默认视图">
                 <a-select v-model="setting.defaultView" style="margin-left: 8px;width: 140px;">
                     <a-option label="基础视图" :value="ViewTypeEnum.BASE"/>
-                    <a-option :label="$t('common.keyword.jsonView')" :value="ViewTypeEnum.JSON"/>
-                    <a-option :label="$t('common.keyword.tableView')" :value="ViewTypeEnum.TABLE"/>
+                    <a-option label="JSON视图" :value="ViewTypeEnum.JSON"/>
+                    <a-option label="表格视图" :value="ViewTypeEnum.TABLE"/>
                     <a-option label="JSON树视图" :value="ViewTypeEnum.JSON_TREE"/>
                     <a-option label="编辑器视图" :value="ViewTypeEnum.EDITOR"/>
                 </a-select>

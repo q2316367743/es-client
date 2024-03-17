@@ -1,8 +1,7 @@
 <template>
     <div class="field-condition-container">
         <div v-if="conditions.length === 0">
-            <a-button type="primary" @click="add()">{{ $t('common.operation.add') }}
-            </a-button>
+            <a-button type="primary" @click="add()">新增</a-button>
         </div>
         <div v-for="(_item, idx) in conditions" :key="_item.id" style="margin-bottom: 10px;">
             <field-condition-item v-model="conditions[idx]" :index="idx" @add="add" @remove="remove"

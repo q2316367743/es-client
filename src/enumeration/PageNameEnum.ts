@@ -31,7 +31,7 @@ enum PageNameEnum {
 
     SETTING_GLOBAL = "/setting/global",
 
-    SETTING_URL = "/setting/url",
+    SETTING_LINK = "/setting/link",
 
     SETTING_BACKUP = "/setting/backup",
 

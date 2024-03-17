@@ -15,7 +15,7 @@
                 <icon-minus/>
             </db-simple-item>
             <db-simple-item :disable="selectedKeys.length !== 1"
-                            :tip="$t('common.operation.update')"
+                            tip="更新"
                             @click="recordEdit">
                 <icon-edit/>
             </db-simple-item>

@@ -24,7 +24,7 @@
                     {{ item }}
                     <icon-close :size="16" @click="removeAlias(item)" class="alias-close" />
                 </span>
-                <a-button type="primary" status="normal" size="mini" @click="newAlias()">{{ $t('common.operation.add') }}
+                <a-button type="primary" status="normal" size="mini" @click="newAlias()">新增
                 </a-button>
             </a-descriptions-item>
         </a-descriptions>

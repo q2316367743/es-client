@@ -20,7 +20,7 @@
         </a-select>
         <!-- 选择查询条件 -->
         <!-- TODO: 此处还需处理，对于不同类型，需要不同查询条件 -->
-        <a-select v-model="condition.condition" filterable :placeholder="$t('baseSearch.placeholder.condition')"
+        <a-select v-model="condition.condition" filterable placeholder="请选择查询条件"
                   style="margin-left: 10px;width: 110px;" allow-search>
             <!-- 分词查询 -->
             <a-option label="match" value="match"/>

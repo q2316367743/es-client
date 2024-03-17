@@ -1,5 +1,5 @@
 <template>
-    <a-spin :loading="loading" :tip="$t('common.loading.search')" class="base-spin">
+    <a-spin :loading="loading" tip="查询中" class="base-spin">
         <div class="base-search">
             <!-- 主要显示区域 -->
             <div class="base-search-main full-screen">

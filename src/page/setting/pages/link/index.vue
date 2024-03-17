@@ -2,7 +2,7 @@
     <div class="setting-url">
         <div class="setting-url-toolbar">
             <a-input v-model="keyword" style="width: 40vw;" placeholder="链接名称" allow-clear/>
-            <a-dropdown-button @click="editOpen()" type="primary">
+            <a-dropdown-button @click="openAddLink()" type="primary">
                 新增
                 <template #content>
                     <a-doption @click="exportUrlToJson()">
@@ -20,29 +20,26 @@
                 </template>
             </a-dropdown-button>
         </div>
-        <a-table ref="urlTable" :data="urls" class="data" sticky-header style="height: 100%;" :draggable="draggable"
-                 @change="urlChange($event)">
+        <a-table ref="urlTable" :data="urls" class="data" sticky-header style="height: 100%;" :draggable="draggable" :pagination="false"
+                 @change="urlChange($event)" :virtual-list-props="virtualListProps">
             <template #columns>
-                <a-table-column data-index="name" :title="$t('common.keyword.name')" :width="120"
+                <a-table-column data-index="name" title="名称" :width="120"
                                 fixed="left"></a-table-column>
-                <a-table-column data-index="value" :title="$t('common.keyword.url')" :width="260">
+                <a-table-column data-index="value" title="链接" :width="260">
                     <template #cell="{ record }">
                         <a-link @click="open(record.value)" type="primary" target="_blank">{{ record.value }}</a-link>
-                        <div class="url-copy" @click="execCopy(record.value)">{{ $t('common.operation.copy') }}</div>
+                        <div class="url-copy" @click="execCopy(record.value)">复制</div>
                     </template>
                 </a-table-column>
                 <a-table-column data-index="version" title="版本" :width="100"/>
-                <a-table-column :title="$t('setting.link.form.isAuth')" :width="100">
+                <a-table-column title="认证" :width="100">
                     <template #cell="{ record }">
                         {{ prettyAuth(record.isAuth) }}
                     </template>
                 </a-table-column>
-                <a-table-column :title="$t('common.keyword.operation')" :width="160" fixed="right">
+                <a-table-column title="操作" :width="160" fixed="right">
                     <template #cell="{ record }">
-                        <a-button type="primary" size="small" @click="editOpen(record)">{{
-                                $t('common.operation.edit')
-                            }}
-                        </a-button>
+                        <a-button type="primary" size="small" @click="openUpdateLink(record)">修改</a-button>
                         <a-popconfirm @ok="remove(record.id, record.value)" content="是否删除链接，删除后将无法恢复"
                                       ok-text="删除" position="br" :ok-button-props="{status: 'danger'}">
                             <a-button type="primary" status="danger" size="small"
@@ -54,32 +51,28 @@
                 </a-table-column>
             </template>
         </a-table>
-        <save-or-update-url/>
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, ref, toRaw} from "vue";
+import {computed, ref, toRaw} from "vue";
 
 import useUrlStore from "@/store/UrlStore";
 import useIndexStore from "@/store/IndexStore";
-import {getDefaultUrl, Url} from "@/entity/Url";
+import {getDefaultUrl} from "@/entity/Url";
 
-import {useUrlEditEvent} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
-import SaveOrUpdateUrl from "@/page/setting/components/save-or-update-url/index.vue";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {TableDraggable} from "@arco-design/web-vue";
-import {useRoute} from "vue-router";
 import {download} from "@/utils/BrowserUtil";
 import Constant from "@/global/Constant";
-import {useFileSystemAccess} from "@vueuse/core";
+import {useFileSystemAccess, useWindowSize} from "@vueuse/core";
+import {openAddLink, openUpdateLink} from "@/page/setting/pages/link/components/EditLink";
 
-const route = useRoute();
+const size = useWindowSize();
 
 const keyword = ref('');
 
 const items = computed(() => useUrlStore().urls);
-
 const {results} = useFuse(keyword, items, {
     matchAllWhenSearchEmpty: true,
     fuseOptions: {
@@ -91,7 +84,6 @@ const {results} = useFuse(keyword, items, {
     }
 });
 const urls = computed(() => results.value.map(e => e.item));
-
 const draggable = computed<TableDraggable | undefined>(() => {
     if (keyword.value === '') {
         return {
@@ -100,11 +92,10 @@ const draggable = computed<TableDraggable | undefined>(() => {
     }
 });
 
-onMounted(() => {
-    if (route.query.method && route.query.method === 'add') {
-        useUrlEditEvent.emit();
-    }
-})
+const virtualListProps = computed(() => ({
+    height: size.height.value - 144
+}))
+
 
 // -------------------------------------- 方法 --------------------------------------
 
@@ -129,14 +120,6 @@ function removeAfter(value: string) {
         // 删除了当前索引
         useUrlStore().clear();
         useIndexStore().clear();
-    }
-}
-
-function editOpen(url?: Url) {
-    if (url) {
-        useUrlEditEvent.emit(JSON.parse(JSON.stringify(toRaw(url))));
-    } else {
-        useUrlEditEvent.emit();
     }
 }
 

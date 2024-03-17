@@ -1,8 +1,8 @@
 <template>
     <a-layout-header id="header">
         <div class="left">
-            <div class="logo" :title="name || $t('app.name')">
-                {{ name || $t('app.name') }}
+            <div class="logo" :title="name || 'ES-client'">
+                {{ name || 'ES-client' }}
             </div>
             <!-- 索引服务器选择 -->
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
@@ -10,22 +10,19 @@
                 <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
                 <template #empty>
                     <div style="padding: 6px 0; text-align: center;">
-                        <a-button type="primary" @click="jumpToAddUrl()">新增链接</a-button>
+                        <a-button type="primary" @click="openAddLink()">新增链接</a-button>
                     </div>
                 </template>
                 <template #footer>
                     <div style="padding: 6px 0; text-align: center;">
-                        <a-button type="primary" @click="jumpToAddUrl()">
+                        <a-button type="primary" @click="openAddLink()">
                             新增链接
                         </a-button>
                     </div>
                 </template>
             </a-select>
             <!-- 刷新按钮 -->
-            <a-button class="refresh" @click="refresh()" :disabled="loading || !urlId || urlId === ''">{{
-                    $t('common.operation.refresh')
-                }}
-            </a-button>
+            <a-button class="refresh" @click="refresh()" :disabled="loading || !urlId || urlId === ''">刷新</a-button>
             <a-progress v-if="total_shards > 0" :percent="Math.round(active_shards / total_shards * 100) / 100"
                         :status="status" style="width: 220px;margin-left: 14px;">
                 <template v-slot:text="scope" >
@@ -74,9 +71,9 @@
                     {{ Constant.version }}
                 </a-button>
                 <template #content>
-                    <a-doption value="feedback">{{ $t('app.feedback') }}</a-doption>
-                    <a-doption value="log">{{ $t('app.updateRecord') }}</a-doption>
-                    <a-doption value="gitee">代码仓库</a-doption>
+                    <a-doption value="feedback">问题反馈</a-doption>
+                    <a-doption value="log">更新日志</a-doption>
+                    <a-doption value="repository">代码仓库</a-doption>
                     <a-doption value="about">关于</a-doption>
                 </template>
             </a-dropdown>
@@ -109,6 +106,7 @@ import {DarkTypeEnum, useGlobalStore} from "@/store/GlobalStore";
 import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
 import {useWindowSize} from "@vueuse/core";
+import {openAddLink} from "@/page/setting/pages/link/components/EditLink";
 
 const router = useRouter();
 const size = useWindowSize();
@@ -161,15 +159,6 @@ async function selectUrl(value: any) {
     await useIndexStore().reset();
 }
 
-function jumpToAddUrl() {
-    router.push({
-        path: PageNameEnum.SETTING_URL,
-        query: {
-            method: 'add'
-        }
-    })
-}
-
 function versionCommand(command: any) {
     switch (command) {
         case 'about':
@@ -178,7 +167,7 @@ function versionCommand(command: any) {
         case 'log':
             router.push(PageNameEnum.MORE_UPDATE)
             break;
-        case 'gitee':
+        case 'repository':
             utools.shellOpenExternal(Constant.repositories[0].url)
             break;
         case 'update':

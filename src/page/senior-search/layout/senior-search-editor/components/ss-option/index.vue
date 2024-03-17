@@ -15,7 +15,7 @@
                     </template>
                 </a-button>
             </a-tooltip>
-            <a-tooltip :content="$t('common.operation.format')" position="right">
+            <a-tooltip content="格式化" position="right">
                 <a-button type="text" status="normal" @click="formatDocument()">
                     <template #icon>
                         <icon-code/>

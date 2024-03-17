@@ -38,7 +38,7 @@
                             {{ prettyDate(new Date(record.id)) }}
                         </template>
                     </a-table-column>
-                    <a-table-column :title="$t('common.keyword.operation')" :width="230">
+                    <a-table-column title="操作" :width="230">
                         <template #cell="{ record }">
                             <a-button type="primary" status="success" size="small" @click="load(record)">
                                 加载
