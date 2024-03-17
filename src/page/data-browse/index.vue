@@ -13,9 +13,12 @@ import DbCondition from "@/page/data-browse/component/db-condition.vue";
 import DbHeader from "@/page/data-browse/component/DbHeader/index.vue";
 import DbContainer from "@/page/data-browse/component/DbContainer/index.vue";
 import {statistics} from "@/global/BeanFactory";
+import {useDbSettingStore} from "@/page/data-browse/store/DbSettingStore";
 
 
 statistics.access("功能统计", "数据浏览");
+
+useDbSettingStore().init();
 
 </script>
 <style lang="less">

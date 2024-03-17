@@ -14,6 +14,8 @@ import {
 } from "@/page/data-browse/build/ConditionBuild";
 import {ConditionItem, SortItem} from "@/page/data-browse/domain/DbConditionItem";
 import MessageUtil from "@/utils/MessageUtil";
+import {useDbSettingStore} from "@/page/data-browse/store/DbSettingStore";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 type Type = 'must' | 'mustNot' | 'should';
 
@@ -22,7 +24,7 @@ function addOneCondition(items: Array<ConditionItem>, field: string, key: Condit
     if (index > -1) {
         // 存在此条件，变化
         items[index].value = value;
-    }else {
+    } else {
         items.push({field, type: key, value})
     }
     return conditionConvert(items);
@@ -42,7 +44,7 @@ function addOneSort(items: Array<SortItem>, field: string, key: SortConditionTyp
     if (index > -1) {
         // 存在此条件，变化
         items[index].type = key;
-    }else {
+    } else {
         items.push({field, type: key})
     }
     return orderByConvert(items);
@@ -110,6 +112,15 @@ export const useDbConditionStore = createGlobalState(() => {
     }
 
     function buildSearchQuery(): DocumentSearchQuery {
+        const from = Math.max(0, page.value - 1) * size.value;
+
+        if (from > 10000 && !useDbSettingStore().dbSetting.enableTrackTotalHits) {
+            NotificationUtil.warning("检测到查询记录超过10000条，" +
+                "但未开启track_total_hits，" +
+                "可以点击数据浏览右上角更多按钮，在设置中开启")
+        }
+
+
         return {
             sort: orderByRender(orderByBuild(orderBy.value)),
             query: {
@@ -120,8 +131,9 @@ export const useDbConditionStore = createGlobalState(() => {
                 }
             },
             aggs: {},
-            from: Math.max(0, page.value - 1) * size.value,
-            size: size.value
+            from,
+            size: size.value,
+            ...useDbSettingStore().params
         };
     }
 

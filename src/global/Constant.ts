@@ -36,5 +36,8 @@ export default {
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog,
     updater: "https://static.esion.xyz/share/es-client/update.json",
-    isSupportPin: true
+    isSupportPin: true,
+    doc: {
+        dataBrowse: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz'
+    }
 }

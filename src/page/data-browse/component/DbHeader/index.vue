@@ -71,10 +71,8 @@
                     </template>
                 </a-button>
                 <template #content>
-                    <a-doption>
-                        <a-link href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz" target="_blank">帮助
-                        </a-link>
-                    </a-doption>
+                    <a-doption @click="openHelp()">帮助</a-doption>
+                    <a-doption @click="openDbSetting()">设置</a-doption>
                 </template>
             </a-dropdown>
         </a-button-group>
@@ -95,6 +93,8 @@ import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
+import {openDbSetting} from "@/page/data-browse/component/DbHeader/DbSetting";
+import Constant from "@/global/Constant";
 
 const router = useRouter();
 
@@ -171,7 +171,7 @@ function openExportDialog() {
     })
 }
 
-
+const openHelp = () => utools.shellOpenExternal(Constant.doc.dataBrowse);
 </script>
 <style scoped>
 

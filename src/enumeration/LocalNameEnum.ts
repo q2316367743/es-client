@@ -33,6 +33,11 @@ enum LocalNameEnum {
     SETTING_EDITOR = '/setting/editor',
 
     /**
+     * 设置 - 数据浏览
+     */
+    SETTING_DATA_BROWSE = '/setting/data-browse',
+
+    /**
      * 设置 - 基础搜索
      */
     SETTING_BASE_SEARCH = '/setting/base-search',
