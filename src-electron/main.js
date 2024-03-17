@@ -1,7 +1,6 @@
 // electron-main/index.ts
-const {app, BrowserWindow, dialog, Notification, ipcMain} = require("electron");
+const {app, BrowserWindow, ipcMain} = require("electron");
 const path = require("path");
-const axios = require("axios");
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -28,8 +27,6 @@ const createWindow = () => {
 app.whenReady().then(() => {
     // 创建窗口
     createWindow();
-    // 检测更新
-    checkUpdate();
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
@@ -42,34 +39,6 @@ app.on("window-all-closed", () => {
     }
 });
 
-async function checkUpdate() {
-    let url = "";
-    //设置要检测更新的路径
-    if (process.platform === 'darwin') {
-        url = 'https://es-client.esion.xyz/electron/darwin'
-    } else {
-        url = 'https://es-client.esion.xyz/electron/win32';
-    }
-    const response = await axios.request({
-        baseURL: url,
-        url: "/latest.json",
-        responseType: 'json'
-    })
-
-    if (true) {
-        // 如果更新
-            dialog.showMessageBox({
-                type: 'info',
-                title: '应用更新',
-                message: '发现新版本，是否更新？',
-                buttons: ['是', '否']
-            }).then((buttonIndex) => {
-                if (buttonIndex.response === 0) {  //选择是，则退出程序，安装新版本
-                    // 更新
-                }
-            })
-    }
-}
 
 
 

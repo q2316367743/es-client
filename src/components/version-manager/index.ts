@@ -40,7 +40,11 @@ export function versionManager(): VersionStatus {
     } else {
         return VersionStatus.NONE;
     }
+
+
+
 }
+
 
 function updateTo() {
     if (Constant.sign === 300) {

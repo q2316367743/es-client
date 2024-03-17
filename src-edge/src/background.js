@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-undef,no-unused-vars
-chrome.browserAction.onClicked.addListener(function (tab) {
-    // eslint-disable-next-line no-undef,no-unused-vars
-    chrome.tabs.create({'url': chrome.extension.getURL('es-client/index.html')}, function (tab) {
+// 图标点击事件：跳转指定网页
+chrome.action.onClicked.addListener(() => {
+    chrome.tabs.create({'url': chrome.runtime.getURL('es-client/index.html')}, function (tab) {
     });
 });
+
+console.log(chrome.browserAction)

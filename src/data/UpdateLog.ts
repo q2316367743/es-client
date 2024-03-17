@@ -2,9 +2,25 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.5',
+        sign: 315,
+        time: '2024-03-17',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【数据浏览】增加设置，可以突破10000条限制"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【高级查询】载入问题"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【链接管理】修复了分页导致的数据丢失，现在不进行分页"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善"
+    },
+    {
         version: '3.1.4',
         sign: 314,
-        time: '2024-04-03',
+        time: '2024-03-03',
         items: [{
             label: LogItemEnum.REPAIR,
             content: "【插件】上方链接选择器根据窗口宽度自适应"

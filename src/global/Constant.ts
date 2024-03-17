@@ -14,11 +14,10 @@ export default {
     author: "Esion",
     email: 'm17762618644@163.com',
     mode,
-    // @ts-ignore
-    feedback: import.meta.env.VITE_FEEDBACK_URL,
     homeUrl: 'https://blog.esion.xyz',
     docUrl: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r',
     statistics: "http://project-esion.nat300.top",
+    updateUrl: 'https://es-client.esion.xyz/electron/update.json',
     repositories: [{
         name: "Gitee",
         url: "https://gitee.com/qiaoshengda/es-client"
@@ -35,7 +34,6 @@ export default {
     },
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog,
-    updater: "https://static.esion.xyz/share/es-client/update.json",
     isSupportPin: true,
     doc: {
         dataBrowse: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz'

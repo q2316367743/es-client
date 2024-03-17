@@ -43,6 +43,7 @@ import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 import Assert from "@/utils/Assert";
 import {showVersionUpdateDialog} from "@/module/version-update";
+import {checkElectronUpdate} from "@/components/version-manager/ElectronUpdate";
 
 const router = useRouter();
 
@@ -96,6 +97,7 @@ initData().then(() => {
             useIndexStore().reset();
         }
     }
+    checkElectronUpdate();
 });
 // 初始化主题
 useGlobalStore().initDarkColors();

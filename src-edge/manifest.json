@@ -1,21 +1,28 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "es-client",
-    "version": "3.1.4",
+    "version": "3.1.5",
     "description": "elasticsearch管理客户端",
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": {
+        "script-src": "self",
+        "object-src": "self"
+    },
     "icons": {
         "96": "icons/logo_200.png",
         "128": "icons/logo_200.png"
     },
-    "browser_action": {},
+    "action": {
+        "default_title": "es-client",
+        "default_icon": "icons/logo_200.png"
+    },
     "background": {
-        "scripts": [
-            "src/background.js"
-        ]
+        "service_worker": "src/background.js",
+        "type": "module"
     },
     "permissions": [
-        "http://*/*",
-        "https://*/*"
+        "tabs"
+    ],
+    "host_permissions": [
+        "*://*/"
     ]
 }

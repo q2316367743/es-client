@@ -1,6 +1,6 @@
 {
     "name": "es-client",
-    "version": "3.1.4",
+    "version": "3.1.5",
     "description": "elasticsearch客户端",
     "main": "main.js",
     "type": "commonjs",
@@ -24,8 +24,7 @@
         "es-client"
     ],
     "dependencies": {
-        "axios": "^1.6.2",
-        "electron-updater": "^6.1.7"
+        "axios": "^1.6.2"
     },
     "devDependencies": {
         "@types/node": "^20.10.5",
@@ -36,7 +35,7 @@
         "appId": "xyz.esion.es-client",
         "productName": "es-client",
         "asar": true,
-        "copyright": "Copyright © 2023 esion",
+        "copyright": "Copyright © 2024 esion",
         "directories": {
             "output": "release/"
         },
