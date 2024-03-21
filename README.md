@@ -15,16 +15,19 @@
 </p>
 <p align="center">
 	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v3.1.0-%230883d8' alt='edge插件'/>
+        <img src='https://img.shields.io/badge/edge-v3.1.5-%23242624' alt='chrome插件'/>
+    </a>
+	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
+        <img src='https://img.shields.io/badge/edge-v3.1.4-%230883d8' alt='edge插件'/>
     </a>
  	<a target="_blank" href="https://addons.mozilla.org/zh-CN/firefox/addon/es-client">
 		<img src="https://img.shields.io/badge/firefox-v3.1.0-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
-        <img src='https://img.shields.io/badge/windows-v3.1.0-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v3.1.5-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.1.0-%23787B80' alt="utools"/>
+        <img src='https://img.shields.io/badge/utools-v3.1.5-%23787B80' alt="utools"/>
     </a>
     <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
         <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
@@ -46,18 +49,16 @@
 > 但是elasticsearch head已经停止更新，且样式老旧，功能不全；
 > 而Kibana虽功能全面，但是启动麻烦，大部分功能用不上，很不灵活，所以采用vite2+vue3+ts+arco-design进行开发了一个elasticsearch的客户端。
 
-**注意**：由于谷歌浏览器、edge政策，2024年起，将下架全部V2版本的插件，由于本项目基于vue开发，无法迁移到v3，
-所以，2.8.3版本之后，开发重心将会以utools插件为主，不再以浏览器插件为主，但仍然会提供v2版本的浏览器插件安装包。
-
 ## 安装 & 更新
 
 ### 发行版
 
+- [Chrome插件（需要科学上网）](https://chromewebstore.google.com/detail/es-client/pkhmgepniefdigphghbolofjgbnhnhfd)
 - [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 - [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 - ~~[想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)~~
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
-- [web](https://www.u.tools/)
+- ~~[web](https://www.u.tools/)~~
 - ~~[vscode](https://marketplace.visualstudio.com/items?itemName=m17762618644.es-client)~~
 - ~~[IDEA](https://plugins.jetbrains.com/plugin/21804-es-client)（第三方提供：[es-client](https://gitee.com/shenmk/es-client)）~~
 
@@ -71,6 +72,8 @@
 ### 安装
 
 > 目前只要3.1.0版本有苹果安装包，请前往`可道云网盘`的`3.1.0`中下载苹果安装包
+> 
+> 3.1.4版本之后，可在`可道云网盘`中下载ubuntu安装包
 
 推荐使用utools插件，或者windows安装版。由于没有其他设备，目前安装包仅打包的`windows安装包`，其他平台需要自己打包。
 使用utools插件版或者安装包，都会有更新提示，如果windows更新无反应，可以自行到`Gitee发行版`中下载新版本安装包进行更新
@@ -107,9 +110,3 @@
 - 索引管理功能
 - 语法提示与高亮
 - 。。。
-
-## 特别感谢JetBrains对开源项目支持
-
-<a href="https://www.jetbrains.com.cn/community/opensource/#support">
-  <img src="https://static.esion.xyz/cdn/static/JetBrains.png" align="left" height="100" width="100" alt="JetBrains" />
-</a>
