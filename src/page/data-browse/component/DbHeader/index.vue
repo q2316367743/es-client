@@ -138,8 +138,8 @@ function recordEdit(_id?: string) {
     }
     execUpdate(indexName.value, record['_id'], JSON.stringify(record['_source']['_source'], null, 4))
         .then(({id, data}) => useDataBrowseStore().update(id, data)
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => MessageUtil.error("新增失败", e)));
+            .then(() => MessageUtil.success("更新成功"))
+            .catch(e => MessageUtil.error("更新失败", e)));
 }
 
 function recordAdd() {

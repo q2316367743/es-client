@@ -192,11 +192,10 @@ export const useDataBrowseStore = defineStore('data-browser', {
          */
         update(id: string, data: string): Promise<void> {
             if (this.type === '') {
-                MessageUtil.warning("类型未知，无法更新");
-                return Promise.reject();
-            } else if (this.type === 'alias') {
-                MessageUtil.warning("当前选择项为别名，无法更新");
-                return Promise.reject();
+                return Promise.reject(new Error("类型未知，无法更新"));
+            }
+            if (this.name.trim() === '') {
+                return Promise.reject(new Error("请选择索引"))
             }
             let record = {};
             try {
@@ -206,12 +205,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                 return Promise.reject(e);
             }
             return new Promise<void>((resolve, reject) => {
-                if (!this.index) {
-                    MessageUtil.error('请选择索引');
-                    reject();
-                    return;
-                }
-                DocumentApi(this.index.name)._update(id, record).then(() => {
+                DocumentApi(this.name)._update(id, record).then(() => {
                     // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
                     setTimeout(() => {
                         resolve();

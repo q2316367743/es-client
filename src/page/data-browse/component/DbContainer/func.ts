@@ -4,6 +4,7 @@ import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {Ref} from "vue";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 import {statistics} from "@/global/BeanFactory";
+import {execUpdate} from "@/page/data-browse/component/DbHeader/func";
 
 
 export function buildSelectAllChangeEvent(instance: Ref<VxeTableInstance | null>): VxeTableEvents.CheckboxAll {
@@ -46,7 +47,10 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                 }
                 break;
             case 'operation-edit':
-                console.log('编辑', row);
+                execUpdate(useDataBrowseStore().name, row['_id'], JSON.stringify(row['_source']['_source'], null, 4))
+                    .then(({id, data}) => useDataBrowseStore().update(id, data)
+                        .then(() => MessageUtil.success("更新成功"))
+                        .catch(e => MessageUtil.error("更新失败", e)));
                 break;
             case 'operation-delete':
                 console.log('删除', row);
