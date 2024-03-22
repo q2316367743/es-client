@@ -16,7 +16,7 @@ export default defineComponent({
     props: {
         disable: {
             type: Boolean,
-            required: true,
+            required: false,
             default: false
         },
         tip: {

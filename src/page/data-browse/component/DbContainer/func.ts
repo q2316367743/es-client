@@ -53,7 +53,7 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                         .catch(e => MessageUtil.error("更新失败", e)));
                 break;
             case 'operation-delete':
-                console.log('删除', row);
+                useDataBrowseStore().reduce([row['_id']])
                 break;
             case 'expand':
                 if ($table) {

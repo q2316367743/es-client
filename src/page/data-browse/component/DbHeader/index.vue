@@ -8,7 +8,7 @@
                 <icon-refresh/>
             </db-simple-item>
             <div class="sep"></div>
-            <db-simple-item :disable="type !== 'index'" tip="新增" @click="recordAdd">
+            <db-simple-item tip="新增" @click="recordAdd">
                 <icon-plus/>
             </db-simple-item>
             <db-simple-item :disable="selectedKeys.length === 0" tip="删除" @click="recordReduce">
@@ -147,9 +147,7 @@ function recordAdd() {
         return;
     }
     execAdd(indexName.value, DataBuild(index.value.mapping))
-        .then(data => useDataBrowseStore().add(data)
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => MessageUtil.error("新增失败", e)))
+        .then(data => useDataBrowseStore().add(data))
 }
 
 function openExportDialog() {

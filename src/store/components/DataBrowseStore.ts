@@ -89,100 +89,82 @@ export const useDataBrowseStore = defineStore('data-browser', {
          * 新增一个记录
          * @param data 记录内容
          */
-        add(data: string): Promise<void> {
-            if (this.type === '') {
-                MessageUtil.warning("类型未知，无法新增");
-                return Promise.reject();
-            } else if (this.type === 'alias') {
-                MessageUtil.warning("当前选择项为别名，无法新增");
-                return Promise.reject();
+        add(data: string): void {
+            if (this.name.trim() === '') {
+                MessageUtil.error("请选择索引");
+                return;
             }
             let record = {};
             try {
                 record = JSON.parse(data);
             } catch (e) {
                 MessageUtil.error("数据解析错误", e);
-                return Promise.reject(e);
+                return;
             }
-            return new Promise<void>((resolve, reject) => {
-                if (!this.index) {
-                    MessageUtil.error("请先选择索引");
-                    reject();
-                    return;
-                }
-                DocumentApi(this.index.name)._insert(record)
-                    .then(result => {
-                        MessageUtil.success(`新增成功，新数据ID【${result._id || ''}】`)
-                        // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
-                        setTimeout(() => {
-                            resolve();
-                            this.executeQuery(false).then(() => console.log("查询成功"));
-                        }, 1000);
-                        resolve()
-                    })
-                    .catch(reject);
-            })
+            if (!this.index) {
+                MessageUtil.error("请先选择索引");
+                return;
+            }
+            DocumentApi(this.index.name)._insert(record)
+                .then(result => {
+                    MessageUtil.success(`新增成功，新数据ID【${result._id || ''}】`)
+                    // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
+                    setTimeout(() => {
+                        this.executeQuery(false).then(() => console.log("查询成功"));
+                    }, 1000);
+                })
+                .catch(e => MessageUtil.error("新增失败", e));
         },
         /**
          * 删除记录
          * @param deleteRow 记录ID
          */
-        reduce(deleteRow?: Array<string>): Promise<void> {
-            if (this.type === '') {
-                MessageUtil.warning("类型未知，无法删除");
-                return Promise.reject();
-            } else if (this.type === 'alias') {
-                MessageUtil.warning("当前选择项为别名，无法删除");
-                return Promise.reject();
-            }
-            if (this.index === undefined) {
-                MessageUtil.error("请先选择索引");
-                return Promise.reject();
+        reduce(deleteRow?: Array<string>): void {
+            if (this.name.trim() === '') {
+                MessageUtil.error("请选择索引");
+                return;
             }
             let deleteRowIndies = Optional.ofNullable(deleteRow)
                 .orElse(this.selectedKeys.map(e => e['_id']));
             if (deleteRowIndies.length === 0) {
                 MessageUtil.error("请选择要删除的行");
-                return Promise.reject();
+                MessageUtil.error("类型未知，无法更新");
+                return;
             }
-            return new Promise<void>((resolve, reject) => {
-                MessageBoxUtil.confirm("确定要删除这些索引，删除后将无法恢复！", "警告", {
-                    confirmButtonText: '删除',
-                    cancelButtonText: '跳转到高级搜索'
-                }).then(() => {
-                    let ids = new Array<string>();
-                    deleteRowIndies.forEach(id => ids.push(id));
-                    DocumentApi(this.index!.name)._delete_by_query({
-                        query: {
-                            bool: {
-                                must: [
-                                    {
-                                        ids: {
-                                            values: ids
-                                        }
+            let ids = new Array<string>();
+            deleteRowIndies.forEach(id => ids.push(id));
+            MessageBoxUtil.confirm(`确定要删除这些索引：${ids.join('、')}`, "警告", {
+                confirmButtonText: '删除',
+                cancelButtonText: '跳转到高级搜索'
+            }).then(() => {
+                DocumentApi(this.name)._delete_by_query({
+                    query: {
+                        bool: {
+                            must: [
+                                {
+                                    ids: {
+                                        values: ids
                                     }
-                                ]
-                            }
+                                }
+                            ]
                         }
-                    })
-                        .then(() => {
-                            MessageUtil.success('删除成功');
-                            // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
-                            setTimeout(() => {
-                                resolve();
-                                this.executeQuery(false).then(() => console.log("查询成功"));
-                            }, 1000);
-                            // 删除后，重置选择
-                            this.selectedKeys = new Array<any>();
-                        })
-                        .catch(e => MessageUtil.error('删除失败', e));
-                }).catch((action) => {
-                    if (action === 'cancel') {
-                        // 跳转到高级查询
-                        reject();
                     }
-                });
-            })
+                })
+                    .then(() => {
+                        MessageUtil.success('删除成功');
+                        // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
+                        setTimeout(() => {
+                            this.executeQuery(false).then(() => console.log("查询成功"));
+                        }, 1000);
+                        // 删除后，重置选择
+                        this.selectedKeys = new Array<any>();
+                    })
+                    .catch(e => MessageUtil.error('删除失败', e));
+            }).catch((action) => {
+                if (action === 'cancel') {
+                    // 跳转到高级查询
+                }
+            });
 
         },
         /**
@@ -191,9 +173,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
          * @param data 新的数据
          */
         update(id: string, data: string): Promise<void> {
-            if (this.type === '') {
-                return Promise.reject(new Error("类型未知，无法更新"));
-            }
             if (this.name.trim() === '') {
                 return Promise.reject(new Error("请选择索引"))
             }
