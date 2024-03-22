@@ -15,6 +15,14 @@
             </a-link>
         </p>
         <p>
+            chrome用户也可以在
+            <a-link
+                @click="open(data.distributes.chrome)"
+                target="_blank" type="primary">chrome插件商店
+            </a-link>
+            进行评论与打分。
+        </p>
+        <p>
             edge用户也可以在
             <a-link
                 @click="open(data.distributes.edge)"
