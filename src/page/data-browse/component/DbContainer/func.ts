@@ -45,6 +45,12 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                     MessageUtil.info("已复制到剪贴板！")
                 }
                 break;
+            case 'operation-edit':
+                console.log('编辑', row);
+                break;
+            case 'operation-delete':
+                console.log('删除', row);
+                break;
             case 'expand':
                 if ($table) {
                     $table.toggleRowExpand(row).then(() => console.log("切换行展收状态成功"))

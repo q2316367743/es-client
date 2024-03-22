@@ -52,6 +52,10 @@ export const menuConfig: VxeTablePropTypes.MenuConfig = {
                 {code: 'copy-row', name: '复制当前行', prefixIcon: 'vxe-icon-copy', visible: true},
             ],
             [
+                {code: 'operation-edit', name: '编辑', prefixIcon: 'vxe-icon-edit',visible: true},
+                {code: 'operation-delete', name: '删除', prefixIcon: 'vxe-icon-delete',visible: true}
+            ],
+            [
                 {code: 'expand', name: '展开/收起当前行', visible: true},
                 {code: 'select', name: '选中/取消当前行', visible: true}
             ],
