@@ -51,7 +51,7 @@ const useUrlStore = defineStore('url', {
                 return false;
             }
             // 统计用户使用的es版本
-            statistics.access("es版本统计", url.version);
+            statistics.access("es_version", url.version);
             setItem(LocalNameEnum.KEY_LAST_URL, id);
             this.url = url;
             title.value = url.name || 'domain-client';

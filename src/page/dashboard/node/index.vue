@@ -89,7 +89,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {prettyDataUnit} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
-import {statistics} from "@/global/BeanFactory";
 
 interface NodeItem {
     name: string;
@@ -150,7 +149,6 @@ function dateFormat(date: number): string {
     return toDateString(date);
 }
 
-statistics.access("功能统计", "仪表盘-节点");
 </script>
 <style scoped>
 .dashboard-node {

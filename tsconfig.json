@@ -10,6 +10,7 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
+        "jsxImportSource": "vue",
         "lib": [
             "esnext",
             "dom"

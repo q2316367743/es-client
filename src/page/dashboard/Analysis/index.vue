@@ -22,7 +22,6 @@ import {ref} from "vue";
 import DaFieldType from "@/page/dashboard/Analysis/DaFieldType.vue";
 import DaAnalyzer from "@/page/dashboard/Analysis/DaAnalyzer.vue";
 import {showAnalyzer, showFieldType} from "@/page/dashboard/Analysis/ShowQuestion";
-import {statistics} from "@/global/BeanFactory";
 
 enum ActiveKey {
     FIELD_TYPE = 'field type',
@@ -39,7 +38,6 @@ function action() {
     }
 }
 
-statistics.access("功能统计", "仪表盘-分析");
 </script>
 <style scoped>
 

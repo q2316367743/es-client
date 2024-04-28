@@ -8,6 +8,9 @@ enum LocalNameEnum {
 
     KEY_SENIOR_SEARCH_VIEW = '/key/senior-search/view',
 
+    KEY_TOKEN = '/key/token',
+
+    KEY_SENIOR_SEARCH_EDITOR = '/key/senior-search/editor',
 
     KEY_PRIVACY_ENABLE = '/key/privacy/enable',
 

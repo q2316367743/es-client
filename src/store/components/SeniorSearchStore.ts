@@ -41,6 +41,7 @@ getFromOne<ViewTypeEnum>(LocalNameEnum.KEY_SENIOR_SEARCH_VIEW)
 // 数据存储
 watch(() => seniorSearchView.value, value => saveOneByAsync(LocalNameEnum.KEY_SENIOR_SEARCH_VIEW, value));
 
+let isInit = false;
 
 export const useSeniorSearchStore = defineStore('senior-search', {
     state: () => ({
@@ -61,6 +62,26 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         loading: false,
     }),
     actions: {
+        init() {
+            if (isInit)  {
+                return;
+            }
+            isInit = true;
+
+            getFromOne<string>(LocalNameEnum.KEY_SENIOR_SEARCH_EDITOR)
+                .then(data => {
+                    if (data) {
+                        this.body = data.record;
+                    }else {
+                        this.body = '';
+                    }
+                }).finally(() => {
+                    watch(() => this.body, value => {
+                        saveOneByAsync(LocalNameEnum.KEY_SENIOR_SEARCH_EDITOR, value)
+                            .then(() => console.debug("保存编辑器"));
+                    })
+            });
+        },
         updateBody(body: string) {
             this.body = body;
         },

@@ -1,16 +1,94 @@
 /* eslint-disable */
 
-declare module '*.vue' {
-    import type {DefineComponent} from 'vue'
-    const component: DefineComponent<{}, {}, any>
-    export default component
+declare interface TdAppUserOpt {
+    /**
+     * 账户的唯一标识，用于区分不同用户
+     */
+    profileId: string;
+    /**
+     * 传入账户的类型。支持匿名、自有账户显性注册、第三方账户及其他预留的自定义账户类型，共4大类，具体如下：
+     * 0：ANONYMOUS，匿名账号；
+     * 1：REGISTERED，自有帐户显性注册；
+     * 2：SINA_WEIBO，新浪微博账号；
+     * 3：QQ，QQ账号；
+     * 4：TENCENT_WEIBO，腾讯微博账号；
+     * 5：ND91，91平台账号；
+     * 6：WEIXIN,微信账号
+     * 11：Type1
+     * 12：Type2；
+     * 13：Type3；
+     * ……
+     * 20：Type10
+     */
+    profileType: number;
+    /**
+     * 账户名称
+     */
+    name?: string;
+    /**
+     * 性别，0：未知；1：男性；2：女性
+     */
+    gender?: number;
+    /**
+     * 年龄，限数字
+     */
+    age?: number;
+    // property1到property10为扩展属性
+    property1?: string | number;
+    property2?: string | number;
+    property3?: string | number;
+    property4?: string | number;
+    property5?: string | number;
+    property6?: string | number;
+    property7?: string | number;
+    property8?: string | number;
+    property9?: string | number;
+    property10?: string | number;
 }
 
+declare interface TDAPP {
+    /**
+     * 自定义事件
+     * @param eventId 自定义事件ID
+     * 64个字符以内的中文、英文、数字、下划线，不要加空格或其他的转义字符
+     * @param label 一个事件的子分类
+     * 64个字符以内的中文、英文、数字、下划线，不要加空格或其他的转义字符
+     * @param mapKv 事件的参数信息，描绘发生事件时的属性和场景
+     * Object键值对中的value如果是number类型，服务器会做sum/avg之类的处理；如果是其他类型，按string对待做次数统计
+     */
+    onEvent(eventId: string, label?: string, mapKv?: Record<string, string>): void;
+
+    /**
+     * 注册
+     * @param opt
+     */
+    register(opt: TdAppUserOpt): void;
+
+    /**
+     * 登录
+     */
+    login(opt: TdAppUserOpt): void;
+}
 
 interface Window {
     preload: {
         axios: <T>(config: any) => any,
         iconv(content: any, charset: string): string,
         sendTo(id: number, channel: string, data: any): void;
-    }
+    },
+    LA: {
+        /**
+         * 埋点
+         * @param event_identification 事件唯一标识。需要通过上述步骤进行创建。该项为必填项。且事件标识必须通过上述步骤创建后方可被统计。
+         * @param custom_params 自定义事件参数，该项为可选项。该参数接收一个至少包含一个键值对且可被JSON化的Object，用于标识该事件不同的值
+         * @param ids 事件上报统计掩码。
+         * 该项为可选项。
+         * 通常情况下您不需要关心该参数。
+         * sdk默认将事件上报到当前您的网站上已成功安装且开启了事件分析功能的所有统计掩码中。
+         * 当您的网站安装了超过一个统计代码且您希望仅将事件统计到某些统计掩码当中时，
+         * 您可以通过一个字符串或一个数组指定当前事件所需要上报的统计掩码：
+         */
+        track(event_identification: string, custom_params?: Record<string, string>, ids?: string): void
+    },
+    TDAPP: TDAPP
 }

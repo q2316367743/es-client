@@ -83,7 +83,7 @@ import {showJson, showJsonDialogByAsync} from "@/utils/DialogUtil";
 import {computed, ref, watch} from "vue";
 import {Shard} from "@/components/es/domain/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
-import {statistics, useIndexManageEvent} from "@/global/BeanFactory";
+import {useIndexManageEvent} from "@/global/BeanFactory";
 import {OrderType} from "@/store/components/HomeStore";
 import ClusterApi from "@/components/es/api/ClusterApi";
 import {ClusterNode} from "@/domain/index/ClusterInfo";
@@ -194,7 +194,6 @@ function showNode(node: string) {
     })
 }
 
-statistics.access("功能统计", "仪表盘-副本与分片");
 </script>
 <style scoped lang="less">
 @import url(./index.less);

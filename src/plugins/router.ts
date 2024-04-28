@@ -1,5 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import {statistics} from "@/global/BeanFactory";
 // 引入路由
 
 const router = createRouter({
@@ -103,5 +104,16 @@ const router = createRouter({
         }]
     }]
 });
+
+router.afterEach(to => {
+    try {
+        statistics.track('page_jump', {
+            name: `${to.name as string}`,
+            path: to.path
+        })
+    } catch (e) {
+        console.error(e);
+    }
+})
 
 export default router;

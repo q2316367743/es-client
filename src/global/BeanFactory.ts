@@ -14,7 +14,7 @@ import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStra
 import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStrategyImpl";
 import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
 // 插件
-import Statistics from "@/plugins/Statistics";
+import {Statistics} from "@/plugins/Statistics";
 import {instance, preload} from "@/plugins/distribute";
 
 // 重新注入
@@ -41,5 +41,3 @@ highlight.registerLanguage('json', highlightJson);
 export {highlight};
 
 export const statistics = new Statistics();
-statistics.init();
-statistics.open()

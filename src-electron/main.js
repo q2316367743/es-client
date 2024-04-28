@@ -20,7 +20,7 @@ const createWindow = () => {
     win.setMenu(null);
 
     // Load your file
-    win.loadFile(path.join(__dirname, "./dist/index.html"));
+    win.loadFile(path.join(__dirname, "./dist/index.html?td_channelid=electron"));
     // win.openDevTools();
 };
 

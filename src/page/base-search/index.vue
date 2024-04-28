@@ -20,15 +20,12 @@ import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 // 内部组件
 import BaseSearchHeader from './components/header/index.vue';
 import BaseSearchDisplay from "./layout/display.vue";
-import {statistics} from "@/global/BeanFactory";
 
 
 const loading = computed(() => useBaseSearchStore().loading);
 const current = computed(() => useBaseSearchStore().current);
 
 const clear = () => useBaseSearchStore().clear(true);
-
-statistics.access("功能统计", "基础搜索");
 
 </script>
 

@@ -86,7 +86,7 @@ const indices = computed<Array<SelectOptionData>>(() => {
 })
 
 function printHandler() {
-    statistics.access("功能统计-基础搜索", "打印");
+    statistics.access("func_base_search", "打印");
     showDataExportDrawer({
         name: useBaseSearchStore().current.index,
         index: useBaseSearchStore().current.index,

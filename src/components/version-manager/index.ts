@@ -29,13 +29,15 @@ export function versionManager(): VersionStatus {
         setItem(LocalNameEnum.KEY_VERSION, Constant.version);
         MessageUtil.success("欢迎您使用es-client");
         updateTo();
-        statistics.access("版本更新", `新用户使用`);
+        statistics.access("update", `新用户使用`);
+        statistics.register();
         return VersionStatus.NEW;
     } else if (version != Constant.version) {
         setItem(LocalNameEnum.KEY_VERSION, Constant.version);
         MessageUtil.success("欢迎您更新到" + Constant.version);
         updateTo();
-        statistics.access("版本更新", `从${version}更新到${Constant.version}`);
+        statistics.access("update", `从${version}更新到${Constant.version}`);
+        statistics.login();
         return VersionStatus.UPDATE;
     } else {
         return VersionStatus.NONE;

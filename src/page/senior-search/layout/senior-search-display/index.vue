@@ -63,7 +63,7 @@ useSeniorShowResultEvent.reset();
 useSeniorShowResultEvent.on(() => displayActive.value = 'result');
 
 function pin() {
-    statistics.access("功能统计-高级搜索", "钉住");
+    statistics.access("func_senior_search", "钉住");
     if (Constant.isSupportPin) {
         const {html, original} = jsonToHtml(useSeniorSearchStore().result);
         createDataBrowserWindow(BrowserWindowType.JSON, html, original, {

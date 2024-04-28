@@ -38,7 +38,6 @@ import {jsonToHtml, showJson} from "@/utils/DialogUtil";
 import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import Constant from "@/global/Constant";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import NotificationUtil from "@/utils/NotificationUtil";
 import {statistics} from "@/global/BeanFactory";
@@ -52,7 +51,7 @@ function jumpToSeniorSearch() {
         MessageUtil.warning("请选择索引再跳转。");
         return;
     }
-    statistics.access("功能统计-基础搜索", "跳转到基础查询");
+    statistics.access("func_base_search", "跳转到基础查询");
     try {
         useSeniorSearchStore().loadEvent({
             link: `/${current.value.index}/_search`,
@@ -69,13 +68,13 @@ function jumpToSeniorSearch() {
 }
 
 function execCopy() {
-    statistics.access("功能统计-基础搜索", "复制查询条件");
+    statistics.access("func_base_search", "复制查询条件");
     utools.copyText(JSON.stringify(QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders)));
     MessageUtil.success("已成功复制到剪切板");
 }
 
 function showBody() {
-    statistics.access("功能统计-基础搜索", "显示查询条件");
+    statistics.access("func_base_search", "显示查询条件");
     try {
         let current = useBaseSearchStore().current;
         showJson("查询条件", QueryConditionBuild(current.conditions,
@@ -88,7 +87,7 @@ function showBody() {
 }
 
 function pin() {
-    statistics.access("功能统计-基础搜索", "钉住");
+    statistics.access("func_base_search", "钉住");
     if (Constant.isSupportPin) {
         const {html, original} = jsonToHtml(useBaseSearchStore().current.result);
         createDataBrowserWindow(BrowserWindowType.JSON, html, original, {

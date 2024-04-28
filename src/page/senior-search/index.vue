@@ -25,7 +25,6 @@ import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-displ
 import SeniorSearchFilter from '@/page/senior-search/layout/senior-search-filter/index.vue';
 import {useWindowSize} from "@vueuse/core";
 import {useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
-import {statistics} from "@/global/BeanFactory";
 
 const windowSize = useWindowSize();
 
@@ -59,8 +58,7 @@ function exitFullscreen() {
 }
 
 useSeniorFilterRecordStore().init();
-
-statistics.access("功能统计", "高级搜索");
+useSeniorSearchStore().init();
 
 </script>
 
