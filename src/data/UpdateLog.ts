@@ -2,6 +2,16 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.6',
+        sign: 316,
+        time: '2024-4-28',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: "【高级查询】编辑器内容会被保存，下次打开编辑器，内容不会丢失"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善。祝大家五一劳动节快乐！"
+    },
+    {
         version: '3.1.5',
         sign: 315,
         time: '2024-03-17',

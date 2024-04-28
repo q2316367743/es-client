@@ -9,7 +9,7 @@
     },
     "package": {
         "productName": "es-client",
-        "version": "3.1.5"
+        "version": "3.1.6"
     },
     "tauri": {
         "allowlist": {
@@ -81,7 +81,7 @@
                 "https://es-client.esion.xyz/update.json"
             ],
             "dialog": true,
-            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQyRkY5QTYzRkNCRjNCNUUKUldSZU83LzhZNXIvMHJzKzdJeDgvUXlSTU02OEpHS2twTnBlRTlreitWZ2NYeWx3S2EzOXQvSzIK"
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZEOERGNEU0NjZBREI0NjYKUldSbXRLMW01UFNOL1NxVUZ4WHVaU1hYYi9SY2xTVEhrWTZyaVRqUExIelRSVmtoVk1wcHpmVm8K"
         },
         "windows": [
             {
