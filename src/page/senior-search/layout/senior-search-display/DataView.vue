@@ -76,6 +76,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useWindowSize} from "@vueuse/core";
 import {computed} from "vue";
+import {jsonParse} from "@/plugins/native/axios";
 
 /**
  * 每一项
@@ -161,7 +162,7 @@ export default defineComponent({
             this.pretty = this.data || "{}";
             try {
                 // 尝试解析JSON视图
-                this.wrapper = JSON.parse(this.pretty);
+                this.wrapper = jsonParse(this.pretty);
                 // 可以解析，是JSON
                 this.pretty = jsonFormat(this.pretty);
             } catch (e) {

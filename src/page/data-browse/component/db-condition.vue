@@ -35,7 +35,7 @@
                         <div class="condition-item">
                             <div :class="orderBy === '' ? 'disable' : ''" class="key">ORDER</div>
                             <a-input type="text" v-model="orderBy" class="input" @keydown.enter="executeQuery()"
-                                     placeholder="field1='str',field2=num" allow-clear style="padding: 0"
+                                     placeholder="field1 asc,field2 desc" allow-clear style="padding: 0"
                                      @clear="clear()"/>
                         </div>
                     </template>
