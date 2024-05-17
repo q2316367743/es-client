@@ -28,7 +28,6 @@ export const useGlobalStore = defineStore('global', {
         size: useWindowSize(),
         loading: false,
         loadingText: '',
-        collapsed: true
     }),
     getters: {
         height: state => state.size.height,
@@ -59,8 +58,5 @@ export const useGlobalStore = defineStore('global', {
                 document.body.removeAttribute('arco-theme');
             }
         },
-        setCollapsed(collapsed: boolean) {
-            this.collapsed = collapsed;
-        }
     }
 })

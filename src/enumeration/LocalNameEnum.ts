@@ -20,6 +20,7 @@ enum LocalNameEnum {
 
     KEY_PRIVACY_ES_VERSION = '/key/privacy/es/version',
 
+    KEY_COLLAPSED = '/key/collapsed',
 
     DB_URL = '/db/url',
 

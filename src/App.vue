@@ -5,9 +5,7 @@
         <app-header/>
         <!-- 主页面 -->
         <a-layout id="main">
-            <a-layout-sider :collapsed="collapsed" :width="150" :collapsed-width="50">
-                <app-sider/>
-            </a-layout-sider>
+            <app-side/>
             <!-- 内容-->
             <a-layout-content>
                 <a-spin :loading="loading" :tip="text">
@@ -49,12 +47,11 @@ const router = useRouter();
 
 
 const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.vue"));
-const AppSider = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
+const AppSide = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
 const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
 
 
 const jsonTheme = computed(() => useGlobalSettingStore().jsonTheme);
-const collapsed = computed(() => useGlobalStore().collapsed);
 const loading = computed(() => useLoadingStore().loading);
 const text = computed(() => useLoadingStore().text);
 

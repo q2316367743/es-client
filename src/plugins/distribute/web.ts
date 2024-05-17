@@ -3,6 +3,7 @@ import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
 import {JSON_REGEX} from "@/data/EsUrl";
 import axios from "axios";
+import {StorageLike} from "@vueuse/core";
 
 // 模拟utools声明
 
@@ -41,41 +42,43 @@ function isWindows(): boolean {
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
 
-export const web = {
-    dbStorage: {
-        /**
-         * 键值对存储，如果键名存在，则更新其对应的值
-         * @param key 键名(同时为文档ID)
-         * @param value 键值
-         */
-        setItem<T>(key: string, value: T): void {
-            localStorage.setItem(key, JSON.stringify({value}));
-        },
-        /**
-         * 获取键名对应的值
-         */
-        getItem(key: string): any | null {
-            const str = localStorage.getItem(key);
-            if (!str) {
-                return null;
-            }
-            if (JSON_REGEX.test(str)) {
-                const target = JSON.parse(str);
-                if (target.value) {
-                    return target.value;
-                }
-            }
-            // 数据是错的，直接删掉
-            localStorage.removeItem(key);
-            return null;
-        },
-        /**
-         * 删除键值对(删除文档)
-         */
-        removeItem(key: string): void {
-            localStorage.removeItem(key);
-        }
+export const DbStorage: StorageLike = {
+    /**
+     * 键值对存储，如果键名存在，则更新其对应的值
+     * @param key 键名(同时为文档ID)
+     * @param value 键值
+     */
+    setItem<T>(key: string, value: T): void {
+        localStorage.setItem(key, JSON.stringify({value}));
     },
+    /**
+     * 获取键名对应的值
+     */
+    getItem(key: string): any | null {
+        const str = localStorage.getItem(key);
+        if (!str) {
+            return null;
+        }
+        if (JSON_REGEX.test(str)) {
+            const target = JSON.parse(str);
+            if (target.value) {
+                return target.value;
+            }
+        }
+        // 数据是错的，直接删掉
+        localStorage.removeItem(key);
+        return null;
+    },
+    /**
+     * 删除键值对(删除文档)
+     */
+    removeItem(key: string): void {
+        localStorage.removeItem(key);
+    }
+}
+
+export const web = {
+    dbStorage: DbStorage,
     db: {
         promises: {
             /**

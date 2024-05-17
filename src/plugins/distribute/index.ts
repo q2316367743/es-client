@@ -1,8 +1,9 @@
 import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
-import {web, webPreload} from "@/plugins/distribute/web";
+import {web, webPreload, DbStorage} from "@/plugins/distribute/web";
 import {tauri, tauriPreload} from "@/plugins/distribute/tauri";
 import {serverPreload} from "@/plugins/distribute/server";
+import {StorageLike} from "@vueuse/core";
 
 let utools: any;
 let source: any;
@@ -27,7 +28,6 @@ if (Constant.mode === PluginModeEnum.TAURI) {
             return {avatar: "", nickname: "服务器用户", type: ""};
         }
     });
-    ;
     source = serverPreload;
 } else if (Constant.mode === PluginModeEnum.UTOOLS) {
     // utools会注入
@@ -44,3 +44,5 @@ export const instance = utools;
 // @ts-ignore
 export const preload = source;
 // @ts-ignore
+
+export const dbStorage: StorageLike = window.utools.dbStorage || DbStorage
