@@ -24,6 +24,7 @@ import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore"
 import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useWindowSize} from "@vueuse/core";
+import {jsonFormat} from "@/algorithm/jsonFormat";
 
 export default defineComponent({
     name: 'base-search-data-view',
@@ -75,7 +76,7 @@ export default defineComponent({
             MessageUtil.success("已成功复制到剪切板");
         },
         render() {
-            this.pretty = JSON.stringify(this.current.result, null, 4);
+            this.pretty = jsonFormat(this.current.result);
             if (this.pretty === '') {
                 this.pretty = '{}';
             }

@@ -40,12 +40,9 @@ import {SelectOptionData} from "@arco-design/web-vue";
 import BshManage from "@/page/base-search/components/History/index.vue";
 import BaseSearchSetting from "@/page/base-search/components/setting/index.vue";
 import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
-import {useWindowSize} from "@vueuse/core";
 import Sentence from "@/page/base-search/components/header/sentence.vue";
 import {showDataExportDrawer} from "@/components/DataExport";
 import {statistics} from "@/global/BeanFactory";
-
-const size = useWindowSize();
 
 const index = ref('');
 

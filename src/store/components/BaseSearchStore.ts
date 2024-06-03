@@ -29,7 +29,7 @@ function getDefaultBaseSearch(): BaseSearchItemBody {
     };
 }
 
-export const useBaseSearchStore = defineStore('base-search', {
+export const  useBaseSearchStore = defineStore('base-search', {
     state: () => ({
         current: getDefaultBaseSearch(),
 

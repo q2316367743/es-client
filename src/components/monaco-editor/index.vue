@@ -7,6 +7,7 @@ import {defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {editorProps} from './MonacoEditorType'
 import * as monaco from 'monaco-editor'
 import {useGlobalStore} from "@/store/GlobalStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 export default defineComponent({
     name: 'monaco-editor',
@@ -23,6 +24,7 @@ export default defineComponent({
                 theme: useGlobalStore().isDark ? 'vs-dark' : 'vs',
                 ...props.options,
                 readOnly: props.readOnly,
+                fontSize: useGlobalSettingStore().jsonFontSize,
             })
 
             // 监听值的变化

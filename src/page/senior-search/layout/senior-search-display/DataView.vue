@@ -164,7 +164,7 @@ export default defineComponent({
                 // 尝试解析JSON视图
                 this.wrapper = jsonParse(this.pretty);
                 // 可以解析，是JSON
-                this.pretty = jsonFormat(this.pretty);
+                this.pretty = jsonFormat(this.wrapper);
             } catch (e) {
                 // 解析失败
                 this.wrapper = {};

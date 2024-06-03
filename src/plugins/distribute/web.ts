@@ -1,12 +1,10 @@
 import MessageUtil from '@/utils/MessageUtil';
 import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
-import {JSON_REGEX} from "@/data/EsUrl";
 import axios from "axios";
 import {StorageLike} from "@vueuse/core";
 
 // 模拟utools声明
-
 
 export type ShowOpenDialogOptionProperty = 'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles'
     | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent';
@@ -42,7 +40,7 @@ function isWindows(): boolean {
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
 
-export const DbStorage: StorageLike = {
+export const DbStorage = {
     /**
      * 键值对存储，如果键名存在，则更新其对应的值
      * @param key 键名(同时为文档ID)
@@ -59,11 +57,14 @@ export const DbStorage: StorageLike = {
         if (!str) {
             return null;
         }
-        if (JSON_REGEX.test(str)) {
+        try {
             const target = JSON.parse(str);
             if (target.value) {
                 return target.value;
             }
+        } catch (e) {
+            console.error(e);
+            return null;
         }
         // 数据是错的，直接删掉
         localStorage.removeItem(key);

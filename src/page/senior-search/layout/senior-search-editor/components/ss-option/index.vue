@@ -30,15 +30,17 @@
                 </a-button>
             </a-tooltip>
             <a-dropdown position="bl" @select="select">
-                <a-button type="text" status="normal">
-                    <template #icon>
-                        <icon-code :size="18" v-if="seniorSearchView === ViewTypeEnum.BASE"/>
-                        <icon-code-block :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON"/>
-                        <icon-nav :size="18" v-else-if="seniorSearchView === ViewTypeEnum.TABLE"/>
-                        <icon-mind-mapping :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON_TREE"/>
-                        <icon-edit :size="18" v-else-if="seniorSearchView === ViewTypeEnum.EDITOR"/>
-                    </template>
-                </a-button>
+                <a-tooltip content="修改视图" position="right">
+                    <a-button type="text" status="normal">
+                        <template #icon>
+                            <icon-code :size="18" v-if="seniorSearchView === ViewTypeEnum.BASE"/>
+                            <icon-code-block :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON"/>
+                            <icon-nav :size="18" v-else-if="seniorSearchView === ViewTypeEnum.TABLE"/>
+                            <icon-mind-mapping :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON_TREE"/>
+                            <icon-edit :size="18" v-else-if="seniorSearchView === ViewTypeEnum.EDITOR"/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
                 <template #content>
                     <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
                     <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>

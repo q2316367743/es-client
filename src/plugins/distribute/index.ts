@@ -3,7 +3,6 @@ import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {web, webPreload, DbStorage} from "@/plugins/distribute/web";
 import {tauri, tauriPreload} from "@/plugins/distribute/tauri";
 import {serverPreload} from "@/plugins/distribute/server";
-import {StorageLike} from "@vueuse/core";
 
 let utools: any;
 let source: any;
@@ -45,4 +44,4 @@ export const instance = utools;
 export const preload = source;
 // @ts-ignore
 
-export const dbStorage: StorageLike = window.utools.dbStorage || DbStorage
+export const dbStorage = window.utools.dbStorage || DbStorage
