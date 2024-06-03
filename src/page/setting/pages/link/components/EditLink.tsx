@@ -83,9 +83,10 @@ function buildForm(link: Ref<Url>) {
         <FormItem label={'名称'}>
             <Input v-model={link.value.name} allowClear/>
         </FormItem>
-        <FormItem label={'链接'}>
-            <Input v-model={link.value.value} allowClear/>
-        </FormItem>
+        <FormItem label={'链接'}>{{
+            default: () => <Input v-model={link.value.value} allowClear/>,
+            help: () => link.value.value.endsWith('/') && <span style={{color: 'rgb(var(--danger-6))'}}>检测到链接以/结尾，可能造成报错，建议删除结尾的/</span>
+        }}</FormItem>
         <FormItem label={'版本'}>
             <Input v-model={link.value.version} allowClear/>
         </FormItem>

@@ -15,27 +15,24 @@
 </p>
 <p align="center">
 	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v3.1.5-%23242624' alt='chrome插件'/>
+        <img src='https://img.shields.io/badge/edge-v3.1.6-%23242624' alt='chrome插件'/>
     </a>
 	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v3.1.4-%230883d8' alt='edge插件'/>
+        <img src='https://img.shields.io/badge/edge-v3.1.6-%230883d8' alt='edge插件'/>
     </a>
  	<a target="_blank" href="https://addons.mozilla.org/zh-CN/firefox/addon/es-client">
 		<img src="https://img.shields.io/badge/firefox-v3.1.0-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
-        <img src='https://img.shields.io/badge/windows-v3.1.5-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v3.1.6-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://open.u-tools.cn/14220.html">
-        <img src='https://img.shields.io/badge/utools-v3.1.5-%23787B80' alt="utools"/>
-    </a>
-    <a target="_blank" href="https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w">
-        <img src='https://up.apps.vip/storeicon/w-bright.svg' alt="想天浏览器"/>
+        <img src='https://img.shields.io/badge/utools-v3.1.6-%23787B80' alt="utools"/>
     </a>
 </p>
 <p align="center">
 	👉 
-    <a target="_blank" href="http://es-client.esion.xyz">官网</a> - 
+    <a target="_blank" href="https://es-client.esion.xyz">官网</a> - 
     <a target="_blank" href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r">语雀</a> - 
     <a target="_blank" href="https://support.qq.com/products/489458">兔小巢</a>  👈
 </p>
