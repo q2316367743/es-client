@@ -2,7 +2,6 @@ import MessageUtil from '@/utils/MessageUtil';
 import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
 import axios from "axios";
-import {StorageLike} from "@vueuse/core";
 
 // 模拟utools声明
 

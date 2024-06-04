@@ -1,5 +1,6 @@
 import {ref, Ref, shallowRef, toRaw, watch} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
+import {dbStorage} from "@/plugins/distribute";
 
 export interface UseUtoolsDbOptions {
     flush?: 'pre' | 'post' | 'sync';
@@ -26,7 +27,7 @@ export function useUtoolsDbStorage<T extends (string | number | boolean | object
         },
     } = options
 
-    const sourceValue = utools.dbStorage.getItem(key);
+    const sourceValue = dbStorage.getItem(key);
 
     const data = (shallow ? shallowRef : ref)((typeof sourceValue === 'undefined' || sourceValue === null) ? initialValue : sourceValue) as Ref<T>
 
@@ -36,9 +37,9 @@ export function useUtoolsDbStorage<T extends (string | number | boolean | object
             try {
                 console.log(val, data.value)
                 if (data.value == null)
-                    utools.dbStorage.removeItem(key)
+                    dbStorage.removeItem(key)
                 else
-                    utools.dbStorage.setItem(key, toRaw(data.value))
+                    dbStorage.setItem(key, toRaw(data.value))
             } catch (e) {
                 onError(e)
             }

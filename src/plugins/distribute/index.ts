@@ -44,4 +44,4 @@ export const instance = utools;
 export const preload = source;
 // @ts-ignore
 
-export const dbStorage = window.utools.dbStorage || DbStorage
+export const dbStorage = window.utools ? window.utools.dbStorage : DbStorage
