@@ -2,9 +2,31 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.7',
+        sign: 317,
+        time: '2024-06-04',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: "【插件】提升JSON树视图字符串节点的可读性，支持换行和制表符"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【插件】继续解决精度丢失问题"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【插件】新增url时，对于异常的url进行提示"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【插件】可以在设置中设置JSON字体大小，来修改数据展示的大小"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【高级查询】记住高级查询分栏大小"
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善。"
+    },
+    {
         version: '3.1.6',
         sign: 316,
-        time: '2024-4-28',
+        time: '2024-40-28',
         items: [{
             label: LogItemEnum.REPAIR,
             content: "【高级查询】编辑器内容会被保存，下次打开编辑器，内容不会丢失"
