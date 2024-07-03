@@ -1,5 +1,5 @@
 <template>
-    <a-spin :loading="loading" tip="查询中" class="base-spin">
+    <a-spin :loading="baseSearchLoading" tip="查询中" class="base-spin">
         <div class="base-search">
             <!-- 主要显示区域 -->
             <div class="base-search-main full-screen">
@@ -14,15 +14,12 @@
 </template>
 
 <script lang="ts" setup>
-import {computed} from "vue";
 // 全局存储
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {baseSearchLoading} from "@/store/components/BaseSearchStore";
 // 内部组件
 import BaseSearchHeader from './components/header/index.vue';
 import BaseSearchDisplay from "./layout/BaseSearchDisplay.vue";
 
-
-const loading = computed(() => useBaseSearchStore().loading);
 
 </script>
 

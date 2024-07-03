@@ -3,7 +3,7 @@ import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult"
 import {defineStore} from "pinia";
 import BaseOrder from "@/entity/BaseOrder";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {baseSearchLoadEvent} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 
@@ -57,7 +57,7 @@ export const useDbResultStore = defineStore('db-result-store', {
                     isEnable: true
                 });
             }
-            useBaseSearchStore().loadEvent({
+            baseSearchLoadEvent({
                 execute: true,
                 index: useDataBrowseStore().name,
                 conditions: [],

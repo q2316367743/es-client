@@ -29,10 +29,9 @@
     </a-tooltip>
 </template>
 <script lang="ts" setup>
-import {computed} from "vue";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {current, getBaseSearchCondition} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {jsonToHtml, showJson} from "@/utils/DialogUtil";
 import {useRouter} from "vue-router";
@@ -44,7 +43,6 @@ import {statistics} from "@/global/BeanFactory";
 
 const router = useRouter();
 
-const current = computed(() => useBaseSearchStore().current);
 
 function jumpToSeniorSearch() {
     if (!current.value.index) {
@@ -76,11 +74,7 @@ function execCopy() {
 function showBody() {
     statistics.access("func_base_search", "显示查询条件");
     try {
-        let current = useBaseSearchStore().current;
-        showJson("查询条件", QueryConditionBuild(current.conditions,
-            current.page,
-            current.size,
-            current.orders));
+        showJson("查询条件", getBaseSearchCondition());
     } catch (e) {
         MessageUtil.error('条件构造错误', e);
     }
@@ -89,7 +83,7 @@ function showBody() {
 function pin() {
     statistics.access("func_base_search", "钉住");
     if (Constant.isSupportPin) {
-        const {html, original} = jsonToHtml(useBaseSearchStore().current.result);
+        const {html, original} = jsonToHtml(current.value.result);
         createDataBrowserWindow(BrowserWindowType.JSON, html, original, {
             title: "查询结果",
             alwaysOnTop: true

@@ -39,10 +39,8 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
-
-// 工具类
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import MessageUtil from "@/utils/MessageUtil";
+import {baseSearchLoadHistory} from "@/store/components/BaseSearchStore";
 
 export default defineComponent({
     name: 'bsh-history',
@@ -58,7 +56,7 @@ export default defineComponent({
             MessageUtil.success("已成功复制到剪切板");
         },
         load(history: BaseSearchHistory) {
-            useBaseSearchStore().loadHistory(history);
+            baseSearchLoadHistory(history);
             this.$emit('close');
         },
         removeById(id: number) {

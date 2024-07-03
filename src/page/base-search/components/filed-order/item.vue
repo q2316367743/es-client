@@ -30,55 +30,42 @@
         </template>
     </a-button>
 </template>
-<script lang="ts">
-import {defineComponent, PropType} from "vue";
+<script lang="ts" setup>
+import {PropType, ref, watch} from "vue";
 import BaseOrder from "@/entity/BaseOrder";
-import {mapState} from "pinia";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {baseSearchExecute, fields} from "@/store/components/BaseSearchStore";
 
-export default defineComponent({
-    name: 'field-order-item',
-    emits: ['update:modelValue', 'add', 'remove'],
-    props: {
-        modelValue: Object as PropType<BaseOrder>,
-    },
-    data: () => ({
-        order: {
-            id: new Date().getTime(),
-            field: '',
-            type: 'asc'
-        } as BaseOrder
-    }),
-    computed: {
-        ...mapState(useBaseSearchStore, ['fields'])
-    },
-    created() {
-        if (this.modelValue) {
-            this.order = this.modelValue;
-        }
-    },
-    watch: {
-        modelValue(newValue: BaseOrder) {
-            this.order = newValue;
-        },
-        order: {
-            handler(newValue: BaseOrder) {
-                this.$emit('update:modelValue', newValue);
-            },
-            deep: true
-        }
-    },
-    methods: {
-        add() {
-            this.$emit('add');
-        },
-        remove(id: number) {
-            this.$emit('remove', id);
-        },
-        search() {
-            useBaseSearchStore().search();
-        }
+const props = defineProps({
+    modelValue: Object as PropType<BaseOrder>
+});
+const emits = defineEmits(['update:modelValue', 'add', 'remove']);
+
+const order = ref<BaseOrder>(props.modelValue ? props.modelValue : {
+    id: new Date().getTime(),
+    field: '',
+    type: 'asc',
+    isEnable: true
+});
+
+watch(() => props.modelValue, value => {
+    if (value) {
+        order.value = value;
     }
 });
+watch(() => order.value, value => {
+    emits('update:modelValue', value)
+}, {deep: true});
+
+function add() {
+    emits('add');
+}
+
+function remove(id: number) {
+    emits('remove', id);
+}
+
+function search() {
+    baseSearchExecute();
+}
 </script>
 <style scoped></style>

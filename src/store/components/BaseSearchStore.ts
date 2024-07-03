@@ -1,4 +1,3 @@
-import {defineStore} from "pinia";
 import {BaseSearchItemBody} from "@/page/base-search/domain/BaseSearchItem";
 import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
@@ -16,6 +15,8 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 import BaseSearchJumpEvent from "@/entity/event/BaseSearchJumpEvent";
 import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {ref, watch} from "vue";
+import {Router} from "vue-router";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
     return {
@@ -29,157 +30,117 @@ function getDefaultBaseSearch(): BaseSearchItemBody {
     };
 }
 
-export const  useBaseSearchStore = defineStore('base-search', {
-    state: () => ({
-        current: getDefaultBaseSearch(),
+export const fields = ref(new Array<Field>());
+export const baseSearchLoading = ref(false);
 
-        // 字典
-        fields: [] as Array<Field>,
+export const current = ref(getDefaultBaseSearch());
 
-        loading: false,
-        visibility: true,
+export function clear() {
+    current.value = getDefaultBaseSearch();
+    fields.value = [];
+}
 
-        // 条件对话框
-        condition: {
-            dialog: false,
-            data: {}
-        },
-        historyDialog: false,
-        settingDialog: false,
-
-        // 视图
-        showTop: true,
-
-    }),
-    actions: {
-        setCurrentIndex(index: string) {
-            this.current.index = index;
-            if (index.length > 0) {
-                this.fields = useIndexStore().field(index).sort((a, b) => {
-                    return a.name.localeCompare(b.name, "zh-CN");
-                });
-                this.current.page = 1;
-                this.current.size = useGlobalSettingStore().pageSize;
-                return;
-            }
-            if (index === '') {
-                this.clear();
-            }
-            this.fields = []
-        },
-        setCurrentCondition(conditions: Array<BaseQuery>) {
-            this.current.conditions = conditions;
-        },
-        setCurrentOrders(orders: Array<BaseOrder>) {
-            this.current.orders = orders;
-        },
-        setCurrentPage(page: number) {
-            this.current.page = page;
-            this.search()
-        },
-        setCurrentSize(size: number) {
-            this.current.size = size;
-            this.search()
-        },
-
-        getCondition(): DocumentSearchQuery {
-            return QueryConditionBuild(this.current.conditions, this.current.page, this.current.size, this.current.orders);
-        },
-        search() {
-            if (this.current.index.length === 0) {
-                MessageUtil.error("请选择索引")
-                return;
-            }
-            this.loading = true;
-            try {
-                DocumentApi(this.current.index)._search(this.getCondition()).then((response) => {
-                    // 结果
-                    this.current.result = response as Record<string, any>;
-                    // 解析总数
-                    if (response.hits) {
-                        if (typeof response.hits.total === 'number') {
-                            this.current.total = response.hits.total
-                        } else if (response.hits.total) {
-                            this.current.total = response.hits.total.value;
-                        } else {
-                            this.current.total = 0;
-                        }
-                    } else {
-                        this.current.total = 0;
-                    }
-                }).catch((e) => {
-                    this.current.result = e.response.data;
-                }).finally(() => {
-                    this.loading = false;
-                });
-                // 新增历史记录
-                baseSearchRecordService.save({
-                    urlId: useUrlStore().id || 0,
-                    index: this.current.index,
-                    conditions: this.current.conditions,
-                    orders: this.current.orders
-                }).then(() => console.log("新增历史记录成功"))
-                    .catch(e => MessageUtil.error("新增历史记录失败", e))
-            } catch (e) {
-                MessageUtil.error('条件构造错误', e);
-                this.loading = false;
-            }
-        },
-        openIndexManage() {
-            if (this.current.index === '') {
-                MessageUtil.error('请先选择索引');
-                return;
-            }
-            let index = useIndexStore().indexAliasMap.get(this.current.index);
-            if (index) {
-                useIndexManageEvent.emit(index);
-            } else {
-                MessageUtil.warning(`索引【${this.current.index}】未找到`)
-            }
-        },
-        clear(clearIndex: boolean = false) {
-            this.current.page = 1;
-            this.current.size = useGlobalSettingStore().pageSize;
-            this.current.total = 0;
-            this.current.conditions = new Array<BaseQuery>();
-            this.current.orders = new Array<BaseOrder>();
-            this.current.result = {};
-            this.condition = {
-                dialog: false,
-                data: {}
-            }
-            if (clearIndex) {
-                this.current.index = '';
-            }
-        },
-        /**
-         * 加载历史保存记录
-         * @param history 历史保存记录
-         */
-        loadHistory(history: BaseSearchHistory) {
-            this.current.conditions = history.conditions;
-            this.current.orders = history.orders;
-            this.current.index = history.index;
-            this.search();
-        },
-        /**
-         * 加载历史记录
-         * @param record 历史记录
-         */
-        loadRecord(record: BaseSearchRecord) {
-            this.current.conditions = record.conditions;
-            this.current.orders = record.orders;
-            this.current.index = record.index;
-            this.search();
-        },
-        loadEvent(event: BaseSearchJumpEvent) {
-            router.push(PageNameEnum.BASE_SEARCH).then(() => console.log('基础搜索跳转'));
-            this.current.conditions = event.conditions;
-            this.current.orders = event.orders;
-            this.current.index = event.index;
-            if (event.execute) {
-                this.search()
-            }
-        }
+watch(() => current.value.index, value => {
+    if (value != null) {
+        fields.value = useIndexStore().field(value).sort((a, b) => {
+            return a.name.localeCompare(b.name, "zh-CN");
+        });
+        current.value.page = 1;
+        current.value.size = useGlobalSettingStore().pageSize;
+        return;
+    } else {
+        clear();
     }
-})
+});
+watch(() => current.value.page, () => baseSearchExecute());
+watch(() => current.value.size, () => baseSearchExecute());
+
+export function getBaseSearchCondition(): DocumentSearchQuery {
+    return QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders);
+}
+
+export function baseSearchExecute() {
+    if (current.value.index.length === 0) {
+        MessageUtil.error("请选择索引")
+        return;
+    }
+    baseSearchLoading.value = true;
+    try {
+        DocumentApi(current.value.index)._search(getBaseSearchCondition()).then((response) => {
+            // 结果
+            current.value.result = response as Record<string, any>;
+            // 解析总数
+            if (response.hits) {
+                if (typeof response.hits.total === 'number') {
+                    current.value.total = response.hits.total
+                } else if (response.hits.total) {
+                    current.value.total = response.hits.total.value;
+                } else {
+                    current.value.total = 0;
+                }
+            } else {
+                current.value.total = 0;
+            }
+        }).catch((e) => {
+            current.value.result = e.response.data;
+        }).finally(() => {
+            baseSearchLoading.value = false;
+        });
+        // 新增历史记录
+        baseSearchRecordService.save({
+            urlId: useUrlStore().id || 0,
+            index: current.value.index,
+            conditions: current.value.conditions,
+            orders: current.value.orders
+        }).then(() => console.log("新增历史记录成功"))
+            .catch(e => MessageUtil.error("新增历史记录失败", e))
+    } catch (e) {
+        MessageUtil.error('条件构造错误', e);
+        baseSearchLoading.value = false;
+    }
+}
+
+export function openIndexManage() {
+    if (current.value.index === '') {
+        MessageUtil.error('请先选择索引');
+        return;
+    }
+    let index = useIndexStore().indexAliasMap.get(current.value.index);
+    if (index) {
+        useIndexManageEvent.emit(index);
+    } else {
+        MessageUtil.warning(`索引【${current.value.index}】未找到`)
+    }
+}
+
+/**
+ * 加载历史保存记录
+ * @param history 历史保存记录
+ */
+export function baseSearchLoadHistory(history: BaseSearchHistory) {
+    current.value.conditions = history.conditions;
+    current.value.orders = history.orders;
+    current.value.index = history.index;
+    baseSearchExecute();
+}
+
+/**
+ * 加载历史记录
+ * @param record 历史记录
+ */
+export function baseSearchLoadRecord(record: BaseSearchRecord) {
+    current.value.conditions = record.conditions;
+    current.value.orders = record.orders;
+    current.value.index = record.index;
+    baseSearchExecute();
+}
+
+export function baseSearchLoadEvent(event: BaseSearchJumpEvent, rt?: Router) {
+    (rt || router).push(PageNameEnum.BASE_SEARCH).then(() => console.log('基础搜索跳转'));
+    current.value.conditions = event.conditions;
+    current.value.orders = event.orders;
+    current.value.index = event.index;
+    if (event.execute) {
+        baseSearchExecute()
+    }
+}

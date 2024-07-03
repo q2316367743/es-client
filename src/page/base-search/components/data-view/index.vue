@@ -4,7 +4,8 @@
         <pre v-if="defaultView === ViewTypeEnum.BASE">{{ pretty }}</pre>
         <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"/>
         <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index"/>
-        <monaco-editor v-else-if="defaultView === ViewTypeEnum.EDITOR" :model-value="pretty" language="json" :height="height" read-only/>
+        <monaco-editor v-else-if="defaultView === ViewTypeEnum.EDITOR" :model-value="pretty" language="json"
+                       :height="height" read-only/>
         <div v-show="defaultView === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
         <a-back-top target-container=".base-search-data-view .arco-scrollbar-container"/>
     </div>
@@ -19,12 +20,13 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useWindowSize} from "@vueuse/core";
 import {jsonFormat} from "@/algorithm/jsonFormat";
+import {current} from "@/store/components/BaseSearchStore";
+
 
 export default defineComponent({
     name: 'base-search-data-view',
@@ -40,7 +42,6 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalSettingStore, ['jsonFontSize', 'jsonWrap']),
         ...mapState(useBaseSearchSettingStore, ['defaultView']),
-        ...mapState(useBaseSearchStore, ['current']),
         mainClass() {
             let classItem = new Array<string>();
             if (this.defaultView === ViewTypeEnum.TABLE) {
@@ -63,8 +64,9 @@ export default defineComponent({
     setup() {
         const size = useWindowSize();
         const height = computed(() => (size.height.value - 120) + 'px');
+
         return {
-            height
+            height, current
         }
     },
     mounted() {

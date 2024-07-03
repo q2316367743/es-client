@@ -68,7 +68,7 @@ import {baseSearchRecordService} from "@/global/BeanFactory";
 // 存储
 import useUrlStore from "@/store/UrlStore";
 import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {baseSearchLoadRecord} from "@/store/components/BaseSearchStore";
 // 工具类
 import Optional from "@/utils/Optional";
 import MessageUtil from "@/utils/MessageUtil";
@@ -120,7 +120,7 @@ const removeById = (id: number) => baseSearchRecordService.removeById(id)
     .then(() => MessageUtil.success("删除成功", () => search()))
     .catch(e => MessageUtil.error("删除失败", e));
 const load = (record: BaseSearchRecord) => {
-    useBaseSearchStore().loadRecord(record);
+    baseSearchLoadRecord(record);
     emits('close');
 };
 const reset = () => urlId.value = undefined;

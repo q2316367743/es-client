@@ -98,7 +98,7 @@ import Optional from "@/utils/Optional";
 import useIndexStore from "@/store/IndexStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {baseSearchLoadEvent} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 其他
 import IndexView from "@/view/index/IndexView";
@@ -215,12 +215,12 @@ export default defineComponent({
         },
         jumpToBaseSearch() {
             if (this.index) {
-                useBaseSearchStore().loadEvent({
+                baseSearchLoadEvent({
                     index: this.index.name,
                     conditions: new Array<BaseQuery>(),
                     orders: new Array<BaseOrder>(),
                     execute: true
-                })
+                }, this.$router)
             }
         },
         jumpToDataBrowser() {

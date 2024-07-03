@@ -56,7 +56,7 @@
                 <icon-minus/>
             </template>
         </a-button>
-        <a-button type="primary" status="success" style="margin-left:10px;margin-right: 20px;" @click="search()">
+        <a-button type="primary" status="success" style="margin-left:10px;margin-right: 20px;" @click="baseSearchExecute()">
             <template #icon>
                 <icon-search/>
             </template>
@@ -65,8 +65,8 @@
 </template>
 <script lang="ts" setup>
 import {BaseQuery, getDefaultBaseQuery} from "@/entity/BaseQuery";
-import {computed, PropType, ref, watch} from "vue";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {PropType, ref, watch} from "vue";
+import {baseSearchExecute, fields} from "@/store/components/BaseSearchStore";
 
 const props = defineProps({
     modelValue: Object as PropType<BaseQuery>,
@@ -75,8 +75,6 @@ const props = defineProps({
 const emits = defineEmits(['add', 'remove', 'editTextArea', 'update:modelValue']);
 
 const condition = ref<BaseQuery>(getDefaultBaseQuery());
-
-const fields = computed(() => useBaseSearchStore().fields);
 
 condition.value = Object.assign(condition.value, props.modelValue);
 
@@ -91,7 +89,6 @@ watch(() => condition.value.condition, value => {
 const add = () => emits('add')
 const remove = (id: number) => emits('remove', id);
 const textArea = () => emits('editTextArea', props.index);
-const search = () => useBaseSearchStore().search();
 
 
 </script>

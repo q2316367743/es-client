@@ -28,32 +28,21 @@
         <a-back-top target-container=".base-display"/>
     </div>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
+<script lang="ts" setup>
 import BaseSearchDataView from "@/page/base-search/components/data-view/index.vue";
 import FieldOrderContainer from "@/page/base-search/components/filed-order/container.vue";
 import FieldConditionContainer from "@/page/base-search/components/field-condition/container.vue";
-import {mapState} from "pinia";
-import {useBaseSearchStore} from "@/store/components/BaseSearchStore";
+import {current} from "@/store/components/BaseSearchStore";
 
-export default defineComponent({
-    name: 'base-search-display',
-    components: {FieldConditionContainer, FieldOrderContainer, BaseSearchDataView},
-    data: () => ({}),
-    computed: {
-        ...mapState(useBaseSearchStore, ['current'])
-    },
-    methods: {
-        pageChange(page: number) {
-            useBaseSearchStore().setCurrentPage(page);
-        },
-        sizeChange(size?: number) {
-            if (typeof size !== 'undefined') {
-                useBaseSearchStore().setCurrentSize(size);
-            }
-        }
+function pageChange(page: number) {
+    current.value.page = page;
+}
+function sizeChange(size?: number) {
+    if (typeof size !== 'undefined') {
+        current.value.size = size;
     }
-});
+}
+
 </script>
 <style scoped>
 
