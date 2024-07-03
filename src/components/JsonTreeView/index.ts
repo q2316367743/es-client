@@ -334,8 +334,8 @@ export function renderJSONTreeView(
 
     /**
      * Recursively traverse Tree object
-     * @param {Object} node
-     * @param {Callback} callback
+     * @param node
+     * @param callback
      */
     function traverseTree(
         node: JSONTreeNode,
