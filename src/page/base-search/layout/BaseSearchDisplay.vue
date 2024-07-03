@@ -2,7 +2,7 @@
     <!-- 核心查询区 -->
     <div class="base-display">
         <!-- 查询条件 -->
-        <div class="base-condition" ref="baseCondition">
+        <div class="base-condition">
             <a-form :model="current" layout="vertical" label-width="80px"
                     style="overflow-x: auto;overflow-y: hidden;">
                 <!-- 条件 -->
@@ -29,10 +29,10 @@
     </div>
 </template>
 <script lang="ts" setup>
+import {current} from "@/store/components/BaseSearchStore";
 import BaseSearchDataView from "@/page/base-search/components/data-view/index.vue";
 import FieldOrderContainer from "@/page/base-search/components/filed-order/container.vue";
 import FieldConditionContainer from "@/page/base-search/components/field-condition/container.vue";
-import {current} from "@/store/components/BaseSearchStore";
 
 function pageChange(page: number) {
     current.value.page = page;

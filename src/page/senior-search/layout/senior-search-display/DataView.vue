@@ -62,7 +62,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
-import {renderJSONTreeView} from "@/components/JsonTree";
+import {renderJSONTreeView} from "src/components/JsonTreeView";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 import {highlight} from '@/global/BeanFactory';

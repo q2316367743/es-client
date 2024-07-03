@@ -17,7 +17,7 @@
 // 全局存储
 import {baseSearchLoading} from "@/store/components/BaseSearchStore";
 // 内部组件
-import BaseSearchHeader from './components/header/index.vue';
+import BaseSearchHeader from './layout/BaseSearchHeader/index.vue';
 import BaseSearchDisplay from "./layout/BaseSearchDisplay.vue";
 
 

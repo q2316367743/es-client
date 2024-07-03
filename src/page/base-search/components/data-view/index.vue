@@ -1,41 +1,34 @@
 <template>
     <div class="base-search-data-view hljs" :class="mainClass"
          :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
-        <pre v-if="defaultView === ViewTypeEnum.BASE">{{ pretty }}</pre>
-        <pre v-else-if="defaultView === ViewTypeEnum.JSON" class="data-scroll language-json hljs" v-html="value"/>
+        <base-view v-if="defaultView === ViewTypeEnum.BASE" :value="current.result"/>
+        <json-view v-else-if="defaultView === ViewTypeEnum.JSON" :data="current.result"/>
         <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index"/>
-        <monaco-editor v-else-if="defaultView === ViewTypeEnum.EDITOR" :model-value="pretty" language="json"
-                       :height="height" read-only/>
-        <div v-show="defaultView === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
-        <a-back-top target-container=".base-search-data-view .arco-scrollbar-container"/>
+        <monaco-view v-else-if="defaultView === ViewTypeEnum.EDITOR" :value="current.result" :height="height"/>
+        <json-tree-view v-else-if="defaultView === ViewTypeEnum.JSON_TREE" :value="current.result"/>
     </div>
 </template>
 <script lang="ts">
 import {computed, defineComponent} from "vue";
 import {mapState} from "pinia";
-import {renderJSONTreeView} from "@/components/JsonTree";
+import {useWindowSize} from "@vueuse/core";
 
-import {highlight} from '@/global/BeanFactory';
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import TableViewer from "@/components/TableViewer/index.vue";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
-import MessageUtil from "@/utils/MessageUtil";
-import MonacoEditor from "@/components/monaco-editor/index.vue";
-import {useWindowSize} from "@vueuse/core";
-import {jsonFormat} from "@/algorithm/jsonFormat";
 import {current} from "@/store/components/BaseSearchStore";
+import TableViewer from "@/components/TableViewer/index.vue";
+import JsonTreeView from "@/components/JsonTreeView/index.vue";
+import JsonView from "@/components/JsonView/index.vue";
+import BaseView from "@/components/BaseView/index.vue";
+import MonacoView from "@/components/MonacoView/index.vue";
 
 
 export default defineComponent({
     name: 'base-search-data-view',
-    components: {MonacoEditor, TableViewer},
+    components: {MonacoView, BaseView, JsonView, JsonTreeView, TableViewer},
     data: () => ({
-        jsonTreeId: 'json-tree-view-' + new Date().getTime(),
-        value: '',
-        pretty: '',
-        copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
         Optional,
         ViewTypeEnum
     }),
@@ -53,14 +46,6 @@ export default defineComponent({
             return classItem.join(' ')
         }
     },
-    watch: {
-        'current.result'() {
-            this.render();
-        },
-        view() {
-            this.render();
-        }
-    },
     setup() {
         const size = useWindowSize();
         const height = computed(() => (size.height.value - 120) + 'px');
@@ -69,39 +54,6 @@ export default defineComponent({
             height, current
         }
     },
-    mounted() {
-        this.render();
-    },
-    methods: {
-        execCopy() {
-            utools.copyText(this.pretty);
-            MessageUtil.success("已成功复制到剪切板");
-        },
-        render() {
-            this.pretty = jsonFormat(this.current.result);
-            if (this.pretty === '') {
-                this.pretty = '{}';
-            }
-            if (this.defaultView === ViewTypeEnum.JSON) {
-                this.renderJsonView()
-            } else if (this.defaultView === ViewTypeEnum.JSON_TREE) {
-                this.renderJsonTreeView();
-            }
-        },
-        renderJsonView() {
-            this.$nextTick(() => {
-                let highlightResult = highlight.highlight(this.pretty, {
-                    language: 'json'
-                });
-                this.value = highlightResult.value;
-            });
-        },
-        renderJsonTreeView() {
-            renderJSONTreeView(this.current.result, document.getElementById(this.jsonTreeId)!, {
-                expanded: true
-            })
-        }
-    }
 });
 </script>
 <style lang="less">
