@@ -21,7 +21,7 @@
             </a-dropdown-button>
         </div>
         <a-table ref="urlTable" :data="urls" class="data" sticky-header style="height: 100%;" :draggable="draggable" :pagination="false"
-                 @change="urlChange($event)" :virtual-list-props="virtualListProps">
+                 @change="urlChange($event)" :virtual-list-props="virtualListProps" :scroll="{y: '100%'}">
             <template #columns>
                 <a-table-column data-index="name" title="名称" :width="120"
                                 fixed="left"></a-table-column>
@@ -37,7 +37,7 @@
                         {{ prettyAuth(record.isAuth) }}
                     </template>
                 </a-table-column>
-                <a-table-column title="操作" :width="160" fixed="right">
+                <a-table-column title="操作" :width="170" fixed="right">
                     <template #cell="{ record }">
                         <a-button type="primary" size="small" @click="openUpdateLink(record)">修改</a-button>
                         <a-popconfirm @ok="remove(record.id, record.value)" content="是否删除链接，删除后将无法恢复"

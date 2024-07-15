@@ -3,15 +3,21 @@
 
         <div class="header">
             <a-input v-model="keyword" style="width: 300px" placeholder="请输入名或者值" allow-clear/>
-            <a-button type="primary" @click="openAdd()">
-                <template #icon>
-                    <icon-plus/>
-                </template>
-            </a-button>
+            <a-input-group>
+                <a-switch type="round" v-model="enableFilter">
+                    <template #checked>启用</template>
+                    <template #unchecked>禁用</template>
+                </a-switch>
+                <a-button type="primary" @click="openAdd()">
+                    <template #icon>
+                        <icon-plus/>
+                    </template>
+                </a-button>
+            </a-input-group>
         </div>
 
         <a-list :data="results" :virtual-list-props="virtualListProps" class="container">
-            <template #item="{ item, index }">
+            <template #item="{ item }">
                 <a-list-item :key="item.id">
                     <a-list-item-meta :title="item.item.label" :description="item.item.value"/>
                     <template #extra>
@@ -62,7 +68,7 @@ import {computed, ref} from "vue";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import MessageUtil from "@/utils/MessageUtil";
 import {clone} from "xe-utils";
-import {useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
+import {enableFilter, useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
 import {SeniorFilterRecord} from "@/entity/record/SeniorFilterRecord";
 
 const size = useWindowSize();

@@ -1,8 +1,6 @@
 <template>
     <div class="setting">
-        <a-scrollbar style="overflow: auto;height: calc(100vh - 47px);">
-            <router-view/>
-        </a-scrollbar>
+        <router-view/>
     </div>
 </template>
 
