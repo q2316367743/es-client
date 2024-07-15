@@ -63,7 +63,7 @@
             },
             j = () => ({
                 website: h,
-                hostname: window.referrer,
+                hostname: (window.referrer ||  '').replace("https://", ""),
                 screen: N,
                 language: r,
                 title: O(_),

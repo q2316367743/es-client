@@ -42,7 +42,7 @@ import {defineComponent, h, PropType} from "vue";
 import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
-import JsonView from "@/components/JsonView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
 import {buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc} from "@/algorithm/jsonToTable";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";

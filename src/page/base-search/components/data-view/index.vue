@@ -18,11 +18,11 @@ import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {current} from "@/store/components/BaseSearchStore";
-import TableViewer from "@/components/TableViewer/index.vue";
-import JsonTreeView from "@/components/JsonTreeView/index.vue";
-import JsonView from "@/components/JsonView/index.vue";
-import BaseView from "@/components/BaseView/index.vue";
-import MonacoView from "@/components/MonacoView/index.vue";
+import TableViewer from "@/components/view/TableViewer/index.vue";
+import JsonTreeView from "@/components/view/JsonTreeView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
+import BaseView from "@/components/view/BaseView/index.vue";
+import MonacoView from "@/components/view/MonacoView/index.vue";
 
 
 export default defineComponent({

@@ -6,7 +6,7 @@
             </a-tab-pane>
         </a-tabs>
         <!-- 可视化面板 -->
-        <div class="index-mapping-tab" v-for="(item, index) in dataItems" v-show="index === activeKey"
+        <div class="index-mapping-tab" v-for="(_item, index) in dataItems" v-show="index === activeKey"
              :style="{height: hasType ? 'calc(100% - 50px)' : '100%'}">
             <div class="index-mapping-main">
                 <a-tag bordered color="blue">type</a-tag>
@@ -77,7 +77,7 @@ import {
     valueTipsBuild
 } from "@/components/IndexMapping/Util";
 import {Mapping, Property} from "@/components/es/domain/IndexBase";
-import JsonView from "@/components/JsonView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
 import MappingData from "./domain/MappingData";
 
 

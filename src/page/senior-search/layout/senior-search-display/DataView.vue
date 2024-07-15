@@ -22,37 +22,27 @@
             <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
                 <a-scrollbar class="scrollbar"
                              :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
-                    <pre v-if="item.view === ViewTypeEnum.BASE">{{ item.pretty }}</pre>
-                    <pre v-else-if="item.view === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                         v-html="item.value"/>
-                    <div v-else-if="item.view === ViewTypeEnum.JSON_TREE" :ref="`jsonTree${item.title}`"
-                         class="data-scroll hljs CompCssDJsonViewTree" v-html="item.value"/>
+                    <base-view v-if="item.view === ViewTypeEnum.BASE" :value="item.data"/>
+                    <json-view v-else-if="item.view === ViewTypeEnum.JSON" :value="item.data"/>
+                    <json-tree-view v-else-if="item.view === ViewTypeEnum.JSON_TREE" :value="item.data"/>
                 </a-scrollbar>
-                <monaco-editor v-if="item.view === ViewTypeEnum.EDITOR" :model-value="item.pretty" language="json"
-                               height="100%" read-only/>
-                <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :data="item.data"/>
+                <monaco-view v-if="item.view === ViewTypeEnum.EDITOR" :value="item.data"/>
+                <table-viewer v-else-if="item.view === ViewTypeEnum.TABLE" :data="item.data"/>
             </div>
             <!-- 当前的标签 -->
             <div class="current-scroll" v-show="itemActive === -1">
                 <!-- 可以滚动的视图 -->
                 <div class="json-scroll"
-                     v-if="show === ViewTypeEnum.BASE || show === ViewTypeEnum.JSON || show === ViewTypeEnum.JSON_TREE">
+                     v-if="view === ViewTypeEnum.BASE || view === ViewTypeEnum.JSON || view === ViewTypeEnum.JSON_TREE">
                     <a-scrollbar class="scrollbar"
                                  :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
-                        <!-- 基础视图 -->
-                        <pre v-if="show === ViewTypeEnum.BASE">{{ pretty }}</pre>
-                        <!-- JSON视图 -->
-                        <pre v-else-if="show === ViewTypeEnum.JSON" class="data-scroll language-json hljs"
-                             v-html="value"/>
-                        <!-- JSON树视图 -->
-                        <div v-show="show === ViewTypeEnum.JSON_TREE" :id="jsonTreeId" class="data-scroll hljs"/>
+                        <base-view v-if="view === ViewTypeEnum.BASE" :value="data"/>
+                        <json-view v-else-if="view === ViewTypeEnum.JSON" :value="data" :copy="false"/>
+                        <json-tree-view v-else-if="view === ViewTypeEnum.JSON_TREE" :value="data"/>
                     </a-scrollbar>
                 </div>
-                <!-- 编辑器视图 -->
-                <monaco-editor v-if="show === ViewTypeEnum.EDITOR" :model-value="pretty" language="json" height="100%"
-                               read-only/>
-                <!-- 表格视图 -->
-                <table-viewer v-if="show === ViewTypeEnum.TABLE" :data="wrapper"/>
+                <monaco-view v-if="view === ViewTypeEnum.EDITOR" :value="data"/>
+                <table-viewer v-else-if="view === ViewTypeEnum.TABLE" :data="data"/>
             </div>
         </div>
         <a-button type="text" link class="json-view-copy" v-show="view !== ViewTypeEnum.TABLE" @click="execCopy()">复制
@@ -62,21 +52,22 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
-import {renderJSONTreeView} from "src/components/JsonTreeView";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
-import {highlight} from '@/global/BeanFactory';
 // 工具
 import Optional from "@/utils/Optional";
 // 枚举
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import TableViewer from "@/components/TableViewer/index.vue";
-import {jsonFormat} from "@/algorithm/json";
+import TableViewer from "@/components/view/TableViewer/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useWindowSize} from "@vueuse/core";
 import {computed} from "vue";
-import {jsonParse} from "@/algorithm/json";
+import BaseView from "@/components/view/BaseView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
+import JsonTreeView from "@/components/view/JsonTreeView/index.vue";
+import MonacoView from "@/components/view/MonacoView/index.vue";
+import {jsonFormat} from "@/algorithm/json";
 
 /**
  * 每一项
@@ -98,34 +89,24 @@ interface Item {
      */
     data: any;
 
-    /**
-     * 渲染后的数据
-     */
-    pretty: string;
-
-    /**
-     * HTML渲染后的数据
-     */
-    value: string;
 
 }
 
 export default defineComponent({
     name: 'senior-search-data-view',
-    components: {MonacoEditor, TableViewer},
+    components: {MonacoView, JsonTreeView, JsonView, BaseView, MonacoEditor, TableViewer},
     props: {
-        view: Number,
+        view: {
+            type: Number,
+            default: () => ViewTypeEnum.JSON
+        },
         data: String,
     },
     data: () => ({
-        jsonTreeId: 'json-tree-view-' + new Date().getTime(),
-        value: '',
-        pretty: '',
         wrapper: {} as any,
         copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
         Optional,
         ViewTypeEnum,
-        show: ViewTypeEnum.JSON as ViewTypeEnum,
         items: new Array<Item>(),
         index: 0,
         // 活动的标签页
@@ -134,14 +115,6 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalSettingStore, ['jsonFontSize', 'jsonWrap'])
     },
-    watch: {
-        data() {
-            this.render();
-        },
-        view() {
-            this.render();
-        }
-    },
     setup() {
         const size = useWindowSize();
         const height = computed(() => (size.height.value - 120) + 'px');
@@ -149,72 +122,21 @@ export default defineComponent({
             height
         }
     },
-    mounted() {
-        this.render();
-    },
     methods: {
         execCopy() {
-            utools.copyText(this.pretty);
+            if (!this.data) {
+                return;
+            }
+            utools.copyText(jsonFormat(this.data));
             MessageUtil.success("已成功复制到剪切板");
-        },
-        render() {
-            // 渲染后的视图
-            this.pretty = this.data || "{}";
-            try {
-                // 尝试解析JSON视图
-                this.wrapper = jsonParse(this.pretty);
-                // 可以解析，是JSON
-                this.pretty = jsonFormat(this.wrapper);
-            } catch (e) {
-                // 解析失败
-                this.wrapper = {};
-                console.error(e);
-            }
-            // 视图
-            this.show = this.view || ViewTypeEnum.JSON;
-            if (this.view === ViewTypeEnum.JSON) {
-                this.renderJsonView()
-            } else if (this.view === ViewTypeEnum.JSON_TREE) {
-                this.renderJsonTreeView();
-            } else if (this.view === ViewTypeEnum.TABLE) {
-                // 表格，需要判断是否满足
-                this.renderTableView();
-            }
-        },
-        renderJsonView() {
-            this.$nextTick(() => {
-                let highlightResult = highlight.highlight(this.pretty, {
-                    language: 'json'
-                });
-                this.value = highlightResult.value;
-            });
-        },
-        renderJsonTreeView() {
-            renderJSONTreeView(this.wrapper, document.getElementById(this.jsonTreeId)!, {
-                expanded: true
-            });
-        },
-        renderTableView() {
-            // 判断是否满足
-            if (!(this.wrapper.hits && this.wrapper.hits.hits)) {
-                this.show = ViewTypeEnum.BASE;
-                // MessageUtil.warning("结果数据不满足结构，使用基础视图展示");
-            }
         },
         fixAdd() {
             this.index += 1;
-            let item = {
+            this.items.push({
                 title: this.index + '',
                 view: this.show + 0,
-                pretty: this.pretty + ' ',
                 data: typeof this.data === 'object' ? this.data : {},
-                value: this.value + ' '
-            };
-            if (this.show === ViewTypeEnum.JSON_TREE) {
-                let source = document.getElementById(this.jsonTreeId)! as HTMLDivElement;
-                item.value = source.innerHTML;
-            }
-            this.items.push(item);
+            });
         },
         fixDelete(index: number) {
             this.items.splice(index, 1);

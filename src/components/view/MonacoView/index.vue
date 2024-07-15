@@ -6,14 +6,14 @@ import {defineComponent, ref, watch} from "vue";
 import Optional from "@/utils/Optional";
 import {jsonFormat} from "@/algorithm/json";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import TableViewer from "@/components/TableViewer/index.vue";
+import TableViewer from "@/components/view/TableViewer/index.vue";
 
 
 export default defineComponent({
     name: 'monaco-view',
     components: {TableViewer, MonacoEditor},
     props: {
-        value: Object,
+        value: [Object, String],
         height: String,
     },
     data: () => ({
@@ -21,7 +21,6 @@ export default defineComponent({
     }),
     setup(props) {
         const pretty = ref('');
-
 
         watch(() => props.value, (value) => {
             if (value) {

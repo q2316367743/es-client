@@ -77,7 +77,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 // 其他
-import JsonView from "@/components/JsonView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
 
 const emits = defineEmits(['close']);
 

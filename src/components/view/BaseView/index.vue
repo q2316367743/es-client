@@ -10,7 +10,7 @@ import {jsonFormat} from "@/algorithm/json";
 export default defineComponent({
     name: 'base-view',
     props: {
-        value: Object
+        value: [Object, String]
     },
     data: () => ({
         Optional,

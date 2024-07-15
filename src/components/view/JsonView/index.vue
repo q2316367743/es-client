@@ -1,6 +1,6 @@
 <template>
     <div class="json-view hljs" :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
-        <pre class="language-json hljs" v-html="value"></pre>
+        <pre class="language-json hljs" v-html="pretty"></pre>
         <a-button v-if="copy" type="text" link class="json-view-copy" @click="execCopy">复制</a-button>
     </div>
 </template>
@@ -17,7 +17,10 @@ import {JSON_REGEX} from "@/data/EsUrl";
 export default defineComponent({
     name: 'json-view',
     props: {
-        data: [Object, String],
+        value: {
+            type: [Object, String],
+            default: '{}'
+        },
         copy: {
             type: Boolean,
             required: false,
@@ -25,7 +28,7 @@ export default defineComponent({
         }
     },
     data: () => ({
-        value: '',
+        pretty: '',
         origin: '',
         Optional
     }),
@@ -33,19 +36,19 @@ export default defineComponent({
         ...mapState(useGlobalSettingStore, ['jsonFontSize'])
     },
     watch: {
-        data(value) {
-            this.value = this.render(value);
+        value(value) {
+            this.pretty = this.render(value);
         }
     },
     created() {
-        this.value = this.render(this.data);
+        this.pretty = this.render(this.value);
     },
     methods: {
         execCopy() {
             utools.copyText(this.origin);
             MessageUtil.success("成功复制到剪切板");
         },
-        render(data: any): string {
+        render(data: object | string): string {
             let value = '';
             let needPretty = true;
             if (typeof data === 'string') {
@@ -54,15 +57,17 @@ export default defineComponent({
                         value = jsonFormat(data)
                     }catch (e) {
                         MessageUtil.error("格式化JSON失败", e);
-                        value = this.data as string;
+                        value = this.value as string;
                         needPretty = false;
                     }
                 } else {
-                    value = this.data as string;
+                    value = this.value as string;
                     needPretty = false;
                 }
-            } else {
+            } else if (typeof data === 'object'){
                 value = JSON.stringify(data, null, 4);
+            }else {
+                value = '';
             }
             // 原始值
             this.origin = value;

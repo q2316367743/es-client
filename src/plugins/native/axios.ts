@@ -74,7 +74,7 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
                 ...result,
                 data: jsonParse(result.data),
             });
-        }else {
+        } else {
             return Promise.resolve({
                 ...result,
                 data: result.data as T,
@@ -82,12 +82,12 @@ export async function http<T>(config: AxiosRequestConfig): Promise<Response<T>> 
         }
     } catch (e) {
         MessageUtil.error("JSON解析失败", e);
-        try{
+        try {
             return Promise.resolve({
                 ...result,
                 data: JSON.parse(result.data),
             });
-        }catch (ee) {
+        } catch (ee) {
             MessageUtil.error("JSON解析失败", ee);
             return Promise.resolve({
                 ...result,
@@ -163,10 +163,12 @@ export async function fetchEs<T>(config: RequestConfig): Promise<T> {
         return Promise.reject("请先选择链接！");
     }
 
-    let headers: Record<string, string> = {};
+    let headers: Record<string, string> = {
+        'Content-Type': 'application/json; charset=utf-8'
+    };
 
     // 如果有密码应该追加密码
-    let url = useUrlStore().url;
+    let {url} = useUrlStore();
     if (url) {
         if (url.isAuth) {
             if (url.authType === UrlAuthTypeEnum.HEADER) {

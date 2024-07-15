@@ -12,7 +12,7 @@ import '@/assets/less/theme.less';
 import '@/assets/less/main.less';
 import '@/assets/less/post.css';
 import '@/assets/less/customer.less';
-import '@/components/JsonTreeView/index.less';
+import '@/components/view/JsonTreeView/index.less';
 import '@arco-design/web-vue/dist/arco.css';
 import 'vxe-table/lib/style.css'
 

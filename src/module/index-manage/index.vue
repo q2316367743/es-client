@@ -38,7 +38,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import JsonView from "@/components/JsonView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
 import ArrayUtil from "@/utils/ArrayUtil";
 import IndexApi from "@/components/es/api/IndexApi";
 import Assert from "@/utils/Assert";

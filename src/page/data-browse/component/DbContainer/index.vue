@@ -24,7 +24,7 @@ import useUrlStore from "@/store/UrlStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {VxeTableInstance} from 'vxe-table';
 import {useWindowSize} from "@vueuse/core";
-import JsonView from "@/components/JsonView/index.vue";
+import JsonView from "@/components/view/JsonView/index.vue";
 import {
     buildContextMenuClickEvent,
     buildSelectAllChangeEvent,
