@@ -1,7 +1,7 @@
 import StrUtil from "@/utils/StrUtil";
 import {supportMethods} from "@/data/EsUrl";
 import MessageUtil from "@/utils/MessageUtil";
-import {jsonFormat} from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/json";
 
 /**
  * 格式化rest语法

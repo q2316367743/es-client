@@ -38,7 +38,6 @@ if (Constant.mode === PluginModeEnum.TAURI) {
     source = webPreload;
 }
 
-
 export const instance = utools;
 // @ts-ignore
 export const preload = source;

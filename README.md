@@ -26,7 +26,7 @@
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
         <img src='https://img.shields.io/badge/windows-v3.1.6-%2324c8db' alt="windows客户端"/>
     </a>
-    <a target="_blank" href="https://open.u-tools.cn/14220.html">
+    <a target="_blank" href="https://u.tools/plugins/detail/es-client/">
         <img src='https://img.shields.io/badge/utools-v3.1.6-%23787B80' alt="utools"/>
     </a>
 </p>
@@ -53,6 +53,7 @@
 - [Chrome插件（需要科学上网）](https://chromewebstore.google.com/detail/es-client/pkhmgepniefdigphghbolofjgbnhnhfd)
 - [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 - [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+- [uTools插件](https://u.tools/plugins/detail/es-client/)
 - ~~[想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)~~
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
 - ~~[web](https://www.u.tools/)~~

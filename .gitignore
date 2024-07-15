@@ -57,3 +57,4 @@ pnpm-debug.log*
 # electron
 /dist-electron
 /release
+/dist-tauri

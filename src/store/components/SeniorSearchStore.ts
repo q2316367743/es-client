@@ -4,10 +4,11 @@ import * as monaco from "monaco-editor";
 import MessageUtil from "@/utils/MessageUtil";
 import NotificationUtil from "@/utils/NotificationUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import {fetchEs, jsonParse} from "@/plugins/native/axios";
+import {fetchEs} from "@/plugins/native/axios";
+import {jsonParse} from "@/algorithm/json";
 //算法
 import restFormat from "@/algorithm/restFormat";
-import {jsonFormat} from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/json";
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
 import SeniorSearchJumpEvent from "@/entity/event/SeniorSearchJumpEvent";
 import router from "@/plugins/router";

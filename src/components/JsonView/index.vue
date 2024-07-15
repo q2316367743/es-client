@@ -10,7 +10,7 @@ import {highlight} from '@/global/BeanFactory';
 import {mapState} from "pinia";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";
-import {jsonFormat} from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/json";
 import MessageUtil from "@/utils/MessageUtil";
 import {JSON_REGEX} from "@/data/EsUrl";
 

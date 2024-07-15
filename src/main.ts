@@ -1,4 +1,4 @@
-import { createApp, App } from 'vue';
+import {createApp, App} from 'vue';
 import store from "@/store";
 import AppInstance from './App.vue';
 import router from "@/plugins/router";
@@ -8,10 +8,10 @@ import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 
 // 引入样式
-import '@/less/theme.less';
-import '@/less/main.less';
-import '@/less/post.css';
-import '@/less/customer.less';
+import '@/assets/less/theme.less';
+import '@/assets/less/main.less';
+import '@/assets/less/post.css';
+import '@/assets/less/customer.less';
 import '@/components/JsonTreeView/index.less';
 import '@arco-design/web-vue/dist/arco.css';
 import 'vxe-table/lib/style.css'
@@ -74,10 +74,11 @@ import foldingRange from "@/page/senior-search/layout/senior-search-editor/compo
 VXETable.setup({
     i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
 })
-function useTable (app: App) {
+
+function useTable(app: App) {
     // 表格功能
     app
-    .use(Menu)
+        .use(Menu)
 
     // 可选组件
     app.use(Icon)
@@ -87,6 +88,7 @@ function useTable (app: App) {
         // 安装表格
         .use(VxeTable)
 }
+
 // 插件
 createApp(AppInstance)
     .use(ArcoVue)
@@ -96,3 +98,6 @@ createApp(AppInstance)
     .use(useTable)
     .mount('#app');
 
+// 变量挂载
+window.mode = import.meta.env.VITE_MODE;
+window.referrer = import.meta.env.VITE_REFERRER;

@@ -71,12 +71,12 @@ import Optional from "@/utils/Optional";
 // 枚举
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/TableViewer/index.vue";
-import {jsonFormat} from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/json";
 import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useWindowSize} from "@vueuse/core";
 import {computed} from "vue";
-import {jsonParse} from "@/plugins/native/axios";
+import {jsonParse} from "@/algorithm/json";
 
 /**
  * 每一项

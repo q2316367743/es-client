@@ -1,5 +1,5 @@
 import {Button, Modal, ModalReturn} from "@arco-design/web-vue";
-import {jsonFormat} from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/json";
 import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
 import useLoadingStore from "@/store/LoadingStore";

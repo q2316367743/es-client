@@ -4,7 +4,7 @@
 <script lang="ts">
 import {defineComponent, ref, watch} from "vue";
 import Optional from "@/utils/Optional";
-import {jsonFormat} from "@/algorithm/jsonFormat";
+import {jsonFormat} from "@/algorithm/json";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import TableViewer from "@/components/TableViewer/index.vue";
 

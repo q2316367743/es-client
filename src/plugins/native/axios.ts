@@ -1,11 +1,11 @@
 import {AxiosRequestConfig} from "axios";
 import useUrlStore from "@/store/UrlStore";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
-import JSONBig from 'json-bigint';
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {JSON_REGEX} from "@/data/EsUrl";
+import {jsonParse} from "@/algorithm/json";
 
 interface Response<T> {
     /** The request URL. */
@@ -192,33 +192,4 @@ export async function fetchEs<T>(config: RequestConfig): Promise<T> {
         },
         responseEncoding: "utf-8"
     });
-}
-
-/**
- * JSON解析，将字符串解析为对象
- * @param data
- */
-export function jsonParse<T = any>(data: string): T {
-    return JSONBig.parse(data, (_key, value) => {
-        try {
-            if (typeof value === 'object') {
-                if (value.constructor) {
-                    // 存在构造器，是个类
-                    if (value.constructor.name == 'BigNumber2') {
-                        return value.toString();
-                    } else if (value.constructor.name == 'BigNumber') {
-                        return value.toString();
-                    }  else if (value.constructor.name == 'Array') {
-                        return value;
-                    } else {
-                        // 尝试解决数据异常问题
-                        return `${value}`;
-                    }
-                }
-            }
-        } catch (e) {
-            return value;
-        }
-        return value;
-    })
 }

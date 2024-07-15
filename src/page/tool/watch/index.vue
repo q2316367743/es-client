@@ -74,12 +74,12 @@ import {JSON_REGEX, signMethods, signs} from "@/data/EsUrl";
 import useIndexStore from "@/store/IndexStore";
 import {useIntervalFn} from "@vueuse/core";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import {fetchEs, jsonParse} from "@/plugins/native/axios";
+import {fetchEs} from "@/plugins/native/axios";
+import {jsonParse} from "@/algorithm/json";
 import useUrlStore from "@/store/UrlStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {jsonToHtml} from "@/utils/DialogUtil";
 import Constant from "@/global/Constant";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 
 

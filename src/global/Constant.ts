@@ -2,8 +2,7 @@ import {Repository} from "@/view/Data";
 import UpdateLog from '@/data/UpdateLog'
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
 
-// @ts-ignore
-const mode: PluginModeEnum = import.meta.env.VITE_MODE;
+const mode: PluginModeEnum = import.meta.env.VITE_MODE as PluginModeEnum;
 
 export default {
     uid: "z1f3vu4k",
@@ -31,7 +30,7 @@ export default {
         'edge': 'https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo',
         'firefox': 'https://addons.mozilla.org/zh-CN/firefox/addon/es-client/',
         '想天浏览器': 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w',
-        'utools': 'https://open.u-tools.cn/14220.html'
+        'utools': 'https://u.tools/plugins/detail/es-client/'
     },
     txc: 'https://support.qq.com/products/489458',
     logs: UpdateLog,

@@ -209,7 +209,6 @@ export const web = {
         })
     },
     isDev(): boolean {
-        // @ts-ignore
         return import.meta.env.DEV;
     },
     isMacOS,

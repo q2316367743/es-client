@@ -1,4 +1,4 @@
-/* eslint-disable */
+/// <reference types="vite/client" />
 
 declare interface TdAppUserOpt {
     /**
@@ -70,25 +70,47 @@ declare interface TDAPP {
     login(opt: TdAppUserOpt): void;
 }
 
+
+interface UmamiProps {
+    hostname?: string;
+    language?: string;
+    referrer?: string;
+    screen?: string;
+    title?: string;
+    url?: string;
+    website: string;
+}
+
+interface UmamiPropData extends UmamiProps {
+    name?: string;
+    data?: Record<string, string | number | boolean>;
+}
+
+interface UmamiInstance {
+
+    track(event: string, data?: Record<string, string | number | boolean>): void;
+
+    track(data: UmamiProps): void;
+
+    track(func: (props: Required<UmamiProps>) => UmamiPropData): void;
+
+}
+
 interface Window {
     preload: {
         axios: <T>(config: any) => any,
         iconv(content: any, charset: string): string,
         sendTo(id: number, channel: string, data: any): void;
     },
-    LA: {
-        /**
-         * 埋点
-         * @param event_identification 事件唯一标识。需要通过上述步骤进行创建。该项为必填项。且事件标识必须通过上述步骤创建后方可被统计。
-         * @param custom_params 自定义事件参数，该项为可选项。该参数接收一个至少包含一个键值对且可被JSON化的Object，用于标识该事件不同的值
-         * @param ids 事件上报统计掩码。
-         * 该项为可选项。
-         * 通常情况下您不需要关心该参数。
-         * sdk默认将事件上报到当前您的网站上已成功安装且开启了事件分析功能的所有统计掩码中。
-         * 当您的网站安装了超过一个统计代码且您希望仅将事件统计到某些统计掩码当中时，
-         * 您可以通过一个字符串或一个数组指定当前事件所需要上报的统计掩码：
-         */
-        track(event_identification: string, custom_params?: Record<string, string>, ids?: string): void
-    },
-    TDAPP: TDAPP
+    mode: string,
+    referrer: string,
+    TDAPP: TDAPP,
+    umami: UmamiInstance
+}
+
+interface ImportMetaEnv {
+    // 发行版
+    VITE_MODE: string;
+    VITE_PLATFORM: string;
+    VITE_REFERRER: string;
 }
