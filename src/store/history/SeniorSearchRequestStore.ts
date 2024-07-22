@@ -11,11 +11,18 @@ export const useSeniorSearchRequestStore = defineStore('senior-search-request', 
     let isInitialized = false;
     const requests = ref(new Array<SeniorSearchRequest>());
     let rev: string | undefined = undefined;
+    let isInit = false;
 
     async function init() {
+        if (isInit) {
+            return;
+        }
+        isInit = true;
         const res = await listByAsync<SeniorSearchRequest>(TableNameEnum.SENIOR_SEARCH_REQUEST);
         requests.value = res.list;
         rev = res.rev;
     }
+
+    return {init}
 
 })
