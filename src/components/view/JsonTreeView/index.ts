@@ -191,8 +191,7 @@ export function renderJSONTreeView(
         });
         let valueType = "hljs-" + typeof node.value;
         let valueContent = String(node.value);
-        let valueElementName = typeof node.value==='string' ? 'pre' : "div";
-        let valueElement = createElement(valueElementName, {
+        let valueElement = createElement("div", {
             className: "hljs-value " + valueType,
             content: valueContent,
         });
