@@ -17,20 +17,21 @@
 
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
+import { useWindowSize} from "@vueuse/core";
 import './index.less';
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {enableFilter, useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
 // 布局组件
 import SeniorSearchEditor from '@/page/senior-search/layout/senior-search-editor/index.vue';
 import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-display/index.vue';
 import SeniorSearchFilter from '@/page/senior-search/layout/senior-search-filter/index.vue';
-import {useLocalStorage, useWindowSize} from "@vueuse/core";
-import {enableFilter, useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
 
 const windowSize = useWindowSize();
 
 let history = '';
 
-const size = useLocalStorage('/key/senior-search/split-size', '400px');
+const size = useUtoolsDbStorage<string>('/key/senior-search/split-size', '400px');
 const disabled = ref(false);
 const fullscreen = ref(false);
 

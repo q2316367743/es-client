@@ -64,7 +64,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
     }),
     actions: {
         init() {
-            if (isInit)  {
+            if (isInit) {
                 return;
             }
             isInit = true;
@@ -73,14 +73,14 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 .then(data => {
                     if (data) {
                         this.body = data.record;
-                    }else {
+                    } else {
                         this.body = '';
                     }
                 }).finally(() => {
-                    watch(() => this.body, value => {
-                        saveOneByAsync(LocalNameEnum.KEY_SENIOR_SEARCH_EDITOR, value)
-                            .then(() => console.debug("保存编辑器"));
-                    })
+                watch(() => this.body, value => {
+                    saveOneByAsync(LocalNameEnum.KEY_SENIOR_SEARCH_EDITOR, value)
+                        .then(() => console.debug("保存编辑器"));
+                })
             });
         },
         updateBody(body: string) {
@@ -116,7 +116,8 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 method: request.method,
                 link: request.link
             }).then(() => console.log("新增高级查询历史记录"))
-                .catch(e => MessageUtil.error("新增高级查询历史记录失败", e))
+                .catch(e => MessageUtil.error("新增高级查询历史记录失败", e));
+
             fetchEs<string>({
                 url: request.link,
                 method: request.method,
@@ -137,10 +138,8 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                     this.json = {};
                 }
 
-                // 如果有过滤
-                if (this.filter.trim() !== '') {
-                    this.execFilter();
-                }
+                // 执行过滤
+                this.execFilter();
 
             }).catch((e) => {
                 this.result = e.response.data;

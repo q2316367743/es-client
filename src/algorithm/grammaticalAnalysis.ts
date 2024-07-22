@@ -110,7 +110,7 @@ function renderGrammatical(lines: Array<Line>, index: number): Grammatical | nul
             method: first[1] as Method,
             link: first[2],
             index,
-            params: lines.slice(1).map(e => e.value).join('\n'),
+            params: lines.slice(1).map(e => e.value).join('\r\n'),
             lineNumberStart: lines[0].lineNumber,
             lineNumberEnd: lines[lines.length - 1].lineNumber
         }
