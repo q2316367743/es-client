@@ -2,6 +2,7 @@
     <div class="senior-search-filter">
         <a-auto-complete v-model="filter" :data="seniorFilterRecords" allow-clear
                          placeholder="JS过滤；示例 “.hits.hits”、“.hits.hits[0]”、“.hits.hits.map(e => e._id)”"
+                         @keydown.enter="execFilter()"
         @clear="clearFilter()">
             <template #prepend>
                 this
