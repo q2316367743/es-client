@@ -79,22 +79,22 @@
     </div>
 </template>
 <script lang="ts" setup>
-import PageHelp from "@/page/data-browse/component/PageHelp.vue";
-import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
-import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
 import {computed} from "vue";
-import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
-import MessageUtil from "@/utils/MessageUtil";
-import ArrayUtil from "@/utils/ArrayUtil";
-import DataBuild from "@/page/data-browse/build/DataBuild";
-import {showDataExportDrawer} from "@/components/DataExport";
-import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useRouter} from "vue-router";
+import Constant from "@/global/Constant";
+import {showDataExportDrawer} from "@/components/DataExport";
+import {map} from "@/utils/ArrayUtil";
+import MessageUtil from "@/utils/MessageUtil";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
+import PageHelp from "@/page/data-browse/component/PageHelp.vue";
+import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
+import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
+import DataBuild from "@/page/data-browse/build/DataBuild";
+import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
 import {openDbSetting} from "@/page/data-browse/component/DbHeader/DbSetting";
-import Constant from "@/global/Constant";
 
 const router = useRouter();
 
@@ -103,7 +103,6 @@ const name = computed(() => useDataBrowseStore().name);
 const records = computed(() => useDbResultStore().records);
 const columns = computed(() => useDbResultStore().columns);
 const type = computed(() => useDataBrowseStore().type);
-const loading = computed(() => useDataBrowseStore().loading);
 const selectedKeys = computed(() => useDataBrowseStore().selectedKeys);
 const indexName = computed(() => index.value ? index.value.name : '')
 
@@ -123,7 +122,7 @@ function recordEdit(_id?: string) {
         return;
     }
     let record;
-    const recordMap = ArrayUtil.map<any, string, '_id'>(records.value, '_id');
+    const recordMap = map(records.value, '_id');
     if (selectedKeys.value.length !== 1) {
         if (_id) {
             record = recordMap.get(_id);

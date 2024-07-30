@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {GlobalSetting, getDefaultGlobalSetting} from "@/entity/setting/GlobalSetting";
 // 工具类
-import ArrayUtil from "@/utils/ArrayUtil";
+import {contains} from "@/utils/ArrayUtil";
 import Optional from "@/utils/Optional";
 // 枚举
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
@@ -31,7 +31,7 @@ const useGlobalSettingStore = defineStore('global-setting', {
         getTimeout: (state): number => Optional.ofNullable(state.globalSetting.timeout).orElse(5000),
         getNotificationTime: (state): number => Optional.ofNullable(state.globalSetting.notificationTime).orElse(5000),
 
-        getHomeSearchState: (state): number => ArrayUtil.contains([0, 1, 2], state.globalSetting.homeSearchState) ? state.globalSetting.homeSearchState : 0,
+        getHomeSearchState: (state): number => contains([0, 1, 2], state.globalSetting.homeSearchState) ? state.globalSetting.homeSearchState : 0,
         getHomeExcludeIndices: (state): Array<string> => Optional.ofNullable(state.globalSetting.homeExcludeIndices).orElse(new Array<string>()),
         getHomeIncludeIndices: (state): Array<string> => Optional.ofNullable(state.globalSetting.homeIncludeIndices).orElse(new Array<string>()),
         getTableHeaderMode: (state): TableHeaderModeEnum => Optional.ofNullable(state.globalSetting.tableHeaderMode).orElse(TableHeaderModeEnum.RENDER),

@@ -1,4 +1,4 @@
-import ArrayUtil from "@/utils/ArrayUtil";
+import {contains} from "@/utils/ArrayUtil";
 import {Property, Mapping} from "@/components/es/domain/IndexBase";
 
 /**
@@ -36,10 +36,10 @@ function buildItem(key: string, properties: Property, data: any) {
     }
     // 普通类型
     if (properties.type) {
-        if (ArrayUtil.contains(['date', 'keyword', 'text'], properties.type)) {
+        if (contains(['date', 'keyword', 'text'], properties.type)) {
             // 字符串类型
             data[key] = '';
-        } else if (ArrayUtil.contains(['long', 'integer', 'short'], properties.type)) {
+        } else if (contains(['long', 'integer', 'short'], properties.type)) {
             // 数值类型
             data[key] = 0;
         } else {

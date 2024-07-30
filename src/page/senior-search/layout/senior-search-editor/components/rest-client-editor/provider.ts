@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import ArrayUtil from "@/utils/ArrayUtil";
+import {startWith} from "@/utils/ArrayUtil";
 import StrUtil from "@/utils/StrUtil";
 import {optionsForGet, optionsForPost, signs, supportMethods} from '@/data/EsUrl';
 import useIndexStore from "@/store/IndexStore";
@@ -101,7 +101,7 @@ const provider = {
             endColumn: position.column + 1
         });
         // 需要获取连续的代码块
-        if (ArrayUtil.startWith(supportMethods, token, true)) {
+        if (startWith(supportMethods, token, true)) {
             // 请求方法提示
             getMethodSuggestions(position).forEach(e => suggestions.push(e));
         } else if (StrUtil.startWithArr(token, supportMethods)) {

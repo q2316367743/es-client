@@ -3,7 +3,7 @@ import {useTitle} from "@vueuse/core";
 
 import {Url} from "@/entity/Url";
 
-import ArrayUtil from "@/utils/ArrayUtil";
+import {map} from "@/utils/ArrayUtil";
 import {listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
@@ -20,7 +20,7 @@ const useUrlStore = defineStore('url', {
         url: undefined as Url | undefined
     }),
     getters: {
-        urlMap: state => ArrayUtil.map<Url, number, keyof Url>(state.urls, 'id'),
+        urlMap: state => map(state.urls, 'id'),
         /**
          * 返回全部的链接
          */

@@ -84,7 +84,7 @@
 
 ## 开发
 
-具体请前往[文档](https://www.yuque.com/baozhiyige-tewwf/ygxv4r)
+- 自构建文档：<https://blog.esion.xyz/archives/1722304832149>
 
 ## 项目预览
 
