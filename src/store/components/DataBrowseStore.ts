@@ -79,7 +79,6 @@ export const useDataBrowseStore = defineStore('data-browser', {
 
 
         updateSelectKeys(items: any[]) {
-            console.log(items)
             this.selectedKeys = items;
         },
 

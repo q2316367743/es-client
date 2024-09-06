@@ -17,6 +17,12 @@
                              allow-clear/>
                     <a-scrollbar style="height: 358px" class="data-browse-pull-down-data">
                         <div>
+                            <div v-if="input" class="data-browse-list-item"
+                                 :class="input.name === name ? 'data-browse-list-item-this' : ''"
+                                 @click="indexChange(input?.name, input?.type)">
+                                <span>{{ input.name }}</span>
+                                <a-tag color="orange">自定义</a-tag>
+                            </div>
                             <div v-for="item in items" class="data-browse-list-item"
                                  :class="item.name === name ? 'data-browse-list-item-this' : ''"
                                  @click="indexChange(item.name, item.type, item.index)">
@@ -32,7 +38,7 @@
     </a-trigger>
 </template>
 <script lang="ts" setup>
-import {computed, nextTick, ref} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import IndexView from "@/view/index/IndexView";
 import useIndexStore from "@/store/IndexStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
@@ -43,7 +49,7 @@ interface Item {
 
     name: string;
 
-    type: 'index' | 'alias';
+    type: 'index' | 'alias' | 'custom';
 
     index?: IndexView | undefined;
 
@@ -53,6 +59,7 @@ interface Item {
 const keyword = ref('');
 const show = ref(false);
 const dataBrowsePullDownSearch = ref<HTMLDivElement | null>(null);
+const input = ref<Item>()
 
 const name = computed(() => useDataBrowseStore().name);
 const indices = computed<Array<Item>>(() => {
@@ -97,6 +104,22 @@ const {results} = useFuse(keyword, indices, {
     }
 });
 const items = computed(() => results.value.map(e => e.item));
+
+watch(keyword,  value =>  {
+    if (value === '') {
+        input.value = undefined;
+        return;
+    }
+    if (indices.value.some(e => e.name.includes(value))) {
+        // 存在索引包含关键字
+        input.value = undefined;
+        return;
+    }
+    input.value =  {
+        name: value,
+        type: 'custom'
+    }
+})
 
 
 function showIndex() {
