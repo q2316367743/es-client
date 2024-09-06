@@ -55,7 +55,7 @@
         </div>
         <!-- 结果展示 -->
         <div class="index-mapping-source" v-if="source.show">
-            <json-view :data="source.data" :copy="false"/>
+            <json-view :value="source.data" :copy="false"/>
         </div>
         <a-button type="text" status="normal" class="index-mapping-switch" @click="source.show = !source.show">切换
         </a-button>

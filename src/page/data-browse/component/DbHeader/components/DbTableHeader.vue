@@ -7,7 +7,8 @@
             <div class="table-view-trigger">
                 <a-list style="width: 250px">
                     <template #header>
-                        <a-button long status="danger" type="primary" size="small" @click="useDbResultResetColumn()">重置
+                        <a-button long status="danger" type="primary" size="small" @click="useDbResultResetColumn()">
+                            重置
                         </a-button>
                     </template>
                     <a-scrollbar style="height: 341px;overflow: auto;width: 250px;">

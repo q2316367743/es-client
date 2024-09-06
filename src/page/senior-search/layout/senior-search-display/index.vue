@@ -7,6 +7,8 @@
             <display-record v-show="displayActive === 'record'"/>
             <!-- 历史记录 -->
             <display-history v-show="displayActive === 'history'"/>
+            <!-- 快捷命令 -->
+            <ss-display-quick v-if="displayActive === 'quick'"/>
         </div>
         <div class="tabs">
             <a-button type="text" @click="fullscreen = !fullscreen">
@@ -29,6 +31,9 @@
             <div class="tab" :class="displayActive === 'history' ? 'active' : ''" @click="displayActive = 'history'">
                 历史记录
             </div>
+            <div class="tab" :class="displayActive === 'quick' ? 'active' : ''" @click="displayActive = 'quick'">
+                快捷命令
+            </div>
         </div>
     </div>
 </template>
@@ -44,6 +49,7 @@ import Constant from "@/global/Constant";
 import {jsonToHtml} from "@/utils/DialogUtil";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import NotificationUtil from "@/utils/NotificationUtil";
+import SsDisplayQuick from "@/page/senior-search/layout/senior-search-display/SsDisplayQuick.vue";
 
 const props = defineProps({
     fullscreen: Boolean
@@ -70,7 +76,7 @@ function pin() {
             title: "高级搜索-查询结果",
             alwaysOnTop: true
         })
-    }else {
+    } else {
         NotificationUtil.warning("目前只有utools支持json钉住，请使用utools版本");
     }
 }

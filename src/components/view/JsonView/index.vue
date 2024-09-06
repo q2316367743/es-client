@@ -36,8 +36,12 @@ export default defineComponent({
         ...mapState(useGlobalSettingStore, ['jsonFontSize'])
     },
     watch: {
-        value(value) {
-            this.pretty = this.render(value);
+        value: {
+            handler(value) {
+                this.pretty = this.render(value);
+            },
+            immediate: true,
+            deep: true
         }
     },
     created() {

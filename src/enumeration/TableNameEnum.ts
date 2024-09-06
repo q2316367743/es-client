@@ -13,7 +13,12 @@ enum TableNameEnum {
     /**
      * 高级查询请求
      */
-    SENIOR_SEARCH_REQUEST = '/list/senior-search-request'
+    SENIOR_SEARCH_REQUEST = '/list/senior-search-request',
+
+    /**
+     * 高级查询请求
+     */
+    SENIOR_SEARCH_REQUEST_ITEM = '/item/senior-search-request'
 
 }
 

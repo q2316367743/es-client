@@ -4,13 +4,21 @@ export interface SeniorSearchRequest {
     name: string;
     // 最大255
     description: string;
-    // 基础url，如果不一致，需要带上
-    baseUrl: string;
+}
+
+export interface SeniorSearchRequestContent extends SeniorSearchRequest {
     method: string;
     url: string;
     body: string;
 }
 
-export interface SeniorSearchRequestContent extends SeniorSearchRequest {
-    body: string;
+export function createSeniorSearchRequestContent(): SeniorSearchRequestContent {
+    return {
+        id: Date.now(),
+        name: '',
+        description: '',
+        method: 'POST',
+        url: '',
+        body: ''
+    }
 }
