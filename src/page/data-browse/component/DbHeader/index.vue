@@ -66,9 +66,6 @@ import {map} from "@/utils/ArrayUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
-import PageHelp from "@/page/data-browse/component/PageHelp.vue";
-import DbIndexSelect from "@/page/data-browse/component/DbIndexSelect.vue";
-import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
 import DataBuild from "@/page/data-browse/build/DataBuild";
 import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
@@ -78,6 +75,9 @@ import {
     jumpToSeniorSearch,
     useDbResultRecords
 } from "@/page/data-browse/store/DbResultStore";
+import PageHelp from "@/page/data-browse/component/DbHeader/components/PageHelp.vue";
+import DbIndexSelect from "@/page/data-browse/component/DbHeader/components/DbIndexSelect.vue";
+import DbSimpleItem from "@/page/data-browse/component/DbHeader/components/DbSimpleItem.vue";
 import DbTableHeader from "@/page/data-browse/component/DbHeader/components/DbTableHeader.vue";
 
 const router = useRouter();
