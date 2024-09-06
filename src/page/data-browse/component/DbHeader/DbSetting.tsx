@@ -15,6 +15,12 @@ export function openDbSetting() {
                     help: () => <span>启用track_total_hits可实现突破10000条显示</span>
                 }}
             </FormItem>
+            <FormItem label={'是否固定_id的表头'}>
+                {{
+                    default: () => <Switch v-model={dbSetting.value.fixId}/>,
+                    help: () => <span>固定后，展开行将无法复制全部</span>
+                }}
+            </FormItem>
         </Form>,
         okText: '保存',
         async onBeforeOk() {

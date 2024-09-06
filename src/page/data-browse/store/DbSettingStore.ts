@@ -18,6 +18,8 @@ export const useDbSettingStore = defineStore(LocalNameEnum.SETTING_DATA_BROWSE, 
         return res;
     })
 
+    const fixId = computed(() => dbSetting.value.fixId);
+
     async function init() {
         if (isInit) {
             return;
@@ -34,7 +36,7 @@ export const useDbSettingStore = defineStore(LocalNameEnum.SETTING_DATA_BROWSE, 
     }
 
     return {
-        dbSetting,params,
+        dbSetting,params,fixId,
         init, save
     }
 

@@ -5,10 +5,16 @@ export interface DbSetting {
      */
     enableTrackTotalHits: boolean;
 
+    /**
+     * 是否固定ID
+     */
+    fixId: boolean;
+
 }
 
 export function getDefaultDbSetting(): DbSetting {
     return {
-        enableTrackTotalHits: false
+        enableTrackTotalHits: false,
+        fixId: true
     }
 }

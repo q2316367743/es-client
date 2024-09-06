@@ -14,7 +14,7 @@
                 </template>
             </vxe-column>
             <vxe-column v-for="column in useDbResultColumns" :key="column.title" :field="column.dataIndex"
-                        :title="column.title" :fixed="column.title === '_id' ? 'left' : null" :visible="column.show"
+                        :title="column.title" :fixed="renderFixed(column.title)" :visible="column.show"
                         :width="Math.max(column.title.length * 14, 80)" show-overflow="tooltip"/>
         </vxe-table>
     </div>
@@ -33,6 +33,7 @@ import {
 } from "@/page/data-browse/component/DbContainer/func";
 import {columnConfig, menuConfig, rowConfig} from "@/page/data-browse/component/DbContainer/args";
 import {useDbResultColumns, useDbResultRecords} from "@/page/data-browse/store/DbResultStore";
+import {useDbSettingStore} from "@/page/data-browse/store/DbSettingStore";
 
 const size = useWindowSize();
 
@@ -52,6 +53,14 @@ const emptyText = computed(() => {
 
 
 const loading = computed(() => useDataBrowseStore().loading);
+const fixId = computed(() => useDbSettingStore().fixId);
+
+function renderFixed(title: string) {
+    if (!fixId.value) {
+        return null;
+    }
+    return title === '_id' ? 'left' : null
+}
 
 onMounted(() => {
     const $table = tableRef.value
