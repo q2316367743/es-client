@@ -66,19 +66,38 @@ function getMethodUrlSuggestions(position: monaco.Position): Map<string, Array<m
                     endColumn: -1
                 }
             }));
-            optionsForPost.forEach(option => postList.push({
-                label: `/${item}/${option}`,
-                kind: monaco.languages.CompletionItemKind.Variable,
-                insertText: `/${item}/${option}`,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                detail: `/${item}/${option}`,
-                range: {
-                    startLineNumber: position.lineNumber,
-                    startColumn: position.column - 1,
-                    endLineNumber: position.lineNumber,
-                    endColumn: -1
+            optionsForPost.forEach(option => {
+                let insertText = `/${item}/${option}`;
+                if (option === '_search') {
+                    insertText += '\n' +
+                        '{\n' +
+                        '    "sort": {},\n' +
+                        '    "query": {\n' +
+                        '        "bool": {\n' +
+                        '            "must": [],\n' +
+                        '            "should": [],\n' +
+                        '            "must_not": []\n' +
+                        '        }\n' +
+                        '    },\n' +
+                        '    "aggs": {},\n' +
+                        '    "from": 0,\n' +
+                        '    "size": 20\n' +
+                        '}'
                 }
-            }));
+                postList.push({
+                    label: `/${item}/${option}`,
+                    kind: monaco.languages.CompletionItemKind.Variable,
+                    insertText: insertText,
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    detail: `/${item}/${option}`,
+                    range: {
+                        startLineNumber: position.lineNumber,
+                        startColumn: position.column - 1,
+                        endLineNumber: position.lineNumber,
+                        endColumn: -1
+                    }
+                })
+            });
         }));
     map.set('get', getList);
     map.set('post', postList);
