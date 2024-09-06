@@ -33,36 +33,15 @@
                 <icon-nav/>
             </db-simple-item>
             <!-- 跳转到基础查询 -->
-            <db-simple-item :disable="type === ''" tip="跳转到 基础查询" @click="jumpToBaseSearch">
+            <db-simple-item :disable="type === ''" tip="跳转到 基础查询" @click="jumpToBaseSearchWrapper">
                 <icon-search/>
             </db-simple-item>
             <!-- 跳转到高级查询 -->
-            <db-simple-item :disable="type === ''" tip="跳转到 高级查询" @click="jumpToSeniorSearch">
+            <db-simple-item :disable="type === ''" tip="跳转到 高级查询" @click="jumpToSeniorSearchWrapper">
                 <icon-filter/>
             </db-simple-item>
             <!-- 筛选 -->
-            <a-trigger trigger="click" :unmount-on-close="false" position="br">
-                <db-simple-item :disable="type === ''" tip="筛选">
-                    <icon-select-all/>
-                </db-simple-item>
-                <template #content>
-                    <div class="table-view-trigger">
-                        <a-list style="width: 250px">
-                            <template #header>
-                                <a-button long status="danger" type="primary" size="small" @click="resetColumn()">重置
-                                </a-button>
-                            </template>
-                            <a-scrollbar style="height: 341px;overflow: auto;width: 250px;">
-                                <a-checkbox-group :model-value="selectedKeys" @change="setColumn($event)">
-                                    <div v-for="column in columns" style="width: 240px;margin: 5px 5px;">
-                                        <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
-                                    </div>
-                                </a-checkbox-group>
-                            </a-scrollbar>
-                        </a-list>
-                    </div>
-                </template>
-            </a-trigger>
+            <db-table-header />
             <!-- 操作 -->
             <a-dropdown trigger="click">
                 <a-button type="text" size="mini">
@@ -93,15 +72,18 @@ import DbSimpleItem from "@/page/data-browse/component/DbSimpleItem.vue";
 import DataBuild from "@/page/data-browse/build/DataBuild";
 import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
-import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
 import {openDbSetting} from "@/page/data-browse/component/DbHeader/DbSetting";
+import {
+    jumpToBaseSearch,
+    jumpToSeniorSearch,
+    useDbResultRecords
+} from "@/page/data-browse/store/DbResultStore";
+import DbTableHeader from "@/page/data-browse/component/DbHeader/components/DbTableHeader.vue";
 
 const router = useRouter();
 
 const index = computed(() => useDataBrowseStore().index);
 const name = computed(() => useDataBrowseStore().name);
-const records = computed(() => useDbResultStore().records);
-const columns = computed(() => useDbResultStore().columns);
 const type = computed(() => useDataBrowseStore().type);
 const selectedKeys = computed(() => useDataBrowseStore().selectedKeys);
 const indexName = computed(() => index.value ? index.value.name : '')
@@ -109,12 +91,10 @@ const indexName = computed(() => index.value ? index.value.name : '')
 const recordReduce = (deleteRowIndies?: Array<string>) => useDataBrowseStore().reduce(deleteRowIndies);
 const executeQuery = (renderHeader?: boolean) => useDataBrowseStore().executeQuery(renderHeader);
 const openMappingDrawer = () => useDataBrowseStore().openMappingDrawer();
-const jumpToBaseSearch = () => useDbResultStore().jumpToBaseSearch(() => router.push(PageNameEnum.BASE_SEARCH));
-const jumpToSeniorSearch = () => {
-    useDbResultStore().jumpToSeniorSearch(() => router.push(PageNameEnum.SENIOR_SEARCH));
+const jumpToBaseSearchWrapper = () => jumpToBaseSearch(() => router.push(PageNameEnum.BASE_SEARCH));
+const jumpToSeniorSearchWrapper = () => {
+    jumpToSeniorSearch(() => router.push(PageNameEnum.SENIOR_SEARCH));
 }
-const resetColumn = () => useDbResultStore().resetColumn();
-const setColumn = (values: any[]) => useDbResultStore().setColumn(values);
 
 function recordEdit(_id?: string) {
     if (!index.value) {
@@ -122,7 +102,7 @@ function recordEdit(_id?: string) {
         return;
     }
     let record;
-    const recordMap = map(records.value, '_id');
+    const recordMap = map(useDbResultRecords.value, '_id');
     if (selectedKeys.value.length !== 1) {
         if (_id) {
             record = recordMap.get(_id);
@@ -156,7 +136,7 @@ function openExportDialog() {
         return;
     }
     // 有记录
-    if (records.value.length === 0) {
+    if (useDbResultRecords.value.length === 0) {
         MessageUtil.warning('数据为空');
         return;
     }

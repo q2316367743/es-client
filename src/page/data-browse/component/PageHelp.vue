@@ -12,7 +12,7 @@
         </a-button>
         <a-dropdown trigger="click" @select="pageSizeChange">
             <a-button style="font-size: 12px;line-height: 20px;">
-                {{ (page - 1) * size }} - {{ Math.min(page * size, total) }}
+                {{ (page - 1) * size }} - {{ Math.min(page * size, useDbResultTotal) }}
             </a-button>
             <template #content>
                 <a-doption value="1">10</a-doption>
@@ -24,14 +24,14 @@
             </template>
         </a-dropdown>
         <a-button style="font-size: 12px">
-            / {{ total }}
+            / {{ useDbResultTotal }}
         </a-button>
-        <a-button :disabled="page * size > total" @click="nextPage()">
+        <a-button :disabled="page * size > useDbResultTotal" @click="nextPage()">
             <template #icon>
                 <icon-right/>
             </template>
         </a-button>
-        <a-button :disabled="page * size > total" @click="toLast()">
+        <a-button :disabled="page * size > useDbResultTotal" @click="toLast()">
             <template #icon>
                 <icon-double-right/>
             </template>
@@ -39,15 +39,12 @@
     </a-button-group>
 </template>
 <script lang="ts" setup>
-import {computed} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
-import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
+import {useDbResultTotal} from "@/page/data-browse/store/DbResultStore";
 
 const {page, size} = useDbConditionStore();
-
-const total = computed(() => useDbResultStore().total);
 
 function update() {
     useDataBrowseStore().executeQuery(false);
@@ -85,7 +82,7 @@ function pageSizeChange(command: any) {
 }
 
 function nextPage() {
-    if (page.value * size.value > total.value) {
+    if (page.value * size.value > useDbResultTotal.value) {
         return;
     }
     updatePage(page.value + 1);
@@ -93,7 +90,7 @@ function nextPage() {
 }
 
 function toLast() {
-    updatePage(Math.ceil(total.value / size.value));
+    updatePage(Math.ceil(useDbResultTotal.value / size.value));
     update();
 }
 

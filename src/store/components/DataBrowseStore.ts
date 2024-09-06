@@ -12,7 +12,7 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import IndexView from "@/view/index/IndexView";
 // 存储
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
-import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
+import {useDbResultRender} from "@/page/data-browse/store/DbResultStore";
 
 export interface IndexInfo {
     name: string,
@@ -53,7 +53,7 @@ export const useDataBrowseStore = defineStore('data-browser', {
                             this.allowUpdate = true;
                             this.selectedKeys = [];
                         }
-                        useDbResultStore().render(result, renderHeader);
+                        useDbResultRender(result, renderHeader);
                         this.selectedKeys = new Array<any>();
                         resolve();
                     })

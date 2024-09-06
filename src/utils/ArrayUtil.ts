@@ -176,3 +176,22 @@ export class MapWrap<K, V> extends Map<K, V> {
     }
 
 }
+
+export function arraysAreEqual<T = any>(arr1: Array<T>, arr2: Array<T>) {
+    // 首先检查长度是否相等
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    // 排序数组并逐个比较元素
+    arr1.sort();
+    arr2.sort();
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}

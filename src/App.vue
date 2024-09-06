@@ -24,8 +24,6 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import useLoadingStore from "@/store/LoadingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import useUrlStore from "@/store/UrlStore";
-import useBaseSearchHistoryStore from "@/store/history/BaseSearchHistoryStore";
-import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
@@ -45,11 +43,9 @@ import {checkElectronUpdate} from "@/components/version-manager/ElectronUpdate";
 
 const router = useRouter();
 
-
 const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.vue"));
 const AppSide = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
 const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
-
 
 const jsonTheme = computed(() => useGlobalSettingStore().jsonTheme);
 const loading = computed(() => useLoadingStore().loading);
@@ -57,10 +53,6 @@ const text = computed(() => useLoadingStore().text);
 
 async function initData(): Promise<void> {
     await Promise.all([
-        useUrlStore().init(),
-        // 历史记录
-        useBaseSearchHistoryStore().init(),
-        useSeniorSearchHistoryStore().init(),
         // 设置
         useGlobalSettingStore().init(),
         useEditorSettingStore().init(),

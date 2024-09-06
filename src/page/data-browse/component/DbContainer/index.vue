@@ -1,19 +1,20 @@
 <template>
     <div class="content-table">
-        <vxe-table ref="tableRef" :data="records" :height="height" :column-config="columnConfig" :row-config="rowConfig"
+        <vxe-table ref="tableRef" :data="useDbResultRecords" :height="height" :column-config="columnConfig"
+                   :row-config="rowConfig"
                    :empty-text="emptyText" :loading="loading" :menu-config="menuConfig"
                    @checkbox-all="selectAllChangeEvent" @checkbox-change="selectChangeEvent"
                    @menu-click="contextMenuClickEvent">
             <vxe-column type="checkbox" width="60"></vxe-column>
             <vxe-column type="expand" width="80" title="详细">
-                <template #content="{ row, rowIndex }">
+                <template #content="{ row }">
                     <div class="expand-wrapper">
                         <json-view :data="row"/>
                     </div>
                 </template>
             </vxe-column>
-            <vxe-column v-for="column in showColumns" :key="column.title" :field="column.dataIndex"
-                        :title="column.title" :fixed="column.title === '_id' ? 'left' : null"
+            <vxe-column v-for="column in useDbResultColumns" :key="column.title" :field="column.dataIndex"
+                        :title="column.title" :fixed="column.title === '_id' ? 'left' : null" :visible="column.show"
                         :width="Math.max(column.title.length * 14, 80)" show-overflow="tooltip"/>
         </vxe-table>
     </div>
@@ -31,7 +32,7 @@ import {
     buildSelectChangeEvent
 } from "@/page/data-browse/component/DbContainer/func";
 import {columnConfig, menuConfig, rowConfig} from "@/page/data-browse/component/DbContainer/args";
-import {useDbResultStore} from "@/page/data-browse/store/DbResultStore";
+import {useDbResultColumns, useDbResultRecords} from "@/page/data-browse/store/DbResultStore";
 
 const size = useWindowSize();
 
@@ -50,8 +51,6 @@ const emptyText = computed(() => {
 });
 
 
-const records = computed(() => useDbResultStore().records);
-const showColumns = computed(() => useDbResultStore().showColumns);
 const loading = computed(() => useDataBrowseStore().loading);
 
 onMounted(() => {

@@ -6,126 +6,135 @@ import {Url} from "@/entity/Url";
 import {map} from "@/utils/ArrayUtil";
 import {listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {toRaw} from "vue";
+import {computed, ref, toRaw} from "vue";
 import {statistics} from "@/global/BeanFactory";
 
 const title = useTitle();
 
-const useUrlStore = defineStore('url', {
-    state: () => ({
-        // 全部的链接
-        urls: new Array<Url>(),
-        rev: undefined as string | undefined,
-        // 当前选中的链接
-        url: undefined as Url | undefined
-    }),
-    getters: {
-        urlMap: state => map(state.urls, 'id'),
-        /**
-         * 返回全部的链接
-         */
-        list: (state): Array<Url> => {
-            return state.urls;
-        },
-        current: (state): string => {
-            return state.url && state.url.value ? state.url.value! : '';
-        },
-        id: (state): number | undefined => {
-            return state.url ? state.url.id! : undefined;
-        },
-        empty: state => state.url === undefined
-    },
-    actions: {
-        async init() {
-            const {list, rev} = await listByAsync<Url>(LocalNameEnum.DB_URL);
-            this.urls = list.sort((a, b) => b.sequence! - a.sequence!);
-            this.rev = rev;
-        },
-        /**
-         * 选择链接
-         */
-        choose(id: number): boolean {
-            // 查询URL
-            let url = this.urls.find(e => e.id! === id);
-            if (!url) {
-                return false;
-            }
-            // 统计用户使用的es版本
-            statistics.access("es_version", url.version);
-            setItem(LocalNameEnum.KEY_LAST_URL, id);
-            this.url = url;
-            title.value = url.name || 'domain-client';
-            return true;
-        },
-        clear() {
-            this.url = undefined;
-            title.value = 'domain-client';
-        },
+const useUrlStore = defineStore('url', () => {
+    // state
+    const urls = ref<Array<Url>>([]);
+    const rev = ref<string | undefined>(undefined);
+    const url = ref<Url | undefined>(undefined);
 
+    // getters
+    const urlMap = computed(() => map(urls.value, 'id'));
+    const list = computed(() => urls.value);
+    const current = computed(() => url.value && url.value.value ? url.value.value! : '');
+    const id = computed(() => url.value ? url.value.id! : undefined);
+    const empty = computed(() => url.value === undefined);
 
-        async add(record: Omit<Url, 'id' | 'createTime' | 'updateTime'>) {
-            const now = new Date();
-            const id = now.getTime();
-            this.urls.push({
+    // actions
+    const init = async () => {
+        const res = await listByAsync<Url>(LocalNameEnum.DB_URL);
+        urls.value = res.list.sort((a, b) => b.sequence! - a.sequence!);
+        rev.value = res.rev;
+    };
+
+    init();
+
+    const choose = (id: number): boolean => {
+        // 查询URL
+        const targetUrl = urls.value.find(e => e.id! === id);
+        if (!targetUrl) {
+            return false;
+        }
+        // 统计用户使用的es版本
+        statistics.access("es_version", targetUrl.version);
+        setItem(LocalNameEnum.KEY_LAST_URL, id);
+        url.value = targetUrl;
+        title.value = targetUrl.name || 'es-client';
+        return true;
+    };
+
+    const clear = () => {
+        url.value = undefined;
+        title.value = 'es-client';
+    };
+
+    const add = async (record: Omit<Url, 'id' | 'createTime' | 'updateTime'>) => {
+        const now = new Date();
+        const id = now.getTime();
+        urls.value.push({
+            ...record,
+             id,
+             createTime: now,
+             updateTime: now
+        });
+        await _sync();
+    };
+
+    const addByBatch = async (records: Array<Omit<Url, 'id' | 'createTime' | 'updateTime'>>) => {
+        const now = new Date();
+        const id = now.getTime();
+        for (let i = 0; i < records.length; i++) {
+            const record = records[i];
+            urls.value.push({
                 ...record,
-                id,
-                createTime: now,
-                updateTime: now
+                 id: id + i,
+                 createTime: now,
+                 updateTime: now
             });
-            await this._sync();
-        },
-        async addByBatch(records: Array<Omit<Url, 'id' | 'createTime' | 'updateTime'>>) {
-            const now = new Date();
-            const id = now.getTime();
-            for (let i = 0; i < records.length; i++) {
-                const record = records[i];
-                this.urls.push({
-                    ...record,
-                    id: id + i,
-                    createTime: now,
-                    updateTime: now
-                });
-            }
-            await this._sync();
-        },
-        async update(id: number, record: Partial<Url>) {
-            const index = this.urls.findIndex(e => e.id === id);
-            if (index === -1) {
-                return Promise.reject(`存储【${id}】不存在`);
-            }
-            const now = new Date();
-            this.urls[index] = {
-                ...this.urls[index],
-                ...record,
-                id,
-                updateTime: now
-            };
-            await this._sync();
-        },
-        async remove(id: number) {
-            const index = this.urls.findIndex(e => e.id === id);
-            if (index === -1) {
-                return Promise.reject(`链接【${id}】不存在`);
-            }
-            this.urls.splice(index, 1);
-            await this._sync();
-        },
-        async save(urls: Array<Url>) {
-            this.urls = urls;
-            await this._sync();
-        },
-        async _sync() {
+        }
+        await _sync();
+    };
 
-            const res = await utools.db.promises.put({
-                _id: LocalNameEnum.DB_URL,
-                _rev: this.rev,
-                value: toRaw(this.urls)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
-        },
+    const update = async (id: number, record: Partial<Url>) => {
+        const index = urls.value.findIndex(e => e.id === id);
+        if (index === -1) {
+            return Promise.reject(`存储【${id}】不存在`);
+        }
+        const now = new Date();
+        urls.value[index] = {
+            ...urls.value[index],
+            ...record,
+             id,
+             updateTime: now
+        };
+        await _sync();
+    };
+
+    const remove = async (id: number) => {
+        const index = urls.value.findIndex(e => e.id === id);
+        if (index === -1) {
+            return Promise.reject(`链接【${id}】不存在`);
+        }
+        urls.value.splice(index, 1);
+        await _sync();
+    };
+
+    const save = async (res: Array<Url>) => {
+        urls.value = res;
+        await _sync();
+    };
+
+    const _sync = async () => {
+        const res = await utools.db.promises.put({
+            _id: LocalNameEnum.DB_URL,
+            _rev: rev.value,
+            value: toRaw(urls.value)
+        });
+        if (res.error) {
+            return Promise.reject(res.message);
+        }
+        rev.value = res.rev;
+    }
+
+    return {
+        urls,
+        url,
+        urlMap,
+        list,
+        current,
+        id,
+        empty,
+        choose,
+        clear,
+        add,
+        addByBatch,
+        update,
+        remove,
+        save,
     }
 });
 

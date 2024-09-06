@@ -1,3 +1,9 @@
+/**
+ * 将JSON数据转化为表格视图
+ * @author Esion
+ * @since 2023-03-27
+ */
+
 import {ClassName} from "@arco-design/web-vue/es/_utils/types";
 import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 
@@ -11,6 +17,7 @@ export function buildTableColumnData(dataIndex: string, width: number, title?: s
         tooltip: width === MAX_WIDTH,
         width,
         cellClass: fixed ? 'table-view-cell table-view-fixed' : 'table-view-cell',
+        show: true
     }
 }
 
@@ -42,7 +49,7 @@ export interface TableViewColumnData {
     tooltip?: boolean | Record<string, any>;
     sortable?: TableViewSortable;
     cellClass: ClassName;
-
+    show: boolean;
 }
 
 export interface TableViewSortable {
@@ -75,7 +82,7 @@ export interface TableView {
  * @param result 数据
  * @constructor
  */
-export function jsonToTable(result: DocumentSearchResult<any>): TableView {
+export function jsonToTable(result: DocumentSearchResult): TableView {
     return jsonToTableComplete(result, {common: true, source: true, separator: "-"});
 }
 
@@ -86,7 +93,7 @@ export function jsonToTable(result: DocumentSearchResult<any>): TableView {
  * @constructor
  */
 export function jsonToTableComplete(
-    result: DocumentSearchResult<any>,
+    result: DocumentSearchResult,
     config: BuildConfig,
 ): TableView {
     // 当变化时，进行渲染
@@ -103,7 +110,8 @@ export function jsonToTableComplete(
             sortable: {
                 sortDirections: ['ascend', 'descend']
             },
-            cellClass: 'table-view-cell table-view-fixed'
+            cellClass: 'table-view-cell table-view-fixed',
+            show: true
         });
         ['_index', '_score'].forEach(key => columnMap.set(key, buildTableColumnData(key, 110)));
     }

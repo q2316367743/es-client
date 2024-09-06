@@ -2,12 +2,12 @@
     <a-trigger position="top" auto-fit-position :unmount-on-close="false" trigger="click" v-model:popup-visible="show"
                :popup-offset="2">
         <a-button type="text" size="mini" @click="showIndex()">
-            <template #icon>
+            <a-space>
                 <icon-up style="margin: 5px;" v-if="show"/>
                 <icon-down style="margin: 5px;" v-else/>
-            </template>
-            <span v-if="name === ''" style="user-select: none;">未选择索引</span>
-            <span v-else style="user-select: none;">{{ name }}</span>
+                <span v-if="name === ''" style="user-select: none;">未选择索引</span>
+                <span v-else style="user-select: none;">{{ name }}</span>
+            </a-space>
         </a-button>
         <template #content>
             <div class="data-browse-pull-down-panel">
