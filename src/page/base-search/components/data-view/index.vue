@@ -2,7 +2,7 @@
     <div class="base-search-data-view hljs" :class="mainClass"
          :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
         <base-view v-if="defaultView === ViewTypeEnum.BASE" :value="current.result"/>
-        <json-view v-else-if="defaultView === ViewTypeEnum.JSON" :data="current.result"/>
+        <json-view v-else-if="defaultView === ViewTypeEnum.JSON" :value="current.result"/>
         <table-viewer v-else-if="defaultView === ViewTypeEnum.TABLE" :data="current.result" :index="current.index"/>
         <monaco-view v-else-if="defaultView === ViewTypeEnum.EDITOR" :value="current.result" :height="height"/>
         <json-tree-view v-else-if="defaultView === ViewTypeEnum.JSON_TREE" :value="current.result"/>

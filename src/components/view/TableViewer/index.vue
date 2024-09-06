@@ -152,7 +152,8 @@ export default defineComponent({
                     sortable: {
                         sortDirections: ['ascend', 'descend']
                     },
-                    cellClass: 'table-view-cell table-view-fixed'
+                    cellClass: 'table-view-cell table-view-fixed',
+                    show: true
                 });
                 ['_index', '_score'].forEach(key => renderColumns.push(buildTableColumnData(key, widthCalc(key))));
                 if (index) {

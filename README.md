@@ -63,7 +63,7 @@
 ### 存储
 
 - [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
-- [可道云网盘](http://disk.esion.xyz/#s/93qZEN8w)
+- [落雨不悔的分享站](https://static.esion.xyz/#/插件/es-client)
 - ~~[阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)~~
 - ~~[夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs~~
 
@@ -79,7 +79,7 @@
 ### 桌面客户端
 
 如果是win11用户，优先推荐使用`tauri`安装包，在[release](https://gitee.com/qiaoshengda/es-client/releases)中下载即可，安装包更小，使用更加方便。如果安装后使用异常，
-就需要前往[可道云网盘](http://disk.esion.xyz/#s/93qZEN8w)中下载`electron`打包的安装包。
+就需要前往[落雨不悔的分享站](https://static.esion.xyz/#/插件/es-client)中下载`electron`打包的安装包。
 其他windows用户建议下载electron版本，现在electron版本也可以自动更新了
 
 ## 开发

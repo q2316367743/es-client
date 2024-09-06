@@ -13,6 +13,8 @@ function outDir() {
     switch (process.env.npm_lifecycle_event) {
         case 'build:edge':
             return 'src-edge/es-client';
+        case 'build:chrome':
+            return 'src-edge/es-client';
         case 'build:firefox':
             return 'src-firefox/es-client';
         case 'build:vscode':

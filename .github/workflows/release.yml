@@ -1,0 +1,174 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build_desktop:
+    name: 构建【${{ matrix.platform }}】桌面端
+    strategy:
+      matrix:
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.platform }}
+    env:
+      TAURI_PRIVATE_KEY: "${{ secrets.TAURI_PRIVATE_KEY }}"
+      TAURI_KEY_PASSWORD: "${{ secrets.TAURI_KEY_PASSWORD }}"
+      APPLE_CERTIFICATE: "${{ secrets.APPLE_CERTIFICATE }}"
+      APPLE_CERTIFICATE_PASSWORD: "${{ secrets.APPLE_CERTIFICATE_PASSWORD }}"
+      APPLE_SIGNING_IDENTITY: "${{ secrets.APPLE_SIGNING_IDENTITY }}"
+      APPLE_ID: "${{ secrets.APPLE_ID }}"
+      APPLE_PASSWORD: "${{ secrets.APPLE_PASSWORD }}"
+      APPLE_TEAM_ID: "${{ secrets.APPLE_TEAM_ID }}"
+
+    steps:
+      ### system setup
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.5.1'
+          cache: 'yarn'
+      - run: yarn
+
+      - run: rustup toolchain install stable
+      - name: mac > setup targets
+        if: matrix.platform == 'macos-latest'
+        run: |
+          rustup target add aarch64-apple-darwin
+          rustup target add x86_64-apple-darwin
+
+      - name: linux > install dependencies
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 librsvg2-dev patchelf
+
+      ### build apple arm
+
+      - name: mac aaarch64 > build
+        run: yarn tauri:build --target aarch64-apple-darwin
+        if: matrix.platform == 'macos-latest'
+
+      - name: mac aaarch64 > rename artifacts
+        if: matrix.platform == 'macos-latest'
+        run: |
+          mv src-tauri/target/aarch64-apple-darwin/release/bundle/macos/es-client.app.tar.gz src-tauri/target/aarch64-apple-darwin/release/bundle/macos/es-client_aarch64.app.tar.gz
+          mv src-tauri/target/aarch64-apple-darwin/release/bundle/macos/es-client.app.tar.gz.sig src-tauri/target/aarch64-apple-darwin/release/bundle/macos/es-client_aarch64.app.tar.gz.sig
+
+      - name: mac aaarch64 > upload artifacts
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac_aaarch64_artifacts
+          if-no-files-found: error
+          path: |
+            src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/es-client_*_aarch64.dmg
+            src-tauri/target/aarch64-apple-darwin/release/bundle/macos/es-client_aarch64*
+
+      ### build apple x86_64
+
+      - name: mac x86_64 > build
+        run: yarn tauri:build --target x86_64-apple-darwin
+        if: matrix.platform == 'macos-latest'
+
+      - name: mac x86_64 > rename artifacts
+        if: matrix.platform == 'macos-latest'
+        run: |
+          mv src-tauri/target/x86_64-apple-darwin/release/bundle/macos/es-client.app.tar.gz src-tauri/target/x86_64-apple-darwin/release/bundle/macos/es-client_x64.app.tar.gz
+          mv src-tauri/target/x86_64-apple-darwin/release/bundle/macos/es-client.app.tar.gz.sig src-tauri/target/x86_64-apple-darwin/release/bundle/macos/es-client_x64.app.tar.gz.sig
+
+      - name: mac x86_64 > upload artifacts
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac_x86_64_artifacts
+          if-no-files-found: error
+          path: |
+            src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/es-client_*_x64.dmg
+            src-tauri/target/x86_64-apple-darwin/release/bundle/macos/es-client_x64*
+
+      ### build linux
+
+      - name: linux > build
+        run: yarn tauri:build
+        if: matrix.platform == 'ubuntu-latest'
+
+      - name: linux > upload artifacts
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux_artifacts
+          if-no-files-found: error
+          path: |
+            src-tauri/target/release/bundle/deb/es-client_*_amd64.deb
+            src-tauri/target/release/bundle/appimage/es-client_*_amd64.*
+            src-tauri/target/release/es-client
+
+      ### build windows
+
+      - name: windows > build
+        run: yarn tauri:build
+        if: matrix.platform == 'windows-latest'
+
+      - name: windows > upload artifacts
+        if: matrix.platform == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows_artifacts
+          if-no-files-found: error
+          path: |
+            src-tauri/target/release/bundle/msi/es-client_*_x64*
+            src-tauri/target/release/es-client.exe
+
+  publish:
+    name: Publish release
+    needs:
+      - build_desktop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: martinbeentjes/npm-get-version-action@v1.3.1
+        id: package-version
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: github-artifacts
+
+      - uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: true
+          prerelease: false
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          artifacts: |
+            github-artifacts/linux_artifacts/bundle/appimage/es-client_*_amd64.*
+            github-artifacts/linux_artifacts/bundle/deb/es-client_*_amd64.deb
+            github-artifacts/linux_artifacts/es-client
+            github-artifacts/mac_aaarch64_artifacts/dmg/es-client_*_aarch64.dmg
+            github-artifacts/mac_aaarch64_artifacts/macos/es-client_aarch64*
+            github-artifacts/mac_x86_64_artifacts/dmg/es-client_*_x64.dmg
+            github-artifacts/mac_x86_64_artifacts/macos/es-client_x64*
+            github-artifacts/windows_artifacts/bundle/msi/es-client_*_x64*
+            github-artifacts/windows_artifacts/es-client.exe
+          body: |
+            ## 变更日志
+            ## 如何使用 es-client
+            ### 桌面端
+            * [Windows .msi](https://github.com/q2316367743/es-client/releases/download/${{ github.ref_name }}/es-client_${{ steps.package-version.outputs.current-version }}_x64_en-US.msi)
+            * [Mac x68 .dmg](https://github.com/q2316367743/es-client/releases/download/${{ github.ref_name }}/es-client_${{ steps.package-version.outputs.current-version }}_x64.dmg) / [Mac aarch64 .dmg](https://github.com/q2316367743/es-client/releases/download/${{ github.ref_name }}/es-client_${{ steps.package-version.outputs.current-version }}_aarch64.dmg)
+            * [Linux .AppImage](https://github.com/q2316367743/es-client/releases/download/${{ github.ref_name }}/es-client_${{ steps.package-version.outputs.current-version }}_amd64.AppImage) / [Linux .deb](https://github.com/q2316367743/es-client/releases/download/${{ github.ref_name }}/es-client_${{ steps.package-version.outputs.current-version }}_amd64.deb)
+            
+            ### 浏览器拓展
+            * [Google Chrome](https://chromewebstore.google.com/detail/es-client/pkhmgepniefdigphghbolofjgbnhnhfd)
+            * [Mozilla Firefox](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
+            * [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
+            ### 其他方式
+            * [uTools插件](https://u.tools/plugins/detail/es-client/)
+            * [主页](https://es-client.esion.xyz)

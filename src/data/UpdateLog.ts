@@ -2,6 +2,37 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
     {
+        version: '3.1.8',
+        sign: 318,
+        time: '2024-09-07',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: "【插件】优化JSON树与基础视图长字段显示: 在保留显示空白字符的基础上，对于长字段直接打断换行，避免类似压缩json显示长度长，需要横向滚动较久的问题"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "[数据浏览] 表头渲染问题"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "[数据浏览] 自定义索引选择"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "[高级查询] 新增快捷命令"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "[设置] 排除指定索引，正则太长时，无法关闭"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "[高级查询] 高级查询可以选择索引进行查询，选择索引后，控制台默认初始化查询语句"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '[插件] 全局滚动条变为10px'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '[插件] 可以切换是否固定列，避免展开的json数据被截断而无法复制'
+        }],
+        remark: "如果大家有更好的建议、或者需要的功能，欢迎在【兔小巢】中提出来，一起完善。"
+    },
+    {
         version: '3.1.7',
         sign: 317,
         time: '2024-06-04',
