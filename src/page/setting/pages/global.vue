@@ -43,7 +43,7 @@
                     <a-radio :value="2">关闭</a-radio>
                 </a-radio-group>
             </a-form-item>
-            <a-form-item id="homeExcludeIndices">
+            <a-form-item id="homeExcludeIndices" class="w-full">
                 <template #label>
                     <span>排除指定索引</span>
                     <a-tooltip content="支持正则表达式" placement="top" effect="light">
@@ -64,7 +64,7 @@
                 <!--                新增索引-->
                 <!--            </a-button>-->
             </a-form-item>
-            <a-form-item id="homeIncludeIndices">
+            <a-form-item id="homeIncludeIndices" class="w-full">
                 <template #label>
                     <span>显示指定索引</span>
                     <a-tooltip content="支持正则表达式" placement="top" effect="light">
@@ -229,6 +229,13 @@ export default defineComponent({
 
     .arco-form-item-wrapper-col {
         width: 350px;
+    }
+
+    .w-full {
+
+        .arco-form-item-wrapper-col {
+            width: 100%;
+        }
     }
 }
 </style>
