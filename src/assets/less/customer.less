@@ -13,12 +13,14 @@ pre {
 
 html {
     /*滚动条整体部分*/
+
     ::-webkit-scrollbar {
         width: 10px;
         height: 5px;
     }
 
     /*滚动条的轨道*/
+
     ::-webkit-scrollbar-track {
         background-color: transparent;
     }
@@ -28,6 +30,7 @@ html {
     }
 
     /*滚动条里面的小方块，能向上向下移动*/
+
     ::-webkit-scrollbar-thumb {
         background-color: #9b97a2;
         border-radius: 1px;
@@ -46,6 +49,7 @@ html {
     }
 
     /*边角，即两个滚动条的交汇处*/
+
     ::-webkit-scrollbar-corner {
         background-color: transparent;
     }
@@ -77,6 +81,7 @@ body[arco-theme=dark] {
     right: 0;
     bottom: 0;
 }
+
 .abs-7 {
     position: absolute;
     top: 7px;
@@ -84,6 +89,7 @@ body[arco-theme=dark] {
     right: 7px;
     bottom: 7px;
 }
+
 .abs-07 {
     position: absolute;
     top: 0;
@@ -91,6 +97,7 @@ body[arco-theme=dark] {
     right: 7px;
     bottom: 7px;
 }
+
 .abs-70 {
     position: absolute;
     top: 7px;
@@ -106,4 +113,16 @@ body[arco-theme=dark] {
     right: 0;
     bottom: 0;
     overflow: auto;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.clickable {
+    cursor: pointer;
 }

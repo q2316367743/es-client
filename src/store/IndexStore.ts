@@ -61,6 +61,7 @@ const useIndexStore = defineStore('index', {
             if (useUrlStore().current === '') {
                 return Promise.reject('链接不存在');
             }
+            const old = useUrlStore().current;
             // 清空数据
             this.clear();
             // 初始化时加载
@@ -102,7 +103,10 @@ const useIndexStore = defineStore('index', {
                 this.sort(this.order);
                 return Promise.resolve();
             } catch (e: any) {
-                useUrlStore().clear();
+                // 此处需要判断，错误的链接是不是当前链接
+                if (useUrlStore().current === old) {
+                    useUrlStore().clear();
+                }
                 console.error(e);
                 return Promise.reject(e);
             } finally {

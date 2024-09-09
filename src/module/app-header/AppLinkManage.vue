@@ -11,84 +11,45 @@
         <template #content>
             <div class="app-link-manage" ref="contentRef">
                 <div class="header">
-                    <a-input v-model="keyword" style="width: 40vw;" placeholder="链接名称" allow-clear/>
-                    <a-dropdown-button @click="openAddLink()" type="primary">
-                        新增
-                        <template #content>
-                            <a-doption @click="exportUrlToJson()">
-                                <template #icon>
-                                    <icon-export/>
-                                </template>
-                                数据导出
-                            </a-doption>
-                            <a-doption @click="importUrlByJson()">
-                                <template #icon>
-                                    <icon-import/>
-                                </template>
-                                数据导入
-                            </a-doption>
-                        </template>
-                    </a-dropdown-button>
+                    <a-input v-model="keyword" placeholder="链接名称" allow-clear/>
+                    <a-button type="primary" @click="toAddLink">新增</a-button>
+                    <a-button type="primary" @click="toManage">编辑</a-button>
                 </div>
-                <a-table ref="urlTable" :data="urls" class="data" sticky-header :draggable="draggable"
-                         :pagination="false"
-                         @change="urlChange($event)" :virtual-list-props="virtualListProps" :scroll="{y: '100%'}"
-                         style="margin-top: 8px;">
-                    <template #columns>
-                        <a-table-column data-index="name" title="名称" :width="120"
-                                        fixed="left"></a-table-column>
-                        <a-table-column data-index="value" title="链接" :width="260">
-                            <template #cell="{ record }">
-                                <a-link @click="open(record.value)" type="primary" target="_blank">{{
-                                        record.value
-                                    }}
-                                </a-link>
+                <a-list :max-height="maxHeight" style="margin-top: 8px;" hoverable>
+                    <a-list-item v-for="item in urls" :key="item.id" class="clickable" @click="selectUrl(item.id)">
+                        <a-list-item-meta :description="item.value">
+                            <template #title>
+                                <a-space>
+                                    <span>{{ item.name }}</span>
+                                    <a-tag v-if="item.id === selectUrlId" bordered color="green">当前</a-tag>
+                                </a-space>
                             </template>
-                        </a-table-column>
-                        <a-table-column data-index="version" title="版本" :width="100"/>
-                        <a-table-column title="操作" :width="170" fixed="right">
-                            <template #cell="{ record }">
-                                <a-button type="text" size="small" @click="openUpdateLink(record)">
-                                    <template #icon>
-                                        <icon-edit/>
-                                    </template>
-                                </a-button>
-                                <a-popconfirm @ok="remove(record.id, record.value)"
-                                              content="是否删除链接，删除后将无法恢复"
-                                              ok-text="删除" position="br" :ok-button-props="{status: 'danger'}">
-                                    <a-button type="text" status="danger" size="small"
-                                              style="margin-left: 8px;">
-                                        <template #icon>
-                                            <icon-delete/>
-                                        </template>
-                                    </a-button>
-                                </a-popconfirm>
-                            </template>
-                        </a-table-column>
-                    </template>
-                </a-table>
+                        </a-list-item-meta>
+                        <template #actions>
+                            <a-tag bordered v-if="item.isAuth">需要认证</a-tag>
+                            <a-tag bordered v-if="item.version" color="arcoblue">{{ item.version }}</a-tag>
+                        </template>
+                    </a-list-item>
+                </a-list>
             </div>
         </template>
     </a-trigger>
 </template>
 <script lang="ts" setup>
-import {computed, ref, toRaw} from "vue";
-import {openAddLink, openUpdateLink} from "@/page/setting/pages/link/components/EditLink";
-import {useElementSize, useFileSystemAccess} from "@vueuse/core";
+import {computed, ref} from "vue";
+import {openAddLink} from "@/page/setting/pages/link/components/EditLink";
+import {useElementSize} from "@vueuse/core";
 import useUrlStore from "@/store/UrlStore";
 import {useFuse} from "@vueuse/integrations/useFuse";
-import {TableDraggable} from "@arco-design/web-vue";
-import MessageUtil from "@/utils/MessageUtil";
 import useIndexStore from "@/store/IndexStore";
-import {download} from "@/utils/BrowserUtil";
-import Constant from "@/global/Constant";
-import {getDefaultUrl} from "@/entity/Url";
-
+import {useRouter} from "vue-router";
+import Assert from "@/utils/Assert";
 
 const contentRef = ref();
 const keyword = ref('');
 const visible = ref(false);
 
+const router = useRouter();
 const size = useElementSize(contentRef);
 
 const items = computed(() => useUrlStore().urls);
@@ -103,17 +64,8 @@ const {results} = useFuse(keyword, items, {
     }
 });
 const urls = computed(() => results.value.map(e => e.item));
-const draggable = computed<TableDraggable | undefined>(() => {
-    if (keyword.value === '') {
-        return {
-            type: 'handle'
-        }
-    }
-});
 
-const virtualListProps = computed(() => ({
-    height: size.height.value - 82
-}))
+const maxHeight = computed(() => size.height.value - 40);
 const selectName = computed(() => {
     const {id, urlMap} = useUrlStore();
     if (!id) {
@@ -133,96 +85,41 @@ const status = computed(() => {
     }
     return 'normal';
 });
+const selectUrlId = computed(() => {
+    const {id} = useUrlStore();
+    return id;
+});
 
 // -------------------------------------- 方法 --------------------------------------
 
-function urlChange(items: Array<any>) {
-    useUrlStore().save(items.map(item => toRaw(item)));
+const toManage = () => {
+    router.push('/setting/link');
+    // 关闭弹窗
+    visible.value = false;
 }
 
-function remove(id: number, value: string) {
-    useUrlStore().remove(id)
-        .then(() => removeAfter(value))
-        .catch(e => MessageUtil.error('删除失败', e));
+const toAddLink = () => {
+    openAddLink();
+    // 关闭弹窗
+    visible.value = false;
 }
 
-function removeAfter(value: string) {
-    MessageUtil.success('删除成功');
-    if (useUrlStore().current === value) {
-        // 删除了当前索引
-        useUrlStore().clear();
-        useIndexStore().clear();
-    }
-}
-
-const execCopy = (text: string) => {
-    utools.copyText(text);
-    MessageUtil.success("已成功复制到剪切板");
-};
-const open = (url: string) => utools.shellOpenExternal(url);
-
-// 导入导出
-
-function exportUrlToJson() {
-    download(JSON.stringify({
-        version: Constant.version,
-        records: useUrlStore().urls
-    }, null, 4), "链接导出.json", "application/json");
-}
-
-const importFile = useFileSystemAccess({
-    dataType: 'Text',
-    types: [{
-        accept: {
-            'application/json': ['.json']
-        },
-        description: "JSON文件"
-    }]
-});
-
-function importUrlByJson() {
-    const rsp = importFile.open() as Promise<void>;
-    rsp.then(() => {
-        const value = importFile.data.value;
-        if (!value) {
-            MessageUtil.error("没有解析到数据，请确认上传文件是否正确")
-        }
-        handlerJson(value)
-            .then(() => MessageUtil.success("导入成功"))
-            .catch(e => MessageUtil.error("导入失败", e));
-    })
-}
-
-async function handlerJson(json?: string) {
-    if (!json) {
-        return Promise.reject("没有解析到数据，请确认上传文件是否正确");
-    }
-    let value;
-    try {
-        value = JSON.parse(json) as any;
-    } catch (e) {
-        return Promise.reject("JSON文件解析失败");
-    }
-    if (!value) {
-        return Promise.reject("JSON未解析到数据");
-    }
-    let records = value.records;
-    if (!records) {
-        return Promise.reject("链接记录不存在");
-    }
-    if (!(records instanceof Array)) {
-        return Promise.reject("数据格式错误，无法导入");
-    }
-    await useUrlStore().addByBatch(records.map(e => getDefaultUrl(e)))
+async function selectUrl(value: number) {
+    // 选择链接
+    Assert.isTrue(useUrlStore().choose(value as number), "链接未找到");
+    // 索引刷新
+    await useIndexStore().reset();
+    // 关闭弹窗
+    visible.value = false;
 }
 
 </script>
 <style scoped lang="less">
 .app-link-manage {
     width: 50vw;
-    max-width: 600px;
+    max-width: 1200px;
     height: 340px;
-    background-color: var(--color-bg-1);
+    background-color: var(--color-bg-2);
     color: var(--color-text-1);
     border-radius: var(--border-radius-medium);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -230,7 +127,7 @@ async function handlerJson(json?: string) {
 
     .header {
         display: grid;
-        grid-template-columns: 1fr 100px;
+        grid-template-columns: 1fr 60px 60px;
     }
 }
 </style>
