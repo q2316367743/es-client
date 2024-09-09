@@ -5,6 +5,7 @@
                 {{ name || 'ES-client' }}
             </div>
             <!-- 索引服务器选择 -->
+            <app-link-manage />
             <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
                       class="url-select" :show-extra-options="true" :style="{width: width + 'px'}">
                 <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
@@ -29,7 +30,6 @@
                     {{active_shards}} / {{total_shards}}
                 </template>
             </a-progress>
-            <app-link-manage />
         </div>
         <div class="right">
             <!-- 控制台 -->

@@ -1,64 +1,65 @@
 <template>
-    <a-trigger trigger="click" v-model:popup-visible="visible" :popup-offset="8">
+    <a-trigger trigger="click" v-model:popup-visible="visible" :popup-offset="8" show-arrow position="bl">
         <a-button style="margin-top: 4px;">
             <a-space>
                 <a-badge :count="10" dot :status="status"></a-badge>
-                <span>{{ selectName}}</span>
+                <span>{{ selectName }}</span>
                 <icon-up v-if="visible"/>
                 <icon-down v-else/>
             </a-space>
         </a-button>
         <template #content>
             <div class="app-link-manage" ref="contentRef">
-                <div class="setting-url-toolbar">
+                <div class="header">
                     <a-input v-model="keyword" style="width: 40vw;" placeholder="链接名称" allow-clear/>
                     <a-dropdown-button @click="openAddLink()" type="primary">
                         新增
                         <template #content>
                             <a-doption @click="exportUrlToJson()">
                                 <template #icon>
-                                    <icon-export />
+                                    <icon-export/>
                                 </template>
                                 数据导出
                             </a-doption>
                             <a-doption @click="importUrlByJson()">
                                 <template #icon>
-                                    <icon-import />
+                                    <icon-import/>
                                 </template>
                                 数据导入
                             </a-doption>
                         </template>
                     </a-dropdown-button>
                 </div>
-                <a-table ref="urlTable" :data="urls" class="data" sticky-header :draggable="draggable" :pagination="false"
-                         @change="urlChange($event)" :virtual-list-props="virtualListProps" :scroll="{y: '100%'}" style="margin-top: 8px;">
+                <a-table ref="urlTable" :data="urls" class="data" sticky-header :draggable="draggable"
+                         :pagination="false"
+                         @change="urlChange($event)" :virtual-list-props="virtualListProps" :scroll="{y: '100%'}"
+                         style="margin-top: 8px;">
                     <template #columns>
                         <a-table-column data-index="name" title="名称" :width="120"
                                         fixed="left"></a-table-column>
                         <a-table-column data-index="value" title="链接" :width="260">
                             <template #cell="{ record }">
-                                <a-link @click="open(record.value)" type="primary" target="_blank">{{ record.value }}</a-link>
+                                <a-link @click="open(record.value)" type="primary" target="_blank">{{
+                                        record.value
+                                    }}
+                                </a-link>
                             </template>
                         </a-table-column>
                         <a-table-column data-index="version" title="版本" :width="100"/>
-                        <a-table-column title="认证" :width="100">
-                            <template #cell="{ record }">
-                                {{ prettyAuth(record.isAuth) }}
-                            </template>
-                        </a-table-column>
                         <a-table-column title="操作" :width="170" fixed="right">
                             <template #cell="{ record }">
-                                <a-button type="primary" size="small" @click="openUpdateLink(record)">
+                                <a-button type="text" size="small" @click="openUpdateLink(record)">
                                     <template #icon>
-                                        <icon-edit />
+                                        <icon-edit/>
                                     </template>
                                 </a-button>
-                                <a-popconfirm @ok="remove(record.id, record.value)" content="是否删除链接，删除后将无法恢复"
+                                <a-popconfirm @ok="remove(record.id, record.value)"
+                                              content="是否删除链接，删除后将无法恢复"
                                               ok-text="删除" position="br" :ok-button-props="{status: 'danger'}">
-                                    <a-button type="primary" status="danger" size="small"
+                                    <a-button type="text" status="danger" size="small"
                                               style="margin-left: 8px;">
                                         <template #icon>
-                                            <icon-delete />
+                                            <icon-delete/>
                                         </template>
                                     </a-button>
                                 </a-popconfirm>
@@ -111,7 +112,7 @@ const draggable = computed<TableDraggable | undefined>(() => {
 });
 
 const virtualListProps = computed(() => ({
-    height: size.height.value - 40
+    height: size.height.value - 82
 }))
 const selectName = computed(() => {
     const {id, urlMap} = useUrlStore();
@@ -137,11 +138,6 @@ const status = computed(() => {
 
 function urlChange(items: Array<any>) {
     useUrlStore().save(items.map(item => toRaw(item)));
-}
-
-
-function prettyAuth(params: boolean) {
-    return params ? "需要认证" : "无需认证";
 }
 
 function remove(id: number, value: string) {
@@ -183,8 +179,9 @@ const importFile = useFileSystemAccess({
         description: "JSON文件"
     }]
 });
+
 function importUrlByJson() {
-    const rsp =  importFile.open() as Promise<void>;
+    const rsp = importFile.open() as Promise<void>;
     rsp.then(() => {
         const value = importFile.data.value;
         if (!value) {
@@ -203,7 +200,7 @@ async function handlerJson(json?: string) {
     let value;
     try {
         value = JSON.parse(json) as any;
-    }catch (e) {
+    } catch (e) {
         return Promise.reject("JSON文件解析失败");
     }
     if (!value) {
@@ -230,5 +227,10 @@ async function handlerJson(json?: string) {
     border-radius: var(--border-radius-medium);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     padding: 8px;
+
+    .header {
+        display: grid;
+        grid-template-columns: 1fr 100px;
+    }
 }
 </style>
