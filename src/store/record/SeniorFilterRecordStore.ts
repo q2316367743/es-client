@@ -1,74 +1,75 @@
 import {defineStore} from "pinia";
-import {listByAsync} from "@/utils/utools/DbStorageUtil";
+import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {SeniorFilterRecord} from "@/entity/record/SeniorFilterRecord";
-import {toRaw} from "vue";
+import {ref, shallowRef} from "vue";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 
-let init = false;
 
 export const enableFilter = useUtoolsDbStorage('/setting/filter/enable', false);
 
-export const useSeniorFilterRecordStore = defineStore('SeniorFilterSetting', {
-    state: () => ({
-        seniorFilterRecords: new Array<SeniorFilterRecord>(),
-        rev: undefined as string | undefined
-    }),
-    actions: {
-        async init() {
-            if (!init) {
-                let seniorFilterRecordWrap = await listByAsync<SeniorFilterRecord>(LocalNameEnum.SETTING_SENIOR_FILTER);
-                this.seniorFilterRecords = seniorFilterRecordWrap.list;
-                this.rev = seniorFilterRecordWrap.rev;
-                init = true;
-            }
-            return Promise.resolve();
-        },
-        async _sync() {
-            const res = await utools.db.promises.put({
-                _id: LocalNameEnum.SETTING_SENIOR_FILTER,
-                _rev: this.rev,
-                value: toRaw(this.seniorFilterRecords)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
-        },
-        async add(item: Omit<SeniorFilterRecord, 'id'>) {
-            if (item.label.trim() === '') {
-                return Promise.reject("记录名不能为空");
-            }
-            if (item.value.trim() === '') {
-                return Promise.reject("记录值不能为空");
-            }
-            this.seniorFilterRecords.push({
-                ...item,
-                id: new Date().getTime()
-            });
-            await this._sync();
-        },
-        async update(item: SeniorFilterRecord) {
-            if (item.label.trim() === '') {
-                return Promise.reject("记录名不能为空");
-            }
-            if (item.value.trim() === '') {
-                return Promise.reject("记录值不能为空");
-            }
-            const index = this.seniorFilterRecords.findIndex(e => e.id === item.id);
-            if (index === -1) {
-                return Promise.reject("高级查询过滤器未找到，无法修改");
-            }
-            this.seniorFilterRecords[index] = item;
-            await this._sync();
-        },
-        async remove(id: number) {
-            const index = this.seniorFilterRecords.findIndex(e => e.id === id);
-            if (index === -1) {
-                return Promise.reject("高级查询过滤器未找到，无法删除");
-            }
-            this.seniorFilterRecords.splice(index, 1);
-            await this._sync();
+export const useSeniorFilterRecordStore = defineStore('SeniorFilterSetting', () => {
+    const seniorFilterRecords = ref<Array<SeniorFilterRecord>>([]);
+    const rev = shallowRef<string | undefined>(undefined);
+
+    const init = async () => {
+        if (seniorFilterRecords.value.length === 0) {
+            const seniorFilterRecordWrap = await listByAsync<SeniorFilterRecord>(LocalNameEnum.SETTING_SENIOR_FILTER);
+            seniorFilterRecords.value = seniorFilterRecordWrap.list;
+            rev.value = seniorFilterRecordWrap.rev;
         }
+    }
+
+    init()
+        .then(() => console.log('SeniorFilterRecordStore init successfully'))
+        .catch(e => console.error('SeniorFilterRecordStore init failed', e));
+
+    const _sync = async () => {
+        rev.value = await saveListByAsync(LocalNameEnum.SETTING_SENIOR_FILTER, seniorFilterRecords.value, rev.value);
+    }
+
+    const add = async (item: Omit<SeniorFilterRecord, 'id'>) => {
+        if (item.label.trim() === '') {
+            return Promise.reject("记录名不能为空");
+        }
+        if (item.value.trim() === '') {
+            return Promise.reject("记录值不能为空");
+        }
+        seniorFilterRecords.value.push({
+            ...item,
+            id: new Date().getTime()
+        });
+        await _sync();
+    }
+
+    const update = async (item: SeniorFilterRecord) => {
+        if (item.label.trim() === '') {
+            return Promise.reject("记录名不能为空");
+        }
+        if (item.value.trim() === '') {
+            return Promise.reject("记录值不能为空");
+        }
+        const index = seniorFilterRecords.value.findIndex(e => e.id === item.id);
+        if (index === -1) {
+            return Promise.reject("高级查询过滤器未找到，无法修改");
+        }
+        seniorFilterRecords.value[index] = item;
+        await _sync();
+    }
+
+    const remove = async (id: number) => {
+        const index = seniorFilterRecords.value.findIndex(e => e.id === id);
+        if (index === -1) {
+            return Promise.reject("高级查询过滤器未找到，无法删除");
+        }
+        seniorFilterRecords.value.splice(index, 1);
+        await _sync();
+    }
+
+    return {
+        seniorFilterRecords,
+        add,
+        update,
+        remove
     }
 })

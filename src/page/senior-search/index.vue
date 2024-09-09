@@ -17,11 +17,11 @@
 
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import { useWindowSize} from "@vueuse/core";
+import {useWindowSize} from "@vueuse/core";
 import './index.less';
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
-import {enableFilter, useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
+import {enableFilter} from "@/store/record/SeniorFilterRecordStore";
 // 布局组件
 import SeniorSearchEditor from '@/page/senior-search/layout/senior-search-editor/index.vue';
 import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-display/index.vue';
@@ -58,7 +58,6 @@ function exitFullscreen() {
     disabled.value = false;
 }
 
-useSeniorFilterRecordStore().init();
 useSeniorSearchStore().init();
 
 </script>

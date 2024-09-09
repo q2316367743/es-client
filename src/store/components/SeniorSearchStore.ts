@@ -20,6 +20,7 @@ import useLoadingStore from "@/store/LoadingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 import {getFromOne, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {enableFilter} from "@/store/record/SeniorFilterRecordStore";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
     let value = instance.getValue();
@@ -139,7 +140,9 @@ export const useSeniorSearchStore = defineStore('senior-search', {
                 }
 
                 // 执行过滤
-                this.execFilter();
+                if (enableFilter.value) {
+                    this.execFilter();
+                }
 
             }).catch((e) => {
                 this.result = e.response.data;
