@@ -84,20 +84,26 @@ function pin() {
 </script>
 <style scoped lang="less">
 .senior-search-display {
+    position: relative;
     height: 100%;
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 32px;
     overflow: hidden;
 
     .view {
-        position: relative;
-        padding: 0 4px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 36px;
+        bottom: 0;
         overflow-x: hidden;
         overflow-y: auto;
     }
 
     .tabs {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
         width: 32px;
         display: block;
 

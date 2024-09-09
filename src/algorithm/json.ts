@@ -29,8 +29,30 @@ export function jsonParse<T = any>(data: string): T {
     })
 }
 
+// 空格数量
+const SPACE_COUNT = '    ';
 
 export function jsonFormat(json: string | object): string {
-    return JSON.stringify(typeof json === 'string' ? jsonParse(json) : json, null, 4);
+    if(typeof json ==='string') {
+        let result = '';
+        let indent = 0;
+        for (let i = 0; i < json.length; i++) {
+            const char = json[i];
+            if (char === '{' || char === '[') {
+                result += char + '\n' + SPACE_COUNT.repeat(indent + 1);
+                indent++;
+            } else if (char === '}' || char === ']') {
+                indent--;
+                result += '\n' + SPACE_COUNT.repeat(indent) + char;
+            } else if (char === ',') {
+                result += char + '\n' + SPACE_COUNT.repeat(indent);
+            } else {
+                result += char;
+            }
+        }
+        return result;
+    }
+
+    return JSON.stringify(json, null, 4);
 
 }

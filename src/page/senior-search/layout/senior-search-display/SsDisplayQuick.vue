@@ -8,7 +8,7 @@
                 <a-button type="primary" @click="openQuickAdd()">新增</a-button>
             </a-col>
         </a-row>
-        <a-list style="margin-top: 8px;">
+        <a-list style="margin-top: 8px;" :max-height="maxHeight">
             <a-list-item v-for="request in requests" :key="request.id">
                 <a-list-item-meta :title="request.name" :description="request.description"/>
                 <a-space>
@@ -35,17 +35,24 @@ import {
     openQuickAdd,
     openQuickDelete
 } from "@/page/senior-search/layout/senior-search-display/SsDisplayQuickOpera";
+import {useWindowSize} from "@vueuse/core";
+
+const size = useWindowSize();
 
 const keyword = ref('');
 const requests = computed(() => useSeniorSearchRequestStore().requests);
 
+const maxHeight = computed(() => Math.max(size.height.value - 95, 0));
 
 </script>
 <style scoped lang="less">
 .ss-display-quick {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    padding: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 8px 8px;
+    overflow: auto;
 }
 </style>

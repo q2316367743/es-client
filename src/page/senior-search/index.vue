@@ -24,7 +24,7 @@ import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {enableFilter} from "@/store/record/SeniorFilterRecordStore";
 // 布局组件
 import SeniorSearchEditor from '@/page/senior-search/layout/senior-search-editor/index.vue';
-import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-display/index.vue';
+import SeniorSearchDisplay from '@/page/senior-search/layout/senior-search-display/SeniorSearchDisplay.vue';
 import SeniorSearchFilter from '@/page/senior-search/layout/senior-search-filter/index.vue';
 
 const windowSize = useWindowSize();

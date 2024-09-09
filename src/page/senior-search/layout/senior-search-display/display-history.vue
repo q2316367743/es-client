@@ -3,7 +3,7 @@
         <header class="header">
             <a-input allow-clear v-model="keyword" placeholder="请输入记录名"/>
         </header>
-        <a-list :data="results" :bordered="false" :virtual-list-props="virtualListProps">
+        <a-list :data="results"  :virtual-list-props="virtualListProps" style="margin-top: 8px;">
             <template #item="{ item, index }">
                 <a-list-item :key="item.item.id">
                     <a-link @click="load(item.item.id)">{{ item.item.name }}</a-link>
@@ -51,7 +51,7 @@ const size = useWindowSize();
 
 const keyword = ref('');
 const items = computed(() => useSeniorSearchHistoryStore().seniorSearchHistories);
-const {results} = useFuse(keyword, useSeniorSearchHistoryStore().seniorSearchHistories, {
+const {results} = useFuse(keyword, items, {
     matchAllWhenSearchEmpty: true,
     fuseOptions: {
         keys: [{
@@ -60,7 +60,7 @@ const {results} = useFuse(keyword, useSeniorSearchHistoryStore().seniorSearchHis
     }
 });
 const virtualListProps = computed(() => ({
-    height: size.height.value - 41 - 32 - 14 - 14 - 32 - 7
+    height: Math.max(size.height.value - 95, 0)
 }))
 
 const load = (id: number) => useSeniorSearchStore().loadHistory(id);
@@ -79,6 +79,14 @@ const remove = (id: number) => useSeniorSearchHistoryStore().remove(id)
     .catch(e => MessageUtil.error("删除失败", e));
 
 </script>
-<style scoped>
-
+<style scoped lang="less">
+.display-history {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    padding: 0 8px 8px;
+}
 </style>

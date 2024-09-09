@@ -53,7 +53,6 @@
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-
 // 工具
 import Optional from "@/utils/Optional";
 // 枚举
@@ -134,7 +133,7 @@ export default defineComponent({
             this.index += 1;
             this.items.push({
                 title: this.index + '',
-                view: this.show + 0,
+                view: this.view,
                 data: typeof this.data === 'object' ? this.data : {},
             });
         },

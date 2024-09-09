@@ -30,14 +30,18 @@ export const useDbSettingStore = defineStore(LocalNameEnum.SETTING_DATA_BROWSE, 
         isInit = true;
     }
 
+    init()
+        .then(() => console.log('DbSettingStore init successfully.'))
+        .catch(e => console.error(e))
+
     async function save(record: DbSetting) {
         dbSetting.value = record;
         rev = await saveOneByAsync(LocalNameEnum.SETTING_DATA_BROWSE, dbSetting.value, rev);
     }
 
     return {
-        dbSetting,params,fixId,
-        init, save
+        dbSetting, params, fixId,
+        save
     }
 
 })

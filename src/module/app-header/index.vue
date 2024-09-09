@@ -1,5 +1,5 @@
 <template>
-    <a-layout-header id="header">
+    <header id="header">
         <div class="left">
             <div class="logo" :title="name || 'ES-client'">
                 {{ name || 'ES-client' }}
@@ -84,7 +84,7 @@
                  draggable unmount-on-close :footer="false">
             <feedback-module v-if="feedbackDialog"/>
         </a-modal>
-    </a-layout-header>
+    </header>
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from 'vue';

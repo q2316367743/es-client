@@ -141,9 +141,6 @@ function remove(id: number) {
         .catch(e => MessageUtil.error("删除失败", e));
 }
 
-useSeniorFilterRecordStore().init();
-
-
 </script>
 <style lang="less">
 .senior-filter-record {
