@@ -29,6 +29,7 @@
                     {{active_shards}} / {{total_shards}}
                 </template>
             </a-progress>
+            <app-link-manage />
         </div>
         <div class="right">
             <!-- 控制台 -->
@@ -107,6 +108,7 @@ import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
 import {useWindowSize} from "@vueuse/core";
 import {openAddLink} from "@/page/setting/pages/link/components/EditLink";
+import AppLinkManage from "@/module/app-header/AppLinkManage.vue";
 
 const router = useRouter();
 const size = useWindowSize();

@@ -31,7 +31,9 @@ const useUrlStore = defineStore('url', () => {
         rev.value = res.rev;
     };
 
-    init();
+    init()
+        .then(() => console.log('url init successfully'))
+        .catch(e => console.error('url init failed', e));
 
     const choose = (id: number): boolean => {
         // 查询URL
