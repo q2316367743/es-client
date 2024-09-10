@@ -106,8 +106,12 @@ export default defineComponent({
         }
     },
     watch: {
-        data() {
-            this.render();
+        data: {
+            handler() {
+                this.render();
+            },
+            deep: true,
+            immediate: true
         },
         tableHeaderMode(newValue: TableHeaderModeEnum) {
             if (newValue === TableHeaderModeEnum.MAPPING) {
@@ -198,7 +202,7 @@ export default defineComponent({
             if (!this.data.hits) {
                 return false;
             }
-            return this.data.hits.hits;
+            return !!this.data.hits.hits;
 
         },
         copy(value: any) {

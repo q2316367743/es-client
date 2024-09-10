@@ -5,16 +5,28 @@
                 {{ name || 'ES-client' }}
             </div>
             <!-- 索引服务器选择 -->
-            <app-link-manage/>
+            <a-select v-model="urlId" placeholder="请选择链接" size="small" allow-search allow-clear @change="selectUrl"
+                      class="url-select" :show-extra-options="true" :style="{width: width + 'px'}">
+                <a-option v-for="url in urls" :key="url.id" :label="url.name" :value="url.id"/>
+                <template #empty>
+                    <div style="padding: 6px 0; text-align: center;">
+                        <a-button type="primary" @click="openAddLink()">新增</a-button>
+                    </div>
+                </template>
+                <template #footer>
+                    <div style="padding: 6px 0; text-align: center;">
+                        <a-button type="primary" @click="toManage()">
+                            管理
+                        </a-button>
+                    </div>
+                </template>
+            </a-select>
             <!-- 刷新按钮 -->
             <a-button class="refresh" @click="refresh()" :disabled="loading || !urlId || urlId === ''">刷新</a-button>
-            <a-button class="close" @click="onClose()" status="danger" v-if="!(loading || !urlId || urlId === '')">
-                关闭
-            </a-button>
             <a-progress v-if="total_shards > 0" :percent="Math.round(active_shards / total_shards * 100) / 100"
                         :status="status" style="width: 220px;margin-left: 14px;">
                 <template #text>
-                    {{ active_shards }} / {{ total_shards }}
+                    {{active_shards}} / {{total_shards}}
                 </template>
             </a-progress>
         </div>
@@ -91,14 +103,18 @@ import useIndexStore from '@/store/IndexStore';
 import useLoadingStore from "@/store/LoadingStore";
 import {DarkTypeEnum, useGlobalStore} from "@/store/GlobalStore";
 // 工具类
+import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
-import AppLinkManage from "@/module/app-header/AppLinkManage.vue";
+import {useWindowSize} from "@vueuse/core";
+import {openAddLink} from "@/page/setting/pages/link/components/EditLink";
 
 const router = useRouter();
+const size = useWindowSize();
 
 const urlId = ref<number | string | undefined>(useUrlStore().id);
 const feedbackDialog = ref<boolean>(false);
 
+const urls = computed(() => useUrlStore().urls);
 const loading = computed(() => useLoadingStore().loading);
 const darkType = computed(() => useGlobalStore().darkType);
 const name = computed(() => useIndexStore().name);
@@ -115,6 +131,7 @@ const status = computed(() => {
 });
 const active_shards = computed(() => useIndexStore().active_shards);
 const total_shards = computed(() => useIndexStore().total_shards);
+const width = computed(() => size.width.value / 5);
 
 watch(() => urlId.value, value => setItem(LocalNameEnum.KEY_LAST_URL, value));
 watch(() => useUrlStore().id, value => {
@@ -126,11 +143,24 @@ watch(() => useUrlStore().id, value => {
 const refresh = () => useIndexStore().reset();
 const switchDarkColors = useGlobalStore().switchDarkColors;
 
-function onClose() {
-    // 清空链接选择
-    useUrlStore().clear();
-    // 清空索引信息
-    useIndexStore().clear();
+const toManage = () => {
+    router.push(PageNameEnum.SETTING_LINK);
+}
+
+async function selectUrl(value: any) {
+    // 清空链接
+    if (value === '') {
+        // 清空链接选择
+        useUrlStore().clear();
+        // 清空索引信息
+        useIndexStore().clear();
+        // 发哦送清空事件
+        return
+    }
+    // 选择链接
+    Assert.isTrue(useUrlStore().choose(value as number), "链接未找到");
+    // 索引刷新
+    await useIndexStore().reset();
 }
 
 function versionCommand(command: any) {

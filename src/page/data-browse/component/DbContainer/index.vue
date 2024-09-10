@@ -9,7 +9,7 @@
             <vxe-column type="expand" width="80" title="详细">
                 <template #content="{ row }">
                     <div class="expand-wrapper">
-                        <json-view :value="row"/>
+                        <json-view :value="row['_source']"/>
                     </div>
                 </template>
             </vxe-column>

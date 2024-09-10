@@ -158,7 +158,7 @@ export function renderObj(
         // 处理对象
         if (typeof source === 'object') {
             // JSON转字符串
-            if (source instanceof Array) {
+            if (Array.isArray(source)) {
                 value = JSON.stringify(source);
             } else {
                 renderObj(source, columnMap, record, title, separator);
