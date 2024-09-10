@@ -20,13 +20,7 @@ export const serverPreload = {
         const response: AxiosResponse<Result<any>> = await instance.post("/api/preload/fetch", config);
         const data = response.data;
         if (data.success) {
-            return Promise.resolve({
-                status: response.status,
-                statusText: "OK",
-                headers: response.headers,
-                config: config as any,
-                data: response.data.data
-            });
+            return Promise.resolve(data.data);
         } else {
             return Promise.reject(data.msg);
         }

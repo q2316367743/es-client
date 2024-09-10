@@ -21,7 +21,7 @@ export default defineConfig({
     ],
     base: './',
     build: {
-        outDir: 'src-server/dist'
+        outDir: 'src-server/dist-static'
     },
     // 强制预构建插件包
     optimizeDeps: {
