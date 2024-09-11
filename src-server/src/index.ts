@@ -1,22 +1,32 @@
 import Express from 'express';
 import axios from 'axios';
+import path from 'path';
 
 
 let app = Express();
-let PORT = 8888;
+let PORT = 8848;
 
 app.use(Express.json());
+app.use('/', Express.static(path.join(__dirname, '../dist-static')))
 
-app.get('/api/preload/fetch',(req,res)=>{
+
+app.post('/api/preload/fetch',(req,res)=>{
     const config = req.body;
     axios.request(config)
     .then(rsp => {
         res.json({
             success: true,
-            data: rsp
+            data: {
+                config: rsp.config,
+                status: rsp.status,
+                statusText: rsp.statusText,
+                headers: rsp.headers,
+                data: rsp.data
+            }
         })
     })
     .catch(e => {
+        console.log(e);
         res.json({
             success: false,
             data: e
@@ -26,5 +36,5 @@ app.get('/api/preload/fetch',(req,res)=>{
 
 
 app.listen(PORT, function () {
-    console.log('Express server listening...');
+    console.log('Express server listening: http://localhost:8848');
 });

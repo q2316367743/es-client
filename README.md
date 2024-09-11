@@ -4,7 +4,6 @@
 
 <p align="center"><strong>elasticsearch查询客户端。</strong></p>
 
-
 <p align="center">
 	<a target="_blank" href="https://gitee.com/qiaoshengda/es-client">
         <img src='https://gitee.com/qiaoshengda/es-client/badge/star.svg?theme=white' alt='gitee star'/>
@@ -14,27 +13,30 @@
     </a>
 </p>
 <p align="center">
-	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v3.1.6-%23242624' alt='chrome插件'/>
+	<a target="_blank" href="https://chromewebstore.google.com/detail/es-client/pkhmgepniefdigphghbolofjgbnhnhfd">
+        <img src='https://img.shields.io/badge/chrome-v3.1.8-%23FBC21D' alt='chrome插件'/>
     </a>
 	<a target="_blank" href="https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo">
-        <img src='https://img.shields.io/badge/edge-v3.1.6-%230883d8' alt='edge插件'/>
+        <img src='https://img.shields.io/badge/edge-v3.1.8-%230883d8' alt='edge插件'/>
     </a>
  	<a target="_blank" href="https://addons.mozilla.org/zh-CN/firefox/addon/es-client">
 		<img src="https://img.shields.io/badge/firefox-v3.1.0-%23ff3847" alt="火狐插件"/>
     </a>
     <a target="_blank" href="https://gitee.com/qiaoshengda/es-client/releases">
-        <img src='https://img.shields.io/badge/windows-v3.1.6-%2324c8db' alt="windows客户端"/>
+        <img src='https://img.shields.io/badge/windows-v3.1.8-%2324c8db' alt="windows客户端"/>
     </a>
     <a target="_blank" href="https://u.tools/plugins/detail/es-client/">
-        <img src='https://img.shields.io/badge/utools-v3.1.6-%23787B80' alt="utools"/>
+        <img src='https://img.shields.io/badge/utools-v3.1.8-%23787B80' alt="uTools"/>
+    </a>
+    <a target="_blank" href="https://hub.docker.com/r/q2316367743/es-client">
+        <img src='https://img.shields.io/badge/docker-v3.1.8-%231949AB' alt="docker"/>
     </a>
 </p>
 <p align="center">
 	👉 
     <a target="_blank" href="https://es-client.esion.xyz">官网</a> - 
     <a target="_blank" href="https://www.yuque.com/baozhiyige-tewwf/ygxv4r">语雀</a> - 
-    <a target="_blank" href="https://support.qq.com/products/489458">兔小巢</a>  👈
+    <a target="_blank" href="https://txc.qq.com/products/489458">兔小巢</a>  👈
 </p>
 
 ---
@@ -54,16 +56,17 @@
 - [Edge插件](https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo)
 - [火狐插件](https://addons.mozilla.org/zh-CN/firefox/addon/es-client/)
 - [uTools插件](https://u.tools/plugins/detail/es-client/)
-- ~~[想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)~~
 - [windows安装包](https://gitee.com/qiaoshengda/es-client/releases)
+- [docker](https://hub.docker.com/r/q2316367743/es-client)
+- ~~[想天浏览器](https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w)~~
 - ~~[web](https://www.u.tools/)~~
 - ~~[vscode](https://marketplace.visualstudio.com/items?itemName=m17762618644.es-client)~~
 - ~~[IDEA](https://plugins.jetbrains.com/plugin/21804-es-client)（第三方提供：[es-client](https://gitee.com/shenmk/es-client)）~~
 
 ### 存储
 
-- [百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)
 - [落雨不悔的分享站](https://static.esion.xyz/#/插件/es-client)
+- ~~[百度网盘](https://pan.baidu.com/s/1sTd8aOWai-n3hxMur11iXA?pwd=3e5t)~~
 - ~~[阿里云盘](https://www.aliyundrive.com/s/wRg2ZS2K6ME)~~
 - ~~[夸克网盘](https://pan.quark.cn/s/ad9afd5e88a1)，提取码：FHGs~~
 
@@ -76,15 +79,27 @@
 推荐使用utools插件，或者windows安装版。由于没有其他设备，目前安装包仅打包的`windows安装包`，其他平台需要自己打包。
 使用utools插件版或者安装包，都会有更新提示，如果windows更新无反应，可以自行到`Gitee发行版`中下载新版本安装包进行更新
 
+### 浏览器插件
+
+前往各个浏览器插件商店下载安装即可。
+
 ### 桌面客户端
 
 如果是win11用户，优先推荐使用`tauri`安装包，在[release](https://gitee.com/qiaoshengda/es-client/releases)中下载即可，安装包更小，使用更加方便。如果安装后使用异常，
 就需要前往[落雨不悔的分享站](https://static.esion.xyz/#/插件/es-client)中下载`electron`打包的安装包。
 其他windows用户建议下载electron版本，现在electron版本也可以自动更新了
 
+### docker
+
+> 由于本插件没有打包mac和linux版本，所以mac和linux用户只能使用docker版本。
+
+```
+docker run -p 8848:8848 --name es-client -d q2316367743/es-client:latest
+```
+
 ## 开发
 
-- 自构建文档：<https://blog.esion.xyz/archives/1722304832149>
+- 自构建文档：[https://blog.esion.xyz/archives/1722304832149](https://blog.esion.xyz/archives/1722304832149)
 
 ## 项目预览
 
@@ -108,3 +123,4 @@
 - 索引管理功能
 - 语法提示与高亮
 - 。。。
+

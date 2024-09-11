@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "type": "docker-build",
+            "name": "Docker-build version",
+            "file": "Dockerfile",
+            "buildOptions": "-t q2316367743/es-client:3.1.8"
+        },
+        {
+            "type": "docker-build",
+            "name": "Docker-build latest",
+            "file": "Dockerfile",
+            "buildOptions": "-t q2316367743/es-client:latest"
+        }
+    ]
+}
