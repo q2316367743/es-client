@@ -85,7 +85,7 @@ export default defineComponent({
                 width: 80,
                 expandedRowRender: (record: TableData) => {
                     return h(JsonView, {
-                        data: record['_source']
+                        value: record['_source']
                     });
                 }
             } as TableExpandable,
