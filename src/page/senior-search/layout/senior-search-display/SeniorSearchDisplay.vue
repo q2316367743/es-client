@@ -2,7 +2,7 @@
     <div class="senior-search-display">
         <div class="view">
             <!-- 结果集渲染 -->
-            <senior-search-data-view v-show="displayActive === 'result'" :view="seniorSearchView" :data="show"/>
+            <senior-search-data-view v-show="displayActive === 'result'" :view="seniorSearchView"/>
             <!-- 请求记录 -->
             <display-record v-show="displayActive === 'record'"/>
             <!-- 历史记录 -->
@@ -59,8 +59,6 @@ const emits = defineEmits(['update:fullscreen']);
 
 const displayActive = ref('result');
 const fullscreen = ref(false);
-
-const show = computed(() => useSeniorSearchStore().show);
 
 watch(() => fullscreen.value, value => emits('update:fullscreen', value));
 watch(() => props.fullscreen, value => fullscreen.value = value);

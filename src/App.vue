@@ -75,17 +75,6 @@ initData().then(() => {
             router.push(PageNameEnum.MORE_UPDATE);
             break;
     }
-    // 最后的链接
-    if (useGlobalSettingStore().getLastUrl) {
-        const lastUrlId = getItemByDefault(LocalNameEnum.KEY_LAST_URL, 0);
-        if (lastUrlId !== 0) {
-            useUrlStore().choose(lastUrlId);
-            // 选择链接
-            Assert.isTrue(useUrlStore().choose(lastUrlId), "链接未找到");
-            // 索引刷新
-            useIndexStore().reset();
-        }
-    }
     checkElectronUpdate();
 });
 // 初始化主题

@@ -4,10 +4,13 @@ import {useTitle} from "@vueuse/core";
 import {Url} from "@/entity/Url";
 
 import {map} from "@/utils/ArrayUtil";
-import {listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
+import {getItemByDefault, listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {computed, ref, toRaw} from "vue";
 import {statistics} from "@/global/BeanFactory";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+import Assert from "@/utils/Assert";
+import useIndexStore from "@/store/IndexStore";
 
 const title = useTitle();
 
@@ -32,7 +35,21 @@ const useUrlStore = defineStore('url', () => {
     };
 
     init()
-        .then(() => console.log('url init successfully'))
+        .then(() => {
+          console.log('url init successfully');
+
+          // 最后的链接
+          if (useGlobalSettingStore().getLastUrl) {
+            const lastUrlId = getItemByDefault(LocalNameEnum.KEY_LAST_URL, 0);
+            if (lastUrlId !== 0) {
+              // 选择链接
+              Assert.isTrue(choose(lastUrlId), "链接未找到");
+              // 索引刷新
+              useIndexStore().reset();
+            }
+          }
+
+        })
         .catch(e => console.error('url init failed', e));
 
     const choose = (id: number): boolean => {
