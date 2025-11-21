@@ -1,4 +1,4 @@
-import {SortConditionType} from "@/components/es/domain/DocumentSearchQuery";
+import {SortConditionType} from "@/domain/es/DocumentSearchQuery";
 
 /**
  * 基础排序

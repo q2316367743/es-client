@@ -9,13 +9,13 @@ import {
     TabPane,
     ModalReturn,
     Button,
-    Select, Option, Tag
+    Select, Option
 } from "@arco-design/web-vue";
-import {IndexCreate} from "@/components/es/domain/IndexCreate";
+import {IndexCreate} from "@/domain/es/IndexCreate";
 import {getDefaultIndexInstance, IndexInstance} from "@/domain/IndexInstance";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import MessageUtil from "@/utils/MessageUtil";
-import indexApi from "@/components/es/api/IndexApi";
+import indexApi from "@/components/es/IndexApi";
 import useIndexStore from "@/store/IndexStore";
 import useLoadingStore from "@/store/LoadingStore";
 import MonacoEditor from "@/components/monaco-editor/index.vue";

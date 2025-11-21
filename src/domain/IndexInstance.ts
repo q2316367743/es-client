@@ -1,4 +1,4 @@
-import {Setting} from "@/components/es/domain/IndexBase";
+import {Setting} from "@/domain/es/IndexBase";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 /**
@@ -6,28 +6,29 @@ import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
  */
 export interface IndexInstance {
 
-    /**
-     * 索引名称
-     */
-    name: string;
+  /**
+   * 索引名称
+   */
+  name: string;
 
-    /**
-     * 设置
-     */
-    settings: Setting;
+  /**
+   * 设置
+   */
+  settings: Setting;
 
-    /**
-     * 映射
-     */
-    mappings: string;
+  /**
+   * 映射
+   */
+  mappings: string;
 }
+
 export function getDefaultIndexInstance(): IndexInstance {
-    return {
-        name: '',
-        settings: {
-            number_of_shards: useGlobalSettingStore().getDefaultShard,
-            number_of_replicas: useGlobalSettingStore().getDefaultReplica
-        },
-        mappings: "{}"
-    }
+  return {
+    name: '',
+    settings: {
+      number_of_shards: useGlobalSettingStore().getDefaultShard,
+      number_of_replicas: useGlobalSettingStore().getDefaultReplica
+    },
+    mappings: "{}"
+  }
 }

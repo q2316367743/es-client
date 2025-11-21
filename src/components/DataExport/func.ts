@@ -3,12 +3,12 @@ import {Parser} from '@json2csv/plainjs';
 import {utils, writeFile} from 'xlsx'
 
 import {ApiType, ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
-import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
+import {DocumentSearchResult} from "@/domain/es/DocumentSearchResult";
 import {download} from "@/utils/BrowserUtil";
-import DocumentApi from "@/components/es/api/DocumentApi";
+import DocumentApi from "@/components/es/DocumentApi";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {DocumentSearchQuery} from "@/domain/es/DocumentSearchQuery";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 

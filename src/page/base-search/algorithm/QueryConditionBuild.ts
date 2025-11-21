@@ -2,7 +2,7 @@ import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import MessageUtil from "@/utils/MessageUtil";
 import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
-import {ConditionArray, DocumentSearchQuery, QuerySort} from "@/components/es/domain/DocumentSearchQuery";
+import {ConditionArray, DocumentSearchQuery, QuerySort} from "@/domain/es/DocumentSearchQuery";
 
 /**
  * 获取基础查询请求体

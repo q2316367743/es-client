@@ -83,8 +83,8 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {Node, NodeState} from "@/components/es/domain/NodeState";
-import ClusterApi from "@/components/es/api/ClusterApi";
+import {Node, NodeState} from "@/domain/es/NodeState";
+import ClusterApi from "@/components/es/ClusterApi";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {prettyDataUnit} from "@/utils/BrowserUtil";

@@ -1,7 +1,7 @@
 import VersionStrategy from "@/strategy/VersionStrategy/VersionStrategy";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
-import ClusterApi from "@/components/es/api/ClusterApi";
+import ClusterApi from "@/components/es/ClusterApi";
 import Optional from "@/utils/Optional";
 import useUrlStore from "@/store/UrlStore";
 import V7VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V7VersionStrategyImpl";

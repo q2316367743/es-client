@@ -1,11 +1,11 @@
 import {TableColumnData, TableData} from "@arco-design/web-vue";
-import {fetchEs} from "@/plugins/native/axios";
+import {useEsRequestJson} from "@/plugins/native/axios";
 
 
 export interface Table {
-    columns: Array<TableColumnData>;
-    records: Array<TableData>;
-    width: number;
+  columns: Array<TableColumnData>;
+  records: Array<TableData>;
+  width: number;
 }
 
 /**
@@ -13,56 +13,56 @@ export interface Table {
  * @param url 链接
  */
 export async function cat(url: string): Promise<Table> {
-    const rsp = await fetchEs<string>({
-        url,
-        method: 'GET',
-        responseType: "text"
-    });
+  const rsp = await useEsRequestJson<string>({
+    url,
+    method: 'GET',
+    responseType: "text"
+  });
 
-    const columns = new Array<TableColumnData>();
-    const records = new Array<TableData>();
-    let width = 0;
+  const columns = new Array<TableColumnData>();
+  const records = new Array<TableData>();
+  let width = 0;
 
-    // 第一排是标题
-    let lines = rsp.split("\n");
-    if (lines.length == 0) {
-        return {columns, records, width};
+  // 第一排是标题
+  let lines = rsp.split("\n");
+  if (lines.length == 0) {
+    return {columns, records, width};
+  }
+  const headerStr = lines[0];
+  const headers = headerStr.split(" ").filter(e => e.trim() !== '');
+  headers.forEach(header => {
+    const column: TableColumnData = {title: header, dataIndex: header, width: Math.max(30, header.length * 16)};
+    if (header === 'index') {
+      // 索引增加排序
+      column.sortable = {
+        sortDirections: ['ascend', 'descend']
+      }
     }
-    const headerStr = lines[0];
-    const headers = headerStr.split(" ").filter(e => e.trim() !== '');
-    headers.forEach(header => {
-        const column: TableColumnData = {title: header, dataIndex: header, width: Math.max(30, header.length * 16)};
-        if (header === 'index') {
-            // 索引增加排序
-            column.sortable = {
-                sortDirections: ['ascend', 'descend']
-            }
-        }
-        columns.push(column);
+    columns.push(column);
 
-    });
-    if (lines.length == 1) {
-        columns.map(e => e.width || 0).forEach(e => width += e);
-        return {columns, records, width};
-    }
-    let recordsStr = lines.slice(1);
-    for (let recordStr of recordsStr) {
-        let recordItems = recordStr.split(" ").filter(e => e.trim() !== '');
-        const record: TableData = {};
-        for (let i = 0; i < recordItems.length; i++) {
-            record[headers[i] || ''] = recordItems[i];
-            columns[i].width = Math.max(columns[i].width || 30, recordItems[i].length * 13)
-        }
-        records.push(record);
-    }
-    // 重新计算宽度
+  });
+  if (lines.length == 1) {
     columns.map(e => e.width || 0).forEach(e => width += e);
     return {columns, records, width};
+  }
+  let recordsStr = lines.slice(1);
+  for (let recordStr of recordsStr) {
+    let recordItems = recordStr.split(" ").filter(e => e.trim() !== '');
+    const record: TableData = {};
+    for (let i = 0; i < recordItems.length; i++) {
+      record[headers[i] || ''] = recordItems[i];
+      columns[i].width = Math.max(columns[i].width || 30, recordItems[i].length * 13)
+    }
+    records.push(record);
+  }
+  // 重新计算宽度
+  columns.map(e => e.width || 0).forEach(e => width += e);
+  return {columns, records, width};
 }
 
 interface Url {
-    title: string;
-    key: string;
+  title: string;
+  key: string;
 }
 
 // =^.^=
@@ -95,7 +95,7 @@ interface Url {
 // /_cat/templates
 
 const urls = ['allocation', 'shards', 'shards/{index}', 'master', 'nodes', 'tasks', 'indices', 'indices/{index}',
-    'segments', 'segments/{index}', 'count', 'count/{index}', 'recovery', 'recovery/{index}',
-    'health', 'pending_tasks', 'aliases', 'thread_pool', 'plugins', 'fielddata', 'nodeattrs', 'repositories', 'templates'];
+  'segments', 'segments/{index}', 'count', 'count/{index}', 'recovery', 'recovery/{index}',
+  'health', 'pending_tasks', 'aliases', 'thread_pool', 'plugins', 'fielddata', 'nodeattrs', 'repositories', 'templates'];
 
 export const tabs: Array<Url> = urls.map(e => ({title: e, key: `/_cat/${e}?v`}));

@@ -1,5 +1,5 @@
 import MappingNode from "@/components/IndexMapping/domain/MappingNode";
-import {Mapping, Property} from "@/components/es/domain/IndexBase";
+import {Mapping, Property} from "@/domain/es/IndexBase";
 import MappingData from "@/components/IndexMapping/domain/MappingData";
 import Optional from "@/utils/Optional";
 import {typeMap} from "@/components/IndexMapping/Constant";

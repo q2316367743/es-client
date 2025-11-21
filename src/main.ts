@@ -60,7 +60,7 @@ window.addEventListener('message', event => {
 });
 
 import XEUtils from 'xe-utils'
-import {VXETable, Column, Icon, Tooltip, VxeTable, Menu} from 'vxe-table'
+import {VXETable, Column, VxeTable,} from 'vxe-table'
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import * as monaco from "monaco-editor";
 import language from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/language";
@@ -77,13 +77,9 @@ VXETable.setup({
 
 function useTable(app: App) {
     // 表格功能
-    app
-        .use(Menu)
 
     // 可选组件
-    app.use(Icon)
-        .use(Column)
-        .use(Tooltip)
+    app.use(Column)
 
         // 安装表格
         .use(VxeTable)

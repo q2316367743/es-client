@@ -1,4 +1,4 @@
-import {SortConditionType} from "@/components/es/domain/DocumentSearchQuery";
+import {SortConditionType} from "@/domain/es/DocumentSearchQuery";
 import {ConditionItem, SortItem} from "@/page/data-browse/domain/DbConditionItem";
 import MessageUtil from "@/utils/MessageUtil";
 

@@ -81,11 +81,11 @@
 import useIndexStore from "@/store/IndexStore";
 import {showJson, showJsonDialogByAsync} from "@/utils/DialogUtil";
 import {computed, ref, watch} from "vue";
-import {Shard} from "@/components/es/domain/ClusterState";
+import {Shard} from "@/domain/es/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import {OrderType} from "@/store/components/HomeStore";
-import ClusterApi from "@/components/es/api/ClusterApi";
+import ClusterApi from "@/components/es/ClusterApi";
 import {ClusterNode} from "@/domain/index/ClusterInfo";
 
 const UNASSIGNED = "Unassigned";

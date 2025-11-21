@@ -1,7 +1,7 @@
 import VersionStrategy from "@/strategy/VersionStrategy/VersionStrategy";
 import {IndexInstance} from "@/domain/IndexInstance";
-import {IndexCreate} from "@/components/es/domain/IndexCreate";
-import {Setting} from "@/components/es/domain/IndexBase";
+import {IndexCreate} from "@/domain/es/IndexCreate";
+import {Setting} from "@/domain/es/IndexBase";
 
 /**
  * v6版本策略

@@ -1,4 +1,4 @@
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {DocumentSearchQuery} from "@/domain/es/DocumentSearchQuery";
 
 /**
  * 导出类型

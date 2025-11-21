@@ -1,47 +1,36 @@
-import {jsonToTable, TableViewColumnData} from "@/algorithm/jsonToTable";
-import {DocumentSearchResult} from "@/components/es/domain/DocumentSearchResult";
 import BaseOrder from "@/entity/BaseOrder";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 import {baseSearchLoadEvent} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {ref} from "vue";
-import {arraysAreEqual} from "@/utils/ArrayUtil";
+import {searchResultToTable} from "@/algorithm/format";
+import {DataSearchColumnConfig, DataSearchResult, DataSourceRecord} from "@/domain/core";
 
 /**
  * 数据浏览展示对象
  */
 // state
-export const useDbResultColumns = ref(new Array<TableViewColumnData>());
-export const useDbResultRecords = ref(new Array<any>());
-export const useDbResultResult = ref({} as Partial<DocumentSearchResult>);
+export const useDbResultColumns = ref<Array<DataSearchColumnConfig>>([]);
+export const useDbResultRecords = ref<Array<DataSourceRecord>>([]);
+export const useDbResultResult = ref({} as Partial<DataSearchResult>);
 export const useDbResultTotal = ref(1);
 
 // actions
-export function useDbResultRender(searchResult: DocumentSearchResult, renderHeader: boolean) {
-    useDbResultResult.value = searchResult;
-    const tableData = jsonToTable(searchResult);
-    useDbResultRecords.value = tableData.records;
-    useDbResultTotal.value = tableData.total;
-    if (renderHeader) {
-        useDbResultColumns.value = tableData.columns;
-        return;
-    }
-    // 此处需要判断是否需要渲染表头
-    const oldDataIndex = useDbResultColumns.value.map(e => e.dataIndex);
-    const newDataIndex = tableData.columns.map(e => e.dataIndex);
-
-    if (arraysAreEqual(oldDataIndex, newDataIndex)) {
-        // 表头没有变化，不需要重新渲染
-        return;
-    }
-    useDbResultColumns.value = tableData.columns;
+export function useDbResultRender(result: string, renderHeader: boolean) {
+  useDbResultResult.value = searchResultToTable(result);
+  useDbResultRecords.value = useDbResultResult.value.records || [];
+  useDbResultTotal.value = useDbResultResult.value.total || 0;
+  if (renderHeader) {
+    useDbResultColumns.value = useDbResultResult.value.columns || [];
+    return;
+  }
 }
 
 export function useDbResultResetColumn() {
-    useDbResultColumns.value.forEach(e => {
-        e.show = true;
-    })
+  useDbResultColumns.value.forEach(e => {
+    e.show = true;
+  })
 }
 
 
@@ -49,43 +38,43 @@ export function useDbResultResetColumn() {
  * 跳转到基础查询
  */
 export function jumpToBaseSearch(callback: () => void) {
-    if (useDataBrowseStore().type === '') {
-        return;
-    }
-    // 基础数据
-    let orders = new Array<BaseOrder>();
-    // 填充数据
-    let count = 1;
-    let condition = useDbConditionStore().buildSearchQuery();
-    // 排序
-    for (let key in condition.sort) {
-        orders.push({
-            id: count++,
-            field: `${key}`,
-            type: condition.sort[key].order,
-            isEnable: true
-        });
-    }
-    baseSearchLoadEvent({
-        execute: true,
-        index: useDataBrowseStore().name,
-        conditions: [],
-        orders
+  if (useDataBrowseStore().type === '') {
+    return;
+  }
+  // 基础数据
+  let orders = new Array<BaseOrder>();
+  // 填充数据
+  let count = 1;
+  let condition = useDbConditionStore().buildSearchQuery();
+  // 排序
+  for (let key in condition.sort) {
+    orders.push({
+      id: count++,
+      field: `${key}`,
+      type: condition.sort[key].order,
+      isEnable: true
     });
-    callback();
+  }
+  baseSearchLoadEvent({
+    execute: true,
+    index: useDataBrowseStore().name,
+    conditions: [],
+    orders
+  });
+  callback();
 }
 
 /**
  * 跳转到高级查询
  */
 export function jumpToSeniorSearch(callback: () => void) {
-    // 填充数据
-    useSeniorSearchStore().loadEvent({
-        link: `/${useDataBrowseStore().name}/_search`,
-        method: 'POST',
-        body: JSON.stringify(useDbConditionStore().buildSearchQuery(), null, 4)
-    }, false);
-    callback();
+  // 填充数据
+  useSeniorSearchStore().loadEvent({
+    link: `/${useDataBrowseStore().name}/_search`,
+    method: 'POST',
+    body: JSON.stringify(useDbConditionStore().buildSearchQuery(), null, 4)
+  }, false);
+  callback();
 }
 
 /**
@@ -93,15 +82,15 @@ export function jumpToSeniorSearch(callback: () => void) {
  * @param data
  */
 export function jumpToSeniorSearchByInsert(data: any): Promise<void> {
-    if (!useDataBrowseStore().index) {
-        return Promise.reject();
-    }
-    useSeniorSearchStore().loadEvent({
-        link: `/${useDataBrowseStore().name}/_doc`,
-        method: 'POST',
-        body: data
-    });
-    return Promise.resolve();
+  if (!useDataBrowseStore().index) {
+    return Promise.reject();
+  }
+  useSeniorSearchStore().loadEvent({
+    link: `/${useDataBrowseStore().name}/_doc`,
+    method: 'POST',
+    body: data
+  });
+  return Promise.resolve();
 }
 
 /**
@@ -110,14 +99,14 @@ export function jumpToSeniorSearchByInsert(data: any): Promise<void> {
  * @param data
  */
 export function jumpToSeniorSearchByUpdate(id: string, data: any): Promise<void> {
-    if (!useDataBrowseStore().index) {
-        return Promise.reject();
-    }
-    useSeniorSearchStore().loadEvent({
-        link: `/${useDataBrowseStore().name}/_doc/${id}`,
-        method: 'PUT',
-        body: data
-    });
-    return Promise.resolve();
+  if (!useDataBrowseStore().index) {
+    return Promise.reject();
+  }
+  useSeniorSearchStore().loadEvent({
+    link: `/${useDataBrowseStore().name}/_doc/${id}`,
+    method: 'PUT',
+    body: data
+  });
+  return Promise.resolve();
 }
 

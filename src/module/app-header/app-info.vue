@@ -22,7 +22,7 @@
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
-import clusterApi from "@/components/es/api/ClusterApi";
+import clusterApi from "@/components/es/ClusterApi";
 import {showJsonDialogByAsync} from "@/utils/DialogUtil";
 
 export default defineComponent({

@@ -1,43 +1,43 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "useDefineForClassFields": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "strict": true,
-        "jsx": "preserve",
-        "sourceMap": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "jsxImportSource": "vue",
-        "lib": [
-            "esnext",
-            "dom"
-        ],
-        "baseUrl": "./",
-        "paths": {
-            "@/*": [
-                "./src/*"
-            ]
-        },
-        "types": [
-            "utools-api-types"
-        ]
-    },
-    "include": [
-        "src/**/*.ts",
-        "src/**/*.d.ts",
-        "src/**/*.tsx",
-        "src/**/*.vue"
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "jsxImportSource": "vue",
+    "lib": [
+      "esnext",
+      "dom"
     ],
-    "exclude": [
-        "node_modules",
-        "electron",
-        "src-edge",
-        "src-firefox",
-        "src-server",
-        "src-electron",
-        "src-tauri"
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "types": [
+      "utools-api-types"
     ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules",
+    "electron",
+    "src-edge",
+    "src-firefox",
+    "src-server",
+    "src-electron",
+    "src-tauri"
+  ]
 }

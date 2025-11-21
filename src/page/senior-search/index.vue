@@ -17,9 +17,8 @@
 
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import { useWindowSize} from "@vueuse/core";
+import {useLocalStorage, useWindowSize} from "@vueuse/core";
 import './index.less';
-import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {enableFilter, useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
 // 布局组件
@@ -31,7 +30,7 @@ const windowSize = useWindowSize();
 
 let history = '';
 
-const size = useUtoolsDbStorage<string>('/key/senior-search/split-size', '400px');
+const size = useLocalStorage<string>('/key/senior-search/split-size', '400px');
 const disabled = ref(false);
 const fullscreen = ref(false);
 

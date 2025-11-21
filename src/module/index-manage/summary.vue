@@ -34,7 +34,7 @@
 import { defineComponent } from "vue";
 import useIndexStore from "@/store/IndexStore";
 import Assert from "@/utils/Assert";
-import IndexApi from "@/components/es/api/IndexApi";
+import IndexApi from "@/components/es/IndexApi";
 import MessageUtil from "@/utils/MessageUtil";
 import Optional from "@/utils/Optional";
 import { mapState } from "pinia";

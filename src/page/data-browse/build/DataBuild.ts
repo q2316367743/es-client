@@ -1,5 +1,5 @@
 import {contains} from "@/utils/ArrayUtil";
-import {Property, Mapping} from "@/components/es/domain/IndexBase";
+import {Property, Mapping} from "@/domain/es/IndexBase";
 
 /**
  * 数据构造器

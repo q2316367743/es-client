@@ -1,21 +1,21 @@
 <template>
-    <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
-    <a-layout id="app">
-        <!-- 顶部菜单栏 -->
-        <app-header/>
-        <!-- 主页面 -->
-        <a-layout id="main">
-            <app-side/>
-            <!-- 内容-->
-            <a-layout-content>
-                <a-spin :loading="loading" :tip="text">
-                    <router-view/>
-                </a-spin>
-            </a-layout-content>
-        </a-layout>
+  <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
+  <a-layout id="app">
+    <!-- 顶部菜单栏 -->
+    <app-header/>
+    <!-- 主页面 -->
+    <a-layout id="main">
+      <app-side/>
+      <!-- 内容-->
+      <a-layout-content>
+        <a-spin :loading="loading" :tip="text">
+          <router-view/>
+        </a-spin>
+      </a-layout-content>
     </a-layout>
-    <!-- 索引管理 -->
-    <index-manage/>
+  </a-layout>
+  <!-- 索引管理 -->
+  <index-manage/>
 </template>
 
 <script lang="ts" setup>
@@ -39,7 +39,6 @@ import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 import Assert from "@/utils/Assert";
 import {showVersionUpdateDialog} from "@/module/version-update";
-import {checkElectronUpdate} from "@/components/version-manager/ElectronUpdate";
 
 const router = useRouter();
 
@@ -52,41 +51,40 @@ const loading = computed(() => useLoadingStore().loading);
 const text = computed(() => useLoadingStore().text);
 
 async function initData(): Promise<void> {
-    await Promise.all([
-        // 设置
-        useGlobalSettingStore().init(),
-        useEditorSettingStore().init(),
-        useBaseSearchSettingStore().init(),
-        useBackupSettingStore().init()
-    ]);
-    return Promise.resolve();
+  await Promise.all([
+    // 设置
+    useGlobalSettingStore().init(),
+    useEditorSettingStore().init(),
+    useBaseSearchSettingStore().init(),
+    useBackupSettingStore().init()
+  ]);
+  return Promise.resolve();
 }
 
 // 初始化数据
 initData().then(() => {
-    console.log("初始化完成");
-    // 版本
-    switch (versionManager()) {
-        case VersionStatus.NEW:
-            router.push(PageNameEnum.MORE_ABOUT);
-            break;
-        case VersionStatus.UPDATE:
-            showVersionUpdateDialog()
-            router.push(PageNameEnum.MORE_UPDATE);
-            break;
+  console.log("初始化完成");
+  // 版本
+  switch (versionManager()) {
+    case VersionStatus.NEW:
+      router.push(PageNameEnum.MORE_ABOUT);
+      break;
+    case VersionStatus.UPDATE:
+      showVersionUpdateDialog()
+      router.push(PageNameEnum.MORE_UPDATE);
+      break;
+  }
+  // 最后的链接
+  if (useGlobalSettingStore().getLastUrl) {
+    const lastUrlId = getItemByDefault(LocalNameEnum.KEY_LAST_URL, 0);
+    if (lastUrlId !== 0) {
+      useUrlStore().choose(lastUrlId);
+      // 选择链接
+      Assert.isTrue(useUrlStore().choose(lastUrlId), "链接未找到");
+      // 索引刷新
+      useIndexStore().reset();
     }
-    // 最后的链接
-    if (useGlobalSettingStore().getLastUrl) {
-        const lastUrlId = getItemByDefault(LocalNameEnum.KEY_LAST_URL, 0);
-        if (lastUrlId !== 0) {
-            useUrlStore().choose(lastUrlId);
-            // 选择链接
-            Assert.isTrue(useUrlStore().choose(lastUrlId), "链接未找到");
-            // 索引刷新
-            useIndexStore().reset();
-        }
-    }
-    checkElectronUpdate();
+  }
 });
 // 初始化主题
 useGlobalStore().initDarkColors();
@@ -96,8 +94,8 @@ useGlobalStore().initDarkColors();
 
 <style lang="less">
 .app-feedback {
-    width: calc(100vw - 40px);
-    height: calc(100vh - 58px - 60px);
-    border: none;
+  width: calc(100vw - 40px);
+  height: calc(100vh - 58px - 60px);
+  border: none;
 }
 </style>

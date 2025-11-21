@@ -2,7 +2,7 @@ import {BaseSearchItemBody} from "@/page/base-search/domain/BaseSearchItem";
 import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import Field from "@/view/Field";
-import DocumentApi from "@/components/es/api/DocumentApi";
+import DocumentApi from "@/components/es/DocumentApi";
 import QueryConditionBuild from "@/page/base-search/algorithm/QueryConditionBuild";
 import MessageUtil from "@/utils/MessageUtil";
 import {baseSearchRecordService, useIndexManageEvent} from "@/global/BeanFactory";
@@ -14,7 +14,7 @@ import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 import BaseSearchJumpEvent from "@/entity/event/BaseSearchJumpEvent";
-import {DocumentSearchQuery} from "@/components/es/domain/DocumentSearchQuery";
+import {DocumentSearchQuery} from "@/domain/es/DocumentSearchQuery";
 import {ref, watch} from "vue";
 import {Router} from "vue-router";
 

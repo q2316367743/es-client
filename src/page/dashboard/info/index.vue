@@ -112,13 +112,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-import ClusterApi from "@/components/es/api/ClusterApi";
+import ClusterApi from "@/components/es/ClusterApi";
 import {computed, ref, watch} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
-import {ClusterHealth} from "@/components/es/domain/ClusterHealth";
+import {ClusterHealth} from "@/domain/es/ClusterHealth";
 import DashboardCard from "@/page/dashboard/components/DashboardCard.vue";
-import {Overview} from "@/components/es/domain/Overview";
+import {Overview} from "@/domain/es/Overview";
 
 const empty = computed(() => useUrlStore().empty);
 

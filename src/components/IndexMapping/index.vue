@@ -76,7 +76,7 @@ import {
     typeRender,
     valueTipsBuild
 } from "@/components/IndexMapping/Util";
-import {Mapping, Property} from "@/components/es/domain/IndexBase";
+import {Mapping, Property} from "@/domain/es/IndexBase";
 import JsonView from "@/components/view/JsonView/index.vue";
 import MappingData from "./domain/MappingData";
 

@@ -3,7 +3,7 @@ import {createGlobalState} from "@vueuse/core";
 import {
     ConditionKey,
     DocumentSearchQuery, SortConditionType,
-} from "@/components/es/domain/DocumentSearchQuery";
+} from "@/domain/es/DocumentSearchQuery";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {
     conditionConvert,

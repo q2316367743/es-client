@@ -1,4 +1,4 @@
-import {ConditionKey, SortConditionType} from "@/components/es/domain/DocumentSearchQuery";
+import {ConditionKey, SortConditionType} from "@/domain/es/DocumentSearchQuery";
 
 /**
  * 条件项

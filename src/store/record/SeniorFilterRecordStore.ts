@@ -3,11 +3,11 @@ import {listByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {SeniorFilterRecord} from "@/entity/record/SeniorFilterRecord";
 import {toRaw} from "vue";
-import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import {useLocalStorage} from "@vueuse/core";
 
 let init = false;
 
-export const enableFilter = useUtoolsDbStorage('/setting/filter/enable', false);
+export const enableFilter = useLocalStorage('/setting/filter/enable', false);
 
 export const useSeniorFilterRecordStore = defineStore('SeniorFilterSetting', {
     state: () => ({
