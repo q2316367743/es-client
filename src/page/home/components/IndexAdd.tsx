@@ -20,6 +20,8 @@ import indexApi from "@/components/es/IndexApi";
 import useIndexStore from "@/store/IndexStore";
 import useLoadingStore from "@/store/LoadingStore";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
+import {parseJsonWithBigIntSupport, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+import {copyText} from "@/utils/BrowserUtil";
 
 /**
  * 索引创建
@@ -76,7 +78,7 @@ export function indexAdd(): void {
       index.value = {
         name: index.value.name,
         settings: index.value.settings,
-        mappings: JSON.stringify(sourceIndex.mapping, null, 4)
+        mappings: stringifyJsonWithBigIntSupport(sourceIndex.mapping)
       };
     }
   }
@@ -150,14 +152,14 @@ function jumpToSeniorSearch(index: Ref<IndexInstance>, modalReturn: ModalReturn)
   useSeniorSearchStore().loadEvent({
     link: '/' + index.value.name,
     method: 'PUT',
-    body: JSON.stringify(getIndexCreate(index), null, 4)
+    body: stringifyJsonWithBigIntSupport(getIndexCreate(index))
   });
   modalReturn.close();
 }
 
 function copyIndex(index: Ref<IndexInstance>, modalReturn: ModalReturn) {
   // 执行拷贝
-  utools.copyText(JSON.stringify(getIndexCreate(index), null, 4));
+  copyText(stringifyJsonWithBigIntSupport(getIndexCreate(index)));
   MessageUtil.success("已成功复制到剪切板");
   modalReturn.close();
 }
@@ -176,6 +178,6 @@ function addIndex(index: Ref<IndexInstance>, modalReturn: ModalReturn) {
 function getIndexCreate(index: Ref<IndexInstance>): IndexCreate {
   return {
     settings: index.value.settings,
-    mappings: JSON.parse(index.value.mappings)
+    mappings: parseJsonWithBigIntSupport(index.value.mappings)
   };
 }

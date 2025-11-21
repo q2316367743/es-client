@@ -1,7 +1,7 @@
 import axios, {AxiosRequestConfig} from "axios";
 import useUrlStore from "@/store/UrlStore";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
-import {jsonParse} from "@/algorithm/json";
+import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 
 
 export interface RequestConfig extends AxiosRequestConfig {
@@ -22,9 +22,9 @@ export async function useRequest(url: string, config: RequestConfig = {}): Promi
   return response.data;
 }
 
-export async function useRequestJson<T = any>(url: string, config: RequestConfig = {}): Promise<T> {
+export async function useRequestJson<T extends Record<string, any>>(url: string, config: RequestConfig = {}): Promise<T> {
   const r = await useRequest(url, config);
-  return jsonParse<T>(r);
+  return parseJsonWithBigIntSupport<T>(r);
 }
 
 export async function useEsRequest(config: RequestConfig = {}): Promise<string> {
@@ -65,7 +65,7 @@ export async function useEsRequest(config: RequestConfig = {}): Promise<string> 
 }
 
 
-export async function useEsRequestJson<T = any>(config: RequestConfig = {}): Promise<T> {
+export async function useEsRequestJson<T extends Record<string, any>>(config: RequestConfig = {}): Promise<T> {
   const r = await useEsRequest(config);
-  return jsonParse<T>(r);
+  return parseJsonWithBigIntSupport<T>(r);
 }

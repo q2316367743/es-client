@@ -79,12 +79,12 @@ import useIndexStore from "@/store/IndexStore";
 import {useIntervalFn} from "@vueuse/core";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useEsRequestJson} from "@/plugins/native/axios";
-import {jsonParse} from "@/algorithm/json";
 import useUrlStore from "@/store/UrlStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {jsonToHtml} from "@/utils/DialogUtil";
 import Constant from "@/global/Constant";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
+import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 
 
 const method = ref<Method>('POST');
@@ -146,7 +146,7 @@ const {pause, resume, isActive} = useIntervalFn(() => {
   }).then(rsp => {
     if (JSON_REGEX.test(rsp)) {
       try {
-        const {html, original} = jsonToHtml(jsonParse(rsp));
+        const {html, original} = jsonToHtml(parseJsonWithBigIntSupport(rsp));
         result.value = html;
         json.value = original;
       } catch (e) {

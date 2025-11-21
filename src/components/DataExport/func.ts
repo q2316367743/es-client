@@ -9,7 +9,7 @@ import DocumentApi from "@/components/es/DocumentApi";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {DocumentSearchQuery} from "@/domain/es/DocumentSearchQuery";
-import {parseJsonWithBigIntSupport} from "@/algorithm/format";
+import {parseJsonWithBigIntSupport, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
@@ -21,7 +21,7 @@ const json2Tsv = new Parser({
 // ------------------------------------------------ 非结构化导出 ------------------------------------------------
 
 function exportJson(records: Array<Record<string, any>>): string {
-  return JSON.stringify(records);
+  return stringifyJsonWithBigIntSupport(records);
 }
 
 // ------------------------------------------------ 结构化导出 ------------------------------------------------

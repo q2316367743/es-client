@@ -3,6 +3,7 @@ import {defineStore} from "pinia";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 
 export function getDefaultBaseSearchSetting(): BaseSearchSetting {
   return {
@@ -23,7 +24,7 @@ export const useBaseSearchSettingStore = defineStore('base-search-setting', {
       let params = {};
       if (state.baseSearchSetting.defaultParams.trim() !== '') {
         try {
-          params = JSON.parse(state.baseSearchSetting.defaultParams);
+          params = parseJsonWithBigIntSupport(state.baseSearchSetting.defaultParams);
         } catch (e) {
           console.error(e);
         }

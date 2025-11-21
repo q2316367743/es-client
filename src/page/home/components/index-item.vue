@@ -79,27 +79,23 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {mapState} from "pinia";
-// 组件
 import IndexApi from '@/components/es/IndexApi'
 import {getDefaultDocumentSearchQueryStr} from "@/domain/es/DocumentSearchQuery";
-// 实体类
 import BaseOrder from "@/entity/BaseOrder";
 import {BaseQuery} from "@/entity/BaseQuery";
-// 工具类
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Optional from "@/utils/Optional";
-// 存储
 import useIndexStore from "@/store/IndexStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {baseSearchLoadEvent} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
-// 其他
 import IndexView from "@/view/index/IndexView";
 import {useIndexManageEvent} from "@/global/BeanFactory";
 import {indexReindex} from "@/page/home/components/IndexReindex";
 import PageNameEnum from "@/enumeration/PageNameEnum";
+import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 
 export default defineComponent({
   name: 'index-item',
@@ -159,7 +155,7 @@ export default defineComponent({
         confirmButtonText: "确定",
         cancelButtonText: "取消",
       }).then((value) => IndexApi(this.index.name!).newAlias(value)
-        .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+        .then(res => MessageUtil.success(stringifyJsonWithBigIntSupport(res), this.reset))
         .catch(e => MessageUtil.error('新建别名错误', e)));
     },
     removeAlias(alias: string) {
@@ -169,7 +165,7 @@ export default defineComponent({
       })
         .then(() => IndexApi(this.index.name!).removeAlias(alias)
           .then(res => {
-            MessageUtil.success(JSON.stringify(res), this.reset);
+            MessageUtil.success(stringifyJsonWithBigIntSupport(res), this.reset);
           })
           .catch(e => MessageUtil.error('删除别名错误', e)))
         .catch(() => console.log('取消删除'));
@@ -179,7 +175,7 @@ export default defineComponent({
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(() => IndexApi(this.index.name!).delete()
-        .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+        .then(res => MessageUtil.success(stringifyJsonWithBigIntSupport(res), this.reset))
         .catch(e => MessageUtil.error('索引删除错误', e)));
     },
     indexOperation() {
@@ -193,12 +189,12 @@ export default defineComponent({
     },
     openIndex() {
       IndexApi(this.index.name!)._open()
-        .then(res => MessageUtil.success(JSON.stringify(res), this.reset))
+        .then(res => MessageUtil.success(stringifyJsonWithBigIntSupport(res), this.reset))
         .catch(e => MessageUtil.error('打开索引失败', e));
     },
     closeIndex() {
       IndexApi(this.index.name!)._close()
-        .then((res: any) => MessageUtil.success(JSON.stringify(res), this.reset))
+        .then((res: any) => MessageUtil.success(stringifyJsonWithBigIntSupport(res), this.reset))
         .catch(e => MessageUtil.error('关闭索引失败', e));
     },
     reset() {

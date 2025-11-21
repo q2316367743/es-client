@@ -4,7 +4,7 @@ import {baseSearchLoadEvent} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {ref} from "vue";
-import {searchResultToTable} from "@/algorithm/format";
+import {searchResultToTable, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {DataSearchColumnConfig, DataSearchResult, DataSourceRecord} from "@/domain/core";
 
 /**
@@ -72,7 +72,7 @@ export function jumpToSeniorSearch(callback: () => void) {
   useSeniorSearchStore().loadEvent({
     link: `/${useDataBrowseStore().name}/_search`,
     method: 'POST',
-    body: JSON.stringify(useDbConditionStore().buildSearchQuery(), null, 4)
+    body: stringifyJsonWithBigIntSupport(useDbConditionStore().buildSearchQuery())
   }, false);
   callback();
 }

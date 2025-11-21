@@ -116,7 +116,16 @@ export default defineComponent({
       }
       let {columns, records} = searchResultToTable(this.value);
       // 渲染表头
-      this.renderColumns = columns.map(c => ({
+      this.renderColumns = [{
+        dataIndex: '_id',
+        title: 'ID',
+        width: 200,
+        fixed: 'left',
+        ellipsis: true,
+        resizable: true,
+        sortable: true,
+        align: 'left'
+      }, ...columns.map(c => ({
         dataIndex: c.field,
         title: c.title,
         width: c.width,
@@ -125,7 +134,7 @@ export default defineComponent({
         resizable: true,
         sortable: true,
         align: 'left'
-      } as TableColumnData));
+      } as TableColumnData))];
       this.showColumns = this.renderColumns;
       // 映射表头
       this.columns = this.renderColumns

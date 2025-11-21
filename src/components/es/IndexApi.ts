@@ -6,6 +6,7 @@ import {useEsRequestJson} from "@/plugins/native/axios";
  * 与索引有关的API
  *
  * @param name 索引名称
+ * @todo 考虑版本影响
  */
 export default function (name: string) {
   return {

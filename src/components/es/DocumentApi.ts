@@ -5,6 +5,7 @@ import {Analyze} from "@/domain/es/Analyze";
 
 /**
  * 与索引有关的API
+ * @todo 此处需要考虑版本的影响
  */
 export default function DocumentApi(index: string) {
   return {
@@ -16,7 +17,7 @@ export default function DocumentApi(index: string) {
       })
     },
 
-    _insert(data: Record<string, any>): Promise<any> {
+    _insert(data: string): Promise<any> {
       return useEsRequestJson<any>({
         url: `/${index}/_doc`,
         method: "POST",
@@ -36,9 +37,9 @@ export default function DocumentApi(index: string) {
         data
       })
     },
-    _update(id: string, data: Record<string, any>): Promise<any> {
+    _update(id: string, data: string): Promise<any> {
       return useEsRequestJson<any>({
-        url: `/${index}/_doc/${id}`,
+        url: `/${index}/${id}`,
         method: "PUT",
         headers: {
           'Content-Type': 'application/json'

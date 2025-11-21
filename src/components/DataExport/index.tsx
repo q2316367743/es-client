@@ -28,6 +28,7 @@ const allowExportTypes: Array<ExportType> = [ExportType.JSON];
 /**
  * 显示导出组件
  * @param config 配置项
+ * @todo 优化这个组件，太大了
  */
 export function showDataExportDrawer(config: ConditionExportEvent) {
 

@@ -4,7 +4,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref, watch} from "vue";
 import {renderJSONTreeView} from "@/components/view/JsonTreeView/index";
-import {jsonParse} from "@/algorithm/json";
+import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 
 export default defineComponent({
     name: 'json-tree-view',
@@ -20,7 +20,7 @@ export default defineComponent({
                 let json: Record<string, any> = {};
                 if (value) {
                     if (typeof value === 'string') {
-                        json = jsonParse(value);
+                        json = parseJsonWithBigIntSupport(value);
                     }else {
                         json = value;
                     }

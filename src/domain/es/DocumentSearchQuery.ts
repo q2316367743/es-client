@@ -1,4 +1,5 @@
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
+import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 
 /**
  * 文档搜索条件
@@ -51,7 +52,7 @@ export const getDefaultDocumentSearchQuery = (): DocumentSearchQuery => ({
     size: useGlobalSettingStore().getPageSize
 });
 
-const defaultDocumentSearchQueryStr = JSON.stringify(getDefaultDocumentSearchQuery());
+const defaultDocumentSearchQueryStr = stringifyJsonWithBigIntSupport(getDefaultDocumentSearchQuery());
 
 export const getDefaultDocumentSearchQueryStr = (): string => defaultDocumentSearchQueryStr;
 

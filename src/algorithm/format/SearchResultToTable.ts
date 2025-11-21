@@ -1,5 +1,5 @@
 import {DataSearchResult} from "@/domain/core";
-import {parseJsonWithBigIntSupport} from "@/algorithm/format";
+import {parseJsonWithBigIntSupport, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {flattenObject} from "@/algorithm/file";
 
 /**
@@ -53,7 +53,7 @@ export function searchResultToTable(response: string): DataSearchResult {
     _index: hit._index,
     _type: hit._type,
     _score: hit._score,
-    _source: JSON.stringify(hit._source, null, 2),
+    _source: stringifyJsonWithBigIntSupport(hit._source),
     ...flattenObject(hit._source)
   }));
 

@@ -1,3 +1,5 @@
+import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+
 /**
  * 格式化 JSON 字符串，保留 Long 类型的原始字符串表示，避免类型丢失。
  * 通过纯字符串操作实现，防止解析后再序列化导致的精度问题。
@@ -478,7 +480,7 @@ function _flattenObject(obj: unknown, prefix = ""): Record<string, string> {
 
   // 基础类型（包括 bigint）或数组：直接转为字符串
   if (typeof obj !== "object" || Array.isArray(obj)) {
-    const value = Array.isArray(obj) ? JSON.stringify(obj) : String(obj);
+    const value = Array.isArray(obj) ? stringifyJsonWithBigIntSupport(obj) : String(obj);
     return prefix ? { [prefix]: value } : {};
   }
 
@@ -495,7 +497,7 @@ function _flattenObject(obj: unknown, prefix = ""): Record<string, string> {
         result[newKey] = String(value);
       } else if (Array.isArray(value)) {
         // 数组转 JSON 字符串
-        result[newKey] = JSON.stringify(value);
+        result[newKey] = stringifyJsonWithBigIntSupport(value);
       } else {
         // 递归处理嵌套对象
         Object.assign(result, _flattenObject(value, newKey));

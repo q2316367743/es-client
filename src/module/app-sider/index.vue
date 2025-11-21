@@ -97,15 +97,14 @@
 <script lang="ts" setup>
 import {ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {useStorage} from "@vueuse/core";
+import {useLocalStorage} from "@vueuse/core";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {dbStorage} from "@/plugins/distribute";
 
 const route = useRoute();
 const router = useRouter();
 
-const collapsed = useStorage(LocalNameEnum.KEY_COLLAPSED, true, dbStorage);
+const collapsed = useLocalStorage(LocalNameEnum.KEY_COLLAPSED, true);
 const selectedKeys = ref<Array<PageNameEnum>>([PageNameEnum.HOME]);
 
 watch(() => selectedKeys.value, value => router.push(value[0]));

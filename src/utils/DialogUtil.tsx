@@ -8,6 +8,7 @@ import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/brows
 import Constant from "@/global/Constant";
 import {formatJsonString} from "@/algorithm/file";
 import {copyText} from "@/utils/BrowserUtil";
+import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 
 /**
  * 对话框参数
@@ -50,7 +51,7 @@ export function jsonToHtml(json: string | any): { html: string, original: string
       needPretty = false;
     }
   } else {
-    value = JSON.stringify(json, null, 4);
+    value = stringifyJsonWithBigIntSupport(json);
   }
   // 原始值
   if (needPretty && value !== '') {

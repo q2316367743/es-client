@@ -93,18 +93,11 @@ export const useDataBrowseStore = defineStore('data-browser', {
         MessageUtil.error("请选择索引");
         return;
       }
-      let record = {};
-      try {
-        record = JSON.parse(data);
-      } catch (e) {
-        MessageUtil.error("数据解析错误", e);
-        return;
-      }
       if (!this.index) {
         MessageUtil.error("请先选择索引");
         return;
       }
-      DocumentApi(this.index.name)._insert(record)
+      DocumentApi(this.index.name)._insert(data)
         .then(result => {
           MessageUtil.success(`新增成功，新数据ID【${result._id || ''}】`)
           // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
@@ -175,15 +168,8 @@ export const useDataBrowseStore = defineStore('data-browser', {
       if (this.name.trim() === '') {
         return Promise.reject(new Error("请选择索引"))
       }
-      let record = {};
-      try {
-        record = JSON.parse(data);
-      } catch (e) {
-        MessageUtil.error("数据解析错误", e);
-        return Promise.reject(e);
-      }
       return new Promise<void>((resolve, reject) => {
-        DocumentApi(this.name)._update(id, record).then(() => {
+        DocumentApi(this.name)._update(id, data).then(() => {
           // ES 是一个近实时系统，我们写入的数据默认的情况下会在 1 秒后才能被查询到
           setTimeout(() => {
             resolve();
