@@ -3,18 +3,18 @@ import BaseOrder from "@/entity/BaseOrder";
 
 export interface BaseSearchItemBody {
 
-    index: string,
+  index: string,
 
-    conditions: Array<BaseQuery>;
+  conditions: Array<BaseQuery>;
 
-    orders: Array<BaseOrder>;
+  orders: Array<BaseOrder>;
 
-    page: number;
+  page: number;
 
-    size: number;
+  size: number;
 
-    total: number;
+  total: number;
 
-    result: any;
+  result: string;
 
 }

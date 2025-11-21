@@ -48,8 +48,8 @@ export const menuConfig: VxeTablePropTypes.MenuConfig = {
     body: {
         options: [
             [
-                {code: 'copy', name: '复制', prefixIcon: 'vxe-icon-copy', visible: true},
-                {code: 'copy-row', name: '复制当前行', prefixIcon: 'vxe-icon-copy', visible: true},
+                {code: 'copy', name: '复制', prefixIcon: 'vxe-icon-copyText', visible: true},
+                {code: 'copyText-row', name: '复制当前行', prefixIcon: 'vxe-icon-copyText', visible: true},
             ],
             [
                 {code: 'operation-edit', name: '编辑', prefixIcon: 'vxe-icon-edit',visible: true},

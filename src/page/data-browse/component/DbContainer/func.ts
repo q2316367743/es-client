@@ -40,7 +40,7 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
                     MessageUtil.info("已复制到剪贴板！")
                 }
                 break
-            case 'copy-row':
+            case 'copyText-row':
                 if (row) {
                     utools.copyText(JSON.stringify(row))
                     MessageUtil.info("已复制到剪贴板！")

@@ -8,15 +8,24 @@
  */
 enum ViewTypeEnum {
 
-    BASE = 1,
+  /**
+   * @deprecated 不要了，不好用
+   */
+  BASE = 1,
 
-    JSON = 2,
+  /**
+   * @deprecated 不要了，不好用
+   */
+  JSON = 2,
 
-    TABLE = 3,
+  TABLE = 3,
 
-    JSON_TREE = 4,
+  /**
+   * @deprecated 不要了，不好用
+   */
+  JSON_TREE = 4,
 
-    EDITOR = 5
+  EDITOR = 5
 
 }
 

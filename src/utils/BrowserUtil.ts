@@ -19,23 +19,50 @@ export function download(data: string | ArrayBuffer | Blob, fileName: string, mi
 }
 
 /**
- * 拷贝
- * @param content 内容
+ * 拷贝文本到剪贴板
+ * @param content 要复制的文本内容
+ * @returns Promise<boolean> 是否成功复制
  */
-export function copy(content: string) {
-    // content为要复制的内容
-    // 创建元素用于复制
-    const ele = document.createElement('textarea');
-    // 设置元素内容
-    ele.value = content;
-    // 将元素插入页面进行调用
-    document.body.appendChild(ele);
-    // 复制内容
-    ele.select();
-    // 将内容复制到剪贴板
-    document.execCommand('copy');
-    // 删除创建元素
-    document.body.removeChild(ele);
+export async function copyText(content: string): Promise<boolean> {
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    try {
+      await navigator.clipboard.writeText(content);
+      return true;
+    } catch (err) {
+      console.warn('使用 Clipboard API 复制失败，尝试降级方案:', err);
+    }
+  }
+
+  // 降级方案：使用 document.execCommand('copy')
+  const ele = document.createElement('textarea');
+  ele.value = content;
+  ele.setAttribute('readonly', '');
+  ele.style.position = 'absolute';
+  ele.style.left = '-9999px';
+  document.body.appendChild(ele);
+
+  const selection = document.getSelection();
+  const selected = selection?.rangeCount ? selection.getRangeAt(0) : null;
+
+  ele.select();
+  ele.setSelectionRange(0, ele.value.length);
+
+  let success = false;
+  try {
+    success = document.execCommand('copy');
+  } catch (err) {
+    console.error('降级复制方案失败:', err);
+  }
+
+  document.body.removeChild(ele);
+
+  // 恢复用户原有的选区（如果存在）
+  if (selected && selection) {
+    selection.removeAllRanges();
+    selection.addRange(selected);
+  }
+
+  return success;
 }
 
 export function downloadByUrl(url: string, fileName?: string) {

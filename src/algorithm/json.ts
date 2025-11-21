@@ -33,6 +33,10 @@ export function jsonParse<T = any>(data: string): T {
 
 
 // TODO: 替换
+/**
+ * @deprecated
+ * @param json
+ */
 export function jsonFormat(json: string | object): string {
   return JSON.stringify(typeof json === 'string' ? jsonParse(json) : json, null, 4);
 

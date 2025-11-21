@@ -1,5 +1,5 @@
 import MessageUtil from '@/utils/MessageUtil';
-import {copy, generateUUID} from "@/utils/BrowserUtil";
+import {copyText, generateUUID} from "@/utils/BrowserUtil";
 import {del, get, getMany, keys, set} from 'idb-keyval';
 import axios from "axios";
 
@@ -217,7 +217,7 @@ export const web = {
         return !isMacOS() && !isWindows();
     },
     copyText(text: string) {
-        copy(text);
+        copyText(text);
     }
 
 }

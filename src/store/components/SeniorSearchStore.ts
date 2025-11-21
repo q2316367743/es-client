@@ -5,7 +5,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import NotificationUtil from "@/utils/NotificationUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {useEsRequestJson} from "@/plugins/native/axios";
-import {jsonFormat, jsonParse} from "@/algorithm/json";
 //算法
 import restFormat from "@/algorithm/restFormat";
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
@@ -19,6 +18,8 @@ import useLoadingStore from "@/store/LoadingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 import {getFromOne, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {formatJsonString} from "@/algorithm/file";
+import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 
 function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
   let value = instance.getValue();
@@ -132,7 +133,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         this.show = response;
         // 解析后的数据，用于执行过滤器
         try {
-          this.json = jsonParse(this.result);
+          this.json = parseJsonWithBigIntSupport(this.result);
         } catch (e) {
           this.json = {};
         }
@@ -160,7 +161,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         let filterFunc = new Function('$', 'return $' + this.filter);
         let resultJson = filterFunc(toRaw(this.json));
         if (typeof resultJson === 'object') {
-          this.show = jsonFormat(resultJson);
+          this.show = formatJsonString(resultJson);
         } else {
           this.show = `${resultJson}`;
         }

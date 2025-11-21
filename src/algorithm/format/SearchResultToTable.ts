@@ -1,6 +1,6 @@
-import { DataSearchResult } from "@/domain/core";
-import { parseJsonWithBigIntSupport } from "@/algorithm/format";
-import { flattenObject } from "@/algorithm/file";
+import {DataSearchResult} from "@/domain/core";
+import {parseJsonWithBigIntSupport} from "@/algorithm/format";
+import {flattenObject} from "@/algorithm/file";
 
 /**
  * 搜索结果转为表格
@@ -8,6 +8,9 @@ import { flattenObject } from "@/algorithm/file";
  */
 export function searchResultToTable(response: string): DataSearchResult {
   const result = parseJsonWithBigIntSupport(response);
+  if (!result.hits || !result.hits.hits) {
+    return {columns: [], records: [], total: 0, source: response};
+  }
   const hits = result.hits.hits || [];
 
   // 提取所有字段名

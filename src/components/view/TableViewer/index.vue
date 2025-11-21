@@ -25,44 +25,35 @@
           </div>
         </template>
       </a-trigger>
-      <a-select v-model="tableHeaderMode" :disabled="index === ''">
-        <a-option label="索引映射" :value="TableHeaderModeEnum.MAPPING"/>
-        <a-option label="实时渲染" :value="TableHeaderModeEnum.RENDER"/>
-      </a-select>
     </div>
     <div class="table-view-wrap">
       <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
-               scrollbar
-               :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered" :draggable="draggable"/>
+               scrollbar :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"
+               :draggable="draggable"/>
     </div>
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, h, PropType} from "vue";
+import {defineComponent, h} from "vue";
 import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 
-import JsonView from "@/components/view/JsonView/index.vue";
-import {buildTableColumnData, jsonToTable, TableViewColumnData, widthCalc} from "@/algorithm/jsonToTable";
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
-import useIndexStore from "@/store/IndexStore";
+import MonacoView from "@/components/view/MonacoView/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
+import {searchResultToTable} from "@/algorithm/format";
+import {copyText} from "@/utils/BrowserUtil";
 
 let sort: Sortable | undefined;
 
 export default defineComponent({
   name: 'table-viewer',
   props: {
-    data: Object as PropType<any>,
-    index: {
+    value: {
       type: String,
-      required: false,
-      default: ''
-    }
+      required: true
+    },
   },
-  components: {JsonView},
-
+  components: {MonacoView},
   data: () => {
     let now = new Date().getTime();
     return {
@@ -84,8 +75,9 @@ export default defineComponent({
         title: '源数据',
         width: 80,
         expandedRowRender: (record: TableData) => {
-          return h(JsonView, {
-            data: record['_source']
+          return h(MonacoView, {
+            value: record['_source'],
+            height: '400px'
           });
         }
       } as TableExpandable,
@@ -101,108 +93,55 @@ export default defineComponent({
       // 筛选
       checkItems: new Array<string>(),
       allowUpdate: true,
-      tableHeaderMode: TableHeaderModeEnum.RENDER as TableHeaderModeEnum,
-      TableHeaderModeEnum
     }
   },
   watch: {
-    data() {
+    value() {
       this.render();
-    },
-    tableHeaderMode(newValue: TableHeaderModeEnum) {
-      if (newValue === TableHeaderModeEnum.MAPPING) {
-        this.columns = this.mappingColumns;
-      } else if (newValue === TableHeaderModeEnum.RENDER) {
-        this.columns = this.renderColumns
-      }
-      this.resetColumn();
     }
   },
   mounted() {
-    // 启动时注册
-    this.tableHeaderMode = this.index === '' ? TableHeaderModeEnum.RENDER : useGlobalSettingStore().getTableHeaderMode;
     // 注册够渲染
     this.render();
   },
   methods: {
     render() {
       // 当变化时，进行渲染
-      if (!this.verify_index()) {
-        this.records = []
+      // 数据处理
+      if (!this.value) {
+        this.showColumns = [];
         this.columns = [];
-        this.emptyText = '数据无法解析，请使用其他视图查看'
+        this.records = [];
         return;
       }
-      // 数据处理
-      let {columns, records} = jsonToTable(this.data);
+      let {columns, records} = searchResultToTable(this.value);
       // 渲染表头
-      this.renderColumns = columns;
+      this.renderColumns = columns.map(c => ({
+        dataIndex: c.field,
+        title: c.title,
+        width: c.width,
+        fixed: c.fixed,
+        ellipsis: true,
+        resizable: true,
+        sortable: true,
+        align: 'left'
+      } as TableColumnData));
+      this.showColumns = this.renderColumns;
       // 映射表头
-      if (this.index !== '') {
-        // 如果存在索引
-        let index = useIndexStore().map.get(this.index);
-        let renderColumns = new Array<TableViewColumnData>();
-        // 只有全部才会加入基础对象
-        renderColumns.push({
-          title: '_id',
-          dataIndex: '_id',
-          ellipsis: true,
-          width: 110,
-          tooltip: true,
-          sortable: {
-            sortDirections: ['ascend', 'descend']
-          },
-          cellClass: 'table-view-cell table-view-fixed',
-          show: true
-        });
-        ['_index', '_score'].forEach(key => renderColumns.push(buildTableColumnData(key, widthCalc(key))));
-        if (index) {
-          // 存在索引
-          index.fields.filter(field => field.dataIndex !== '')
-            .map(field => buildTableColumnData(field.dataIndex, widthCalc(field.name), field.name))
-            .forEach(column => renderColumns.push(column));
-          this.mappingColumns = renderColumns;
-        }
-      }
-      if (this.tableHeaderMode === TableHeaderModeEnum.MAPPING) {
-        this.columns = this.mappingColumns;
-      } else if (this.tableHeaderMode === TableHeaderModeEnum.RENDER) {
-        this.columns = this.renderColumns
-      }
+      this.columns = this.renderColumns
       this.columns = columns;
       this.records = records;
       // 数据清空
       let x = 0;
       this.columns.map(e => e.width).forEach(e => x += (e || 0));
       this.scroll.x = `${x}px`;
-      // 此处设置显示的列
-      if (this.index !== this.oldIndex ||
-        (this.allowUpdate && this.index === '') ||
-        (this.index === this.oldIndex && this.index !== '' && this.allowUpdate)
-      ) {
-        // 重置索引:切换索引 || (索引为空 && 允许更新) || (索引存在 && 索引未切换 && 允许更新)
-        this.allowUpdate = true;
-        this.showColumns = this.columns
-        this.checkItems = this.showColumns.map(column => column.dataIndex!);
-      }
-      this.oldIndex = this.index || '';
       // 拖拽
       this.$nextTick(() => {
         this.addSortable();
       })
     },
-    verify_index(): boolean {
-      if (!this.data) {
-        return false;
-      }
-      if (!this.data.hits) {
-        return false;
-      }
-      return this.data.hits.hits;
-
-    },
     copy(value: any) {
-      utools.copyText(JSON.stringify(value, null, 4));
+      copyText(value);
       MessageUtil.success("已成功复制到剪切板");
     },
     handleChange(values: any[]) {
