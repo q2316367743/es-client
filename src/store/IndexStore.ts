@@ -58,7 +58,8 @@ const useIndexStore = defineStore('index', {
      * 重新获取链接
      */
     async reset(): Promise<void> {
-      if (useUrlStore().current === '') {
+      const {url} = useUrlStore();
+      if (!url) {
         return Promise.reject('链接不存在');
       }
       // 清空数据
@@ -85,19 +86,12 @@ const useIndexStore = defineStore('index', {
         }).catch(e => NotificationUtil.error(e, '获取索引健康值失败'));
 
 
-        // 此处判断url是否存在版本
-        const url = useUrlStore().url;
-        if (url) {
-          const version = url.version;
-          if (!version || version.trim() === '') {
-            // 获取健康
-            clusterApi.info().then(overview => {
-              useUrlStore().update(url.id, {
-                version: overview.version.number
-              }).catch(e => NotificationUtil.error(e, "更新版本信息失败"));
-            }).catch(e => NotificationUtil.error(e, "获取版本信息失败"));
-          }
-        }
+        // 更新版本信息，但是只需要异步即可
+        clusterApi.info().then(overview => {
+          useUrlStore().update(url.id, {
+            version: overview.version.number
+          }).catch(e => NotificationUtil.error(e, "更新版本信息失败"));
+        }).catch(e => NotificationUtil.error(e, "获取版本信息失败"));
 
         this.sort(this.order);
         return Promise.resolve();
