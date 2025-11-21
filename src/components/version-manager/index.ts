@@ -2,9 +2,8 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/MessageUtil";
-import {updateTo3ByUtools, updateTo3ByWeb} from "@/components/version-manager/updateTo3";
+import {updateTo3ByWeb} from "@/components/version-manager/updateTo3";
 import useLoadingStore from "@/store/LoadingStore";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {statistics} from "@/global/BeanFactory";
 
 export enum VersionStatus {
@@ -53,16 +52,9 @@ function updateTo() {
 }
 
 export function updateTo3() {
-  if (Constant.mode === PluginModeEnum.UTOOLS) {
-    useLoadingStore().start("链接迁移")
-    updateTo3ByUtools().then(() => MessageUtil.success("迁移完成"))
-      .catch(e => MessageUtil.error("迁移失败", e))
-      .finally(() => useLoadingStore().close());
-  } else {
-    useLoadingStore().start("链接迁移")
-    updateTo3ByWeb().then(() => MessageUtil.success("迁移完成"))
-      .catch(e => MessageUtil.error("迁移失败", e))
-      .finally(() => useLoadingStore().close());
-  }
+  useLoadingStore().start("链接迁移")
+  updateTo3ByWeb().then(() => MessageUtil.success("迁移完成"))
+    .catch(e => MessageUtil.error("迁移失败", e))
+    .finally(() => useLoadingStore().close());
 }
 

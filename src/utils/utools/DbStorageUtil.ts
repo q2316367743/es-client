@@ -37,8 +37,6 @@ export interface DbList<T> {
 
   list: Array<T>;
 
-  rev?: string;
-
 }
 
 export interface DbRecord<T> {
