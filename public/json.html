@@ -1,106 +1,106 @@
 <!doctype html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>JSON对话框</title>
-    <style>
-        html {
-            --color-bg-1: #fff;
-            --color-text-1: var(--color-neutral-10);
-            --color-neutral-10: rgb(var(--gray-10));
-            --gray-10: 29, 33, 41;
-            --primary-6: var(--arcoblue-6);
-            --arcoblue-6: 22, 93, 255;
-            --color-fill-2: var(--color-neutral-2);
-            --color-neutral-2: rgb(var(--gray-2));
-            --gray-2: 242, 243, 245;
-            --color-neutral-4: rgb(var(--gray-4));
-            --gray-4: 201, 205, 212;
-            --color-fill-3: var(--color-neutral-3);
-            --color-neutral-3: rgb(var(--gray-3));
-            --gray-3: 229, 230, 235;
-            --color-text-4: var(--color-neutral-4);
-            --color-text-2: var(--color-neutral-8);
-            --color-neutral-8: rgb(var(--gray-8));
-            --gray-8: 78, 89, 105;
-            --color-text-3: var(--color-neutral-6);
-            --color-neutral-6: rgb(var(--gray-6));
-            --gray-6: 134, 144, 156;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>JSON对话框</title>
+  <style>
+    html {
+      --color-bg-1: #fff;
+      --color-text-1: var(--color-neutral-10);
+      --color-neutral-10: rgb(var(--gray-10));
+      --gray-10: 29, 33, 41;
+      --primary-6: var(--arcoblue-6);
+      --arcoblue-6: 22, 93, 255;
+      --color-fill-2: var(--color-neutral-2);
+      --color-neutral-2: rgb(var(--gray-2));
+      --gray-2: 242, 243, 245;
+      --color-neutral-4: rgb(var(--gray-4));
+      --gray-4: 201, 205, 212;
+      --color-fill-3: var(--color-neutral-3);
+      --color-neutral-3: rgb(var(--gray-3));
+      --gray-3: 229, 230, 235;
+      --color-text-4: var(--color-neutral-4);
+      --color-text-2: var(--color-neutral-8);
+      --color-neutral-8: rgb(var(--gray-8));
+      --gray-8: 78, 89, 105;
+      --color-text-3: var(--color-neutral-6);
+      --color-neutral-6: rgb(var(--gray-6));
+      --gray-6: 134, 144, 156;
+    }
 
-        html[arco-theme=dark] {
-            --color-bg-1: #000000;
-            --color-text-1: #ffffff;
-        }
+    html[arco-theme=dark] {
+      --color-bg-1: #000000;
+      --color-text-1: #ffffff;
+    }
 
-        .copy {
-            position: fixed;
-            top: 10px;
-            right: 24px;
-        }
+    .copy {
+      position: fixed;
+      top: 10px;
+      right: 24px;
+    }
 
-        #code {
-            font-size: 18px;
-            line-height: 24px;
-            padding: 14px;
-            margin: 0;
-            font-family: Consolas, Menlo, Courier, monospace;
-        }
+    #code {
+      font-size: 18px;
+      line-height: 24px;
+      padding: 14px;
+      margin: 0;
+      font-family: Consolas, Menlo, Courier, monospace;
+    }
 
-        .container {
-            background-color: var(--color-bg-1);
-            color: var(--color-text-1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: auto;
-        }
+    .container {
+      background-color: var(--color-bg-1);
+      color: var(--color-text-1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+    }
 
-        .arco-btn {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-            font-weight: 400;
-            line-height: 1.5715;
-            white-space: nowrap;
-            outline: none;
-            cursor: pointer;
-            transition: all .1s cubic-bezier(0, 0, 1, 1);
-            -webkit-appearance: none;
-            user-select: none;
-            font-size: 16px;
-        }
+    .arco-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      font-weight: 400;
+      line-height: 1.5715;
+      white-space: nowrap;
+      outline: none;
+      cursor: pointer;
+      transition: all .1s cubic-bezier(0, 0, 1, 1);
+      -webkit-appearance: none;
+      user-select: none;
+      font-size: 16px;
+    }
 
-        .arco-btn-text, .arco-btn-text[type=button], .arco-btn-text[type=submit] {
-            color: rgb(var(--primary-6));
-            background-color: transparent;
-            border: 1px solid transparent;
-            padding: 6px 12px;
-        }
+    .arco-btn-text, .arco-btn-text[type=button], .arco-btn-text[type=submit] {
+      color: rgb(var(--primary-6));
+      background-color: transparent;
+      border: 1px solid transparent;
+      padding: 6px 12px;
+    }
 
-        .arco-btn-text:hover, .arco-btn-text[type=button]:hover, .arco-btn-text[type=submit]:hover {
-            color: rgb(var(--primary-6));
-            background-color: var(--color-fill-2);
-            border-color: transparent
-        }
+    .arco-btn-text:hover, .arco-btn-text[type=button]:hover, .arco-btn-text[type=submit]:hover {
+      color: rgb(var(--primary-6));
+      background-color: var(--color-fill-2);
+      border-color: transparent
+    }
 
-        .arco-btn-text:focus-visible, .arco-btn-text[type=button]:focus-visible, .arco-btn-text[type=submit]:focus-visible {
-            box-shadow: 0 0 0 .25em var(--color-neutral-4)
-        }
+    .arco-btn-text:focus-visible, .arco-btn-text[type=button]:focus-visible, .arco-btn-text[type=submit]:focus-visible {
+      box-shadow: 0 0 0 .25em var(--color-neutral-4)
+    }
 
-        .arco-btn-text:active, .arco-btn-text[type=button]:active, .arco-btn-text[type=submit]:active {
-            color: rgb(var(--primary-6));
-            background-color: var(--color-fill-3);
-            border-color: transparent
-        }
-    </style>
+    .arco-btn-text:active, .arco-btn-text[type=button]:active, .arco-btn-text[type=submit]:active {
+      color: rgb(var(--primary-6));
+      background-color: var(--color-fill-3);
+      border-color: transparent
+    }
+  </style>
 </head>
 <body>
 <div spellcheck="false" class="container">
@@ -108,49 +108,95 @@
 </pre>
 </div>
 <div class="copy">
-    <button class="arco-btn arco-btn-text">复制</button>
+  <button class="arco-btn arco-btn-text">复制</button>
 </div>
 </body>
 <script>
-    if (window.preload) {
-        window.preload.receiveMsg(callback)
-    } else if (window.__TAURI__) {
-        // TODO: 此处有bug
-        window.__TAURI__.event.once("data", ({event, payload}) => {
-            console.log("接收到信息")
-            console.log(event, payload);
-            callback(payload);
-        });
+  if (window.__TAURI__) {
+    // TODO: 此处有bug
+    window.__TAURI__.event.once("data", ({event, payload}) => {
+      console.log("接收到信息")
+      console.log(event, payload);
+      callback(payload);
+    });
+  }
+
+
+  /**
+   * 复制文本
+   * @param content {string} 复制的内容
+   * @return {Promise<boolean>}
+   */
+  async function copyText(content) {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      try {
+        await navigator.clipboard.writeText(content);
+        return true;
+      } catch (err) {
+        console.warn('使用 Clipboard API 复制失败，尝试降级方案:', err);
+      }
     }
 
-    /**
-     * 回调函数
-     * @param msg 消息
-     */
-    function callback(msg) {
-        const {html, theme, title, isDark, json} = msg;
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.type = "text/css";
-        link.href = `./highlight.js/styles/${theme}.css`
-        document.head.appendChild(link);
-        document.getElementById("code").innerHTML = html;
-        if (title) {
-            document.title = title;
-        }
+    // 降级方案：使用 document.execCommand('copy')
+    const ele = document.createElement('textarea');
+    ele.value = content;
+    ele.setAttribute('readonly', '');
+    ele.style.position = 'absolute';
+    ele.style.left = '-9999px';
+    document.body.appendChild(ele);
 
-        if (isDark) {
-            // 设置为暗黑主题
-            document.body.setAttribute('arco-theme', 'dark');
-        } else {
-            // 恢复亮色主题
-            document.body.removeAttribute('arco-theme');
-        }
-        document.querySelector('.copy button').addEventListener('click', function () {
-            // 复制
-            window.preload.copyText(json);
-            window.preload.showNotification("已成功复制到剪切板");
-        });
+    const selection = document.getSelection();
+    const selected = selection?.rangeCount ? selection.getRangeAt(0) : null;
+
+    ele.select();
+    ele.setSelectionRange(0, ele.value.length);
+
+    let success = false;
+    try {
+      success = document.execCommand('copy');
+    } catch (err) {
+      console.error('降级复制方案失败:', err);
     }
+
+    document.body.removeChild(ele);
+
+    // 恢复用户原有的选区（如果存在）
+    if (selected && selection) {
+      selection.removeAllRanges();
+      selection.addRange(selected);
+    }
+
+    return success;
+  }
+
+  /**
+   * 回调函数
+   * @param msg 消息
+   */
+  function callback(msg) {
+    const {html, title, isDark, json} = msg;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = `./highlight.js/styles/github${isDark ? '-dark' : ''}.css`
+    document.head.appendChild(link);
+    document.getElementById("code").innerHTML = html;
+    if (title) {
+      document.title = title;
+    }
+
+    if (isDark) {
+      // 设置为暗黑主题
+      document.body.setAttribute('arco-theme', 'dark');
+    } else {
+      // 恢复亮色主题
+      document.body.removeAttribute('arco-theme');
+    }
+    document.querySelector('.copy button').addEventListener('click', function () {
+      // 复制
+      copyText(json);
+      alert("已成功复制到剪切板");
+    });
+  }
 </script>
 </html>

@@ -4,7 +4,7 @@ import * as monaco from "monaco-editor";
 import MessageUtil from "@/utils/MessageUtil";
 import NotificationUtil from "@/utils/NotificationUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import {useEsRequestJson} from "@/plugins/native/axios";
+import {useEsRequest} from "@/plugins/native/axios";
 //算法
 import restFormat from "@/algorithm/restFormat";
 import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
@@ -117,7 +117,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
       }).then(() => console.log("新增高级查询历史记录"))
         .catch(e => MessageUtil.error("新增高级查询历史记录失败", e));
 
-      useEsRequestJson<string>({
+      useEsRequest({
         url: request.link,
         method: request.method,
         data: request.params.trim() === '' ? undefined : request.params,

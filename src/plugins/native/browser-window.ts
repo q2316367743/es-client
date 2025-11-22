@@ -1,4 +1,3 @@
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import Constant from "@/global/Constant";
 import PluginModeEnum from "@/enumeration/PluginModeEnum";
@@ -68,7 +67,6 @@ export function createDataBrowserWindowByTauri(
     setInterval(() => {
       emit("data", {
         html: data,
-        theme: useGlobalSettingStore().jsonTheme,
         title: options.title,
         isDark: useGlobalStore().isDark,
         json: json
@@ -89,7 +87,6 @@ export function createDataBrowserWindowByWeb(
   if (newWindow) {
     const msg = {
       html: data,
-      theme: useGlobalSettingStore().jsonTheme,
       title: options.title,
       isDark: useGlobalStore().isDark,
       json: json
@@ -99,7 +96,7 @@ export function createDataBrowserWindowByWeb(
       const link = newWindow.document.createElement("link");
       link.rel = "stylesheet";
       link.type = "text/css";
-      link.href = `./highlight.js/styles/${msg.theme}.css`
+      link.href = `./highlight.js/styles/github${useGlobalStore().isDark ? '-dark' : ''}.css`
       newWindow.document.head.appendChild(link);
       newWindow.document.getElementById("code")!.innerHTML = msg.html;
       if (msg.title) {

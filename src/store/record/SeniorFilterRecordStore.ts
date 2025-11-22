@@ -21,7 +21,7 @@ export const useSeniorFilterRecordStore = defineStore('SeniorFilterSetting', {
       return Promise.resolve();
     },
     async _sync() {
-      await saveOneByAsync(LocalNameEnum.SETTING_SENIOR_FILTER,toRaw(this.seniorFilterRecords));
+      await saveOneByAsync(LocalNameEnum.SETTING_SENIOR_FILTER, toRaw(this.seniorFilterRecords));
     },
     async add(item: Omit<SeniorFilterRecord, 'id'>) {
       if (item.label.trim() === '') {

@@ -10,7 +10,7 @@
       </a-tabs>
       <a-spin :loading="loading" tip="加载中">
         <div class="content">
-          <monaco-editor language="json" :model-value="data" v-show="jsonViewShow" read-only/>
+          <monaco-view :value="pretty" v-show="jsonViewShow" read-only height="calc(100vh - 176px)"/>
           <index-manage-summary ref="indexManageSummary" v-show="!jsonViewShow" :index="index"
                                 :state="state"/>
         </div>
@@ -52,6 +52,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import IndexMapping from "@/components/IndexMapping/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+import {formatJsonString} from "@/algorithm/file";
 
 export default defineComponent({
   name: 'index-manage',
@@ -82,6 +83,9 @@ export default defineComponent({
     state(): 'open' | 'close' | '' {
       let indexView = useIndexStore().indicesMap.get(this.index);
       return Optional.ofNullable(indexView).map(e => e.state).orElse('');
+    },
+    pretty() {
+      return formatJsonString(this.data);
     }
   },
   created() {
