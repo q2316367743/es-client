@@ -51,7 +51,6 @@
         </a-button>
         <template #content>
           <a-doption @click="openHelp()">帮助</a-doption>
-          <a-doption @click="openDbSetting()">设置</a-doption>
         </template>
       </a-dropdown>
     </a-button-group>
@@ -67,7 +66,6 @@ import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import DataBuild from "@/page/data-browse/build/DataBuild";
 import {execAdd, execUpdate} from "@/page/data-browse/component/DbHeader/func";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
-import {openDbSetting} from "@/page/data-browse/component/DbHeader/DbSetting";
 import {jumpToBaseSearch, jumpToSeniorSearch, useDbResultRecords} from "@/page/data-browse/store/DbResultStore";
 import PageHelp from "@/page/data-browse/component/DbHeader/components/PageHelp.vue";
 import DbIndexSelect from "@/page/data-browse/component/DbHeader/components/DbIndexSelect.vue";

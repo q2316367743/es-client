@@ -29,8 +29,6 @@
     <div class="right">
       <sentence/>
       <bsh-manage/>
-      <!-- 设置 -->
-      <base-search-setting/>
     </div>
   </div>
 </template>
@@ -40,7 +38,6 @@ import {statistics} from "@/global/BeanFactory";
 import {showDataExportDrawer} from "@/components/DataExport";
 import BshManage from "@/page/base-search/layout/BaseSearchHeader/History/index.vue";
 import Sentence from "@/page/base-search/layout/BaseSearchHeader/sentence.vue";
-import BaseSearchSetting from "@/page/base-search/components/setting/index.vue";
 import useIndexStore from "@/store/IndexStore";
 import {baseSearchExecute, current, getBaseSearchCondition, openIndexManage} from "@/store/components/BaseSearchStore";
 

@@ -1,6 +1,7 @@
 import {contains} from "@/utils/ArrayUtil";
 import {Mapping, Property} from "@/domain/es/IndexBase";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+import {formatJsonString} from "@/algorithm/file";
 
 /**
  * 数据构造器
@@ -19,7 +20,7 @@ export default function DataBuild(mapping: Mapping): string {
     for (let key in properties) {
       buildItem(key, properties[key], data);
     }
-    return stringifyJsonWithBigIntSupport(data);
+    return formatJsonString(stringifyJsonWithBigIntSupport(data));
   } catch (ignore) {
     return '{}';
   }

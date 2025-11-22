@@ -1,124 +1,114 @@
-import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
+import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 
 /**
  * 设置
  */
 export interface GlobalSetting {
 
-    /*--------------------------------- 新建索引 ---------------------------------*/
+  /*--------------------------------- 新建索引 ---------------------------------*/
 
-    /**
-     * 默认分片
-     */
-    defaultShard: number;
+  /**
+   * 默认分片
+   */
+  defaultShard: number;
 
-    /**
-     * 默认副本
-     */
-    defaultReplica: number;
+  /**
+   * 默认副本
+   */
+  defaultReplica: number;
 
-    /*--------------------------------- 时间相关 ---------------------------------*/
+  /*--------------------------------- 时间相关 ---------------------------------*/
 
-    /**
-     * 超时时间
-     */
-    timeout: number;
+  /**
+   * 超时时间
+   */
+  timeout: number;
 
-    /**
-     * 通知关闭时间
-     */
-    notificationTime: number;
+  /**
+   * 通知关闭时间
+   */
+  notificationTime: number;
 
-    /*--------------------------------- 全局索引查询条件 ---------------------------------*/
+  /*--------------------------------- 全局索引查询条件 ---------------------------------*/
 
-    /**
-     * 概览 => 搜索 => 状态
-     */
-    homeSearchState: number;
+  /**
+   * 概览 => 搜索 => 状态
+   */
+  homeSearchState: number;
 
-    /**
-     * 概览 => 搜索 => 排除的索引
-     */
-    homeExcludeIndices: Array<string>;
+  /**
+   * 概览 => 搜索 => 排除的索引
+   */
+  homeExcludeIndices: Array<string>;
 
-    /**
-     * 概览 => 搜索 => 显示的索引
-     */
-    homeIncludeIndices: Array<string>;
+  /**
+   * 概览 => 搜索 => 显示的索引
+   */
+  homeIncludeIndices: Array<string>;
 
-    /*--------------------------------- 显示设置 ---------------------------------*/
+  /*--------------------------------- track_total_hits设置 ---------------------------------*/
 
-    /**
-     * 默认分页大小
-     */
-    pageSize: number;
+  /**
+   * track_total_hits模式
+   */
+  trackTotalHitsMode: "true" | "false" | "custom";
 
-    /**
-     * 默认视图
-     */
-    defaultViewer: number;
+  /**
+   * 当模式为custom时，track_total_hits值
+   */
+  trackTotalHitsValue: number;
 
-    /**
-     * JSON字体，单位px，默认14
-     */
-    jsonFontSize: number;
+  /*--------------------------------- 显示设置 ---------------------------------*/
 
-    /**
-     * JSON是否自动换行
-     */
-    jsonWrap: boolean;
+  /**
+   * 默认分页大小
+   */
+  pageSize: number;
 
-    /**
-     * JSON主题 - 白天
-     */
-    jsonThemeByLight: string;
+  /**
+   * 基础 - 默认视图
+   */
+  baseDefaultViewer: ViewTypeEnum;
 
-    /**
-     * JSON主题 - 黑夜
-     */
-    jsonThemeByDark: string;
+  /**
+   * 高级 - 默认视图
+   */
+  seniorDefaultViewer: ViewTypeEnum;
 
-    /**
-     * 表格表头渲染模式
-     */
-    tableHeaderMode: TableHeaderModeEnum;
+  /*--------------------------------- 其他设置 ---------------------------------*/
 
-    /*--------------------------------- 其他设置 ---------------------------------*/
-
-    /**
-     * 保存上次选择的连接
-     */
-    lastUrl: boolean;
+  /**
+   * 保存上次选择的连接
+   */
+  lastUrl: boolean;
 
 }
 
 
 export function getDefaultGlobalSetting(): GlobalSetting {
-    return {
+  return {
 
-        // 新建索引
-        defaultReplica: 1,
-        defaultShard: 5,
+    // 新建索引
+    defaultReplica: 1,
+    defaultShard: 5,
 
-        // http设置
-        timeout: 5000,
-        notificationTime: 5000,
+    // http设置
+    timeout: 5000,
+    notificationTime: 5000,
 
-        // 全局索引查询条件
-        homeSearchState: 0,
-        homeExcludeIndices: new Array<string>(),
-        homeIncludeIndices: new Array<string>(),
+    // 全局索引查询条件
+    homeSearchState: 0,
+    homeExcludeIndices: new Array<string>(),
+    homeIncludeIndices: new Array<string>(),
+    trackTotalHitsValue: 10000,
+    trackTotalHitsMode: 'true',
 
-        // 显示设置
-        pageSize: 20,
-        defaultViewer: 2,
-        jsonFontSize: 16,
-        jsonWrap: false,
-        jsonThemeByLight: 'github',
-        jsonThemeByDark: 'github-dark',
-        tableHeaderMode: TableHeaderModeEnum.RENDER,
+    // 显示设置
+    pageSize: 20,
+    baseDefaultViewer: ViewTypeEnum.EDITOR,
+    seniorDefaultViewer: ViewTypeEnum.EDITOR,
 
-        // 其他设置
-        lastUrl: false,
-    };
+    // 其他设置
+    lastUrl: false,
+  };
 }

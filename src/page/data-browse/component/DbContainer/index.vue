@@ -32,10 +32,8 @@ import {
 } from "@/page/data-browse/component/DbContainer/func";
 import {columnConfig, menuConfig, rowConfig} from "@/page/data-browse/component/DbContainer/args";
 import {useDbResultColumns, useDbResultRecords} from "@/page/data-browse/store/DbResultStore";
-import {useDbSettingStore} from "@/page/data-browse/store/DbSettingStore";
 
 const size = useWindowSize();
-
 
 const tableRef = ref<VxeTableInstance | null>(null);
 
@@ -52,7 +50,6 @@ const emptyText = computed(() => {
 
 
 const loading = computed(() => useDataBrowseStore().loading);
-const fixId = computed(() => useDbSettingStore().fixId);
 
 
 onMounted(() => {

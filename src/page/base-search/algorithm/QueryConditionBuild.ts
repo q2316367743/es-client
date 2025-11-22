@@ -1,9 +1,10 @@
 import {BaseQuery} from "@/entity/BaseQuery";
 import BaseOrder from "@/entity/BaseOrder";
 import MessageUtil from "@/utils/MessageUtil";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {ConditionArray, DocumentSearchQuery, QuerySort} from "@/domain/es/DocumentSearchQuery";
 import {parseJsonWithBigIntSupport} from "@/algorithm/format";
+import useUrlStore from "@/store/UrlStore";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 /**
  * 获取基础查询请求体
@@ -135,7 +136,7 @@ export default function QueryConditionBuild(
       MessageUtil.warning(`第${index}个条件解析错误`, e);
     }
   }
-  let body = getBaseBody(page, size);
+  const body = getBaseBody(page, size);
   body.query = {
     bool: {
       must,
@@ -146,13 +147,9 @@ export default function QueryConditionBuild(
   if (orders.length > 0) {
     body.sort = buildOrder(orders);
   }
-  let customerOption = {} as Record<string, any>;
-  if (useBaseSearchSettingStore().enableTrackTotalHits) {
-    customerOption['track_total_hits'] = useBaseSearchSettingStore().trackTotalHits
+  const {versionFirst} = useUrlStore();
+  if (versionFirst > 6) {
+    body.track_total_hits = useGlobalSettingStore().trackTotalHits;
   }
-  return {
-    ...body,
-    ...customerOption,
-    ...useBaseSearchSettingStore().defaultParams
-  };
+  return body;
 }

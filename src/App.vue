@@ -1,5 +1,4 @@
 <template>
-  <link :href="`./highlight.js/styles/${jsonTheme}.css`" type="text/css" rel="stylesheet">
   <a-layout id="app">
     <!-- 顶部菜单栏 -->
     <app-header/>
@@ -25,7 +24,6 @@ import useLoadingStore from "@/store/LoadingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import useUrlStore from "@/store/UrlStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {useBackupSettingStore} from "@/store/setting/BackupSettingStore";
 import useIndexStore from "@/store/IndexStore";
 import PageNameEnum from "@/enumeration/PageNameEnum";
@@ -41,7 +39,6 @@ const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.v
 const AppSide = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
 const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
 
-const jsonTheme = computed(() => useGlobalSettingStore().jsonTheme);
 const loading = computed(() => useLoadingStore().loading);
 const text = computed(() => useLoadingStore().text);
 
@@ -50,7 +47,6 @@ async function initData(): Promise<void> {
     // 设置
     useGlobalSettingStore().init(),
     useEditorSettingStore().init(),
-    useBaseSearchSettingStore().init(),
     useBackupSettingStore().init()
   ]);
   return Promise.resolve();

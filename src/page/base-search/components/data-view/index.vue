@@ -1,18 +1,14 @@
 <template>
-  <div class="base-search-data-view hljs" :class="mainClass"
-       :style="{ fontSize: Optional.ofNullable(jsonFontSize).orElse(16) + 'px' }">
-    <TableViewer v-if="defaultView === ViewTypeEnum.TABLE" :value="current.result" :index="current.index"/>
+  <div class="base-search-data-view hljs">
+    <TableViewer v-if="baseDefaultViewer === ViewTypeEnum.TABLE" :value="current.result" :index="current.index"/>
     <monaco-view v-else :value="current.result" :height="height"/>
   </div>
 </template>
 <script lang="ts">
 import {mapState} from "pinia";
-import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import {useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import {current} from "@/store/components/BaseSearchStore";
-import TableViewer from "@/components/view/TableViewer/index.vue";
 import JsonView from "@/components/view/JsonView/index.vue";
 import BaseView from "@/components/view/BaseView/index.vue";
 import MonacoView from "@/components/view/MonacoView/index.vue";
@@ -22,22 +18,10 @@ export default defineComponent({
   name: 'base-search-data-view',
   components: {MonacoView, BaseView, JsonView, TableViewer},
   data: () => ({
-    Optional,
     ViewTypeEnum
   }),
   computed: {
-    ...mapState(useGlobalSettingStore, ['jsonFontSize', 'jsonWrap']),
-    ...mapState(useBaseSearchSettingStore, ['defaultView']),
-    mainClass() {
-      let classItem = new Array<string>();
-      if (this.defaultView === ViewTypeEnum.TABLE) {
-        classItem.push('table-viewer-show')
-      }
-      if (this.jsonWrap) {
-        classItem.push('json-wrap')
-      }
-      return classItem.join(' ')
-    }
+    ...mapState(useGlobalSettingStore, ['baseDefaultViewer']),
   },
   setup() {
     const size = useWindowSize();

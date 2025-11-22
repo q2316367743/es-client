@@ -20,6 +20,12 @@ const useUrlStore = defineStore('url', () => {
   const current = computed(() => url.value && url.value.value ? url.value.value! : '');
   const id = computed(() => url.value ? url.value.id! : undefined);
   const empty = computed(() => url.value === undefined);
+  // 第一个版本号
+  const versionFirst = computed(() => {
+    const [r1] = (url.value?.version || "").split(".");
+    if (r1) return Number(r1);
+    else return 0;
+  });
 
   // actions
   const init = async () => {
@@ -122,7 +128,7 @@ const useUrlStore = defineStore('url', () => {
     list,
     current,
     id,
-    empty,
+    empty,versionFirst,
     choose,
     clear,
     add,

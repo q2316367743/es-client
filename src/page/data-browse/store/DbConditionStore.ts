@@ -10,8 +10,7 @@ import {
 } from "@/page/data-browse/build/ConditionBuild";
 import {ConditionItem, SortItem} from "@/page/data-browse/domain/DbConditionItem";
 import MessageUtil from "@/utils/MessageUtil";
-import {useDbSettingStore} from "@/page/data-browse/store/DbSettingStore";
-import NotificationUtil from "@/utils/NotificationUtil";
+import useUrlStore from "@/store/UrlStore";
 
 type Type = 'must' | 'mustNot' | 'should';
 
@@ -109,15 +108,9 @@ export const useDbConditionStore = createGlobalState(() => {
 
   function buildSearchQuery(): DocumentSearchQuery {
     const from = Math.max(0, page.value - 1) * size.value;
+    const {versionFirst} = useUrlStore();
 
-    if (from > 10000 && !useDbSettingStore().dbSetting.enableTrackTotalHits) {
-      NotificationUtil.warning("检测到查询记录超过10000条，" +
-        "但未开启track_total_hits，" +
-        "可以点击数据浏览右上角更多按钮，在设置中开启")
-    }
-
-
-    return {
+    const dsl: Record<string, any> = {
       sort: orderByRender(orderByBuild(orderBy.value)),
       query: {
         bool: {
@@ -128,9 +121,13 @@ export const useDbConditionStore = createGlobalState(() => {
       },
       aggs: {},
       from,
-      size: size.value,
-      ...useDbSettingStore().params
+      size: size.value
     };
+    if (versionFirst > 6) {
+      // 只有大于V7才有效
+      dsl.track_total_hits = useGlobalSettingStore().trackTotalHits;
+    }
+    return dsl;
   }
 
   return {
