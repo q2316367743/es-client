@@ -63,26 +63,52 @@ export function formatJsonString(jsonString: string, indent: number = 2): string
       case "{":
         formatted += char;
         stack.push("{");
-        formatted += "\n" + indentString.repeat(stack.length);
+        // 检查下一个非空白字符是否是闭合括号，如果是则不换行(空对象)
+        let nextIndex = i + 1;
+        while (nextIndex < jsonString.length && /\s/.test(jsonString[nextIndex])) {
+          nextIndex++;
+        }
+        if (nextIndex < jsonString.length && jsonString[nextIndex] !== "}") {
+          formatted += "\n" + indentString.repeat(stack.length);
+        }
         break;
       case "[":
         formatted += char;
         stack.push("[");
-        formatted += "\n" + indentString.repeat(stack.length);
+        // 检查下一个非空白字符是否是闭合括号，如果是则不换行(空数组)
+        let nextIdx = i + 1;
+        while (nextIdx < jsonString.length && /\s/.test(jsonString[nextIdx])) {
+          nextIdx++;
+        }
+        if (nextIdx < jsonString.length && jsonString[nextIdx] !== "]") {
+          formatted += "\n" + indentString.repeat(stack.length);
+        }
         break;
       case "}":
         // 弹出栈顶，表示离开一个对象
         if (stack.length > 0 && stack[stack.length - 1] === "{") {
           stack.pop();
         }
-        formatted += "\n" + indentString.repeat(stack.length) + char;
+        // 检查前一个非空白字符是否是开括号，如果是则不换行(空对象)
+        const lastNonWhitespace = formatted.trimEnd();
+        if (lastNonWhitespace.endsWith("{")) {
+          formatted = lastNonWhitespace + char;
+        } else {
+          formatted += "\n" + indentString.repeat(stack.length) + char;
+        }
         break;
       case "]":
         // 弹出栈顶，表示离开一个数组
         if (stack.length > 0 && stack[stack.length - 1] === "[") {
           stack.pop();
         }
-        formatted += "\n" + indentString.repeat(stack.length) + char;
+        // 检查前一个非空白字符是否是开括号，如果是则不换行(空数组)
+        const lastNonSpace = formatted.trimEnd();
+        if (lastNonSpace.endsWith("[")) {
+          formatted = lastNonSpace + char;
+        } else {
+          formatted += "\n" + indentString.repeat(stack.length) + char;
+        }
         break;
       case ",":
         // 只有在字符串外的逗号才是分隔符

@@ -182,7 +182,7 @@ export function formatRestQuery(input: string): string {
 
         if (rawBody.trim() !== "") {
           // 尝试格式化 JSON
-          const formattedBody = formatJsonString(rawBody, 2);
+          const formattedBody = formatJsonString(rawBody);
           formattedLines.push(formattedBody);
         }
       }

@@ -6,8 +6,6 @@ import NotificationUtil from "@/utils/NotificationUtil";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {useEsRequest} from "@/plugins/native/axios";
 //算法
-import restFormat from "@/algorithm/restFormat";
-import {Grammatical, grammaticalAnalysis} from "@/algorithm/grammaticalAnalysis";
 import SeniorSearchJumpEvent from "@/entity/event/SeniorSearchJumpEvent";
 import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
@@ -17,16 +15,17 @@ import useLoadingStore from "@/store/LoadingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 import {getFromOne, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {formatJsonString} from "@/algorithm/file";
+import {formatJsonString, formatRestQuery, ParsedRequest, parseRestRequests} from "@/algorithm/file";
 import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 
-function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): Grammatical | undefined {
+function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: number): ParsedRequest | undefined {
   let value = instance.getValue();
   let position = instance.getPosition();
   if (!position) {
     return;
   }
-  let list = grammaticalAnalysis(value);
+  let list = parseRestRequests(value);
+  console.log(list, index)
   if (list.length === 0) {
     return;
   }
@@ -96,12 +95,12 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         MessageUtil.error('请求块无法识别');
         return;
       }
-      if (request.link === '') {
+      if (request.url === '') {
         MessageUtil.success('链接未识别到');
         return;
       }
       this.loading = true;
-      if (request.method === 'POST' && request.link.indexOf('_doc') > -1 && request.params == '') {
+      if (request.method === 'POST' && request.url.indexOf('_doc') > -1 && request.body == '') {
         // 如果是新增文档，但是没有参数，不进行查询
         this.result = "{}";
         this.show = "{}"
@@ -111,16 +110,16 @@ export const useSeniorSearchStore = defineStore('senior-search', {
       // 新增历史记录
       seniorSearchRecordService.save({
         urlId: useUrlStore().id,
-        body: request.params,
+        body: request.body || '',
         method: request.method,
-        link: request.link
+        link: request.url,
       }).then(() => console.log("新增高级查询历史记录"))
         .catch(e => MessageUtil.error("新增高级查询历史记录失败", e));
 
       useEsRequest({
-        url: request.link,
+        url: request.url,
         method: request.method,
-        data: request.params.trim() === '' ? undefined : request.params,
+        data: request.body,
         responseType: 'text',
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
@@ -181,7 +180,7 @@ export const useSeniorSearchStore = defineStore('senior-search', {
     },
     formatDocument() {
       try {
-        this.body = restFormat(this.body);
+        this.body = formatRestQuery(this.body);
       } catch (e: any) {
         MessageUtil.error('格式化失败', e);
       }
