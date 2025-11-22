@@ -58,13 +58,8 @@
 </template>
 
 <script lang="ts" setup>
-import {computed} from 'vue';
-
 import useIndexStore from '@/store/IndexStore';
-
 import IndexItem from "./components/index-item.vue";
-
-import {useWindowSize} from "@vueuse/core";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {OrderType, Status, useHomeStore} from "@/store/components/HomeStore";
 import {indexAdd} from "@/page/home/components/IndexAdd";

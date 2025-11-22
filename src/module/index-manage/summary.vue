@@ -31,7 +31,6 @@
   </a-spin>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import useIndexStore from "@/store/IndexStore";
 import Assert from "@/utils/Assert";
 import IndexApi from "@/components/es/IndexApi";

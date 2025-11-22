@@ -18,7 +18,6 @@ import {
   RadioGroup,
   Select
 } from "@arco-design/web-vue";
-import {Ref, ref} from "vue";
 import {exportData} from "@/components/DataExport/func";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";

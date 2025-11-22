@@ -58,8 +58,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed} from "vue";
-import {useRouter} from "vue-router";
 import Constant from "@/global/Constant";
 import {showDataExportDrawer} from "@/components/DataExport";
 import {map} from "@/utils/ArrayUtil";

@@ -113,7 +113,6 @@
 </template>
 <script lang="ts" setup>
 import ClusterApi from "@/components/es/ClusterApi";
-import {computed, ref, watch} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {ClusterHealth} from "@/domain/es/ClusterHealth";

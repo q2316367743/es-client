@@ -1,4 +1,3 @@
-import {ref} from "vue";
 import {Method} from "axios";
 import {Drawer, Form, FormItem, Input, Radio, RadioGroup, Textarea} from "@arco-design/web-vue";
 import {createSeniorSearchRequestContent} from "@/entity/history/SeniorSearchRequest";

@@ -1,4 +1,3 @@
-import {createApp, App} from 'vue';
 import store from "@/store";
 import AppInstance from './App.vue';
 import router from "@/plugins/router";
@@ -25,72 +24,56 @@ import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 // import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import XEUtils from 'xe-utils'
+import {Column, VxeTable, VxeUI,} from 'vxe-table'
+import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
+import {registerLanguageForHttp} from "@/components/rest-client-editor";
+import {App} from "vue";
 // @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
 self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
-    getWorker(_: string, label: string) {
-        if (label === 'json') {
-            return new JsonWorker()
-        }
-        if (['css', 'scss', 'less'].includes(label)) {
-            return new CssWorker()
-        }
-        if (['html', 'handlebars', 'razor'].includes(label)) {
-            return new HtmlWorker()
-        }
-        // if (['typescript', 'javascript'].includes(label)) {
-        //     return new TsWorker()
-        // }
-        return new EditorWorker()
+  getWorker(_: string, label: string) {
+    if (label === 'json') {
+      return new JsonWorker()
     }
+    if (['css', 'scss', 'less'].includes(label)) {
+      return new CssWorker()
+    }
+    if (['html', 'handlebars', 'razor'].includes(label)) {
+      return new HtmlWorker()
+    }
+    // if (['typescript', 'javascript'].includes(label)) {
+    //     return new TsWorker()
+    // }
+    return new EditorWorker()
+  }
 };
 
 // 注册语言服务器
-monaco.languages.register({id: 'http'});
-monaco.languages.setMonarchTokensProvider('http', language);
-monaco.languages.setLanguageConfiguration('http', configuration);
-monaco.languages.registerCompletionItemProvider('http', provider);
-monaco.languages.registerFoldingRangeProvider('http', foldingRange)
-
-window.addEventListener('message', event => {
-    const message = event.data;
-    if (message['type'] === 'url-open') {
-        sessionStorage.setItem('action', message['content']);
-    }
-});
-
-import XEUtils from 'xe-utils'
-import {VXETable, Column, VxeTable,} from 'vxe-table'
-import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
-import * as monaco from "monaco-editor";
-import language from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/language";
-import configuration
-    from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/configuration";
-import provider from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/provider";
-import foldingRange from "@/page/senior-search/layout/senior-search-editor/components/rest-client-editor/foldingRange";
+registerLanguageForHttp()
 
 // 引入VXETable
 // 按需加载的方式默认是不带国际化的，自定义国际化需要自行解析占位符 '{0}'，例如：
-VXETable.setup({
-    i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
+VxeUI.setConfig({
+  i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args)
 })
 
 function useTable(app: App) {
-    // 表格功能
+  // 表格功能
 
-    // 可选组件
-    app.use(Column)
+  // 可选组件
+  app.use(Column)
 
-        // 安装表格
-        .use(VxeTable)
+    // 安装表格
+    .use(VxeTable)
 }
 
 // 插件
 createApp(AppInstance)
-    .use(store)
-    .use(ArcoVueIcon)
-    .use(router)
-    .use(useTable)
-    .mount('#app');
+  .use(store)
+  .use(ArcoVueIcon)
+  .use(router)
+  .use(useTable)
+  .mount('#app');
 
 // 变量挂载
 window.mode = import.meta.env.VITE_MODE;

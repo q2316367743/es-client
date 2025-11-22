@@ -21,11 +21,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, ref} from "vue";
 import useUrlStore from "@/store/UrlStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {VxeTableInstance} from 'vxe-table';
-import {useWindowSize} from "@vueuse/core";
 import MonacoView from "@/components/view/MonacoView/index.vue";
 import {
   buildContextMenuClickEvent,

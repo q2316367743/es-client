@@ -1,4 +1,3 @@
-import {useEventBus} from "@vueuse/core";
 
 import {BaseSearchRecordService} from "@/service/BaseSearchRecordService";
 

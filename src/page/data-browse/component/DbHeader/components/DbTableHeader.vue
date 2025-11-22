@@ -23,7 +23,6 @@
 </template>
 <script lang="ts" setup>
 import DbSimpleItem from "@/page/data-browse/component/DbHeader/components/DbSimpleItem.vue";
-import {computed} from "vue";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
 import {useDbResultColumns, useDbResultResetColumn} from "@/page/data-browse/store/DbResultStore";
 

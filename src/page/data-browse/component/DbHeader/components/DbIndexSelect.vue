@@ -38,7 +38,6 @@
     </a-trigger>
 </template>
 <script lang="ts" setup>
-import {computed, nextTick, ref, watch} from "vue";
 import IndexView from "@/view/index/IndexView";
 import useIndexStore from "@/store/IndexStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";

@@ -87,7 +87,6 @@
   </a-layout-header>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import Constant from '@/global/Constant';
 // 枚举
@@ -105,7 +104,6 @@ import {DarkTypeEnum, useGlobalStore} from "@/store/GlobalStore";
 // 工具类
 import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
-import {useWindowSize} from "@vueuse/core";
 import {openAddLink} from "@/page/setting/pages/link/components/EditLink";
 import {openUrl} from "@/utils/BrowserUtil";
 

@@ -35,7 +35,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed} from "vue";
 import {SelectOptionData} from "@arco-design/web-vue";
 import {statistics} from "@/global/BeanFactory";
 import {showDataExportDrawer} from "@/components/DataExport";

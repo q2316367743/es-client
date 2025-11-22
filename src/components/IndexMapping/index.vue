@@ -63,7 +63,6 @@
     </a-spin>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
 import {SelectOptionData,} from "@arco-design/web-vue";
 
 import './index.less';

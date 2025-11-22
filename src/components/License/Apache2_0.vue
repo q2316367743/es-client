@@ -207,8 +207,6 @@
     </pre>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-
 export default defineComponent({
     name: 'license-apache-2_0',
     data: () => ({})

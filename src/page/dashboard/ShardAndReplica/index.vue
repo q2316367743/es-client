@@ -80,7 +80,6 @@
 <script lang="ts" setup>
 import useIndexStore from "@/store/IndexStore";
 import {showJson, showJsonDialogByAsync} from "@/utils/DialogUtil";
-import {computed, ref, watch} from "vue";
 import {Shard} from "@/domain/es/ClusterState";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useIndexManageEvent} from "@/global/BeanFactory";

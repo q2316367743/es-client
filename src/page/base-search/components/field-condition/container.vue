@@ -14,8 +14,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
-
 import FieldConditionItem from "./item.vue";
 import {current} from "@/store/components/BaseSearchStore";
 import MonacoEditor from "@/components/monaco-editor/index.vue";

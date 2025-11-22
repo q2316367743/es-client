@@ -50,7 +50,6 @@
   </a-drawer>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import {getDefaultBaseSearchSetting, useBaseSearchSettingStore} from "@/store/setting/BaseSearchSettingStore";
 import MessageUtil from "@/utils/MessageUtil";

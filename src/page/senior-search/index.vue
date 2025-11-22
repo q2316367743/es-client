@@ -16,8 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
-import {useLocalStorage, useWindowSize} from "@vueuse/core";
 import './index.less';
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {enableFilter, useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";

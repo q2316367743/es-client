@@ -57,7 +57,6 @@
   </a-typography>
 </template>
 <script lang="ts" setup>
-import {ref, watch} from "vue";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 

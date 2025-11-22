@@ -15,9 +15,8 @@ import PageNameEnum from "@/enumeration/PageNameEnum";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 import BaseSearchJumpEvent from "@/entity/event/BaseSearchJumpEvent";
 import {DocumentSearchQuery} from "@/domain/es/DocumentSearchQuery";
-import {ref, watch} from "vue";
-import {Router} from "vue-router";
 import {parseJsonWithBigIntSupport} from "@/algorithm/format";
+import {Router} from "vue-router";
 
 function getDefaultBaseSearch(): BaseSearchItemBody {
   return {

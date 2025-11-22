@@ -72,11 +72,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
 import {Method} from "axios";
 import {JSON_REGEX, signMethods, signs} from "@/data/EsUrl";
 import useIndexStore from "@/store/IndexStore";
-import {useIntervalFn} from "@vueuse/core";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {useEsRequest} from "@/plugins/native/axios";
 import useUrlStore from "@/store/UrlStore";

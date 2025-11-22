@@ -38,7 +38,6 @@
   </a-drawer>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import JsonView from "@/components/view/JsonView/index.vue";
 import {contains} from "@/utils/ArrayUtil";
 import IndexApi from "@/components/es/IndexApi";

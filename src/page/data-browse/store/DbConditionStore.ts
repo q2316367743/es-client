@@ -1,5 +1,3 @@
-import {Ref, ref} from "vue";
-import {createGlobalState} from "@vueuse/core";
 import {ConditionKey, DocumentSearchQuery, SortConditionType,} from "@/domain/es/DocumentSearchQuery";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {

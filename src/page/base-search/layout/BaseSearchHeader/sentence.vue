@@ -34,7 +34,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import {current, getBaseSearchCondition} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {jsonToHtml, showJson} from "@/utils/DialogUtil";
-import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import Constant from "@/global/Constant";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";

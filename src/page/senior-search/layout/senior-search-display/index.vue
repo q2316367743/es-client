@@ -38,7 +38,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
 import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 组件
 import DisplayRecord from "@/page/senior-search/layout/senior-search-display/display-record.vue";

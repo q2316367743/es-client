@@ -12,7 +12,6 @@ import {
   Switch,
   Trigger
 } from "@arco-design/web-vue";
-import {computed, ref, Ref} from "vue";
 import {getDefaultUrl, Url} from "@/entity/Url";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 import './EditLink.less';

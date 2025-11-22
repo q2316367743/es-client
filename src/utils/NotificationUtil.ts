@@ -1,5 +1,4 @@
 import {Button, Notification} from "@arco-design/web-vue";
-import {h} from "vue";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 export default {

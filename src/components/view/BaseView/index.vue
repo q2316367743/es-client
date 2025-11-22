@@ -2,7 +2,6 @@
   <div class="base-view">{{ pretty }}</div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import {formatJsonString} from "@/algorithm/file";
 
 

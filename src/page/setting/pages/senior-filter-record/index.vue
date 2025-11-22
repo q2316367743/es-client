@@ -63,8 +63,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {useWindowSize} from "@vueuse/core";
-import {computed, ref} from "vue";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import MessageUtil from "@/utils/MessageUtil";
 import {clone} from "xe-utils";

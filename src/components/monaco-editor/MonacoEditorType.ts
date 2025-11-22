@@ -1,4 +1,3 @@
-import { PropType } from 'vue'
 import {editor} from 'monaco-editor';
 
 export type FoldingStrategy = 'auto' | 'indentation'

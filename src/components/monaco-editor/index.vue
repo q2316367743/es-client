@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {editorProps} from './MonacoEditorType'
 import * as monaco from 'monaco-editor'
 import {useGlobalStore} from "@/store/GlobalStore";

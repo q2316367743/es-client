@@ -65,7 +65,6 @@
 </template>
 <script lang="ts" setup>
 import {BaseQuery, getDefaultBaseQuery} from "@/entity/BaseQuery";
-import {PropType, ref, watch} from "vue";
 import {baseSearchExecute, fields} from "@/store/components/BaseSearchStore";
 
 const props = defineProps({

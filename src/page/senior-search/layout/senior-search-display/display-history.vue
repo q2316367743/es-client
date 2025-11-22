@@ -39,13 +39,11 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
-import {useWindowSize} from "@vueuse/core";
 
 const size = useWindowSize();
 

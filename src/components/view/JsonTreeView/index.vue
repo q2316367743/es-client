@@ -2,7 +2,6 @@
     <div class="data-scroll hljs" ref="el"/>
 </template>
 <script lang="ts">
-import {defineComponent, onMounted, ref, watch} from "vue";
 import {renderJSONTreeView} from "@/components/view/JsonTreeView/index";
 import {parseJsonWithBigIntSupport} from "@/algorithm/format";
 

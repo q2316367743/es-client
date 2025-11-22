@@ -3,12 +3,12 @@ import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
 import useLoadingStore from "@/store/LoadingStore";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-import type {RenderFunction} from 'vue';
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import Constant from "@/global/Constant";
 import {formatJsonString} from "@/algorithm/file";
 import {copyText} from "@/utils/BrowserUtil";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+import {RenderFunction} from "vue";
 
 /**
  * 对话框参数

@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {computed, ref, toRaw} from "vue";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 

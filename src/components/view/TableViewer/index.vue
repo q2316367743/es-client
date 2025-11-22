@@ -34,7 +34,6 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, h} from "vue";
 import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
 import Sortable from 'sortablejs';
 

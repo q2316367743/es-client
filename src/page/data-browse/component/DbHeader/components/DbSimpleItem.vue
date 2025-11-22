@@ -8,8 +8,6 @@
     </a-tooltip>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-
 export default defineComponent({
     name: 'db-simple-item',
     emits: ['click'],

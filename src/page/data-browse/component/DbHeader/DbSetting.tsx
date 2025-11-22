@@ -1,5 +1,4 @@
 import {Form, FormItem, Modal, Switch} from "@arco-design/web-vue";
-import {ref} from "vue";
 import {useDbSettingStore} from "@/page/data-browse/store/DbSettingStore";
 import {clone} from "xe-utils";
 import MessageUtil from "@/utils/MessageUtil";

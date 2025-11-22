@@ -36,8 +36,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </a-scrollbar>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-
 export default defineComponent({
     name: 'license-bsd',
     data: () => ({})

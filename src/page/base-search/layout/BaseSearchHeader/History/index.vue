@@ -18,7 +18,6 @@
     </a-drawer>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
 import BsRestoreHistory from "./bs-restore-history.vue";
 import BsRestoreRecord from "@/page/base-search/layout/BaseSearchHeader/History/bs-restore-record.vue";
 

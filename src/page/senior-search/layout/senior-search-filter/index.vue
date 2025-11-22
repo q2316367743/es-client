@@ -27,7 +27,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {useSeniorFilterRecordStore} from "@/store/record/SeniorFilterRecordStore";
 

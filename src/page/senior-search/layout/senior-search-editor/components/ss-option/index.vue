@@ -70,7 +70,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed} from "vue";
 import FormatIcon from "@/icon/FormatIcon.vue";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";

@@ -77,7 +77,6 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
 import {mapState} from "pinia";
 import IndexApi from '@/components/es/IndexApi'
 import {getDefaultDocumentSearchQueryStr} from "@/domain/es/DocumentSearchQuery";

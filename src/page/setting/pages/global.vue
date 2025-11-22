@@ -153,17 +153,11 @@
     </a-scrollbar>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-// 状态管理
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import JsonTheme from "@/data/JsonTheme";
-
-// 枚举
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import TableHeaderModeEnum from "@/enumeration/TableHeaderModeEnum";
-
 import {getDefaultGlobalSetting, GlobalSetting} from "@/entity/setting/GlobalSetting";
-
 
 export default defineComponent({
     name: 'setting-base',

@@ -2,8 +2,6 @@ import {defineStore} from "pinia";
 import {listByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {SeniorFilterRecord} from "@/entity/record/SeniorFilterRecord";
-import {toRaw} from "vue";
-import {useLocalStorage} from "@vueuse/core";
 
 let init = false;
 

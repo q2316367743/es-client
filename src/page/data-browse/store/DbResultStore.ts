@@ -3,7 +3,6 @@ import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 import {baseSearchLoadEvent} from "@/store/components/BaseSearchStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
-import {ref} from "vue";
 import {searchResultToTable, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {DataSearchColumnConfig, DataSearchResult, DataSourceRecord} from "@/domain/core";
 

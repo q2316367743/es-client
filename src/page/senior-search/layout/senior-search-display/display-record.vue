@@ -52,7 +52,6 @@
 </template>
 <script lang="ts" setup>
 import {TableData, TableExpandable} from "@arco-design/web-vue";
-import {computed, h, ref, watch} from "vue";
 import JsonView from "@/components/view/JsonView/index.vue";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {SeniorSearchRecord} from "@/entity/record/SeniorSearchRecord";

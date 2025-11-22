@@ -18,7 +18,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
 import DaFieldType from "@/page/dashboard/Analysis/DaFieldType.vue";
 import DaAnalyzer from "@/page/dashboard/Analysis/DaAnalyzer.vue";
 import {showAnalyzer, showFieldType} from "@/page/dashboard/Analysis/ShowQuestion";

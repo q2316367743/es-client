@@ -33,14 +33,11 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
 import {TableColumnData, TableData} from "@arco-design/web-vue";
-import {useWindowSize} from "@vueuse/core";
 import {cat, tabs} from "@/page/dashboard/Cat/func";
 import MessageUtil from "@/utils/MessageUtil";
 import useUrlStore from "@/store/UrlStore";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
-import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import useIndexStore from "@/store/IndexStore";
 

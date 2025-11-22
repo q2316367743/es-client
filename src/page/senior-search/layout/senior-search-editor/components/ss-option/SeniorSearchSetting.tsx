@@ -1,5 +1,4 @@
 import {Button, Form, FormItem, Input, InputNumber, Modal, Option, Select, Switch} from "@arco-design/web-vue";
-import {ref} from "vue";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 

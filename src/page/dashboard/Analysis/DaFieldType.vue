@@ -44,14 +44,12 @@
     </a-spin>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
 import useIndexStore from "@/store/IndexStore";
 import Field from "@/view/Field";
 import {Token} from "@/domain/es/Analyze";
 import MessageUtil from "@/utils/MessageUtil";
 import DocumentApi from "@/components/es/DocumentApi";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
-import {useRouter} from "vue-router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 
 const router = useRouter();

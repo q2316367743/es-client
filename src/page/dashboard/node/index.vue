@@ -82,7 +82,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
 import {Node, NodeState} from "@/domain/es/NodeState";
 import ClusterApi from "@/components/es/ClusterApi";
 import MessageUtil from "@/utils/MessageUtil";

@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import BackupSetting from "@/entity/setting/BackupSetting";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {toRaw} from "vue";
 import {getFromOne, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 

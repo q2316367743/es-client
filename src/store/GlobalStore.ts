@@ -1,4 +1,3 @@
-import {useWindowSize} from "@vueuse/core";
 import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";

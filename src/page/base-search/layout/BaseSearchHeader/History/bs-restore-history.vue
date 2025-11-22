@@ -37,7 +37,6 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 import MessageUtil from "@/utils/MessageUtil";
 import {baseSearchLoadHistory} from "@/store/components/BaseSearchStore";

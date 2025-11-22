@@ -28,7 +28,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
 import {useSeniorSearchRequestStore} from "@/store/history/SeniorSearchRequestStore";
 import {
     loadQuickOpera,

@@ -46,7 +46,6 @@
 </template>
 <script lang="ts" setup>
 import {useDataBrowseStore} from "@/store/components/DataBrowseStore";
-import {nextTick} from "vue";
 import {useDbConditionStore} from "@/page/data-browse/store/DbConditionStore";
 
 const {must, should, mustNot, orderBy} = useDbConditionStore()

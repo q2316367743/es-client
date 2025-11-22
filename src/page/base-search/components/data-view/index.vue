@@ -6,10 +6,7 @@
   </div>
 </template>
 <script lang="ts">
-import {computed, defineComponent} from "vue";
 import {mapState} from "pinia";
-import {useWindowSize} from "@vueuse/core";
-
 import Optional from "@/utils/Optional";
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";

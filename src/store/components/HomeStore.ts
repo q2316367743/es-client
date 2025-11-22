@@ -1,5 +1,3 @@
-import {createGlobalState} from "@vueuse/core";
-import {ref} from "vue";
 import useIndexStore from "@/store/IndexStore";
 
 

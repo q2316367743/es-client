@@ -5,7 +5,6 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import Optional from "@/utils/Optional";

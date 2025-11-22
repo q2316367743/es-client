@@ -34,7 +34,6 @@
   </div>
 </template>
 <script lang="ts">
-import {computed, defineComponent} from "vue";
 import {mapState} from "pinia";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
@@ -45,7 +44,6 @@ import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/view/TableViewer/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import {useWindowSize} from "@vueuse/core";
 import BaseView from "@/components/view/BaseView/index.vue";
 import JsonView from "@/components/view/JsonView/index.vue";
 import JsonTreeView from "@/components/view/JsonTreeView/index.vue";

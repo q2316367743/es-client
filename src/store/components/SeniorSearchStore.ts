@@ -13,7 +13,6 @@ import router from "@/plugins/router";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {seniorSearchRecordService, useSeniorShowResultEvent} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
-import {ref, toRaw, watch} from "vue";
 import useLoadingStore from "@/store/LoadingStore";
 import {useSeniorSearchHistoryStore} from "@/store/history/SeniorSearchHistoryStore";
 import {getFromOne, saveOneByAsync} from "@/utils/utools/DbStorageUtil";

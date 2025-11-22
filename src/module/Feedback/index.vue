@@ -46,7 +46,6 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import Constant from "@/global/Constant";
 import {openUrl} from "@/utils/BrowserUtil";
 

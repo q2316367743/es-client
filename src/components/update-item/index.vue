@@ -36,7 +36,6 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
 import {Log, LogItemEnum} from "@/view/Data";
 import {Link, Tag, Tooltip, TypographyParagraph} from "@arco-design/web-vue";
 import {openUrl} from "@/utils/BrowserUtil";

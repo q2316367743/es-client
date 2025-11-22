@@ -2,14 +2,10 @@
     <div ref="container" class="es-rest-client-editor"></div>
 </template>
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import * as monaco from 'monaco-editor';
-// 语言组件
 import codelens from "./codelens";
-// 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import useEditorSettingStore from "@/store/setting/EditorSettingStore";
-// 其他
 import Optional from "@/utils/Optional";
 import {URL_REGEX} from "@/data/EsUrl";
 import restFormat from "@/algorithm/restFormat";

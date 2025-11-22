@@ -19,7 +19,6 @@
     </a-dropdown>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import useUrlStore from "@/store/UrlStore";
 import clusterApi from "@/components/es/ClusterApi";
