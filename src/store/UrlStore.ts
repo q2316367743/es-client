@@ -4,10 +4,34 @@ import {map} from "@/utils/ArrayUtil";
 import {listByAsync, saveListByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {statistics} from "@/global/BeanFactory";
-import { useRequestJson} from "@/plugins/native/axios";
+import {RequestConfig, useRequestJson} from "@/plugins/native/axios";
 import {Overview} from "@/domain/es/Overview";
+import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 
 const title = useTitle();
+
+export const buildRequestConfig = (record: Omit<Url, 'id' | 'createTime' | 'updateTime'>): RequestConfig => {
+  const config: RequestConfig = {
+    baseURL: record.value,
+    url: '/',
+    method: 'GET',
+    headers: {} as Record<string, any>,
+  };
+  if (record.isAuth) {
+    if (record.authType === UrlAuthTypeEnum.BASIC) {
+      config.auth = {
+        username: record.authUser!,
+        password: record.authPassword!
+      }
+    } else if (record.authType === UrlAuthTypeEnum.HEADER) {
+      if (record.authUser) {
+        config.headers = {};
+        config.headers[record.authUser] = record.authPassword;
+      }
+    }
+  }
+  return config;
+}
 
 const useUrlStore = defineStore('url', () => {
   // state
@@ -58,10 +82,7 @@ const useUrlStore = defineStore('url', () => {
     const now = new Date();
     const id = now.getTime();
     // 获取版本
-
-    const response = await useRequestJson<Overview>("/", {
-      baseURL: record.value
-    });
+    const response = await useRequestJson<Overview>("/", buildRequestConfig(record));
 
     urls.value.push({
       ...record,
@@ -94,12 +115,16 @@ const useUrlStore = defineStore('url', () => {
       return Promise.reject(`存储【${id}】不存在`);
     }
     const now = new Date();
-    urls.value[index] = {
+    const target: Url = {
       ...urls.value[index],
       ...record,
       id,
       updateTime: now
-    };
+    }
+    // 获取版本
+    const response = await useRequestJson<Overview>("/", buildRequestConfig(target));
+    target.value = response.version.number;
+    urls.value[index] = target;
     await _sync();
   };
 

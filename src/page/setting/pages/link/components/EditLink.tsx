@@ -15,11 +15,11 @@ import {
 import {getDefaultUrl, Url} from "@/entity/Url";
 import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
 import './EditLink.less';
-import {AxiosRequestConfig} from "axios";
 import {useRequestJson} from "@/plugins/native/axios";
-import useUrlStore from "@/store/UrlStore";
+import useUrlStore, {buildRequestConfig} from "@/store/UrlStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {clone} from "xe-utils";
+import {Overview} from "@/domain/es/Overview";
 
 export function openAddLink() {
   const link = ref(getDefaultUrl());
@@ -134,36 +134,16 @@ function buildFooter(link: Ref<Url>, id: number, submit: () => void) {
       version: '',
       luceneVersion: ''
     };
-    let config = {
-      baseURL: link.value.value,
-      url: '/',
-      method: 'GET',
-      headers: {} as Record<string, any>,
-      auth: {}
-    } as AxiosRequestConfig;
-    if (link.value.isAuth) {
-      if (link.value.authType === UrlAuthTypeEnum.BASIC) {
-        config.auth = {
-          username: link.value.authUser!,
-          password: link.value.authPassword!
-        }
-      } else if (link.value.authType === UrlAuthTypeEnum.HEADER) {
-        if (link.value.authUser) {
-          config.headers = {};
-          config.headers[link.value.authUser] = link.value.authPassword;
-        }
-      }
-    }
-    useRequestJson<any>('/', config)
+    useRequestJson<Overview>('/', buildRequestConfig(link.value))
       .then((response) => {
         testData.value = {
           icon: 'success',
           title: '链接成功',
-          name: response.data.name,
-          version: response.data.version.number,
-          luceneVersion: response.data.version.lucene_version
+          name: response.name,
+          version: response.version.number,
+          luceneVersion: response.version.lucene_version
         }
-        link.value.version = `${response.data.version.number}`;
+        link.value.version = `${response.version.number}`;
       }).catch(() => {
       testData.value = {
         icon: 'error',
