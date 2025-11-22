@@ -75,6 +75,7 @@ import PageHelp from "@/page/data-browse/component/DbHeader/components/PageHelp.
 import DbIndexSelect from "@/page/data-browse/component/DbHeader/components/DbIndexSelect.vue";
 import DbSimpleItem from "@/page/data-browse/component/DbHeader/components/DbSimpleItem.vue";
 import DbTableHeader from "@/page/data-browse/component/DbHeader/components/DbTableHeader.vue";
+import {openUrl} from "@/utils/BrowserUtil";
 
 const router = useRouter();
 
@@ -144,7 +145,7 @@ function openExportDialog() {
   })
 }
 
-const openHelp = () => utools.shellOpenExternal(Constant.doc.dataBrowse);
+const openHelp = () => openUrl(Constant.doc.dataBrowse);
 </script>
 <style scoped>
 

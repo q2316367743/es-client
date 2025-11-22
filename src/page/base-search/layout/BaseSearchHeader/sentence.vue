@@ -41,6 +41,7 @@ import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/brows
 import NotificationUtil from "@/utils/NotificationUtil";
 import {statistics} from "@/global/BeanFactory";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+import {copyText} from "@/utils/BrowserUtil";
 
 const router = useRouter();
 
@@ -66,7 +67,7 @@ function jumpToSeniorSearch() {
 
 function execCopy() {
   statistics.access("func_base_search", "复制查询条件");
-  utools.copyText(stringifyJsonWithBigIntSupport(QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders)));
+  copyText(stringifyJsonWithBigIntSupport(QueryConditionBuild(current.value.conditions, current.value.page, current.value.size, current.value.orders)));
   MessageUtil.success("已成功复制到剪切板");
 }
 

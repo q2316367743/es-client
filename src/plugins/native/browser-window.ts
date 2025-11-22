@@ -5,6 +5,7 @@ import PluginModeEnum from "@/enumeration/PluginModeEnum";
 import {WebviewWindow} from "@tauri-apps/api/window";
 import {emit} from "@tauri-apps/api/event";
 import MessageUtil from "@/utils/MessageUtil";
+import {copyText} from "@/utils/BrowserUtil";
 
 export interface BrowserWindowOption {
   title: string;
@@ -41,71 +42,11 @@ export function createDataBrowserWindow(
   json: string,
   options: Partial<BrowserWindowOption>) {
 
-  if (Constant.mode === PluginModeEnum.UTOOLS) {
-    createDataBrowserWindowByUtools(type, data, json, options);
-  } else if (Constant.mode === PluginModeEnum.ELECTRON) {
-    createDataBrowserWindowByElectron(type, data, json, options)
-  } else if (Constant.mode === PluginModeEnum.TAURI) {
+  if (Constant.mode === PluginModeEnum.TAURI) {
     createDataBrowserWindowByTauri(type, data, json, options);
   } else {
     createDataBrowserWindowByWeb(type, data, json, options);
   }
-}
-
-
-export function createDataBrowserWindowByUtools(
-  type: BrowserWindowType,
-  data: string,
-  json: string,
-  options: Partial<BrowserWindowOption>) {
-  const file: string = utools.isDev() ? "../public/json.html" : "dist/json.html";
-  const preload: string = utools.isDev() ? '../public/electron/preload-json.js' : 'dist/electron/preload-json.js';
-
-  const browserWindow = utools.createBrowserWindow(file, {
-    ...options,
-    // @ts-ignore
-    webPreferences: {
-      preload: preload
-    }
-  }, () => {
-    browserWindow.show();
-    if (utools.isDev()) {
-      browserWindow.webContents.openDevTools();
-    }
-    window.preload.sendTo(browserWindow.webContents.id, type, {
-      html: data,
-      theme: useGlobalSettingStore().jsonTheme,
-      title: options.title,
-      isDark: useGlobalStore().isDark,
-      json: json
-    });
-  });
-}
-
-
-export function createDataBrowserWindowByElectron(
-  type: BrowserWindowType,
-  data: string,
-  json: string,
-  options: Partial<BrowserWindowOption>) {
-  const file: string = utools.isDev() ? "../public/json.html" : "dist/json.html";
-  const preload: string = utools.isDev() ? '../public/electron/preload-json.js' : 'dist/electron/preload-json.js';
-  // @ts-ignore
-  utools.createBrowserWindow(file, {
-    ...options,
-    // @ts-ignore
-    webPreferences: {
-      preload: preload
-    },
-    data: {
-      html: data,
-      theme: useGlobalSettingStore().jsonTheme,
-      title: options.title,
-      isDark: useGlobalStore().isDark,
-      json: json
-    },
-    type
-  });
 }
 
 
@@ -174,7 +115,7 @@ export function createDataBrowserWindowByWeb(
       }
       newWindow.document.querySelector('.copyText button')!.addEventListener('click', function () {
         // 复制
-        utools.copyText(json);
+        copyText(json);
         newWindow.alert("已成功复制到剪切板");
       });
     })

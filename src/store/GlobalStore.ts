@@ -2,6 +2,7 @@ import {useWindowSize} from "@vueuse/core";
 import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {isDarkColors} from "@/utils/BrowserUtil";
 
 export enum DarkTypeEnum {
     LIGHT = 1,
@@ -16,7 +17,7 @@ function getIsDark(darkType?: DarkTypeEnum): boolean {
     } else if (darkType === DarkTypeEnum.DARK) {
         return true;
     } else if (darkType === DarkTypeEnum.AUTO) {
-        return utools.isDarkColors();
+        return isDarkColors();
     } else {
         return false;
     }

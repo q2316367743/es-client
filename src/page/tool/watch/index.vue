@@ -78,13 +78,14 @@ import {JSON_REGEX, signMethods, signs} from "@/data/EsUrl";
 import useIndexStore from "@/store/IndexStore";
 import {useIntervalFn} from "@vueuse/core";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import {useEsRequestJson} from "@/plugins/native/axios";
+import {useEsRequest} from "@/plugins/native/axios";
 import useUrlStore from "@/store/UrlStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {jsonToHtml} from "@/utils/DialogUtil";
 import Constant from "@/global/Constant";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import {parseJsonWithBigIntSupport} from "@/algorithm/format";
+import {copyText} from "@/utils/BrowserUtil";
 
 
 const method = ref<Method>('POST');
@@ -138,7 +139,7 @@ const {pause, resume, isActive} = useIntervalFn(() => {
     showBody.value = false;
   }
   loading.value = true;
-  useEsRequestJson<string>({
+  useEsRequest({
     url: url.value,
     method: method.value,
     data: body.value,
@@ -184,7 +185,7 @@ function execShowBody() {
 }
 
 function execCopy() {
-  utools.copyText(json.value);
+  copyText(json.value);
   MessageUtil.success("已复制到剪贴板");
 }
 

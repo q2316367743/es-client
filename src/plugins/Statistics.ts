@@ -32,7 +32,7 @@ export class Statistics {
    * @param params 附加参数
    */
   track(event: EventIdentificationEnum, params?: Record<string, string>) {
-    if (utools.isDev()) {
+    if (import.meta.env.DEV) {
       return;
     }
     try {

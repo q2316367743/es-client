@@ -64,7 +64,7 @@ import {getDefaultUrl} from "@/entity/Url";
 import MessageUtil from "@/utils/MessageUtil";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {TableDraggable} from "@arco-design/web-vue";
-import {download} from "@/utils/BrowserUtil";
+import {copyText, download, openUrl} from "@/utils/BrowserUtil";
 import Constant from "@/global/Constant";
 import {useFileSystemAccess, useWindowSize} from "@vueuse/core";
 import {openAddLink, openUpdateLink} from "@/page/setting/pages/link/components/EditLink";
@@ -126,10 +126,10 @@ function removeAfter(value: string) {
 }
 
 const execCopy = (text: string) => {
-  utools.copyText(text);
+  copyText(text);
   MessageUtil.success("已成功复制到剪切板");
 };
-const open = (url: string) => utools.shellOpenExternal(url);
+const open = (url: string) => openUrl(url);
 
 // 导入导出
 

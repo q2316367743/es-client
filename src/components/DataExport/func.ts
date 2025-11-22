@@ -4,7 +4,7 @@ import {utils, writeFile} from 'xlsx'
 
 import {ApiType, ExportConfig, ExportMode, ExportScope, ExportSource, ExportType} from "./domain";
 import {DocumentSearchResult} from "@/domain/es/DocumentSearchResult";
-import {download} from "@/utils/BrowserUtil";
+import {copyText, download} from "@/utils/BrowserUtil";
 import DocumentApi from "@/components/es/DocumentApi";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
@@ -196,7 +196,7 @@ export async function exportData(config: ExportConfig): Promise<void> {
     if (config.mode === ExportMode.DOWNLOAD) {
       download(content, config.name + config.type, config.type);
     } else if (config.mode === ExportMode.COPY) {
-      utools.copyText(content);
+      copyText(content);
       MessageUtil.success("已成功复制到剪切板");
     }
   }

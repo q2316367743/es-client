@@ -51,6 +51,7 @@ import JsonView from "@/components/view/JsonView/index.vue";
 import JsonTreeView from "@/components/view/JsonTreeView/index.vue";
 import MonacoView from "@/components/view/MonacoView/index.vue";
 import {formatJsonString} from "@/algorithm/file";
+import {copyText} from "@/utils/BrowserUtil";
 
 /**
  * 每一项
@@ -110,7 +111,7 @@ export default defineComponent({
       if (!this.data) {
         return;
       }
-      utools.copyText(formatJsonString(this.data));
+      copyText(formatJsonString(this.data));
       MessageUtil.success("已成功复制到剪切板");
     },
     fixAdd() {

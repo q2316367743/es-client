@@ -4,7 +4,6 @@ import AppInstance from './App.vue';
 import router from "@/plugins/router";
 
 // 额外引入图标库
-import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 
 // 引入样式
@@ -87,7 +86,6 @@ function useTable(app: App) {
 
 // 插件
 createApp(AppInstance)
-    .use(ArcoVue)
     .use(store)
     .use(ArcoVueIcon)
     .use(router)

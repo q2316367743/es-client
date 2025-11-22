@@ -1,14 +1,23 @@
 enum PluginModeEnum {
 
-    TAURI = 'tauri',
+  TAURI = 'tauri',
 
-    ELECTRON = 'electron',
+  /**
+   * @deprecated
+   */
+  ELECTRON = 'electron',
 
-    BROWSER = 'browser',
+  /**
+   * @deprecated
+   */
+  BROWSER = 'browser',
 
-    SERVER = 'server',
+  /**
+   * @deprecated
+   */
+  SERVER = 'server',
 
-    UTOOLS = 'utools'
+  UTOOLS = 'utools'
 
 }
 

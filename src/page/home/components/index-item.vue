@@ -96,6 +96,7 @@ import {useIndexManageEvent} from "@/global/BeanFactory";
 import {indexReindex} from "@/page/home/components/IndexReindex";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
+import {copyText} from "@/utils/BrowserUtil";
 
 export default defineComponent({
   name: 'index-item',
@@ -201,7 +202,7 @@ export default defineComponent({
       useIndexStore().reset();
     },
     execCopy(url?: string) {
-      utools.copyText(Optional.ofNullable(url).orElse(''));
+      copyText(Optional.ofNullable(url).orElse(''));
       MessageUtil.success("已成功复制到剪切板");
     },
     jumpToBaseSearch() {
