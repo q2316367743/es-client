@@ -30,7 +30,7 @@ export async function useRequestJson<T extends Record<string, any>>(url: string,
 export async function useEsRequest(config: RequestConfig = {}): Promise<string> {
   const {url, current} = useUrlStore();
   if (current.trim() === '') {
-    return Promise.reject("请先选择链接！");
+    return Promise.reject(new Error("请先选择链接！"));
   }
 
   let headers: Record<string, string> = {

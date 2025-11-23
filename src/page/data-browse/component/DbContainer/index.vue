@@ -1,7 +1,7 @@
 <template>
   <div class="content-table">
     <vxe-table ref="tableRef" :data="useDbResultRecords" :height="height" :column-config="columnConfig"
-               :row-config="rowConfig"
+               :row-config="rowConfig" :virtual-y-config="virtualYConfig"
                :empty-text="emptyText" :loading="loading" :menu-config="menuConfig"
                @checkbox-all="selectAllChangeEvent" @checkbox-change="selectChangeEvent"
                @menu-click="contextMenuClickEvent">
@@ -30,7 +30,7 @@ import {
   buildSelectAllChangeEvent,
   buildSelectChangeEvent
 } from "@/page/data-browse/component/DbContainer/func";
-import {columnConfig, menuConfig, rowConfig} from "@/page/data-browse/component/DbContainer/args";
+import {columnConfig, menuConfig, rowConfig, virtualYConfig} from "@/page/data-browse/component/DbContainer/args";
 import {useDbResultColumns, useDbResultRecords} from "@/page/data-browse/store/DbResultStore";
 
 const size = useWindowSize();

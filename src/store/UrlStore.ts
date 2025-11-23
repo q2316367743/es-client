@@ -123,7 +123,7 @@ const useUrlStore = defineStore('url', () => {
     }
     // 获取版本
     const response = await useRequestJson<Overview>("/", buildRequestConfig(target));
-    target.value = response.version.number;
+    target.version = response.version.number;
     urls.value[index] = target;
     await _sync();
   };

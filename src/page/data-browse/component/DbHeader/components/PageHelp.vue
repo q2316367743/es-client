@@ -76,8 +76,8 @@ function prePage() {
 
 function pageSizeChange(command: any) {
   pageSizeChangeExec(command, update, (p, s) => {
-    updatePage(p);
     updateSize(s);
+    updatePage(p);
   })
 }
 

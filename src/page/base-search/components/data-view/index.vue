@@ -4,34 +4,16 @@
     <monaco-view v-else :value="current.result" :height="height"/>
   </div>
 </template>
-<script lang="ts">
-import {mapState} from "pinia";
+<script lang="ts" setup>
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {current} from "@/store/components/BaseSearchStore";
-import JsonView from "@/components/view/JsonView/index.vue";
-import BaseView from "@/components/view/BaseView/index.vue";
 import MonacoView from "@/components/view/MonacoView/index.vue";
 
+const size = useWindowSize();
 
-export default defineComponent({
-  name: 'base-search-data-view',
-  components: {MonacoView, BaseView, JsonView, TableViewer},
-  data: () => ({
-    ViewTypeEnum
-  }),
-  computed: {
-    ...mapState(useGlobalSettingStore, ['baseDefaultViewer']),
-  },
-  setup() {
-    const size = useWindowSize();
-    const height = computed(() => (size.height.value - 120) + 'px');
-
-    return {
-      height, current
-    }
-  },
-});
+const baseDefaultViewer = computed(() => useGlobalSettingStore().baseDefaultViewer);
+const height = computed(() => (size.height.value - 120) + 'px');
 </script>
 <style lang="less">
 .base-search-data-view {

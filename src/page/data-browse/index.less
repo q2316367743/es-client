@@ -1,124 +1,126 @@
 #data-browse {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background-color: var(--color-bg-2);
+
+  .option {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    background-color: var(--color-bg-2);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 26px;
+    border: 1px solid var(--color-border-2);
+    display: flex;
+    justify-content: space-between;
 
-    .option {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 26px;
+    .left {
+      display: flex;
+    }
+
+    .right {
+      display: flex;
+    }
+
+
+    .item {
+      padding: 0 4px;
+      line-height: 23px !important;
+      cursor: pointer;
+      border: 1px solid transparent;
+      color: var(--color-neutral-10);
+
+      &:hover {
         border: 1px solid var(--color-border-2);
-        display: flex;
-        justify-content: space-between;
+      }
 
-        .left {
-            display: flex;
-        }
-
-        .right {
-            display: flex;
-        }
-
-
-        .item {
-            padding: 0 4px;
-            line-height: 23px !important;
-            cursor: pointer;
-            border: 1px solid transparent;
-            color: var(--color-neutral-10);
-
-            &:hover {
-                border: 1px solid var(--color-border-2);
-            }
-
-            &.disable {
-                color: var(--color-neutral-4);
-            }
-        }
-
+      &.disable {
+        color: var(--color-neutral-4);
+      }
     }
 
-    .condition {
+  }
+
+  .condition {
+    position: absolute;
+    top: 26px;
+    left: 0;
+    right: 0;
+    height: 35px;
+    border-bottom: 1px solid var(--color-border-2);
+    border-left: 1px solid var(--color-border-2);
+    border-right: 1px solid var(--color-border-2);
+
+
+    .arco-split-trigger-vertical {
+      height: auto;
+    }
+
+    .condition-item {
+      display: flex;
+      margin: 0 5px;
+      position: relative;
+
+      .key {
+        line-height: 35px;
+        color: #ff92bb;
+        font-weight: bold;
+        user-select: none;
+
+        &.disable {
+          color: #787878;
+        }
+      }
+
+      .input {
+        border: 0;
+        width: 100%;
+        outline: 0;
+        padding: 8px 0;
+        margin: 0 5px 1px;
+        line-height: 1em;
+      }
+
+      .clear {
         position: absolute;
-        top: 26px;
-        left: 0;
-        right: 0;
-        height: 35px;
-        border-bottom: 1px solid var(--color-border-2);
-        border-left: 1px solid var(--color-border-2);
-        border-right: 1px solid var(--color-border-2);
+        top: 8px;
+        right: 8px;
+        cursor: pointer;
+        display: none;
+      }
 
-
-        .arco-split-trigger-vertical {
-            height: auto;
+      &:hover {
+        .clear {
+          display: block;
         }
-
-        .condition-item {
-            display: flex;
-            margin: 0 5px;
-            position: relative;
-
-            .key {
-                line-height: 35px;
-                color: #ff92bb;
-                font-weight: bold;
-                user-select: none;
-
-                &.disable {
-                    color: #787878;
-                }
-            }
-
-            .input {
-                border: 0;
-                width: 100%;
-                outline: 0;
-                padding: 8px 0;
-                margin: 0 5px 1px;
-                line-height: 1em;
-            }
-
-            .clear {
-                position: absolute;
-                top: 8px;
-                right: 8px;
-                cursor: pointer;
-                display: none;
-            }
-
-            &:hover {
-                .clear {
-                    display: block;
-                }
-            }
-        }
-
-        .condition-sep {
-            background-color: var(--color-border-2);
-        }
-
-
+      }
     }
 
-    .content-table {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        .data-browse-empty {
-            text-align: center;
-            padding-top: 20%;
-            font-size: 1.5em;
-        }
+    .condition-sep {
+      background-color: var(--color-border-2);
     }
+
+
+  }
+
+  .content-table {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .data-browse-empty {
+      text-align: center;
+      padding-top: 20%;
+      font-size: 1.5em;
+    }
+  }
 }
+
 .table-view-trigger {
-    background-color: var(--color-bg-1);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-bg-1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }

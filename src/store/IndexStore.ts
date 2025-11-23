@@ -8,6 +8,7 @@ import useLoadingStore from "@/store/LoadingStore";
 import NotificationUtil from "@/utils/NotificationUtil";
 import {OrderType} from "@/store/components/HomeStore";
 import {ClusterNode} from "@/domain/index/ClusterInfo";
+import MessageUtil from "@/utils/MessageUtil";
 
 function renderMap(indices: Array<IndexView>): Map<string, IndexView> {
   let indicesMap = new Map<string, IndexView>();
@@ -98,6 +99,7 @@ const useIndexStore = defineStore('index', {
       } catch (e: any) {
         useUrlStore().clear();
         console.error(e);
+        MessageUtil.error("获取索引映射信息错误", e);
         return Promise.reject(e);
       } finally {
         useLoadingStore().close();

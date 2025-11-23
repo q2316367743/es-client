@@ -1,14 +1,14 @@
-import {Button, Modal, ModalReturn} from "@arco-design/web-vue";
+import {Modal, ModalReturn} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/MessageUtil";
 import {highlight} from "@/global/BeanFactory";
 import useLoadingStore from "@/store/LoadingStore";
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import Constant from "@/global/Constant";
 import {formatJsonString} from "@/algorithm/file";
 import {copyText} from "@/utils/BrowserUtil";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {RenderFunction} from "vue";
+import MonacoView from "@/components/view/MonacoView/index.vue";
 
 /**
  * 对话框参数
@@ -75,17 +75,9 @@ export function showJson(title: string, json: string | any, options?: DialogOpti
   // 创建对话框
   if (Constant.isSupportPin) {
 
-    showDialog(title, () => <div class="hljs" style={{
-      fontSize: useGlobalSettingStore().jsonFontSize + 'px',
-      position: 'relative'
-    }}>
-      <pre class="language-json" v-html={html}></pre>
-      <Button type="text" style={{
-        position: "absolute",
-        top: "6px",
-        right: "20px"
-      }} onClick={() => execCopy()}>复制</Button>
-    </div>, options);
+    showDialog(title, () => <MonacoView
+      value={typeof json === 'string' ? formatJsonString(json) : formatJsonString(stringifyJsonWithBigIntSupport(json))}
+      height={'100%'}/>, options);
   } else {
     createDataBrowserWindow(BrowserWindowType.JSON, html, original, {
       title: title,

@@ -65,14 +65,17 @@ importers:
       vue-router:
         specifier: ^4.6.3
         version: 4.6.3(vue@3.5.24(typescript@4.9.5))
+      vxe-pc-ui:
+        specifier: 4.10.29
+        version: 4.10.29(vue@3.5.24(typescript@4.9.5))
       vxe-table:
-        specifier: ^4.17.18
+        specifier: 4.17.18
         version: 4.17.18(vue@3.5.24(typescript@4.9.5))
       webdav:
         specifier: ^5.8.0
         version: 5.8.0
       xe-utils:
-        specifier: ^3.7.9
+        specifier: 3.7.9
         version: 3.7.9
       xlsx:
         specifier: ^0.18.5
