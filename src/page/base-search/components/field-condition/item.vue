@@ -16,7 +16,7 @@
     <!-- 选择查询字段 -->
     <a-select v-model="condition.field" allow-search allow-create allow-clear placeholder="请选择查询字段"
               style="margin-left: 10px;width: 250px;">
-      <a-option v-for="(field, idx) in fields" :key="idx" :label="field.label" :value="field.name"/>
+      <a-option v-for="(field, idx) in fields" :key="idx" :label="field.label" :value="field.name" :title="field.name"/>
     </a-select>
     <!-- 选择查询条件 -->
     <!-- TODO: 此处还需处理，对于不同类型，需要不同查询条件 -->
