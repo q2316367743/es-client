@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Form,
   FormItem,
@@ -21,6 +22,7 @@ import useLoadingStore from "@/store/LoadingStore";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {parseJsonWithBigIntSupport, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {copyText} from "@/utils/BrowserUtil";
+import AppLink from "@/components/AppLink/AppLink.vue";
 
 /**
  * 索引创建
@@ -88,9 +90,13 @@ export function indexAdd(): void {
     draggable: true,
     modalClass: "home-index-add",
     renderToBody: true,
-    fullscreen: true,
     content: () => <>
       <Form model={index} layout="vertical">
+        <Alert title={"手动建索引太麻烦？"}>
+          <span>🚀 </span>
+          <AppLink event="新建索引"/>
+          <span>提供可视化创建索引向导，轻松搞定复杂配置！</span>
+        </Alert>
         <FormItem label="名称">
           {{
             default: () => <Input v-model={index.value.name} style="width: 300px;" maxLength={255}
@@ -123,7 +129,7 @@ export function indexAdd(): void {
             </TabPane>
             <TabPane title="映射设置" key="2">
               <MonacoEditor v-model={index.value.mappings} language="json"
-                            height={window.innerHeight - 200 + 'px'}/>
+                            height={'calc(90vh - 336px)'}/>
             </TabPane>
           </>,
           extra: () => activeKey.value == "2" && <>

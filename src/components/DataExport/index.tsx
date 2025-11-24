@@ -7,6 +7,7 @@ import ConditionExportEvent, {
   ExportType
 } from "@/components/DataExport/domain";
 import {
+  Alert,
   Drawer,
   Form,
   FormItem,
@@ -21,13 +22,13 @@ import {
 import {exportData} from "@/components/DataExport/func";
 import useLoadingStore from "@/store/LoadingStore";
 import MessageUtil from "@/utils/MessageUtil";
+import AppLink from "@/components/AppLink/AppLink.vue";
 
 const allowExportTypes: Array<ExportType> = [ExportType.JSON];
 
 /**
  * 显示导出组件
  * @param config 配置项
- * @todo 优化这个组件，太大了
  */
 export function showDataExportDrawer(config: ConditionExportEvent) {
 
@@ -37,6 +38,11 @@ export function showDataExportDrawer(config: ConditionExportEvent) {
   Drawer.open({
     title: "数据导出",
     content: () => <Form model={instance} layout="vertical">
+      <Alert title={"导出卡顿？"}>
+        <span>👉 想一键导出 10 万+ 行到 CSV/Excel/JSON？试试 </span>
+        <AppLink event="导出"/>
+        <span>！</span>
+      </Alert>
       <FormItem label="文件名">
         <Input v-model={instance.value.name}/>
       </FormItem>

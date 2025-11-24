@@ -1,10 +1,11 @@
 import useIndexStore from "@/store/IndexStore";
 import IndexView from "@/view/index/IndexView";
-import {Button, Form, FormItem, Modal, ModalReturn, Option, Select, Switch} from "@arco-design/web-vue";
+import {Alert, Button, Form, FormItem, Modal, ModalReturn, Option, Select, Switch} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/MessageUtil";
 import useLoadingStore from "@/store/LoadingStore";
 import {useEsRequestJson} from "@/plugins/native/axios";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import AppLink from "@/components/AppLink/AppLink.vue";
 
 interface Config {
   index: string;
@@ -27,7 +28,14 @@ export function indexReindex(index: string) {
     // TODO: 此处bete
     title: `索引【${index}】迁移（beta）`,
     content: () => <>
-      <div style="margin-bottom: 7px;">
+      <Alert title={"想可视化 Reindex？"}>
+        <span>🔜 </span>
+        <AppLink event="Reindex"/>
+        <span>将在</span>
+        <strong>下一版本</strong>
+        <span>上线可视化 Reindex，支持一键重建索引！立即体验抢先版 →</span>
+      </Alert>
+      <div style="margin: 8px 0;">
         如果 Mapping 中字段已经定义就不能修改其字段的类型等属性了，同时也不能改变分片的数量，
         可以使用 Reindex API 来解决这个问题。
       </div>

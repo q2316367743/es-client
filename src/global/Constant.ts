@@ -13,10 +13,6 @@ export default {
   author: "Esion",
   email: 'm17762618644@163.com',
   mode,
-  homeUrl: 'https://blog.esion.xyz',
-  docUrl: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r',
-  statistics: "http://project-esion.nat300.top",
-  updateUrl: 'https://es-client.esion.xyz/electron/update.json',
   repositories: [{
     name: "Gitee",
     url: "https://gitee.com/qiaoshengda/es-client"
@@ -28,14 +24,16 @@ export default {
   distributes: {
     'chrome': 'https://chromewebstore.google.com/detail/es-client/pkhmgepniefdigphghbolofjgbnhnhfd',
     'edge': 'https://microsoftedge.microsoft.com/addons/detail/esclient/aonamamifdfigcflbeokdndfappnmogo',
-    'firefox': 'https://addons.mozilla.org/zh-CN/firefox/addon/es-client/',
-    '想天浏览器': 'https://a.apps.vip/d.appStore/index.html#/share?id=NdAH5w',
-    'utools': 'https://u.tools/plugins/detail/es-client/'
   },
-  txc: 'https://support.qq.com/products/489458',
   logs: UpdateLog,
   isSupportPin: true,
+  url: {
+    home: 'https://es-client.esion.xyz',
+    author: 'https://blog.esion.xyz',
+    feedback: 'https://es-client.esion/feedback/open'
+  },
   doc: {
+    index: 'https://es-client.esion.xyz/docs/open',
     dataBrowse: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz'
   }
 }

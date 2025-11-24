@@ -2,7 +2,7 @@
   <div class="entry">
     <p>
       建议使用
-      <a-link target="_blank" @click="open(data.txc)">兔小巢</a-link>
+      <a-link target="_blank" @click="open(data.url.feedback)">反馈系统</a-link>
       进行建议反馈，无须登录即可留言。
     </p>
     <p>
@@ -28,19 +28,6 @@
         @click="open(data.distributes.edge)"
         target="_blank" type="primary">edge插件商店
       </a-link>
-      进行评论与打分。
-    </p>
-    <p>
-      firefox用户也可以在
-      <a-link
-        @click="open(data.distributes.firefox)"
-        target="_blank" type="primary">firefox附加组件
-      </a-link>
-      进行评论与打分。
-    </p>
-    <p>
-      utools用户也可以在
-      <a-link @click="open(data.distributes.utools)" target="_blank" type="primary">utools插件商店</a-link>
       进行评论与打分。
     </p>
   </div>

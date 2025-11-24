@@ -10,7 +10,12 @@
       </a-tabs>
       <a-spin :loading="loading" tip="加载中">
         <div class="content">
-          <monaco-view :value="pretty" v-show="jsonViewShow" read-only height="calc(100vh - 176px)"/>
+          <a-alert v-if="active === '3'" title="Mapping 看得头疼？" style="margin-bottom: 8px;">
+            <span>🌳</span>
+            <AppLink event="查看mapping"/>
+            <span>用树形表格清晰展示 Mapping 结构，一目了然！</span>
+          </a-alert>
+          <monaco-view :value="pretty" v-show="jsonViewShow" read-only :height="active === '3' ? 'calc(100vh - 268px)' : 'calc(100vh - 176px)'"/>
           <index-manage-summary ref="indexManageSummary" v-show="!jsonViewShow" :index="index"
                                 :state="state"/>
         </div>

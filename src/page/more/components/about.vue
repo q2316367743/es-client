@@ -9,12 +9,12 @@
     </p>
     <p>
       <span>使用中遇到任何问题，你可以先访问 </span>
-      <a-link target="_blank" @click="open(data.docUrl)">用户手册</a-link>
+      <a-link target="_blank" @click="open(data.doc.index)">用户手册</a-link>
       <span> ，在用户手册里可以查看与功能或产品相关的使用说明以及一些常见问题。</span>
     </p>
     <p>
       <span>如果用户手册没有解决你的问题，或者对项目有什么建议，你可以发送 </span>
-      <a-link @click="open(data.txc)" target="_blank" type="primary">反馈</a-link>
+      <a-link @click="open(data.url.feedback)" target="_blank" type="primary">反馈</a-link>
       <span> 或者直接发送邮件到 </span>
       <a-link @click="open('mailto:' + data.email)">{{ data.email }}</a-link>
       <span> 联系我。</span>
@@ -43,10 +43,6 @@
         <a-link target="_blank" @click="open(repository.url)">{{ repository.name }}</a-link>
         <span v-if="index < data.repositories.length - 1"> | </span>
       </template>
-    </p>
-    <p>
-      <span>用户手册：</span>
-      <a-link target="_blank" @click="open(data.docUrl)">语雀</a-link>
     </p>
     <div class="title-2">建议反馈</div>
     <feedback-module/>

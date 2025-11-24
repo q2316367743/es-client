@@ -96,6 +96,7 @@ import {indexReindex} from "@/page/home/components/IndexReindex";
 import PageNameEnum from "@/enumeration/PageNameEnum";
 import {stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {copyText} from "@/utils/BrowserUtil";
+import {indexAliasAdd} from "@/page/home/components/IndexAliasAdd";
 
 export default defineComponent({
   name: 'index-item',
@@ -151,10 +152,7 @@ export default defineComponent({
       useIndexManageEvent.emit(this.index.name);
     },
     newAlias() {
-      MessageBoxUtil.prompt("请输入新别名", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-      }).then((value) => IndexApi(this.index.name!).newAlias(value)
+      indexAliasAdd().then((value) => IndexApi(this.index.name!).newAlias(value)
         .then(res => MessageUtil.success(stringifyJsonWithBigIntSupport(res), this.reset))
         .catch(e => MessageUtil.error('新建别名错误', e)));
     },
