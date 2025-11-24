@@ -8,7 +8,7 @@
         <icon-refresh/>
       </db-simple-item>
       <div class="sep"></div>
-      <db-simple-item tip="新增" @click="recordAdd">
+      <db-simple-item tip="新增" @click="recordAdd" :disable="!index">
         <icon-plus/>
       </db-simple-item>
       <db-simple-item :disable="selectedKeys.length === 0" tip="删除" @click="recordReduce">
@@ -109,8 +109,8 @@ function recordEdit(_id?: string) {
     record = selectedKeys.value[0];
   }
   execUpdate(indexName.value, record['_id'], record['_source'])
-    .then(({id, data}) => useDataBrowseStore().update(id, data)
-      .then(() => MessageUtil.success("更新成功"))
+    .then(({id, data, close}) => useDataBrowseStore().update(id, data)
+      .then(() => MessageUtil.success("更新成功", close))
       .catch(e => MessageUtil.error("更新失败", e)));
 }
 

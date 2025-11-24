@@ -39,8 +39,8 @@ export default function DocumentApi(index: string) {
     },
     _update(id: string, data: string): Promise<any> {
       return useEsRequestJson<any>({
-        url: `/${index}/${id}`,
-        method: "PUT",
+        url: `/${index}/_doc/${id}`,
+        method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },

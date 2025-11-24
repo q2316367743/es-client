@@ -49,8 +49,8 @@ export function buildContextMenuClickEvent(instance: Ref<VxeTableInstance | null
         break;
       case 'operation-edit':
         execUpdate(useDataBrowseStore().name, row['_id'], row['_source'])
-          .then(({id, data}) => useDataBrowseStore().update(id, data)
-            .then(() => MessageUtil.success("更新成功"))
+          .then(({id, data, close}) => useDataBrowseStore().update(id, data)
+            .then(() => MessageUtil.success("更新成功", close))
             .catch(e => MessageUtil.error("更新失败", e)));
         break;
       case 'operation-delete':

@@ -60,7 +60,7 @@ export function searchResultToTable(response: string): DataSearchResult {
   return {
     columns,
     records,
-    total: result.hits.total.value || result.hits.total,
+    total: typeof result.hits.total.value === 'undefined' ? result.hits.total : result.hits.total.value,
     source: response
   };
 }

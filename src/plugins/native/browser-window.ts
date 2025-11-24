@@ -110,9 +110,10 @@ export function createDataBrowserWindowByWeb(
         // 恢复亮色主题
         newWindow.document.body.removeAttribute('arco-theme');
       }
-      newWindow.document.querySelector('.copyText button')!.addEventListener('click', function () {
+      newWindow.document.querySelector('.copy button')!.addEventListener('click', function () {
         // 复制
-        copyText(json);
+        // @ts-ignore
+        newWindow.copyText(json);
         newWindow.alert("已成功复制到剪切板");
       });
     })
