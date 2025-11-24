@@ -3,7 +3,7 @@ import IndexView from "@/view/index/IndexView";
 import {Alert, Button, Form, FormItem, Modal, ModalReturn, Option, Select, Switch} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/MessageUtil";
 import useLoadingStore from "@/store/LoadingStore";
-import {useEsRequestJson} from "@/plugins/native/axios";
+import {useEsRequest} from "@/plugins/native/axios";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import AppLink from "@/components/AppLink/AppLink.vue";
 
@@ -82,14 +82,13 @@ function onOk(index: string, config: Ref<Config>, modalReturn: ModalReturn) {
     return;
   }
   useLoadingStore().start("开始进行索引迁移");
-  useEsRequestJson<string>({
+  useEsRequest({
     url: '_reindex' + (config.value.async ? '?wait_for_completion=false' : ''),
     method: 'POST',
     data: {
       source: {index: index},
       dest: {index: config.value.index}
     },
-    responseType: 'text'
   }).then(res => MessageUtil.success(res))
     .catch(e => MessageUtil.error("迁移失败", e))
     .finally(() => {
