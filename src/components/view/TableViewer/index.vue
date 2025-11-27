@@ -141,7 +141,7 @@ export default defineComponent({
       this.records = records;
       // 数据清空
       let x = 0;
-      this.columns.map(e => e.width).forEach(e => x += (e || 0));
+      this.columns.map((e: any) => e.width).forEach((e: any) => x += (e || 0));
       this.scroll.x = `${x}px`;
       // 拖拽
       this.$nextTick(() => {
@@ -153,12 +153,12 @@ export default defineComponent({
       MessageUtil.success("已成功复制到剪切板");
     },
     handleChange(values: any[]) {
-      this.showColumns = this.columns.filter(column => values.includes(column.dataIndex));
+      this.showColumns = this.columns.filter((column: any) => values.includes(column.dataIndex));
       this.allowUpdate = this.showColumns.length === this.columns.length;
     },
     resetColumn() {
       this.showColumns = this.columns;
-      this.checkItems = this.showColumns.map(column => column.dataIndex!);
+      this.checkItems = this.showColumns.map((column: any) => column.dataIndex!);
       this.allowUpdate = true;
     },
     addSortable() {

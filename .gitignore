@@ -29,32 +29,16 @@ pnpm-debug.log*
 # 依赖分析
 /stats.html
 
-#web
-/utools
-
-# 想天浏览器
-/dist-ts
-
-# web版
-/dist-web
-
-# vscode
-/src-vscode/node_modules
-/src-vscode/out
-/src-vscode/.vscode-test-web
-/src-vscode/es-client
-*.vsix
 
 # 谷歌浏览器V3
-/src-chrome/node_modules
-/src-chrome/dist
-/src-chrome/dist.pem
-/src-chrome/dist.crx
+/src-chrome/es-client
+/src-chrome/src-chrome.zip
+
+# edge浏览器
+
+/src-edge/es-client
+/src-edge/src-edge.zip
 
 # web
-/src-utools/dist
+/dist
 
-# electron
-/dist-electron
-/release
-/dist-tauri

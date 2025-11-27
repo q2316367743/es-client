@@ -21,7 +21,7 @@
       </a-popconfirm>
     </div>
     <div class="temp-record-body">
-      <a-table :data="items" style="height: 100%;" :expandable="expandable" row-key="id" :pagination="false">
+      <a-table :data="items" style="height: 100%;" row-key="id" :pagination="false">
         <template #columns>
           <a-table-column data-index="index" title="索引" :width="150">
             <template #cell="{ record }">
@@ -61,8 +61,6 @@
 </template>
 <script lang="ts" setup>
 import XEUtils from "xe-utils";
-import {TableData, TableExpandable} from "@arco-design/web-vue";
-
 import {baseSearchRecordService} from "@/global/BeanFactory";
 // 存储
 import useUrlStore from "@/store/UrlStore";
@@ -76,7 +74,6 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {BaseSearchRecord} from "@/entity/record/BaseSearchRecord";
 import BaseSearchHistory from "@/entity/history/BaseSearchHistory";
 // 其他
-import JsonView from "@/components/view/JsonView/index.vue";
 import {copyText} from "@/utils/BrowserUtil";
 
 const emits = defineEmits(['close']);
@@ -84,15 +81,6 @@ const emits = defineEmits(['close']);
 const urlId = ref<number | undefined>(useUrlStore().id);
 const items = ref(new Array<BaseSearchRecord>());
 const clearLoading = ref(false);
-const expandable = markRaw<TableExpandable>({
-  title: '详情',
-  width: 80,
-  expandedRowRender: (record: TableData) => {
-    return h(JsonView, {
-      data: record
-    });
-  }
-});
 
 const current = ref(1);
 const size = ref(10);

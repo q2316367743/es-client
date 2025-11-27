@@ -17,7 +17,7 @@
       </div>
     </div>
     <!-- 内容 -->
-    <div class="base-scroll" :class="jsonWrap ? 'json-wrap' : ''">
+    <div class="base-scroll">
       <!-- 固定的标签 -->
       <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
         <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :value="item.data"/>
@@ -25,7 +25,7 @@
       </div>
       <!-- 当前的标签 -->
       <div class="current-scroll" v-show="itemActive === -1">
-        <table-viewer v-if="view === ViewTypeEnum.TABLE" :value="data"/>
+        <table-viewer v-if="view === ViewTypeEnum.TABLE && data" :value="data"/>
         <monaco-view v-else :value="data"/>
       </div>
     </div>
@@ -34,19 +34,10 @@
   </div>
 </template>
 <script lang="ts">
-import {mapState} from "pinia";
-import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
-
-// 工具
-import Optional from "@/utils/Optional";
-// 枚举
 import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import TableViewer from "@/components/view/TableViewer/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import BaseView from "@/components/view/BaseView/index.vue";
-import JsonView from "@/components/view/JsonView/index.vue";
-import JsonTreeView from "@/components/view/JsonTreeView/index.vue";
 import MonacoView from "@/components/view/MonacoView/index.vue";
 import {formatJsonString} from "@/algorithm/file";
 import {copyText} from "@/utils/BrowserUtil";
@@ -69,34 +60,30 @@ interface Item {
   /**
    * 数据
    */
-  data: any;
+  data: string;
 
 
 }
 
 export default defineComponent({
   name: 'senior-search-data-view',
-  components: {MonacoView, JsonTreeView, JsonView, BaseView, MonacoEditor, TableViewer},
+  components: {MonacoView, MonacoEditor, TableViewer},
   props: {
     view: {
       type: Number,
-      default: () => ViewTypeEnum.JSON
+      default: () => ViewTypeEnum.EDITOR
     },
     data: String,
   },
   data: () => ({
     wrapper: {} as any,
     copyable: {copyText: "复制", copiedText: "复制成功", timeout: 2000},
-    Optional,
     ViewTypeEnum,
     items: new Array<Item>(),
     index: 0,
     // 活动的标签页
     itemActive: -1
   }),
-  computed: {
-    ...mapState(useGlobalSettingStore, ['jsonFontSize', 'jsonWrap'])
-  },
   setup() {
     const size = useWindowSize();
     const height = computed(() => (size.height.value - 120) + 'px');
@@ -117,7 +104,7 @@ export default defineComponent({
       this.items.push({
         title: this.index + '',
         view: this.view,
-        data: typeof this.data === 'object' ? this.data : {},
+        data: this.data || "",
       });
     },
     fixDelete(index: number) {

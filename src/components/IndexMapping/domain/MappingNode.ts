@@ -2,12 +2,14 @@ import {TreeNodeData} from "@arco-design/web-vue";
 
 export default interface MappingNode extends TreeNodeData {
 
-    key: string;
+  disabled?: boolean;
 
-    type: string;
+  key: string;
 
-    value: string;
+  type: string;
 
-    children: Array<MappingNode>;
+  value: string;
+
+  children: Array<MappingNode>;
 
 }

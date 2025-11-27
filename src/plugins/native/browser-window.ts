@@ -1,10 +1,4 @@
 import {useGlobalStore} from "@/store/GlobalStore";
-import Constant from "@/global/Constant";
-import PluginModeEnum from "@/enumeration/PluginModeEnum";
-import {WebviewWindow} from "@tauri-apps/api/window";
-import {emit} from "@tauri-apps/api/event";
-import MessageUtil from "@/utils/MessageUtil";
-import {copyText} from "@/utils/BrowserUtil";
 
 export interface BrowserWindowOption {
   title: string;
@@ -40,42 +34,7 @@ export function createDataBrowserWindow(
   data: string,
   json: string,
   options: Partial<BrowserWindowOption>) {
-
-  if (Constant.mode === PluginModeEnum.TAURI) {
-    createDataBrowserWindowByTauri(type, data, json, options);
-  } else {
-    createDataBrowserWindowByWeb(type, data, json, options);
-  }
-}
-
-
-export function createDataBrowserWindowByTauri(
-  type: BrowserWindowType,
-  data: string,
-  json: string,
-  options: Partial<BrowserWindowOption>) {
-  const webviewWindow = new WebviewWindow(type + new Date().getTime(), {
-    url: '/json.html',
-    width: options.width,
-    height: options.height,
-    title: options.title,
-    theme: useGlobalStore().isDark ? 'dark' : 'light',
-    alwaysOnTop: true,
-  });
-  webviewWindow.once('tauri://created', function () {
-    // 发送5次
-    setInterval(() => {
-      emit("data", {
-        html: data,
-        title: options.title,
-        isDark: useGlobalStore().isDark,
-        json: json
-      }).then(() => console.debug("消息发送成功"));
-    }, 1000, 5);
-  }).then(() => console.debug("窗口已成功创建"));
-  webviewWindow.once('tauri://error', function (e) {
-    MessageUtil.error("创建webview窗口失败", e);
-  });
+  createDataBrowserWindowByWeb(type, data, json, options);
 }
 
 export function createDataBrowserWindowByWeb(

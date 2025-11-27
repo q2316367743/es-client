@@ -52,12 +52,12 @@
 </template>
 <script lang="ts" setup>
 import {TableData, TableExpandable} from "@arco-design/web-vue";
-import JsonView from "@/components/view/JsonView/index.vue";
 import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {SeniorSearchRecord} from "@/entity/record/SeniorSearchRecord";
 import {seniorSearchRecordService} from "@/global/BeanFactory";
 import useUrlStore from "@/store/UrlStore";
 import MessageUtil from "@/utils/MessageUtil";
+import MonacoView from "@/components/view/MonacoView/index.vue";
 
 const urlId = ref<number | undefined>(useUrlStore().id);
 const records = ref(new Array<SeniorSearchRecord>());
@@ -78,8 +78,9 @@ const expandable = ref<TableExpandable>({
   width: 80,
   expandedRowRender: (record: TableData) => {
     try {
-      return h(JsonView, {
-        value: record.body
+      return h(MonacoView, {
+        value: record.body,
+        height: "400px"
       });
     } catch (e) {
       return h('pre', {}, record.body);
@@ -98,7 +99,7 @@ const search = (value?: number) => seniorSearchRecordService.page(current.value,
 function load(record: SeniorSearchRecord) {
   useSeniorSearchStore().loadEvent({
     link: record.link,
-    method: record.method,
+    method: record.method as any,
     body: record.body
   }, false);
 }

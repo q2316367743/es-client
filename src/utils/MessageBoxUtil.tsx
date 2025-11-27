@@ -70,8 +70,8 @@ export default {
       Modal.confirm({
         content: () => <div class="domain-prompt">
           <div>{content}</div>
-          <Input type="text" defaultValue={option.inputValue} onInput={e => onInput(e)}
-                 style={{marginTop: '8px'}} onVnodeMounted={e => (e.el as HTMLInputElement)
+          <Input type="text" defaultValue={option.inputValue} onInput={(e: string) => onInput(e)}
+                 style={{marginTop: '8px'}} onVnodeMounted={(e: VNode) => (e.el as HTMLInputElement)
             .getElementsByTagName("input")
             .item(0)!
             .focus()}/>
@@ -115,14 +115,14 @@ export default {
       Modal.confirm({
         content: () => <div class="domain-prompt">
           <div>{content}</div>
-          <Input type="text" onInput={e => onUsernameInput(e)} style={{marginTop: '8px'}}
-                 onVnodeMounted={e => {
+          <Input type="text" onInput={(e: string) => onUsernameInput(e)} style={{marginTop: '8px'}}
+                 onVnodeMounted={(e: VNode) => {
                    (e.el as HTMLInputElement)
                      .getElementsByTagName("input")
                      .item(0)!
                      .focus();
                  }}/>
-          <Input type="password" onInput={e => onPasswordInput(e)} style={{marginTop: '8px'}}/>
+          <Input type="password" onInput={(e: string) => onPasswordInput(e)} style={{marginTop: '8px'}}/>
         </div>,
         title: title,
         draggable: true,

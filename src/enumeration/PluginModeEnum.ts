@@ -1,5 +1,8 @@
 enum PluginModeEnum {
 
+  /**
+   * @deprecated
+   */
   TAURI = 'tauri',
 
   /**
@@ -7,9 +10,6 @@ enum PluginModeEnum {
    */
   ELECTRON = 'electron',
 
-  /**
-   * @deprecated
-   */
   BROWSER = 'browser',
 
   /**
@@ -17,6 +17,9 @@ enum PluginModeEnum {
    */
   SERVER = 'server',
 
+  /**
+   * @deprecated
+   */
   UTOOLS = 'utools'
 
 }

@@ -42,8 +42,9 @@ const useGlobalSettingStore = defineStore('global-setting', {
       } else {
         return state.globalSetting.trackTotalHitsMode === "true";
       }
-    }
+    },
 
+    getLastUrl: (state): boolean => state.globalSetting.lastUrl,
   },
   actions: {
     async init() {

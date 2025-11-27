@@ -14,13 +14,6 @@ import V8VersionStrategyImpl from "@/strategy/VersionStrategy/impl/V8VersionStra
 import {SeniorSearchRecordService} from "@/service/SeniorSearchRecordService";
 // 插件
 import {Statistics} from "@/plugins/Statistics";
-import {instance, preload} from "@/plugins/distribute";
-
-// 重新注入
-// @ts-ignore
-window.utools = instance
-// @ts-ignore
-window.preload = preload;
 
 export const baseSearchRecordService = new BaseSearchRecordService();
 export const seniorSearchRecordService = new SeniorSearchRecordService();

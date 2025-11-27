@@ -1,5 +1,5 @@
 import {TableColumnData, TableData} from "@arco-design/web-vue";
-import {useEsRequestJson} from "@/plugins/native/axios";
+import {useEsRequest} from "@/plugins/native/axios";
 
 
 export interface Table {
@@ -13,10 +13,9 @@ export interface Table {
  * @param url 链接
  */
 export async function cat(url: string): Promise<Table> {
-  const rsp = await useEsRequestJson<string>({
+  const rsp = await useEsRequest({
     url,
     method: 'GET',
-    responseType: "text"
   });
 
   const columns = new Array<TableColumnData>();

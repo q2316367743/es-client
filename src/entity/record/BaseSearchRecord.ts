@@ -4,24 +4,24 @@ import BaseOrder from "@/entity/BaseOrder";
 
 export interface BaseSearchRecord extends Base {
 
-    /**
-     * URL的id，可能存在
-     */
-    urlId?: number
+  /**
+   * URL的id，可能存在
+   */
+  urlId?: number
 
-    /**
-     * 索引
-     */
-    index: string;
+  /**
+   * 索引
+   */
+  index: string;
 
-    /**
-     * 条件
-     */
-    conditions: Array<BaseQuery>;
+  /**
+   * 条件
+   */
+  conditions: Array<BaseQuery>;
 
-    /**
-     * 排序
-     */
-    orders: Array<BaseOrder>;
+  /**
+   * 排序
+   */
+  orders: Array<BaseOrder>;
 
 }

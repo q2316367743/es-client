@@ -46,15 +46,6 @@ export async function copyText(content: string): Promise<boolean> {
 }
 
 export function openUrl(url: string) {
-  // 先判断是否存在TAURI变量
-  try {
-    if (typeof window.__TAURI__ !== 'undefined') {
-      window.__TAURI__.shell.open(url);
-      return;
-    }
-  } catch (e) {
-    console.error('使用 Tauri API 复制失败:', e);
-  }
   // 如果失败了，则使用兼容方案
   window.open(url);
 }

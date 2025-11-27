@@ -5,7 +5,6 @@ import "@/assets/less"
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 // 引入样式
-import '@/components/view/JsonTreeView/index.less';
 import '@arco-design/web-vue/dist/arco.css';
 // @ts-ignore
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
