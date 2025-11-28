@@ -30,7 +30,7 @@ export default {
   url: {
     home: 'https://es-client.esion.xyz',
     author: 'https://blog.esion.xyz',
-    feedback: 'https://es-client.esion/feedback/app/es-client-open'
+    feedback: 'https://es-client.esion.xyz/feedback/app/es-client-open'
   },
   doc: {
     index: 'https://es-client.esion.xyz/help/docs/app/es-client-open',
