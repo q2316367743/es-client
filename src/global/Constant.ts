@@ -30,10 +30,10 @@ export default {
   url: {
     home: 'https://es-client.esion.xyz',
     author: 'https://blog.esion.xyz',
-    feedback: 'https://es-client.esion/feedback/open'
+    feedback: 'https://es-client.esion/feedback/app/es-client-open'
   },
   doc: {
-    index: 'https://es-client.esion.xyz/docs/open',
-    dataBrowse: 'https://www.yuque.com/baozhiyige-tewwf/ygxv4r/fcqkthtec4u90hgz'
+    index: 'https://es-client.esion.xyz/help/docs/app/es-client-open',
+    dataBrowse: 'https://es-client.esion.xyz/help/docs/info/e2d96cbb-cff3-4925-8cd8-e1df06dba44b'
   }
 }
