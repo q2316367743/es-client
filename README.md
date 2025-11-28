@@ -1,4 +1,8 @@
 <p align="center">
+<a href="./README.md">简体中文</a> | <a href="./README.en.md">English</a>
+</p>
+
+<p align="center">
 <img src="./public/logo.png" alt="ES-Client Logo" width="120">
 </p>
 
