@@ -26,13 +26,12 @@
     </div>
     <div class="table-view-wrap">
       <a-table :columns="showColumns" :data="records" :expandable="expandable" hoverable column-resizable
-               scrollbar :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"
-               :draggable="draggable"/>
+               scrollbar :scroll="scroll" :pagination="false" row-key="_id" :bordered="bordered"/>
     </div>
   </div>
 </template>
 <script lang="ts">
-import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
+import {TableBorder, TableColumnData, TableData, TableExpandable} from "@arco-design/web-vue";
 
 import MonacoView from "@/components/view/MonacoView/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
@@ -69,6 +68,7 @@ export default defineComponent({
       expandable: {
         title: '源数据',
         width: 80,
+        fixed: 'left',
         expandedRowRender: (record: TableData) => {
           return h(MonacoView, {
             value: record['_source'],
@@ -81,9 +81,6 @@ export default defineComponent({
         x: '100%',
         y: '100%'
       },
-      draggable: {
-        type: 'handle'
-      } as TableDraggable,
 
       allowUpdate: true,
     }
@@ -177,9 +174,9 @@ export default defineComponent({
 .table-view-trigger {
   width: 250px;
   height: 400px;
-  background-color: var(--color-fill-2);
+  background-color: var(--color-bg-1);
   border-radius: var(--border-radius-small);
-  box-shadow: 0 0 12px var(--color-border-2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   display: flex;
 
   .arco-list-header {

@@ -2,6 +2,21 @@ import {Log, LogItemEnum} from "@/view/Data";
 
 export default [
   {
+    version: "3.2.1",
+    sign: 321,
+    time: "2025-12-04",
+    items: [{
+      label: LogItemEnum.UPDATE,
+      content: "修复了表格视图展示问题"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "修复了表格视图自定义列无法使用问题"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "修复了首页快速查询按钮消失问题"
+    }]
+  },
+  {
     version: '3.2.0',
     sign: 320,
     time: '2025-11-30',

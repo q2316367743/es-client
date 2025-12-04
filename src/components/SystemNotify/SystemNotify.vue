@@ -27,7 +27,7 @@
             <a-tag v-if="isUnread(a.id)" color="red" size="small">NEW</a-tag>
           </div>
           <div class="notification-actions">
-            <a-button size="mini" @click.stop="markAsRead(a.id)">标记已读</a-button>
+            <a-button v-if="isUnread(a.id)" size="mini" @click.stop="markAsRead(a.id)">标记已读</a-button>
             <a-button v-if="a.link" type="primary" size="mini" @click.stop="openLink(a)">打开链接</a-button>
           </div>
         </a-list-item>
