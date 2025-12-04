@@ -92,6 +92,8 @@ declare module 'vue' {
     RestClientEditor: typeof import('./src/components/rest-client-editor/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SplitPanel: typeof import('./src/components/SplitPanel/SplitPanel.vue')['default']
+    SystemNotify: typeof import('./src/components/SystemNotify/SystemNotify.vue')['default']
     TableViewer: typeof import('./src/components/view/TableViewer/index.vue')['default']
     UpdateItem: typeof import('./src/components/update-item/index.vue')['default']
   }
@@ -179,6 +181,8 @@ declare global {
   const RestClientEditor: typeof import('./src/components/rest-client-editor/index.vue')['default']
   const RouterLink: typeof import('vue-router')['RouterLink']
   const RouterView: typeof import('vue-router')['RouterView']
+  const SplitPanel: typeof import('./src/components/SplitPanel/SplitPanel.vue')['default']
+  const SystemNotify: typeof import('./src/components/SystemNotify/SystemNotify.vue')['default']
   const TableViewer: typeof import('./src/components/view/TableViewer/index.vue')['default']
   const UpdateItem: typeof import('./src/components/update-item/index.vue')['default']
 }
