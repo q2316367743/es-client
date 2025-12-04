@@ -9,7 +9,7 @@ import {flattenObject} from "@/algorithm/file";
 export function searchResultToTable(response: string): DataSearchResult {
   const result = parseJsonWithBigIntSupport(response);
   if (!result.hits || !result.hits.hits) {
-    return {columns: [], records: [], total: 0, source: response};
+    return {columns: [], records: [], total: 0, source: response, result};
   }
   const hits = result.hits.hits || [];
 
@@ -63,9 +63,7 @@ export function searchResultToTable(response: string): DataSearchResult {
         ellipsis: true,
         cellClass: "",
         show: true,
-        sortable: {
-          sortDirections: ["ascend", "descend"] as ("ascend" | "descend")[]
-        }
+        fixed: 'left'
       },
       {
         field: "_index",
@@ -89,6 +87,7 @@ export function searchResultToTable(response: string): DataSearchResult {
     ],
     records,
     total: typeof result.hits.total.value === 'undefined' ? result.hits.total : result.hits.total.value,
-    source: response
+    source: response,
+    result: result
   };
 }

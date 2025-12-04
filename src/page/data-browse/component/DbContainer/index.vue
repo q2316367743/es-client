@@ -13,10 +13,9 @@
           </div>
         </template>
       </vxe-column>
-      <vxe-column field="_id" title="_id" fixed="left" :width="200" show-overflow="tooltip"/>
       <vxe-column v-for="column in useDbResultColumns" :key="column.title" :field="column.field"
-                  :title="column.title" :visible="column.show"
-                  :width="Math.max(column.title.length * 14, 80)" show-overflow="tooltip"/>
+                  :title="column.title" :visible="column.show" :fixed="column.fixed"
+                  :width="column.width" show-overflow="tooltip"/>
     </vxe-table>
   </div>
 </template>

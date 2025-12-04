@@ -119,7 +119,6 @@ export default defineComponent({
         this.records = [];
         return;
       }
-      console.log(this.value)
       let {columns, records} = searchResultToTable(this.value);
       // 映射表头
       this.columns = columns;
