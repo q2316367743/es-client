@@ -1,6 +1,7 @@
 <template>
-  <div class="base-search-data-view hljs" :style="{height: height}">
-    <TableViewer v-if="baseDefaultViewer === ViewTypeEnum.TABLE" :value="current.result" :index="current.index"/>
+  <div class="base-search-data-view hljs">
+    <TableViewer v-if="baseDefaultViewer === ViewTypeEnum.TABLE" :value="current.result" :index="current.index"
+                 :style="{height: height}"/>
     <monaco-view v-else :value="current.result" :height="height"/>
   </div>
 </template>
