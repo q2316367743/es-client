@@ -20,12 +20,13 @@
     <div class="base-scroll">
       <!-- 固定的标签 -->
       <div class="fix-scroll" v-for="(item, index) in items" v-show="itemActive === index">
-        <table-viewer v-if="item.view === ViewTypeEnum.TABLE" :value="item.data"/>
+        <table-viewer v-if="item.view === ViewTypeEnum.TABLE && !item.error" :value="item.data"/>
         <monaco-view v-else/>
       </div>
       <!-- 当前的标签 -->
       <div class="current-scroll" v-show="itemActive === -1">
-        <table-viewer v-if="view === ViewTypeEnum.TABLE && data" :value="data"/>
+        <!-- 表格，且没有错误 -->
+        <table-viewer v-if="view === ViewTypeEnum.TABLE && !error" :value="data"/>
         <monaco-view v-else :value="data"/>
       </div>
     </div>
@@ -62,6 +63,11 @@ interface Item {
    */
   data: string;
 
+  /**
+   * 是否是出错数据
+   */
+  error: boolean;
+
 
 }
 
@@ -72,6 +78,11 @@ export default defineComponent({
     view: {
       type: Number,
       default: () => ViewTypeEnum.EDITOR
+    },
+    // 查询是否出错
+    error: {
+      type: Boolean,
+      default: () => false
     },
     data: String,
   },
@@ -105,6 +116,7 @@ export default defineComponent({
         title: this.index + '',
         view: this.view,
         data: this.data || "",
+        error: this.error
       });
     },
     fixDelete(index: number) {

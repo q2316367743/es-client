@@ -3,7 +3,6 @@ import * as monaco from "monaco-editor";
 // 工具类
 import MessageUtil from "@/utils/MessageUtil";
 import NotificationUtil from "@/utils/NotificationUtil";
-import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
 import {useEsRequest} from "@/plugins/native/axios";
 //算法
 import SeniorSearchJumpEvent from "@/entity/event/SeniorSearchJumpEvent";
@@ -25,20 +24,11 @@ function requestBuild(instance: monaco.editor.IStandaloneCodeEditor, index: numb
     return;
   }
   let list = parseRestRequests(value);
-  console.log(list, index)
   if (list.length === 0) {
     return;
   }
   return list[index];
 }
-
-// 高级搜索视图，默认编辑器视图
-export const seniorSearchView = ref(ViewTypeEnum.EDITOR);
-// 数据初始化
-getFromOne<ViewTypeEnum>(LocalNameEnum.KEY_SENIOR_SEARCH_VIEW)
-  .then(res => seniorSearchView.value = (res ? res.record : seniorSearchView.value));
-// 数据存储
-watch(() => seniorSearchView.value, value => saveOneByAsync(LocalNameEnum.KEY_SENIOR_SEARCH_VIEW, value));
 
 let isInit = false;
 
@@ -55,6 +45,8 @@ export const useSeniorSearchStore = defineStore('senior-search', {
     // 展示的结果
     show: '',
     json: {},
+    // 是否出错了
+    error: false,
 
     filter: '',
 
@@ -135,14 +127,16 @@ export const useSeniorSearchStore = defineStore('senior-search', {
         } catch (e) {
           this.json = {};
         }
+        this.error = false;
 
         // 执行过滤
         this.execFilter();
 
       }).catch((e) => {
-        this.result = e.response.data;
-        this.show = this.result;
         MessageUtil.error("执行失败", e);
+        this.result = e?.response?.data || '';
+        this.error = true;
+        this.show = this.result;
       }).finally(() => {
         this.loading = false;
         useSeniorShowResultEvent.emit();

@@ -48,6 +48,10 @@ export interface DataSearchResult {
   total: number;
   // 原始数据
   source: string;
+  /**
+   * 解析后的结果
+   */
+  result: Record<string, any>;
 }
 
 export interface DataSearchProp {

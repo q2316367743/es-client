@@ -29,26 +29,6 @@
           </template>
         </a-button>
       </a-tooltip>
-      <a-dropdown position="bl" @select="select">
-        <a-tooltip content="修改视图" position="right">
-          <a-button type="text" status="normal">
-            <template #icon>
-              <icon-code :size="18" v-if="seniorSearchView === ViewTypeEnum.BASE"/>
-              <icon-code-block :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON"/>
-              <icon-nav :size="18" v-else-if="seniorSearchView === ViewTypeEnum.TABLE"/>
-              <icon-mind-mapping :size="18" v-else-if="seniorSearchView === ViewTypeEnum.JSON_TREE"/>
-              <icon-edit :size="18" v-else-if="seniorSearchView === ViewTypeEnum.EDITOR"/>
-            </template>
-          </a-button>
-        </a-tooltip>
-        <template #content>
-          <a-doption :value="ViewTypeEnum.BASE">基础视图</a-doption>
-          <a-doption :value="ViewTypeEnum.JSON">JSON视图</a-doption>
-          <a-doption :value="ViewTypeEnum.TABLE">表格视图</a-doption>
-          <a-doption :value="ViewTypeEnum.JSON_TREE">JSON树视图</a-doption>
-          <a-doption :value="ViewTypeEnum.EDITOR">编辑器视图</a-doption>
-        </template>
-      </a-dropdown>
       <a-tooltip content="编辑器设置" position="right">
         <a-button type="text" status="normal" @click="useSeniorSearchSetting()">
           <template #icon>
@@ -71,24 +51,20 @@
 </template>
 <script lang="ts" setup>
 import FormatIcon from "@/icon/FormatIcon.vue";
-import ViewTypeEnum from "@/enumeration/ViewTypeEnum";
-import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 import {
   useSeniorSearchSetting
 } from "@/page/senior-search/layout/senior-search-editor/components/ss-option/SeniorSearchSetting";
 import {openUrl} from "@/utils/BrowserUtil";
+import Constant from "@/global/Constant";
 
 const allowEdit = computed(() => useSeniorSearchStore().id !== 0);
 
-const openHelp = () => openUrl('https://www.yuque.com/baozhiyige-tewwf/ygxv4r/ya0xyiidxty4lois');
+const openHelp = () => openUrl(Constant.doc.rest);
 const formatDocument = () => useSeniorSearchStore().formatDocument();
 const clearBody = () => useSeniorSearchStore().clearBody();
 const saveHistory = () => useSeniorSearchStore().saveHistory();
 const clearHistory = () => useSeniorSearchStore().clearHistory();
-
-function select(value: any) {
-  seniorSearchView.value = value;
-}
 
 </script>
 <style lang="less">

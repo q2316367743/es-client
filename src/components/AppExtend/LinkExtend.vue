@@ -33,7 +33,8 @@ const updateLine = () => {
 
 const onClick = () => {
   // 记录
-  useUmami.track("APP引流", "首页banner")
+  useUmami.track("APP引流", "首页banner");
+  useUmami.track("首页Banner引流", currentLine.value);
 };
 
 onMounted(() => {

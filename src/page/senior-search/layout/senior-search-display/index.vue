@@ -2,7 +2,7 @@
   <div class="senior-search-display">
     <div class="view">
       <!-- 结果集渲染 -->
-      <senior-search-data-view v-show="displayActive === 'result'" :view="seniorSearchView" :data="show"/>
+      <senior-search-data-view v-show="displayActive === 'result'" :view="seniorSearchView" :data="show" :error="error"/>
       <!-- 请求记录 -->
       <display-record v-show="displayActive === 'record'"/>
       <!-- 历史记录 -->
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {seniorSearchView, useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
+import {useSeniorSearchStore} from "@/store/components/SeniorSearchStore";
 // 组件
 import DisplayRecord from "@/page/senior-search/layout/senior-search-display/display-record.vue";
 import SeniorSearchDataView from '@/page/senior-search/layout/senior-search-display/DataView.vue'
@@ -49,6 +49,7 @@ import {jsonToHtml} from "@/utils/DialogUtil";
 import {BrowserWindowType, createDataBrowserWindow} from "@/plugins/native/browser-window";
 import NotificationUtil from "@/utils/NotificationUtil";
 import SsDisplayQuick from "@/page/senior-search/layout/senior-search-display/SsDisplayQuick.vue";
+import useGlobalSettingStore from "@/store/setting/GlobalSettingStore";
 
 const props = defineProps({
   fullscreen: Boolean
@@ -60,6 +61,8 @@ const displayActive = ref('result');
 const fullscreen = ref(false);
 
 const show = computed(() => useSeniorSearchStore().show);
+const error = computed(() => useSeniorSearchStore().error);
+const seniorSearchView = computed(() => useGlobalSettingStore().seniorDefaultViewer);
 
 watch(() => fullscreen.value, value => emits('update:fullscreen', value));
 watch(() => props.fullscreen, value => fullscreen.value = value);

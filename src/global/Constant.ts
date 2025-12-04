@@ -36,7 +36,8 @@ export default {
   },
   doc: {
     index: 'https://es-client.esion.xyz/help/docs/list',
-    dataBrowse: 'https://es-client.esion.xyz/help/docs/info/e2d96cbb-cff3-4925-8cd8-e1df06dba44b'
+    dataBrowse: 'https://es-client.esion.xyz/help/docs/info/e2d96cbb-cff3-4925-8cd8-e1df06dba44b',
+    rest: ''
   },
   mbd: {
     // 年费，常规

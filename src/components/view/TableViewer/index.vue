@@ -33,7 +33,6 @@
 </template>
 <script lang="ts">
 import {TableBorder, TableColumnData, TableData, TableDraggable, TableExpandable} from "@arco-design/web-vue";
-import Sortable from 'sortablejs';
 
 import MonacoView from "@/components/view/MonacoView/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
@@ -41,14 +40,13 @@ import {searchResultToTable} from "@/algorithm/format";
 import {copyText} from "@/utils/BrowserUtil";
 import {DataSearchColumnConfig} from "@/domain/core";
 
-let sort: Sortable | undefined;
 
 export default defineComponent({
   name: 'table-viewer',
   props: {
     value: {
       type: String,
-      required: true
+      default: () => ""
     },
   },
   components: {MonacoView},
@@ -116,12 +114,12 @@ export default defineComponent({
     render() {
       // 当变化时，进行渲染
       // 数据处理
-      if (!this.value) {
-        this.showColumns = [];
+      if (!this.value || !this.value.trim()) {
         this.columns = [];
         this.records = [];
         return;
       }
+      console.log(this.value)
       let {columns, records} = searchResultToTable(this.value);
       // 映射表头
       this.columns = columns;
@@ -130,10 +128,6 @@ export default defineComponent({
       let x = 0;
       this.columns.map((e: any) => e.width).forEach((e: any) => x += (e || 0));
       this.scroll.x = `${x}px`;
-      // 拖拽
-      this.$nextTick(() => {
-        this.addSortable();
-      })
     },
     copy(value: any) {
       copyText(value);
@@ -144,45 +138,6 @@ export default defineComponent({
         c.show = true;
       });
     },
-    addSortable() {
-      let tableViewWrap = document.getElementById(this.id);
-      if (sort) {
-        sort.destroy();
-      }
-      const wrapperTr = tableViewWrap!.querySelector('.arco-table-tr')! as HTMLElement;
-      sort = Sortable.create(wrapperTr, {
-        draggable: '.arco-table-th',
-        filter: '.table-view-fixed',
-        swapThreshold: 1,
-        animation: 150,
-        delay: 0,
-        onUpdate: (evt: any) => {
-          const {newIndex, oldIndex} = evt;
-          if (newIndex == oldIndex) {
-            // 没有变位置，直接返回
-            return;
-          }
-          // 表头修改
-          const newItem = wrapperTr.children[newIndex];
-          const oldItem = wrapperTr.children[oldIndex];
-
-          // 先删除移动的节点
-          wrapperTr.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if (newIndex > oldIndex) {
-            wrapperTr.insertBefore(newItem, oldItem)
-          } else {
-            wrapperTr.insertBefore(newItem, oldItem.nextSibling)
-          }
-          // 列变化
-          this.$nextTick(() => {
-            // 变化列
-            const currRow = this.showColumns.splice(oldIndex - 2, 1)[0];
-            this.showColumns.splice(newIndex - 2, 0, currRow);
-          });
-        }
-      });
-    }
   }
 });
 </script>
