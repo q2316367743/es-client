@@ -13,14 +13,14 @@ export interface TableColumn {
   width: number;
   // 是否固定
   fixed?: "left" | "right";
-  // 是否胜率
-  ellipsis: boolean;
+  // 是否省略
+  ellipsis?: boolean;
   // 是否显示提示
   tooltip?: boolean | Record<string, any>;
   // 排序
   sortable?: TableColumnSortable;
   // 单元格样式
-  cellClass: string;
+  cellClass?: string;
   // 是否显示
   show: boolean;
 }

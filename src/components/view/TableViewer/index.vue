@@ -15,11 +15,9 @@
                 <a-button type="primary" size="small" @click="resetColumn">重置</a-button>
               </template>
               <a-scrollbar style="height: 341px;overflow: auto;">
-                <a-checkbox-group v-model="checkItems" @change="handleChange">
-                  <a-list-item v-for="column in columns" style="width: 250px;margin: 5px 3px;">
-                    <a-checkbox :value="column.dataIndex">{{ column.title }}</a-checkbox>
-                  </a-list-item>
-                </a-checkbox-group>
+                <a-list-item v-for="(column, i) in columns" style="width: 250px;margin: 5px 3px;">
+                  <a-checkbox v-model="columns[i].show">{{ column.title }}</a-checkbox>
+                </a-list-item>
               </a-scrollbar>
             </a-list>
           </div>
@@ -41,6 +39,7 @@ import MonacoView from "@/components/view/MonacoView/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
 import {searchResultToTable} from "@/algorithm/format";
 import {copyText} from "@/utils/BrowserUtil";
+import {DataSearchColumnConfig} from "@/domain/core";
 
 let sort: Sortable | undefined;
 
@@ -61,8 +60,7 @@ export default defineComponent({
       // 映射表头
       mappingColumns: [] as Array<TableColumnData>,
       records: [] as Array<TableData>,
-      columns: [] as Array<TableColumnData>,
-      showColumns: [] as Array<TableColumnData>,
+      columns: [] as Array<DataSearchColumnConfig>,
       emptyText: '空空如也',
 
       oldIndex: '',
@@ -89,14 +87,25 @@ export default defineComponent({
         type: 'handle'
       } as TableDraggable,
 
-      // 筛选
-      checkItems: new Array<string>(),
       allowUpdate: true,
     }
   },
   watch: {
     value() {
       this.render();
+    }
+  }, computed: {
+    showColumns() {
+      return this.columns.filter(c => c.show).map(c => ({
+        dataIndex: c.field,
+        title: c.title,
+        width: c.width,
+        fixed: c.fixed,
+        ellipsis: true,
+        resizable: true,
+        sortable: true,
+        align: 'left'
+      }))
     }
   },
   mounted() {
@@ -114,29 +123,7 @@ export default defineComponent({
         return;
       }
       let {columns, records} = searchResultToTable(this.value);
-      // 渲染表头
-      this.renderColumns = [{
-        dataIndex: '_id',
-        title: 'ID',
-        width: 200,
-        fixed: 'left',
-        ellipsis: true,
-        resizable: true,
-        sortable: true,
-        align: 'left'
-      }, ...columns.map(c => ({
-        dataIndex: c.field,
-        title: c.title,
-        width: c.width,
-        fixed: c.fixed,
-        ellipsis: true,
-        resizable: true,
-        sortable: true,
-        align: 'left'
-      } as TableColumnData))];
-      this.showColumns = this.renderColumns;
       // 映射表头
-      this.columns = this.renderColumns
       this.columns = columns;
       this.records = records;
       // 数据清空
@@ -152,14 +139,10 @@ export default defineComponent({
       copyText(value);
       MessageUtil.success("已成功复制到剪切板");
     },
-    handleChange(values: any[]) {
-      this.showColumns = this.columns.filter((column: any) => values.includes(column.dataIndex));
-      this.allowUpdate = this.showColumns.length === this.columns.length;
-    },
     resetColumn() {
-      this.showColumns = this.columns;
-      this.checkItems = this.showColumns.map((column: any) => column.dataIndex!);
-      this.allowUpdate = true;
+      this.columns.forEach(c => {
+        c.show = true;
+      });
     },
     addSortable() {
       let tableViewWrap = document.getElementById(this.id);

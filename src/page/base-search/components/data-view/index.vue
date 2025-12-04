@@ -1,5 +1,5 @@
 <template>
-  <div class="base-search-data-view hljs">
+  <div class="base-search-data-view hljs" :style="{height: height}">
     <TableViewer v-if="baseDefaultViewer === ViewTypeEnum.TABLE" :value="current.result" :index="current.index"/>
     <monaco-view v-else :value="current.result" :height="height"/>
   </div>
@@ -25,6 +25,7 @@ const height = computed(() => (size.height.value - 120) + 'px');
   border-right: 1px solid var(--color-border-2);
   border-top: 1px solid var(--color-border-2);
   overflow-x: auto;
+  overflow-y: hidden;
 
   &.json-wrap {
     .CompCssDJsonViewTree {

@@ -15,9 +15,6 @@ export function searchResultToTable(response: string): DataSearchResult {
 
   // 提取所有字段名
   const allFields = new Set<string>();
-  allFields.add("_type");
-  allFields.add("_score");
-  allFields.add("_index");
   hits.forEach((hit: any) => {
     if (hit._source) {
       const extractFields = (obj: any, prefix = "") => {
@@ -58,7 +55,38 @@ export function searchResultToTable(response: string): DataSearchResult {
   }));
 
   return {
-    columns,
+    columns: [
+      {
+        field: "_id",
+        title: "_id",
+        width: 240,
+        ellipsis: true,
+        cellClass: "",
+        show: true,
+        sortable: {
+          sortDirections: ["ascend", "descend"] as ("ascend" | "descend")[]
+        }
+      },
+      {
+        field: "_index",
+        title: "索引",
+        width: 80,
+        show: true,
+      },
+      {
+        field: "_type",
+        title: "类型",
+        width: 80,
+        show: true
+      },
+      {
+        field: "_score",
+        title: "分数",
+        width: 80,
+        show: true
+      },
+      ...columns
+    ],
     records,
     total: typeof result.hits.total.value === 'undefined' ? result.hits.total : result.hits.total.value,
     source: response
