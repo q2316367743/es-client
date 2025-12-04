@@ -31,6 +31,7 @@
       </a-progress>
     </div>
     <div class="right">
+      <LinkExtend  style="margin-right: 8px;"/>
       <!-- 控制台 -->
       <app-bug/>
       <!-- 各种信息弹框 -->
@@ -106,6 +107,7 @@ import Assert from "@/utils/Assert";
 import {setItem} from '@/utils/utools/DbStorageUtil';
 import {openAddLink} from "@/page/setting/pages/link/components/EditLink";
 import {openUrl} from "@/utils/BrowserUtil";
+import LinkExtend from "@/components/AppExtend/LinkExtend.vue";
 
 const router = useRouter();
 const size = useWindowSize();

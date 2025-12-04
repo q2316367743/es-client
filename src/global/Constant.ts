@@ -30,10 +30,18 @@ export default {
   url: {
     home: 'https://es-client.esion.xyz',
     author: 'https://blog.esion.xyz',
-    feedback: 'https://es-client.esion.xyz/feedback/app/es-client-open'
+    feedback: 'https://es-client.esion.xyz/feedback/app/es-client-open',
+    download: 'https://es-client.esion.xyz/download',
+    price: 'https://es-client.esion.xyz/price'
   },
   doc: {
-    index: 'https://es-client.esion.xyz/help/docs/app/es-client-open',
+    index: 'https://es-client.esion.xyz/help/docs/list',
     dataBrowse: 'https://es-client.esion.xyz/help/docs/info/e2d96cbb-cff3-4925-8cd8-e1df06dba44b'
+  },
+  mbd: {
+    // 年费，常规
+    year: 'https://mbd.pub/o/bread/YZWZlp9vZw==',
+    // 永久，活动
+    active: 'https://mbd.pub/o/bread/YZWZmJdvZg=='
   }
 }

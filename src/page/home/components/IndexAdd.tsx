@@ -23,6 +23,7 @@ import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {parseJsonWithBigIntSupport, stringifyJsonWithBigIntSupport} from "@/algorithm/format";
 import {copyText} from "@/utils/BrowserUtil";
 import AppLink from "@/components/AppLink/AppLink.vue";
+import AlertExtend from "@/components/AppExtend/AlertExtend.vue";
 
 /**
  * 索引创建
@@ -92,11 +93,7 @@ export function indexAdd(): void {
     renderToBody: true,
     content: () => <>
       <Form model={index} layout="vertical">
-        <Alert title={"手动建索引太麻烦？"}>
-          <span>🚀 </span>
-          <AppLink event="新建索引"/>
-          <span>提供可视化创建索引向导，轻松搞定复杂配置！</span>
-        </Alert>
+        <AlertExtend title={"手动建索引太麻烦？"} content={"提供可视化创建索引向导，轻松搞定复杂配置！"} event={"新建索引"} />
         <FormItem label="名称">
           {{
             default: () => <Input v-model={index.value.name} style="width: 300px;" maxLength={255}

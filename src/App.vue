@@ -32,12 +32,12 @@ import {versionManager, VersionStatus} from "@/components/version-manager";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 import Assert from "@/utils/Assert";
 import {showVersionUpdateDialog} from "@/module/version-update";
+import AppHeader from  "@/module/app-header/index.vue";
+import AppSide from "@/module/app-sider/index.vue";
+import IndexManage  from '@/module/index-manage/index.vue';
 
 const router = useRouter();
 
-const AppHeader = defineAsyncComponent(() => import("@/module/app-header/index.vue"));
-const AppSide = defineAsyncComponent(() => import("@/module/app-sider/index.vue"));
-const IndexManage = defineAsyncComponent(() => import('@/module/index-manage/index.vue'));
 
 const loading = computed(() => useLoadingStore().loading);
 const text = computed(() => useLoadingStore().text);
