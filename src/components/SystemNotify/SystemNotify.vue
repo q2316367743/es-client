@@ -46,10 +46,11 @@
   </a-drawer>
 </template>
 
-<script lang="ts" setup>
-import { getAnnouncements, AnnouncementResponse } from './AnnouncementApi';
-import { Announcement } from './AnnouncementTypes';
-import { openUrl } from "@/utils/BrowserUtil";
+<script lang="tsx" setup>
+import {Button, Notification as ArcoNotification} from '@arco-design/web-vue';
+import {AnnouncementResponse, getAnnouncements} from './AnnouncementApi';
+import {Announcement} from './AnnouncementTypes';
+import {openUrl} from "@/utils/BrowserUtil";
 
 const drawerVisible = ref(false);
 const currentPage = ref(1);
@@ -80,8 +81,9 @@ const formatDate = (s: string) => new Date(s).toLocaleString('zh-CN');
 const markAsRead = (id: string) => {
   if (!readSet.value.has(id)) {
     readAnnouncementIds.value = [...readAnnouncementIds.value, id];
-    recomputeUnreadBadge();
   }
+  recomputeUnreadBadge();
+  scanForUnreadAcrossPages();
 };
 
 const handleItemClick = (a: Announcement) => {
@@ -117,16 +119,16 @@ const fetchPage = async () => {
     total.value = r.data.count;
     recomputeUnreadBadge();
     if (currentPage.value === 1) maybeNotifyOnce();
-    if (currentPage.value === 1) scanForUnreadAcrossPages();
+    if (currentPage.value === 1) await scanForUnreadAcrossPages();
   }
 };
 
 const recomputeUnreadBadge = () => {
-  const anyUnreadOnPage = sortedItems.value.some(a => isUnread(a.id));
-  hasUnread.value = anyUnreadOnPage || hasUnread.value;
+  hasUnread.value = sortedItems.value.some(a => isUnread(a.id));
 };
 
 const maybeNotifyOnce = () => {
+  console.log("maybeNotifyOnce")
   if (firstPageNotified.value) return;
   const unread = sortedItems.value.filter(a => isUnread(a.id));
   if (unread.length === 0) {
@@ -135,8 +137,29 @@ const maybeNotifyOnce = () => {
   }
   const latest = unread[0];
   const within7Days = (new Date().getTime() - new Date(latest.published_at).getTime()) <= 7 * 24 * 60 * 60 * 1000;
-  if (within7Days && Notification.permission === 'granted' && lastNotifiedId.value !== latest.id) {
-    new Notification('你有 N 条新公告', { body: latest.title });
+  if (within7Days) {
+    let notif: any;
+    notif = ArcoNotification.info({
+      title: latest.title,
+      content: () => (
+        <div>
+          <div style="margin-bottom:8px;">{latest.description ?? latest.title}</div>
+          <div>
+            <Button size="mini" onClick={() => { markAsRead(latest.id); notif?.close?.(); }}>关闭</Button>
+            {latest.link && (
+              <Button type="primary" size="mini" style="margin-left:8px" onClick={() => {
+                markAsRead(latest.id);
+                window.open(latest.link as string, '_blank');
+                notif?.close?.();
+              }}>查看</Button>
+            )}
+          </div>
+        </div>
+      ),
+      position: 'topRight',
+      closable: false,
+      duration: 3600000
+    });
     lastNotifiedId.value = latest.id;
   }
   firstPageNotified.value = true;
@@ -146,20 +169,24 @@ const scanForUnreadAcrossPages = async () => {
   if (scanning.value) return;
   scanning.value = true;
   try {
+    let foundUnread = sortedItems.value.some(a => isUnread(a.id));
     const pages = Math.ceil(total.value / limit.value);
-    for (let p = 2; p <= pages; p++) {
-      const r: AnnouncementResponse = await getAnnouncements((p - 1) * limit.value, limit.value);
-      if (r && r.success) {
-        const list = r.data.announcements.filter(a => !isExpired(a));
-        const unreadExists = list.some(a => !readSet.value.has(a.id));
-        if (unreadExists) {
-          hasUnread.value = true;
+    if (!foundUnread) {
+      for (let p = 2; p <= pages; p++) {
+        const r: AnnouncementResponse = await getAnnouncements((p - 1) * limit.value, limit.value);
+        if (r && r.success) {
+          const list = r.data.announcements.filter(a => !isExpired(a));
+          const unreadExists = list.some(a => !readSet.value.has(a.id));
+          if (unreadExists) {
+            foundUnread = true;
+            break;
+          }
+        } else {
           break;
         }
-      } else {
-        break;
       }
     }
+    hasUnread.value = foundUnread;
   } finally {
     scanning.value = false;
   }

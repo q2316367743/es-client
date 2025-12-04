@@ -146,7 +146,7 @@ export default defineComponent({
       font-size: 32px;
       font-weight: bold;
       margin-bottom: 20px;
-      color: #1d2129;
+      color: var(--color-text-1);
     }
     
     .version-info {
@@ -161,7 +161,7 @@ export default defineComponent({
   }
 
   .feature-card {
-    background: #ffffff;
+    background: var(--color-bg-2);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 24px;
@@ -178,11 +178,11 @@ export default defineComponent({
         font-size: 20px;
         font-weight: 600;
         margin: 0 0 12px 0;
-        color: #1d2129;
+        color: var(--color-text-2);
       }
       
       .card-description {
-        color: #86909c;
+        color: var(--color-text-2);
         font-size: 14px;
         line-height: 1.6;
         margin-bottom: 16px;
@@ -232,7 +232,7 @@ export default defineComponent({
         margin: 10px 0;
         
         .separator {
-          color: #c9cdd4;
+          color: var(--color-text-1);
         }
       }
       
@@ -243,17 +243,17 @@ export default defineComponent({
   }
   
   .professional-card {
-    border: 1px solid #00b42a;
-    background: linear-gradient(120deg, #f6ffed 0%, #ffffff 100%);
+    border: 1px solid var(--color-border-2);
+    background: linear-gradient(120deg, var(--color-bg-2) 0%, var(--color-bg-1) 100%);
     
     .card-title {
-      color: #00b42a;
+      color: var(--success-6);
     }
   }
   
   .community-card {
     .card-title {
-      color: #ff7d00;
+      color: var(--warning-6);
     }
   }
   
@@ -264,7 +264,7 @@ export default defineComponent({
   }
   
   .resources-section, .feedback-section {
-    background: #ffffff;
+    background: var(--color-bg-2);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 24px;
@@ -274,16 +274,16 @@ export default defineComponent({
       font-size: 20px;
       font-weight: 600;
       margin: 0 0 16px 0;
-      color: #1d2129;
+      color: var(--color-text-1);
     }
     
     .resource-list {
-      color: #4e5969;
+      color: var(--color-text-2);
       line-height: 1.6;
       
       .separator {
         margin: 0 8px;
-        color: #c9cdd4;
+        color: var(--color-border-2);
       }
     }
   }
