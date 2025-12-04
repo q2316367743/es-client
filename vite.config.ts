@@ -5,6 +5,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite';
 import {ArcoResolver} from 'unplugin-vue-components/resolvers';
 import path from 'path'
+import UnoCSS from 'unocss/vite'
 
 function _resolve(dir: string) {
   return path.resolve(__dirname, dir);
@@ -42,7 +43,8 @@ export default defineConfig(({mode}) => {
             sideEffect: true
           })
         ]
-      })
+      }),
+      UnoCSS()
     ],
     base: './',
     build: {

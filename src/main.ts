@@ -17,6 +17,7 @@ import 'vxe-pc-ui/es/style.css'
 // vxe-table
 import VxeUITable from 'vxe-table'
 import 'vxe-table/es/style.css'
+import 'virtual:uno.css'
 // @ts-ignore: worker 导入方式可以参考vite官网 https://cn.vitejs.dev/guide/features.html#web-workers
 self.MonacoEnvironment = { // 提供一个定义worker路径的全局变量
   getWorker(_: string, label: string) {

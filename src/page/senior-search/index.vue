@@ -2,14 +2,24 @@
   <a-spin :loading="loading" tip="数据查询中">
     <div :class="{'senior-search': true,'disable-filter': !enableFilter}">
       <!-- 左面查询条件 -->
-      <a-split class="senior-main" min="42px" :max="0.9" v-model:size="size" :disabled="disabled">
-        <template #first>
+<!--      <a-split class="senior-main" min="42px" :max="0.9" v-model:size="size" :disabled="disabled">-->
+<!--        <template #first>-->
+<!--          <senior-search-editor/>-->
+<!--        </template>-->
+<!--        <template #second>-->
+<!--          <senior-search-display v-model:fullscreen="fullscreen"/>-->
+<!--        </template>-->
+<!--      </a-split>-->
+
+      <SplitPanel v-model="panelSize">
+        <template #left>
           <senior-search-editor/>
         </template>
-        <template #second>
+        <template #right>
           <senior-search-display v-model:fullscreen="fullscreen"/>
         </template>
-      </a-split>
+      </SplitPanel>
+
       <senior-search-filter/>
     </div>
   </a-spin>
@@ -29,6 +39,7 @@ const windowSize = useWindowSize();
 let history = '';
 
 const size = useLocalStorage<string>('/key/senior-search/split-size', '400px');
+const panelSize = useLocalStorage<number>('/key/senior-search/split-panel-size', 400);
 const disabled = ref(false);
 const fullscreen = ref(false);
 

@@ -1,11 +1,13 @@
 <template>
   <div class="senior-search-side" :style="{height: height}">
     <!-- 编辑器 -->
-    <div class="senior-search-editor">
+    <div class="senior-search-editor h-full flex w-full">
       <!-- 操作栏 -->
       <ss-option/>
       <!-- rest客户端编辑器 -->
-      <rest-client-editor ref="editorInstance" class="editor"/>
+      <div style="width: calc(100% - 33px)">
+        <rest-client-editor ref="editorInstance" class="editor h-full"/>
+      </div>
     </div>
   </div>
 </template>
