@@ -302,7 +302,7 @@ export default defineComponent({
 
   .expand-btn {
     position: absolute;
-    top: 114px;
+    top: 48px;
     right: 12px;
   }
 
