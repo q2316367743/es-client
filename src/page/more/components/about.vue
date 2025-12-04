@@ -1,5 +1,5 @@
 <template>
-  <div class="about entry">
+  <div class="about">
     <div class="header-section">
       <h1 class="main-title">Hi，感谢使用 es-client ！</h1>
       <div class="version-info">
@@ -261,7 +261,6 @@ export default defineComponent({
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    margin-bottom: 20px;
   }
   
   .resources-section, .feedback-section {
