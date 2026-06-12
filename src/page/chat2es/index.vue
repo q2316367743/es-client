@@ -2,7 +2,7 @@
   <div class="abs-0">
     <SplitPanel v-model="size">
       <template #left>
-        <chat-left v-model="active" :records="records" @add="handleAdd" />
+        <chat-left v-model="active" :records="records" @add="handleAdd" @remove="handleRemove" />
       </template>
       <template #right>
         <chat-right v-model="active" :records="records" />
@@ -15,7 +15,7 @@ import LocalNameEnum from '@/enumeration/LocalNameEnum'
 import ChatLeft from '@/page/chat2es/layouts/ChatLeft.vue'
 import ChatRight from '@/page/chat2es/layouts/ChatRight.vue'
 import { ChatRecord } from '@/entity/chat'
-import { addChatRecord, listChatRecords } from '@/api'
+import { addChatRecord, deleteChatRecord, listChatRecords } from '@/api'
 import MessageUtil from '@/utils/model/MessageUtil'
 import { toDateString } from '@/utils/lang'
 import MessageBoxUtil from '@/utils/model/MessageBoxUtil'
@@ -49,6 +49,15 @@ const handleAdd = () => {
       })
       .catch((e) => MessageUtil.error('添加记录失败', e))
   })
+}
+
+const handleRemove = (record: ChatRecord) => {
+  deleteChatRecord(record.id, useUrlStore().id)
+    .then(() => {
+      MessageUtil.success('删除记录成功')
+      init()
+    })
+    .catch((e) => MessageUtil.error('删除记录失败', e))
 }
 
 watch(

@@ -35,14 +35,14 @@
         </div>
       </div>
 
-      <!-- 请求体 -->
+      <!-- 请求体（Monaco 视图） -->
       <div class="dsl-field">
         <div class="dsl-field-label">
           <code-icon size="14px" class="field-icon" />
           <span>请求体</span>
         </div>
-        <div class="dsl-field-value">
-          <pre class="dsl-code-block"><code>{{ dslBody }}</code></pre>
+        <div class="dsl-field-value dsl-field-value--monaco">
+          <MonacoView :value="dslBody" height="200px" />
           <t-tooltip content="复制请求体">
             <t-button
               theme="default"
@@ -57,21 +57,61 @@
         </div>
       </div>
 
-      <!-- 执行结果（如有） -->
+      <!-- 执行结果（Monaco 视图） -->
       <div v-if="dslResult" class="dsl-field">
         <div class="dsl-field-label">
           <view-list-icon size="14px" class="field-icon" />
           <span>执行结果</span>
+          <t-tag
+            v-if="executionTime"
+            theme="success"
+            variant="light"
+            size="small"
+            class="exec-time-tag"
+          >
+            {{ executionTime }}ms
+          </t-tag>
+          <t-tooltip content="清空结果">
+            <t-button
+              theme="danger"
+              variant="text"
+              size="small"
+              class="clear-result-btn"
+              shape="square"
+              @click="clearResult"
+            >
+              <delete-icon />
+            </t-button>
+          </t-tooltip>
+          <t-tooltip content="最大化查看">
+            <t-button
+              theme="primary"
+              variant="text"
+              size="small"
+              class="maximize-btn"
+              shape="square"
+              @click="maximizeResult"
+            >
+              <fullscreen-1-icon />
+            </t-button>
+          </t-tooltip>
         </div>
-        <div class="dsl-field-value">
-          <pre class="dsl-code-block dsl-code-block--result"><code>{{ dslResult }}</code></pre>
+        <div class="dsl-field-value dsl-field-value--monaco">
+          <MonacoView :value="dslResult" height="300px" />
         </div>
       </div>
     </div>
 
     <!-- 底部：执行按钮 -->
     <div class="dsl-footer">
-      <t-button theme="primary" variant="base" class="dsl-execute-btn" @click="handleExecute">
+      <t-button
+        theme="primary"
+        variant="base"
+        class="dsl-execute-btn"
+        :loading="isExecuting"
+        :disabled="isExecuting"
+        @click="handleExecute"
+      >
         <template #icon><play-icon /></template>
         执行聚合
       </t-button>
@@ -79,10 +119,21 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { ToolCallContent } from '@tdesign-vue-next/chat'
-import { CodeIcon, PinIcon, FileCopyIcon, ViewListIcon, PlayIcon } from 'tdesign-icons-vue-next'
+import {
+  CodeIcon,
+  PinIcon,
+  FileCopyIcon,
+  ViewListIcon,
+  PlayIcon,
+  DeleteIcon,
+  Fullscreen1Icon
+} from 'tdesign-icons-vue-next'
+import MonacoView from '@/components/view/MonacoView/index.vue'
+import { useEsRequestJson } from '@/plugins/native/axios'
 import MessageUtil from '@/utils/model/MessageUtil'
+import { showJson } from '@/utils/model/DialogUtil'
 
 const props = defineProps({
   content: {
@@ -94,6 +145,12 @@ const props = defineProps({
 const emit = defineEmits<{
   execute: [payload: { index: string; body: Record<string, unknown>; method: string }]
 }>()
+
+const isExecuting = ref(false)
+
+// ── 执行时间 ──
+
+const executionTime = computed(() => props.content.data._executionTime as number | undefined)
 
 // ── 状态 ──
 
@@ -141,7 +198,7 @@ const dslIndex = computed(() => String(objectedArgs.value['index'] ?? ''))
 const dslBody = computed(() => {
   const body = objectedArgs.value['body']
   if (!body) return '{}'
-  return tryFormatJson(typeof body === 'string' ? body : JSON.stringify(body))
+  return typeof body === 'string' ? tryFormatJson(body) : JSON.stringify(body, null, 2)
 })
 
 const dslMethod = computed(() => {
@@ -166,20 +223,54 @@ const dslResult = computed(() => {
   return tryFormatJson(props.content.data.result)
 })
 
-// ── 操作 ──
+// ── 执行请求 ──
 
-function handleExecute() {
+async function handleExecute() {
+  isExecuting.value = true
+  // 先通知父组件
   emit('execute', {
     index: dslIndex.value,
     body: objectedArgs.value['body'],
     method: dslMethod.value
   })
+
+  const startTime = performance.now()
+  try {
+    const response = await useEsRequestJson({
+      method: dslMethod.value as 'GET' | 'POST',
+      url: `/${encodeURIComponent(dslIndex.value)}/_search`,
+      data: objectedArgs.value['body']
+    })
+    const elapsed = Math.round(performance.now() - startTime)
+
+    props.content.data._executionTime = elapsed
+    props.content.data.result = JSON.stringify(response)
+    props.content.status = 'complete'
+  } catch (err: unknown) {
+    const elapsed = Math.round(performance.now() - startTime)
+    const msg = err instanceof Error ? err.message : String(err)
+    props.content.data._executionTime = elapsed
+    props.content.data.result = JSON.stringify({ error: msg }, null, 2)
+    props.content.status = 'error'
+  } finally {
+    isExecuting.value = false
+  }
 }
 
 function copyDslBody() {
   navigator.clipboard.writeText(dslBody.value).then(() => {
     MessageUtil.success('已复制请求体')
   })
+}
+
+function maximizeResult() {
+  showJson(`执行结果 - ${props.content.data.toolCallName}`, props.content.data.result ?? '')
+}
+
+function clearResult() {
+  props.content.data._executionTime = undefined
+  props.content.data.result = ''
+  props.content.status = undefined
 }
 </script>
 <style scoped lang="less">
@@ -273,28 +364,11 @@ function copyDslBody() {
 
 .dsl-field-value {
   position: relative;
-}
 
-.dsl-code-block {
-  margin: 0;
-  padding: var(--td-comp-paddingTB-m) var(--td-comp-paddingTB-l);
-  background: var(--td-bg-color-secondarycontainer);
-  border-radius: var(--td-radius-small);
-  border: 1px solid var(--td-component-border);
-  font: var(--td-font-body-small);
-  font-family: var(--td-font-family-mono, 'Cascadia Code', 'Fira Code', 'Consolas', monospace);
-  color: var(--td-text-color-primary);
-  white-space: pre-wrap;
-  word-break: break-all;
-  overflow-wrap: break-word;
-  line-height: 1.7;
-  max-height: 360px;
-  overflow: auto;
-  tab-size: 2;
-
-  &--result {
-    border-color: var(--td-success-color-3, #b8f0c5);
-    background: var(--td-success-color-1, #e8f8ef);
+  &--monaco {
+    border: 1px solid var(--td-component-border);
+    border-radius: var(--td-radius-small);
+    overflow: hidden;
   }
 }
 
@@ -305,6 +379,20 @@ function copyDslBody() {
   opacity: 0;
   transition: opacity 0.2s ease;
   color: var(--td-text-color-placeholder);
+  z-index: 10;
+}
+
+.clear-result-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.maximize-btn {
+  flex-shrink: 0;
+}
+
+.exec-time-tag {
+  flex-shrink: 0;
 }
 
 .dsl-field-value:hover .copy-btn {
@@ -325,12 +413,12 @@ function copyDslBody() {
     transform 0.15s ease,
     box-shadow 0.15s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: var(--td-shadow-1, 0 1px 4px rgba(0, 0, 0, 0.12));
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
   }
 }

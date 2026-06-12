@@ -1,6 +1,11 @@
 // 获取列表
 
-import { getFromOne, listByAsync, saveOneByAsync } from '@/utils/utools/DbStorageUtil'
+import {
+  getFromOne,
+  listByAsync,
+  removeOneByAsync,
+  saveOneByAsync
+} from '@/utils/utools/DbStorageUtil'
 import LocalNameEnum from '@/enumeration/LocalNameEnum'
 import { ChatItem, ChatRecord } from '@/entity/chat'
 import { debounce } from 'es-toolkit'
@@ -12,7 +17,7 @@ export const listChatRecords = async (id?: string | number) => {
 }
 
 export const addChatRecord = async (name: string, id: string | number) => {
-  const list = await listChatRecords()
+  const list = await listChatRecords(id)
   list.push({
     id: useSnowflake().nextId(),
     name,
@@ -20,6 +25,17 @@ export const addChatRecord = async (name: string, id: string | number) => {
     updateTime: Date.now()
   })
   await saveOneByAsync(LocalNameEnum.LIST_CHAT_RECORD(String(id)), list)
+}
+
+export const deleteChatRecord = async (id: string, urlId?: string | number) => {
+  const list = await listChatRecords(urlId)
+  list.splice(
+    list.findIndex((item) => item.id === id),
+    1
+  )
+  await saveOneByAsync(LocalNameEnum.LIST_CHAT_RECORD(String(urlId)), list)
+  // 删除对应的记录
+  await removeOneByAsync(LocalNameEnum.ITEM_CHAT_RECORD(id))
 }
 
 export const getChatRecordItem = async (id: string) => {

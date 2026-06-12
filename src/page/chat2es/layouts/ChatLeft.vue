@@ -11,7 +11,8 @@
       </div>
     </div>
     <div class="flex-1 overflow-auto">
-      <t-empty v-if="!records.length" title="空空如也" class="mt-25vh" />
+      <t-empty v-if="disabled" title="请先选择一个链接" class="mt-25vh" />
+      <t-empty v-else-if="!records.length" title="空空如也" class="mt-25vh" />
       <div class="chat-records">
         <div
           v-for="(record, index) in records"
@@ -64,6 +65,8 @@ const handleClick = (record: ChatRecord): void => {
 <style scoped lang="less">
 .chat-records {
   padding-top: 8px;
+  display: flex;
+  flex-direction: column-reverse;
 }
 .chat-record {
   display: flex;
