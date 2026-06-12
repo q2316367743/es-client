@@ -1,22 +1,25 @@
 <template>
-  <t-aside :collapsed="collapsed" :width="collapsed ? '64px' : '232px'"
-           style="border-right: 1px solid var(--td-border-level-1-color)">
+  <t-aside
+    :collapsed="collapsed"
+    :width="collapsed ? '64px' : '232px'"
+    style="border-right: 1px solid var(--td-border-level-1-color)"
+  >
     <t-menu :collapsed="collapsed" v-model="selectedKeys">
       <t-menu-item :value="PageNameEnum.HOME">
         <template #icon>
-          <home-icon/>
+          <home-icon />
         </template>
         {{ $t('menu.home') }}
       </t-menu-item>
       <t-menu-item :value="PageNameEnum.DATA_BROWSE">
         <template #icon>
-          <table2-icon/>
+          <table2-icon />
         </template>
         {{ $t('menu.data_browser') }}
       </t-menu-item>
       <t-menu-item :value="PageNameEnum.BASE_SEARCH">
         <template #icon>
-          <search-icon/>
+          <search-icon />
         </template>
         {{ $t('menu.base_search') }}
       </t-menu-item>
@@ -34,7 +37,7 @@
       </t-menu-item>
       <t-submenu :value="PageNameEnum.DASHBOARD">
         <template #icon>
-          <dashboard-icon/>
+          <dashboard-icon />
         </template>
         <template #title>{{ $t('menu.dashboard') }}</template>
         <t-menu-item :value="PageNameEnum.DASHBOARD_INFO">
@@ -55,7 +58,7 @@
       </t-submenu>
       <t-submenu :value="PageNameEnum.SETTING">
         <template #icon>
-          <setting-icon/>
+          <setting-icon />
         </template>
         <template #title>{{ $t('menu.setting') }}</template>
         <t-menu-item :value="PageNameEnum.SETTING_GLOBAL">
@@ -64,10 +67,13 @@
         <t-menu-item :value="PageNameEnum.SETTING_LINK">
           {{ $t('menu.setting_link') }}
         </t-menu-item>
+        <t-menu-item :value="PageNameEnum.SETTING_AI">
+          {{ $t('menu.setting_ai') }}
+        </t-menu-item>
       </t-submenu>
       <t-submenu :value="PageNameEnum.MORE">
         <template #icon>
-          <ellipsis-icon/>
+          <ellipsis-icon />
         </template>
         <template #title>{{ $t('menu.more') }}</template>
         <t-menu-item :value="PageNameEnum.MORE_UPDATE">
@@ -83,7 +89,7 @@
       <template #operations>
         <t-button variant="text" shape="square" @click="changeCollapsed()">
           <template #icon>
-            <view-list-icon/>
+            <view-list-icon />
           </template>
         </t-button>
       </template>
@@ -91,8 +97,8 @@
   </t-aside>
 </template>
 <script lang="ts" setup>
-import PageNameEnum from "@/enumeration/PageNameEnum";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import PageNameEnum from '@/enumeration/PageNameEnum'
+import LocalNameEnum from '@/enumeration/LocalNameEnum'
 import {
   ChatBubbleIcon,
   CodeIcon,
@@ -104,20 +110,20 @@ import {
   SettingIcon,
   Table2Icon,
   ViewListIcon
-} from "tdesign-icons-vue-next";
+} from 'tdesign-icons-vue-next'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const collapsed = useLocalStorage(LocalNameEnum.KEY_COLLAPSED, true);
-const selectedKeys = ref<PageNameEnum>(PageNameEnum.HOME);
+const collapsed = useLocalStorage(LocalNameEnum.KEY_COLLAPSED, true)
+const selectedKeys = ref<PageNameEnum>(PageNameEnum.HOME)
 
 const changeCollapsed = useToggle(collapsed)
 
-watch(selectedKeys, value => router.push(value));
-watch(() => route.path, value => selectedKeys.value = value as PageNameEnum);
-
+watch(selectedKeys, (value) => router.push(value))
+watch(
+  () => route.path,
+  (value) => (selectedKeys.value = value as PageNameEnum)
+)
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

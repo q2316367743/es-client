@@ -39,10 +39,10 @@
 <script lang="ts" setup>
 import { ChatSender } from '@tdesign-vue-next/chat'
 import { SystemSumIcon } from 'tdesign-icons-vue-next'
-import { useBoolState, useChat, useUtoolsKvStorage, type ToolFunction } from '@/hooks'
-import { useAiProvideStore } from '@/store/setting/AiProvideStore'
-import MessageUtil from '@/utils/modal/MessageUtil'
-import DbKeyEnum from '@/enumeration/DbKeyEnum'
+import { useBoolState, useChat, type ToolFunction } from '@/hooks'
+import { useAiProvideStore } from '@/store'
+import MessageUtil from '@/utils/model/MessageUtil'
+import LocalNameEnum from '@/enumeration/LocalNameEnum'
 
 const props = withDefaults(
   defineProps<{
@@ -59,7 +59,7 @@ const props = withDefaults(
 const [think, toggleThink] = useBoolState(false)
 
 const inputValue = ref('')
-const modelValue = useUtoolsKvStorage(DbKeyEnum.PAGE_SOURCE_SUBSCRIBE_MODEL, '')
+const modelValue = useLocalStorage(LocalNameEnum.PAGE_CHAT_MODEL, '')
 
 const options = computed(() => useAiProvideStore().options)
 
@@ -105,7 +105,7 @@ const handleClear = () => {
 let unWatch: (() => void) | null = null
 
 onMounted(async () => {
-  const c = localStorage.getItem(DbKeyEnum.ITEM_SOURCE_AI(props.chatId))
+  const c = localStorage.getItem(LocalNameEnum.ITEM_SOURCE_AI(props.chatId))
   if (c) {
     const parsed = JSON.parse(c)
     init(
@@ -127,7 +127,7 @@ onMounted(async () => {
     messages,
     async (val) => {
       localStorage.setItem(
-        DbKeyEnum.ITEM_SOURCE_AI(props.chatId),
+        LocalNameEnum.ITEM_SOURCE_AI(props.chatId),
         JSON.stringify({ messages: val })
       )
     },

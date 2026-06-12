@@ -1,53 +1,51 @@
 enum PageNameEnum {
+  HOME = '/home',
 
-    HOME = "/home",
+  DATA_BROWSE = '/data-browse',
 
-    DATA_BROWSE = "/data-browse",
+  BASE_SEARCH = '/base-search',
 
-    BASE_SEARCH = "/base-search",
+  SENIOR_SEARCH = '/senior-search',
 
-    SENIOR_SEARCH = "/senior-search",
+  DEV_TOOL = '/dev-tool',
 
-    DEV_TOOL = "/dev-tool",
+  CHAT2ES = '/chat2es',
 
-    CHAT2ES = "/chat2es",
+  TOOL = '/tool',
 
-    TOOL = "/tool",
+  TOOL_WATCH = '/tool/watch',
 
-    TOOL_WATCH = "/tool/watch",
+  TOOL_SQL = '/tool/sql',
 
-    TOOL_SQL = "/tool/sql",
+  DASHBOARD = '/dashboard',
 
+  DASHBOARD_INFO = '/dashboard/info',
 
-    DASHBOARD = '/dashboard',
+  DASHBOARD_NODE = '/dashboard/node',
 
-    DASHBOARD_INFO = '/dashboard/info',
+  DASHBOARD_SHARD_AND_REPLICA = '/dashboard/shard-and-replica',
 
-    DASHBOARD_NODE = '/dashboard/node',
+  DASHBOARD_CAT = '/dashboard/cat',
 
-    DASHBOARD_SHARD_AND_REPLICA = '/dashboard/shard-and-replica',
+  DASHBOARD_ANALYSIS = '/dashboard/analysis',
 
-    DASHBOARD_CAT = '/dashboard/cat',
+  SETTING = '/setting',
 
-    DASHBOARD_ANALYSIS = '/dashboard/analysis',
+  SETTING_GLOBAL = '/setting/global',
 
-    SETTING = "/setting",
+  SETTING_LINK = '/setting/link',
 
-    SETTING_GLOBAL = "/setting/global",
+  SETTING_AI = '/setting/ai',
 
-    SETTING_LINK = "/setting/link",
+  SETTING_SENIOR_FILTER_RECORD = '/setting/senior-filter-record',
 
+  MORE = '/more',
 
-    SETTING_SENIOR_FILTER_RECORD = "/setting/senior-filter-record",
+  MORE_UPDATE = '/more/update',
 
-    MORE = "/more",
+  MORE_PRIVACY = '/more/privacy',
 
-    MORE_UPDATE = "/more/update",
-
-    MORE_PRIVACY = "/more/privacy",
-
-    MORE_ABOUT = "/more/about"
-
+  MORE_ABOUT = '/more/about'
 }
 
 export default PageNameEnum;

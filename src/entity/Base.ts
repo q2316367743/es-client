@@ -2,21 +2,18 @@
  * 基础字段
  */
 export default interface Base {
-
   /**
    * ID
    */
-  id: number;
+  id: string
 
   /**
    * 创建时间
    */
-  createTime: Date | string | number;
+  createTime: Date | string | number
 
   /**
    * 更新时间
    */
-  updateTime: Date | string | number;
-
-
+  updateTime: Date | string | number
 }

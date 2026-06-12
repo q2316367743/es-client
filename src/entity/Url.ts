@@ -1,64 +1,65 @@
-import Base from "@/entity/Base";
-import UrlAuthTypeEnum from "@/enumeration/UrlAuthTypeEnum";
+import Base from '@/entity/Base'
+import UrlAuthTypeEnum from '@/enumeration/UrlAuthTypeEnum'
 
 export interface Url extends Base {
-
   /**
    * 链接名称
    */
-  name: string;
+  name: string
 
   /**
    * 链接值
    */
-  value: string;
+  value: string
 
   /**
    * 排序
    */
-  sequence: number;
+  sequence: number
   /**
    * 是否需要认证
    */
-  isAuth: boolean;
+  isAuth: boolean
 
   /**
    * 认证类型那个，默认Basic认证
    */
-  authType: UrlAuthTypeEnum;
+  authType: UrlAuthTypeEnum
 
   /**
    * 用户名
    */
-  authUser: string;
+  authUser: string
 
   /**
    * 密码
    */
-  authPassword: string;
+  authPassword: string
 
   /**
    * 版本信息
    */
-  version: string;
+  version: string
 
-  platform: "elasticsearch" | "opensearch" | "easysearch"
-
+  platform: 'elasticsearch' | 'opensearch' | 'easysearch'
 }
 
 export function getDefaultUrl(source?: Partial<Url>): Url {
-  return Object.assign<Url, Partial<Url>>({
-    id: 0,
-    version: '',
-    updateTime: new Date(),
-    createTime: new Date(),
-    name: '',
-    value: 'http://',
-    sequence: 0,
-    isAuth: false,
-    authType: UrlAuthTypeEnum.BASIC as UrlAuthTypeEnum,
-    authUser: '',
-    authPassword: '',
-    platform: "elasticsearch"
-  }, source || {});
+  return Object.assign<Url, Partial<Url>>(
+    {
+      id: 0,
+      version: '',
+      updateTime: new Date(),
+      createTime: new Date(),
+      name: '',
+      value: 'http://',
+      sequence: 0,
+      isAuth: false,
+      authType: UrlAuthTypeEnum.BASIC as UrlAuthTypeEnum,
+      authUser: '',
+      authPassword: '',
+      platform: 'elasticsearch'
+    },
+    source || {}
+  )
 }

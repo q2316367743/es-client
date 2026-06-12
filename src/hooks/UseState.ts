@@ -1,13 +1,26 @@
-import type { Ref } from "vue";
+import { Ref } from 'vue'
 
-type UseStateReturn<T> = [state: Ref<T>, setState: (newState: T) => void];
+export const useState = <T>(initial: T): [Ref<T>, (v: T) => void] => {
+  const data = ref<T>(initial) as Ref<T>
 
-export const useState = <T = any>(initialState: T): UseStateReturn<T> => {
-  const state = ref<T>(initialState) as Ref<T>;
   return [
-    state,
-    (newState: T) => {
-      state.value = newState;
+    data,
+    (v: T) => {
+      data.value = v
     }
-  ] as const;
-};
+  ]
+}
+
+export const useBoolState = (initial: boolean, key?: string): [Ref<boolean>, () => void] => {
+  const [data, setData] = useState(initial)
+  if (key) {
+    watch(data, (v) => localStorage.setItem(key, JSON.stringify({ value: v })))
+    data.value = JSON.parse(localStorage.getItem(key) || '{}').value
+  }
+  return [
+    data,
+    () => {
+      setData(!data.value)
+    }
+  ]
+}

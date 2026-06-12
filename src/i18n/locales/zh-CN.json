@@ -218,7 +218,8 @@
     "senior_search": "高级搜索",
     "setting": "设置",
     "setting_global": "全局设置",
-    "setting_link": "链接管理"
+    "setting_link": "链接管理",
+    "setting_ai": "AI 管理"
   },
   "message": {
     "confirm_delete_alias": "此操作将永久删除该别名, 是否继续?",
