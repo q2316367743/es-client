@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center">
       <div>CHAT2ES</div>
       <div class="flex gap-8px">
-        <t-button theme="primary" variant="text" shape="circle" @click="$emit('add')">
+        <t-button theme="primary" variant="text" shape="circle" :disabled @click="$emit('add')">
           <template #icon>
             <chat-bubble-add-icon />
           </template>
@@ -37,6 +37,7 @@
 <script lang="ts" setup>
 import { ChatBubbleAddIcon, DeleteIcon } from 'tdesign-icons-vue-next'
 import { ChatRecord } from '@/entity/chat'
+import { useUrlStore } from '@/store'
 
 const active = defineModel({
   type: String,
@@ -49,6 +50,8 @@ defineProps({
   }
 })
 const emit = defineEmits(['add', 'remove'])
+
+const disabled = computed(() => !useUrlStore().id)
 
 const handleClick = (record: ChatRecord): void => {
   if (active.value === record.id) {

@@ -62,12 +62,18 @@ export type ChatMessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 
 export type ChatStatus = 'idle' | ChatMessageStatus
 export type ChatMessageSetterMode = 'replace' | 'prepend' | 'append'
 
+interface ToolFunctionProperty {
+  type: string
+  description: string
+  enum?: Array<string>
+}
+
 export interface ToolFunction {
   name: string
   description: string
   parameters: {
     type: 'object'
-    properties: Record<string, { type: string; description: string }>
+    properties: Record<string, ToolFunctionProperty>
     required?: Array<string>
     additionalProperties?: boolean
   }

@@ -19,6 +19,7 @@ import { addChatRecord, listChatRecords } from '@/api'
 import MessageUtil from '@/utils/model/MessageUtil'
 import { toDateString } from '@/utils/lang'
 import MessageBoxUtil from '@/utils/model/MessageBoxUtil'
+import { useUrlStore } from '@/store'
 
 defineOptions({
   name: 'Chat2ES'
@@ -30,16 +31,18 @@ const active = useSessionStorage(LocalNameEnum.PAGE_CHAT2ES_ACTIVE, '')
 const records = ref<Array<ChatRecord>>([])
 
 const init = () => {
-  listChatRecords()
+  listChatRecords(useUrlStore().id)
     .then((res) => (records.value = res))
     .catch((e) => MessageUtil.error('获取记录失败', e))
 }
 
 const handleAdd = () => {
+  const { id } = useUrlStore()
+  if (!id) return MessageUtil.error('请先选择一个连接')
   MessageBoxUtil.prompt('请输入记录名称', '添加记录', {
     inputValue: toDateString(Date.now())
   }).then((name) => {
-    addChatRecord(name)
+    addChatRecord(name, id)
       .then(() => {
         MessageUtil.success('添加记录成功')
         init()
@@ -48,6 +51,13 @@ const handleAdd = () => {
   })
 }
 
+watch(
+  () => useUrlStore().id,
+  () => {
+    init()
+    active.value = ''
+  }
+)
 onMounted(init)
 </script>
 <style scoped lang="less"></style>

@@ -296,7 +296,7 @@ async function handleSave() {
       name: form.name,
       baseUrl: form.baseUrl,
       key: form.key,
-      models: form.models
+      models: toRaw(form.models)
     })
     // 新增完成后，选中刚刚保存的项，退出创建模式
     if (isCreating.value) {

@@ -110,7 +110,7 @@ const LocalNameEnum = {
    */
   LIST_SETTING_AI_PROVIDE: '/list/setting/ai-provide',
 
-  LIST_CHAT_RECORD: '/list/chat/record',
+  LIST_CHAT_RECORD: (id: string) => `/list/chat/record/${id}`,
 
   ITEM_CHAT_RECORD: (id: string)=>`/item/chat/record/${id}`,
 

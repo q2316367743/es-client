@@ -6,12 +6,12 @@ import { ChatItem, ChatRecord } from '@/entity/chat'
 import { debounce } from 'es-toolkit'
 import { useSnowflake } from '$/util'
 
-export const listChatRecords = async () => {
-  const { list } = await listByAsync<ChatRecord>(LocalNameEnum.LIST_CHAT_RECORD)
+export const listChatRecords = async (id?: string | number) => {
+  const { list } = await listByAsync<ChatRecord>(LocalNameEnum.LIST_CHAT_RECORD(String(id || '')))
   return list
 }
 
-export const addChatRecord = async (name: string) => {
+export const addChatRecord = async (name: string, id: string | number) => {
   const list = await listChatRecords()
   list.push({
     id: useSnowflake().nextId(),
@@ -19,7 +19,7 @@ export const addChatRecord = async (name: string) => {
     createTime: Date.now(),
     updateTime: Date.now()
   })
-  await saveOneByAsync(LocalNameEnum.LIST_CHAT_RECORD, list)
+  await saveOneByAsync(LocalNameEnum.LIST_CHAT_RECORD(String(id)), list)
 }
 
 export const getChatRecordItem = async (id: string) => {

@@ -204,7 +204,7 @@ function setMode(m: 'light' | 'dark' | 'auto') {
 
 async function selectUrl(value: any) {
   // 清空链接
-  if (value === '') {
+  if (value === '' || !value) {
     // 清空链接选择
     useUrlStore().clear()
     // 清空索引信息
