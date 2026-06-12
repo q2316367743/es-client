@@ -44,6 +44,7 @@ import { useAiProvideStore } from '@/store'
 import MessageUtil from '@/utils/model/MessageUtil'
 import LocalNameEnum from '@/enumeration/LocalNameEnum'
 import { getChatRecordItem, saveChatRecordItem } from '@/api'
+import { cloneDeep } from 'es-toolkit'
 
 const props = withDefaults(
   defineProps<{
@@ -124,7 +125,7 @@ onMounted(async () => {
   unWatch = watchDebounced(
     messages,
     async (val) => {
-      return saveChatRecordItem(props.chatId, { messages: val })
+      return saveChatRecordItem(props.chatId, { messages: cloneDeep(val) })
     },
     { debounce: 600, deep: true }
   )

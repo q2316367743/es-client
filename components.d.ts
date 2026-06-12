@@ -13,9 +13,12 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActiveExtend: typeof import('./src/components/AppExtend/ActiveExtend.vue')['default']
+    AggsDslToolCard: typeof import('./src/components/chat/tools/AggsDslToolCard.vue')['default']
     AlertExtend: typeof import('./src/components/AppExtend/AlertExtend.vue')['default']
     Apache2_0: typeof import('./src/components/License/Apache2_0.vue')['default']
     AppLink: typeof import('./src/components/AppLink/AppLink.vue')['default']
+    DefaultToolCard: typeof import('./src/components/chat/tools/DefaultToolCard.vue')['default']
+    DslToolCard: typeof import('./src/components/chat/tools/DslToolCard.vue')['default']
     EmptyResult: typeof import('./src/components/Result/EmptyResult.vue')['default']
     ErrorResult: typeof import('./src/components/Result/ErrorResult.vue')['default']
     LinkExtend: typeof import('./src/components/AppExtend/LinkExtend.vue')['default']
@@ -31,6 +34,7 @@ declare module 'vue' {
     RestEditor: typeof import('./src/components/RestClientEditor/RestEditor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchDslToolCard: typeof import('./src/components/chat/tools/SearchDslToolCard.vue')['default']
     SplitPanel: typeof import('./src/components/SplitPanel/SplitPanel.vue')['default']
     SqlEditor: typeof import('./src/components/SqlEditor/SqlEditor.vue')['default']
     SubPageLayout: typeof import('./src/components/PageLayout/SubPageLayout.vue')['default']
@@ -110,9 +114,12 @@ declare module 'vue' {
 // For TSX support
 declare global {
   const ActiveExtend: typeof import('./src/components/AppExtend/ActiveExtend.vue')['default']
+  const AggsDslToolCard: typeof import('./src/components/chat/tools/AggsDslToolCard.vue')['default']
   const AlertExtend: typeof import('./src/components/AppExtend/AlertExtend.vue')['default']
   const Apache2_0: typeof import('./src/components/License/Apache2_0.vue')['default']
   const AppLink: typeof import('./src/components/AppLink/AppLink.vue')['default']
+  const DefaultToolCard: typeof import('./src/components/chat/tools/DefaultToolCard.vue')['default']
+  const DslToolCard: typeof import('./src/components/chat/tools/DslToolCard.vue')['default']
   const EmptyResult: typeof import('./src/components/Result/EmptyResult.vue')['default']
   const ErrorResult: typeof import('./src/components/Result/ErrorResult.vue')['default']
   const LinkExtend: typeof import('./src/components/AppExtend/LinkExtend.vue')['default']
@@ -128,6 +135,7 @@ declare global {
   const RestEditor: typeof import('./src/components/RestClientEditor/RestEditor.vue')['default']
   const RouterLink: typeof import('vue-router')['RouterLink']
   const RouterView: typeof import('vue-router')['RouterView']
+  const SearchDslToolCard: typeof import('./src/components/chat/tools/SearchDslToolCard.vue')['default']
   const SplitPanel: typeof import('./src/components/SplitPanel/SplitPanel.vue')['default']
   const SqlEditor: typeof import('./src/components/SqlEditor/SqlEditor.vue')['default']
   const SubPageLayout: typeof import('./src/components/PageLayout/SubPageLayout.vue')['default']

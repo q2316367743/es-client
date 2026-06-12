@@ -53,6 +53,7 @@ const tabs = computed(() => {
 
 watch(active, (val) => {
   if (!val) return
+  if (ids.value.includes(val)) return
   ids.value.push(val)
 })
 
