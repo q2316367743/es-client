@@ -1,13 +1,12 @@
-import * as monaco from "monaco-editor";
-import { startWith } from "@/utils/ArrayUtil";
-import StrUtil from "@/utils/StrUtil";
-import { optionsForGet, optionsForPost, signs, supportMethods } from "@/data/EsUrl";
-import {useIndexStore} from "@/store";
+import * as monaco from 'monaco-editor'
+import { startWith, StrUtil } from '@/utils/lang'
+import { optionsForGet, optionsForPost, signs, supportMethods } from '@/data/EsUrl'
+import { useIndexStore } from '@/store'
 
 // 附加操作
 
 function getMethodSuggestions(position: monaco.Position): monaco.languages.CompletionItem[] {
-  const suggestions = new Array<monaco.languages.CompletionItem>();
+  const suggestions = new Array<monaco.languages.CompletionItem>()
   for (const method of supportMethods) {
     suggestions.push({
       label: method,
@@ -21,13 +20,13 @@ function getMethodSuggestions(position: monaco.Position): monaco.languages.Compl
         endLineNumber: position.lineNumber,
         endColumn: -1
       }
-    });
+    })
   }
-  return suggestions;
+  return suggestions
 }
 
 function getBaseUrlSuggestions(position: monaco.Position): monaco.languages.CompletionItem[] {
-  const suggestions = new Array<monaco.languages.CompletionItem>();
+  const suggestions = new Array<monaco.languages.CompletionItem>()
   for (const sign of signs) {
     suggestions.push({
       label: sign,
@@ -41,17 +40,17 @@ function getBaseUrlSuggestions(position: monaco.Position): monaco.languages.Comp
         endLineNumber: position.lineNumber,
         endColumn: -1
       }
-    });
+    })
   }
-  return suggestions;
+  return suggestions
 }
 
 function getMethodUrlSuggestions(
   position: monaco.Position
 ): Map<string, Array<monaco.languages.CompletionItem>> {
-  const map = new Map<string, Array<monaco.languages.CompletionItem>>();
-  const getList = new Array<monaco.languages.CompletionItem>();
-  const postList = new Array<monaco.languages.CompletionItem>();
+  const map = new Map<string, Array<monaco.languages.CompletionItem>>()
+  const getList = new Array<monaco.languages.CompletionItem>()
+  const postList = new Array<monaco.languages.CompletionItem>()
   useIndexStore().list.forEach((index) =>
     [...index.alias, index.name].forEach((item) => {
       optionsForGet.forEach((option) =>
@@ -68,25 +67,25 @@ function getMethodUrlSuggestions(
             endColumn: -1
           }
         })
-      );
+      )
       optionsForPost.forEach((option) => {
-        let insertText = `/${item}/${option}`;
-        if (option === "_search") {
+        let insertText = `/${item}/${option}`
+        if (option === '_search') {
           insertText +=
-            "\n" +
-            "{\n" +
+            '\n' +
+            '{\n' +
             '    "sort": {},\n' +
             '    "query": {\n' +
             '        "bool": {\n' +
             '            "must": [],\n' +
             '            "should": [],\n' +
             '            "must_not": []\n' +
-            "        }\n" +
-            "    },\n" +
+            '        }\n' +
+            '    },\n' +
             '    "aggs": {},\n' +
             '    "from": 0,\n' +
             '    "size": 20\n' +
-            "}";
+            '}'
         }
         postList.push({
           label: `/${item}/${option}`,
@@ -100,13 +99,13 @@ function getMethodUrlSuggestions(
             endLineNumber: position.lineNumber,
             endColumn: -1
           }
-        });
-      });
+        })
+      })
     })
-  );
-  map.set("get", getList);
-  map.set("post", postList);
-  return map;
+  )
+  map.set('get', getList)
+  map.set('post', postList)
+  return map
 }
 
 /**
@@ -117,65 +116,65 @@ const provider = {
     model: monaco.editor.ITextModel,
     position: monaco.Position
   ): Promise<monaco.languages.ProviderResult<monaco.languages.CompletionList>> {
-    const suggestions = new Array<monaco.languages.CompletionItem>();
+    const suggestions = new Array<monaco.languages.CompletionItem>()
     const token = model.getValueInRange({
       startLineNumber: position.lineNumber,
       startColumn: 0,
       endLineNumber: position.lineNumber,
       endColumn: position.column + 1
-    });
+    })
     // 需要获取连续的代码块
     if (startWith(supportMethods, token, true)) {
       // 请求方法提示
-      getMethodSuggestions(position).forEach((e) => suggestions.push(e));
+      getMethodSuggestions(position).forEach((e) => suggestions.push(e))
     } else if (StrUtil.startWithArr(token, supportMethods)) {
       // 基础请求路径提示
-      getBaseUrlSuggestions(position).forEach((e) => suggestions.push(e));
-      const items = StrUtil.splitAll(token, " ");
+      getBaseUrlSuggestions(position).forEach((e) => suggestions.push(e))
+      const items = StrUtil.splitAll(token, ' ')
       if (items.length > 0) {
-        const completionItems = getMethodUrlSuggestions(position).get(items[0].toLowerCase());
+        const completionItems = getMethodUrlSuggestions(position).get(items[0].toLowerCase())
         if (completionItems) {
-          completionItems.forEach((e) => suggestions.push(e));
+          completionItems.forEach((e) => suggestions.push(e))
         }
       }
     }
-    return { suggestions };
+    return { suggestions }
   },
   triggerCharacters: [
-    "{",
-    "/",
+    '{',
+    '/',
     '"',
     // 26个字母
-    "q",
-    "a",
-    "z",
-    "w",
-    "s",
-    "x",
-    "e",
-    "d",
-    "c",
-    "r",
-    "f",
-    "v",
-    "t",
-    "g",
-    "b",
-    "y",
-    "h",
-    "n",
-    "u",
-    "j",
-    "m",
-    "i",
-    "k",
-    "o",
-    "l",
-    "p"
+    'q',
+    'a',
+    'z',
+    'w',
+    's',
+    'x',
+    'e',
+    'd',
+    'c',
+    'r',
+    'f',
+    'v',
+    't',
+    'g',
+    'b',
+    'y',
+    'h',
+    'n',
+    'u',
+    'j',
+    'm',
+    'i',
+    'k',
+    'o',
+    'l',
+    'p'
   ]
-} as monaco.languages.CompletionItemProvider;
+} as monaco.languages.CompletionItemProvider
 
-export default provider;
+export default provider
 
 /**
  * 规定语法：

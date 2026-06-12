@@ -11,3 +11,9 @@ interface ImportMetaEnv {
   VITE_REFERRER: string;
   VITE_HOMENAME: string;
 }
+declare module '@json2csv/plainjs' {
+  export class Parser {
+    constructor(opts: { delimiter?: string })
+    parse(data: Array<Record<string, any>>): string
+  }
+}
