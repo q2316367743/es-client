@@ -110,6 +110,10 @@ const LocalNameEnum = {
    */
   LIST_SETTING_AI_PROVIDE: '/list/setting/ai-provide',
 
+  LIST_CHAT_RECORD: '/list/chat/record',
+
+  ITEM_CHAT_RECORD: (id: string)=>`/item/chat/record/${id}`,
+
   /**
    * 页面 - 数据浏览 - 大小
    * /page/data-browser/size
@@ -121,6 +125,8 @@ const LocalNameEnum = {
    * /page/senior-search/size
    */
   PAGE_SENIOR_SEARCH_SIZE: '/page/senior-search/size',
+
+  PAGE_CHAT2ES_ACTIVE: '/page/chat2es/active',
 
   /**
    * 页面 - 高级查询 - 大小

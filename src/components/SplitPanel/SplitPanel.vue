@@ -17,7 +17,9 @@
   </div>
   </template>
 <script setup lang="ts">
+
 const model = defineModel<number>({ default: 240 })
+
 const props = defineProps<{ dividerWidth?: number }>()
 const dividerW = computed(() => props.dividerWidth ?? 8)
 const containerRef = ref<HTMLElement | null>(null)
@@ -45,13 +47,16 @@ function clamp() {
 }
 
 function updateContainerWidth() {
-  if (containerRef.value) {
+  if (isVisible && containerRef.value) {
     containerWidth.value = containerRef.value.clientWidth
+    // 当容器被 display: none 隐藏时 clientWidth 为 0，跳过不更新 model
+    if (containerWidth.value === 0) return
     clamp()
   }
 }
 
 let ro: ResizeObserver | null = null
+let isVisible = true
 
 onMounted(() => {
   updateContainerWidth()
@@ -60,6 +65,15 @@ onMounted(() => {
     ro.observe(containerRef.value)
   }
   window.addEventListener('resize', updateContainerWidth)
+})
+
+onActivated(() => {
+  isVisible = true
+  updateContainerWidth()
+})
+
+onDeactivated(() => {
+  isVisible = false
 })
 
 onBeforeUnmount(() => {

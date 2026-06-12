@@ -43,6 +43,7 @@ import { useBoolState, useChat, type ToolFunction } from '@/hooks'
 import { useAiProvideStore } from '@/store'
 import MessageUtil from '@/utils/model/MessageUtil'
 import LocalNameEnum from '@/enumeration/LocalNameEnum'
+import { getChatRecordItem, saveChatRecordItem } from '@/api'
 
 const props = withDefaults(
   defineProps<{
@@ -105,17 +106,14 @@ const handleClear = () => {
 let unWatch: (() => void) | null = null
 
 onMounted(async () => {
-  const c = localStorage.getItem(LocalNameEnum.ITEM_SOURCE_AI(props.chatId))
-  if (c) {
-    const parsed = JSON.parse(c)
-    init(
-      {
-        baseURL: '',
-        apiKey: ''
-      },
-      parsed.messages ?? parsed.message
-    )
-  }
+  const c = await getChatRecordItem(props.chatId)
+  init(
+    {
+      baseURL: '',
+      apiKey: ''
+    },
+    c.messages
+  )
 
   // 如果第一次，则需要注入系统提示词
   if (messages.value.length === 0) {
@@ -126,10 +124,7 @@ onMounted(async () => {
   unWatch = watchDebounced(
     messages,
     async (val) => {
-      localStorage.setItem(
-        LocalNameEnum.ITEM_SOURCE_AI(props.chatId),
-        JSON.stringify({ messages: val })
-      )
+      return saveChatRecordItem(props.chatId, { messages: val })
     },
     { debounce: 600, deep: true }
   )

@@ -1,10 +1,65 @@
 <template>
-  <div class="abs-8 !left-0 material-card">
-    右侧
+  <div class="abs-8 !left-0 material-card px-8px">
+    <empty-result v-if="!tabs.length" title="请在左侧创建对话" />
+    <template v-else>
+      <TabChrome
+        v-model="active"
+        :tabs="tabs"
+        :class="[{ 'theme-dark': isDark }, 'my-8px']"
+        @remove="handleRemove"
+      />
+      <div>
+        <r-chat-assistant
+          v-for="chatId in ids"
+          v-show="active === chatId"
+          :key="chatId"
+          :chat-id="chatId"
+          :functions="[]"
+          system-prompt=""
+          height="calc(100vh - 116px)"
+        />
+      </div>
+    </template>
   </div>
 </template>
 <script lang="ts" setup>
-</script>
-<style scoped lang="less">
+import { useGlobalStore } from '@/store'
+import { ChatRecord } from '@/entity/chat'
+import { SelectOption } from '$/shared/common'
 
-</style>
+const active = defineModel({
+  type: String,
+  default: ''
+})
+const props = defineProps({
+  records: {
+    type: Array as PropType<Array<ChatRecord>>,
+    default: () => []
+  }
+})
+
+const ids = ref<Array<string>>([])
+
+const isDark = computed(() => useGlobalStore().isDark)
+const tabs = computed(() => {
+  return props.records
+    .filter((e) => ids.value.includes(e.id))
+    .map((e) => ({
+      value: e.id,
+      label: e.name
+    }))
+})
+
+watch(active, (val) => {
+  if (!val) return
+  ids.value.push(val)
+})
+
+const handleRemove = (val: SelectOption) => {
+  ids.value = ids.value.filter((e) => e !== val.value)
+  if (val.value === active.value) {
+    active.value = ''
+  }
+}
+</script>
+<style scoped lang="less"></style>
