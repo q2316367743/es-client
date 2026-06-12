@@ -1,7 +1,7 @@
 import Base from '@/entity/Base'
 import UrlAuthTypeEnum from '@/enumeration/UrlAuthTypeEnum'
 
-export interface Url extends Base {
+export interface UrlForm {
   /**
    * 链接名称
    */
@@ -44,13 +44,12 @@ export interface Url extends Base {
   platform: 'elasticsearch' | 'opensearch' | 'easysearch'
 }
 
-export function getDefaultUrl(source?: Partial<Url>): Url {
-  return Object.assign<Url, Partial<Url>>(
+export interface Url extends Base, UrlForm {}
+
+export function getDefaultUrl(source?: Partial<UrlForm>): UrlForm {
+  return Object.assign<UrlForm, Partial<UrlForm>>(
     {
-      id: 0,
       version: '',
-      updateTime: new Date(),
-      createTime: new Date(),
       name: '',
       value: 'http://',
       sequence: 0,

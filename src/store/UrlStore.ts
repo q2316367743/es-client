@@ -14,6 +14,7 @@ import { Overview } from '@/domain/es/Overview'
 import { createElasticsearchClient, ElasticsearchClient } from '$/elasticsearch-client'
 import { clearDataBrowserQuery } from '@/api/DataBrowser/DataBrwoserQueryService'
 import { clearDataBrowserViews } from '@/api/DataBrowser/DataBrowserViewService'
+import { useSnowflake } from '$/util'
 
 const title = useTitle()
 
@@ -60,9 +61,9 @@ export const useUrlStore = defineStore('url', () => {
     .then(() => console.log('url 初始化成功'))
     .catch((e) => console.log('url 初始化失败', e))
 
-  const choose = (id: number): boolean => {
+  const choose = (id: string): boolean => {
     // 查询URL
-    const targetUrl = urls.value.find((e) => e.id! === id)
+    const targetUrl = urls.value.find((e) => String(e.id) === String(id))
     if (!targetUrl) {
       return false
     }
@@ -93,8 +94,8 @@ export const useUrlStore = defineStore('url', () => {
   }
 
   const add = async (record: Omit<Url, 'id' | 'createTime' | 'updateTime'>) => {
-    const now = new Date()
-    const id = now.getTime()
+    const now = Date.now()
+    const id = useSnowflake().nextId()
     // 获取版本
     const response = await useRequestJson<Overview>('/', buildRequestConfig(record))
 
@@ -109,13 +110,12 @@ export const useUrlStore = defineStore('url', () => {
   }
 
   const addByBatch = async (records: Array<Omit<Url, 'id' | 'createTime' | 'updateTime'>>) => {
-    const now = new Date()
-    const id = now.getTime()
+    const now = Date.now()
     for (let i = 0; i < records.length; i++) {
       const record = records[i]
       urls.value.push({
         ...record,
-        id: id + i,
+        id: useSnowflake().nextId(),
         createTime: now,
         updateTime: now
       })
@@ -123,8 +123,8 @@ export const useUrlStore = defineStore('url', () => {
     await _sync()
   }
 
-  const update = async (id: number, record: Partial<Url>) => {
-    const index = urls.value.findIndex((e) => e.id === id)
+  const update = async (id: string, record: Partial<Url>) => {
+    const index = urls.value.findIndex((e) => String(e.id) === String(id))
     if (index === -1) {
       return Promise.reject(`存储【${id}】不存在`)
     }
@@ -159,8 +159,8 @@ export const useUrlStore = defineStore('url', () => {
     await _sync()
   }
 
-  const remove = async (id: number) => {
-    const index = urls.value.findIndex((e) => e.id === id)
+  const remove = async (id: string) => {
+    const index = urls.value.findIndex((e) => String(e.id) === String(id))
     if (index === -1) {
       return Promise.reject(`链接【${id}】不存在`)
     }

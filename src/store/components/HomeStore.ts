@@ -20,23 +20,19 @@ export enum OrderType {
 }
 
 export enum Status {
-
   NONE = 0,
 
   OPEN = 1,
 
   CLOSE = 2
-
 }
 
 // useSessionStorage('home-search-keyword', '')
-export const useHomeStore = createGlobalState(
-  () => {
-    // state
-    const keyword = ref('');
-    const order = ref<OrderType>(1);
-    const status = ref<Status>(Status.NONE)
+export const useHomeStore = createGlobalState(() => {
+  // state
+  const keyword = ref('')
+  const order = ref<OrderType>(1)
+  const status = ref<Status>(Status.NONE)
 
-    return {keyword, order, status}
-  }
-)
+  return { keyword, order, status }
+})
