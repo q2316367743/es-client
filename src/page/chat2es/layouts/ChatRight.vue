@@ -14,8 +14,8 @@
           v-show="active === chatId"
           :key="chatId"
           :chat-id="chatId"
-          :functions="[]"
-          system-prompt=""
+          :functions="chatFunctions"
+          :system-prompt="chatPrompt"
           height="calc(100vh - 116px)"
         />
       </div>
@@ -26,6 +26,7 @@
 import { useGlobalStore } from '@/store'
 import { ChatRecord } from '@/entity/chat'
 import { SelectOption } from '$/shared/common'
+import { chatFunctions, chatPrompt } from '@/module/chat'
 
 const active = defineModel({
   type: String,
