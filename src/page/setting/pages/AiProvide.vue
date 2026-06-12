@@ -46,7 +46,7 @@
       <!-- 右侧：编辑面板 -->
       <div class="ai-setting-main">
         <template v-if="!selectedId && !isCreating">
-          <t-empty description="请选择一个提供方或新增" />
+          <t-empty description="请选择一个提供方或新增" class="mt-25vh" />
         </template>
         <template v-else>
           <!-- 基本信息 -->
@@ -73,6 +73,14 @@
                 placeholder="请输入 API Key"
                 allow-clear
               />
+              <t-link
+                theme="primary"
+                class="shrink-0 ml-8px"
+                href="https://www.codex365.cc?from=es-client"
+                target="_blank"
+              >
+                立即获取接口密钥
+              </t-link>
             </t-form-item>
             <t-form-item>
               <t-space>
@@ -221,6 +229,25 @@ import { useBoolState } from '@/hooks'
 
 const store = useAiProvideStore()
 
+// ---------- 提供方名称预设 ----------
+
+const providerPresets: Array<{ label: string; baseUrl: string }> = [
+  { label: 'Codex365', baseUrl: 'https://www.codex365.cc/v1' },
+  { label: 'OpenAI', baseUrl: 'https://api.openai.com/v1' },
+  { label: 'DeepSeek', baseUrl: 'https://api.deepseek.com/v1' },
+  { label: 'Ollama (本地)', baseUrl: 'http://localhost:11434/v1' },
+  { label: 'OpenRouter', baseUrl: 'https://openrouter.ai/api/v1' },
+  { label: 'Together AI', baseUrl: 'https://api.together.xyz/v1' },
+  { label: 'Mistral AI', baseUrl: 'https://api.mistral.ai/v1' },
+  { label: 'Perplexity', baseUrl: 'https://api.perplexity.ai' },
+  { label: '零一万物 (Yi)', baseUrl: 'https://api.lingyiwanwu.com/v1' },
+  { label: 'Moonshot (月之暗面)', baseUrl: 'https://api.moonshot.cn/v1' },
+  { label: '阿里云 (通义千问)', baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1' },
+  { label: '百度千帆', baseUrl: 'https://qianfan.baobao.baidu.com/v2' },
+  { label: '硅基流动', baseUrl: 'https://api.siliconflow.cn/v1' },
+  { label: '小米', baseUrl: 'https://token-plan-cn.xiaomimimo.com/v1' }
+]
+
 // ---------- 左侧列表 ----------
 
 const items = computed(() => store.items)
@@ -234,7 +261,7 @@ const isCreating = ref(false)
 let form = reactive({
   id: '',
   name: '',
-  baseUrl: '',
+  baseUrl: providerPresets[0].baseUrl,
   key: '',
   models: [] as AiModel[]
 })
@@ -243,7 +270,7 @@ let form = reactive({
 function selectItem(id: string) {
   if (id === selectedId.value) {
     selectedId.value = ''
-    isCreating.value = true
+    isCreating.value = false
     form.id = ''
     form.name = ''
     form.baseUrl = ''
@@ -262,17 +289,6 @@ function selectItem(id: string) {
     form.models = item.models.map((m) => ({ ...m }))
   }
 }
-
-// 初始化：数据加载完成后选中第一个
-watch(
-  () => store.items.length,
-  (len) => {
-    if (!selectedId.value && !isCreating.value && len > 0) {
-      selectItem(store.items[0].id)
-    }
-  },
-  { immediate: true }
-)
 
 const saving = ref(false)
 
@@ -315,25 +331,6 @@ async function handleSave() {
   }
 }
 
-// ---------- 提供方名称预设 ----------
-
-const providerPresets: Array<{ label: string; baseUrl: string }> = [
-  { label: 'OpenAI', baseUrl: 'https://api.openai.com/v1' },
-  { label: 'DeepSeek', baseUrl: 'https://api.deepseek.com/v1' },
-  { label: 'Ollama (本地)', baseUrl: 'http://localhost:11434/v1' },
-  { label: 'Groq', baseUrl: 'https://api.groq.com/openai/v1' },
-  { label: 'OpenRouter', baseUrl: 'https://openrouter.ai/api/v1' },
-  { label: 'Together AI', baseUrl: 'https://api.together.xyz/v1' },
-  { label: 'Mistral AI', baseUrl: 'https://api.mistral.ai/v1' },
-  { label: 'Perplexity', baseUrl: 'https://api.perplexity.ai' },
-  { label: '零一万物 (Yi)', baseUrl: 'https://api.lingyiwanwu.com/v1' },
-  { label: 'Moonshot (月之暗面)', baseUrl: 'https://api.moonshot.cn/v1' },
-  { label: '阿里云 (通义千问)', baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1' },
-  { label: '百度千帆', baseUrl: 'https://qianfan.baobao.baidu.com/v2' },
-  { label: '硅基流动', baseUrl: 'https://api.siliconflow.cn/v1' },
-  { label: '小米', baseUrl: 'https://token-plan-cn.xiaomimimo.com/v1' }
-]
-
 const namePresets = providerPresets.map((p) => ({ label: p.label, value: p.label }))
 
 function onNameChange(value: any) {
@@ -352,7 +349,7 @@ function handleAdd() {
   isCreating.value = true
   form.id = ''
   form.name = ''
-  form.baseUrl = ''
+  form.baseUrl = providerPresets[0].baseUrl
   form.key = ''
   form.models = []
   selectedId.value = ''

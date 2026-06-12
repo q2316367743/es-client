@@ -43,19 +43,82 @@ export function parseJsonWithBigIntSupport<T extends Record<string, any>>(text: 
       return value;
     });
   } catch (e) {
-    MessageUtil.warning("JSON解析出现问题，数值类型精度可能丢失");
+    MessageUtil.warning("JSON解析出现问题，数值类型精度可能丢失", e);
     return JSON.parse(text);
   }
 }
 
 /**
  * 预处理JSON字符串，将大整数转换为字符串格式
- * 使用优化的正则表达式，确保只匹配真正的数字而不是字符串中的数字
+ * 使用字符级状态扫描器追踪是否在字符串上下文中，避免误替换字符串内容
  * @param text JSON字符串
  * @returns 预处理后的字符串
  */
 function preprocessBigIntNumbers(text: string): string {
-  return text.replace(/(?<!["\w])\s*(-?\d{16,})(?=\s*[,}\]])/g, '"$1"');
+  let result = "";
+  let inString = false;
+  let i = 0;
+  const len = text.length;
+
+  while (i < len) {
+    const ch = text[i];
+
+    if (inString) {
+      // 字符串内：原样复制，处理转义
+      result += ch;
+      i++;
+      if (ch === "\\" && i < len) {
+        // 跳过转义后的字符（包括 \"）
+        result += text[i];
+        i++;
+      } else if (ch === '"') {
+        // 字符串结束
+        inString = false;
+      }
+    } else {
+      if (ch === '"') {
+        // 字符串开始
+        inString = true;
+        result += ch;
+        i++;
+      } else if (ch === "-" || (ch >= "0" && ch <= "9")) {
+        // 尝试匹配一个完整的数字：可选负号 + 整数部分
+        const start = i;
+        if (ch === "-") i++;
+        while (i < len && text[i] >= "0" && text[i] <= "9") i++;
+        const intPart = text.slice(start, i);
+        const digitCount = ch === "-" ? intPart.length - 1 : intPart.length;
+
+        // 检查是否是小数或科学计数法的一部分
+        const isDecimalOrScientific = i < len && (text[i] === "." || text[i] === "e" || text[i] === "E");
+
+        if (digitCount >= 16 && !isDecimalOrScientific) {
+          // 进一步检查前一个非空格字符：
+          // 如果是 '.' 或 'e'/'E'，说明这是小数尾数或科学计数法指数，不应包裹
+          // 如果是 \w（字母/数字/下划线），说明这是标识符的一部分，不应包裹
+          let prevIdx = start - 1;
+          while (prevIdx >= 0 && text[prevIdx] === " ") prevIdx--;
+          if (
+            prevIdx >= 0 &&
+            (text[prevIdx] === "." || text[prevIdx] === "e" || text[prevIdx] === "E" || /\w/.test(text[prevIdx]))
+          ) {
+            // 不是独立的大整数，保持原样
+            result += intPart;
+          } else {
+            // 真正的独立大整数，包裹为字符串
+            result += '"' + intPart + '"';
+          }
+        } else {
+          result += intPart;
+        }
+      } else {
+        result += ch;
+        i++;
+      }
+    }
+  }
+
+  return result;
 }
 
 /**
