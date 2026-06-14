@@ -236,7 +236,7 @@ const providerPresets: Array<{ label: string; baseUrl: string; invitation?: stri
   {
     label: 'Codex365',
     baseUrl: 'https://www.codex365.cc/v1',
-    invitation: 'https://www.codex365.cc?from=es-client'
+    invitation: 'https://www.codex365.cc/register?aff=VIP666'
   },
   {
     label: 'V3 API',
