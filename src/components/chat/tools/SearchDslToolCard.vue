@@ -62,15 +62,6 @@
         <div class="dsl-field-label">
           <view-list-icon size="14px" class="field-icon" />
           <span>执行结果</span>
-          <t-tag
-            v-if="executionTime"
-            theme="success"
-            variant="light"
-            size="small"
-            class="exec-time-tag"
-          >
-            {{ executionTime }}ms
-          </t-tag>
           <t-tooltip content="清空结果">
             <t-button
               theme="danger"
@@ -148,9 +139,6 @@ const emit = defineEmits<{
 
 const isExecuting = ref(false)
 
-// ── 执行时间 ──
-
-const executionTime = computed(() => props.content.data._executionTime as number | undefined)
 
 // ── 状态 ──
 
@@ -243,13 +231,11 @@ async function handleExecute() {
     })
     const elapsed = Math.round(performance.now() - startTime)
 
-    props.content.data._executionTime = elapsed
     props.content.data.result = JSON.stringify(response)
     props.content.status = 'complete'
   } catch (err: unknown) {
     const elapsed = Math.round(performance.now() - startTime)
     const msg = err instanceof Error ? err.message : String(err)
-    props.content.data._executionTime = elapsed
     props.content.data.result = JSON.stringify({ error: msg }, null, 2)
     props.content.status = 'error'
   } finally {
@@ -268,7 +254,6 @@ function maximizeResult() {
 }
 
 function clearResult() {
-  props.content.data._executionTime = undefined
   props.content.data.result = ''
   props.content.status = undefined
 }

@@ -1,5 +1,4 @@
 // 导出库
-import { Parser } from '@json2csv/plainjs'
 import { utils, writeFile } from 'xlsx'
 import { ApiType, ExportConfig, ExportMode, ExportScope, ExportSource, ExportType } from './domain'
 import { DocumentSearchResult } from '@/domain/es/DocumentSearchResult'
@@ -10,11 +9,12 @@ import { DocumentSearchQuery } from '@/domain/es/DocumentSearchQuery'
 import { parseJsonWithBigIntSupport, stringifyJsonWithBigIntSupport } from '$/util'
 import { useLoading, UseLoadingResult } from '@/hooks/UseLoading'
 import { t } from '@/i18n'
+import { Json2CsvParser } from '@/components/DataExport/Json2CsvParser'
 
 // ------------------------------------------------ 渲染库 ------------------------------------------------
 
-const json2Csv = new Parser({})
-const json2Tsv = new Parser({
+const json2Csv = new Json2CsvParser({})
+const json2Tsv = new Json2CsvParser({
   delimiter: '\t'
 })
 
@@ -35,7 +35,7 @@ function exportForTsv(records: Array<Record<string, any>>): string {
 }
 
 function exportForTxt(config: ExportConfig, records: Array<Record<string, any>>): string {
-  const json2Txt = new Parser({
+  const json2Txt = new Json2CsvParser({
     delimiter: config.separator
   })
   return json2Txt.parse(records)

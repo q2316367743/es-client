@@ -213,7 +213,7 @@ async function selectUrl(value: any) {
     return
   }
   // 选择链接
-  Assert.isTrue(useUrlStore().choose(value as number), t('error.link_not_found'))
+  Assert.isTrue(useUrlStore().choose(value), t('error.link_not_found'))
   // 索引刷新
   await useIndexStore().reset()
 }

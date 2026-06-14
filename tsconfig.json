@@ -24,10 +24,7 @@
         "./src/core/*"
       ]
     },
-    "noEmit": true,
-    "types": [
-      "utools-api-types"
-    ]
+    "noEmit": true
   },
   "include": [
     "src/**/*.ts",

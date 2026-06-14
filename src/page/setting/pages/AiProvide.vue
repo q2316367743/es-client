@@ -74,9 +74,10 @@
                 allow-clear
               />
               <t-link
+                v-if="providerPreset && providerPreset.invitation"
                 theme="primary"
                 class="shrink-0 ml-8px"
-                href="https://www.codex365.cc?from=es-client"
+                :href="providerPreset.invitation"
                 target="_blank"
               >
                 立即获取接口密钥
@@ -231,22 +232,61 @@ const store = useAiProvideStore()
 
 // ---------- 提供方名称预设 ----------
 
-const providerPresets: Array<{ label: string; baseUrl: string }> = [
-  { label: 'Codex365', baseUrl: 'https://www.codex365.cc/v1' },
-  { label: 'OpenAI', baseUrl: 'https://api.openai.com/v1' },
-  { label: 'DeepSeek', baseUrl: 'https://api.deepseek.com/v1' },
+const providerPresets: Array<{ label: string; baseUrl: string; invitation?: string }> = [
+  {
+    label: 'Codex365',
+    baseUrl: 'https://www.codex365.cc/v1',
+    invitation: 'https://www.codex365.cc?from=es-client'
+  },
+  {
+    label: 'V3 API',
+    baseUrl: 'https://api.v3.cm/v1',
+    invitation: 'https://api.gpt.ge/register?aff=6A4f'
+  },
+  {
+    label: 'OpenAI',
+    baseUrl: 'https://api.openai.com/v1',
+    invitation: 'https://openai.com?from=es-client'
+  },
+  {
+    label: 'DeepSeek',
+    baseUrl: 'https://api.deepseek.com/v1',
+    invitation: 'https://platform.deepseek.com?from=es-client'
+  },
   { label: 'Ollama (本地)', baseUrl: 'http://localhost:11434/v1' },
-  { label: 'OpenRouter', baseUrl: 'https://openrouter.ai/api/v1' },
-  { label: 'Together AI', baseUrl: 'https://api.together.xyz/v1' },
-  { label: 'Mistral AI', baseUrl: 'https://api.mistral.ai/v1' },
-  { label: 'Perplexity', baseUrl: 'https://api.perplexity.ai' },
-  { label: '零一万物 (Yi)', baseUrl: 'https://api.lingyiwanwu.com/v1' },
-  { label: 'Moonshot (月之暗面)', baseUrl: 'https://api.moonshot.cn/v1' },
-  { label: '阿里云 (通义千问)', baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1' },
-  { label: '百度千帆', baseUrl: 'https://qianfan.baobao.baidu.com/v2' },
-  { label: '硅基流动', baseUrl: 'https://api.siliconflow.cn/v1' },
-  { label: '小米', baseUrl: 'https://token-plan-cn.xiaomimimo.com/v1' }
+  {
+    label: 'OpenRouter',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    invitation: 'https://openrouter.ai/?from=es-client'
+  },
+  {
+    label: 'Moonshot (月之暗面)',
+    baseUrl: 'https://api.moonshot.cn/v1',
+    invitation: 'https://platform.kimi.com/?from=es-client'
+  },
+  {
+    label: '阿里云 (通义千问)',
+    baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    invitation: 'https://bailian.console.aliyun.com/cn-beijing/?from=es-client'
+  },
+  {
+    label: '百度千帆',
+    baseUrl: 'https://qianfan.baobao.baidu.com/v2',
+    invitation: 'https://cloud.baidu.com/product-s/qianfan_home?from=es-client'
+  },
+  {
+    label: '硅基流动',
+    baseUrl: 'https://api.siliconflow.cn/v1',
+    invitation: 'https://siliconflow.cn/?from=es-client'
+  },
+  {
+    label: '小米',
+    baseUrl: 'https://token-plan-cn.xiaomimimo.com/v1',
+    invitation: 'https://platform.xiaomimimo.com?from=es-client'
+  }
 ]
+
+const providerPreset = computed(() => providerPresets.find((p) => p.baseUrl === form.baseUrl))
 
 // ---------- 左侧列表 ----------
 
@@ -260,7 +300,7 @@ const isCreating = ref(false)
 
 let form = reactive({
   id: '',
-  name: '',
+  name: providerPresets[0].label,
   baseUrl: providerPresets[0].baseUrl,
   key: '',
   models: [] as AiModel[]
@@ -348,7 +388,7 @@ function onNameChange(value: any) {
 function handleAdd() {
   isCreating.value = true
   form.id = ''
-  form.name = ''
+  form.name = providerPresets[0].label
   form.baseUrl = providerPresets[0].baseUrl
   form.key = ''
   form.models = []
