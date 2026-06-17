@@ -127,6 +127,7 @@ const LocalNameEnum = {
   PAGE_SENIOR_SEARCH_SIZE: '/page/senior-search/size',
 
   PAGE_CHAT2ES_ACTIVE: '/page/chat2es/active',
+  PAGE_CHAT2ES_SIZE: '/page/chat2es/size',
 
   /**
    * 页面 - 高级查询 - 大小

@@ -25,7 +25,7 @@ defineOptions({
   name: 'Chat2ES'
 })
 
-const size = useLocalStorage(LocalNameEnum.KEY_CHAT_SIZE, 400)
+const size = useLocalStorage(LocalNameEnum.PAGE_CHAT2ES_SIZE, 400)
 const active = useSessionStorage(LocalNameEnum.PAGE_CHAT2ES_ACTIVE, '')
 
 const records = ref<Array<ChatRecord>>([])
