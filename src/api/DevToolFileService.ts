@@ -23,7 +23,7 @@ export async function devToolFileCreate(urlId: string, prop: DevToolFileCreatePr
 
 export async function devToolFileRename(urlId: string, id: string, name: string) {
   const list = await devToolFileList(urlId)
-  const index = list.findIndex((item) => item.id === id)
+  const index = list.findIndex((item) => String(item.id) === String(id))
   if (index === -1) {
     return Promise.reject(new Error('未找到该文件'))
   }
@@ -34,7 +34,7 @@ export async function devToolFileRename(urlId: string, id: string, name: string)
 
 export async function devToolFileDelete(urlId: string, id: string) {
   const list = await devToolFileList(urlId)
-  const index = list.findIndex((item) => item.id === id)
+  const index = list.findIndex((item) => String(item.id) === String(id))
   if (index === -1) {
     return Promise.reject(new Error('未找到该文件'))
   }

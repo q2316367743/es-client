@@ -89,14 +89,18 @@ export const useDevToolFileItemStore = defineStore('useDevToolFileItemStore', ()
   }
 
   const remove = async (item: DevToolFileItem) => {
-    const { id } = useUrlStore()
-    if (!id) {
-      return Promise.reject(new Error('请先选择连接'))
+    let urlId = '0'
+    if (activeKey.value !== 'global') {
+      const { id } = useUrlStore()
+      if (!id) {
+        return Promise.reject(new Error('请先选择连接'))
+      }
+      urlId = id;
     }
     const suffix = item.folder ? '夹' : ''
     await MessageBoxUtil.confirm(`确定要删除此文件${suffix}吗？`, '删除文件' + suffix)
 
-    await devToolFileDelete(id, item.id)
+    await devToolFileDelete(urlId, item.id)
 
     // 关闭打开的文件
     useDevToolStore().onFileItemClose(item.id)
