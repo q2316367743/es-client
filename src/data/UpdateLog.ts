@@ -2,6 +2,21 @@ import { Log, LogItemEnum } from '@/view/Data'
 
 export default [
   {
+    version: '3.2.4',
+    sign: 324,
+    time: '2026-06-22',
+    items: [
+      {
+        label: LogItemEnum.REPAIR,
+        content: '紧急修复开发者工具数据不显示问题'
+      },
+      {
+        label: LogItemEnum.UPDATE,
+        content: '优化部分右键菜单样式'
+      }
+    ]
+  },
+  {
     version: '3.2.3',
     sign: 323,
     time: '2026-06-14',
