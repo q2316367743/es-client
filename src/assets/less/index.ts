@@ -1,4 +1,7 @@
-import '@/assets/less/main.less';
-import '@/assets/less/post.css';
-import '@/assets/less/customer.less';
-import "./tdesign-theme.css";
+import '@/assets/less/main.less'
+import '@/assets/less/post.css'
+import '@/assets/less/customer.less'
+import './tdesign-theme.css'
+import './vue3-context-menu.less'
+import 'vxe-table/es/style.css'
+import 'vxe-pc-ui/es/style.css'

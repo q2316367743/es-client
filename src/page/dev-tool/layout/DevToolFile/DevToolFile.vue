@@ -19,7 +19,9 @@
       <div class="ml-auto">
         <t-radio-group v-model="activeKey" variant="default-filled" size="small">
           <t-radio-button value="global">{{ $t('dev_tool.global') }}</t-radio-button>
-          <t-radio-button value="current">{{ $t('dev_tool.current') }}</t-radio-button>
+          <t-radio-button value="current" :disabled="!urlId">{{
+            $t('dev_tool.current')
+          }}</t-radio-button>
         </t-radio-group>
       </div>
     </div>
@@ -112,7 +114,7 @@
 <script lang="ts" setup>
 import { TdTreeProps } from 'tdesign-vue-next'
 import { useDevToolFileItemStore } from '@/store/db/DevToolFileItemStore'
-import { useDevToolStore } from '@/store'
+import { useDevToolStore, useUrlStore } from '@/store'
 import {
   handleFileDelete,
   handleFileRename,
@@ -138,6 +140,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const fileItemStore = useDevToolFileItemStore()
 const searchStore = useDevToolStore()
+const urlStore = useUrlStore()
 
 // 缓存展开的节点
 const expanded = useSessionStorage(LocalNameEnum.KEY_DEV_TOOL_EXPENDED, [])
@@ -147,6 +150,7 @@ const { activeKey } = toRefs(fileItemStore)
 
 const items = computed(() => fileItemStore.items)
 const actives = computed(() => [searchStore.activeId])
+const urlId = computed(() => urlStore.id)
 
 const onClick: TdTreeProps['onClick'] = ({ node }) => {
   if (node.data?._source?.folder === 1 || !node.data?._source) {
