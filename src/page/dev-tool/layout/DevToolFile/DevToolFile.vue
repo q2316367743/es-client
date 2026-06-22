@@ -5,13 +5,13 @@
       <t-space size="small">
         <t-button variant="text" size="small" @click="openFileContextmenu($event, activeKey)">
           <template #icon>
-            <add-icon/>
+            <add-icon />
           </template>
           {{ $t('dev_tool.new') }}
         </t-button>
         <t-button variant="text" size="small" :loading="refreshing" @click="handleRefresh">
           <template #icon>
-            <refresh-icon/>
+            <refresh-icon />
           </template>
           {{ $t('dev_tool.refresh') }}
         </t-button>
@@ -39,15 +39,15 @@
         <template #label="{ node }">
           <div class="tree-node-label" @contextmenu.prevent="openFileContextmenu($event, node)">
             <div class="node-icon">
-              <folder-icon v-if="node.data.icon === 'folder'" class="icon-folder"/>
-              <file-code-icon v-else-if="node.data.icon === 'file'" class="icon-file"/>
+              <folder-icon v-if="node.data.icon === 'folder'" class="icon-folder" />
+              <file-code-icon v-else-if="node.data.icon === 'file'" class="icon-file" />
             </div>
             <div class="node-label">{{ node.label }}</div>
             <div class="node-operator">
               <t-dropdown trigger="click" :max-column-width="120">
                 <t-button theme="primary" size="small" variant="text" @click.stop>
                   <template #icon>
-                    <more-icon/>
+                    <more-icon />
                   </template>
                 </t-button>
                 <t-dropdown-menu>
@@ -57,12 +57,12 @@
                       createDevTool({
                         folder: true,
                         parentId:
-                          node.value === 'global' || node.value === 'current' ? '0' : node.value,
+                          node.value === 'global' || node.value === 'current' ? '0' : node.value
                       })
                     "
                   >
                     <template #prefix-icon>
-                      <file-add-icon/>
+                      <file-add-icon />
                     </template>
                     {{ $t('dev_tool.new_file') }}
                   </t-dropdown-item>
@@ -72,12 +72,12 @@
                       createDevTool({
                         folder: true,
                         parentId:
-                          node.value === 'global' || node.value === 'current' ? '0' : node.value,
+                          node.value === 'global' || node.value === 'current' ? '0' : node.value
                       })
                     "
                   >
                     <template #prefix-icon>
-                      <folder-add-icon/>
+                      <folder-add-icon />
                     </template>
                     {{ $t('dev_tool.new_folder') }}
                   </t-dropdown-item>
@@ -86,7 +86,7 @@
                     @click="handleFileRename(node)"
                   >
                     <template #prefix-icon>
-                      <edit-icon/>
+                      <edit-icon />
                     </template>
                     {{ $t('dev_tool.rename') }}
                   </t-dropdown-item>
@@ -96,7 +96,7 @@
                     @click="handleFileDelete(node)"
                   >
                     <template #prefix-icon>
-                      <delete-icon/>
+                      <delete-icon />
                     </template>
                     {{ $t('dev_tool.delete') }}
                   </t-dropdown-item>
@@ -110,14 +110,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TdTreeProps} from "tdesign-vue-next";
-import {useDevToolFileItemStore} from "@/store/db/DevToolFileItemStore";
-import {useDevToolStore} from "@/store";
+import { TdTreeProps } from 'tdesign-vue-next'
+import { useDevToolFileItemStore } from '@/store/db/DevToolFileItemStore'
+import { useDevToolStore } from '@/store'
 import {
   handleFileDelete,
   handleFileRename,
   openFileContextmenu
-} from "@/page/dev-tool/layout/DevToolFile/func/FileContextmenu";
+} from '@/page/dev-tool/layout/DevToolFile/func/FileContextmenu'
 import {
   AddIcon,
   DeleteIcon,
@@ -128,56 +128,55 @@ import {
   FolderIcon,
   MoreIcon,
   RefreshIcon
-} from "tdesign-icons-vue-next";
-import MessageUtil from "@/utils/model/MessageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {createDevTool} from "@/page/dev-tool/layout/DevToolFile/func/CreateDevTool";
-import {toggleArray} from "$/util";
-import {useI18n} from "vue-i18n";
+} from 'tdesign-icons-vue-next'
+import MessageUtil from '@/utils/model/MessageUtil'
+import LocalNameEnum from '@/enumeration/LocalNameEnum'
+import { createDevTool } from '@/page/dev-tool/layout/DevToolFile/func/CreateDevTool'
+import { toggleArray } from '$/util'
+import { useI18n } from 'vue-i18n'
 
-const {t} = useI18n();
-const fileItemStore = useDevToolFileItemStore();
-const searchStore = useDevToolStore();
+const { t } = useI18n()
+const fileItemStore = useDevToolFileItemStore()
+const searchStore = useDevToolStore()
 
 // 缓存展开的节点
-const expanded = useSessionStorage(LocalNameEnum.KEY_DEV_TOOL_EXPENDED, []);
+const expanded = useSessionStorage(LocalNameEnum.KEY_DEV_TOOL_EXPENDED, [])
 
-const refreshing = ref(false);
-const activeKey = ref<'global' | 'current'>('global');
+const refreshing = ref(false)
+const { activeKey } = toRefs(fileItemStore)
 
-const items = computed(() => fileItemStore.items);
-const actives = computed(() => [searchStore.activeId]);
+const items = computed(() => fileItemStore.items)
+const actives = computed(() => [searchStore.activeId])
 
-const onClick: TdTreeProps["onClick"] = ({node}) => {
+const onClick: TdTreeProps['onClick'] = ({ node }) => {
   if (node.data?._source?.folder === 1 || !node.data?._source) {
     // 文件夹，toggle
-    toggleArray(expanded.value, node.value);
-    return;
+    toggleArray(expanded.value, node.value)
+    return
   }
-  searchStore.onFileItemClick(node.data._source);
-};
+  searchStore.onFileItemClick(node.data._source)
+}
 
 // 刷新文件列表
 const handleRefresh = async () => {
-  refreshing.value = true;
+  refreshing.value = true
   try {
-    fileItemStore.refresh();
-    MessageUtil.success(t('dev_tool.refresh_success'));
+    fileItemStore.refresh()
+    MessageUtil.success(t('dev_tool.refresh_success'))
   } catch (error) {
-    MessageUtil.error(t('dev_tool.refresh_failed'), error);
+    MessageUtil.error(t('dev_tool.refresh_failed'), error)
   } finally {
-    refreshing.value = false;
+    refreshing.value = false
   }
-};
+}
 
 // 组件挂载时刷新数据
 onMounted(() => {
   // 自动刷新
-  fileItemStore.refresh();
-});
+  fileItemStore.refresh()
+})
 </script>
 <style scoped lang="less">
-
 .toolbar {
   padding: 8px 12px;
   border-bottom: 1px solid var(--td-border-level-1-color);

@@ -152,7 +152,6 @@ export const useIndexStore = defineStore("index", () => {
     });
     try {
       const clusterInfo = await client.indices();
-      console.log(clusterInfo)
       indices.value = clusterInfo.indices;
       masterNode.value = clusterInfo.masterNode;
       nodes.value = clusterInfo.nodes;
