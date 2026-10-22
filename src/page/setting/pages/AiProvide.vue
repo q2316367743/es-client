@@ -260,6 +260,11 @@ const providerPresets: Array<{ label: string; baseUrl: string; invitation?: stri
     invitation: 'https://openrouter.ai/?from=es-client'
   },
   {
+    label: 'OrcaRouter',
+    baseUrl: 'https://api.orcarouter.ai/v1',
+    invitation: 'https://www.orcarouter.ai'
+  },
+  {
     label: 'Moonshot (月之暗面)',
     baseUrl: 'https://api.moonshot.cn/v1',
     invitation: 'https://platform.kimi.com/?from=es-client'
