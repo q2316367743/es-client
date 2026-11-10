@@ -265,6 +265,11 @@ const providerPresets: Array<{ label: string; baseUrl: string; invitation?: stri
     invitation: 'https://www.orcarouter.ai'
   },
   {
+    label: 'UberLLM',
+    baseUrl: 'https://api.uberllm.dev/v1',
+    invitation: 'https://uberllm.dev/?from=es-client'
+  },
+  {
     label: 'Moonshot (月之暗面)',
     baseUrl: 'https://api.moonshot.cn/v1',
     invitation: 'https://platform.kimi.com/?from=es-client'
